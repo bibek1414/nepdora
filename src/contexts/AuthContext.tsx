@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { User, AuthTokens, LoginResponse } from "@/types/auth/auth";
 import { loginUser, signupUser } from "@/services/auth/api";
 import { toast } from "sonner";
+import { AuthErrorHandler } from "@/utils/auth/error.utils";
+import { ErrorResponse } from "@/types/auth/error.types";
 
 interface LoginData {
   email: string;
@@ -16,23 +18,6 @@ interface SignupData {
   password: string;
   phone: string;
   store_name: string;
-}
-
-interface ErrorResponse {
-  response?: {
-    status: number;
-    data?: {
-      errors?: Array<{
-        message: string;
-        code: string;
-      }>;
-      message?: string;
-      error?: string;
-      detail?: string;
-    };
-  };
-  request?: unknown;
-  message?: string;
 }
 
 interface AuthContextType {
@@ -220,70 +205,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     deleteCrossDomainCookie("authUser");
   };
 
-  const getErrorMessage = (error: ErrorResponse) => {
-    if (error.response) {
-      const status = error.response.status;
-      const data = error.response.data;
-
-      if (
-        data?.errors &&
-        Array.isArray(data.errors) &&
-        data.errors.length > 0
-      ) {
-        const firstError = data.errors[0];
-
-        if (firstError.code === "too_many_login_attempts") {
-          return "Too many failed login attempts. Please wait a few minutes before trying again.";
-        }
-
-        if (firstError.code === "invalid_credentials") {
-          return "Invalid email or password. Please check your credentials and try again.";
-        }
-
-        if (firstError.code === "user_not_found") {
-          return "Account not found. Please check your email address or sign up for a new account.";
-        }
-
-        if (firstError.code === "account_disabled") {
-          return "Your account has been disabled. Please contact support for assistance.";
-        }
-
-        return firstError.message || "Login failed. Please try again.";
-      }
-
-      switch (status) {
-        case 401:
-          return "Invalid email or password. Please check your credentials and try again.";
-        case 400:
-          return (
-            data?.message ||
-            data?.error ||
-            data?.detail ||
-            "Invalid login credentials. Please check your email and password."
-          );
-        case 403:
-          return "Your account has been suspended or disabled. Please contact support.";
-        case 404:
-          return "Account not found. Please check your email address or sign up for a new account.";
-        case 429:
-          return "Too many login attempts. Please wait a few minutes before trying again.";
-        case 500:
-          return "Server error occurred. Please try again later.";
-        default:
-          return (
-            data?.message ||
-            data?.error ||
-            data?.detail ||
-            "Login failed. Please try again."
-          );
-      }
-    } else if (error.request) {
-      return "Network error. Please check your internet connection and try again.";
-    } else {
-      return error.message || "An unexpected error occurred. Please try again.";
-    }
-  };
-
   const login = async (data: LoginData) => {
     setIsLoading(true);
     try {
@@ -359,10 +280,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         router.push("/");
       }
     } catch (error) {
-      const errorMessage = getErrorMessage(error as ErrorResponse);
+      const errorResponse = error as ErrorResponse;
+      const parsedError = AuthErrorHandler.parseAuthError(errorResponse);
 
       toast.error("Login Failed", {
-        description: errorMessage,
+        description: parsedError.message,
       });
 
       console.error("Login error:", error);
@@ -394,10 +316,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       router.push("/signup/verify");
     } catch (error) {
-      const errorMessage = getErrorMessage(error as ErrorResponse);
+      const errorResponse = error as ErrorResponse;
+      const parsedError = AuthErrorHandler.parseAuthError(errorResponse);
 
       toast.error("Signup Failed", {
-        description: errorMessage,
+        description: parsedError.message,
       });
 
       console.error("Signup error:", error);
