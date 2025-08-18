@@ -11,6 +11,13 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    rules: {
+      // Disable rules that conflict with Prettier
+      "arrow-body-style": "off",
+      "prefer-arrow-callback": "off",
+    },
+  },
 ];
 
 export default eslintConfig;

@@ -1,8 +1,7 @@
 export const siteConfig = {
   name: " ",
   description: "Nepdora",
-  apiBaseUrl:
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000",
+  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000",
 };
 
 export const getApiBaseUrl = (): string => {

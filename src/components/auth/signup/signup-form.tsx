@@ -37,12 +37,12 @@ export function SignupForm({
   };
 
   return (
-    <div className="min-h-screen bg-card flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="relative max-w-md w-full">
-        <div className="bg-white rounded-lg p-8 ">
+    <div className="bg-card flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+      <div className="relative w-full max-w-md">
+        <div className="rounded-lg bg-white p-8">
           <div className={cn("grid gap-6", className)} {...props}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="text-center mb-8">
+              <div className="mb-8 text-center">
                 <h2 className="text-3xl font-bold text-gray-900">
                   Create New Account
                 </h2>
@@ -57,7 +57,7 @@ export function SignupForm({
                   type="text"
                   label="Store Name"
                   disabled={isLoading}
-                  className="border-gray-300 focus:ring-primary"
+                  className="focus:ring-primary border-gray-300"
                   {...register("store_name")}
                 />
                 {errors.store_name && (
@@ -74,7 +74,7 @@ export function SignupForm({
                   label="Email Address"
                   autoComplete="email"
                   disabled={isLoading}
-                  className="border-gray-300 focus:ring-primary"
+                  className="focus:ring-primary border-gray-300"
                   {...register("email")}
                 />
                 {errors.email && (
@@ -89,7 +89,7 @@ export function SignupForm({
                   type="tel"
                   label="Phone Number"
                   disabled={isLoading}
-                  className="border-gray-300 focus:ring-primary"
+                  className="focus:ring-primary border-gray-300"
                   {...register("phone")}
                 />
                 {errors.phone && (
@@ -105,7 +105,7 @@ export function SignupForm({
                   label="Password"
                   autoComplete="new-password"
                   disabled={isLoading}
-                  className="border-gray-300 focus:ring-primary"
+                  className="focus:ring-primary border-gray-300"
                   {...register("password")}
                 />
                 {errors.password && (
@@ -114,7 +114,7 @@ export function SignupForm({
                   </p>
                 )}
                 {password && password.length < 8 && !errors.password && (
-                  <p className="mt-2 text-sm text-red-600 font-medium">
+                  <p className="mt-2 text-sm font-medium text-red-600">
                     Password must be at least 8 characters long
                   </p>
                 )}
@@ -127,7 +127,7 @@ export function SignupForm({
                   label="Confirm Password"
                   autoComplete="new-password"
                   disabled={isLoading}
-                  className="border-gray-300 focus:ring-primary"
+                  className="focus:ring-primary border-gray-300"
                   {...register("confirmPassword")}
                 />
                 {errors.confirmPassword && (
@@ -139,7 +139,7 @@ export function SignupForm({
                   password &&
                   password !== confirmPassword &&
                   !errors.confirmPassword && (
-                    <p className="mt-2 text-sm text-red-600 font-medium">
+                    <p className="mt-2 text-sm font-medium text-red-600">
                       Passwords do not match
                     </p>
                   )}
@@ -150,15 +150,15 @@ export function SignupForm({
                   type="submit"
                   disabled={isLoading}
                   className={cn(
-                    "w-full py-3 px-4 rounded-lg font-medium text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2",
+                    "w-full rounded-lg px-4 py-3 font-medium text-white transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none",
                     isLoading
-                      ? "bg-gray-400 cursor-not-allowed"
+                      ? "cursor-not-allowed bg-gray-400"
                       : "bg-primary hover:bg-primary focus:ring-primary"
                   )}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      <div className="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
                       Creating Account...
                     </div>
                   ) : (
@@ -172,7 +172,7 @@ export function SignupForm({
                   Already have an account?{" "}
                   <Link
                     href="/login"
-                    className="font-medium text-primary hover:text-primary"
+                    className="text-primary hover:text-primary font-medium"
                   >
                     Login
                   </Link>

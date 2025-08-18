@@ -1,4 +1,3 @@
-
 import { LoginResponse, SignupResponse } from "@/types/auth/auth";
 import { siteConfig } from "@/config/site";
 
@@ -6,7 +5,7 @@ const API_BASE_URL = siteConfig.apiBaseUrl;
 
 interface SignupData {
   email: string;
-  password: string; 
+  password: string;
   phone: string;
   store_name: string;
 }
@@ -34,13 +33,16 @@ export async function signupUser(data: SignupData): Promise<SignupResponse> {
 }
 
 export async function loginUser(data: LoginData): Promise<LoginResponse> {
-  const response = await fetch(`${API_BASE_URL}/_allauth/browser/v1/auth/login`, { 
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/_allauth/browser/v1/auth/login`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
 
   if (!response.ok) {
     const errorData = await response.json();

@@ -52,7 +52,7 @@ export function LoginForm({
     } catch (error: unknown) {
       const loginError = error as LoginError;
 
-      setAttemptCount((prev) => prev + 1);
+      setAttemptCount(prev => prev + 1);
 
       const errorData = loginError.response?.data;
       const errorCode = errorData?.errors?.[0]?.code;
@@ -121,20 +121,20 @@ export function LoginForm({
   const showSecurityMessage = attemptCount >= 3;
 
   return (
-    <div className="flex flex-col justify-center min-h-screen py-12 bg-card sm:px-6 lg:px-8">
+    <div className="bg-card flex min-h-screen flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="p-8 bg-white shadow-lg rounded-lg ">
+        <div className="rounded-lg bg-white p-8 shadow-lg">
           <div className={cn("grid gap-6", className)} {...props}>
             {loginError && (
-              <div className="flex items-center p-4 mb-4 text-sm border border-red-200 rounded-lg bg-red-50 text-red-800">
-                <AlertCircle className="w-5 h-5 mr-2" />
+              <div className="mb-4 flex items-center rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+                <AlertCircle className="mr-2 h-5 w-5" />
                 <span>{loginError}</span>
               </div>
             )}
 
             {showSecurityMessage && (
-              <div className="flex items-center p-4 mb-4 text-sm border border-yellow-200 rounded-lg bg-yellow-50 text-yellow-800">
-                <AlertCircle className="w-5 h-5 mr-2" />
+              <div className="mb-4 flex items-center rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800">
+                <AlertCircle className="mr-2 h-5 w-5" />
                 <span>
                   For security reasons, please double-check your credentials. If
                   you&apos;ve forgotten your password, consider resetting it.
@@ -161,10 +161,10 @@ export function LoginForm({
                     className={cn(
                       errors.email
                         ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-primary"
+                        : "focus:ring-primary border-gray-300"
                     )}
                     {...register("email")}
-                    onChange={(e) => {
+                    onChange={e => {
                       register("email").onChange(e);
                       if (loginError) {
                         setLoginError(null);
@@ -172,8 +172,8 @@ export function LoginForm({
                     }}
                   />
                   {errors.email && (
-                    <p className="mt-2 text-sm font-medium text-red-500 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
+                      <AlertCircle className="mr-1 h-4 w-4" />
                       {errors.email.message}
                     </p>
                   )}
@@ -188,10 +188,10 @@ export function LoginForm({
                     className={cn(
                       errors.password
                         ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-primary"
+                        : "focus:ring-primary border-gray-300"
                     )}
                     {...register("password")}
-                    onChange={(e) => {
+                    onChange={e => {
                       register("password").onChange(e);
                       if (loginError) {
                         setLoginError(null);
@@ -199,8 +199,8 @@ export function LoginForm({
                     }}
                   />
                   {errors.password && (
-                    <p className="mt-2 text-sm font-medium text-red-500 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
+                      <AlertCircle className="mr-1 h-4 w-4" />
                       {errors.password.message}
                     </p>
                   )}
@@ -210,15 +210,15 @@ export function LoginForm({
                   type="submit"
                   disabled={isLoading}
                   className={cn(
-                    "w-full py-3 px-4 rounded-lg font-medium text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2",
+                    "w-full rounded-lg px-4 py-3 font-medium text-white transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none",
                     isLoading
-                      ? "bg-gray-400 cursor-not-allowed"
+                      ? "cursor-not-allowed bg-gray-400"
                       : "bg-primary hover:bg-primary focus:ring-primary"
                   )}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center">
-                      <div className="w-5 h-5 mr-2 border-b-2 border-white rounded-full animate-spin"></div>
+                      <div className="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
                       Signing in...
                     </div>
                   ) : (
@@ -234,7 +234,7 @@ export function LoginForm({
               Don&apos;t have an account?{" "}
               <Link
                 href="/signup"
-                className="font-medium text-primary hover:text-primary"
+                className="text-primary hover:text-primary font-medium"
               >
                 Sign up
               </Link>

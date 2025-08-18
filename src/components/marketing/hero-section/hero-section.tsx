@@ -25,13 +25,13 @@ const RetroGrid: React.FC<GridOptions> = ({
       <div className="absolute inset-0 [transform:rotateX(var(--grid-angle))]">
         <div
           className={cn(
-            "animate-grid [background-repeat:repeat] [background-size:var(--cell-size)_var(--cell-size)]",
-            "[height:300vh] [inset:0%_0px] [margin-left:-50%] [transform-origin:100%_0_0] [width:200vw]",
+            "animate-grid [background-size:var(--cell-size)_var(--cell-size)] [background-repeat:repeat]",
+            "[inset:0%_0px] [margin-left:-50%] [height:300vh] [width:200vw] [transform-origin:100%_0_0]",
             "[background-image:linear-gradient(to_right,hsl(var(--primary))_1px,transparent_0),linear-gradient(to_bottom,hsl(var(--primary))_1px,transparent_0)]"
           )}
         />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent to-90%" />
+      <div className="from-background absolute inset-0 bg-gradient-to-t to-transparent to-90%" />
     </div>
   );
 };
@@ -52,39 +52,39 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <div className={cn("relative overflow-hidden", className)}>
       {/* Background gradient */}
-      <div className="absolute top-0 z-[0] h-screen w-full bg-gradient-to-b from-primary/10 via-transparent to-transparent" />
+      <div className="from-primary/10 absolute top-0 z-[0] h-screen w-full bg-gradient-to-b via-transparent to-transparent" />
 
-      <section className="relative max-w-full mx-auto z-1">
+      <section className="relative z-1 mx-auto max-w-full">
         <RetroGrid {...gridOptions} />
 
-        <div className="max-w-screen-xl z-10 mx-auto px-4 py-28 gap-12 md:px-8">
-          <div className="space-y-5 max-w-3xl leading-0 lg:leading-5 mx-auto text-center">
-            <h1 className="text-sm text-muted-foreground group font-medium mx-auto px-5 py-2 bg-background/80 backdrop-blur-sm border border-border rounded-3xl w-fit shadow-sm">
+        <div className="z-10 mx-auto max-w-screen-xl gap-12 px-4 py-28 md:px-8">
+          <div className="mx-auto max-w-3xl space-y-5 text-center leading-0 lg:leading-5">
+            <h1 className="text-muted-foreground group bg-background/80 border-border mx-auto w-fit rounded-3xl border px-5 py-2 text-sm font-medium shadow-sm backdrop-blur-sm">
               {title}
-              <ChevronRight className="inline w-4 h-4 ml-2 group-hover:translate-x-1 duration-300 text-primary" />
+              <ChevronRight className="text-primary ml-2 inline h-4 w-4 duration-300 group-hover:translate-x-1" />
             </h1>
 
-            <h2 className="text-4xl tracking-tighter font-bold mx-auto md:text-6xl text-foreground">
+            <h2 className="text-foreground mx-auto text-4xl font-bold tracking-tighter md:text-6xl">
               {subtitle.regular}
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
+              <span className="from-primary to-primary/60 bg-gradient-to-r bg-clip-text text-transparent">
                 {subtitle.gradient}
               </span>
             </h2>
 
             {description && (
-              <p className="text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-muted-foreground mx-auto max-w-2xl">
                 {description}
               </p>
             )}
 
-            <div className="items-center justify-center gap-x-3 space-y-3 sm:flex sm:space-y-0">
+            <div className="items-center justify-center space-y-3 gap-x-3 sm:flex sm:space-y-0">
               <span className="relative inline-block overflow-hidden rounded-full p-[2px]">
-                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-gradient-to-r from-primary via-primary/60 to-primary" />
-                <div className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-background text-sm font-medium backdrop-blur-3xl">
+                <span className="from-primary via-primary/60 to-primary absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-gradient-to-r" />
+                <div className="bg-background inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full text-sm font-medium backdrop-blur-3xl">
                   <a
                     href={ctaHref}
-                    className="inline-flex rounded-full text-center group items-center w-full justify-center text-primary-foreground font-medium border-0 hover:opacity-90 transition-all sm:w-auto py-4 px-10 bg-gradient-to-r from-primary to-primary/80"
+                    className="group text-primary-foreground from-primary to-primary/80 inline-flex w-full items-center justify-center rounded-full border-0 bg-gradient-to-r px-10 py-4 text-center font-medium transition-all hover:opacity-90 sm:w-auto"
                   >
                     {ctaText}
                   </a>
@@ -94,15 +94,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {bottomImage && (
-            <div className="mt-32 mx-4 md:mx-10 relative z-10">
+            <div className="relative z-10 mx-4 mt-32 md:mx-10">
               <img
                 src={bottomImage.light}
-                className="w-full shadow-2xl rounded-lg border border-border dark:hidden"
+                className="border-border w-full rounded-lg border shadow-2xl dark:hidden"
                 alt="Dashboard preview"
               />
               <img
                 src={bottomImage.dark}
-                className="hidden w-full shadow-2xl rounded-lg border border-border dark:block"
+                className="border-border hidden w-full rounded-lg border shadow-2xl dark:block"
                 alt="Dashboard preview"
               />
             </div>

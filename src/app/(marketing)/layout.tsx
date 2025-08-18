@@ -1,4 +1,3 @@
-
 import React from "react";
 import Header from "@/components/marketing/layout/header";
 import Footer from "@/components/marketing/layout/footer";

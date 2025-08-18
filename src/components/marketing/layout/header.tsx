@@ -6,7 +6,7 @@ import { Globe } from "lucide-react";
 
 const Header: React.FC = () => {
   return (
-    <header className="relative z-50 px-6 py-4 bg-white/80 backdrop-blur-md border-b border-primary/10">
+    <header className="border-primary/10 relative z-50 border-b bg-white/80 px-6 py-4 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex items-center space-x-2">
           <Link href="/">
@@ -18,12 +18,12 @@ const Header: React.FC = () => {
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center space-x-8">
-          {["Features", "Templates", "Pricing", "About"].map((item) => (
+        <div className="hidden items-center space-x-8 md:flex">
+          {["Features", "Templates", "Pricing", "About"].map(item => (
             <Link
               key={item}
               href={`/${item.toLowerCase()}`}
-              className="text-muted-foreground hover:text-primary transition-colors cursor-pointer font-medium"
+              className="text-muted-foreground hover:text-primary cursor-pointer font-medium transition-colors"
             >
               {item}
             </Link>
@@ -40,7 +40,7 @@ const Header: React.FC = () => {
             </Button>
           </Link>
           <Link href="/signup">
-            <Button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white shadow-lg hover:shadow-xl transition-all duration-200">
+            <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r text-white shadow-lg transition-all duration-200 hover:shadow-xl">
               Get Started Free
             </Button>
           </Link>

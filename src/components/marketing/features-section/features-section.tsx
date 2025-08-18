@@ -16,8 +16,7 @@ import {
   Settings,
   Target,
 } from "lucide-react";
-import {Feature} from "@/types/marketing/feature";
-
+import { Feature } from "@/types/marketing/feature";
 
 const FeaturesSection: React.FC = () => {
   const features: Feature[] = [
@@ -96,36 +95,36 @@ const FeaturesSection: React.FC = () => {
   ];
 
   return (
-    <section id="features" className="py-20 bg-background">
+    <section id="features" className="bg-background py-20">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="text-center mb-16">
+        <div className="mb-16 text-center">
           <Badge variant="outline" className="mb-4">
             <Target className="mr-2 h-4 w-4" />
             Features
           </Badge>
-          <h2 className="text-3xl font-bold md:text-4xl mb-4">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
             Everything You Need to
-            <span className="block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="from-primary to-secondary block bg-gradient-to-r bg-clip-text text-transparent">
               Succeed Online
             </span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
             Powerful tools and features to help you create, manage, and grow
             your online presence.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="group hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border-primary/10 hover:border-primary/20"
+              className="group border-primary/10 hover:border-primary/20 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
             >
               <CardContent className="p-6">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 ">
-                  <feature.icon className="w-6 h-6" />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+                  <feature.icon className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-semibold mb-3">{feature.title}</h3>
+                <h3 className="mb-3 text-lg font-semibold">{feature.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
                   {feature.description}
                 </p>

@@ -87,38 +87,38 @@ const PricingSection: React.FC = () => {
   ];
 
   return (
-    <section id="pricing" className="py-20 bg-muted/50">
+    <section id="pricing" className="bg-muted/50 py-20">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="text-center mb-16">
+        <div className="mb-16 text-center">
           <Badge variant="outline" className="mb-4">
             <CreditCard className="mr-2 h-4 w-4" />
             Pricing
           </Badge>
-          <h2 className="text-3xl font-bold md:text-4xl mb-4">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
             Simple, Transparent
-            <span className="block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="from-primary to-secondary block bg-gradient-to-r bg-clip-text text-transparent">
               Pricing
             </span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
             Choose the perfect plan for your business. All plans include our
             core features with no hidden fees.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
           {plans.map((plan, index) => (
             <Card
               key={index}
               className={`relative ${
                 plan.popular
-                  ? "ring-2 ring-primary shadow-2xl transform scale-105 bg-gradient-to-br from-primary/5 to-secondary/5"
+                  ? "ring-primary from-primary/5 to-secondary/5 scale-105 transform bg-gradient-to-br shadow-2xl ring-2"
                   : "shadow-lg hover:shadow-xl"
               } transition-all duration-300`}
             >
               {plan.popular && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-gradient-to-r from-primary to-secondary text-white">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 transform">
+                  <Badge className="from-primary to-secondary bg-gradient-to-r text-white">
                     Most Popular
                   </Badge>
                 </div>
@@ -126,21 +126,21 @@ const PricingSection: React.FC = () => {
 
               <CardHeader className="text-center">
                 <div
-                  className={`w-12 h-12 mx-auto mb-4 rounded-xl flex items-center justify-center bg-${
+                  className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-${
                     plan.color === "primary"
                       ? "primary"
                       : plan.color === "secondary"
-                      ? "secondary"
-                      : "primary"
+                        ? "secondary"
+                        : "primary"
                   }/10 text-${
                     plan.color === "primary"
                       ? "primary"
                       : plan.color === "secondary"
-                      ? "secondary"
-                      : "primary"
+                        ? "secondary"
+                        : "primary"
                   }`}
                 >
-                  <plan.icon className="w-6 h-6" />
+                  <plan.icon className="h-6 w-6" />
                 </div>
                 <CardTitle className="text-xl">{plan.name}</CardTitle>
                 <CardDescription className="mb-4">
@@ -157,10 +157,10 @@ const PricingSection: React.FC = () => {
               </CardHeader>
 
               <CardContent>
-                <ul className="space-y-3 mb-6">
+                <ul className="mb-6 space-y-3">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start">
-                      <Check className="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                      <Check className="mt-0.5 mr-3 h-4 w-4 flex-shrink-0 text-green-500" />
                       <span className="text-sm">{feature}</span>
                     </li>
                   ))}
@@ -169,7 +169,7 @@ const PricingSection: React.FC = () => {
                 <Button
                   className={`w-full ${
                     plan.popular
-                      ? "bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white"
+                      ? "from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r text-white"
                       : ""
                   }`}
                   variant={plan.popular ? "default" : "outline"}
@@ -183,12 +183,12 @@ const PricingSection: React.FC = () => {
 
         {/* Additional Benefits */}
         <div className="mt-16">
-          <Card className="bg-gradient-to-r from-primary/5 to-secondary/5">
+          <Card className="from-primary/5 to-secondary/5 bg-gradient-to-r">
             <CardContent className="p-8">
-              <h3 className="text-xl font-bold text-center mb-8">
+              <h3 className="mb-8 text-center text-xl font-bold">
                 All Plans Include
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 {[
                   {
                     icon: Users,
@@ -207,12 +207,12 @@ const PricingSection: React.FC = () => {
                   },
                 ].map((benefit, index) => (
                   <div key={index} className="flex items-center">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
-                      <benefit.icon className="w-5 h-5 text-primary" />
+                    <div className="bg-primary/10 mr-4 flex h-10 w-10 items-center justify-center rounded-lg">
+                      <benefit.icon className="text-primary h-5 w-5" />
                     </div>
                     <div>
                       <div className="font-medium">{benefit.title}</div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-muted-foreground text-sm">
                         {benefit.description}
                       </div>
                     </div>
