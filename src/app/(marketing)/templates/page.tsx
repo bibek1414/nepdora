@@ -1,7 +1,5 @@
-import React from "react";
+import TemplatesPage from "@/components/marketing/templates/templates";
 
-function page() {
-  return <div>page</div>;
+export default function Templates() {
+  return <TemplatesPage />;
 }
-
-export default page;
