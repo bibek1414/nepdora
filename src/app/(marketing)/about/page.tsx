@@ -1,7 +1,5 @@
-import React from "react";
+import AboutPage from "@/components/marketing/about-us/about-us";
 
-function page() {
-  return <div>page</div>;
+export default function About() {
+  return <AboutPage />;
 }
-
-export default page;
