@@ -74,13 +74,13 @@ export default function VerifyEmailPage() {
   }, [params.key, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
         <div className="text-center">
           {status === "loading" && (
             <>
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">
                 Verifying your email...
               </h2>
               <p className="text-gray-600">
@@ -91,9 +91,9 @@ export default function VerifyEmailPage() {
 
           {status === "success" && (
             <>
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
                 <svg
-                  className="w-6 h-6 text-green-600"
+                  className="h-6 w-6 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -106,10 +106,10 @@ export default function VerifyEmailPage() {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">
                 Email Verified!
               </h2>
-              <p className="text-gray-600 mb-4">{message}</p>
+              <p className="mb-4 text-gray-600">{message}</p>
               <p className="text-sm text-gray-500">
                 Redirecting you in a moment...
               </p>
@@ -118,9 +118,9 @@ export default function VerifyEmailPage() {
 
           {status === "error" && (
             <>
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
                 <svg
-                  className="w-6 h-6 text-red-600"
+                  className="h-6 w-6 text-red-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -133,13 +133,13 @@ export default function VerifyEmailPage() {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">
                 Verification Failed
               </h2>
-              <p className="text-gray-600 mb-4">{message}</p>
+              <p className="mb-4 text-gray-600">{message}</p>
               <button
                 onClick={() => router.push("/login")}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
               >
                 Go to Login
               </button>
