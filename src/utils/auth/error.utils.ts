@@ -118,7 +118,7 @@ export class AuthErrorHandler {
         type: "warning",
         action: {
           label: "Resend verification",
-          href: "/signup/verify",
+          href: `/account/verify-email`,
         },
       };
     }

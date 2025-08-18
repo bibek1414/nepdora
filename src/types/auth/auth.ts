@@ -1,9 +1,19 @@
+import { StringValidation } from "zod/v3";
+
 export interface User {
   id: number | string;
-  username: string;
+  username?: string;
   email: string;
   store_name: string;
   has_usable_password?: boolean;
+  // Decoded token fields
+  user_id?: number;
+  has_profile?: boolean;
+  role?: string;
+  phone_number?: string;
+  domain?: string;
+  sub_domain?: string;
+  has_profile_completed?: boolean;
 }
 export interface AuthTokens {
   access_token: string;
@@ -32,4 +42,15 @@ export interface LoginResponse {
   };
 }
 
-export interface SignupResponse extends User, AuthTokens {}
+export enum Role {
+  OWNER = "owner",
+  VIEWER = "viewer",
+}
+
+export interface SignupResponse {
+  id: number;
+  email: string;
+  username: string;
+  store_name: string;
+  role: Role;
+}

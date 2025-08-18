@@ -2,6 +2,12 @@ export const siteConfig = {
   name: " ",
   description: "Nepdora",
   apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000",
+  baseDomain: process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com",
+  protocol:
+    process.env.NEXT_PUBLIC_PROTOCOL ||
+    (process.env.NODE_ENV === "production" ? "https" : "http"),
+  isDev: process.env.NODE_ENV !== "production",
+  frontendDevPort: Number(process.env.NEXT_PUBLIC_FRONTEND_PORT || 3000),
 };
 
 export const getApiBaseUrl = (): string => {

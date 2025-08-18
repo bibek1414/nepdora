@@ -66,7 +66,6 @@ export function SignupForm({
       clearErrors();
 
       await signup(data);
-      // The signup function will now handle the redirect to /signup/verify
     } catch (error) {
       const errorResponse = error as ErrorResponse;
       const parsedError = AuthErrorHandler.parseAuthError(errorResponse);

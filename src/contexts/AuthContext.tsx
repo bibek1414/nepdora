@@ -7,6 +7,8 @@ import { loginUser, signupUser } from "@/services/auth/api";
 import { toast } from "sonner";
 import { AuthErrorHandler } from "@/utils/auth/error.utils";
 import { ErrorResponse } from "@/types/auth/error.types";
+import { decodeJwt, buildTenantFrontendUrl } from "@/lib/utils";
+import { siteConfig } from "@/config/site";
 
 interface LoginData {
   email: string;
@@ -29,8 +31,6 @@ interface AuthContextType {
   updateTokens: (tokens: AuthTokens) => void;
   isLoading: boolean;
   isAuthenticated: boolean;
-  verificationEmail: string | null;
-  setVerificationEmail: (email: string | null) => void;
   clearAuthData: () => void;
 }
 
@@ -42,9 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [tokens, setTokens] = useState<AuthTokens | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [verificationEmail, setVerificationEmail] = useState<string | null>(
-    null
-  );
+
   const router = useRouter();
 
   // Enhanced cookie utilities for cross-domain support
@@ -53,11 +51,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     value: string,
     days: number = 7
   ) => {
-    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
+    const baseDomain = siteConfig.baseDomain;
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
 
-    // Set cookie for main domain and all subdomains
+    // Set cookie for current host
+    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax${
+      process.env.NODE_ENV === "production" ? "; Secure" : ""
+    }`;
+
+    // Additionally set cookie scoped to base domain (effective in production domains)
     document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; domain=.${baseDomain}; path=/; SameSite=Lax${
       process.env.NODE_ENV === "production" ? "; Secure" : ""
     }`;
@@ -75,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteCrossDomainCookie = (name: string) => {
-    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
+    const baseDomain = siteConfig.baseDomain;
     // Delete from current domain
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     // Delete from base domain
@@ -86,22 +89,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Check URL parameters first (for cross-domain auth)
     const urlParams = new URLSearchParams(window.location.search);
     const authTokenFromUrl = urlParams.get("auth_token");
-    const userDataFromUrl = urlParams.get("user_data");
+    const refreshTokenFromUrl = urlParams.get("refresh_token");
 
-    if (authTokenFromUrl && userDataFromUrl) {
+    if (authTokenFromUrl) {
       try {
-        const decodedUserData = JSON.parse(decodeURIComponent(userDataFromUrl));
+        const decoded = decodeJwt(
+          authTokenFromUrl
+        ) as unknown as Partial<User> | null;
         const tokenData: AuthTokens = {
           access_token: authTokenFromUrl,
-          refresh_token: decodedUserData.refresh_token || "",
+          refresh_token: refreshTokenFromUrl || getCookie("refreshToken") || "",
         };
 
-        handleAuthSuccess(decodedUserData, tokenData);
+        if (decoded) {
+          handleAuthSuccess(decoded as User, tokenData);
+        }
 
         // Clean URL
         const cleanUrl = new URL(window.location.href);
         cleanUrl.searchParams.delete("auth_token");
-        cleanUrl.searchParams.delete("user_data");
+        cleanUrl.searchParams.delete("refresh_token");
         window.history.replaceState({}, "", cleanUrl.toString());
 
         setIsLoading(false);
@@ -114,11 +121,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Check localStorage
     const storedTokens = localStorage.getItem("authTokens");
     const storedUser = localStorage.getItem("authUser");
-    const storedVerificationEmail = localStorage.getItem("verificationEmail");
-
-    if (storedVerificationEmail) {
-      setVerificationEmail(storedVerificationEmail);
-    }
 
     // Check cookies as fallback
     const cookieToken = getCookie("authToken");
@@ -129,7 +131,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const parsedTokens: AuthTokens = JSON.parse(storedTokens);
         const parsedUser: User = JSON.parse(storedUser);
 
-        if (parsedTokens.access_token && parsedUser.id) {
+        const hasUserIdentifier = Boolean(
+          (parsedUser as unknown as { user_id?: number | string }).user_id ??
+            (parsedUser as unknown as { id?: number | string }).id
+        );
+
+        if (parsedTokens.access_token && hasUserIdentifier) {
           setTokens(parsedTokens);
           setUser(parsedUser);
 
@@ -137,10 +144,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setCrossDomainCookie("authToken", parsedTokens.access_token);
           setCrossDomainCookie("authUser", JSON.stringify(parsedUser));
         } else {
-          clearAuthData();
+          // Try to recover by decoding the token
+          const decoded = decodeJwt(
+            parsedTokens.access_token
+          ) as Partial<User> | null;
+          if (decoded) {
+            setTokens(parsedTokens);
+            setUser(decoded as User);
+            setCrossDomainCookie("authToken", parsedTokens.access_token);
+            setCrossDomainCookie("authUser", JSON.stringify(decoded));
+            localStorage.setItem("authUser", JSON.stringify(decoded));
+          } else {
+            clearAuthData();
+          }
         }
       } catch (error) {
         console.error("Failed to parse stored auth data:", error);
+        clearAuthData();
+      }
+    } else if (storedTokens && !storedUser) {
+      try {
+        const parsedTokens: AuthTokens = JSON.parse(storedTokens);
+        const decoded = decodeJwt(
+          parsedTokens.access_token
+        ) as unknown as Partial<User> | null;
+        if (decoded) {
+          setTokens(parsedTokens);
+          setUser(decoded as User);
+          setCrossDomainCookie("authToken", parsedTokens.access_token);
+          setCrossDomainCookie("authUser", JSON.stringify(decoded));
+          localStorage.setItem("authUser", JSON.stringify(decoded));
+        }
+      } catch (error) {
+        console.error("Failed to decode stored token:", error);
         clearAuthData();
       }
     } else if (cookieToken && cookieUser) {
@@ -171,13 +207,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(userData);
     setTokens(tokenData);
 
+    // Persist only required fields in authUser key
+    const persistedUser = {
+      user_id:
+        userData.user_id ??
+        (typeof userData.id === "number" ? userData.id : undefined),
+      email: userData.email,
+      store_name: userData.store_name,
+      has_profile: userData.has_profile ?? undefined,
+      role: userData.role ?? undefined,
+      phone_number: userData.phone_number ?? undefined,
+      domain: userData.domain ?? undefined,
+      sub_domain: userData.sub_domain ?? undefined,
+      has_profile_completed: userData.has_profile_completed ?? undefined,
+    };
+
     // Store in localStorage
     localStorage.setItem("authTokens", JSON.stringify(tokenData));
-    localStorage.setItem("authUser", JSON.stringify(userData));
+    localStorage.setItem("authUser", JSON.stringify(persistedUser));
 
-    // Store in cross-domain cookies
+    // Store in cross-domain cookies (prod only for security)
     setCrossDomainCookie("authToken", tokenData.access_token);
-    setCrossDomainCookie("authUser", JSON.stringify(userData));
+    setCrossDomainCookie("authUser", JSON.stringify(persistedUser));
+    if (tokenData.refresh_token) {
+      setCrossDomainCookie("refreshToken", tokenData.refresh_token);
+    }
   };
 
   const updateTokens = (newTokens: AuthTokens) => {
@@ -203,6 +257,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Clear cross-domain cookies
     deleteCrossDomainCookie("authToken");
     deleteCrossDomainCookie("authUser");
+    deleteCrossDomainCookie("refreshToken");
   };
 
   const login = async (data: LoginData) => {
@@ -211,17 +266,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response: LoginResponse = await loginUser(data);
 
       const userData = response.data.user;
-      const loggedInUser: User = {
-        id: userData.id,
-        username: userData.username,
-        email: data.email,
-        store_name: userData.display,
-        has_usable_password: userData.has_usable_password,
-      };
-
       const tokens: AuthTokens = {
         access_token: userData.access_token,
         refresh_token: userData.refresh_token,
+      };
+
+      const payload = decodeJwt(tokens.access_token) as unknown as
+        | (Partial<User> & {
+            user_id?: number;
+            email?: string;
+            store_name?: string;
+            has_profile?: boolean;
+            role?: string;
+            phone_number?: string;
+            domain?: string;
+            sub_domain?: string;
+            has_profile_completed?: boolean;
+          })
+        | null;
+
+      const loggedInUser: User = {
+        id: payload?.user_id ?? userData.id,
+        username: userData.username,
+        email: payload?.email ?? data.email,
+        store_name: payload?.store_name ?? userData.display,
+        has_usable_password: userData.has_usable_password,
+        user_id: payload?.user_id,
+        has_profile: payload?.has_profile,
+        role: payload?.role,
+        phone_number: payload?.phone_number,
+        domain: payload?.domain,
+        sub_domain: payload?.sub_domain,
+        has_profile_completed: payload?.has_profile_completed,
       };
 
       handleAuthSuccess(loggedInUser, tokens);
@@ -230,55 +306,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         description: "Welcome back!",
       });
 
-      // Handle redirect after successful login
+      // Environment-based tenant redirect
       if (typeof window !== "undefined") {
-        const redirectUrl = sessionStorage.getItem("redirectAfterLogin");
-
-        if (redirectUrl) {
-          sessionStorage.removeItem("redirectAfterLogin");
-
-          // If redirecting to a subdomain, pass auth data in URL
-          if (
-            redirectUrl.includes(".nepdora.com") &&
-            !redirectUrl.includes("www.nepdora.com")
-          ) {
-            const separator = redirectUrl.includes("?") ? "&" : "?";
-            const authRedirectUrl = `${redirectUrl}${separator}auth_token=${encodeURIComponent(
-              tokens.access_token
-            )}&user_data=${encodeURIComponent(JSON.stringify(loggedInUser))}`;
-            window.location.href = authRedirectUrl;
-            return;
-          }
-
-          router.push(redirectUrl);
-        } else {
-          const urlParams = new URLSearchParams(window.location.search);
-          const redirectParam = urlParams.get("redirect");
-
-          if (redirectParam) {
-            const decodedRedirect = decodeURIComponent(redirectParam);
-
-            // If redirecting to a subdomain, pass auth data in URL
-            if (
-              decodedRedirect.includes(".nepdora.com") &&
-              !decodedRedirect.includes("www.nepdora.com")
-            ) {
-              const separator = decodedRedirect.includes("?") ? "&" : "?";
-              const authRedirectUrl = `${decodedRedirect}${separator}auth_token=${encodeURIComponent(
-                tokens.access_token
-              )}&user_data=${encodeURIComponent(JSON.stringify(loggedInUser))}`;
-              window.location.href = authRedirectUrl;
-              return;
-            }
-
-            router.push(decodedRedirect);
-          } else {
-            router.push("/");
-          }
+        const sub = loggedInUser.sub_domain;
+        if (sub) {
+          const path = siteConfig.isDev ? "/admin" : "/";
+          let url = buildTenantFrontendUrl(sub, {
+            path,
+            isDev: siteConfig.isDev,
+            baseDomain: siteConfig.baseDomain,
+            port: siteConfig.frontendDevPort,
+          });
+          const separator = url.includes("?") ? "&" : "?";
+          url = `${url}${separator}auth_token=${encodeURIComponent(
+            tokens.access_token
+          )}&refresh_token=${encodeURIComponent(tokens.refresh_token)}`;
+          window.location.href = url;
+          return;
         }
-      } else {
-        router.push("/");
       }
+      router.push("/");
     } catch (error) {
       const errorResponse = error as ErrorResponse;
       const parsedError = AuthErrorHandler.parseAuthError(errorResponse);
@@ -305,16 +352,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         phone: data.phone,
       };
 
-      await signupUser(signupData);
-
-      setVerificationEmail(data.email);
-      localStorage.setItem("verificationEmail", data.email);
+      const response = await signupUser(signupData);
 
       toast.success("Signup Successful", {
         description: "Please check your email to verify your account.",
       });
 
-      router.push("/signup/verify");
+      router.push(
+        `/account/verify-email?email=${encodeURIComponent(response.email)}`
+      );
     } catch (error) {
       const errorResponse = error as ErrorResponse;
       const parsedError = AuthErrorHandler.parseAuthError(errorResponse);
@@ -332,7 +378,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     clearAuthData();
-    setVerificationEmail(null);
 
     toast.success("Logged Out", {
       description: "You have been successfully logged out.",
@@ -369,20 +414,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         updateTokens,
         isLoading,
         isAuthenticated: !!user && !!tokens?.access_token,
-        verificationEmail,
-        setVerificationEmail,
         clearAuthData,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = React.useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
 };
