@@ -7,28 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Mail } from "lucide-react";
 import Link from "next/link";
 import { loginSchema, LoginFormValues } from "@/schemas/login.form";
-
-interface LoginError {
-  response?: {
-    status?: number;
-    data?: {
-      errors?: Array<{
-        code?: string;
-        message?: string;
-      }>;
-    };
-  };
-}
+import { AuthErrorHandler } from "@/utils/auth/error.utils";
+import { ErrorResponse, FormErrorState } from "@/types/auth/error.types";
 
 export function LoginForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   const { login, isLoading } = useAuth();
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<FormErrorState | null>(null);
   const [attemptCount, setAttemptCount] = useState(0);
 
   const {
@@ -41,82 +31,96 @@ export function LoginForm({
     resolver: zodResolver(loginSchema),
   });
 
+  const getErrorIcon = (type: FormErrorState["type"]) => {
+    switch (type) {
+      case "error":
+        return <AlertCircle className="mr-2 h-5 w-5" />;
+      case "warning":
+        return <Mail className="mr-2 h-5 w-5" />;
+      case "info":
+        return <Mail className="mr-2 h-5 w-5" />;
+      default:
+        return <AlertCircle className="mr-2 h-5 w-5" />;
+    }
+  };
+
+  const getErrorStyles = (type: FormErrorState["type"]) => {
+    switch (type) {
+      case "error":
+        return "border-red-200 bg-red-50 text-red-800";
+      case "warning":
+        return "border-yellow-200 bg-yellow-50 text-yellow-800";
+      case "info":
+        return "border-blue-200 bg-blue-50 text-blue-800";
+      default:
+        return "border-red-200 bg-red-50 text-red-800";
+    }
+  };
+
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      setLoginError(null);
+      setFormError(null);
       clearErrors();
 
       await login(data);
-
       setAttemptCount(0);
-    } catch (error: unknown) {
-      const loginError = error as LoginError;
-
+    } catch (error) {
+      const errorResponse = error as ErrorResponse;
       setAttemptCount(prev => prev + 1);
 
-      const errorData = loginError.response?.data;
-      const errorCode = errorData?.errors?.[0]?.code;
-      const errorMessage = errorData?.errors?.[0]?.message;
-
-      if (errorCode === "too_many_login_attempts") {
-        setLoginError(
-          "Too many failed login attempts. Please wait a few minutes before trying again."
-        );
-      } else if (
-        errorCode === "invalid_credentials" ||
-        errorMessage?.includes("email address and/or password") ||
-        errorMessage?.includes("not correct")
-      ) {
-        setLoginError(
-          "The email address and/or password you specified are not correct."
-        );
-
-        setError("email", {
-          type: "manual",
-          message: "Please verify your email address",
+      // Check if email verification is needed
+      if (AuthErrorHandler.isEmailVerificationNeeded(errorResponse)) {
+        setFormError({
+          message:
+            "Your email address is not verified yet. Please check your email and click the verification link to complete your account setup.",
+          type: "warning",
+          action: {
+            label: "Resend verification email",
+            href: "/signup/verify",
+          },
         });
-        setError("password", {
-          type: "manual",
-          message: "Please verify your password",
-        });
-      } else if (errorCode === "user_not_found") {
-        setLoginError("Account not found. Please check your email or sign up.");
-        setError("email", {
-          type: "manual",
-          message: "Email not found in our system",
-        });
-      } else if (errorCode === "account_disabled") {
-        setLoginError(
-          "Your account has been disabled. Please contact support for assistance."
-        );
-      } else if (loginError.response?.status === 401) {
-        setLoginError(
-          "Invalid email or password. Please check your credentials."
-        );
-
-        setError("email", {
-          type: "manual",
-          message: "Please verify your email address",
-        });
-        setError("password", {
-          type: "manual",
-          message: "Please verify your password",
-        });
-      } else if (loginError.response?.status === 429) {
-        setLoginError(
-          "Too many login attempts. Please wait before trying again."
-        );
-      } else if (loginError.response?.status === 404) {
-        setLoginError("Account not found. Please check your email or sign up.");
-        setError("email", {
-          type: "manual",
-          message: "Email not found in our system",
-        });
-      } else {
-        setLoginError(errorMessage || "Login failed. Please try again.");
+        return;
       }
+
+      const parsedError = AuthErrorHandler.parseAuthError(errorResponse);
+      setFormError(parsedError);
+
+      // Set field-specific errors based on error type
+      if (
+        parsedError.message.includes("Invalid email or password") ||
+        parsedError.message.includes("credentials")
+      ) {
+        setError("email", {
+          type: "manual",
+          message: "Please verify your email address",
+        });
+        setError("password", {
+          type: "manual",
+          message: "Please verify your password",
+        });
+      } else if (parsedError.message.includes("Account not found")) {
+        setError("email", {
+          type: "manual",
+          message: "Email not found in our system",
+        });
+      }
+
+      console.error("Login error:", error);
     }
   };
+
+  const handleInputChange =
+    (field: keyof LoginFormValues) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      register(field).onChange(e);
+      if (formError) {
+        setFormError(null);
+      }
+      // Clear specific field error
+      if (errors[field]) {
+        clearErrors(field);
+      }
+    };
 
   const showSecurityMessage = attemptCount >= 3;
 
@@ -125,10 +129,27 @@ export function LoginForm({
       <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
         <div className="rounded-lg bg-white p-8 shadow-lg">
           <div className={cn("grid gap-6", className)} {...props}>
-            {loginError && (
-              <div className="mb-4 flex items-center rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-                <AlertCircle className="mr-2 h-5 w-5" />
-                <span>{loginError}</span>
+            {formError && (
+              <div
+                className={cn(
+                  "mb-4 flex items-start rounded-lg border p-4 text-sm",
+                  getErrorStyles(formError.type)
+                )}
+              >
+                {getErrorIcon(formError.type)}
+                <div className="flex-1">
+                  <span>{formError.message}</span>
+                  {formError.action && (
+                    <div className="mt-2">
+                      <Link
+                        href={formError.action.href}
+                        className="font-medium underline hover:no-underline"
+                      >
+                        {formError.action.label}
+                      </Link>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
@@ -141,12 +162,14 @@ export function LoginForm({
                 </span>
               </div>
             )}
+
             <div className="mb-8 text-center">
               <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
               <p className="mt-2 text-gray-600">
                 Please enter your details to sign in.
               </p>
             </div>
+
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-6">
                 <div>
@@ -154,6 +177,7 @@ export function LoginForm({
                     id="email"
                     type="email"
                     label="Email"
+                    placeholder="Enter your email address"
                     autoCapitalize="none"
                     autoComplete="email"
                     autoCorrect="off"
@@ -164,12 +188,7 @@ export function LoginForm({
                         : "focus:ring-primary border-gray-300"
                     )}
                     {...register("email")}
-                    onChange={e => {
-                      register("email").onChange(e);
-                      if (loginError) {
-                        setLoginError(null);
-                      }
-                    }}
+                    onChange={handleInputChange("email")}
                   />
                   {errors.email && (
                     <p className="mt-2 flex items-center text-sm font-medium text-red-500">
@@ -184,6 +203,7 @@ export function LoginForm({
                     id="password"
                     type="password"
                     label="Password"
+                    placeholder="Enter your password"
                     disabled={isLoading}
                     className={cn(
                       errors.password
@@ -191,12 +211,7 @@ export function LoginForm({
                         : "focus:ring-primary border-gray-300"
                     )}
                     {...register("password")}
-                    onChange={e => {
-                      register("password").onChange(e);
-                      if (loginError) {
-                        setLoginError(null);
-                      }
-                    }}
+                    onChange={handleInputChange("password")}
                   />
                   {errors.password && (
                     <p className="mt-2 flex items-center text-sm font-medium text-red-500">
@@ -227,18 +242,18 @@ export function LoginForm({
                 </Button>
               </div>
             </form>
-          </div>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/signup"
-                className="text-primary hover:text-primary font-medium"
-              >
-                Sign up
-              </Link>
-            </p>
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600">
+                Don&apos;t have an account?{" "}
+                <Link
+                  href="/signup"
+                  className="text-primary hover:text-primary font-medium"
+                >
+                  Sign up
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>
