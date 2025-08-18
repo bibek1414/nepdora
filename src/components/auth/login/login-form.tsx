@@ -7,11 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
-import { AlertCircle, Mail } from "lucide-react";
+import { AlertCircle, Mail, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { loginSchema, LoginFormValues } from "@/schemas/login.form";
 import { AuthErrorHandler } from "@/utils/auth/error.utils";
 import { ErrorResponse, FormErrorState } from "@/types/auth/error.types";
+import { resendVerificationEmail } from "@/services/auth/api";
+import { toast } from "sonner";
 
 export function LoginForm({
   className,
@@ -20,6 +22,7 @@ export function LoginForm({
   const { login, isLoading } = useAuth();
   const [formError, setFormError] = useState<FormErrorState | null>(null);
   const [attemptCount, setAttemptCount] = useState(0);
+  const [isResendingVerification, setIsResendingVerification] = useState(false);
 
   const {
     register,
@@ -27,6 +30,7 @@ export function LoginForm({
     formState: { errors },
     setError,
     clearErrors,
+    getValues,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
@@ -57,6 +61,45 @@ export function LoginForm({
     }
   };
 
+  const handleResendVerification = async () => {
+    const email = getValues("email");
+
+    if (!email) {
+      toast.error("Please enter your email address first");
+      return;
+    }
+
+    setIsResendingVerification(true);
+
+    try {
+      await resendVerificationEmail({ email });
+
+      toast.success("Verification email sent!", {
+        description: "Please check your inbox and spam folder.",
+      });
+
+      // Update the form error to show success message
+      setFormError({
+        message:
+          "Verification email has been sent! Please check your inbox and click the verification link.",
+        type: "info",
+      });
+    } catch (error: unknown) {
+      const errorResponse = error as ErrorResponse;
+      const errorMessage =
+        errorResponse.response?.data?.error?.message ||
+        errorResponse.message ||
+        "Failed to resend verification email";
+
+      toast.error("Failed to resend verification email", {
+        description: errorMessage,
+      });
+      console.error("Resend verification error:", error);
+    } finally {
+      setIsResendingVerification(false);
+    }
+  };
+
   const onSubmit = async (data: LoginFormValues) => {
     try {
       setFormError(null);
@@ -64,7 +107,7 @@ export function LoginForm({
 
       await login(data);
       setAttemptCount(0);
-    } catch (error) {
+    } catch (error: unknown) {
       const errorResponse = error as ErrorResponse;
       setAttemptCount(prev => prev + 1);
 
@@ -76,7 +119,8 @@ export function LoginForm({
           type: "warning",
           action: {
             label: "Resend verification email",
-            href: "/signup/verify",
+            href: "#",
+            onClick: handleResendVerification,
           },
         });
         return;
@@ -141,12 +185,31 @@ export function LoginForm({
                   <span>{formError.message}</span>
                   {formError.action && (
                     <div className="mt-2">
-                      <Link
-                        href={formError.action.href}
-                        className="font-medium underline hover:no-underline"
-                      >
-                        {formError.action.label}
-                      </Link>
+                      {formError.action.onClick ? (
+                        <Button
+                          type="button"
+                          variant="link"
+                          className="h-auto p-0 font-medium underline hover:no-underline"
+                          onClick={formError.action.onClick}
+                          disabled={isResendingVerification}
+                        >
+                          {isResendingVerification ? (
+                            <>
+                              <RefreshCw className="mr-1 h-3 w-3 animate-spin" />
+                              Sending...
+                            </>
+                          ) : (
+                            formError.action.label
+                          )}
+                        </Button>
+                      ) : formError.action.href ? (
+                        <Link
+                          href={formError.action.href}
+                          className="font-medium underline hover:no-underline"
+                        >
+                          {formError.action.label}
+                        </Link>
+                      ) : null}
                     </div>
                   )}
                 </div>

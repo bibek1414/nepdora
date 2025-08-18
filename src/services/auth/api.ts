@@ -16,6 +16,15 @@ interface LoginData {
   password: string;
 }
 
+interface ResendVerificationData {
+  email: string;
+}
+
+interface ResendVerificationResponse {
+  message: string;
+  success: boolean;
+}
+
 // Create a custom error class that extends Error with proper typing
 class ApiError extends Error implements ErrorResponse {
   response?: {
@@ -70,6 +79,31 @@ export async function loginUser(data: LoginData): Promise<LoginResponse> {
     const errorData = (await response.json()) as ApiErrorResponse;
 
     throw new ApiError("Login failed", response.status, errorData);
+  }
+
+  return response.json();
+}
+
+export async function resendVerificationEmail(
+  data: ResendVerificationData
+): Promise<ResendVerificationResponse> {
+  const response = await fetch(`${API_BASE_URL}/api/resend-verification/`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json()) as ApiErrorResponse;
+
+    throw new ApiError(
+      "Failed to resend verification email",
+      response.status,
+      errorData
+    );
   }
 
   return response.json();

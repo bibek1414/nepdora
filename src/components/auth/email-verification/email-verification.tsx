@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Mail, RefreshCw } from "lucide-react";
+import { Mail, RefreshCw, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { resendVerificationEmail } from "@/services/auth/api";
+import { ErrorResponse } from "@/types/auth/error.types";
 
 interface EmailVerificationProps {
   email: string;
@@ -19,6 +21,7 @@ export function EmailVerification({
   const [isResending, setIsResending] = useState(false);
   const [lastSentTime, setLastSentTime] = useState<Date | null>(null);
   const [countdown, setCountdown] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   const handleResendEmail = async () => {
     if (lastSentTime && countdown > 0) {
@@ -26,22 +29,10 @@ export function EmailVerification({
     }
 
     setIsResending(true);
+    setError(null);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/resend-verification/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to resend verification email");
-      }
+      await resendVerificationEmail({ email });
 
       setLastSentTime(new Date());
       setCountdown(60);
@@ -59,9 +50,16 @@ export function EmailVerification({
       toast.success("Verification email sent!", {
         description: "Please check your inbox and spam folder.",
       });
-    } catch (error) {
+    } catch (error: unknown) {
+      const errorResponse = error as ErrorResponse;
+      const errorMessage =
+        errorResponse.response?.data?.error?.message ||
+        errorResponse.message ||
+        "Failed to resend verification email";
+
+      setError(errorMessage);
       toast.error("Failed to resend email", {
-        description: "Please try again later or contact support.",
+        description: errorMessage,
       });
       console.error("Resend email error:", error);
     } finally {
@@ -101,6 +99,14 @@ export function EmailVerification({
               <p className="text-primary font-semibold break-all">{email}</p>
             </div>
 
+            {/* Error message */}
+            {error && (
+              <div className="mb-4 flex items-start rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+                <AlertCircle className="mr-2 h-5 w-5 flex-shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
             {/* Resend section */}
             <div className="border-t pt-6">
               <p className="text-muted-foreground mb-4 text-sm">
@@ -111,7 +117,7 @@ export function EmailVerification({
                 onClick={handleResendEmail}
                 disabled={isResending || countdown > 0}
                 variant="outline"
-                className="hover:border-primary hover:text-primary mb-4 inline-flex items-center justify-center px-4 py-2"
+                className="hover:border-primary hover:text-primary mb-4 inline-flex items-center justify-center px-4 py-2 disabled:opacity-50"
               >
                 {isResending ? (
                   <div className="flex items-center justify-center">
@@ -131,6 +137,7 @@ export function EmailVerification({
               <div className="text-muted-foreground space-y-1 text-xs">
                 <p>• Check your spam folder</p>
                 <p>• Wait a few minutes before requesting again</p>
+                <p>• Make sure the email address is correct</p>
               </div>
             </div>
 

@@ -42,6 +42,7 @@ export interface FormErrorState {
   action?: {
     label: string;
     href: string;
+    onClick?: () => void;
   };
 }
 
@@ -64,9 +65,3 @@ export enum FlowTypes {
   PROVIDER_REDIRECT = "provider_redirect",
   PROVIDER_TOKEN = "provider_token",
 }
-
-// If you need more flexible params, create a union type
-export type ErrorParams =
-  | Record<string, string | number | boolean>
-  | { email?: string; store_name?: string; phone?: string }
-  | Record<string, unknown>; // Only if absolutely necessary
