@@ -1,6 +1,6 @@
-"use client";
-import * as React from "react";
-import { cn } from "@/lib/utils";
+'use client';
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -9,11 +9,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, label, value, onChange, ...props }, ref) => {
     const [isFocused, setIsFocused] = React.useState(false);
-    const [inputValue, setInputValue] = React.useState(value || "");
+    const [inputValue, setInputValue] = React.useState(value || '');
 
     // Update internal state when controlled value changes
     React.useEffect(() => {
-      setInputValue(value || "");
+      setInputValue(value || '');
     }, [value]);
 
     // Check if field has value (works for both controlled and uncontrolled)
@@ -48,8 +48,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(
-            "flex h-12 w-full rounded-lg ring-0 outline-none border border-input bg-white/80 px-4 py-3 text-base transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-transparent focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-            label && "pt-7",
+            'border-input file:text-foreground flex h-12 w-full rounded-lg border bg-white/80 px-4 py-3 text-base ring-0 transition-all duration-200 outline-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-transparent focus-visible:ring-0 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+            label && 'pt-7',
             className
           )}
           ref={ref}
@@ -62,10 +62,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             className={cn(
-              "absolute left-4 transition-all duration-200 pointer-events-none text-muted-foreground",
+              'text-muted-foreground pointer-events-none absolute left-4 transition-all duration-200',
               isFocused || hasValue
-                ? "top-2 text-[10px] text-muted-foreground font-medium"
-                : "top-1/2 -translate-y-1/2 text-xs"
+                ? 'text-muted-foreground top-2 text-[10px] font-medium'
+                : 'top-1/2 -translate-y-1/2 text-xs'
             )}
           >
             {label}
@@ -76,5 +76,5 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-Input.displayName = "Input";
+Input.displayName = 'Input';
 export { Input };

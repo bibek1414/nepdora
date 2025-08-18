@@ -1,7 +1,6 @@
-
-import React from "react";
-import Header from "@/components/marketing/layout/header";
-import Footer from "@/components/marketing/layout/footer";
+import React from 'react';
+import Header from '@/components/marketing/layout/header';
+import Footer from '@/components/marketing/layout/footer';
 
 export default function MarketingLayout({
   children,

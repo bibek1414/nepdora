@@ -1,4 +1,4 @@
-import PricingSection from "@/components/marketing/pricing-section/pricing-section";
+import PricingSection from '@/components/marketing/pricing-section/pricing-section';
 
 export default function PricingPage() {
   return <PricingSection />;
