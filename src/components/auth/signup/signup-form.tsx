@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useAuth } from '@/hooks/use-auth';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import { signupSchema, SignupFormValues } from '@/schemas/signup.form';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/use-auth";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { signupSchema, SignupFormValues } from "@/schemas/signup.form";
 
 export function SignupForm({
   className,
@@ -24,15 +24,15 @@ export function SignupForm({
     resolver: zodResolver(signupSchema),
   });
 
-  const password = watch('password');
-  const confirmPassword = watch('confirmPassword');
+  const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
 
   const onSubmit = async (data: SignupFormValues) => {
     try {
       await signup(data);
       // The signup function will now handle the redirect to /signup/verify
     } catch (error) {
-      console.error('Signup error:', error);
+      console.error("Signup error:", error);
     }
   };
 
@@ -40,7 +40,7 @@ export function SignupForm({
     <div className="bg-card flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="relative w-full max-w-md">
         <div className="rounded-lg bg-white p-8">
-          <div className={cn('grid gap-6', className)} {...props}>
+          <div className={cn("grid gap-6", className)} {...props}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="mb-8 text-center">
                 <h2 className="text-3xl font-bold text-gray-900">
@@ -58,7 +58,7 @@ export function SignupForm({
                   label="Store Name"
                   disabled={isLoading}
                   className="focus:ring-primary border-gray-300"
-                  {...register('store_name')}
+                  {...register("store_name")}
                 />
                 {errors.store_name && (
                   <p className="mt-2 text-sm font-medium text-red-500">
@@ -75,7 +75,7 @@ export function SignupForm({
                   autoComplete="email"
                   disabled={isLoading}
                   className="focus:ring-primary border-gray-300"
-                  {...register('email')}
+                  {...register("email")}
                 />
                 {errors.email && (
                   <p className="mt-2 text-sm font-medium text-red-500">
@@ -90,7 +90,7 @@ export function SignupForm({
                   label="Phone Number"
                   disabled={isLoading}
                   className="focus:ring-primary border-gray-300"
-                  {...register('phone')}
+                  {...register("phone")}
                 />
                 {errors.phone && (
                   <p className="mt-2 text-sm font-medium text-red-500">
@@ -106,7 +106,7 @@ export function SignupForm({
                   autoComplete="new-password"
                   disabled={isLoading}
                   className="focus:ring-primary border-gray-300"
-                  {...register('password')}
+                  {...register("password")}
                 />
                 {errors.password && (
                   <p className="mt-2 text-sm font-medium text-red-500">
@@ -128,7 +128,7 @@ export function SignupForm({
                   autoComplete="new-password"
                   disabled={isLoading}
                   className="focus:ring-primary border-gray-300"
-                  {...register('confirmPassword')}
+                  {...register("confirmPassword")}
                 />
                 {errors.confirmPassword && (
                   <p className="mt-2 text-sm font-medium text-red-500">
@@ -150,10 +150,10 @@ export function SignupForm({
                   type="submit"
                   disabled={isLoading}
                   className={cn(
-                    'w-full rounded-lg px-4 py-3 font-medium text-white transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none',
+                    "w-full rounded-lg px-4 py-3 font-medium text-white transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none",
                     isLoading
-                      ? 'cursor-not-allowed bg-gray-400'
-                      : 'bg-primary hover:bg-primary focus:ring-primary'
+                      ? "cursor-not-allowed bg-gray-400"
+                      : "bg-primary hover:bg-primary focus:ring-primary"
                   )}
                 >
                   {isLoading ? (
@@ -162,14 +162,14 @@ export function SignupForm({
                       Creating Account...
                     </div>
                   ) : (
-                    'Create Account'
+                    "Create Account"
                   )}
                 </Button>
               </div>
 
               <div className="text-center">
                 <p className="text-sm text-gray-600">
-                  Already have an account?{' '}
+                  Already have an account?{" "}
                   <Link
                     href="/login"
                     className="text-primary hover:text-primary font-medium"
@@ -181,14 +181,14 @@ export function SignupForm({
 
               <div className="text-center">
                 <p className="text-xs text-gray-500">
-                  By creating an account, you agree to our{' '}
+                  By creating an account, you agree to our{" "}
                   <Link
                     href="/terms"
                     className="text-primary hover:text-primary font-medium transition-colors duration-200"
                   >
                     Terms of Service
-                  </Link>{' '}
-                  and{' '}
+                  </Link>{" "}
+                  and{" "}
                   <Link
                     href="/privacy"
                     className="text-primary hover:text-primary font-medium transition-colors duration-200"

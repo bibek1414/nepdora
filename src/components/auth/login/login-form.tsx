@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useAuth } from '@/hooks/use-auth';
-import { cn } from '@/lib/utils';
-import { AlertCircle } from 'lucide-react';
-import Link from 'next/link';
-import { loginSchema, LoginFormValues } from '@/schemas/login.form';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/use-auth";
+import { cn } from "@/lib/utils";
+import { AlertCircle } from "lucide-react";
+import Link from "next/link";
+import { loginSchema, LoginFormValues } from "@/schemas/login.form";
 
 interface LoginError {
   response?: {
@@ -58,62 +58,62 @@ export function LoginForm({
       const errorCode = errorData?.errors?.[0]?.code;
       const errorMessage = errorData?.errors?.[0]?.message;
 
-      if (errorCode === 'too_many_login_attempts') {
+      if (errorCode === "too_many_login_attempts") {
         setLoginError(
-          'Too many failed login attempts. Please wait a few minutes before trying again.'
+          "Too many failed login attempts. Please wait a few minutes before trying again."
         );
       } else if (
-        errorCode === 'invalid_credentials' ||
-        errorMessage?.includes('email address and/or password') ||
-        errorMessage?.includes('not correct')
+        errorCode === "invalid_credentials" ||
+        errorMessage?.includes("email address and/or password") ||
+        errorMessage?.includes("not correct")
       ) {
         setLoginError(
-          'The email address and/or password you specified are not correct.'
+          "The email address and/or password you specified are not correct."
         );
 
-        setError('email', {
-          type: 'manual',
-          message: 'Please verify your email address',
+        setError("email", {
+          type: "manual",
+          message: "Please verify your email address",
         });
-        setError('password', {
-          type: 'manual',
-          message: 'Please verify your password',
+        setError("password", {
+          type: "manual",
+          message: "Please verify your password",
         });
-      } else if (errorCode === 'user_not_found') {
-        setLoginError('Account not found. Please check your email or sign up.');
-        setError('email', {
-          type: 'manual',
-          message: 'Email not found in our system',
+      } else if (errorCode === "user_not_found") {
+        setLoginError("Account not found. Please check your email or sign up.");
+        setError("email", {
+          type: "manual",
+          message: "Email not found in our system",
         });
-      } else if (errorCode === 'account_disabled') {
+      } else if (errorCode === "account_disabled") {
         setLoginError(
-          'Your account has been disabled. Please contact support for assistance.'
+          "Your account has been disabled. Please contact support for assistance."
         );
       } else if (loginError.response?.status === 401) {
         setLoginError(
-          'Invalid email or password. Please check your credentials.'
+          "Invalid email or password. Please check your credentials."
         );
 
-        setError('email', {
-          type: 'manual',
-          message: 'Please verify your email address',
+        setError("email", {
+          type: "manual",
+          message: "Please verify your email address",
         });
-        setError('password', {
-          type: 'manual',
-          message: 'Please verify your password',
+        setError("password", {
+          type: "manual",
+          message: "Please verify your password",
         });
       } else if (loginError.response?.status === 429) {
         setLoginError(
-          'Too many login attempts. Please wait before trying again.'
+          "Too many login attempts. Please wait before trying again."
         );
       } else if (loginError.response?.status === 404) {
-        setLoginError('Account not found. Please check your email or sign up.');
-        setError('email', {
-          type: 'manual',
-          message: 'Email not found in our system',
+        setLoginError("Account not found. Please check your email or sign up.");
+        setError("email", {
+          type: "manual",
+          message: "Email not found in our system",
         });
       } else {
-        setLoginError(errorMessage || 'Login failed. Please try again.');
+        setLoginError(errorMessage || "Login failed. Please try again.");
       }
     }
   };
@@ -124,7 +124,7 @@ export function LoginForm({
     <div className="bg-card flex min-h-screen flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
         <div className="rounded-lg bg-white p-8 shadow-lg">
-          <div className={cn('grid gap-6', className)} {...props}>
+          <div className={cn("grid gap-6", className)} {...props}>
             {loginError && (
               <div className="mb-4 flex items-center rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
                 <AlertCircle className="mr-2 h-5 w-5" />
@@ -160,12 +160,12 @@ export function LoginForm({
                     disabled={isLoading}
                     className={cn(
                       errors.email
-                        ? 'border-red-300 focus:ring-red-500'
-                        : 'focus:ring-primary border-gray-300'
+                        ? "border-red-300 focus:ring-red-500"
+                        : "focus:ring-primary border-gray-300"
                     )}
-                    {...register('email')}
+                    {...register("email")}
                     onChange={e => {
-                      register('email').onChange(e);
+                      register("email").onChange(e);
                       if (loginError) {
                         setLoginError(null);
                       }
@@ -187,12 +187,12 @@ export function LoginForm({
                     disabled={isLoading}
                     className={cn(
                       errors.password
-                        ? 'border-red-300 focus:ring-red-500'
-                        : 'focus:ring-primary border-gray-300'
+                        ? "border-red-300 focus:ring-red-500"
+                        : "focus:ring-primary border-gray-300"
                     )}
-                    {...register('password')}
+                    {...register("password")}
                     onChange={e => {
-                      register('password').onChange(e);
+                      register("password").onChange(e);
                       if (loginError) {
                         setLoginError(null);
                       }
@@ -210,10 +210,10 @@ export function LoginForm({
                   type="submit"
                   disabled={isLoading}
                   className={cn(
-                    'w-full rounded-lg px-4 py-3 font-medium text-white transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none',
+                    "w-full rounded-lg px-4 py-3 font-medium text-white transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none",
                     isLoading
-                      ? 'cursor-not-allowed bg-gray-400'
-                      : 'bg-primary hover:bg-primary focus:ring-primary'
+                      ? "cursor-not-allowed bg-gray-400"
+                      : "bg-primary hover:bg-primary focus:ring-primary"
                   )}
                 >
                   {isLoading ? (
@@ -222,7 +222,7 @@ export function LoginForm({
                       Signing in...
                     </div>
                   ) : (
-                    'Login'
+                    "Login"
                   )}
                 </Button>
               </div>
@@ -231,7 +231,7 @@ export function LoginForm({
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Don&apos;t have an account?{' '}
+              Don&apos;t have an account?{" "}
               <Link
                 href="/signup"
                 className="text-primary hover:text-primary font-medium"

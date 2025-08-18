@@ -1,39 +1,39 @@
-import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Star, Award } from 'lucide-react';
-import { Testimonial } from '@/types/marketing/testimonial';
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Star, Award } from "lucide-react";
+import { Testimonial } from "@/types/marketing/testimonial";
 
 const TestimonialsSection: React.FC = () => {
   const testimonials: Testimonial[] = [
     {
-      name: 'Sarah Johnson',
-      role: 'CEO',
-      company: 'TechStart Inc',
+      name: "Sarah Johnson",
+      role: "CEO",
+      company: "TechStart Inc",
       content:
-        'Nepdora helped us launch our website in just 3 minutes. The AI-powered templates are incredible and our conversion rate increased by 150%.',
+        "Nepdora helped us launch our website in just 3 minutes. The AI-powered templates are incredible and our conversion rate increased by 150%.",
       avatar:
-        'https://images.unsplash.com/photo-1494790108755-2616b88b6e9b?w=150&h=150&fit=crop&crop=face',
+        "https://images.unsplash.com/photo-1494790108755-2616b88b6e9b?w=150&h=150&fit=crop&crop=face",
       rating: 5,
     },
     {
-      name: 'Michael Chen',
-      role: 'Founder',
-      company: 'EcoMarket',
+      name: "Michael Chen",
+      role: "Founder",
+      company: "EcoMarket",
       content:
-        'The e-commerce features are outstanding. We went from idea to selling products online in under an hour. Customer support is phenomenal too.',
+        "The e-commerce features are outstanding. We went from idea to selling products online in under an hour. Customer support is phenomenal too.",
       avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
       rating: 5,
     },
     {
-      name: 'Emma Davis',
-      role: 'Marketing Director',
-      company: 'Creative Studio',
+      name: "Emma Davis",
+      role: "Marketing Director",
+      company: "Creative Studio",
       content:
-        'The CRM integration saved us thousands on separate tools. Everything we need is in one place. Our team productivity increased by 200%.',
+        "The CRM integration saved us thousands on separate tools. Everything we need is in one place. Our team productivity increased by 200%.",
       avatar:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
       rating: 5,
     },
   ];
@@ -49,7 +49,7 @@ const TestimonialsSection: React.FC = () => {
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">
             Loved by
             <span className="from-primary to-secondary bg-gradient-to-r bg-clip-text text-transparent">
-              {' '}
+              {" "}
               50,000+ Businesses
             </span>
           </h2>

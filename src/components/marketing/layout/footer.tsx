@@ -1,19 +1,19 @@
-import React from 'react';
+import React from "react";
 import {
   FaFacebookF,
   FaInstagram,
   FaLinkedinIn,
   FaWhatsapp,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { name: 'Facebook', icon: <FaFacebookF className="h-4 w-4" />, href: '#' },
-    { name: 'Instagram', icon: <FaInstagram className="h-4 w-4" />, href: '#' },
-    { name: 'LinkedIn', icon: <FaLinkedinIn className="h-4 w-4" />, href: '#' },
-    { name: 'WhatsApp', icon: <FaWhatsapp className="h-4 w-4" />, href: '#' },
+    { name: "Facebook", icon: <FaFacebookF className="h-4 w-4" />, href: "#" },
+    { name: "Instagram", icon: <FaInstagram className="h-4 w-4" />, href: "#" },
+    { name: "LinkedIn", icon: <FaLinkedinIn className="h-4 w-4" />, href: "#" },
+    { name: "WhatsApp", icon: <FaWhatsapp className="h-4 w-4" />, href: "#" },
   ];
 
   return (

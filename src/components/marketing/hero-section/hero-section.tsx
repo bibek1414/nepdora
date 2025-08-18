@@ -1,7 +1,7 @@
-import React from 'react';
-import { ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { GridOptions, HeroSectionProps } from '@/types/marketing/hero';
+import React from "react";
+import { ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { GridOptions, HeroSectionProps } from "@/types/marketing/hero";
 
 const RetroGrid: React.FC<GridOptions> = ({
   angle = 65,
@@ -9,15 +9,15 @@ const RetroGrid: React.FC<GridOptions> = ({
   opacity = 0.5,
 }) => {
   const gridStyles = {
-    '--grid-angle': `${angle}deg`,
-    '--cell-size': `${cellSize}px`,
-    '--opacity': opacity,
+    "--grid-angle": `${angle}deg`,
+    "--cell-size": `${cellSize}px`,
+    "--opacity": opacity,
   } as React.CSSProperties;
 
   return (
     <div
       className={cn(
-        'pointer-events-none absolute size-full overflow-hidden [perspective:200px]',
+        "pointer-events-none absolute size-full overflow-hidden [perspective:200px]",
         `opacity-[var(--opacity)]`
       )}
       style={gridStyles}
@@ -25,9 +25,9 @@ const RetroGrid: React.FC<GridOptions> = ({
       <div className="absolute inset-0 [transform:rotateX(var(--grid-angle))]">
         <div
           className={cn(
-            'animate-grid [background-size:var(--cell-size)_var(--cell-size)] [background-repeat:repeat]',
-            '[inset:0%_0px] [margin-left:-50%] [height:300vh] [width:200vw] [transform-origin:100%_0_0]',
-            '[background-image:linear-gradient(to_right,hsl(var(--primary))_1px,transparent_0),linear-gradient(to_bottom,hsl(var(--primary))_1px,transparent_0)]'
+            "animate-grid [background-size:var(--cell-size)_var(--cell-size)] [background-repeat:repeat]",
+            "[inset:0%_0px] [margin-left:-50%] [height:300vh] [width:200vw] [transform-origin:100%_0_0]",
+            "[background-image:linear-gradient(to_right,hsl(var(--primary))_1px,transparent_0),linear-gradient(to_bottom,hsl(var(--primary))_1px,transparent_0)]"
           )}
         />
       </div>
@@ -38,19 +38,19 @@ const RetroGrid: React.FC<GridOptions> = ({
 
 const HeroSection: React.FC<HeroSectionProps> = ({
   className,
-  title = 'Build products for everyone',
+  title = "Build products for everyone",
   subtitle = {
-    regular: 'Designing your projects faster with ',
-    gradient: 'the largest figma UI kit.',
+    regular: "Designing your projects faster with ",
+    gradient: "the largest figma UI kit.",
   },
   description,
-  ctaText = 'Browse courses',
-  ctaHref = '#',
+  ctaText = "Browse courses",
+  ctaHref = "#",
   bottomImage,
   gridOptions,
 }) => {
   return (
-    <div className={cn('relative overflow-hidden', className)}>
+    <div className={cn("relative overflow-hidden", className)}>
       {/* Background gradient */}
       <div className="from-primary/10 absolute top-0 z-[0] h-screen w-full bg-gradient-to-b via-transparent to-transparent" />
 

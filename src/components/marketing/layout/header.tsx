@@ -1,8 +1,8 @@
-'use client';
-import React from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Globe } from 'lucide-react';
+"use client";
+import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Globe } from "lucide-react";
 
 const Header: React.FC = () => {
   return (
@@ -19,7 +19,7 @@ const Header: React.FC = () => {
         </div>
 
         <div className="hidden items-center space-x-8 md:flex">
-          {['Features', 'Templates', 'Pricing', 'About'].map(item => (
+          {["Features", "Templates", "Pricing", "About"].map(item => (
             <Link
               key={item}
               href={`/${item.toLowerCase()}`}

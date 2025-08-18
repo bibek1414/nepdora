@@ -1,30 +1,30 @@
-import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Clock, Palette, Settings, Zap } from 'lucide-react';
-import { ProcessStep } from '@/types/marketing/process';
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Clock, Palette, Settings, Zap } from "lucide-react";
+import { ProcessStep } from "@/types/marketing/process";
 
 const ProcessSection: React.FC = () => {
   const steps: ProcessStep[] = [
     {
-      number: '01',
-      title: 'Choose Your Template',
+      number: "01",
+      title: "Choose Your Template",
       description:
-        'Pick from 500+ professional templates or let AI create a custom design for your brand.',
+        "Pick from 500+ professional templates or let AI create a custom design for your brand.",
       icon: Palette,
     },
     {
-      number: '02',
-      title: 'Customize Your Content',
+      number: "02",
+      title: "Customize Your Content",
       description:
-        'Use our intuitive drag-and-drop editor to add your content, images, and branding.',
+        "Use our intuitive drag-and-drop editor to add your content, images, and branding.",
       icon: Settings,
     },
     {
-      number: '03',
-      title: 'Launch Your Website',
+      number: "03",
+      title: "Launch Your Website",
       description:
-        'Connect your domain, set up payments, and go live with just one click.',
+        "Connect your domain, set up payments, and go live with just one click.",
       icon: Zap,
     },
   ];
@@ -40,7 +40,7 @@ const ProcessSection: React.FC = () => {
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">
             From Idea to
             <span className="bg-primary bg-clip-text text-transparent">
-              {' '}
+              {" "}
               Live Website
             </span>
           </h2>

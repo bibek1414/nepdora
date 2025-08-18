@@ -1,13 +1,13 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Check,
   Zap,
@@ -16,72 +16,72 @@ import {
   CreditCard,
   Users,
   Heart,
-} from 'lucide-react';
-import { PricingPlan } from '@/types/marketing/price-plan';
+} from "lucide-react";
+import { PricingPlan } from "@/types/marketing/price-plan";
 const PricingSection: React.FC = () => {
   const plans: PricingPlan[] = [
     {
-      name: 'Starter',
-      price: 'Free',
-      period: 'forever',
-      description: 'Perfect for small businesses getting started',
+      name: "Starter",
+      price: "Free",
+      period: "forever",
+      description: "Perfect for small businesses getting started",
       icon: Zap,
-      color: 'primary',
+      color: "primary",
       features: [
-        '1 Website',
-        'Basic Templates',
-        'Mobile Responsive',
-        'Basic Analytics',
-        'Email Support',
-        'SSL Certificate',
-        'Custom Domain (1 year free)',
+        "1 Website",
+        "Basic Templates",
+        "Mobile Responsive",
+        "Basic Analytics",
+        "Email Support",
+        "SSL Certificate",
+        "Custom Domain (1 year free)",
       ],
-      cta: 'Get Started Free',
+      cta: "Get Started Free",
       popular: false,
     },
     {
-      name: 'Professional',
-      price: '$29',
-      period: 'per month',
-      description: 'Best for growing businesses',
+      name: "Professional",
+      price: "$29",
+      period: "per month",
+      description: "Best for growing businesses",
       icon: Star,
-      color: 'secondary',
+      color: "secondary",
       features: [
-        'Up to 5 Websites',
-        'All Templates + AI Custom',
-        'Advanced Analytics',
-        'Priority Support',
-        'Mini CRM System',
-        'Payment Processing',
-        'Support Ticket System',
-        'Custom Domain',
-        'SEO Tools',
-        'Social Media Integration',
+        "Up to 5 Websites",
+        "All Templates + AI Custom",
+        "Advanced Analytics",
+        "Priority Support",
+        "Mini CRM System",
+        "Payment Processing",
+        "Support Ticket System",
+        "Custom Domain",
+        "SEO Tools",
+        "Social Media Integration",
       ],
-      cta: 'Start Free Trial',
+      cta: "Start Free Trial",
       popular: true,
     },
     {
-      name: 'Enterprise',
-      price: '$99',
-      period: 'per month',
-      description: 'For large businesses and agencies',
+      name: "Enterprise",
+      price: "$99",
+      period: "per month",
+      description: "For large businesses and agencies",
       icon: Crown,
-      color: 'accent',
+      color: "accent",
       features: [
-        'Unlimited Websites',
-        'Custom AI Design',
-        'Advanced CRM',
-        '24/7 Phone Support',
-        'White-label Options',
-        'API Access',
-        'Advanced Analytics',
-        'Team Management',
-        'Custom Integrations',
-        'Dedicated Account Manager',
-        'Priority Feature Requests',
+        "Unlimited Websites",
+        "Custom AI Design",
+        "Advanced CRM",
+        "24/7 Phone Support",
+        "White-label Options",
+        "API Access",
+        "Advanced Analytics",
+        "Team Management",
+        "Custom Integrations",
+        "Dedicated Account Manager",
+        "Priority Feature Requests",
       ],
-      cta: 'Contact Sales',
+      cta: "Contact Sales",
       popular: false,
     },
   ];
@@ -112,8 +112,8 @@ const PricingSection: React.FC = () => {
               key={index}
               className={`relative ${
                 plan.popular
-                  ? 'ring-primary from-primary/5 to-secondary/5 scale-105 transform bg-gradient-to-br shadow-2xl ring-2'
-                  : 'shadow-lg hover:shadow-xl'
+                  ? "ring-primary from-primary/5 to-secondary/5 scale-105 transform bg-gradient-to-br shadow-2xl ring-2"
+                  : "shadow-lg hover:shadow-xl"
               } transition-all duration-300`}
             >
               {plan.popular && (
@@ -127,17 +127,17 @@ const PricingSection: React.FC = () => {
               <CardHeader className="text-center">
                 <div
                   className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-${
-                    plan.color === 'primary'
-                      ? 'primary'
-                      : plan.color === 'secondary'
-                        ? 'secondary'
-                        : 'primary'
+                    plan.color === "primary"
+                      ? "primary"
+                      : plan.color === "secondary"
+                        ? "secondary"
+                        : "primary"
                   }/10 text-${
-                    plan.color === 'primary'
-                      ? 'primary'
-                      : plan.color === 'secondary'
-                        ? 'secondary'
-                        : 'primary'
+                    plan.color === "primary"
+                      ? "primary"
+                      : plan.color === "secondary"
+                        ? "secondary"
+                        : "primary"
                   }`}
                 >
                   <plan.icon className="h-6 w-6" />
@@ -148,7 +148,7 @@ const PricingSection: React.FC = () => {
                 </CardDescription>
                 <div className="mb-4">
                   <span className="text-3xl font-bold">{plan.price}</span>
-                  {plan.period !== 'forever' && (
+                  {plan.period !== "forever" && (
                     <span className="text-muted-foreground text-sm">
                       /{plan.period}
                     </span>
@@ -169,10 +169,10 @@ const PricingSection: React.FC = () => {
                 <Button
                   className={`w-full ${
                     plan.popular
-                      ? 'from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r text-white'
-                      : ''
+                      ? "from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r text-white"
+                      : ""
                   }`}
-                  variant={plan.popular ? 'default' : 'outline'}
+                  variant={plan.popular ? "default" : "outline"}
                 >
                   {plan.cta}
                 </Button>
@@ -192,18 +192,18 @@ const PricingSection: React.FC = () => {
                 {[
                   {
                     icon: Users,
-                    title: 'No Setup Fees',
-                    description: 'Get started immediately',
+                    title: "No Setup Fees",
+                    description: "Get started immediately",
                   },
                   {
                     icon: Zap,
-                    title: 'Instant Setup',
-                    description: '5-minute deployment',
+                    title: "Instant Setup",
+                    description: "5-minute deployment",
                   },
                   {
                     icon: Heart,
-                    title: '30-Day Money Back',
-                    description: 'Risk-free guarantee',
+                    title: "30-Day Money Back",
+                    description: "Risk-free guarantee",
                   },
                 ].map((benefit, index) => (
                   <div key={index} className="flex items-center">

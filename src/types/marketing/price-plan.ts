@@ -7,5 +7,5 @@ export interface PricingPlan {
   features: string[];
   cta: string;
   popular: boolean;
-  color: 'primary' | 'secondary' | 'accent';
+  color: "primary" | "secondary" | "accent";
 }

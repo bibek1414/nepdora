@@ -1,27 +1,27 @@
-import React from 'react';
-import { Stat } from '@/types/marketing/stat';
+import React from "react";
+import { Stat } from "@/types/marketing/stat";
 
 const StatsSection: React.FC = () => {
   const stats: Stat[] = [
     {
-      number: '50,000+',
-      label: 'Active Websites',
-      description: 'Built and deployed successfully',
+      number: "50,000+",
+      label: "Active Websites",
+      description: "Built and deployed successfully",
     },
     {
-      number: '99.9%',
-      label: 'Uptime Guarantee',
-      description: 'Reliable hosting infrastructure',
+      number: "99.9%",
+      label: "Uptime Guarantee",
+      description: "Reliable hosting infrastructure",
     },
     {
-      number: '4.9/5',
-      label: 'Customer Rating',
-      description: 'Based on 10,000+ reviews',
+      number: "4.9/5",
+      label: "Customer Rating",
+      description: "Based on 10,000+ reviews",
     },
     {
-      number: '24/7',
-      label: 'Expert Support',
-      description: 'Always here when you need us',
+      number: "24/7",
+      label: "Expert Support",
+      description: "Always here when you need us",
     },
   ];
 

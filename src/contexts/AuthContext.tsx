@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-import { User, AuthTokens, LoginResponse } from '@/types/auth/auth';
-import { loginUser, signupUser } from '@/services/auth/api';
-import { toast } from 'sonner';
+import React, { createContext, useState, useEffect, ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { User, AuthTokens, LoginResponse } from "@/types/auth/auth";
+import { loginUser, signupUser } from "@/services/auth/api";
+import { toast } from "sonner";
 
 interface LoginData {
   email: string;
@@ -68,29 +68,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     value: string,
     days: number = 7
   ) => {
-    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || 'nepdora.com';
+    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
 
     // Set cookie for main domain and all subdomains
     document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; domain=.${baseDomain}; path=/; SameSite=Lax${
-      process.env.NODE_ENV === 'production' ? '; Secure' : ''
+      process.env.NODE_ENV === "production" ? "; Secure" : ""
     }`;
   };
 
   const getCookie = (name: string): string | null => {
-    const nameEQ = name + '=';
-    const ca = document.cookie.split(';');
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(";");
     for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
-      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      while (c.charAt(0) === " ") c = c.substring(1, c.length);
       if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
   };
 
   const deleteCrossDomainCookie = (name: string) => {
-    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || 'nepdora.com';
+    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
     // Delete from current domain
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     // Delete from base domain
@@ -100,44 +100,44 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // Check URL parameters first (for cross-domain auth)
     const urlParams = new URLSearchParams(window.location.search);
-    const authTokenFromUrl = urlParams.get('auth_token');
-    const userDataFromUrl = urlParams.get('user_data');
+    const authTokenFromUrl = urlParams.get("auth_token");
+    const userDataFromUrl = urlParams.get("user_data");
 
     if (authTokenFromUrl && userDataFromUrl) {
       try {
         const decodedUserData = JSON.parse(decodeURIComponent(userDataFromUrl));
         const tokenData: AuthTokens = {
           access_token: authTokenFromUrl,
-          refresh_token: decodedUserData.refresh_token || '',
+          refresh_token: decodedUserData.refresh_token || "",
         };
 
         handleAuthSuccess(decodedUserData, tokenData);
 
         // Clean URL
         const cleanUrl = new URL(window.location.href);
-        cleanUrl.searchParams.delete('auth_token');
-        cleanUrl.searchParams.delete('user_data');
-        window.history.replaceState({}, '', cleanUrl.toString());
+        cleanUrl.searchParams.delete("auth_token");
+        cleanUrl.searchParams.delete("user_data");
+        window.history.replaceState({}, "", cleanUrl.toString());
 
         setIsLoading(false);
         return;
       } catch (error) {
-        console.error('Failed to parse URL auth data:', error);
+        console.error("Failed to parse URL auth data:", error);
       }
     }
 
     // Check localStorage
-    const storedTokens = localStorage.getItem('authTokens');
-    const storedUser = localStorage.getItem('authUser');
-    const storedVerificationEmail = localStorage.getItem('verificationEmail');
+    const storedTokens = localStorage.getItem("authTokens");
+    const storedUser = localStorage.getItem("authUser");
+    const storedVerificationEmail = localStorage.getItem("verificationEmail");
 
     if (storedVerificationEmail) {
       setVerificationEmail(storedVerificationEmail);
     }
 
     // Check cookies as fallback
-    const cookieToken = getCookie('authToken');
-    const cookieUser = getCookie('authUser');
+    const cookieToken = getCookie("authToken");
+    const cookieUser = getCookie("authUser");
 
     if (storedTokens && storedUser) {
       try {
@@ -149,13 +149,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(parsedUser);
 
           // Also set cross-domain cookies
-          setCrossDomainCookie('authToken', parsedTokens.access_token);
-          setCrossDomainCookie('authUser', JSON.stringify(parsedUser));
+          setCrossDomainCookie("authToken", parsedTokens.access_token);
+          setCrossDomainCookie("authUser", JSON.stringify(parsedUser));
         } else {
           clearAuthData();
         }
       } catch (error) {
-        console.error('Failed to parse stored auth data:', error);
+        console.error("Failed to parse stored auth data:", error);
         clearAuthData();
       }
     } else if (cookieToken && cookieUser) {
@@ -164,17 +164,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const parsedUser: User = JSON.parse(cookieUser);
         const tokenData: AuthTokens = {
           access_token: cookieToken,
-          refresh_token: '', // You might want to store this in a separate cookie
+          refresh_token: "", // You might want to store this in a separate cookie
         };
 
         setTokens(tokenData);
         setUser(parsedUser);
 
         // Sync to localStorage
-        localStorage.setItem('authTokens', JSON.stringify(tokenData));
-        localStorage.setItem('authUser', cookieUser);
+        localStorage.setItem("authTokens", JSON.stringify(tokenData));
+        localStorage.setItem("authUser", cookieUser);
       } catch (error) {
-        console.error('Failed to parse cookie auth data:', error);
+        console.error("Failed to parse cookie auth data:", error);
         clearAuthData();
       }
     }
@@ -187,18 +187,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setTokens(tokenData);
 
     // Store in localStorage
-    localStorage.setItem('authTokens', JSON.stringify(tokenData));
-    localStorage.setItem('authUser', JSON.stringify(userData));
+    localStorage.setItem("authTokens", JSON.stringify(tokenData));
+    localStorage.setItem("authUser", JSON.stringify(userData));
 
     // Store in cross-domain cookies
-    setCrossDomainCookie('authToken', tokenData.access_token);
-    setCrossDomainCookie('authUser', JSON.stringify(userData));
+    setCrossDomainCookie("authToken", tokenData.access_token);
+    setCrossDomainCookie("authUser", JSON.stringify(userData));
   };
 
   const updateTokens = (newTokens: AuthTokens) => {
     setTokens(newTokens);
-    localStorage.setItem('authTokens', JSON.stringify(newTokens));
-    setCrossDomainCookie('authToken', newTokens.access_token);
+    localStorage.setItem("authTokens", JSON.stringify(newTokens));
+    setCrossDomainCookie("authToken", newTokens.access_token);
   };
 
   const clearAuthData = () => {
@@ -206,18 +206,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setTokens(null);
 
     // Clear localStorage
-    localStorage.removeItem('authTokens');
-    localStorage.removeItem('authUser');
-    localStorage.removeItem('verificationEmail');
+    localStorage.removeItem("authTokens");
+    localStorage.removeItem("authUser");
+    localStorage.removeItem("verificationEmail");
 
     // Clear sessionStorage
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem('redirectAfterLogin');
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("redirectAfterLogin");
     }
 
     // Clear cross-domain cookies
-    deleteCrossDomainCookie('authToken');
-    deleteCrossDomainCookie('authUser');
+    deleteCrossDomainCookie("authToken");
+    deleteCrossDomainCookie("authUser");
   };
 
   const getErrorMessage = (error: ErrorResponse) => {
@@ -232,55 +232,55 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       ) {
         const firstError = data.errors[0];
 
-        if (firstError.code === 'too_many_login_attempts') {
-          return 'Too many failed login attempts. Please wait a few minutes before trying again.';
+        if (firstError.code === "too_many_login_attempts") {
+          return "Too many failed login attempts. Please wait a few minutes before trying again.";
         }
 
-        if (firstError.code === 'invalid_credentials') {
-          return 'Invalid email or password. Please check your credentials and try again.';
+        if (firstError.code === "invalid_credentials") {
+          return "Invalid email or password. Please check your credentials and try again.";
         }
 
-        if (firstError.code === 'user_not_found') {
-          return 'Account not found. Please check your email address or sign up for a new account.';
+        if (firstError.code === "user_not_found") {
+          return "Account not found. Please check your email address or sign up for a new account.";
         }
 
-        if (firstError.code === 'account_disabled') {
-          return 'Your account has been disabled. Please contact support for assistance.';
+        if (firstError.code === "account_disabled") {
+          return "Your account has been disabled. Please contact support for assistance.";
         }
 
-        return firstError.message || 'Login failed. Please try again.';
+        return firstError.message || "Login failed. Please try again.";
       }
 
       switch (status) {
         case 401:
-          return 'Invalid email or password. Please check your credentials and try again.';
+          return "Invalid email or password. Please check your credentials and try again.";
         case 400:
           return (
             data?.message ||
             data?.error ||
             data?.detail ||
-            'Invalid login credentials. Please check your email and password.'
+            "Invalid login credentials. Please check your email and password."
           );
         case 403:
-          return 'Your account has been suspended or disabled. Please contact support.';
+          return "Your account has been suspended or disabled. Please contact support.";
         case 404:
-          return 'Account not found. Please check your email address or sign up for a new account.';
+          return "Account not found. Please check your email address or sign up for a new account.";
         case 429:
-          return 'Too many login attempts. Please wait a few minutes before trying again.';
+          return "Too many login attempts. Please wait a few minutes before trying again.";
         case 500:
-          return 'Server error occurred. Please try again later.';
+          return "Server error occurred. Please try again later.";
         default:
           return (
             data?.message ||
             data?.error ||
             data?.detail ||
-            'Login failed. Please try again.'
+            "Login failed. Please try again."
           );
       }
     } else if (error.request) {
-      return 'Network error. Please check your internet connection and try again.';
+      return "Network error. Please check your internet connection and try again.";
     } else {
-      return error.message || 'An unexpected error occurred. Please try again.';
+      return error.message || "An unexpected error occurred. Please try again.";
     }
   };
 
@@ -305,23 +305,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       handleAuthSuccess(loggedInUser, tokens);
 
-      toast.success('Login Successful', {
-        description: 'Welcome back!',
+      toast.success("Login Successful", {
+        description: "Welcome back!",
       });
 
       // Handle redirect after successful login
-      if (typeof window !== 'undefined') {
-        const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
+      if (typeof window !== "undefined") {
+        const redirectUrl = sessionStorage.getItem("redirectAfterLogin");
 
         if (redirectUrl) {
-          sessionStorage.removeItem('redirectAfterLogin');
+          sessionStorage.removeItem("redirectAfterLogin");
 
           // If redirecting to a subdomain, pass auth data in URL
           if (
-            redirectUrl.includes('.nepdora.com') &&
-            !redirectUrl.includes('www.nepdora.com')
+            redirectUrl.includes(".nepdora.com") &&
+            !redirectUrl.includes("www.nepdora.com")
           ) {
-            const separator = redirectUrl.includes('?') ? '&' : '?';
+            const separator = redirectUrl.includes("?") ? "&" : "?";
             const authRedirectUrl = `${redirectUrl}${separator}auth_token=${encodeURIComponent(
               tokens.access_token
             )}&user_data=${encodeURIComponent(JSON.stringify(loggedInUser))}`;
@@ -332,17 +332,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           router.push(redirectUrl);
         } else {
           const urlParams = new URLSearchParams(window.location.search);
-          const redirectParam = urlParams.get('redirect');
+          const redirectParam = urlParams.get("redirect");
 
           if (redirectParam) {
             const decodedRedirect = decodeURIComponent(redirectParam);
 
             // If redirecting to a subdomain, pass auth data in URL
             if (
-              decodedRedirect.includes('.nepdora.com') &&
-              !decodedRedirect.includes('www.nepdora.com')
+              decodedRedirect.includes(".nepdora.com") &&
+              !decodedRedirect.includes("www.nepdora.com")
             ) {
-              const separator = decodedRedirect.includes('?') ? '&' : '?';
+              const separator = decodedRedirect.includes("?") ? "&" : "?";
               const authRedirectUrl = `${decodedRedirect}${separator}auth_token=${encodeURIComponent(
                 tokens.access_token
               )}&user_data=${encodeURIComponent(JSON.stringify(loggedInUser))}`;
@@ -352,20 +352,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             router.push(decodedRedirect);
           } else {
-            router.push('/');
+            router.push("/");
           }
         }
       } else {
-        router.push('/');
+        router.push("/");
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error as ErrorResponse);
 
-      toast.error('Login Failed', {
+      toast.error("Login Failed", {
         description: errorMessage,
       });
 
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       clearAuthData();
       throw error;
     } finally {
@@ -386,21 +386,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await signupUser(signupData);
 
       setVerificationEmail(data.email);
-      localStorage.setItem('verificationEmail', data.email);
+      localStorage.setItem("verificationEmail", data.email);
 
-      toast.success('Signup Successful', {
-        description: 'Please check your email to verify your account.',
+      toast.success("Signup Successful", {
+        description: "Please check your email to verify your account.",
       });
 
-      router.push('/signup/verify');
+      router.push("/signup/verify");
     } catch (error) {
       const errorMessage = getErrorMessage(error as ErrorResponse);
 
-      toast.error('Signup Failed', {
+      toast.error("Signup Failed", {
         description: errorMessage,
       });
 
-      console.error('Signup error:', error);
+      console.error("Signup error:", error);
       throw error;
     } finally {
       setIsLoading(false);
@@ -411,27 +411,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     clearAuthData();
     setVerificationEmail(null);
 
-    toast.success('Logged Out', {
-      description: 'You have been successfully logged out.',
+    toast.success("Logged Out", {
+      description: "You have been successfully logged out.",
     });
 
     // Always redirect to main domain for logout
-    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || 'nepdora.com';
-    const protocol = process.env.NEXT_PUBLIC_PROTOCOL || 'https';
+    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
+    const protocol = process.env.NEXT_PUBLIC_PROTOCOL || "https";
 
     // Check if we're on a subdomain
     const hostname = window.location.hostname;
     if (
-      hostname.includes('.') &&
+      hostname.includes(".") &&
       hostname.endsWith(baseDomain) &&
-      !hostname.startsWith('www.') &&
+      !hostname.startsWith("www.") &&
       hostname !== baseDomain
     ) {
       // We're on a subdomain, redirect to main domain
       window.location.href = `${protocol}://www.${baseDomain}/login`;
     } else {
       // We're on main domain
-      router.push('/login');
+      router.push("/login");
     }
   };
 
@@ -459,7 +459,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
   const context = React.useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
