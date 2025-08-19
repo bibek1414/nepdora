@@ -14,7 +14,6 @@ export default function Marketing() {
           regular: "Build Your Website",
           gradient: "In 5 Minutes",
         }}
-        description="Ecommerce or Service Website, you can build it in 5 minutes with our AI-powered platform."
         ctaText="Build Your Website Now"
         ctaHref="/signup"
         bottomImage={{
