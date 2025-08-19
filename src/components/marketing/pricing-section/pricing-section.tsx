@@ -2,7 +2,15 @@
 
 import React from "react";
 import Link from "next/link";
-import { Check, Headphones, Shield, Clock } from "lucide-react";
+import {
+  Check,
+  Headphones,
+  Shield,
+  Clock,
+  Zap,
+  Star,
+  Crown,
+} from "lucide-react";
 
 const PricingSection = () => {
   const topFeatures = [
@@ -22,6 +30,28 @@ const PricingSection = () => {
 
   const plans = [
     {
+      name: "Starter Nepdora",
+      subtitle: "Perfect for small businesses getting started",
+      price: "Free",
+      originalPrice: null,
+      discount: "FREE FOREVER",
+      period: "",
+      freeMonths: "No credit card required",
+      isPopular: false,
+      icon: Zap,
+      websites: "1 website",
+      mailboxes: "1 mailbox - free for 1 year",
+      features: [
+        "Free domain for 1 year",
+        "Basic Nepdora AI",
+        "50 templates",
+        "Basic analytics",
+        "Mobile editing",
+        "SSL Certificate",
+        "Email support",
+      ],
+    },
+    {
       name: "Premium Nepdora",
       subtitle: "Get the essentials to create a website",
       price: "2.99",
@@ -29,7 +59,8 @@ const PricingSection = () => {
       discount: "75% OFF",
       period: "/mo",
       freeMonths: "+3 months free",
-      isPopular: false,
+      isPopular: true,
+      icon: Star,
       websites: "25 websites",
       mailboxes: "2 mailboxes per website - free for 1 year",
       features: [
@@ -40,6 +71,7 @@ const PricingSection = () => {
         "Marketing integrations",
         "Built-in analytics",
         "Mobile editing",
+        "Priority support",
       ],
     },
     {
@@ -50,7 +82,8 @@ const PricingSection = () => {
       discount: "71% OFF",
       period: "/mo",
       freeMonths: "+3 months free",
-      isPopular: true,
+      isPopular: false,
+      icon: Crown,
       websites: "50 websites",
       mailboxes: "5 mailboxes per website - free for 1 year",
       features: [
@@ -63,13 +96,14 @@ const PricingSection = () => {
         "AI product generator",
         "AI logo maker",
         "AI SEO assistant",
+        "24/7 phone support",
       ],
     },
   ];
 
   return (
     <section className="bg-muted/50 py-16">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <div className="mb-12 text-center">
           <h2 className="text-foreground mb-6 text-3xl font-bold md:text-4xl">
@@ -88,14 +122,14 @@ const PricingSection = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
+        <div className="grid gap-8 md:grid-cols-3 lg:gap-12">
           {plans.map((plan, index) => (
             <Link
               key={index}
               href="/signup"
               className={`bg-background relative block rounded-lg border transition-all duration-300 hover:shadow-xl ${
                 plan.isPopular
-                  ? "border-primary border-2 shadow-xl"
+                  ? "border-primary scale-105 transform border-2 shadow-xl"
                   : "border-border hover:border-muted-foreground/50 border"
               }`}
             >
@@ -108,31 +142,56 @@ const PricingSection = () => {
               )}
 
               <div className="p-6">
+                {/* Icon */}
+                <div
+                  className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${
+                    plan.isPopular
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  <plan.icon className="h-6 w-6" />
+                </div>
+
                 {/* Discount Badge */}
-                <div className="mb-4">
-                  <span className="bg-accent text-accent-foreground rounded px-3 py-1 text-sm font-bold">
+                <div className="mb-4 text-center">
+                  <span
+                    className={`rounded px-3 py-1 text-sm font-bold ${
+                      index === 0
+                        ? "text-primary dark:text-primary/80 dark:bg-green-900/20"
+                        : "bg-accent text-accent-foreground"
+                    }`}
+                  >
                     {plan.discount}
                   </span>
                 </div>
 
-                <h3 className="text-foreground mb-2 text-xl font-bold">
+                <h3 className="text-foreground mb-2 text-center text-xl font-bold">
                   {plan.name}
                 </h3>
-                <p className="text-muted-foreground mb-6 text-sm">
+                <p className="text-muted-foreground mb-6 text-center text-sm">
                   {plan.subtitle}
                 </p>
 
                 {/* Pricing */}
-                <div className="mb-6">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-muted-foreground text-sm">US$</span>
-                    <span className="text-foreground text-4xl font-bold">
-                      {plan.price}
-                    </span>
-                    <span className="text-muted-foreground text-sm">
-                      {plan.period}
-                    </span>
-                  </div>
+                <div className="mb-6 text-center">
+                  {index === 0 ? (
+                    <div className="flex items-baseline justify-center gap-2">
+                      <span className="text-foreground text-4xl font-bold">
+                        {plan.price}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-baseline justify-center gap-2">
+                      <span className="text-muted-foreground text-sm">US$</span>
+                      <span className="text-foreground text-4xl font-bold">
+                        {plan.price}
+                      </span>
+                      <span className="text-muted-foreground text-sm">
+                        {plan.period}
+                      </span>
+                    </div>
+                  )}
                   <div className="text-primary mt-1 text-sm font-medium">
                     {plan.freeMonths}
                   </div>
@@ -140,22 +199,30 @@ const PricingSection = () => {
 
                 {/* Choose Plan Button */}
                 <div
-                  className={`w-full rounded-md py-3 text-center font-medium transition-colors ${
+                  className={`mb-4 w-full rounded-md py-3 text-center font-medium transition-colors ${
                     plan.isPopular
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground border"
+                      : index === 0
+                        ? "bg-primary hover:bg-primary text-white"
+                        : "border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground border"
                   }`}
                 >
-                  Choose plan
+                  {index === 0
+                    ? "Get Started Free"
+                    : index === 2
+                      ? "Contact Sales"
+                      : "Choose plan"}
                 </div>
 
                 {/* Pricing Details */}
-                <div className="text-muted-foreground mt-4 text-xs leading-relaxed">
-                  Get 48 months for US${" "}
-                  {(parseFloat(plan.price) * 48).toFixed(2)} (regular price US${" "}
-                  {(parseFloat(plan.originalPrice) * 48).toFixed(2)}). Renews at
-                  US$ {plan.originalPrice}/mo.
-                </div>
+                {plan.originalPrice && (
+                  <div className="text-muted-foreground mb-4 text-center text-xs leading-relaxed">
+                    Get 48 months for US${" "}
+                    {(parseFloat(plan.price) * 48).toFixed(2)} (regular price
+                    US$ {(parseFloat(plan.originalPrice) * 48).toFixed(2)}).
+                    Renews at US$ {plan.originalPrice}/mo.
+                  </div>
+                )}
 
                 {/* Website & Mailbox Info */}
                 <div className="space-y-3 pt-6">
@@ -181,8 +248,10 @@ const PricingSection = () => {
                 <div className="pt-6">
                   <h4 className="text-foreground mb-4 font-medium">
                     {index === 0
-                      ? "Premium benefits:"
-                      : "Everything in Premium, plus:"}
+                      ? "Starter benefits:"
+                      : index === 1
+                        ? "Premium benefits:"
+                        : "Everything in Premium, plus:"}
                   </h4>
                   <ul className="space-y-3">
                     {plan.features.map((feature, featureIndex) => (
