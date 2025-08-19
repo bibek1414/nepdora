@@ -9,6 +9,7 @@ import ContactSection from "@/components/marketing/contact-us/contact-us";
 import BuildYourWay from "@/components/marketing/build-your-way/build-your-way";
 import StatsSection from "@/components/marketing/stats-section/stats-section";
 import AISection from "@/components/marketing/ai-section/ai-section";
+import TemplatesPage from "@/components/marketing/templates/templates-page";
 export default function Marketing() {
   return (
     <div>
@@ -19,6 +20,7 @@ export default function Marketing() {
       <ProcessSection />
       <BuildYourWay />
       <AISection />
+      <TemplatesPage />
       <TestimonialsSection />
       <ContactSection />
       <FAQSection />
