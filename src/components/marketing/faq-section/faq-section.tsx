@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { MessageSquare } from "lucide-react";
-
+import Link from "next/link";
 interface FAQ {
   question: string;
   answer: string;
@@ -85,15 +85,17 @@ const FAQSection: React.FC = () => {
           ))}
         </Accordion>
 
-        <div className="mt-12 text-center">
+        {/* <div className="mt-12 text-center">
           <p className="text-muted-foreground mb-4">Still have questions?</p>
+         <Link href="/contact">
           <Button
             variant="outline"
             className="hover:bg-primary transition-colors hover:text-white"
           >
             Contact Support
           </Button>
-        </div>
+         </Link>
+        </div> */}
       </div>
     </section>
   );

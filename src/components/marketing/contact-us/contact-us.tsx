@@ -1,88 +1,124 @@
-import React from "react";
-
+"use client";
+import React, { useState, ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-interface Contact2Props {
-  title?: string;
-  description?: string;
-  phone?: string;
-  email?: string;
-  web?: { label: string; url: string };
-}
+export default function ContactUs() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
 
-const ContactSection = ({
-  title = "Contact Us",
-  description = "We are available for questions, feedback, or collaboration opportunities. Let us know how we can help!",
-  phone = "(123) 34567890",
-  email = "email@example.com",
-  web = { label: "shadcnblocks.com", url: "https://shadcnblocks.com" },
-}: Contact2Props) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    console.log("Form submitted:", formData);
+    // Handle form submission here
+    alert("Message sent successfully!");
+  };
+
   return (
-    <section className="mx-auto max-w-7xl py-32">
-      <div className="container">
-        <div className="mx-auto flex max-w-screen-xl flex-col justify-between gap-10 lg:flex-row lg:gap-20">
-          <div className="mx-auto flex max-w-sm flex-col justify-between gap-10">
-            <div className="text-center lg:text-left">
-              <h1 className="mb-2 text-5xl font-semibold lg:mb-1 lg:text-6xl">
-                {title}
-              </h1>
-              <p className="text-muted-foreground">{description}</p>
-            </div>
-            <div className="mx-auto w-fit lg:mx-0">
-              <h3 className="mb-6 text-center text-2xl font-semibold lg:text-left">
-                Contact Details
-              </h3>
-              <ul className="ml-4 list-disc">
-                <li>
-                  <span className="font-bold">Phone: </span>
-                  {phone}
-                </li>
-                <li>
-                  <span className="font-bold">Email: </span>
-                  <a href={`mailto:${email}`} className="underline">
-                    {email}
-                  </a>
-                </li>
-                <li>
-                  <span className="font-bold">Web: </span>
-                  <a href={web.url} target="_blank" className="underline">
-                    {web.label}
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="mx-auto flex max-w-screen-md flex-col gap-6 rounded-lg border p-10">
-            <div className="flex gap-4">
-              <div className="grid w-full items-center gap-1.5">
-                <Input type="text" id="firstname" label="first Name" />
-              </div>
-              <div className="grid w-full items-center gap-1.5">
-                <Label htmlFor="lastname">Last Name</Label>
-                <Input type="text" id="lastname" placeholder="Last Name" />
-              </div>
-            </div>
-            <div className="grid w-full items-center gap-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input type="email" id="email" placeholder="Email" />
-            </div>
-            <div className="grid w-full items-center gap-1.5">
-              <Label htmlFor="subject">Subject</Label>
-              <Input type="text" id="subject" placeholder="Subject" />
-            </div>
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="message">Message</Label>
-              <Textarea placeholder="Type your message here." id="message" />
-            </div>
-            <Button className="w-full">Send Message</Button>
-          </div>
-        </div>
+    <section className="mx-auto max-w-2xl px-4 py-16">
+      <div className="mb-12 text-center">
+        <h2 className="mb-4 text-3xl font-bold text-gray-900">
+          Contact <span className="text-primary">Us</span>{" "}
+        </h2>
+        <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          Get in touch with us. We&apos;d love to hear from you and will get
+          back to you as soon as possible.
+        </p>
       </div>
+
+      <Card>
+        <CardContent>
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <Input
+                id="firstName"
+                name="firstName"
+                type="text"
+                label="First Name"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                className="w-full"
+                required
+              />
+
+              <Input
+                id="lastName"
+                name="lastName"
+                type="text"
+                label="Last Name"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                className="w-full"
+                required
+              />
+            </div>
+
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              label="Email Address"
+              value={formData.email}
+              onChange={handleInputChange}
+              className="w-full"
+              required
+            />
+
+            <Input
+              id="phone"
+              name="phone"
+              type="tel"
+              label="Phone Number"
+              value={formData.phone}
+              onChange={handleInputChange}
+              className="w-full"
+            />
+
+            <Textarea
+              id="message"
+              name="message"
+              placeholder="Message"
+              value={formData.message}
+              onChange={handleInputChange}
+              className="min-h-[120px] w-full"
+              required
+            />
+
+            <div className="flex justify-center">
+              <Button
+                type="button"
+                onClick={handleSubmit}
+                className="bg-primary hover:bg-primary/80 px-8 py-2 font-medium text-white"
+              >
+                Send Message
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </section>
   );
-};
-
-export default ContactSection;
+}
