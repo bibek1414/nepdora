@@ -101,9 +101,11 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium">{user.name}</p>
+                <p className="text-sm font-medium capitalize">{user.name}</p>
                 <p className="text-muted-foreground text-xs">{user.email}</p>
-                <p className="font-mono text-xs text-blue-600">{user.domain}</p>
+                <p className="font-mono text-xs text-blue-600 capitalize">
+                  Store name : {user.subDomain}
+                </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />

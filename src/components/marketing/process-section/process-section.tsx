@@ -1,75 +1,154 @@
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Clock, Palette, Settings, Zap } from "lucide-react";
-import { ProcessStep } from "@/types/marketing/process";
+"use client";
+import React, { useState } from "react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+const ProcessSection = () => {
+  const [activeStep, setActiveStep] = useState(1);
 
-const ProcessSection: React.FC = () => {
-  const steps: ProcessStep[] = [
+  const steps = [
     {
-      number: "01",
-      title: "Choose Your Template",
+      id: 1,
+      title: "Choose how to build",
       description:
-        "Pick from 500+ professional templates or let AI create a custom design for your brand.",
-      icon: Palette,
+        "Describe what you need in a few sentences and let AI build a unique website for you — or pick from 150+ designer-made templates.",
+      image: "/images/image1.avif",
     },
     {
-      number: "02",
-      title: "Customize Your Content",
+      id: 2,
+      title: "Customize your website",
       description:
-        "Use our intuitive drag-and-drop editor to add your content, images, and branding.",
-      icon: Settings,
+        "Keep what you like. Discard what you don't. Easily move elements and experiment with different color schemes and fonts. No coding or web design skills required.",
+      image: "/images/image2.avif",
     },
     {
-      number: "03",
-      title: "Launch Your Website",
+      id: 3,
+      title: "Go live",
       description:
-        "Connect your domain, set up payments, and go live with just one click.",
-      icon: Zap,
+        "Select the perfect domain name for your business or project, and launch your brand-new website with performance and security you can rely on.",
+      image: "/images/image3.png",
     },
   ];
 
-  return (
-    <section className="bg-muted/30 py-20">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-16 text-center">
-          <Badge variant="outline" className="mb-4">
-            <Clock className="mr-2 h-4 w-4" />
-            How It Works
-          </Badge>
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-            From Idea to
-            <span className="bg-primary bg-clip-text text-transparent">
-              {" "}
-              Live Website
-            </span>
-          </h2>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-            Get your business online in just three simple steps. No technical
-            skills required.
-          </p>
-        </div>
+  const activeStepData = steps.find(step => step.id === activeStep);
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          {steps.map((step, index) => (
-            <div key={index} className="relative">
-              {index < steps.length - 1 && (
-                <div className="from-primary to-secondary absolute top-12 left-1/2 z-0 hidden h-0.5 w-full translate-x-1/2 transform bg-gradient-to-r md:block"></div>
-              )}
-              <Card className="relative z-10 text-center transition-shadow hover:shadow-lg">
-                <CardContent className="p-6">
-                  <div className="from-primary to-secondary mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r">
-                    <step.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <div className="text-primary mb-2 text-sm font-bold">
-                    {step.number}
-                  </div>
-                  <h3 className="mb-3 text-xl font-semibold">{step.title}</h3>
-                  <p className="text-muted-foreground">{step.description}</p>
-                </CardContent>
-              </Card>
+  return (
+    <section className="bg-background px-4 py-16">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid items-center gap-16 lg:grid-cols-2">
+          {/* Left Content */}
+          <div className="space-y-8">
+            <h2 className="text-foreground text-4xl leading-tight font-bold md:text-5xl">
+              Create a website in 3<br />
+              easy steps
+            </h2>
+
+            <div className="space-y-6">
+              {steps.map(step => (
+                <div
+                  key={step.id}
+                  className="cursor-pointer"
+                  onClick={() => setActiveStep(step.id)}
+                >
+                  <h3
+                    className={`mb-3 text-xl font-semibold transition-colors duration-200 ${
+                      activeStep === step.id
+                        ? "text-primary"
+                        : "text-foreground"
+                    }`}
+                  >
+                    {step.id}. {step.title}
+                  </h3>
+
+                  {activeStep === step.id && (
+                    <div className="border-primary mb-4 border-l-4 pl-4">
+                      <p className="text-muted-foreground leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
+
+            <Link href={"/signup"}>
+              <Button size="lg" className="rounded-lg px-8 py-3 font-medium">
+                Get started
+              </Button>
+            </Link>
+          </div>
+
+          {/* Right Content - Interactive Image Display */}
+          <div className="relative">
+            <div className="from-primary via-primary/90 to-secondary relative overflow-hidden rounded-3xl bg-gradient-to-br p-8 shadow-2xl">
+              {/* Background decorative elements */}
+              <div className="bg-secondary absolute top-4 left-4 h-16 w-16 rotate-12 transform rounded-lg"></div>
+              <div className="bg-primary absolute top-8 left-8 h-8 w-8 rounded"></div>
+              <div className="bg-muted-foreground absolute top-12 left-12 h-6 w-6 rounded"></div>
+              <div className="bg-secondary absolute right-4 bottom-4 h-20 w-20 -rotate-12 transform rounded-lg"></div>
+
+              {/* Go Live Button Mockup */}
+              <div className="relative z-10 mb-6">
+                <div className="flex items-center justify-end">
+                  <div className="bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center space-x-2 rounded-lg px-6 py-2 transition-colors">
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                    <Link href="/signup">
+                      <span className="font-medium">Go live</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Domain Name Display */}
+              <div className="relative z-10 mb-6">
+                <div className="bg-card flex items-center space-x-3 rounded-lg border p-3 shadow-sm">
+                  <span className="text-card-foreground font-medium">
+                    nepdora.com
+                  </span>
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500">
+                    <svg
+                      className="h-3 w-3 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Dynamic Image Display */}
+              <div className="bg-card relative z-10 rounded-xl border p-4 shadow-lg">
+                <div className="bg-muted relative aspect-video overflow-hidden rounded-lg">
+                  <Image
+                    src={activeStepData?.image || "/images/placeholder.jpg"}
+                    alt={`Step ${activeStep}: ${activeStepData?.title}`}
+                    fill
+                    className="object-cover transition-all duration-500 ease-in-out"
+                    priority={activeStep === 1}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -2,16 +2,15 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Globe } from "lucide-react";
 
 const Header: React.FC = () => {
   return (
-    <header className="border-primary/10 relative z-50 border-b bg-white/80 px-6 py-4 backdrop-blur-md">
+    <header className="border-primary/10 sticky top-0 z-50 border-b bg-white/80 px-6 py-4 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex items-center space-x-2">
           <Link href="/">
             <img
-              src="/logo.png"
+              src="/fulllogo.svg"
               alt="Nepdora Logo"
               className="h-10 cursor-pointer"
             />
@@ -19,15 +18,17 @@ const Header: React.FC = () => {
         </div>
 
         <div className="hidden items-center space-x-8 md:flex">
-          {["Features", "Templates", "Pricing", "About"].map(item => (
-            <Link
-              key={item}
-              href={`/${item.toLowerCase()}`}
-              className="text-muted-foreground hover:text-primary cursor-pointer font-medium transition-colors"
-            >
-              {item}
-            </Link>
-          ))}
+          {["Features", "Templates", "Pricing", "About", "Contact"].map(
+            item => (
+              <Link
+                key={item}
+                href={`/${item.toLowerCase()}`}
+                className="text-muted-foreground hover:text-primary cursor-pointer font-medium transition-colors"
+              >
+                {item}
+              </Link>
+            )
+          )}
         </div>
 
         <div className="flex items-center space-x-4">

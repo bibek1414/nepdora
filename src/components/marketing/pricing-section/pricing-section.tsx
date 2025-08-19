@@ -1,226 +1,217 @@
+"use client";
+
 import React from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Check,
-  Zap,
-  Star,
-  Crown,
-  CreditCard,
-  Users,
-  Heart,
-} from "lucide-react";
-import { PricingPlan } from "@/types/marketing/price-plan";
-const PricingSection: React.FC = () => {
-  const plans: PricingPlan[] = [
+import Link from "next/link";
+import { Check, Headphones, Shield, Clock } from "lucide-react";
+
+const PricingSection = () => {
+  const topFeatures = [
     {
-      name: "Starter",
-      price: "Free",
-      period: "forever",
-      description: "Perfect for small businesses getting started",
-      icon: Zap,
-      color: "primary",
-      features: [
-        "1 Website",
-        "Basic Templates",
-        "Mobile Responsive",
-        "Basic Analytics",
-        "Email Support",
-        "SSL Certificate",
-        "Custom Domain (1 year free)",
-      ],
-      cta: "Get Started Free",
-      popular: false,
+      icon: Headphones,
+      text: "24/7 support",
     },
     {
-      name: "Professional",
-      price: "$29",
-      period: "per month",
-      description: "Best for growing businesses",
-      icon: Star,
-      color: "secondary",
-      features: [
-        "Up to 5 Websites",
-        "All Templates + AI Custom",
-        "Advanced Analytics",
-        "Priority Support",
-        "Mini CRM System",
-        "Payment Processing",
-        "Support Ticket System",
-        "Custom Domain",
-        "SEO Tools",
-        "Social Media Integration",
-      ],
-      cta: "Start Free Trial",
-      popular: true,
+      icon: Shield,
+      text: "30-day money-back guarantee",
     },
     {
-      name: "Enterprise",
-      price: "$99",
-      period: "per month",
-      description: "For large businesses and agencies",
-      icon: Crown,
-      color: "accent",
+      icon: Clock,
+      text: "Cancel anytime",
+    },
+  ];
+
+  const plans = [
+    {
+      name: "Premium Nepdora",
+      subtitle: "Get the essentials to create a website",
+      price: "2.99",
+      originalPrice: "10.99",
+      discount: "75% OFF",
+      period: "/mo",
+      freeMonths: "+3 months free",
+      isPopular: false,
+      websites: "25 websites",
+      mailboxes: "2 mailboxes per website - free for 1 year",
       features: [
-        "Unlimited Websites",
-        "Custom AI Design",
-        "Advanced CRM",
-        "24/7 Phone Support",
-        "White-label Options",
-        "API Access",
-        "Advanced Analytics",
-        "Team Management",
-        "Custom Integrations",
-        "Dedicated Account Manager",
-        "Priority Feature Requests",
+        "Free domain for 1 year",
+        "AI Nepdora",
+        "150 templates",
+        "Email marketing",
+        "Marketing integrations",
+        "Built-in analytics",
+        "Mobile editing",
       ],
-      cta: "Contact Sales",
-      popular: false,
+    },
+    {
+      name: "Business Nepdora",
+      subtitle: "Grow with AI tools and ecommerce features",
+      price: "3.99",
+      originalPrice: "13.99",
+      discount: "71% OFF",
+      period: "/mo",
+      freeMonths: "+3 months free",
+      isPopular: true,
+      websites: "50 websites",
+      mailboxes: "5 mailboxes per website - free for 1 year",
+      features: [
+        "Sell products and services",
+        "0% transaction fees",
+        "100+ payment methods",
+        "AI text editor",
+        "AI image generator",
+        "AI blog post generator",
+        "AI product generator",
+        "AI logo maker",
+        "AI SEO assistant",
+      ],
     },
   ];
 
   return (
-    <section id="pricing" className="bg-muted/50 py-20">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-16 text-center">
-          <Badge variant="outline" className="mb-4">
-            <CreditCard className="mr-2 h-4 w-4" />
-            Pricing
-          </Badge>
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-            Simple, Transparent
-            <span className="from-primary to-secondary block bg-gradient-to-r bg-clip-text text-transparent">
-              Pricing
-            </span>
+    <section className="bg-muted/50 py-16">
+      <div className="mx-auto max-w-6xl px-6">
+        {/* Header */}
+        <div className="mb-12 text-center">
+          <h2 className="text-foreground mb-6 text-3xl font-bold md:text-4xl">
+            Find the perfect Nepdora plan for you
           </h2>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-            Choose the perfect plan for your business. All plans include our
-            core features with no hidden fees.
-          </p>
+
+          {/* Top Features */}
+          <div className="text-muted-foreground flex flex-wrap justify-center gap-8 text-sm">
+            {topFeatures.map((feature, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <feature.icon className="h-4 w-4" />
+                <span>{feature.text}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
+        {/* Pricing Cards */}
+        <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
           {plans.map((plan, index) => (
-            <Card
+            <Link
               key={index}
-              className={`relative ${
-                plan.popular
-                  ? "ring-primary from-primary/5 to-secondary/5 scale-105 transform bg-gradient-to-br shadow-2xl ring-2"
-                  : "shadow-lg hover:shadow-xl"
-              } transition-all duration-300`}
+              href="/signup"
+              className={`bg-background relative block rounded-lg border transition-all duration-300 hover:shadow-xl ${
+                plan.isPopular
+                  ? "border-primary border-2 shadow-xl"
+                  : "border-border hover:border-muted-foreground/50 border"
+              }`}
             >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 transform">
-                  <Badge className="from-primary to-secondary bg-gradient-to-r text-white">
-                    Most Popular
-                  </Badge>
+              {plan.isPopular && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <div className="to-primary text-primary-foreground rounded-full bg-gradient-to-r from-purple-500 px-4 py-1 text-sm font-medium">
+                    MOST POPULAR
+                  </div>
                 </div>
               )}
 
-              <CardHeader className="text-center">
-                <div
-                  className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-${
-                    plan.color === "primary"
-                      ? "primary"
-                      : plan.color === "secondary"
-                        ? "secondary"
-                        : "primary"
-                  }/10 text-${
-                    plan.color === "primary"
-                      ? "primary"
-                      : plan.color === "secondary"
-                        ? "secondary"
-                        : "primary"
-                  }`}
-                >
-                  <plan.icon className="h-6 w-6" />
-                </div>
-                <CardTitle className="text-xl">{plan.name}</CardTitle>
-                <CardDescription className="mb-4">
-                  {plan.description}
-                </CardDescription>
+              <div className="p-6">
+                {/* Discount Badge */}
                 <div className="mb-4">
-                  <span className="text-3xl font-bold">{plan.price}</span>
-                  {plan.period !== "forever" && (
-                    <span className="text-muted-foreground text-sm">
-                      /{plan.period}
-                    </span>
-                  )}
+                  <span className="bg-accent text-accent-foreground rounded px-3 py-1 text-sm font-bold">
+                    {plan.discount}
+                  </span>
                 </div>
-              </CardHeader>
 
-              <CardContent>
-                <ul className="mb-6 space-y-3">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start">
-                      <Check className="mt-0.5 mr-3 h-4 w-4 flex-shrink-0 text-green-500" />
-                      <span className="text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+                <h3 className="text-foreground mb-2 text-xl font-bold">
+                  {plan.name}
+                </h3>
+                <p className="text-muted-foreground mb-6 text-sm">
+                  {plan.subtitle}
+                </p>
 
-                <Button
-                  className={`w-full ${
-                    plan.popular
-                      ? "from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r text-white"
-                      : ""
+                {/* Pricing */}
+                <div className="mb-6">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-muted-foreground text-sm">US$</span>
+                    <span className="text-foreground text-4xl font-bold">
+                      {plan.price}
+                    </span>
+                    <span className="text-muted-foreground text-sm">
+                      {plan.period}
+                    </span>
+                  </div>
+                  <div className="text-primary mt-1 text-sm font-medium">
+                    {plan.freeMonths}
+                  </div>
+                </div>
+
+                {/* Choose Plan Button */}
+                <div
+                  className={`w-full rounded-md py-3 text-center font-medium transition-colors ${
+                    plan.isPopular
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                      : "border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground border"
                   }`}
-                  variant={plan.popular ? "default" : "outline"}
                 >
-                  {plan.cta}
-                </Button>
-              </CardContent>
-            </Card>
+                  Choose plan
+                </div>
+
+                {/* Pricing Details */}
+                <div className="text-muted-foreground mt-4 text-xs leading-relaxed">
+                  Get 48 months for US${" "}
+                  {(parseFloat(plan.price) * 48).toFixed(2)} (regular price US${" "}
+                  {(parseFloat(plan.originalPrice) * 48).toFixed(2)}). Renews at
+                  US$ {plan.originalPrice}/mo.
+                </div>
+
+                {/* Website & Mailbox Info */}
+                <div className="space-y-3 pt-6">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-muted flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full">
+                      <div className="bg-muted-foreground h-2 w-2 rounded-full"></div>
+                    </div>
+                    <span className="text-foreground text-sm font-medium">
+                      {plan.websites}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="bg-muted flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full">
+                      <div className="bg-muted-foreground h-2 w-2 rounded-full"></div>
+                    </div>
+                    <span className="text-muted-foreground text-sm">
+                      {plan.mailboxes}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Features */}
+                <div className="pt-6">
+                  <h4 className="text-foreground mb-4 font-medium">
+                    {index === 0
+                      ? "Premium benefits:"
+                      : "Everything in Premium, plus:"}
+                  </h4>
+                  <ul className="space-y-3">
+                    {plan.features.map((feature, featureIndex) => (
+                      <li
+                        key={featureIndex}
+                        className="flex items-center gap-3"
+                      >
+                        <Check className="h-4 w-4 flex-shrink-0 text-green-500" />
+                        <span className="text-foreground flex items-center gap-2 text-sm">
+                          {feature}
+                          {feature === "Email marketing" && (
+                            <span className="rounded bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-900/20 dark:text-green-400">
+                              NEW
+                            </span>
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Link>
           ))}
         </div>
 
-        {/* Additional Benefits */}
-        <div className="mt-16">
-          <Card className="from-primary/5 to-secondary/5 bg-gradient-to-r">
-            <CardContent className="p-8">
-              <h3 className="mb-8 text-center text-xl font-bold">
-                All Plans Include
-              </h3>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {[
-                  {
-                    icon: Users,
-                    title: "No Setup Fees",
-                    description: "Get started immediately",
-                  },
-                  {
-                    icon: Zap,
-                    title: "Instant Setup",
-                    description: "5-minute deployment",
-                  },
-                  {
-                    icon: Heart,
-                    title: "30-Day Money Back",
-                    description: "Risk-free guarantee",
-                  },
-                ].map((benefit, index) => (
-                  <div key={index} className="flex items-center">
-                    <div className="bg-primary/10 mr-4 flex h-10 w-10 items-center justify-center rounded-lg">
-                      <benefit.icon className="text-primary h-5 w-5" />
-                    </div>
-                    <div>
-                      <div className="font-medium">{benefit.title}</div>
-                      <div className="text-muted-foreground text-sm">
-                        {benefit.description}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Footer Note */}
+        <div className="text-muted-foreground mt-8 text-center text-xs">
+          All plans are paid upfront. The monthly rate reflects the total plan
+          price divided by the number of months in your plan.
         </div>
       </div>
     </section>

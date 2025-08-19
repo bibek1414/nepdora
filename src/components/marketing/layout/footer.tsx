@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
         <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="col-span-1 md:col-span-2">
             <div className="mb-4 flex items-center space-x-2">
-              <img src="/logo.png" alt="Nepdora Logo" className="h-10" />
+              <img src="/fulllogo.svg" alt="Nepdora Logo" className="h-10" />
             </div>
             <p className="text-muted-foreground mb-4 max-w-md">
               Build stunning websites in minutes, not days. Everything you need

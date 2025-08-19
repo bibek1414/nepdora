@@ -4,33 +4,21 @@ import ProcessSection from "@/components/marketing/process-section/process-secti
 import PricingSection from "@/components/marketing/pricing-section/pricing-section";
 import TestimonialsSection from "@/components/marketing/testimonials/testimonials";
 import FAQSection from "@/components/marketing/faq-section/faq-section";
+import BuildYourWay from "@/components/marketing/build-your-way/build-your-way";
 import StatsSection from "@/components/marketing/stats-section/stats-section";
+import AISection from "@/components/marketing/ai-section/ai-section";
 export default function Marketing() {
   return (
     <div>
-      <HeroSection
-        title="Website, CRM, Marketing, and Logistics"
-        subtitle={{
-          regular: "Build Your Website",
-          gradient: "In 5 Minutes",
-        }}
-        ctaText="Build Your Website Now"
-        ctaHref="/signup"
-        bottomImage={{
-          light: "https://www.launchuicomponents.com/app-light.png",
-          dark: "https://www.launchuicomponents.com/app-dark.png",
-        }}
-        gridOptions={{
-          angle: 65,
-          opacity: 0.4,
-          cellSize: 50,
-        }}
-      />
+      <HeroSection />
       <StatsSection />
+      <PricingSection />
       <FeaturesSection />
       <ProcessSection />
-      <PricingSection />
+      <BuildYourWay />
+      <AISection />
       <TestimonialsSection />
+
       <FAQSection />
     </div>
   );
