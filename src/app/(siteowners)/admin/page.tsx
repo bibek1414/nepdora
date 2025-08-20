@@ -1,7 +1,5 @@
-import React from "react";
+import AdminDashboardPage from "@/components/site-owners/admin/dashboard/admin-dashborad";
 
-function page() {
-  return <div>page</div>;
+export default function AdminPage() {
+  return <AdminDashboardPage />;
 }
-
-export default page;
