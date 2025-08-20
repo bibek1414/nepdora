@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 import { Template } from "./types";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface TemplateCardProps {
   template: Template;
@@ -16,7 +18,9 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
             alt={template.name}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             onError={e => {
-              e.currentTarget.src = `https://via.placeholder.com/400x300/f3f4f6/6b7280?text=${encodeURIComponent(template.name)}`;
+              e.currentTarget.src = `https://via.placeholder.com/400x300/f3f4f6/6b7280?text=${encodeURIComponent(
+                template.name
+              )}`;
             }}
           />
           {template.featured && (
@@ -28,9 +32,12 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
           )}
           <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/20" />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300 group-hover:opacity-100">
-            <button className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-lg transition-all duration-200 hover:bg-gray-50">
+            <Button
+              variant="secondary"
+              className="rounded-lg bg-white text-gray-900 shadow-lg transition-all duration-200 hover:bg-gray-50"
+            >
               Preview
-            </button>
+            </Button>
           </div>
         </div>
         <div className="p-4">
@@ -40,9 +47,14 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
           <p className="mb-4 text-sm leading-relaxed text-gray-600">
             {template.description}
           </p>
-          <button className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50">
-            Use Template
-          </button>
+          <Link href={"/signup"}>
+            <Button
+              variant="outline"
+              className="w-full border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50"
+            >
+              Use Template
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

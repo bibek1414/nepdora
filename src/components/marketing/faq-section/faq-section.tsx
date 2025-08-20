@@ -84,18 +84,6 @@ const FAQSection: React.FC = () => {
             </AccordionItem>
           ))}
         </Accordion>
-
-        {/* <div className="mt-12 text-center">
-          <p className="text-muted-foreground mb-4">Still have questions?</p>
-         <Link href="/contact">
-          <Button
-            variant="outline"
-            className="hover:bg-primary transition-colors hover:text-white"
-          >
-            Contact Support
-          </Button>
-         </Link>
-        </div> */}
       </div>
     </section>
   );

@@ -3,6 +3,8 @@ import "./globals.css";
 import { DM_Sans } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { QueryProvider } from "@/providers/query-provider";
+import TopLoader from "@/components/top-loader";
+import { Suspense } from "react";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -22,7 +24,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={dmSans.className}>
         <AuthProvider>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <Suspense fallback={null}>
+              <TopLoader />
+            </Suspense>
+            {children}
+          </QueryProvider>
         </AuthProvider>
       </body>
     </html>
