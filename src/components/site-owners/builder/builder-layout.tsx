@@ -13,6 +13,7 @@ import {
 import { NavbarData } from "@/types/owner-site/components/navbar";
 import { NavbarTemplateDialog } from "@/components/site-owners/navbar/navbar-template-dialog";
 import { usePages } from "@/hooks/owner-site/page";
+import { useCreatePage } from "@/hooks/owner-site/page";
 import { Page } from "@/types/owner-site/components/page";
 
 interface Component {
@@ -34,10 +35,39 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   // Use the page hooks
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
+  const createPageMutation = useCreatePage();
 
   const [droppedComponents, setDroppedComponents] = useState<Component[]>([]);
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState("");
+  const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
+
+  // Auto-create home page if no pages exist
+  useEffect(() => {
+    if (
+      !isPagesLoading &&
+      pagesData &&
+      pagesData.length === 0 &&
+      !isCreatingHomePage
+    ) {
+      setIsCreatingHomePage(true);
+
+      createPageMutation.mutate(
+        { title: "Home" },
+        {
+          onSuccess: (data: Page) => {
+            console.log("Default home page created successfully:", data);
+            setCurrentPage(data.slug);
+            setIsCreatingHomePage(false);
+          },
+          onError: error => {
+            console.error("Failed to create default home page:", error);
+            setIsCreatingHomePage(false);
+          },
+        }
+      );
+    }
+  }, [pagesData, isPagesLoading, createPageMutation, isCreatingHomePage]);
 
   // Initialize current page from API data
   useEffect(() => {
@@ -72,6 +102,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleDrop = useCallback((item: any) => {
     if (item.type === "navbar") return;
@@ -91,44 +122,20 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     setDroppedComponents([]); // Reset components for now
   };
 
-  const isLoading = isNavbarLoading || isPagesLoading;
+  const isLoading = isNavbarLoading || isPagesLoading || isCreatingHomePage;
 
   if (isLoading) {
     return (
       <div className="bg-background flex min-h-screen items-center justify-center">
-        <div className="border-primary h-32 w-32 animate-spin rounded-full border-b-2"></div>
-      </div>
-    );
-  }
-
-  // Show default content if no pages exist
-  if (!pagesData || pagesData.length === 0) {
-    return (
-      <DndProvider backend={HTML5Backend}>
-        <div className="bg-background flex min-h-screen flex-col">
-          <div className="bg-card border-b shadow-sm">
-            <div className="flex items-center justify-between px-6 py-4">
-              <div className="flex flex-col items-center gap-3">
-                <img src="/fulllogo.svg" alt="Logo" className="h-8" />
-              </div>
-              <div className="text-muted-foreground text-sm">
-                No pages found. Create your first page to get started.
-              </div>
-              <div></div>
-            </div>
-          </div>
-          <div className="flex flex-1 items-center justify-center">
-            <div className="text-center">
-              <h2 className="text-muted-foreground mb-4 text-2xl font-bold">
-                No Pages Found
-              </h2>
-              <p className="text-muted-foreground">
-                Create your first page to start building your site.
-              </p>
-            </div>
-          </div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="border-primary h-32 w-32 animate-spin rounded-full border-b-2"></div>
+          {isCreatingHomePage && (
+            <p className="text-muted-foreground text-sm">
+              Setting up your first page...
+            </p>
+          )}
         </div>
-      </DndProvider>
+      </div>
     );
   }
 
