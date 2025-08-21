@@ -37,7 +37,7 @@ export const DeletePageDialog: React.FC<DeletePageDialogProps> = ({
       },
       onError: error => {
         console.error("Failed to delete page:", error);
-        // Keep dialog open on error so user can try again or see error
+        // Keep dialog open on error so user can try again or see erro  r
       },
     });
   };
