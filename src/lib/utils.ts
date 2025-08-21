@@ -36,3 +36,16 @@ export function buildTenantFrontendUrl(
   }
   return `https://${subdomain}.${baseDomain}${path}`;
 }
+
+export const getButtonVariant = (variant: string) => {
+  switch (variant) {
+    case "primary":
+      return "default";
+    case "secondary":
+      return "secondary";
+    case "outline":
+      return "outline";
+    default:
+      return "default";
+  }
+};
