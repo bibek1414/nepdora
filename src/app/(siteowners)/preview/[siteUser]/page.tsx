@@ -1,12 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Monitor, Smartphone, Tablet } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { NavbarComponent } from "@/components/site-owners/navbar/navbar-component";
 import { useNavbarQuery } from "@/hooks/owner-site/components/navbar";
+import { useFooterQuery } from "@/hooks/owner-site/components/footer";
+import { Footer as FooterComponent } from "@/components/site-owners/footer/footer";
+
 import { use } from "react";
 interface PreviewPageProps {
   params: Promise<{ siteUser: string }>;
@@ -16,10 +19,12 @@ export default function PreviewPage({ params }: PreviewPageProps) {
   const router = useRouter();
   const { siteUser } = use(params);
 
-  const { data: navbarResponse, isLoading } = useNavbarQuery();
-  const [deviceView, setDeviceView] = React.useState<
-    "desktop" | "tablet" | "mobile"
-  >("desktop");
+  const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
+  const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
+
+  const [deviceView, setDeviceView] = useState<"desktop" | "tablet" | "mobile">(
+    "desktop"
+  );
 
   const handleBackToBuilder = () => {
     router.push(`/builder/${siteUser}`);
@@ -35,6 +40,8 @@ export default function PreviewPage({ params }: PreviewPageProps) {
         return "w-full";
     }
   };
+
+  const isLoading = isNavbarLoading || isFooterLoading;
 
   if (isLoading) {
     return (
@@ -59,11 +66,9 @@ export default function PreviewPage({ params }: PreviewPageProps) {
               <ArrowLeft className="h-4 w-4" />
               Back to Builder
             </Button>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="text-xs">
-                Preview
-              </Badge>
-            </div>
+            <Badge variant="secondary" className="text-xs">
+              Preview
+            </Badge>
           </div>
 
           {/* Device Toggle */}
@@ -97,7 +102,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
       </header>
 
       {/* Preview Content */}
-      <div className="min-h-[calc(100vh-64px)] bg-gray-100 p-6">
+      <main className="min-h-[calc(100vh-64px)] bg-gray-100 p-6">
         <div className={`transition-all duration-300 ${getViewportClass()}`}>
           <div className="min-h-[600px] overflow-hidden rounded-lg bg-white shadow-lg">
             {/* Render Navbar */}
@@ -110,9 +115,9 @@ export default function PreviewPage({ params }: PreviewPageProps) {
 
             {/* Preview Content Area */}
             <div className="p-8">
-              {!navbarResponse?.data && (
+              {!navbarResponse?.data && !footerResponse?.data ? (
                 <div className="py-20 text-center">
-                  <div className="bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full p-6">
+                  <div className="bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
                     <Monitor className="text-muted-foreground h-8 w-8" />
                   </div>
                   <h3 className="text-foreground mb-2 text-xl font-semibold">
@@ -126,14 +131,12 @@ export default function PreviewPage({ params }: PreviewPageProps) {
                     Open Builder
                   </Button>
                 </div>
-              )}
-
-              {navbarResponse?.data && (
+              ) : (
                 <div className="space-y-8">
-                  {/* Hero Section Placeholder */}
                   <div className="bg-primary/5 rounded-lg py-16 text-center">
                     <h1 className="text-foreground mb-4 text-4xl font-bold">
-                      Welcome to {navbarResponse.data.data.logoText}
+                      Welcome to{" "}
+                      {navbarResponse?.data?.data.logoText || "Your Site"}
                     </h1>
                     <p className="text-muted-foreground mb-8 text-xl">
                       This is a preview of your website. Add more components in
@@ -143,8 +146,6 @@ export default function PreviewPage({ params }: PreviewPageProps) {
                       Get Started
                     </Button>
                   </div>
-
-                  {/* Content Sections */}
                   <div className="grid gap-8 md:grid-cols-2">
                     <div className="rounded-lg border p-6">
                       <h2 className="mb-4 text-2xl font-semibold">About Us</h2>
@@ -166,9 +167,19 @@ export default function PreviewPage({ params }: PreviewPageProps) {
                 </div>
               )}
             </div>
+
+            {/* Render Footer */}
+            {footerResponse?.data && (
+              <FooterComponent
+                componentId={footerResponse.data.id}
+                footerData={footerResponse.data.data}
+                style={footerResponse.data.data.style}
+                isEditable={false}
+              />
+            )}
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Device Info */}
       <div className="fixed right-4 bottom-4">
