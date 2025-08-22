@@ -3,18 +3,23 @@
 import React from "react";
 import { useDrop } from "react-dnd";
 import { NavbarComponent } from "@/components/site-owners/navbar/navbar-component";
+import { Footer as FooterComponent } from "@/components/site-owners/footer/footer";
 import { Navbar } from "@/types/owner-site/components/navbar";
-import { Plus, Navigation, Edit, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Footer } from "@/types/owner-site/components/footer";
 import { useDeleteNavbarMutation } from "@/hooks/owner-site/components/navbar";
+import { useDeleteFooterMutation } from "@/hooks/owner-site/components/footer";
+import { Plus, Navigation, Edit, X, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface CanvasAreaProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   droppedComponents: any[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   onDrop: (item: any, position: { x: number; y: number }) => void;
   navbar?: Navbar | null;
   onAddNavbar: () => void;
+  footer?: Footer | null;
+  onAddFooter: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -22,8 +27,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onDrop,
   navbar,
   onAddNavbar,
+  footer,
+  onAddFooter,
 }) => {
   const deleteNavbarMutation = useDeleteNavbarMutation();
+  const deleteFooterMutation = useDeleteFooterMutation();
 
   const handleDeleteNavbar = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -31,9 +39,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       deleteNavbarMutation.mutate(navbar.id);
     }
   };
+
+  const handleDeleteFooter = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (footer?.id) {
+      deleteFooterMutation.mutate();
+    }
+  };
   const [{ isOver, canDrop }, drop] = useDrop(() => ({
     accept: "component",
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     drop: (item: any, monitor) => {
       const clientOffset = monitor.getClientOffset();
       if (clientOffset) {
@@ -57,9 +72,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       {/* Navbar Section */}
       {navbar ? (
         <div className="group relative border-b">
-          {/* NavbarComponent now handles its own editing UI */}
           <NavbarComponent navbar={navbar} />
-          {/* Keep a simple delete button on the outside for clarity */}
           <div className="absolute -top-2 -right-2 z-20 opacity-0 transition-opacity group-hover:opacity-100">
             <Button
               onClick={handleDeleteNavbar}
@@ -95,59 +108,45 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         </div>
       )}
 
-      {/* Canvas Content Area (Code remains the same) */}
+      {/* Main Content Area */}
       <div className="min-h-[400px] p-8">
-        {droppedComponents.length === 0 && navbar && (
+        {droppedComponents.length === 0 && (
           <div className="flex h-full flex-col items-center justify-center py-20 text-center">
             <div className="bg-primary/10 mb-4 rounded-full p-6">
               <Plus className="text-primary h-12 w-12" />
             </div>
             <h3 className="text-foreground mb-2 text-xl font-semibold">
-              Continue Building Your Site
+              {navbar
+                ? "Continue Building Your Site"
+                : "Start Building Your Site"}
             </h3>
             <p className="text-muted-foreground max-w-md">
-              Great! You have a navbar. Now drag components from the sidebar to
-              add content to your page.
+              {navbar
+                ? "Great! You have a navbar. Now drag components from the sidebar to add content to your page."
+                : "Add a navbar first, then drag components from the sidebar to build your website."}
             </p>
           </div>
         )}
 
-        {droppedComponents.length === 0 && !navbar && (
-          <div className="flex h-full flex-col items-center justify-center py-20 text-center">
-            <div className="bg-primary/10 mb-4 rounded-full p-6">
-              <Plus className="text-primary h-12 w-12" />
+        {droppedComponents.map(component => (
+          <div
+            key={component.id}
+            className="mb-4 rounded-lg border border-dashed border-gray-300 p-4"
+          >
+            <div className="flex items-center justify-between">
+              <p className="text-foreground font-medium">
+                Component: {component.type}
+              </p>
+              <Button variant="outline" size="sm">
+                <Edit className="mr-2 h-4 w-4" />
+                Edit
+              </Button>
             </div>
-            <h3 className="text-foreground mb-2 text-xl font-semibold">
-              Start Building Your Site
-            </h3>
-            <p className="text-muted-foreground max-w-md">
-              Add a navbar first, then drag components from the sidebar to build
-              your website.
-            </p>
           </div>
-        )}
+        ))}
 
-        {droppedComponents
-          .filter(c => c.type !== "navbar")
-          .map(component => (
-            <div
-              key={component.id}
-              className="mb-4 rounded-lg border border-dashed border-gray-300 p-4"
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-foreground font-medium">
-                  Component: {component.type}
-                </p>
-                <Button variant="outline" size="sm">
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit
-                </Button>
-              </div>
-            </div>
-          ))}
-
-        {/* Drop zone indicator */}
-        {(droppedComponents.length > 0 || navbar) && (
+        {/* Drop Zone Indicator */}
+        {droppedComponents.length > 0 && (
           <div
             className={`mt-8 rounded-lg border-2 border-dashed p-8 transition-colors ${
               isActive
@@ -162,6 +161,50 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           </div>
         )}
       </div>
+
+      {/* Footer Section */}
+      {footer ? (
+        <div className="group relative border-t">
+          <FooterComponent
+            componentId={footer.id}
+            footerData={footer.data}
+            style={footer.data.style}
+            isEditable={true}
+          />
+          <div className="absolute -top-2 -right-2 z-20 opacity-0 transition-opacity group-hover:opacity-100">
+            <Button
+              onClick={handleDeleteFooter}
+              variant="destructive"
+              size="sm"
+              className="h-8 w-8 p-0"
+              disabled={deleteFooterMutation.isPending}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="border-t border-dashed border-gray-300 bg-gray-50/50">
+          <div className="flex items-center justify-center p-8">
+            <div className="text-center">
+              <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
+                <FileText className="text-primary h-8 w-8" />
+              </div>
+              <h4 className="text-foreground mb-2 text-lg font-semibold">
+                Add a Footer
+              </h4>
+              <p className="text-muted-foreground mb-4 max-w-xs text-sm">
+                Finish your page with a professional footer to provide essential
+                links.
+              </p>
+              <Button onClick={onAddFooter} className="gap-2">
+                <Plus className="h-4 w-4" />
+                Add Footer
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
