@@ -19,14 +19,17 @@ import {
   useFooterQuery,
   useCreateFooterMutation,
 } from "@/hooks/owner-site/components/footer";
-import { FooterData } from "@/types/owner-site/components/footer";
 import { FooterStylesDialog } from "@/components/site-owners/footer/footer-styles-dialog";
+import { HeroStylesDialog } from "@/components/site-owners/hero/hero-styles-dialog";
+import { HeroSettingsDialog } from "@/components/site-owners/hero/hero-editor-dialog";
+import { defaultHeroData } from "@/types/owner-site/components/hero";
+import { useCreateHeroMutation } from "@/hooks/owner-site/components/hero";
 import { Facebook, Twitter } from "lucide-react";
 
 interface Component {
   id: string;
   type: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
 }
 
@@ -44,6 +47,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
   const createFooterMutation = useCreateFooterMutation();
 
+  // Hero hooks
+
   // Use the page hooks
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
   const createPageMutation = useCreatePage();
@@ -51,9 +56,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [droppedComponents, setDroppedComponents] = useState<Component[]>([]);
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
   const [isFooterDialogOpen, setIsFooterDialogOpen] = useState(false);
+  const [isHeroStylesDialogOpen, setIsHeroStylesDialogOpen] = useState(false);
+  const [isHeroSettingsDialogOpen, setIsHeroSettingsDialogOpen] =
+    useState(false);
   const [currentPage, setCurrentPage] = useState("");
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
 
+  const createHeroMutation = useCreateHeroMutation(currentPage);
   // Auto-create home page if no pages exist
   useEffect(() => {
     if (
@@ -99,6 +108,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsNavbarDialogOpen(true);
     } else if (componentId === "footer") {
       setIsFooterDialogOpen(true);
+    } else if (componentId === "hero-sections") {
+      // Open the hero styles dialog for template selection
+      setIsHeroStylesDialogOpen(true);
     } else {
       console.log(`${componentId} clicked`);
     }
@@ -166,7 +178,36 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleHeroTemplateSelect = (template: "hero-1" | "hero-2") => {
+    // Create hero data with the selected template
+    const heroData = {
+      ...defaultHeroData,
+      template: template,
+    };
+
+    const payload = {
+      component_id: `hero-${Date.now()}`,
+      component_type: "hero" as const,
+      data: heroData,
+      order: 1,
+    };
+
+    createHeroMutation.mutate(payload, {
+      onSuccess: () => {
+        setIsHeroStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create hero component:", error);
+      },
+    });
+  };
+
+  const handleAddHeroFromCanvas = () => {
+    // Open the hero styles dialog when adding from canvas
+    setIsHeroStylesDialogOpen(true);
+  };
+
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleDrop = useCallback((item: any) => {
     if (item.type === "navbar" || item.type === "footer") return;
 
@@ -217,6 +258,26 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onStyleSelect={handleFooterStyleSelect}
       />
 
+      {/* Hero Styles Dialog for template selection */}
+      <HeroStylesDialog
+        open={isHeroStylesDialogOpen}
+        onOpenChange={setIsHeroStylesDialogOpen}
+        onStyleSelect={handleHeroTemplateSelect}
+        sampleHeroData={defaultHeroData}
+      />
+
+      {/* Hero Settings Dialog for editing (if needed separately) */}
+      {isHeroSettingsDialogOpen && (
+        <HeroSettingsDialog
+          isOpen={isHeroSettingsDialogOpen}
+          onOpenChange={setIsHeroSettingsDialogOpen}
+          pageSlug={currentPage}
+          heroData={defaultHeroData}
+          mode="create"
+          onSave={() => setIsHeroSettingsDialogOpen(false)}
+        />
+      )}
+
       <div className="bg-background flex min-h-screen flex-col">
         <TopNavigation
           pages={pagesData}
@@ -248,6 +309,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddNavbar={() => setIsNavbarDialogOpen(true)}
                   footer={footerResponse?.data}
                   onAddFooter={() => setIsFooterDialogOpen(true)}
+                  currentPageSlug={currentPage}
+                  onAddHero={handleAddHeroFromCanvas}
                 />
               </div>
             </div>

@@ -5,6 +5,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { QueryProvider } from "@/providers/query-provider";
 import TopLoader from "@/components/top-loader";
 import { Suspense } from "react";
+import { Toaster } from "sonner";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -29,6 +30,12 @@ export default function RootLayout({
               <TopLoader />
             </Suspense>
             {children}
+            <Toaster
+              position="bottom-right"
+              richColors
+              closeButton
+              duration={3000}
+            />
           </QueryProvider>
         </AuthProvider>
       </body>
