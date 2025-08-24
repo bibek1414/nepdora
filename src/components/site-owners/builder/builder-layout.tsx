@@ -9,21 +9,28 @@ import { ComponentSidebar } from "@/components/site-owners/builder/component-sid
 import {
   useNavbarQuery,
   useCreateNavbarMutation,
-} from "@/hooks/owner-site/components/navbar";
+} from "@/hooks/owner-site/components/use-navbar";
 import { NavbarData } from "@/types/owner-site/components/navbar";
 import { NavbarTemplateDialog } from "@/components/site-owners/navbar/navbar-template-dialog";
-import { usePages } from "@/hooks/owner-site/page";
-import { useCreatePage } from "@/hooks/owner-site/page";
+import { usePages } from "@/hooks/owner-site/use-page";
+import { useCreatePage } from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";
 import {
   useFooterQuery,
   useCreateFooterMutation,
-} from "@/hooks/owner-site/components/footer";
+} from "@/hooks/owner-site/components/use-footer";
 import { FooterStylesDialog } from "@/components/site-owners/footer/footer-styles-dialog";
 import { HeroStylesDialog } from "@/components/site-owners/hero/hero-styles-dialog";
 import { HeroSettingsDialog } from "@/components/site-owners/hero/hero-editor-dialog";
 import { defaultHeroData } from "@/types/owner-site/components/hero";
-import { useCreateHeroMutation } from "@/hooks/owner-site/components/hero";
+import { useCreateHeroMutation } from "@/hooks/owner-site/components/use-hero";
+import { useCreateAboutUsMutation } from "@/hooks/owner-site/components/use-about";
+import { AboutUsStylesDialog } from "@/components/site-owners/about/about-styles-dialog";
+import {
+  defaultAboutUs1Data,
+  defaultAboutUs2Data,
+} from "@/types/owner-site/components/about";
+import { AboutUsData } from "@/types/owner-site/components/about";
 import { Facebook, Twitter } from "lucide-react";
 
 interface Component {
@@ -47,8 +54,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
   const createFooterMutation = useCreateFooterMutation();
 
-  // Hero hooks
-
   // Use the page hooks
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
   const createPageMutation = useCreatePage();
@@ -59,10 +64,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isHeroStylesDialogOpen, setIsHeroStylesDialogOpen] = useState(false);
   const [isHeroSettingsDialogOpen, setIsHeroSettingsDialogOpen] =
     useState(false);
+  const [isAboutUsStylesDialogOpen, setIsAboutUsStylesDialogOpen] =
+    useState(false);
   const [currentPage, setCurrentPage] = useState("");
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
 
   const createHeroMutation = useCreateHeroMutation(currentPage);
+  const createAboutUsMutation = useCreateAboutUsMutation(currentPage);
+
   // Auto-create home page if no pages exist
   useEffect(() => {
     if (
@@ -111,6 +120,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     } else if (componentId === "hero-sections") {
       // Open the hero styles dialog for template selection
       setIsHeroStylesDialogOpen(true);
+    } else if (componentId === "about-sections") {
+      setIsAboutUsStylesDialogOpen(true);
     } else {
       console.log(`${componentId} clicked`);
     }
@@ -202,9 +213,35 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
+  const handleAboutUsTemplateSelect = (template: "about-1" | "about-2") => {
+    // Select the correct default data based on the chosen template
+    const aboutUsData: AboutUsData =
+      template === "about-1" ? defaultAboutUs1Data : defaultAboutUs2Data;
+
+    const payload = {
+      component_id: `about-${Date.now()}`,
+      component_type: "about" as const,
+      data: aboutUsData,
+      order: 2, // You should dynamically determine the order
+    };
+
+    createAboutUsMutation.mutate(payload, {
+      onSuccess: () => {
+        setIsAboutUsStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create about us component:", error);
+      },
+    });
+  };
+
   const handleAddHeroFromCanvas = () => {
     // Open the hero styles dialog when adding from canvas
     setIsHeroStylesDialogOpen(true);
+  };
+
+  const handleAddAboutUsFromCanvas = () => {
+    setIsAboutUsStylesDialogOpen(true);
   };
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -266,6 +303,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         sampleHeroData={defaultHeroData}
       />
 
+      {/* About Us Styles Dialog for template selection */}
+      <AboutUsStylesDialog
+        open={isAboutUsStylesDialogOpen}
+        onOpenChange={setIsAboutUsStylesDialogOpen}
+        onStyleSelect={handleAboutUsTemplateSelect}
+      />
+
       {/* Hero Settings Dialog for editing (if needed separately) */}
       {isHeroSettingsDialogOpen && (
         <HeroSettingsDialog
@@ -311,6 +355,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddFooter={() => setIsFooterDialogOpen(true)}
                   currentPageSlug={currentPage}
                   onAddHero={handleAddHeroFromCanvas}
+                  onAddAboutUs={handleAddAboutUsFromCanvas}
                 />
               </div>
             </div>

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Loader2 } from "lucide-react";
-import { useCreatePage } from "@/hooks/owner-site/page";
+import { useCreatePage } from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";
 
 interface NewPageDialogProps {

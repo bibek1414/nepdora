@@ -39,7 +39,7 @@ import {
 import {
   useUpdateHeroMutation,
   useCreateHeroMutation,
-} from "@/hooks/owner-site/components/hero";
+} from "@/hooks/owner-site/components/use-hero";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 
 interface HeroSettingsDialogProps {

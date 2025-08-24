@@ -20,7 +20,7 @@ import {
 import { HeroSettingsDialog } from "./hero-editor-dialog";
 import { HeroTemplate1 } from "./hero-style-1";
 import { HeroTemplate2 } from "./hero-style-2";
-import { useDeleteHeroMutation } from "@/hooks/owner-site/components/hero";
+import { useDeleteHeroMutation } from "@/hooks/owner-site/components/use-hero";
 
 interface HeroComponentProps {
   component: HeroComponentData;

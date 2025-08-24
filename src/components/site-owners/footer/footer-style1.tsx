@@ -14,7 +14,7 @@ import {
   Linkedin,
 } from "lucide-react";
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
-import { useDeleteFooterMutation } from "@/hooks/owner-site/components/footer";
+import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 
 interface FooterStyle1Props {
   footerData: FooterData;

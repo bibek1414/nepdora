@@ -7,7 +7,7 @@ import {
   NavbarButton,
   NavbarData,
 } from "@/types/owner-site/components/navbar";
-import { useUpdateNavbarMutation } from "@/hooks/owner-site/components/navbar";
+import { useUpdateNavbarMutation } from "@/hooks/owner-site/components/use-navbar";
 import { LinkEditorDialog } from "./link-editor-dialog";
 import { ButtonEditorDialog } from "./button-editor-dialog";
 import { TextEditorDialog } from "./text-editor-dialog";

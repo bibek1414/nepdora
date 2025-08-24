@@ -12,7 +12,7 @@ import {
   useUpdateFooterMutation,
   useCreateFooterMutation,
   useFooterQuery,
-} from "@/hooks/owner-site/components/footer";
+} from "@/hooks/owner-site/components/use-footer";
 
 const defaultFooterData: FooterData = {
   companyName: "Your Company",

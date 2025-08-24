@@ -6,17 +6,27 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Monitor, Smartphone, Tablet } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { NavbarComponent } from "@/components/site-owners/navbar/navbar-component";
-import { useNavbarQuery } from "@/hooks/owner-site/components/navbar";
-import { useFooterQuery } from "@/hooks/owner-site/components/footer";
+import { useNavbarQuery } from "@/hooks/owner-site/components/use-navbar";
+import { useFooterQuery } from "@/hooks/owner-site/components/use-footer";
 import { Footer as FooterComponent } from "@/components/site-owners/footer/footer";
 import { HeroComponent } from "@/components/site-owners/hero/hero-component";
-import { usePageComponentsQuery } from "@/hooks/owner-site/components/hero";
-import { usePages } from "@/hooks/owner-site/page";
+import { AboutUsComponent } from "@/components/site-owners/about/about-component";
+import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-hero";
+import { usePages } from "@/hooks/owner-site/use-page";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
+import { AboutUsComponentData } from "@/types/owner-site/components/about";
 
 import { use } from "react";
+
 interface PreviewPageProps {
   params: Promise<{ siteUser: string }>;
+}
+
+interface PageComponent {
+  id: string | number;
+  component_type: "hero" | "about";
+  data: HeroComponentData["data"] | AboutUsComponentData["data"];
+  order?: number;
 }
 
 export default function PreviewPage({ params }: PreviewPageProps) {
@@ -27,15 +37,35 @@ export default function PreviewPage({ params }: PreviewPageProps) {
   const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
 
-  // Get the home page slug for hero components
+  // Get the home page slug for components
   const homePage =
     pagesData.find(page => page.title.toLowerCase() === "home") || pagesData[0];
   const homePageSlug = homePage?.slug || "";
 
-  // Fetch hero components for the home page
-  const { data: heroComponentsResponse, isLoading: isHeroLoading } =
+  // Fetch all components for the home page
+  const { data: pageComponentsResponse, isLoading: isComponentsLoading } =
     usePageComponentsQuery(homePageSlug);
-  const heroComponents = heroComponentsResponse?.data || [];
+
+  // Process all page components with proper typing
+  const pageComponents = React.useMemo((): PageComponent[] => {
+    if (!pageComponentsResponse) return [];
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let components: any[] = [];
+    if (Array.isArray(pageComponentsResponse.data)) {
+      components = pageComponentsResponse.data;
+    } else if (Array.isArray(pageComponentsResponse.components)) {
+      components = pageComponentsResponse.components;
+    } else if (Array.isArray(pageComponentsResponse)) {
+      components = pageComponentsResponse;
+    }
+
+    return components.filter(
+      (component): component is PageComponent =>
+        component.component_type &&
+        ["hero", "about"].includes(component.component_type) &&
+        component.data
+    );
+  }, [pageComponentsResponse]);
 
   const [deviceView, setDeviceView] = useState<"desktop" | "tablet" | "mobile">(
     "desktop"
@@ -56,8 +86,34 @@ export default function PreviewPage({ params }: PreviewPageProps) {
     }
   };
 
+  // Component renderer with proper typing
+  const renderComponent = (component: PageComponent) => {
+    switch (component.component_type) {
+      case "hero":
+        return (
+          <HeroComponent
+            key={component.id}
+            component={component as HeroComponentData}
+            isEditable={false}
+            pageSlug={homePageSlug}
+          />
+        );
+      case "about":
+        return (
+          <AboutUsComponent
+            key={component.id}
+            component={component as AboutUsComponentData}
+            isEditable={false}
+            pageSlug={homePageSlug}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   const isLoading =
-    isNavbarLoading || isFooterLoading || isPagesLoading || isHeroLoading;
+    isNavbarLoading || isFooterLoading || isPagesLoading || isComponentsLoading;
 
   if (isLoading) {
     return (
@@ -71,7 +127,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
   }
 
   const hasContent =
-    navbarResponse?.data || footerResponse?.data || heroComponents.length > 0;
+    navbarResponse?.data || footerResponse?.data || pageComponents.length > 0;
 
   return (
     <div className="bg-background min-h-screen">
@@ -135,22 +191,12 @@ export default function PreviewPage({ params }: PreviewPageProps) {
               />
             )}
 
-            {/* Render Hero Components */}
-            {heroComponents.length > 0 && (
+            {/* Render All Page Components */}
+            {pageComponents.length > 0 && (
               <div className="space-y-0">
-                {heroComponents
-                  .sort(
-                    (a: HeroComponentData, b: HeroComponentData) =>
-                      a.order - b.order
-                  )
-                  .map((heroComponent: HeroComponentData) => (
-                    <HeroComponent
-                      key={heroComponent.id}
-                      component={heroComponent}
-                      isEditable={false}
-                      pageSlug={homePageSlug}
-                    />
-                  ))}
+                {pageComponents
+                  .sort((a, b) => (a.order || 0) - (b.order || 0))
+                  .map(renderComponent)}
               </div>
             )}
 
@@ -172,7 +218,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
                     Open Builder
                   </Button>
                 </div>
-              ) : heroComponents.length === 0 ? (
+              ) : pageComponents.length === 0 ? (
                 <div className="space-y-8">
                   <div className="bg-primary/5 rounded-lg py-16 text-center">
                     <h1 className="text-foreground mb-4 text-4xl font-bold">
@@ -207,7 +253,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
                   </div>
                 </div>
               ) : (
-                // Additional content sections when hero components exist
+                // Additional content sections when page components exist
                 <div className="space-y-12">
                   <div className="grid gap-8 md:grid-cols-3">
                     <div className="rounded-lg border p-6 text-center">
