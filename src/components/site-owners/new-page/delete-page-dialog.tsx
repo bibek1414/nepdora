@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { X, Loader2 } from "lucide-react";
-import { useDeletePage } from "@/hooks/owner-site/page";
+import { useDeletePage } from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";
 
 interface DeletePageDialogProps {
