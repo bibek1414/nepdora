@@ -8,13 +8,15 @@ import {
   Phone,
   Heart,
   ExternalLink,
-  Edit3,
+  Edit,
+  Trash2,
   Facebook,
   Twitter,
   Instagram,
   Linkedin,
 } from "lucide-react";
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
+import { useDeleteFooterMutation } from "@/hooks/owner-site/components/footer";
 
 interface FooterStyle2Props {
   footerData: FooterData;
@@ -54,6 +56,7 @@ export function FooterStyle2({
   onEditClick,
 }: FooterStyle2Props) {
   const [email, setEmail] = useState("");
+  const deleteFooterMutation = useDeleteFooterMutation();
 
   const handleLinkClick = (href: string | undefined, e: React.MouseEvent) => {
     if (!href) {
@@ -66,18 +69,34 @@ export function FooterStyle2({
     }
   };
 
+  const handleDelete = () => {
+    deleteFooterMutation.mutate();
+  };
+
   return (
-    <div className="relative">
+    <div className="group relative">
       {isEditable && (
-        <Button
-          onClick={onEditClick}
-          variant="secondary"
-          size="sm"
-          className="absolute top-4 right-4 z-10 opacity-75 hover:opacity-100"
-        >
-          <Edit3 className="mr-2 h-4 w-4" />
-          Edit Footer
-        </Button>
+        <div className="bg-background/80 absolute top-4 right-4 z-20 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onEditClick}
+            className="shadow-sm"
+          >
+            <Edit className="mr-2 h-4 w-4" />
+            Edit Footer
+          </Button>
+
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={deleteFooterMutation.isPending}
+            className="shadow-sm"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       )}
 
       <footer className="bg-muted/50 border-t">
