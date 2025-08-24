@@ -4,116 +4,245 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Heart, Star } from "lucide-react";
+import { ShoppingCart, Heart, Star, Eye } from "lucide-react";
 import { Product } from "@/types/owner-site/product";
 
 interface ProductCard2Props {
   product: Product;
   siteId?: string;
+  showPrice?: boolean;
+  showDescription?: boolean;
+  showStock?: boolean;
+  onClick?: () => void;
 }
 
 export const ProductCard2: React.FC<ProductCard2Props> = ({
   product,
   siteId,
+  showPrice = true,
+  showDescription = true,
+  showStock = true,
+  onClick,
 }) => {
-  const mockImage =
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=300&fit=crop";
+  // Generate different mock images for variety
+  const mockImages = [
+    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop",
+  ];
+
+  const mockImage = mockImages[(product.id + 1) % mockImages.length]; // Offset by 1 for variety
   const price = parseFloat(product.price);
-  const discountPercentage = 15;
+  const discountPercentage = 5 + (product.id % 4) * 5; // Different discount pattern
   const discountedPrice = (price * (1 - discountPercentage / 100)).toFixed(2);
-  const rating = 4.5;
+  const rating = 3.8 + (product.id % 12) * 0.1; // Different rating pattern
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation when clicking add to cart
+    e.stopPropagation();
+    // Add your cart logic here
+    console.log("Added to cart:", product.id);
+  };
+
+  const handleViewDetails = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Navigate to details page using new route structure
+    const detailsUrl = getDetailsUrl();
+    window.location.href = detailsUrl;
+  };
+
+  const handleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Add your favorite logic here
+    console.log("Added to favorites:", product.id);
+  };
+
+  const handleQuickView = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Add your quick view modal logic here
+    console.log("Quick view:", product.id);
+  };
+
+  // Helper function to generate the correct details URL based on route structure
+  const getDetailsUrl = (): string => {
+    if (siteId) {
+      return `/preview/${siteId}/products/${product.id}`;
+    } else {
+      return `/preview/products/${product.id}`;
+    }
+  };
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      // Default behavior: navigate to product details
+      const detailsUrl = getDetailsUrl();
+      window.location.href = detailsUrl;
+    }
+  };
+
+  // Create the details page URL for the Link component
+  const detailsUrl = getDetailsUrl();
 
   const CardWrapper = siteId
     ? ({ children }: { children: React.ReactNode }) => (
-        <Link href={`/preview?site=${siteId}&product=${product.id}`}>
-          {children}
-        </Link>
+        <Link href={detailsUrl}>{children}</Link>
       )
-    : ({ children }: { children: React.ReactNode }) => <>{children}</>;
+    : ({ children }: { children: React.ReactNode }) => (
+        <div onClick={handleClick} className="cursor-pointer">
+          {children}
+        </div>
+      );
 
   return (
     <CardWrapper>
-      <Card className="group border-border/50 hover:border-primary/50 bg-card overflow-hidden border transition-all duration-300">
+      <Card className="group overflow-hidden border-0 bg-white/80 shadow-lg backdrop-blur-sm transition-all duration-500 hover:shadow-xl">
         <CardContent className="p-0">
-          <div className="bg-muted/30 relative overflow-hidden">
-            <div className="relative aspect-square">
+          <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+            <div className="relative aspect-[4/3]">
               <Image
                 src={mockImage}
                 alt={product.name}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                className="object-cover transition-all duration-700 group-hover:scale-105 group-hover:rotate-1"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-white/10 via-transparent to-black/5" />
             </div>
-            <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
-            <div className="absolute top-3 left-3 flex flex-col gap-2">
+
+            {/* Overlay Actions */}
+            <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/20 group-hover:opacity-100">
+              <div className="flex gap-3">
+                <Button
+                  size="icon"
+                  className="rounded-full bg-white/90 text-gray-800 shadow-lg hover:bg-white"
+                  onClick={handleQuickView}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="icon"
+                  className="rounded-full bg-white/90 text-gray-800 shadow-lg hover:bg-white"
+                  onClick={handleFavorite}
+                >
+                  <Heart className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Corner Badge */}
+            <div className="absolute top-4 left-4">
               {discountPercentage > 0 && (
-                <Badge variant="destructive" className="text-xs font-medium">
-                  -{discountPercentage}%
-                </Badge>
-              )}
-              {product.stock === 0 && (
-                <Badge variant="secondary" className="text-xs">
-                  Out of Stock
-                </Badge>
+                <div className="bg-black px-3 py-1 text-xs font-bold tracking-wide text-white">
+                  SAVE {discountPercentage}%
+                </div>
               )}
             </div>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="absolute top-3 right-3 bg-white/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100 hover:bg-white"
-            >
-              <Heart className="h-4 w-4" />
-            </Button>
+
+            {/* Stock Status */}
+            {product.stock === 0 && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+                <Badge
+                  variant="secondary"
+                  className="bg-white px-4 py-2 text-sm text-black"
+                >
+                  SOLD OUT
+                </Badge>
+              </div>
+            )}
           </div>
 
-          <div className="p-5">
-            <div className="mb-2 flex items-center">
+          <div className="space-y-4 p-6">
+            {/* Brand/Category */}
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
+                Premium Collection
+              </span>
+              {showStock && product.stock > 0 && (
+                <span
+                  className={`rounded-full px-2 py-1 text-xs ${
+                    product.stock > 10
+                      ? "bg-green-100 text-green-800"
+                      : "bg-orange-100 text-orange-800"
+                  }`}
+                >
+                  {product.stock > 10 ? "In Stock" : `${product.stock} left`}
+                </span>
+              )}
+            </div>
+
+            {/* Product Title */}
+            <h3 className="line-clamp-2 text-xl font-light tracking-tight text-gray-900 transition-colors group-hover:text-gray-600">
+              {product.name}
+            </h3>
+
+            {/* Rating */}
+            <div className="flex items-center gap-2">
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
                     className={`h-3.5 w-3.5 ${
                       i < Math.round(rating)
-                        ? "fill-yellow-500 text-yellow-500"
-                        : "text-muted-foreground"
+                        ? "fill-amber-400 text-amber-400"
+                        : "text-gray-200"
                     }`}
                   />
                 ))}
               </div>
-              <span className="text-muted-foreground ml-2 text-xs">
-                ({rating})
+              <span className="text-sm text-gray-500">{rating.toFixed(1)}</span>
+              <span className="text-xs text-gray-400">
+                ({Math.floor(rating * 15 + 5)} reviews)
               </span>
             </div>
 
-            <h3 className="text-foreground mb-2 line-clamp-1 text-lg font-semibold">
-              {product.name}
-            </h3>
+            {/* Description */}
+            {showDescription && (
+              <p className="line-clamp-2 text-sm leading-relaxed text-gray-600">
+                {product.description}
+              </p>
+            )}
 
-            <p className="text-muted-foreground mb-4 line-clamp-2 min-h-[2.5rem] text-sm">
-              {product.description}
-            </p>
-
-            <div className="mb-4 flex items-center justify-between">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-primary text-2xl font-bold">
-                    ${discountedPrice}
-                  </span>
-                  {discountPercentage > 0 && (
-                    <span className="text-muted-foreground text-sm line-through">
-                      ${price.toFixed(2)}
+            {/* Price Section */}
+            {showPrice && (
+              <div className="flex items-end justify-between pt-2">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl font-light tracking-tight text-gray-900">
+                      ${discountedPrice}
                     </span>
-                  )}
-                </div>
-                <div className="text-muted-foreground text-xs">
-                  Stock: {product.stock}
+                    {discountPercentage > 0 && (
+                      <span className="text-lg font-light text-gray-400 line-through">
+                        ${price.toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    Free shipping over $50
+                  </p>
                 </div>
               </div>
-            </div>
+            )}
 
-            <Button className="w-full" size="sm" disabled={product.stock === 0}>
-              <ShoppingCart className="mr-2 h-4 w-4" />
-              {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+            {/* Action Button */}
+            <Button
+              className="w-full rounded-none border-0 bg-gray-900 py-6 font-normal tracking-wide text-white transition-all duration-300 hover:bg-gray-800"
+              disabled={product.stock === 0}
+              onClick={handleAddToCart}
+            >
+              {product.stock > 0 ? (
+                <>
+                  <ShoppingCart className="mr-2 h-4 w-4" />
+                  ADD TO CART
+                </>
+              ) : (
+                "NOTIFY WHEN AVAILABLE"
+              )}
             </Button>
           </div>
         </CardContent>

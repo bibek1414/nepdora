@@ -34,7 +34,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   };
 
   return (
-    <div className="bg-card border-b shadow-sm">
+    <div className="bg-card sticky top-0 z-50 border-b shadow-sm">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex flex-col items-center gap-3">
           <img src="/fulllogo.svg" alt="Logo" className="h-8" />

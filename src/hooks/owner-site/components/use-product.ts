@@ -33,12 +33,23 @@ export const useUpdateProductsComponentMutation = () => {
 
   return useMutation({
     mutationFn: ({
+      pageSlug,
       componentId,
       ...payload
-    }: UpdateProductsComponentRequest & { componentId: string }) =>
-      productComponentsApi.updateProductsComponent(componentId, payload),
+    }: UpdateProductsComponentRequest & {
+      componentId: string;
+      pageSlug: string;
+    }) =>
+      productComponentsApi.updateProductsComponent(
+        pageSlug,
+        componentId,
+        payload
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
       toast.success("Products section updated successfully!");
     },
     onError: (error: unknown) => {
@@ -56,9 +67,18 @@ export const useDeleteProductsComponentMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: productComponentsApi.deleteProductsComponent,
-    onSuccess: () => {
+    mutationFn: ({
+      componentId,
+      pageSlug,
+    }: {
+      componentId: string;
+      pageSlug: string;
+    }) => productComponentsApi.deleteProductsComponent(componentId, pageSlug),
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
       toast.success("Products section removed successfully!");
     },
     onError: (error: unknown) => {

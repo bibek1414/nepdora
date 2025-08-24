@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useProducts } from "@/hooks/use-product";
+import { useDeleteProductsComponentMutation } from "@/hooks/owner-site/components/use-product";
 import { ProductCard1 } from "./product-card1";
 import { ProductCard2 } from "./product-card2";
 import { ProductCard3 } from "./product-card3";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Edit, Settings, ShoppingBag } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { AlertCircle, Trash2, ShoppingBag } from "lucide-react";
 import { Product } from "@/types/owner-site/product";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +27,7 @@ interface ProductsComponentProps {
   component: ProductsComponentData;
   isEditable?: boolean;
   siteId?: string;
+  pageSlug?: string;
   onUpdate?: (componentId: string, newData: ProductsComponentData) => void;
   onProductClick?: (productId: number, order: number) => void;
 }
@@ -23,9 +36,12 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   component,
   isEditable = false,
   siteId,
+  pageSlug,
   onUpdate,
   onProductClick,
 }) => {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
   const {
     limit = 8,
     title = "Our Products",
@@ -36,6 +52,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     showStock = true,
     itemsPerRow = 4,
   } = component.data || {};
+
+  // Delete mutation hook
+  const deleteProductsComponent = useDeleteProductsComponentMutation();
 
   // Calculate page size and get first page for the limit
   const pageSize = Math.min(limit, 50);
@@ -55,10 +74,26 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     }
   };
 
-  const handleEditClick = (e: React.MouseEvent) => {
+  const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Open edit dialog or trigger edit mode
-    console.log("Edit products component:", component.id);
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
+      return;
+    }
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
+      return;
+    }
+
+    deleteProductsComponent.mutate({
+      componentId: component.component_id,
+      pageSlug,
+    });
+    setIsDeleteDialogOpen(false);
   };
 
   const renderProductCard = (product: Product, index: number) => {
@@ -102,28 +137,50 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   if (isEditable) {
     return (
       <div className="group relative">
-        {/* Edit Controls */}
+        {/* Delete Control with AlertDialog */}
         <div className="absolute top-4 right-4 z-20 opacity-0 transition-opacity group-hover:opacity-100">
-          <div className="flex gap-2">
-            <Button
-              onClick={handleEditClick}
-              variant="secondary"
-              size="sm"
-              className="h-8 px-3"
-            >
-              <Settings className="mr-1 h-4 w-4" />
-              Settings
-            </Button>
-            <Button
-              onClick={handleEditClick}
-              variant="outline"
-              size="sm"
-              className="h-8 px-3"
-            >
-              <Edit className="mr-1 h-4 w-4" />
-              Edit
-            </Button>
-          </div>
+          <AlertDialog
+            open={isDeleteDialogOpen}
+            onOpenChange={setIsDeleteDialogOpen}
+          >
+            <AlertDialogTrigger asChild>
+              <Button
+                onClick={handleDeleteClick}
+                variant="destructive"
+                size="sm"
+                className="h-8 px-3"
+                disabled={deleteProductsComponent.isPending}
+              >
+                <Trash2 className="mr-1 h-4 w-4" />
+                {deleteProductsComponent.isPending ? "Deleting..." : "Delete"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex items-center gap-2">
+                  <Trash2 className="text-destructive h-5 w-5" />
+                  Delete Products Component
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete this products component? This
+                  action cannot be undone and will permanently remove the
+                  component from your page.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleConfirmDelete}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  disabled={deleteProductsComponent.isPending}
+                >
+                  {deleteProductsComponent.isPending
+                    ? "Deleting..."
+                    : "Delete Component"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
 
         {/* Style Info Header */}
