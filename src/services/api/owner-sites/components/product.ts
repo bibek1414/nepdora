@@ -26,7 +26,7 @@ export const productComponentsApi = {
   ): Promise<ProductsComponentData> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(
-      `${API_BASE_URL}/api/page/${pageSlug}/products/`,
+      `${API_BASE_URL}/api/pages/${pageSlug}/components/`,
       {
         method: "POST",
         headers: createHeaders(),
@@ -39,12 +39,14 @@ export const productComponentsApi = {
 
   // Update products component
   updateProductsComponent: async (
+    pageSlug: string,
+
     componentId: string,
     payload: UpdateProductsComponentRequest
   ): Promise<ProductsComponentData> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(
-      `${API_BASE_URL}/api/products-component/${componentId}/`,
+      `${API_BASE_URL}/api/pages/${pageSlug}/components/${componentId}/`,
       {
         method: "PATCH",
         headers: createHeaders(),
@@ -56,10 +58,15 @@ export const productComponentsApi = {
   },
 
   // Delete products component
-  deleteProductsComponent: async (componentId: string): Promise<void> => {
+
+  deleteProductsComponent: async (
+    componentId: string,
+    pageSlug: string
+  ): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(
-      `${API_BASE_URL}/api/products-component/${componentId}/`,
+      `${API_BASE_URL}/api/pages/${pageSlug}/components/${componentId}/`,
+
       {
         method: "DELETE",
         headers: createHeaders(),

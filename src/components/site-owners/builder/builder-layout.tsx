@@ -31,6 +31,9 @@ import {
   defaultAboutUs2Data,
 } from "@/types/owner-site/components/about";
 import { AboutUsData } from "@/types/owner-site/components/about";
+import { useCreateProductsComponentMutation } from "@/hooks/owner-site/components/use-product";
+import { defaultProductsData } from "@/types/owner-site/components/products";
+import { ProductsStylesDialog } from "@/components/site-owners/products/products-styles-dialog";
 import { Facebook, Twitter } from "lucide-react";
 
 interface Component {
@@ -66,11 +69,16 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isAboutUsStylesDialogOpen, setIsAboutUsStylesDialogOpen] =
     useState(false);
+  // Add this state for products styles dialog
+  const [isProductsStylesDialogOpen, setIsProductsStylesDialogOpen] =
+    useState(false);
   const [currentPage, setCurrentPage] = useState("");
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
 
   const createHeroMutation = useCreateHeroMutation(currentPage);
   const createAboutUsMutation = useCreateAboutUsMutation(currentPage);
+  const createProductsComponentMutation =
+    useCreateProductsComponentMutation(currentPage);
 
   // Auto-create home page if no pages exist
   useEffect(() => {
@@ -112,6 +120,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   // Get current page data
   const currentPageData = pagesData.find(page => page.slug === currentPage);
 
+  // Update the component click handler
   const handleComponentClick = (componentId: string) => {
     if (componentId === "navbar") {
       setIsNavbarDialogOpen(true);
@@ -122,6 +131,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsHeroStylesDialogOpen(true);
     } else if (componentId === "about-sections") {
       setIsAboutUsStylesDialogOpen(true);
+    } else if (componentId === "products-sections") {
+      // Open the products styles dialog instead of directly creating
+      setIsProductsStylesDialogOpen(true);
     } else {
       console.log(`${componentId} clicked`);
     }
@@ -235,6 +247,31 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
+  // Add the products template select handler
+  const handleProductsTemplateSelect = (
+    template: "grid-1" | "grid-2" | "list-1" | "carousel-1"
+  ) => {
+    // Create products component with the selected template
+    const payload = {
+      component_id: `products-${Date.now()}`,
+      component_type: "products" as const,
+      data: {
+        ...defaultProductsData,
+        style: template, // Set the selected style
+      },
+      order: 3,
+    };
+
+    createProductsComponentMutation.mutate(payload, {
+      onSuccess: () => {
+        setIsProductsStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create products component:", error);
+      },
+    });
+  };
+
   const handleAddHeroFromCanvas = () => {
     // Open the hero styles dialog when adding from canvas
     setIsHeroStylesDialogOpen(true);
@@ -242,6 +279,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   const handleAddAboutUsFromCanvas = () => {
     setIsAboutUsStylesDialogOpen(true);
+  };
+
+  // Update the handleAddProducts function
+  const handleAddProducts = () => {
+    setIsProductsStylesDialogOpen(true);
   };
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -310,6 +352,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onStyleSelect={handleAboutUsTemplateSelect}
       />
 
+      {/* Add this dialog for products styles */}
+      <ProductsStylesDialog
+        open={isProductsStylesDialogOpen}
+        onOpenChange={setIsProductsStylesDialogOpen}
+        onStyleSelect={handleProductsTemplateSelect}
+      />
+
       {/* Hero Settings Dialog for editing (if needed separately) */}
       {isHeroSettingsDialogOpen && (
         <HeroSettingsDialog
@@ -356,6 +405,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   currentPageSlug={currentPage}
                   onAddHero={handleAddHeroFromCanvas}
                   onAddAboutUs={handleAddAboutUsFromCanvas}
+                  onAddProducts={handleAddProducts}
                 />
               </div>
             </div>

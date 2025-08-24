@@ -6,10 +6,12 @@ import { NavbarComponent } from "@/components/site-owners/navbar/navbar-componen
 import { Footer as FooterComponent } from "@/components/site-owners/footer/footer";
 import { HeroComponent } from "@/components/site-owners/hero/hero-component";
 import { AboutUsComponent } from "@/components/site-owners/about/about-component";
+import { ProductsComponent } from "@/components/site-owners/products/products-component";
 import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
+import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useDeleteNavbarMutation } from "@/hooks/owner-site/components/use-navbar";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-hero";
@@ -21,6 +23,7 @@ import {
   FileText,
   Sparkles,
   Info,
+  ShoppingBag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -36,6 +39,7 @@ interface CanvasAreaProps {
   currentPageSlug: string;
   onAddHero?: () => void;
   onAddAboutUs?: () => void;
+  onAddProducts?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -48,6 +52,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   currentPageSlug,
   onAddHero,
   onAddAboutUs,
+  onAddProducts,
 }) => {
   const deleteNavbarMutation = useDeleteNavbarMutation();
   const deleteFooterMutation = useDeleteFooterMutation();
@@ -89,7 +94,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     const filteredComponents = components.filter((component: any) => {
       const hasValidType =
         component.component_type &&
-        ["hero", "about"].includes(component.component_type);
+        ["hero", "about", "products"].includes(component.component_type);
       const hasValidData = component && component.data;
       const hasValidId = component && typeof component.id !== "undefined";
 
@@ -139,6 +144,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   // Check for specific component types
   const hasHero = pageComponents.some(c => c.component_type === "hero");
   const hasAbout = pageComponents.some(c => c.component_type === "about");
+  const hasProducts = pageComponents.some(c => c.component_type === "products");
 
   const handleDeleteNavbar = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -167,6 +173,24 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             component={component as AboutUsComponentData}
             isEditable={true}
             pageSlug={currentPageSlug}
+          />
+        );
+      case "products":
+        return (
+          <ProductsComponent
+            key={`products-${component.id}`}
+            component={component as ProductsComponentData}
+            isEditable={true}
+            siteId={undefined}
+            pageSlug={currentPageSlug}
+            onUpdate={(componentId, newData) => {
+              console.log("Products component updated:", componentId, newData);
+              // Handle component update here
+            }}
+            onProductClick={(productId, order) => {
+              console.log("Product clicked:", productId, order);
+              // Handle product click in builder mode
+            }}
           />
         );
       default:
@@ -295,24 +319,64 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             )}
 
           {/* Show about us placeholder if hero exists but no about */}
-          {!isLoading && hasHero && !hasAbout && onAddAboutUs && (
-            <div className="py-20 text-center">
-              <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-                <Info className="text-primary h-8 w-8" />
+          {!isLoading &&
+            hasHero &&
+            !hasAbout &&
+            !hasProducts &&
+            onAddAboutUs && (
+              <div className="py-20 text-center">
+                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
+                  <Info className="text-primary h-8 w-8" />
+                </div>
+                <h4 className="text-foreground mb-2 text-lg font-semibold">
+                  Tell Your Story
+                </h4>
+                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
+                  Add an &quot;About Us&quot; section to introduce your company
+                  to visitors.
+                </p>
+                <div className="flex justify-center gap-2">
+                  <Button onClick={onAddAboutUs} className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    Add About Us
+                  </Button>
+                  {onAddProducts && (
+                    <Button
+                      onClick={onAddProducts}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <ShoppingBag className="h-4 w-4" />
+                      Add Products
+                    </Button>
+                  )}
+                </div>
               </div>
-              <h4 className="text-foreground mb-2 text-lg font-semibold">
-                Tell Your Story
-              </h4>
-              <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
-                Add an &quot;About Us&quot; section to introduce your company to
-                visitors.
-              </p>
-              <Button onClick={onAddAboutUs} className="gap-2">
-                <Plus className="h-4 w-4" />
-                Add About Us
-              </Button>
-            </div>
-          )}
+            )}
+
+          {/* Show products placeholder if hero and about exist but no products */}
+          {!isLoading &&
+            hasHero &&
+            hasAbout &&
+            !hasProducts &&
+            onAddProducts && (
+              <div className="py-20 text-center">
+                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
+                  <ShoppingBag className="text-primary h-8 w-8" />
+                </div>
+                <h4 className="text-foreground mb-2 text-lg font-semibold">
+                  Showcase Your Products
+                </h4>
+                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
+                  Display your products in an attractive grid or list layout to
+                  attract customers.
+                </p>
+                <Button onClick={onAddProducts} className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Add Products Section
+                </Button>
+              </div>
+            )}
 
           {/* Show general start building message if no navbar */}
           {!isLoading &&
