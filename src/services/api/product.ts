@@ -13,6 +13,83 @@ import {
   PaginationParams,
 } from "@/types/owner-site/product";
 
+const buildProductFormData = (
+  data: CreateProductRequest | UpdateProductRequest
+): FormData => {
+  const formData = new FormData();
+
+  Object.entries(data).forEach(([key, value]) => {
+    if (value === null || value === undefined) {
+      return; // Skip null or undefined values
+    }
+
+    if (key === "images" && Array.isArray(value)) {
+      // Handle the array of images
+      let imageCount = 0;
+      value.forEach(imageFile => {
+        // Only append new File objects, skip existing URLs
+        if (imageFile instanceof File) {
+          formData.append("images", imageFile);
+          imageCount++;
+        }
+      });
+      console.log(`Appended ${imageCount} new image files to FormData`);
+    } else if (key === "thumbnail_image" && value instanceof File) {
+      formData.append("thumbnail_image", value);
+    } else if (typeof value === "boolean") {
+      formData.append(key, value.toString());
+    } else if (typeof value === "number") {
+      formData.append(key, value.toString());
+    } else if (typeof value === "string") {
+      formData.append(key, value);
+    }
+  });
+
+  // Debug: Log FormData contents
+  console.log("FormData contents:");
+  for (const [key, value] of formData.entries()) {
+    if (value instanceof File) {
+      console.log(
+        `${key}: File(${value.name}, ${value.size} bytes, ${value.type})`
+      );
+    } else {
+      console.log(`${key}: ${value}`);
+    }
+  }
+
+  return formData;
+};
+
+// Helper function to validate file sizes before sending
+const validateFiles = (
+  data: CreateProductRequest | UpdateProductRequest
+): string[] => {
+  const errors: string[] = [];
+  const maxSize = 5 * 1024 * 1024; // 5MB
+
+  // Check thumbnail image
+  if (data.thumbnail_image instanceof File) {
+    if (data.thumbnail_image.size > maxSize) {
+      errors.push(
+        `Thumbnail image "${data.thumbnail_image.name}" is too large (${(data.thumbnail_image.size / 1024 / 1024).toFixed(2)}MB). Max size: 5MB`
+      );
+    }
+  }
+
+  // Check additional images
+  if (Array.isArray(data.images)) {
+    data.images.forEach((file, index) => {
+      if (file instanceof File && file.size > maxSize) {
+        errors.push(
+          `Image ${index + 1} "${file.name}" is too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Max size: 5MB`
+        );
+      }
+    });
+  }
+
+  return errors;
+};
+
 export const productApi = {
   getProducts: async (
     params: PaginationParams = {}
@@ -75,25 +152,20 @@ export const productApi = {
     data: CreateProductRequest
   ): Promise<CreateProductResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const formData = new FormData();
 
-    // Dynamically append fields to FormData
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) {
-        if (typeof value === "boolean") {
-          formData.append(key, value.toString());
-        } else if (value instanceof File) {
-          formData.append(key, value);
-        } else {
-          formData.append(key, String(value));
-        }
-      }
-    });
+    // Validate file sizes before sending
+    const validationErrors = validateFiles(data);
+    if (validationErrors.length > 0) {
+      throw new Error(`File validation failed: ${validationErrors.join(", ")}`);
+    }
+
+    const formData = buildProductFormData(data);
 
     const response = await fetch(`${API_BASE_URL}/api/product/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
+        // Don't set Content-Type header - let the browser set it with boundary
       },
       body: formData,
     });
@@ -111,25 +183,20 @@ export const productApi = {
     data: UpdateProductRequest
   ): Promise<UpdateProductResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const formData = new FormData();
 
-    // Dynamically append fields to FormData for PATCH
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) {
-        if (typeof value === "boolean") {
-          formData.append(key, value.toString());
-        } else if (value instanceof File) {
-          formData.append(key, value);
-        } else {
-          formData.append(key, String(value));
-        }
-      }
-    });
+    // Validate file sizes before sending
+    const validationErrors = validateFiles(data);
+    if (validationErrors.length > 0) {
+      throw new Error(`File validation failed: ${validationErrors.join(", ")}`);
+    }
+
+    const formData = buildProductFormData(data);
 
     const response = await fetch(`${API_BASE_URL}/api/product/${slug}/`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
+        // Don't set Content-Type header - let the browser set it with boundary
       },
       body: formData,
     });

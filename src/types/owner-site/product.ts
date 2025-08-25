@@ -136,6 +136,7 @@ export const normalizeProductForCart = (product: ProductLike): Product => {
     description: product.description || null,
     stock: typeof product.stock === "number" ? product.stock : 0,
     thumbnail_image: null,
+    images: [],
     thumbnail_alt_description: null,
     category: null,
     sub_category: null,

@@ -66,6 +66,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
       market_price: product?.market_price || "",
       stock: product?.stock || 0,
       thumbnail_image: null,
+      images: product?.images?.map(img => img.image) || [], // <-- Handle existing images
       thumbnail_alt_description: product?.thumbnail_alt_description || "",
       category: product?.category?.id?.toString() || "",
       sub_category: product?.sub_category?.id?.toString() || "",
@@ -89,14 +90,8 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
 
   const onSubmit = async (data: z.infer<typeof CreateProductSchema>) => {
     try {
-      // Prepare the data object that matches the expected type
       const productData: CreateProductRequest = {
-        name: data.name,
-        description: data.description || "",
-        price: data.price,
-        stock: data.stock,
-        is_popular: data.is_popular,
-        is_featured: data.is_featured,
+        ...data,
         market_price: data.market_price || undefined,
         thumbnail_alt_description: data.thumbnail_alt_description || undefined,
         category: data.category || undefined,
@@ -105,10 +100,11 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
           data.thumbnail_image instanceof File
             ? data.thumbnail_image
             : undefined,
+        // The API handler will filter this array to only send new File objects
+        images: data.images || [],
       };
 
       if (isEditing && product) {
-        // Check if slug exists
         if (!product.slug) {
           throw new Error("Product slug is required for updating");
         }
@@ -145,8 +141,8 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Product Name */}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* ... other form fields (name, description, price, etc.) ... */}
             <FormField
               control={form.control}
               name="name"
@@ -160,7 +156,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                 </FormItem>
               )}
             />
-
             {/* Description */}
             <FormField
               control={form.control}
@@ -246,8 +241,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                 </FormItem>
               )}
             />
-
-            {/* Category and Subcategory */}
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -311,7 +304,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                 )}
               />
             </div>
-
             {/* Thumbnail Image */}
             <FormField
               control={form.control}
@@ -327,6 +319,26 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                       }
                       onChange={field.onChange}
                       disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* NEW: Additional Images */}
+            <FormField
+              control={form.control}
+              name="images"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Additional Images</FormLabel>
+                  <FormControl>
+                    <ImageUploader
+                      value={field.value}
+                      onChange={field.onChange}
+                      disabled={isLoading}
+                      multiple={true}
                     />
                   </FormControl>
                   <FormMessage />
@@ -351,8 +363,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                 </FormItem>
               )}
             />
-
-            {/* Status Checkboxes */}
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -391,7 +401,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
               />
             </div>
 
-            {/* Form Actions */}
             <div className="flex justify-end space-x-2 pt-4">
               <Button
                 type="button"

@@ -13,10 +13,12 @@ const imageSchema = z
   .any()
   .refine(file => {
     if (!file) return true; // Allow null/undefined
+    if (typeof file === "string") return true; // Allow existing image URLs
     return file.size <= MAX_FILE_SIZE;
   }, `Max file size is 5MB.`)
   .refine(file => {
     if (!file) return true; // Allow null/undefined
+    if (typeof file === "string") return true; // Allow existing image URLs
     return ACCEPTED_IMAGE_TYPES.includes(file.type);
   }, ".jpg, .jpeg, .png and .webp files are accepted.")
   .optional()
@@ -40,6 +42,12 @@ export const SubCategoryReferenceSchema = z.object({
   image: z.string().optional().nullable(),
 });
 
+// Product Image Schema (for the nested array in the API response)
+export const ProductImageSchema = z.object({
+  id: z.number(),
+  image: z.string(),
+});
+
 // Base Product Schema (matches API response)
 export const ProductSchema = z.object({
   id: z.number(),
@@ -50,6 +58,7 @@ export const ProductSchema = z.object({
   market_price: z.string().nullable(),
   stock: z.number().min(0, "Stock cannot be negative"),
   thumbnail_image: z.string().nullable(),
+  images: z.array(ProductImageSchema).optional(), // <-- Added this
   thumbnail_alt_description: z.string().nullable(),
   category: CategoryReferenceSchema.nullable(),
   sub_category: SubCategoryReferenceSchema.nullable(),
@@ -90,6 +99,7 @@ export const CreateProductSchema = z.object({
   market_price: z.string().optional(),
   stock: z.number().min(0, "Stock cannot be negative"),
   thumbnail_image: imageSchema,
+  images: z.array(z.any()).optional(), // <-- Added this for multiple file uploads
   thumbnail_alt_description: z.string().optional(),
   category: z.string().optional(),
   sub_category: z.string().optional(),
