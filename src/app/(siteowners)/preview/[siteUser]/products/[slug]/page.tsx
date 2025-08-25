@@ -5,11 +5,11 @@ import { ProductDetail } from "@/components/site-owners/products/product-details
 import { use } from "react";
 
 interface ProductPageProps {
-  params: Promise<{ siteUser: string; id: string }>;
+  params: Promise<{ siteUser: string; slug: string }>;
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
-  const { siteUser, id } = use(params);
+  const { siteUser, slug } = use(params);
 
-  return <ProductDetail productId={id} siteId={siteUser} />;
+  return <ProductDetail slug={slug} siteId={siteUser} />;
 }

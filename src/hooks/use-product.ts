@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useProductApi } from "@/services/api/product";
+import { productApi as useProductApi } from "@/services/api/product";
 import { toast } from "sonner";
 import {
   CreateProductRequest,
@@ -16,11 +16,11 @@ export const useProducts = (params: PaginationParams = {}) => {
   });
 };
 
-export const useProduct = (id: number) => {
+export const useProduct = (slug: string) => {
   return useQuery({
-    queryKey: ["product", id],
-    queryFn: () => useProductApi.getProduct(id),
-    enabled: !!id,
+    queryKey: ["product", slug],
+    queryFn: () => useProductApi.getProduct(slug),
+    enabled: !!slug,
   });
 };
 
@@ -49,12 +49,17 @@ export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpdateProductRequest }) =>
-      useProductApi.updateProduct(id, data),
+    mutationFn: ({
+      slug,
+      data,
+    }: {
+      slug: string;
+      data: UpdateProductRequest;
+    }) => useProductApi.updateProduct(slug, data),
     onSuccess: (response, variables) => {
       // Invalidate all product queries and specific product
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      queryClient.invalidateQueries({ queryKey: ["product", variables.id] });
+      queryClient.invalidateQueries({ queryKey: ["product", variables.slug] });
       toast.success(response.message);
     },
     onError: (error: unknown) => {
@@ -71,7 +76,7 @@ export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => useProductApi.deleteProduct(id),
+    mutationFn: (slug: string) => useProductApi.deleteProduct(slug),
     onSuccess: response => {
       // Invalidate all product queries to refresh pagination
       queryClient.invalidateQueries({ queryKey: ["products"] });

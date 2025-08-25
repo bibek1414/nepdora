@@ -11,6 +11,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
+      {
+        protocol: "https",
+        hostname: "bibek.nepdora.baliyoventures.com",
+      },
+      {
+        protocol: "https",
+        hostname: "nepdora.baliyoventures.com",
+      },
     ],
   },
 };
