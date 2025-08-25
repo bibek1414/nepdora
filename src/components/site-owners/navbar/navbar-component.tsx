@@ -10,7 +10,7 @@ import {
 import { useUpdateNavbarMutation } from "@/hooks/owner-site/components/use-navbar";
 import { LinkEditorDialog } from "./link-editor-dialog";
 import { ButtonEditorDialog } from "./button-editor-dialog";
-import { TextEditorDialog } from "./text-editor-dialog";
+import { LogoEditorDialog } from "./logo-editor-dialog";
 
 import { NavbarStyle1 } from "./styles/navbar-style-1";
 import { NavbarStyle2 } from "./styles/navbar-style-2";
@@ -54,9 +54,14 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
     setIsLogoDialogOpen(true);
   };
 
-  const handleSaveLogo = (newLogoText: string) => {
+  const handleSaveLogo = (logoData: {
+    logoText: string;
+    logoImage?: string;
+    logoType: "text" | "image" | "both";
+    showCart: boolean;
+  }) => {
     if (!isEditable) return;
-    updateNavbarData({ logoText: newLogoText });
+    updateNavbarData(logoData);
   };
 
   // --- Handlers for Links --- (only needed if editable)
@@ -141,13 +146,16 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
       {/* Only show dialogs if editable */}
       {isEditable && (
         <>
-          <TextEditorDialog
+          <LogoEditorDialog
             isOpen={isLogoDialogOpen}
             onClose={() => setIsLogoDialogOpen(false)}
             onSave={handleSaveLogo}
-            initialText={navbar.data.logoText}
-            title="Edit Logo Text"
-            label="Logo Text"
+            initialData={{
+              logoText: navbar.data.logoText,
+              logoImage: navbar.data.logoImage,
+              logoType: navbar.data.logoType || "text",
+              showCart: navbar.data.showCart ?? true,
+            }}
           />
           <LinkEditorDialog
             isOpen={isLinkDialogOpen}

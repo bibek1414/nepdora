@@ -29,6 +29,7 @@ import { AboutUsStylesDialog } from "@/components/site-owners/about/about-styles
 import {
   defaultAboutUs1Data,
   defaultAboutUs2Data,
+  defaultAboutUs3Data,
 } from "@/types/owner-site/components/about";
 import { AboutUsData } from "@/types/owner-site/components/about";
 import { useCreateProductsComponentMutation } from "@/hooks/owner-site/components/use-product";
@@ -225,16 +226,31 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
-  const handleAboutUsTemplateSelect = (template: "about-1" | "about-2") => {
+  const handleAboutUsTemplateSelect = (
+    template: "about-1" | "about-2" | "about-3"
+  ) => {
     // Select the correct default data based on the chosen template
-    const aboutUsData: AboutUsData =
-      template === "about-1" ? defaultAboutUs1Data : defaultAboutUs2Data;
+    let aboutUsData: AboutUsData;
+
+    switch (template) {
+      case "about-1":
+        aboutUsData = defaultAboutUs1Data;
+        break;
+      case "about-2":
+        aboutUsData = defaultAboutUs2Data;
+        break;
+      case "about-3":
+        aboutUsData = defaultAboutUs3Data;
+        break;
+      default:
+        aboutUsData = defaultAboutUs1Data;
+    }
 
     const payload = {
       component_id: `about-${Date.now()}`,
       component_type: "about" as const,
       data: aboutUsData,
-      order: 2, // You should dynamically determine the order
+      order: 2,
     };
 
     createAboutUsMutation.mutate(payload, {

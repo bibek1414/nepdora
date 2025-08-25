@@ -30,7 +30,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-// import { useCart } from "@/hooks/use-cart";
+import { useCart } from "@/hooks/owner-site/use-cart";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 interface ProductDetailProps {
@@ -44,7 +44,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 }) => {
   const { data: product, isLoading, error } = useProduct(parseInt(productId));
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
-  // const { addToCart } = useCart();
+  const { addToCart } = useCart();
   const [quantity, setQuantity] = React.useState(1);
   // Mock image placeholder since the API product structure doesn't include images
   const mockImage =
@@ -135,12 +135,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop&crop=right",
     "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop&crop=bottom",
   ];
-  // const handleAddToCart = () => {
-  //   if (product) {
-  //     addToCart(product, quantity);
-  //     toast.success(`${quantity} x ${product.name} added to cart!`);
-  //   }
-  // };
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product, quantity);
+      toast.success(`${quantity} x ${product.name} added to cart!`);
+    }
+  };
   // Parse price to float for calculations
   const price = parseFloat(product.price);
   const discountPercentage = 15; // Mock discount since API doesn't provide it
@@ -298,14 +298,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 </div>
               </div>
 
-              {/* <Button
+              <Button
                 size="lg"
                 className="w-full"
                 disabled={product.stock === 0}
                 onClick={handleAddToCart}
               >
                 {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
-              </Button> */}
+              </Button>
             </div>
 
             <div className="mt-8 grid grid-cols-1 gap-4 text-center text-sm sm:grid-cols-3">

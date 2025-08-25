@@ -21,13 +21,15 @@ export function PreviewLayoutWrapper({
 }: PreviewLayoutWrapperProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [deviceView, setDeviceView] = useState<"desktop" | "tablet" | "mobile">("desktop");
+  const [deviceView, setDeviceView] = useState<"desktop" | "tablet" | "mobile">(
+    "desktop"
+  );
 
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
 
   // Determine if we're on a product detail page
-  const isProductDetail = pathname.includes('/products/');
+  const isProductDetail = pathname.includes("/products/");
   const isPreviewHome = pathname === `/preview/${siteUser}`;
 
   const handleBackToBuilder = () => {
@@ -139,19 +141,20 @@ export function PreviewLayoutWrapper({
         </div>
       </header>
 
+      {/* Sticky Navbar - positioned outside the preview content */}
+      {navbarResponse?.data && (
+        <div className={`sticky top-16 z-40 ${getViewportClass()}`}>
+          <div className="overflow-hidden bg-white shadow-sm">
+            <NavbarComponent navbar={navbarResponse.data} isEditable={false} />
+          </div>
+        </div>
+      )}
+
       {/* Preview Content */}
       <main className="min-h-[calc(100vh-64px)] bg-gray-100 p-6">
         <div className={`transition-all duration-300 ${getViewportClass()}`}>
           <div className="min-h-[600px] overflow-hidden rounded-lg bg-white shadow-lg">
-            {/* Render Navbar */}
-            {navbarResponse?.data && (
-              <NavbarComponent
-                navbar={navbarResponse.data}
-                isEditable={false}
-              />
-            )}
-
-            {/* Main Content */}
+            {/* Main Content - Children no longer includes navbar */}
             {children}
 
             {/* Render Footer */}

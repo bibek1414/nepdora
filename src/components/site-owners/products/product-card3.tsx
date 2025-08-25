@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Star, Heart, ArrowRight, Clock } from "lucide-react";
 import { Product } from "@/types/owner-site/product";
+import { useCart } from "@/hooks/owner-site/use-cart";
+import { toast } from "sonner";
 
 interface ProductCard3Props {
   product: Product;
@@ -24,6 +26,8 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   showStock = true,
   onClick,
 }) => {
+  const { addToCart } = useCart();
+
   // Generate different mock images for variety
   const mockImages = [
     "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
@@ -42,8 +46,10 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation when clicking add to cart
     e.stopPropagation();
-    // Add your cart logic here
-    console.log("Added to cart:", product.id);
+
+    // Add to cart with quantity of 1
+    addToCart(product, 1);
+    toast.success(`${product.name} added to cart!`);
   };
 
   const handleViewDetails = (e: React.MouseEvent) => {
@@ -52,6 +58,12 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
     // Navigate to details page using new route structure
     const detailsUrl = getDetailsUrl();
     window.location.href = detailsUrl;
+  };
+
+  const handleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toast.info(`${product.name} added to favorites!`);
   };
 
   // Helper function to generate the correct details URL based on route structure
@@ -124,11 +136,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                   size="icon"
                   variant="ghost"
                   className="rounded-full bg-white/90 shadow-lg hover:bg-white"
-                  onClick={e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    // Handle wishlist logic
-                  }}
+                  onClick={handleFavorite}
                 >
                   <Heart className="h-4 w-4" />
                 </Button>

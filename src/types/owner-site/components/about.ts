@@ -28,8 +28,25 @@ export interface AboutUs2Data {
   description: string;
   teamMembers: TeamMember[];
 }
-export type AboutUsData = AboutUs1Data | AboutUs2Data;
-// Component data structure as stored in the DB/API
+
+export interface AboutUs3Data {
+  template: "about-3";
+  title: string;
+  subtitle: string;
+  description: string;
+  features: Array<{
+    id: string;
+    text: string;
+  }>;
+  stats: {
+    startYear: string;
+    completeYear: string;
+    unitsAvailable: string;
+  };
+}
+
+export type AboutUsData = AboutUs1Data | AboutUs2Data | AboutUs3Data;
+
 export interface AboutUsComponentData {
   id: string | number;
   component_id?: string;
@@ -129,4 +146,22 @@ export const defaultAboutUs2Data: AboutUs2Data = {
         "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400",
     },
   ],
+};
+
+export const defaultAboutUs3Data: AboutUs3Data = {
+  template: "about-3",
+  title: "Luxury Living",
+  subtitle: "Redefined",
+  description:
+    "Experience the pinnacle of modern architecture and sophisticated living. Simcoe Garden represents the future of urban residential design.",
+  features: [
+    { id: "1", text: "Premium finishes throughout" },
+    { id: "2", text: "Smart home technology" },
+    { id: "3", text: "Sustainable design principles" },
+  ],
+  stats: {
+    startYear: "2024",
+    completeYear: "2026",
+    unitsAvailable: "50+ UNITS",
+  },
 };

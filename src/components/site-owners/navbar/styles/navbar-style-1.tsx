@@ -7,6 +7,8 @@ import {
 } from "@/types/owner-site/components/navbar";
 import { getButtonVariant } from "@/lib/utils";
 import { Plus, Edit, Trash2 } from "lucide-react";
+import { CartIcon } from "../../cart/cart-icon";
+import { NavbarLogo } from "../navbar-logo";
 
 const EditableItem: React.FC<{
   onEdit: () => void;
@@ -57,20 +59,26 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
   onEditButton,
   onDeleteButton,
 }) => {
-  const { logoText, links, buttons } = navbarData;
+  const { links, buttons, showCart } = navbarData;
 
   return (
-    <nav className="bg-background flex items-center justify-between p-4">
+    <nav
+      className={`bg-background flex items-center justify-between p-4 ${
+        !isEditable ? "sticky top-16 z-40 border-b shadow-sm" : ""
+      }`}
+    >
       <div className="flex items-center gap-8">
-        <div className="text-xl font-bold">
+        <div>
           {isEditable && onEditLogo ? (
             <EditableItem onEdit={onEditLogo}>
-              <span className="cursor-pointer hover:opacity-80">
-                {logoText}
-              </span>
+              <NavbarLogo
+                data={navbarData}
+                isEditable={isEditable}
+                onEdit={onEditLogo}
+              />
             </EditableItem>
           ) : (
-            <a href="#">{logoText}</a>
+            <NavbarLogo data={navbarData} />
           )}
         </div>
 
@@ -141,6 +149,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
             <Plus className="mr-2 h-4 w-4" /> Button
           </Button>
         )}
+        {showCart && <CartIcon />}
       </div>
     </nav>
   );

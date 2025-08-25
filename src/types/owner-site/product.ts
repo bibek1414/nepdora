@@ -62,3 +62,16 @@ export interface UpdateProductResponse {
 export interface DeleteProductResponse {
   message: string;
 }
+
+export const normalizeProductForCart = (product: ProductLike): Product => {
+  return {
+    id: product.id,
+    name: product.name || product.title || "Unknown Product",
+    description: product.description || "",
+    price:
+      typeof product.price === "string"
+        ? product.price
+        : product.price?.toString() || "0",
+    stock: product.stock || 0,
+  };
+};
