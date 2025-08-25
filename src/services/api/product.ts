@@ -1,5 +1,6 @@
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
+import { getAuthToken } from "@/utils/auth";
 import { handleApiError } from "@/utils/api-error";
 import {
   GetProductsResponse,
@@ -12,24 +13,18 @@ import {
   PaginationParams,
 } from "@/types/owner-site/product";
 
-export const useProductApi = {
+export const productApi = {
   getProducts: async (
     params: PaginationParams = {}
   ): Promise<GetProductsResponse> => {
     const { page = 1, limit = 10, search, sortBy, sortOrder = "asc" } = params;
-
     const API_BASE_URL = getApiBaseUrl();
-
-    // Build query parameters
     const queryParams = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
     });
 
-    if (search) {
-      queryParams.append("search", search);
-    }
-
+    if (search) queryParams.append("search", search);
     if (sortBy) {
       queryParams.append("sort_by", sortBy);
       queryParams.append("sort_order", sortOrder);
@@ -45,10 +40,8 @@ export const useProductApi = {
 
     await handleApiError(response);
     const data = await response.json();
-
-    // Enhanced response transformation
-    const results = Array.isArray(data) ? data : data.results || [];
-    const count = data.count || data.length || 0;
+    const results = data.results || [];
+    const count = data.count || 0;
     const totalPages = Math.ceil(count / limit);
 
     return {
@@ -67,9 +60,9 @@ export const useProductApi = {
     };
   },
 
-  getProduct: async (id: number): Promise<Product> => {
+  getProduct: async (slug: string): Promise<Product> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/product/${id}/`, {
+    const response = await fetch(`${API_BASE_URL}/api/product/${slug}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -82,10 +75,27 @@ export const useProductApi = {
     data: CreateProductRequest
   ): Promise<CreateProductResponse> => {
     const API_BASE_URL = getApiBaseUrl();
+    const formData = new FormData();
+
+    // Dynamically append fields to FormData
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        if (typeof value === "boolean") {
+          formData.append(key, value.toString());
+        } else if (value instanceof File) {
+          formData.append(key, value);
+        } else {
+          formData.append(key, String(value));
+        }
+      }
+    });
+
     const response = await fetch(`${API_BASE_URL}/api/product/`, {
       method: "POST",
-      headers: createHeaders(),
-      body: JSON.stringify(data),
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      body: formData,
     });
 
     await handleApiError(response);
@@ -97,14 +107,31 @@ export const useProductApi = {
   },
 
   updateProduct: async (
-    id: number,
+    slug: string,
     data: UpdateProductRequest
   ): Promise<UpdateProductResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/product/${id}/`, {
+    const formData = new FormData();
+
+    // Dynamically append fields to FormData for PATCH
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        if (typeof value === "boolean") {
+          formData.append(key, value.toString());
+        } else if (value instanceof File) {
+          formData.append(key, value);
+        } else {
+          formData.append(key, String(value));
+        }
+      }
+    });
+
+    const response = await fetch(`${API_BASE_URL}/api/product/${slug}/`, {
       method: "PATCH",
-      headers: createHeaders(),
-      body: JSON.stringify(data),
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      body: formData,
     });
 
     await handleApiError(response);
@@ -115,9 +142,9 @@ export const useProductApi = {
     };
   },
 
-  deleteProduct: async (id: number): Promise<DeleteProductResponse> => {
+  deleteProduct: async (slug: string): Promise<DeleteProductResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/product/${id}/`, {
+    const response = await fetch(`${API_BASE_URL}/api/product/${slug}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

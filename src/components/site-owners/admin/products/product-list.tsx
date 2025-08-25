@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import {
   Table,
   TableBody,
@@ -45,6 +46,9 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Star,
+  TrendingUp,
+  ImageIcon,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -56,21 +60,21 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Product } from "@/types/owner-site/product";
 import { useDebouncedCallback } from "use-debounce";
+import { Product } from "@/types/owner-site/product";
 
-export const ProductList: React.FC = () => {
+const ProductList = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<string>("");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
 
   // Debounced search to avoid too many API calls
-  const debouncedSearch = useDebouncedCallback((value: string) => {
+  const debouncedSearch = useDebouncedCallback(value => {
     setSearch(value);
     setPage(1); // Reset to first page when searching
   }, 500);
@@ -80,7 +84,6 @@ export const ProductList: React.FC = () => {
     limit,
     search,
     sortBy: sortBy || undefined,
-    sortOrder,
   });
 
   const deleteProductMutation = useDeleteProduct();
@@ -95,8 +98,12 @@ export const ProductList: React.FC = () => {
   };
 
   const confirmDelete = () => {
-    if (deleteProduct) {
-      deleteProductMutation.mutate(deleteProduct.id);
+    if (deleteProduct && deleteProduct.slug) {
+      deleteProductMutation.mutate(deleteProduct.slug);
+      setDeleteProduct(null);
+    } else if (deleteProduct) {
+      // Handle case where slug is null
+      console.error("Product slug is null");
       setDeleteProduct(null);
     }
   };
@@ -180,6 +187,7 @@ export const ProductList: React.FC = () => {
                   <SelectItem value="name">Name</SelectItem>
                   <SelectItem value="price">Price</SelectItem>
                   <SelectItem value="stock">Stock</SelectItem>
+                  <SelectItem value="created_at">Date Created</SelectItem>
                 </SelectContent>
               </Select>
               <Select
@@ -189,7 +197,7 @@ export const ProductList: React.FC = () => {
                   setPage(1);
                 }}
               >
-                <SelectTrigger className="w-[100px]">
+                <SelectTrigger className="w-[120px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -205,88 +213,164 @@ export const ProductList: React.FC = () => {
           {isLoading ? (
             <div className="space-y-3">
               {[...Array(limit)].map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full" />
+                <Skeleton key={i} className="h-16 w-full" />
               ))}
             </div>
           ) : (
             <>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead
-                      className="hover:bg-muted/50 cursor-pointer"
-                      onClick={() => handleSortChange("name")}
-                    >
-                      Name{" "}
-                      {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
-                    </TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead
-                      className="hover:bg-muted/50 cursor-pointer"
-                      onClick={() => handleSortChange("price")}
-                    >
-                      Price{" "}
-                      {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
-                    </TableHead>
-                    <TableHead
-                      className="hover:bg-muted/50 cursor-pointer"
-                      onClick={() => handleSortChange("stock")}
-                    >
-                      Stock{" "}
-                      {sortBy === "stock" && (sortOrder === "asc" ? "↑" : "↓")}
-                    </TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="w-[50px]"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {products.map(product => (
-                    <TableRow key={product.id}>
-                      <TableCell className="font-medium">
-                        {product.name}
-                      </TableCell>
-                      <TableCell className="max-w-[300px] truncate">
-                        {product.description}
-                      </TableCell>
-                      <TableCell>NPR {product.price}</TableCell>
-                      <TableCell>{product.stock}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            product.stock > 0 ? "default" : "destructive"
-                          }
-                        >
-                          {product.stock > 0 ? "In Stock" : "Out of Stock"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => handleEdit(product)}
-                            >
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(product)}
-                              className="text-destructive"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[100px]">Image</TableHead>
+                      <TableHead
+                        className="hover:bg-muted/50 cursor-pointer"
+                        onClick={() => handleSortChange("name")}
+                      >
+                        Name{" "}
+                        {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
+                      </TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead
+                        className="hover:bg-muted/50 cursor-pointer"
+                        onClick={() => handleSortChange("price")}
+                      >
+                        Price{" "}
+                        {sortBy === "price" &&
+                          (sortOrder === "asc" ? "↑" : "↓")}
+                      </TableHead>
+                      <TableHead>Market Price</TableHead>
+                      <TableHead
+                        className="hover:bg-muted/50 cursor-pointer"
+                        onClick={() => handleSortChange("stock")}
+                      >
+                        Stock{" "}
+                        {sortBy === "stock" &&
+                          (sortOrder === "asc" ? "↑" : "↓")}
+                      </TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {products.map(product => (
+                      <TableRow key={product.id}>
+                        <TableCell>
+                          {product.thumbnail_image ? (
+                            <Image
+                              src={product.thumbnail_image}
+                              alt={
+                                product.thumbnail_alt_description ||
+                                product.name
+                              }
+                              width={60}
+                              height={60}
+                              className="rounded-md object-cover"
+                            />
+                          ) : (
+                            <div className="bg-muted flex h-[60px] w-[60px] items-center justify-center rounded-md">
+                              <ImageIcon className="text-muted-foreground h-6 w-6" />
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-2">
+                            {product.name}
+                            <div className="flex gap-1">
+                              {product.is_featured && (
+                                <Badge variant="secondary" className="text-xs">
+                                  <Star className="mr-1 h-3 w-3" />
+                                  Featured
+                                </Badge>
+                              )}
+                              {product.is_popular && (
+                                <Badge variant="outline" className="text-xs">
+                                  <TrendingUp className="mr-1 h-3 w-3" />
+                                  Popular
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-[200px] truncate">
+                          {product.description || "No description"}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          NPR {product.price}
+                        </TableCell>
+                        <TableCell>
+                          {product.market_price ? (
+                            <span className="text-muted-foreground line-through">
+                              NPR {product.market_price}
+                            </span>
+                          ) : (
+                            "-"
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            className={
+                              product.stock > 0
+                                ? ""
+                                : "text-destructive font-medium"
+                            }
+                          >
+                            {product.stock}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            {product.category && (
+                              <Badge variant="outline" className="text-xs">
+                                {product.category.name}
+                              </Badge>
+                            )}
+                            {product.sub_category && (
+                              <Badge variant="secondary" className="text-xs">
+                                {product.sub_category.name}
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              product.stock > 0 ? "default" : "destructive"
+                            }
+                          >
+                            {product.stock > 0 ? "In Stock" : "Out of Stock"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => handleEdit(product)}
+                              >
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleDelete(product)}
+                                className="text-destructive"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
 
               {/* Pagination Controls */}
               {pagination && pagination.totalPages > 1 && (
@@ -338,6 +422,24 @@ export const ProductList: React.FC = () => {
                   </div>
                 </div>
               )}
+
+              {products.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <div className="bg-muted mb-4 rounded-full p-4">
+                    <Plus className="text-muted-foreground h-8 w-8" />
+                  </div>
+                  <h3 className="text-lg font-semibold">No products found</h3>
+                  <p className="text-muted-foreground mb-4">
+                    {search
+                      ? "Try adjusting your search terms"
+                      : "Get started by adding your first product"}
+                  </p>
+                  <Button onClick={() => setShowForm(true)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Product
+                  </Button>
+                </div>
+              )}
             </>
           )}
         </CardContent>
@@ -358,7 +460,7 @@ export const ProductList: React.FC = () => {
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete the
-              product &apos;{deleteProduct?.name}&apos; from the system.
+              product &quot;{deleteProduct?.name}&quot; from the system.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -375,3 +477,5 @@ export const ProductList: React.FC = () => {
     </div>
   );
 };
+
+export { ProductList };

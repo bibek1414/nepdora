@@ -34,15 +34,15 @@ import { useCart } from "@/hooks/owner-site/use-cart";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 interface ProductDetailProps {
-  productId: string;
+  slug: string;
   siteId?: string;
 }
 
 export const ProductDetail: React.FC<ProductDetailProps> = ({
-  productId,
+  slug,
   siteId,
 }) => {
-  const { data: product, isLoading, error } = useProduct(parseInt(productId));
+  const { data: product, isLoading, error } = useProduct(slug);
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
   const { addToCart } = useCart();
   const [quantity, setQuantity] = React.useState(1);
