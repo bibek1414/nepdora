@@ -4,32 +4,31 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Monitor, Smartphone, Tablet } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { NavbarComponent } from "@/components/site-owners/navbar/navbar-component";
 import { Footer as FooterComponent } from "@/components/site-owners/footer/footer";
 import { useNavbarQuery } from "@/hooks/owner-site/components/use-navbar";
 import { useFooterQuery } from "@/hooks/owner-site/components/use-footer";
 
-interface PreviewLayoutProps {
+interface PreviewLayoutWrapperProps {
   children: React.ReactNode;
   siteUser: string;
-  title?: string;
-  showBackToPreview?: boolean;
 }
 
-export function PreviewLayout({
+export function PreviewLayoutWrapper({
   children,
   siteUser,
-  title = "Preview",
-  showBackToPreview = false,
-}: PreviewLayoutProps) {
+}: PreviewLayoutWrapperProps) {
   const router = useRouter();
-  const [deviceView, setDeviceView] = useState<"desktop" | "tablet" | "mobile">(
-    "desktop"
-  );
+  const pathname = usePathname();
+  const [deviceView, setDeviceView] = useState<"desktop" | "tablet" | "mobile">("desktop");
 
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
+
+  // Determine if we're on a product detail page
+  const isProductDetail = pathname.includes('/products/');
+  const isPreviewHome = pathname === `/preview/${siteUser}`;
 
   const handleBackToBuilder = () => {
     router.push(`/builder/${siteUser}`);
@@ -37,6 +36,11 @@ export function PreviewLayout({
 
   const handleBackToPreview = () => {
     router.push(`/preview/${siteUser}`);
+  };
+
+  const getTitle = () => {
+    if (isProductDetail) return "Product Preview";
+    return "Preview";
   };
 
   const getViewportClass = () => {
@@ -69,7 +73,7 @@ export function PreviewLayout({
       <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="container flex h-16 items-center justify-between px-6">
           <div className="flex items-center gap-4">
-            {showBackToPreview ? (
+            {!isPreviewHome ? (
               <>
                 <Button
                   variant="ghost"
@@ -101,7 +105,7 @@ export function PreviewLayout({
               </Button>
             )}
             <Badge variant="secondary" className="text-xs">
-              {title}
+              {getTitle()}
             </Badge>
           </div>
 
