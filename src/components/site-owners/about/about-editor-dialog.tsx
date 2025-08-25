@@ -477,6 +477,7 @@ const EditTemplate3: React.FC<{
   data: AboutUs3Data;
   setData: (d: AboutUs3Data) => void;
 }> = ({ data, setData }) => {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (field: keyof AboutUs3Data, value: any) =>
     setData({ ...data, [field]: value });
 
