@@ -13,9 +13,12 @@ export interface NavbarButton {
 
 export interface NavbarData {
   logoText: string;
+  logoImage?: string;
+  logoType: "text" | "image" | "both";
   links: NavbarLink[];
   buttons: NavbarButton[];
   style: string;
+  showCart: boolean;
 }
 
 export interface Navbar {

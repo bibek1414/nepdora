@@ -16,7 +16,9 @@ import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { AboutUsSettingsDialog } from "./about-editor-dialog";
 import { AboutUsTemplate1 } from "./about-style-1";
 import { AboutUsTemplate2 } from "./about-style-2";
+import { AboutUsTemplate3 } from "./about-style-3";
 import { useDeleteAboutUsMutation } from "@/hooks/owner-site/components/use-about";
+
 interface AboutUsComponentProps {
   component: AboutUsComponentData;
   isEditable?: boolean;
@@ -52,6 +54,8 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
         return <AboutUsTemplate1 aboutUsData={component.data} />;
       case "about-2":
         return <AboutUsTemplate2 aboutUsData={component.data} />;
+      case "about-3":
+        return <AboutUsTemplate3 aboutUsData={component.data} />;
       default:
         // This helps catch any unhandled template types
         const exhaustiveCheck: never = component.data;

@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Heart, Star, Eye } from "lucide-react";
 import { Product } from "@/types/owner-site/product";
+import { useCart } from "@/hooks/owner-site/use-cart";
+import { toast } from "sonner";
 
 interface ProductCard2Props {
   product: Product;
@@ -24,6 +26,8 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
   showStock = true,
   onClick,
 }) => {
+  const { addToCart } = useCart();
+
   // Generate different mock images for variety
   const mockImages = [
     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop",
@@ -42,8 +46,10 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation when clicking add to cart
     e.stopPropagation();
-    // Add your cart logic here
-    console.log("Added to cart:", product.id);
+
+    // Add to cart with quantity of 1
+    addToCart(product, 1);
+    toast.success(`${product.name} added to cart!`);
   };
 
   const handleViewDetails = (e: React.MouseEvent) => {
@@ -58,14 +64,14 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
     e.preventDefault();
     e.stopPropagation();
     // Add your favorite logic here
-    console.log("Added to favorites:", product.id);
+    toast.info(`${product.name} added to favorites!`);
   };
 
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     // Add your quick view modal logic here
-    console.log("Quick view:", product.id);
+    toast.info(`Quick view: ${product.name}`);
   };
 
   // Helper function to generate the correct details URL based on route structure

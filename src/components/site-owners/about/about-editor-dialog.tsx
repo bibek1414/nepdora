@@ -35,9 +35,11 @@ import {
   AboutUs1Data,
   AboutUs2Data,
   AboutUsStat,
+  AboutUs3Data,
   TeamMember,
   defaultAboutUs1Data,
   defaultAboutUs2Data,
+  defaultAboutUs3Data,
 } from "@/types/owner-site/components/about";
 import { useUpdateAboutUsMutation } from "@/hooks/owner-site/components/use-about";
 import { uploadToCloudinary } from "@/utils/cloudinary";
@@ -471,6 +473,161 @@ const EditTemplate2: React.FC<{
   );
 };
 
+const EditTemplate3: React.FC<{
+  data: AboutUs3Data;
+  setData: (d: AboutUs3Data) => void;
+}> = ({ data, setData }) => {
+  const handleChange = (field: keyof AboutUs3Data, value: any) =>
+    setData({ ...data, [field]: value });
+
+  const handleFeatureUpdate = (
+    id: string,
+    updates: Partial<{ text: string }>
+  ) => {
+    handleChange(
+      "features",
+      data.features.map(f => (f.id === id ? { ...f, ...updates } : f))
+    );
+  };
+
+  const addFeature = () =>
+    handleChange("features", [
+      ...data.features,
+      { id: Date.now().toString(), text: "New Feature" },
+    ]);
+
+  const removeFeature = (id: string) =>
+    handleChange(
+      "features",
+      data.features.filter(f => f.id !== id)
+    );
+
+  const handleStatsChange = (
+    field: keyof AboutUs3Data["stats"],
+    value: string
+  ) => {
+    handleChange("stats", { ...data.stats, [field]: value });
+  };
+
+  return (
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {/* Column 1: Content & Features */}
+      <div className="space-y-6">
+        <div>
+          <h3 className="mb-4 flex items-center gap-2 font-semibold">
+            <Type className="h-4 w-4" />
+            Content
+          </h3>
+          <div className="space-y-4">
+            <div>
+              <Label>Title</Label>
+              <Input
+                value={data.title}
+                onChange={e => handleChange("title", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Subtitle</Label>
+              <Input
+                value={data.subtitle}
+                onChange={e => handleChange("subtitle", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Description</Label>
+              <Textarea
+                value={data.description}
+                onChange={e => handleChange("description", e.target.value)}
+                rows={5}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="mb-4 flex items-center gap-2 font-semibold">
+            <BarChart className="h-4 w-4" />
+            Features
+          </h3>
+          <div className="max-h-60 space-y-3 overflow-y-auto p-1">
+            {data.features.map(feature => (
+              <div
+                key={feature.id}
+                className="bg-muted/50 flex items-center gap-2 rounded-lg border p-2"
+              >
+                <Input
+                  value={feature.text}
+                  onChange={e =>
+                    handleFeatureUpdate(feature.id, { text: e.target.value })
+                  }
+                  placeholder="Feature text"
+                  className="flex-1"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => removeFeature(feature.id)}
+                >
+                  <Trash2 className="text-destructive h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={addFeature}
+            className="mt-3"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Feature
+          </Button>
+        </div>
+      </div>
+
+      {/* Column 2: Stats */}
+      <div className="space-y-6">
+        <div>
+          <h3 className="mb-4 flex items-center gap-2 font-semibold">
+            <LayoutGrid className="h-4 w-4" />
+            Timeline & Stats
+          </h3>
+          <div className="space-y-4">
+            <div>
+              <Label>Start Year</Label>
+              <Input
+                value={data.stats.startYear}
+                onChange={e => handleStatsChange("startYear", e.target.value)}
+                placeholder="e.g., 2024"
+              />
+            </div>
+            <div>
+              <Label>Completion Year</Label>
+              <Input
+                value={data.stats.completeYear}
+                onChange={e =>
+                  handleStatsChange("completeYear", e.target.value)
+                }
+                placeholder="e.g., 2026"
+              />
+            </div>
+            <div>
+              <Label>Units Available</Label>
+              <Input
+                value={data.stats.unitsAvailable}
+                onChange={e =>
+                  handleStatsChange("unitsAvailable", e.target.value)
+                }
+                placeholder="e.g., 50+ UNITS"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const AboutUsSettingsDialog: React.FC<AboutUsSettingsDialogProps> = ({
   isOpen,
   onOpenChange,
@@ -483,9 +640,12 @@ export const AboutUsSettingsDialog: React.FC<AboutUsSettingsDialogProps> = ({
 
   useEffect(() => setLocalData(aboutUsData), [aboutUsData, isOpen]);
 
-  const handleTemplateChange = (template: "about-1" | "about-2") => {
+  const handleTemplateChange = (
+    template: "about-1" | "about-2" | "about-3"
+  ) => {
     if (template === "about-1") setLocalData(defaultAboutUs1Data);
-    else setLocalData(defaultAboutUs2Data);
+    else if (template === "about-2") setLocalData(defaultAboutUs2Data);
+    else if (template === "about-3") setLocalData(defaultAboutUs3Data);
   };
 
   const handleSaveChanges = () => {
@@ -516,6 +676,7 @@ export const AboutUsSettingsDialog: React.FC<AboutUsSettingsDialogProps> = ({
               <SelectContent>
                 <SelectItem value="about-1">Split Layout with Stats</SelectItem>
                 <SelectItem value="about-2">Team Showcase</SelectItem>
+                <SelectItem value="about-3">Luxury Modern</SelectItem>
               </SelectContent>
             </Select>
             <p className="text-muted-foreground mt-1 text-xs">
@@ -530,6 +691,9 @@ export const AboutUsSettingsDialog: React.FC<AboutUsSettingsDialogProps> = ({
             )}
             {localData.template === "about-2" && (
               <EditTemplate2 data={localData} setData={d => setLocalData(d)} />
+            )}
+            {localData.template === "about-3" && (
+              <EditTemplate3 data={localData} setData={d => setLocalData(d)} />
             )}
           </div>
         </div>

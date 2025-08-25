@@ -6,6 +6,7 @@ import { QueryProvider } from "@/providers/query-provider";
 import TopLoader from "@/components/top-loader";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
+import { CartProvider } from "@/contexts/CartContext";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -26,16 +27,18 @@ export default function RootLayout({
       <body className={dmSans.className}>
         <AuthProvider>
           <QueryProvider>
-            <Suspense fallback={null}>
-              <TopLoader />
-            </Suspense>
-            {children}
-            <Toaster
-              position="bottom-right"
-              richColors
-              closeButton
-              duration={3000}
-            />
+            <CartProvider>
+              <Suspense fallback={null}>
+                <TopLoader />
+              </Suspense>
+              {children}
+              <Toaster
+                position="bottom-right"
+                richColors
+                closeButton
+                duration={3000}
+              />
+            </CartProvider>
           </QueryProvider>
         </AuthProvider>
       </body>

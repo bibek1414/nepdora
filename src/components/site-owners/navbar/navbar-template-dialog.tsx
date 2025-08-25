@@ -20,6 +20,8 @@ const templates: { name: string; description: string; data: NavbarData }[] = [
       "Logo on the left, links and buttons on the right. Classic and effective.",
     data: {
       logoText: "Brand",
+      logoType: "text",
+      showCart: true,
       links: [
         { id: "1", text: "Home", href: "#" },
         { id: "2", text: "Features", href: "#" },
@@ -37,6 +39,8 @@ const templates: { name: string; description: string; data: NavbarData }[] = [
       "A modern look with a centered logo and navigation spreading outwards.",
     data: {
       logoText: "Centered",
+      logoType: "text",
+      showCart: true,
       links: [
         { id: "1", text: "Home", href: "#" },
         { id: "2", text: "About", href: "#" },
@@ -67,7 +71,8 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
           <DialogTitle>Choose a Navbar Style</DialogTitle>
           <DialogDescription>
             Select a starting template for your site&apos;s navigation. You can
-            customize it fully afterward.
+            customize it fully afterward, including adding logo images and
+            configuring the cart.
           </DialogDescription>
         </DialogHeader>
         <div className="grid max-h-[70vh] grid-cols-1 gap-6 overflow-y-auto p-1">
