@@ -8,7 +8,6 @@ export const useCreateOrder = () => {
     mutationFn: (orderData: CreateOrderRequest) =>
       orderApi.createOrder(orderData),
     onSuccess: () => {
-      // Invalidate queries that might be affected, e.g., an orders list
       queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
   });
@@ -18,8 +17,8 @@ export const useOrders = () => {
   return useQuery({
     queryKey: ["orders"],
     queryFn: () => orderApi.getOrders(),
-    staleTime: 5 * 60 * 1000, // 5 minutes - orders don't change frequently
-    gcTime: 10 * 60 * 1000, // 10 minutes - keep in cache for background updates
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 };
 
@@ -28,7 +27,7 @@ export const useOrder = (id: number) => {
     queryKey: ["order", id],
     queryFn: () => orderApi.getOrderById(id),
     enabled: !!id,
-    staleTime: 5 * 60 * 1000, // 5 minutes - individual orders are relatively stable
-    gcTime: 15 * 60 * 1000, // 15 minutes - keep individual orders longer in cache
+    staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
   });
 };

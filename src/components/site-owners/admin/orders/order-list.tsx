@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image"; // Import the Next.js Image component
 import { useOrders } from "@/hooks/use-orders";
 import {
   Card,
@@ -32,7 +33,7 @@ const OrderCard = ({ order }: { order: Order }) => {
         <div className="flex items-center justify-between">
           <CardTitle className="text-primary flex items-center gap-2">
             <Package className="h-5 w-5" />
-            Order #{order.id}
+            Order {order.order_number}
           </CardTitle>
           <Badge
             variant="secondary"
@@ -77,23 +78,40 @@ const OrderCard = ({ order }: { order: Order }) => {
           <div className="mb-2 flex items-center gap-2">
             <Package className="text-primary h-4 w-4" />
             <span className="text-sm font-medium">
-              Order Items ({order.items.length})
+              Order Items ({order.order_items?.length ?? 0})
             </span>
           </div>
           <div className="space-y-2">
-            {order.items.map(item => (
+            {order.order_items?.map(item => (
               <div
                 key={item.id}
                 className="bg-secondary/20 flex items-center justify-between rounded p-2 text-sm"
               >
-                <div>
-                  <span className="font-medium">
-                    Product ID: {item.product_id}
-                  </span>
-                  <span className="text-muted-foreground ml-2">
-                    x{item.quantity}
-                  </span>
+                {/* --- IMAGE & DETAILS --- */}
+                <div className="flex items-center gap-3">
+                  {item.product?.thumbnail_image && (
+                    <Image
+                      src={item.product.thumbnail_image}
+                      alt={
+                        item.product.thumbnail_alt_description ||
+                        item.product.name ||
+                        "Product image"
+                      }
+                      width={40}
+                      height={40}
+                      className="rounded-md object-cover"
+                    />
+                  )}
+                  <div>
+                    <div className="font-medium">
+                      {item.product?.name ?? "Unknown Product"}
+                    </div>
+                    <div className="text-muted-foreground">
+                      Quantity: {item.quantity}
+                    </div>
+                  </div>
                 </div>
+                {/* --- PRICE --- */}
                 <div className="flex items-center gap-1">
                   <DollarSign className="h-3 w-3" />
                   <span className="font-medium">{item.price}</span>

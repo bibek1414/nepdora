@@ -28,26 +28,30 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
 }) => {
   const { addToCart } = useCart();
 
-  // Generate different mock images for variety
-  const mockImages = [
-    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop",
-  ];
-
-  const mockImage = mockImages[(product.id + 2) % mockImages.length];
+  // Use actual product data
+  const productImage =
+    product.thumbnail_image ||
+    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop";
   const price = parseFloat(product.price);
-  const discountPercentage = 8 + (product.id % 5) * 4;
-  const discountedPrice = (price * (1 - discountPercentage / 100)).toFixed(2);
+  const marketPrice = product.market_price
+    ? parseFloat(product.market_price)
+    : null;
+
+  // Calculate discount if market price exists and is higher than current price
+  const discountPercentage =
+    marketPrice && marketPrice > price
+      ? Math.round(((marketPrice - price) / marketPrice) * 100)
+      : 0;
+
+  const discountedPrice = price.toFixed(2);
+
+  // Generate a rating (this could be replaced with actual rating from API)
   const rating = 4.2 + (product.id % 8) * 0.1;
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation when clicking add to cart
+    e.preventDefault();
     e.stopPropagation();
 
-    // Add to cart with quantity of 1
     addToCart(product, 1);
     toast.success(`${product.name} added to cart!`);
   };
@@ -55,7 +59,6 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   const handleViewDetails = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Navigate to details page using new route structure
     const detailsUrl = getDetailsUrl();
     window.location.href = detailsUrl;
   };
@@ -66,18 +69,14 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
     toast.info(`${product.name} added to favorites!`);
   };
 
-  // Helper function to generate the correct details URL based on route structure
   const getDetailsUrl = (): string => {
     if (siteId) {
-      // Nested route: /preview/[siteUser]/products/[id]
-      return `/preview/${siteId}/products/${product.id}`;
+      return `/preview/${siteId}/products/${product.slug}`;
     } else {
-      // Separate route: /preview/products/[id]
-      return `/preview/products/${product.id}`;
+      return `/preview/products/${product.slug}`;
     }
   };
 
-  // Create the details page URL for the Link component
   const detailsUrl = getDetailsUrl();
 
   return (
@@ -89,22 +88,24 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
             <div className="relative flex-shrink-0 overflow-hidden sm:w-64">
               <div className="relative aspect-square sm:h-64">
                 <Image
-                  src={mockImage}
-                  alt={product.name}
+                  src={productImage}
+                  alt={product.thumbnail_alt_description || product.name}
                   fill
                   className="object-cover transition-all duration-500 group-hover:scale-110"
+                  onError={e => {
+                    e.currentTarget.src =
+                      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop";
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/20 transition-all duration-500 group-hover:to-black/40" />
               </div>
 
               {/* Corner Accent */}
-              <div className={`absolute top-0 left-0 h-16 w-16 opacity-10`}>
-                <div
-                  className={`absolute top-3 left-3 h-8 w-8 rounded-full opacity-60`}
-                ></div>
+              <div className="absolute top-0 left-0 h-16 w-16 opacity-10">
+                <div className="absolute top-3 left-3 h-8 w-8 rounded-full opacity-60"></div>
               </div>
 
-              {/* Site Badge - shows which site this product belongs to */}
+              {/* Site Badge */}
               {siteId && (
                 <div className="absolute top-4 left-4">
                   <Badge
@@ -119,13 +120,26 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
               {/* Floating Badges */}
               <div className="absolute top-4 right-4 flex flex-col gap-2">
                 {discountPercentage > 0 && (
-                  <Badge className={`border-0 text-xs font-bold shadow-lg`}>
+                  <Badge className="border-0 text-xs font-bold shadow-lg">
                     -{discountPercentage}%
                   </Badge>
                 )}
                 {product.stock === 0 && (
                   <Badge variant="destructive" className="text-xs shadow-lg">
                     Sold Out
+                  </Badge>
+                )}
+                {product.is_featured && (
+                  <Badge className="border-0 bg-yellow-500 text-xs font-bold text-black shadow-lg">
+                    Featured
+                  </Badge>
+                )}
+                {product.is_popular && (
+                  <Badge
+                    variant="outline"
+                    className="border-red-500 bg-white/90 text-xs text-red-600 shadow-lg"
+                  >
+                    Popular
                   </Badge>
                 )}
               </div>
@@ -150,11 +164,11 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                 <div className="flex items-start justify-between">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <span
-                        className={`text-xs font-bold tracking-wider uppercase`}
-                      >
-                        Featured
-                      </span>
+                      {product.category && (
+                        <span className="text-xs font-bold tracking-wider uppercase">
+                          {product.category.name}
+                        </span>
+                      )}
                       {showStock && product.stock > 0 && product.stock <= 3 && (
                         <div className="flex items-center gap-1 text-orange-600">
                           <Clock className="h-3 w-3" />
@@ -192,8 +206,15 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                   </span>
                 </div>
 
+                {/* Subcategory */}
+                {product.sub_category && (
+                  <div className="text-sm text-gray-500">
+                    {product.sub_category.name}
+                  </div>
+                )}
+
                 {/* Description */}
-                {showDescription && (
+                {showDescription && product.description && (
                   <p className="line-clamp-3 leading-relaxed text-gray-600">
                     {product.description}
                   </p>
@@ -212,6 +233,14 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                       In Stock
                     </Badge>
                   )}
+                  {product.is_featured && (
+                    <Badge
+                      variant="outline"
+                      className="border-yellow-500 text-xs text-yellow-600"
+                    >
+                      Featured Product
+                    </Badge>
+                  )}
                 </div>
               </div>
 
@@ -222,12 +251,12 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                   <div className="flex items-end justify-between">
                     <div className="space-y-1">
                       <div className="flex items-center gap-3">
-                        <span className={`text-3xl font-bold`}>
+                        <span className="text-3xl font-bold">
                           ${discountedPrice}
                         </span>
-                        {discountPercentage > 0 && (
+                        {marketPrice && discountPercentage > 0 && (
                           <span className="text-xl text-gray-400 line-through">
-                            ${price.toFixed(2)}
+                            ${marketPrice.toFixed(2)}
                           </span>
                         )}
                       </div>
@@ -245,9 +274,10 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                 {/* Action Buttons */}
                 <div className="flex gap-3">
                   <Button
-                    className={`flex-1 py-3 font-semibold text-white transition-all duration-300 group-hover:shadow-lg`}
+                    className="flex-1 py-3 font-semibold text-white transition-all duration-300 group-hover:shadow-lg"
                     disabled={product.stock === 0}
                     onClick={handleAddToCart}
+                    data-cart-action="true"
                   >
                     <ShoppingCart className="mr-2 h-4 w-4" />
                     {product.stock > 0 ? "Add to Cart" : "Notify Me"}

@@ -124,25 +124,31 @@ export interface DeleteSubCategoryResponse {
 }
 
 export const normalizeProductForCart = (product: ProductLike): Product => {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const productData = product as any;
+
   return {
     id: product.id,
     name: product.name || product.title || "Unknown Product",
-    slug: null,
+    slug: productData.slug || null,
     price:
       typeof product.price === "string"
         ? product.price
         : product.price?.toString() || "0",
-    market_price: null,
+    market_price: productData.market_price || null,
     description: product.description || null,
-    stock: typeof product.stock === "number" ? product.stock : 0,
-    thumbnail_image: null,
-    images: [],
-    thumbnail_alt_description: null,
-    category: null,
-    sub_category: null,
-    is_popular: false,
-    is_featured: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+    stock:
+      typeof product.stock === "number"
+        ? product.stock
+        : productData.stock || 0,
+    thumbnail_image: productData.thumbnail_image || null,
+    images: productData.images || [],
+    thumbnail_alt_description: productData.thumbnail_alt_description || null,
+    category: productData.category || null,
+    sub_category: productData.sub_category || null,
+    is_popular: productData.is_popular || false,
+    is_featured: productData.is_featured || false,
+    created_at: productData.created_at || new Date().toISOString(),
+    updated_at: productData.updated_at || new Date().toISOString(),
   };
 };

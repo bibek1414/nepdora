@@ -58,7 +58,7 @@ export const ProductSchema = z.object({
   market_price: z.string().nullable(),
   stock: z.number().min(0, "Stock cannot be negative"),
   thumbnail_image: z.string().nullable(),
-  images: z.array(ProductImageSchema).optional(), // <-- Added this
+  images: z.array(ProductImageSchema).optional(),
   thumbnail_alt_description: z.string().nullable(),
   category: CategoryReferenceSchema.nullable(),
   sub_category: SubCategoryReferenceSchema.nullable(),
@@ -91,7 +91,6 @@ export const SubCategorySchema = z.object({
   updated_at: z.string(),
 });
 
-// Create Product Schema (for form submission)
 export const CreateProductSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
@@ -99,10 +98,10 @@ export const CreateProductSchema = z.object({
   market_price: z.string().optional(),
   stock: z.number().min(0, "Stock cannot be negative"),
   thumbnail_image: imageSchema,
-  images: z.array(z.any()).optional(), // <-- Added this for multiple file uploads
+  image_files: z.array(z.any()).optional(),
   thumbnail_alt_description: z.string().optional(),
-  category: z.string().optional(),
-  sub_category: z.string().optional(),
+  category_id: z.string().optional(),
+  sub_category_id: z.string().optional(),
   is_popular: z.boolean(),
   is_featured: z.boolean(),
 });

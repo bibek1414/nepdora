@@ -33,6 +33,7 @@ import {
 import { useCart } from "@/hooks/owner-site/use-cart";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
+
 interface ProductDetailProps {
   slug: string;
   siteId?: string;
@@ -43,17 +44,18 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   siteId,
 }) => {
   const { data: product, isLoading, error } = useProduct(slug);
-  const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = React.useState<string>("");
   const { addToCart } = useCart();
   const [quantity, setQuantity] = React.useState(1);
-  // Mock image placeholder since the API product structure doesn't include images
-  const mockImage =
+
+  // Default fallback image
+  const defaultImage =
     "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop";
 
   React.useEffect(() => {
     if (product && !selectedImage) {
-      // Since API product doesn't have images, use a placeholder
-      setSelectedImage(mockImage);
+      // Use actual product image from API or fallback to default
+      setSelectedImage(product.thumbnail_image || defaultImage);
     }
   }, [product, selectedImage]);
 
@@ -127,25 +129,40 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     );
   }
 
-  // Generate mock images array for the gallery
-  const mockImages = [
-    mockImage,
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop&crop=top",
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop&crop=left",
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop&crop=right",
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop&crop=bottom",
-  ];
   const handleAddToCart = () => {
     if (product) {
       addToCart(product, quantity);
       toast.success(`${quantity} x ${product.name} added to cart!`);
     }
   };
+
   // Parse price to float for calculations
   const price = parseFloat(product.price);
-  const discountPercentage = 15; // Mock discount since API doesn't provide it
-  const discountedPrice = (price * (1 - discountPercentage / 100)).toFixed(2);
-  const rating = 4.5; // Mock rating since API doesn't provide it
+  const marketPrice = product.market_price
+    ? parseFloat(product.market_price)
+    : null;
+
+  // Calculate discount if market price exists and is higher than current price
+  const discountPercentage =
+    marketPrice && marketPrice > price
+      ? Math.round(((marketPrice - price) / marketPrice) * 100)
+      : 0;
+
+  const discountedPrice = price.toFixed(2);
+
+  // Generate a rating (this could be replaced with actual rating from API)
+  const rating = 4.5;
+
+  // Create image gallery from product data - filter out null/undefined values
+  const productImages = [
+    product.thumbnail_image,
+    ...(product.images || []).map(img => img.image),
+  ].filter((img): img is string => Boolean(img));
+
+  // Ensure we always have at least one image (fallback)
+  if (productImages.length === 0) {
+    productImages.push(defaultImage);
+  }
 
   return (
     <div className="bg-background">
@@ -172,6 +189,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
+            {product.category && (
+              <>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link
+                      href={`/preview?site=${siteId}&page=products&category=${product.category.slug}`}
+                    >
+                      {product.category.name}
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+              </>
+            )}
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage className="text-foreground font-medium">
@@ -184,44 +215,66 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
         <div className="grid gap-8 md:grid-cols-2 lg:gap-16">
           <div>
             <div className="border-border relative aspect-square w-full overflow-hidden rounded-lg border">
-              {selectedImage && (
-                <Image
-                  src={selectedImage}
-                  alt={product.name}
-                  fill
-                  className="object-contain"
-                />
-              )}
+              <Image
+                src={selectedImage || defaultImage}
+                alt={product.thumbnail_alt_description || product.name}
+                fill
+                className="object-contain"
+                onError={e => {
+                  const target = e.currentTarget as HTMLImageElement;
+                  target.src = defaultImage;
+                }}
+              />
             </div>
             <div className="mt-4 grid grid-cols-5 gap-2">
-              {mockImages.slice(0, 5).map((img, idx) => (
-                <button
+              {productImages.slice(0, 5).map((img, idx) => (
+                <Button
                   key={idx}
-                  onClick={() => setSelectedImage(img)}
-                  className={`relative aspect-square overflow-hidden rounded-md border-2 transition-colors ${
-                    selectedImage === img
-                      ? "border-primary"
-                      : "border-border hover:border-primary/50"
+                  variant="outline"
+                  className={`relative aspect-square overflow-hidden p-0 ${
+                    selectedImage === img ? "ring-primary ring-2" : ""
                   }`}
+                  onClick={() => setSelectedImage(img)}
                 >
                   <Image
                     src={img}
-                    alt={`${product.name} thumbnail ${idx + 1}`}
+                    alt={`${product.name} view ${idx + 1}`}
                     fill
                     className="object-cover"
+                    onError={e => {
+                      const target = e.currentTarget as HTMLImageElement;
+                      target.src = defaultImage;
+                    }}
                   />
-                </button>
+                </Button>
               ))}
             </div>
           </div>
 
           <div className="flex flex-col">
-            <Badge variant="secondary" className="w-fit capitalize">
-              Electronics
-            </Badge>
+            <div className="mb-2 flex items-center gap-2">
+              {product.category && (
+                <Badge variant="secondary" className="w-fit capitalize">
+                  {product.category.name}
+                </Badge>
+              )}
+              {product.sub_category && (
+                <Badge variant="outline" className="w-fit capitalize">
+                  {product.sub_category.name}
+                </Badge>
+              )}
+              {product.is_featured && (
+                <Badge className="bg-yellow-500 text-black">Featured</Badge>
+              )}
+              {product.is_popular && (
+                <Badge className="bg-red-500">Popular</Badge>
+              )}
+            </div>
+
             <h1 className="text-foreground mt-2 text-3xl font-bold md:text-4xl">
               {product.name}
             </h1>
+
             <div className="mt-2 flex items-center gap-2">
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => (
@@ -244,17 +297,23 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               <span className="text-primary text-4xl font-extrabold">
                 ${discountedPrice}
               </span>
-              <span className="text-muted-foreground ml-3 text-xl line-through">
-                ${price.toFixed(2)}
-              </span>
-              <Badge variant="destructive" className="ml-3">
-                {discountPercentage}% OFF
-              </Badge>
+              {marketPrice && discountPercentage > 0 && (
+                <>
+                  <span className="text-muted-foreground ml-3 text-xl line-through">
+                    ${marketPrice.toFixed(2)}
+                  </span>
+                  <Badge variant="destructive" className="ml-3">
+                    {discountPercentage}% OFF
+                  </Badge>
+                </>
+              )}
             </div>
 
-            <p className="text-foreground/80 leading-relaxed">
-              {product.description}
-            </p>
+            {product.description && (
+              <p className="text-foreground/80 leading-relaxed">
+                {product.description}
+              </p>
+            )}
 
             <div className="mt-6">
               <div className="mb-4 flex items-center gap-4">
@@ -341,15 +400,57 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                       </span>
                     </div>
                     <div className="flex justify-between">
+                      <span className="font-medium">SKU:</span>
+                      <span className="text-muted-foreground">
+                        {product.slug}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
                       <span className="font-medium">Price:</span>
                       <span className="text-muted-foreground">
                         ${product.price}
                       </span>
                     </div>
+                    {product.market_price && (
+                      <div className="flex justify-between">
+                        <span className="font-medium">Market Price:</span>
+                        <span className="text-muted-foreground">
+                          ${product.market_price}
+                        </span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span className="font-medium">Stock:</span>
                       <span className="text-muted-foreground">
                         {product.stock} units
+                      </span>
+                    </div>
+                    {product.category && (
+                      <div className="flex justify-between">
+                        <span className="font-medium">Category:</span>
+                        <span className="text-muted-foreground">
+                          {product.category.name}
+                        </span>
+                      </div>
+                    )}
+                    {product.sub_category && (
+                      <div className="flex justify-between">
+                        <span className="font-medium">Subcategory:</span>
+                        <span className="text-muted-foreground">
+                          {product.sub_category.name}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <span className="font-medium">Created:</span>
+                      <span className="text-muted-foreground">
+                        {new Date(product.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Last Updated:</span>
+                      <span className="text-muted-foreground">
+                        {new Date(product.updated_at).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
@@ -359,7 +460,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <AccordionTrigger>Customer Reviews</AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-4">
-                    {/* Mock reviews since API doesn't provide them */}
+                    {/* Mock reviews since API doesn't provide them yet */}
                     <div className="border-border border-b pb-3 last:border-b-0">
                       <div className="flex items-center justify-between">
                         <span className="text-foreground font-semibold">
@@ -407,6 +508,30 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   </div>
                 </AccordionContent>
               </AccordionItem>
+              {product.category && product.category.description && (
+                <AccordionItem value="category-info">
+                  <AccordionTrigger>
+                    About {product.category.name}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-muted-foreground">
+                      {product.category.description}
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+              {product.sub_category && product.sub_category.description && (
+                <AccordionItem value="subcategory-info">
+                  <AccordionTrigger>
+                    About {product.sub_category.name}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-muted-foreground">
+                      {product.sub_category.description}
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
             </Accordion>
           </div>
         </div>

@@ -145,7 +145,11 @@ export function PreviewLayoutWrapper({
       {navbarResponse?.data && (
         <div className={`sticky top-16 z-40 ${getViewportClass()}`}>
           <div className="overflow-hidden bg-white shadow-sm">
-            <NavbarComponent navbar={navbarResponse.data} isEditable={false} />
+            <NavbarComponent
+              navbar={navbarResponse.data}
+              isEditable={false}
+              siteId={siteUser}
+            />
           </div>
         </div>
       )}

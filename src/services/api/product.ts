@@ -23,19 +23,19 @@ const buildProductFormData = (
       return; // Skip null or undefined values
     }
 
-    if (key === "images" && Array.isArray(value)) {
-      // Handle the array of images
+    if (key === "image_files" && Array.isArray(value)) {
       let imageCount = 0;
       value.forEach(imageFile => {
-        // Only append new File objects, skip existing URLs
         if (imageFile instanceof File) {
-          formData.append("images", imageFile);
+          formData.append("image_files", imageFile);
           imageCount++;
         }
       });
       console.log(`Appended ${imageCount} new image files to FormData`);
     } else if (key === "thumbnail_image" && value instanceof File) {
       formData.append("thumbnail_image", value);
+    } else if (key === "image_files") {
+      return;
     } else if (typeof value === "boolean") {
       formData.append(key, value.toString());
     } else if (typeof value === "number") {
@@ -77,8 +77,8 @@ const validateFiles = (
   }
 
   // Check additional images
-  if (Array.isArray(data.images)) {
-    data.images.forEach((file, index) => {
+  if (Array.isArray(data.image_files)) {
+    data.image_files.forEach((file, index) => {
       if (file instanceof File && file.size > maxSize) {
         errors.push(
           `Image ${index + 1} "${file.name}" is too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Max size: 5MB`

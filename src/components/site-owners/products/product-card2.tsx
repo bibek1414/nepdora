@@ -28,26 +28,30 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
 }) => {
   const { addToCart } = useCart();
 
-  // Generate different mock images for variety
-  const mockImages = [
-    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop",
-  ];
-
-  const mockImage = mockImages[(product.id + 1) % mockImages.length]; // Offset by 1 for variety
+  // Use actual product data
+  const productImage =
+    product.thumbnail_image ||
+    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop";
   const price = parseFloat(product.price);
-  const discountPercentage = 5 + (product.id % 4) * 5; // Different discount pattern
-  const discountedPrice = (price * (1 - discountPercentage / 100)).toFixed(2);
-  const rating = 3.8 + (product.id % 12) * 0.1; // Different rating pattern
+  const marketPrice = product.market_price
+    ? parseFloat(product.market_price)
+    : null;
+
+  // Calculate discount if market price exists and is higher than current price
+  const discountPercentage =
+    marketPrice && marketPrice > price
+      ? Math.round(((marketPrice - price) / marketPrice) * 100)
+      : 0;
+
+  const discountedPrice = price.toFixed(2);
+
+  // Generate a rating (this could be replaced with actual rating from API)
+  const rating = 3.8 + (product.id % 12) * 0.1;
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation when clicking add to cart
+    e.preventDefault();
     e.stopPropagation();
 
-    // Add to cart with quantity of 1
     addToCart(product, 1);
     toast.success(`${product.name} added to cart!`);
   };
@@ -55,7 +59,6 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
   const handleViewDetails = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Navigate to details page using new route structure
     const detailsUrl = getDetailsUrl();
     window.location.href = detailsUrl;
   };
@@ -63,23 +66,20 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
   const handleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Add your favorite logic here
     toast.info(`${product.name} added to favorites!`);
   };
 
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Add your quick view modal logic here
     toast.info(`Quick view: ${product.name}`);
   };
 
-  // Helper function to generate the correct details URL based on route structure
   const getDetailsUrl = (): string => {
     if (siteId) {
-      return `/preview/${siteId}/products/${product.id}`;
+      return `/preview/${siteId}/products/${product.slug}`;
     } else {
-      return `/preview/products/${product.id}`;
+      return `/preview/products/${product.slug}`;
     }
   };
 
@@ -87,13 +87,11 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
     if (onClick) {
       onClick();
     } else {
-      // Default behavior: navigate to product details
       const detailsUrl = getDetailsUrl();
       window.location.href = detailsUrl;
     }
   };
 
-  // Create the details page URL for the Link component
   const detailsUrl = getDetailsUrl();
 
   const CardWrapper = siteId
@@ -113,10 +111,14 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
           <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
             <div className="relative aspect-[4/3]">
               <Image
-                src={mockImage}
-                alt={product.name}
+                src={productImage}
+                alt={product.thumbnail_alt_description || product.name}
                 fill
                 className="object-cover transition-all duration-700 group-hover:scale-105 group-hover:rotate-1"
+                onError={e => {
+                  e.currentTarget.src =
+                    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop";
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-white/10 via-transparent to-black/5" />
             </div>
@@ -161,13 +163,27 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
                 </Badge>
               </div>
             )}
+
+            {/* Featured/Popular Badges */}
+            <div className="absolute top-4 right-4 flex flex-col gap-1">
+              {product.is_featured && (
+                <Badge className="bg-yellow-500 text-xs font-bold text-black">
+                  FEATURED
+                </Badge>
+              )}
+              {product.is_popular && (
+                <Badge className="bg-red-500 text-xs font-bold text-white">
+                  POPULAR
+                </Badge>
+              )}
+            </div>
           </div>
 
           <div className="space-y-4 p-6">
             {/* Brand/Category */}
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
-                Premium Collection
+                {product.category?.name || "Premium Collection"}
               </span>
               {showStock && product.stock > 0 && (
                 <span
@@ -186,6 +202,13 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
             <h3 className="line-clamp-2 text-xl font-light tracking-tight text-gray-900 transition-colors group-hover:text-gray-600">
               {product.name}
             </h3>
+
+            {/* Subcategory */}
+            {product.sub_category && (
+              <div className="text-xs text-gray-500">
+                {product.sub_category.name}
+              </div>
+            )}
 
             {/* Rating */}
             <div className="flex items-center gap-2">
@@ -208,7 +231,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
             </div>
 
             {/* Description */}
-            {showDescription && (
+            {showDescription && product.description && (
               <p className="line-clamp-2 text-sm leading-relaxed text-gray-600">
                 {product.description}
               </p>
@@ -222,9 +245,9 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
                     <span className="text-2xl font-light tracking-tight text-gray-900">
                       ${discountedPrice}
                     </span>
-                    {discountPercentage > 0 && (
+                    {marketPrice && discountPercentage > 0 && (
                       <span className="text-lg font-light text-gray-400 line-through">
-                        ${price.toFixed(2)}
+                        ${marketPrice.toFixed(2)}
                       </span>
                     )}
                   </div>
@@ -240,6 +263,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
               className="w-full rounded-none border-0 bg-gray-900 py-6 font-normal tracking-wide text-white transition-all duration-300 hover:bg-gray-800"
               disabled={product.stock === 0}
               onClick={handleAddToCart}
+              data-cart-action="true"
             >
               {product.stock > 0 ? (
                 <>

@@ -66,10 +66,10 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
       market_price: product?.market_price || "",
       stock: product?.stock || 0,
       thumbnail_image: null,
-      images: product?.images?.map(img => img.image) || [], // <-- Handle existing images
+      image_files: product?.images?.map(img => img.image) || [],
       thumbnail_alt_description: product?.thumbnail_alt_description || "",
-      category: product?.category?.id?.toString() || "",
-      sub_category: product?.sub_category?.id?.toString() || "",
+      category_id: product?.category?.id?.toString() || "",
+      sub_category_id: product?.sub_category?.id?.toString() || "",
       is_popular: Boolean(product?.is_popular),
       is_featured: Boolean(product?.is_featured),
     },
@@ -85,7 +85,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
   // Handle category change
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId);
-    form.setValue("sub_category", "");
+    form.setValue("sub_category_id", "");
   };
 
   const onSubmit = async (data: z.infer<typeof CreateProductSchema>) => {
@@ -94,14 +94,13 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
         ...data,
         market_price: data.market_price || undefined,
         thumbnail_alt_description: data.thumbnail_alt_description || undefined,
-        category: data.category || undefined,
-        sub_category: data.sub_category || undefined,
+        category_id: data.category_id || undefined,
+        sub_category_id: data.sub_category_id || undefined,
         thumbnail_image:
           data.thumbnail_image instanceof File
             ? data.thumbnail_image
             : undefined,
-        // The API handler will filter this array to only send new File objects
-        images: data.images || [],
+        image_files: data.image_files || [],
       };
 
       if (isEditing && product) {
@@ -244,7 +243,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="category"
+                name="category_id"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
@@ -278,7 +277,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
 
               <FormField
                 control={form.control}
-                name="sub_category"
+                name="sub_category_id"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Subcategory</FormLabel>
@@ -326,10 +325,9 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
               )}
             />
 
-            {/* NEW: Additional Images */}
             <FormField
               control={form.control}
-              name="images"
+              name="image_files"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Additional Images</FormLabel>

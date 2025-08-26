@@ -90,10 +90,10 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
               {/* Live Preview */}
               <div className="pointer-events-none scale-95 transform rounded-md border bg-white shadow-sm">
                 {template.data.style === "style-1" && (
-                  <NavbarStyle1 navbarData={template.data} />
+                  <NavbarStyle1 navbarData={template.data} siteId="" />
                 )}
                 {template.data.style === "style-2" && (
-                  <NavbarStyle2 navbarData={template.data} />
+                  <NavbarStyle2 navbarData={template.data} siteId="" />
                 )}
               </div>
 

@@ -224,7 +224,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       {/* Navbar Section */}
       {navbar ? (
         <div className="group relative border-b">
-          <NavbarComponent navbar={navbar} />
+          <NavbarComponent navbar={navbar} siteId="" />
           <div className="absolute -top-2 -right-2 z-20 opacity-0 transition-opacity group-hover:opacity-100">
             <Button
               onClick={handleDeleteNavbar}
