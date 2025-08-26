@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -27,17 +28,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProducts, useDeleteProduct } from "@/hooks/use-product";
-import { ProductForm } from "./product-form";
 import {
-  MoreHorizontal,
   Plus,
   Edit,
   Trash2,
@@ -46,9 +39,8 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  Star,
-  TrendingUp,
   ImageIcon,
+  Eye,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -62,6 +54,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useDebouncedCallback } from "use-debounce";
 import { Product } from "@/types/owner-site/product";
+import { toast } from "sonner";
 
 const ProductList = () => {
   const [page, setPage] = useState(1);
@@ -69,8 +62,6 @@ const ProductList = () => {
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
-  const [showForm, setShowForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
 
   // Debounced search to avoid too many API calls
@@ -88,29 +79,25 @@ const ProductList = () => {
 
   const deleteProductMutation = useDeleteProduct();
 
-  const handleEdit = (product: Product) => {
-    setEditingProduct(product);
-    setShowForm(true);
-  };
-
   const handleDelete = (product: Product) => {
     setDeleteProduct(product);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (deleteProduct && deleteProduct.slug) {
-      deleteProductMutation.mutate(deleteProduct.slug);
-      setDeleteProduct(null);
+      try {
+        await deleteProductMutation.mutateAsync(deleteProduct.slug);
+        toast.success("Product deleted successfully");
+        setDeleteProduct(null);
+      } catch (error) {
+        toast.error("Failed to delete product");
+        console.error("Delete error:", error);
+      }
     } else if (deleteProduct) {
-      // Handle case where slug is null
       console.error("Product slug is null");
+      toast.error("Cannot delete product: missing slug");
       setDeleteProduct(null);
     }
-  };
-
-  const handleCloseForm = () => {
-    setShowForm(false);
-    setEditingProduct(null);
   };
 
   const handleSortChange = (field: string) => {
@@ -145,9 +132,11 @@ const ProductList = () => {
           <h1 className="text-3xl font-bold tracking-tight">Products</h1>
           <p className="text-muted-foreground">Manage your product inventory</p>
         </div>
-        <Button onClick={() => setShowForm(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Product
+        <Button asChild>
+          <Link href="/admin/products/add">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Product
+          </Link>
         </Button>
       </div>
 
@@ -232,7 +221,7 @@ const ProductList = () => {
                       </TableHead>
                       <TableHead>Category</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead className="w-[50px]"> Actions</TableHead>
+                      <TableHead className="w-[120px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -259,13 +248,30 @@ const ProductList = () => {
                         <TableCell className="font-medium">
                           <div className="flex items-center gap-2">
                             {product.name}
+                            {product.is_featured && (
+                              <Badge variant="secondary" className="text-xs">
+                                Featured
+                              </Badge>
+                            )}
+                            {product.is_popular && (
+                              <Badge variant="outline" className="text-xs">
+                                Popular
+                              </Badge>
+                            )}
                           </div>
                         </TableCell>
                         <TableCell className="max-w-[200px] truncate">
                           {product.description || "No description"}
                         </TableCell>
                         <TableCell className="font-medium">
-                          NPR {product.price}
+                          <div className="space-y-1">
+                            <div>NPR {product.price}</div>
+                            {product.market_price && (
+                              <div className="text-muted-foreground text-sm line-through">
+                                NPR {product.market_price}
+                              </div>
+                            )}
+                          </div>
                         </TableCell>
 
                         <TableCell>
@@ -286,6 +292,11 @@ const ProductList = () => {
                                 {product.category.name}
                               </Badge>
                             )}
+                            {product.sub_category && (
+                              <Badge variant="secondary" className="text-xs">
+                                {product.sub_category.name}
+                              </Badge>
+                            )}
                           </div>
                         </TableCell>
                         <TableCell>
@@ -297,21 +308,31 @@ const ProductList = () => {
                             {product.stock > 0 ? "In Stock" : "Out of Stock"}
                           </Badge>
                         </TableCell>
-                        <TableCell className="flex items-center gap-x-2">
-                          <Button
-                            variant="outline"
-                            onClick={() => handleEdit(product)}
-                            className="text-primary"
-                          >
-                            <Edit className="mr-2 h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            onClick={() => handleDelete(product)}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                          </Button>
+                        <TableCell>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              asChild
+                              className="h-8 w-8 p-0"
+                            >
+                              <Link
+                                href={`/admin/products/edit/${product.slug}`}
+                              >
+                                <Edit className="h-4 w-4" />
+                                <span className="sr-only">Edit product</span>
+                              </Link>
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDelete(product)}
+                              className="text-destructive hover:text-destructive h-8 w-8 p-0"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              <span className="sr-only">Delete product</span>
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -381,9 +402,11 @@ const ProductList = () => {
                       ? "Try adjusting your search terms"
                       : "Get started by adding your first product"}
                   </p>
-                  <Button onClick={() => setShowForm(true)}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Product
+                  <Button asChild>
+                    <Link href="/admin/products/add">
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Product
+                    </Link>
                   </Button>
                 </div>
               )}
@@ -391,11 +414,6 @@ const ProductList = () => {
           )}
         </CardContent>
       </Card>
-
-      {/* Product Form Dialog */}
-      {showForm && (
-        <ProductForm product={editingProduct} onClose={handleCloseForm} />
-      )}
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog
@@ -415,8 +433,9 @@ const ProductList = () => {
             <AlertDialogAction
               onClick={confirmDelete}
               className="bg-destructive hover:bg-destructive/90"
+              disabled={deleteProductMutation.isPending}
             >
-              Delete
+              {deleteProductMutation.isPending ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
