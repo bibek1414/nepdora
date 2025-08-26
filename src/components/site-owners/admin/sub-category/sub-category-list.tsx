@@ -120,14 +120,6 @@ export const SubCategoryList: React.FC = () => {
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Subcategory List</CardTitle>
-          <CardDescription>
-            {pagination
-              ? `Page ${pagination.page} of ${pagination.totalPages}`
-              : "Loading subcategories..."}
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className="space-y-3">

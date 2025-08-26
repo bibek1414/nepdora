@@ -140,15 +140,7 @@ const ProductList = () => {
         </Button>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Product List</CardTitle>
-          <CardDescription>
-            {pagination
-              ? `${pagination.total} products total`
-              : "No products found"}
-          </CardDescription>
-        </CardHeader>
+      <Card className="border-none shadow-none">
         <CardContent>
           {/* Search and Filter Controls */}
           <div className="mb-6 flex flex-col gap-4 sm:flex-row">
@@ -202,7 +194,6 @@ const ProductList = () => {
                         Name{" "}
                         {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
                       </TableHead>
-                      <TableHead>Description</TableHead>
                       <TableHead
                         className="hover:bg-muted/50 cursor-pointer"
                         onClick={() => handleSortChange("price")}
@@ -248,29 +239,12 @@ const ProductList = () => {
                         <TableCell className="font-medium">
                           <div className="flex items-center gap-2">
                             {product.name}
-                            {product.is_featured && (
-                              <Badge variant="secondary" className="text-xs">
-                                Featured
-                              </Badge>
-                            )}
-                            {product.is_popular && (
-                              <Badge variant="outline" className="text-xs">
-                                Popular
-                              </Badge>
-                            )}
                           </div>
                         </TableCell>
-                        <TableCell className="max-w-[200px] truncate">
-                          {product.description || "No description"}
-                        </TableCell>
+
                         <TableCell className="font-medium">
                           <div className="space-y-1">
                             <div>NPR {product.price}</div>
-                            {product.market_price && (
-                              <div className="text-muted-foreground text-sm line-through">
-                                NPR {product.market_price}
-                              </div>
-                            )}
                           </div>
                         </TableCell>
 
@@ -290,11 +264,6 @@ const ProductList = () => {
                             {product.category && (
                               <Badge variant="outline" className="text-xs">
                                 {product.category.name}
-                              </Badge>
-                            )}
-                            {product.sub_category && (
-                              <Badge variant="secondary" className="text-xs">
-                                {product.sub_category.name}
                               </Badge>
                             )}
                           </div>

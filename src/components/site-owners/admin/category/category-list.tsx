@@ -116,14 +116,6 @@ export const CategoryList: React.FC = () => {
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Category List</CardTitle>
-          <CardDescription>
-            {pagination
-              ? `Page ${pagination.page} of ${pagination.totalPages}`
-              : "Loading categories..."}
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className="space-y-3">

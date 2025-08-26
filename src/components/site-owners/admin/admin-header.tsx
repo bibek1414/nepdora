@@ -39,6 +39,8 @@ const getPageTitle = (pathname: string): string => {
   const titles: { [key: string]: string } = {
     admin: "Dashboard",
     products: "Products",
+    categories: "Categories",
+    subcategories: "Subcategories",
     orders: "Orders",
     blogs: "Blogs",
     testimonials: "Testimonials",
