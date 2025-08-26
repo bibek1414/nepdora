@@ -140,7 +140,7 @@ export const CategoryList: React.FC = () => {
                       <TableHead className="w-[80px]">Image</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Description</TableHead>
-                      <TableHead className="w-[50px]"></TableHead>
+                      <TableHead className="w-[50px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -167,29 +167,21 @@ export const CategoryList: React.FC = () => {
                         <TableCell className="text-muted-foreground max-w-[400px] truncate">
                           {category.description}
                         </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => handleEdit(category)}
-                              >
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleDelete(category)}
-                                className="text-destructive"
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                        <TableCell className="flex items-center gap-x-2">
+                          <Button
+                            variant="outline"
+                            onClick={() => handleEdit(category)}
+                            className="text-primary"
+                          >
+                            <Edit className="mr-2 h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => handleDelete(category)}
+                            className="text-destructive"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}

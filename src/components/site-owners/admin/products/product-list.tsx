@@ -190,23 +190,6 @@ const ProductList = () => {
                   <SelectItem value="created_at">Date Created</SelectItem>
                 </SelectContent>
               </Select>
-              <Select
-                value={limit.toString()}
-                onValueChange={value => {
-                  setLimit(Number(value));
-                  setPage(1);
-                }}
-              >
-                <SelectTrigger className="w-[120px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5 per page</SelectItem>
-                  <SelectItem value="10">10 per page</SelectItem>
-                  <SelectItem value="20">20 per page</SelectItem>
-                  <SelectItem value="50">50 per page</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
           </div>
 
@@ -239,7 +222,6 @@ const ProductList = () => {
                         {sortBy === "price" &&
                           (sortOrder === "asc" ? "↑" : "↓")}
                       </TableHead>
-                      <TableHead>Market Price</TableHead>
                       <TableHead
                         className="hover:bg-muted/50 cursor-pointer"
                         onClick={() => handleSortChange("stock")}
@@ -250,7 +232,7 @@ const ProductList = () => {
                       </TableHead>
                       <TableHead>Category</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead className="w-[50px]"></TableHead>
+                      <TableHead className="w-[50px]"> Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -277,20 +259,6 @@ const ProductList = () => {
                         <TableCell className="font-medium">
                           <div className="flex items-center gap-2">
                             {product.name}
-                            <div className="flex gap-1">
-                              {product.is_featured && (
-                                <Badge variant="secondary" className="text-xs">
-                                  <Star className="mr-1 h-3 w-3" />
-                                  Featured
-                                </Badge>
-                              )}
-                              {product.is_popular && (
-                                <Badge variant="outline" className="text-xs">
-                                  <TrendingUp className="mr-1 h-3 w-3" />
-                                  Popular
-                                </Badge>
-                              )}
-                            </div>
                           </div>
                         </TableCell>
                         <TableCell className="max-w-[200px] truncate">
@@ -299,15 +267,7 @@ const ProductList = () => {
                         <TableCell className="font-medium">
                           NPR {product.price}
                         </TableCell>
-                        <TableCell>
-                          {product.market_price ? (
-                            <span className="text-muted-foreground line-through">
-                              NPR {product.market_price}
-                            </span>
-                          ) : (
-                            "-"
-                          )}
-                        </TableCell>
+
                         <TableCell>
                           <span
                             className={
@@ -326,11 +286,6 @@ const ProductList = () => {
                                 {product.category.name}
                               </Badge>
                             )}
-                            {product.sub_category && (
-                              <Badge variant="secondary" className="text-xs">
-                                {product.sub_category.name}
-                              </Badge>
-                            )}
                           </div>
                         </TableCell>
                         <TableCell>
@@ -342,29 +297,21 @@ const ProductList = () => {
                             {product.stock > 0 ? "In Stock" : "Out of Stock"}
                           </Badge>
                         </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => handleEdit(product)}
-                              >
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleDelete(product)}
-                                className="text-destructive"
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                        <TableCell className="flex items-center gap-x-2">
+                          <Button
+                            variant="outline"
+                            onClick={() => handleEdit(product)}
+                            className="text-primary"
+                          >
+                            <Edit className="mr-2 h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => handleDelete(product)}
+                            className="text-destructive"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}

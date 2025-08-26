@@ -150,7 +150,7 @@ export const SubCategoryList: React.FC = () => {
                       <TableHead>Name</TableHead>
                       <TableHead>Parent Category</TableHead>
                       <TableHead>Description</TableHead>
-                      <TableHead className="w-[50px]"></TableHead>
+                      <TableHead className="w-[50px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -189,29 +189,21 @@ export const SubCategoryList: React.FC = () => {
                           <TableCell className="text-muted-foreground max-w-[300px] truncate">
                             {subCategory.description}
                           </TableCell>
-                          <TableCell>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="h-8 w-8 p-0">
-                                  <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                  onClick={() => handleEdit(subCategory)}
-                                >
-                                  <Edit className="mr-2 h-4 w-4" />
-                                  Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => handleDelete(subCategory)}
-                                  className="text-destructive"
-                                >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                          <TableCell className="flex items-center gap-x-2">
+                            <Button
+                              variant="outline"
+                              onClick={() => handleEdit(subCategory)}
+                              className="text-primary"
+                            >
+                              <Edit className="mr-2 h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              onClick={() => handleDelete(subCategory)}
+                              className="text-destructive"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                            </Button>
                           </TableCell>
                         </TableRow>
                       );
