@@ -31,8 +31,8 @@ import { Button } from "@/components/ui/button";
 import {
   useCreateSubCategory,
   useUpdateSubCategory,
-} from "@/hooks/use-subcategory";
-import { useCategories } from "@/hooks/use-category";
+} from "@/hooks/owner-site/use-subcategory";
+import { useCategories } from "@/hooks/owner-site/use-category";
 import {
   CreateSubCategoryRequest,
   SubCategory,

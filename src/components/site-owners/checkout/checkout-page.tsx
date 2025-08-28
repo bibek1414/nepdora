@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/owner-site/use-cart";
-import { useCreateOrder } from "@/hooks/use-orders";
+import { useCreateOrder } from "@/hooks/owner-site/use-orders";
 import { CreateOrderRequest, OrderItem } from "@/types/owner-site/orders";
 import { toast } from "sonner";
 import Image from "next/image";

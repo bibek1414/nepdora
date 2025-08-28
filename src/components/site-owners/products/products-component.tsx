@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
-import { useProducts } from "@/hooks/use-product";
+import { useProducts } from "@/hooks/owner-site/use-product";
 import { useDeleteProductsComponentMutation } from "@/hooks/owner-site/components/use-product";
 import { ProductCard1 } from "./product-card1";
 import { ProductCard2 } from "./product-card2";

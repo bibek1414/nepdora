@@ -30,9 +30,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useCreateProduct, useUpdateProduct } from "@/hooks/use-product";
-import { useCategories } from "@/hooks/use-category";
-import { useSubCategories } from "@/hooks/use-subcategory";
+import {
+  useCreateProduct,
+  useUpdateProduct,
+} from "@/hooks/owner-site/use-product";
+import { useCategories } from "@/hooks/owner-site/use-category";
+import { useSubCategories } from "@/hooks/owner-site/use-subcategory";
 import { CreateProductSchema } from "@/schemas/product.form";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import type { Product, CreateProductRequest } from "@/types/owner-site/product";

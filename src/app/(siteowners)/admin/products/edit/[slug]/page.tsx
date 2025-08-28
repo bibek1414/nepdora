@@ -4,7 +4,7 @@ import { ProductForm } from "@/components/site-owners/admin/products/product-for
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useProduct } from "@/hooks/use-product";
+import { useProduct } from "@/hooks/owner-site/use-product";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { use } from "react";

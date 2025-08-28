@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image"; // Import the Next.js Image component
-import { useOrders } from "@/hooks/use-orders";
+import { useOrders } from "@/hooks/owner-site/use-orders";
 import {
   Card,
   CardContent,

@@ -5,7 +5,6 @@ import { SiteManager } from "@/components/site-owners/admin/site-manager";
 export default async function AdminDashboardPage() {
   const user = await getServerUser();
 
-  // If no user is found (not logged in), redirect to the login page
   if (!user) {
     redirect("/login");
   }

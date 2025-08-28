@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useProducts, useDeleteProduct } from "@/hooks/use-product";
+import { useProducts, useDeleteProduct } from "@/hooks/owner-site/use-product";
 import {
   Plus,
   Edit,

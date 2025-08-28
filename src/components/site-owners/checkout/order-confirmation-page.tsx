@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useOrder } from "@/hooks/use-orders";
+import { useOrder } from "@/hooks/owner-site/use-orders";
 import { CheckCircle, Package, Truck, Mail } from "lucide-react";
 import { use } from "react";
 import Image from "next/image";

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { productApi as useProductApi } from "@/services/api/product";
+import { productApi as useProductApi } from "@/services/api/owner-sites/product";
 import { toast } from "sonner";
 import {
   CreateProductRequest,
