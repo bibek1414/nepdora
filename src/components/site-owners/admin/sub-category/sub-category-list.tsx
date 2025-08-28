@@ -24,7 +24,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   useSubCategories,
   useDeleteSubCategory,
-} from "@/hooks/use-subcategory";
+} from "@/hooks/owner-site/use-subcategory";
 import { SubCategoryForm } from "./sub-category-form";
 import {
   MoreHorizontal,

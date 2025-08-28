@@ -21,7 +21,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useCreateCategory, useUpdateCategory } from "@/hooks/use-category";
+import {
+  useCreateCategory,
+  useUpdateCategory,
+} from "@/hooks/owner-site/use-category";
 import { CreateCategoryRequest, Category } from "@/types/owner-site/product";
 import { CreateCategorySchema } from "@/schemas/product.form";
 import { ImageUploader } from "@/components/ui/image-uploader";

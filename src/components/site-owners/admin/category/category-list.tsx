@@ -25,7 +25,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCategories, useDeleteCategory } from "@/hooks/use-category";
+import {
+  useCategories,
+  useDeleteCategory,
+} from "@/hooks/owner-site/use-category";
 import { CategoryForm } from "./category-form";
 import {
   MoreHorizontal,

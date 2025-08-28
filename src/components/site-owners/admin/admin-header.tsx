@@ -33,22 +33,59 @@ interface AdminHeaderProps {
 }
 
 const getPageTitle = (pathname: string): string => {
-  const pathSegments = pathname.split("/");
+  const pathSegments = pathname.split("/").filter(Boolean);
   const lastSegment = pathSegments[pathSegments.length - 1];
+  const secondLastSegment = pathSegments[pathSegments.length - 2];
 
-  const titles: { [key: string]: string } = {
-    admin: "Dashboard",
-    products: "Products",
-    categories: "Categories",
-    subcategories: "Subcategories",
-    orders: "Orders",
-    blogs: "Blogs",
-    testimonials: "Testimonials",
-    customers: "Customers",
-    settings: "Settings",
+  // Helper function to format segment names
+  const formatTitle = (segment: string): string => {
+    // Handle special cases
+    if (segment === "admin") return "Dashboard";
+
+    return segment
+      .split("-")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
-  return titles[lastSegment] || "Dashboard";
+  const getSingular = (word: string): string => {
+    const pluralMap: { [key: string]: string } = {
+      products: "Product",
+      categories: "Category",
+      subcategories: "Subcategory",
+      orders: "Order",
+      blogs: "Blog",
+      testimonials: "Testimonial",
+      customers: "Customer",
+    };
+
+    return pluralMap[word] || word.replace(/s$/, ""); // Simple fallback: remove 's'
+  };
+
+  // Handle nested routes
+  if (secondLastSegment && lastSegment) {
+    const parentTitle = formatTitle(secondLastSegment);
+    const childTitle = formatTitle(lastSegment);
+
+    // Common action patterns
+    if (lastSegment === "add") {
+      return `Add ${getSingular(secondLastSegment)}`;
+    }
+    if (lastSegment === "edit") {
+      return `Edit ${getSingular(secondLastSegment)}`;
+    }
+    if (lastSegment === "view" || lastSegment === "details") {
+      return `${getSingular(secondLastSegment)} Details`;
+    }
+    if (lastSegment === "create") {
+      return `Create ${getSingular(secondLastSegment)}`;
+    }
+
+    return `${parentTitle} - ${childTitle}`;
+  }
+
+  // Single segment routes
+  return formatTitle(lastSegment) || "Dashboard";
 };
 
 export default function AdminHeader({ user }: AdminHeaderProps) {

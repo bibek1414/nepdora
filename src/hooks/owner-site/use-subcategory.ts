@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSubCategoryApi } from "@/services/api/sub-category";
+import { useSubCategoryApi } from "@/services/api/owner-sites/sub-category";
 import { toast } from "sonner";
 import {
   CreateSubCategoryRequest,
