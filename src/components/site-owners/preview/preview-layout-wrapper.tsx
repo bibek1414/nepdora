@@ -149,6 +149,7 @@ export function PreviewLayoutWrapper({
               navbar={navbarResponse.data}
               isEditable={false}
               siteId={siteUser}
+              siteUser={siteUser}
             />
           </div>
         </div>

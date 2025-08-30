@@ -18,7 +18,8 @@ import { NavbarStyle2 } from "./styles/navbar-style-2";
 interface NavbarComponentProps {
   navbar: Navbar;
   isEditable?: boolean;
-  siteId: string; // Added siteId prop
+  siteId: string;
+  siteUser?: string;
 }
 
 const styleMap = {
@@ -29,7 +30,8 @@ const styleMap = {
 export const NavbarComponent: React.FC<NavbarComponentProps> = ({
   navbar,
   isEditable = true,
-  siteId, // Added siteId to destructuring
+  siteId,
+  siteUser,
 }) => {
   const { mutate: updateNavbar, isPending } = useUpdateNavbarMutation();
 
@@ -177,7 +179,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
       <StyleComponent
         navbarData={navbar.data}
         isEditable={isEditable}
-        siteId={siteId} // Added siteId prop to StyleComponent
+        siteId={siteId}
         onEditLogo={isEditable ? handleEditLogo : undefined}
         onAddLink={isEditable ? handleAddLink : undefined}
         onEditLink={isEditable ? handleEditLink : undefined}

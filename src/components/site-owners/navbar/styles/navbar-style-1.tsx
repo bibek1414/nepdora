@@ -43,6 +43,8 @@ interface NavbarStyleProps {
   onEditLogo?: () => void;
   onAddLink?: () => void;
   siteId: string;
+
+  siteUser?: string;
   onEditLink?: (link: NavbarLink) => void;
   onDeleteLink?: (linkId: string) => void;
   onAddButton?: () => void;
@@ -58,6 +60,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
   onAddLink,
   onEditLink,
   onDeleteLink,
+  siteUser,
   onAddButton,
   onEditButton,
   onDeleteButton,
@@ -73,11 +76,25 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
     setIsCartOpen(false);
   };
 
+  // Function to generate the correct href for links
+  const generateLinkHref = (originalHref: string) => {
+    if (isEditable) return originalHref; // Keep original href for editable mode
+
+    // For preview mode, generate the correct route
+    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
+      return `/preview/${siteUser}`;
+    }
+
+    // Remove leading slash and hash if present
+    const cleanHref = originalHref.replace(/^[#/]+/, "");
+
+    return `/preview/${siteUser}/${cleanHref}`;
+  };
   return (
     <>
       <nav
         className={`bg-background flex items-center justify-between p-4 ${
-          !isEditable ? "sticky top-16 z-40 border-b shadow-sm" : ""
+          !isEditable ? "sticky top-16 z-40 mx-auto max-w-7xl" : ""
         }`}
       >
         <div className="flex items-center gap-8">
@@ -114,7 +131,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
               ) : (
                 <a
                   key={link.id}
-                  href={link.href}
+                  href={generateLinkHref(link.href)}
                   className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
                 >
                   {link.text}
@@ -153,7 +170,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                 variant={getButtonVariant(button.variant)}
                 size="sm"
               >
-                <a href={button.href}>{button.text}</a>
+                <a href={generateLinkHref(button.href)}>{button.text}</a>
               </Button>
             )
           )}

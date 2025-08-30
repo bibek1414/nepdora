@@ -40,6 +40,7 @@ const EditableItem: React.FC<{
 interface NavbarStyleProps {
   navbarData: NavbarData;
   siteId: string;
+  siteUser?: string;
   isEditable?: boolean;
   onEditLogo?: () => void;
   onAddLink?: () => void;
@@ -54,6 +55,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   navbarData,
   isEditable,
   siteId,
+  siteUser,
   onEditLogo,
   onAddLink,
   onEditLink,
@@ -76,6 +78,18 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
 
   const closeCart = () => {
     setIsCartOpen(false);
+  };
+
+  // Add the same generateLinkHref function
+  const generateLinkHref = (originalHref: string) => {
+    if (isEditable || !siteUser) return originalHref;
+
+    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
+      return `/preview/${siteUser}`;
+    }
+
+    const cleanHref = originalHref.replace(/^[#/]+/, "");
+    return `/preview/${siteUser}/${cleanHref}`;
   };
 
   return (
@@ -104,7 +118,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
             ) : (
               <a
                 key={link.id}
-                href={link.href}
+                href={generateLinkHref(link.href)} // Use generateLinkHref here
                 className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
               >
                 {link.text}
@@ -146,7 +160,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
             ) : (
               <a
                 key={link.id}
-                href={link.href}
+                href={generateLinkHref(link.href)} // Use generateLinkHref here too
                 className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
               >
                 {link.text}
@@ -176,7 +190,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 variant={getButtonVariant(button.variant)}
                 size="sm"
               >
-                <a href={button.href}>{button.text}</a>
+                <a href={generateLinkHref(button.href)}>{button.text}</a>
               </Button>
             )
           )}
