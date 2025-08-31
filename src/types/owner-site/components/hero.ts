@@ -102,7 +102,7 @@ export const defaultHeroData: HeroData = {
   textColor: "#FFFFFF",
   buttons: [
     { id: "1", text: "Get Started", variant: "primary", href: "#" },
-    { id: "2", text: "Learn More", variant: "outline", href: "#" },
+    { id: "2", text: "Learn More", variant: "primary", href: "#" },
   ],
   layout: "text-center",
   backgroundType: "gradient",

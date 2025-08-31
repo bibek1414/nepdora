@@ -4,16 +4,20 @@ import { X } from "lucide-react";
 import { AboutUsTemplate1 } from "./about-style-1";
 import { AboutUsTemplate2 } from "./about-style-2";
 import { AboutUsTemplate3 } from "./about-style-3";
+import { AboutUsTemplate4 } from "./about-style-4";
 import {
   defaultAboutUs1Data,
   defaultAboutUs2Data,
   defaultAboutUs3Data,
+  defaultAboutUs4Data,
 } from "@/types/owner-site/components/about";
 
 interface AboutUsStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (template: "about-1" | "about-2" | "about-3") => void;
+  onStyleSelect: (
+    template: "about-1" | "about-2" | "about-3" | "about-4"
+  ) => void;
 }
 
 const PreviewCard = ({
@@ -106,6 +110,13 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
               onClick={() => onStyleSelect("about-3")}
             >
               <AboutUsTemplate3 aboutUsData={defaultAboutUs3Data} />
+            </PreviewCard>
+            <PreviewCard
+              title="Minimalist Image Right"
+              description="Clean design with a compelling image and concise text."
+              onClick={() => onStyleSelect("about-4")}
+            >
+              <AboutUsTemplate4 aboutUsData={defaultAboutUs4Data} />
             </PreviewCard>
           </div>
         </div>

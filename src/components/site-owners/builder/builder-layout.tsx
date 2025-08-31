@@ -21,7 +21,6 @@ import {
 } from "@/hooks/owner-site/components/use-footer";
 import { FooterStylesDialog } from "@/components/site-owners/footer/footer-styles-dialog";
 import { HeroStylesDialog } from "@/components/site-owners/hero/hero-styles-dialog";
-import { HeroSettingsDialog } from "@/components/site-owners/hero/hero-editor-dialog";
 import { defaultHeroData } from "@/types/owner-site/components/hero";
 import { useCreateHeroMutation } from "@/hooks/owner-site/components/use-hero";
 import { useCreateAboutUsMutation } from "@/hooks/owner-site/components/use-about";
@@ -30,6 +29,7 @@ import {
   defaultAboutUs1Data,
   defaultAboutUs2Data,
   defaultAboutUs3Data,
+  defaultAboutUs4Data,
 } from "@/types/owner-site/components/about";
 import { AboutUsData } from "@/types/owner-site/components/about";
 import { useCreateProductsComponentMutation } from "@/hooks/owner-site/components/use-product";
@@ -227,7 +227,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleAboutUsTemplateSelect = (
-    template: "about-1" | "about-2" | "about-3"
+    template: "about-1" | "about-2" | "about-3" | "about-4"
   ) => {
     // Select the correct default data based on the chosen template
     let aboutUsData: AboutUsData;
@@ -241,6 +241,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         break;
       case "about-3":
         aboutUsData = defaultAboutUs3Data;
+        break;
+      case "about-4":
+        aboutUsData = defaultAboutUs4Data;
         break;
       default:
         aboutUsData = defaultAboutUs1Data;
@@ -358,7 +361,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         open={isHeroStylesDialogOpen}
         onOpenChange={setIsHeroStylesDialogOpen}
         onStyleSelect={handleHeroTemplateSelect}
-        sampleHeroData={defaultHeroData}
       />
 
       {/* About Us Styles Dialog for template selection */}
@@ -374,18 +376,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsProductsStylesDialogOpen}
         onStyleSelect={handleProductsTemplateSelect}
       />
-
-      {/* Hero Settings Dialog for editing (if needed separately) */}
-      {isHeroSettingsDialogOpen && (
-        <HeroSettingsDialog
-          isOpen={isHeroSettingsDialogOpen}
-          onOpenChange={setIsHeroSettingsDialogOpen}
-          pageSlug={currentPage}
-          heroData={defaultHeroData}
-          mode="create"
-          onSave={() => setIsHeroSettingsDialogOpen(false)}
-        />
-      )}
 
       <div className="bg-background flex min-h-screen flex-col">
         <TopNavigation

@@ -44,8 +44,20 @@ export interface AboutUs3Data {
     unitsAvailable: string;
   };
 }
+export interface AboutUs4Data {
+  template: "about-4";
+  title: string;
+  subtitle: string;
+  subSubtitle: string; // New field
+  imageUrl: string;
+  imageAlt: string;
+}
 
-export type AboutUsData = AboutUs1Data | AboutUs2Data | AboutUs3Data;
+export type AboutUsData =
+  | AboutUs1Data
+  | AboutUs2Data
+  | AboutUs3Data
+  | AboutUs4Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -77,7 +89,11 @@ export interface CreateAboutUsRequest {
 export interface UpdateAboutUsRequest {
   component_id?: string;
   component_type?: "about";
-  data: Partial<AboutUsData>;
+  data:
+    | Partial<AboutUs1Data>
+    | Partial<AboutUs2Data>
+    | Partial<AboutUs3Data>
+    | Partial<AboutUs4Data>;
   order?: number;
 }
 
@@ -164,4 +180,13 @@ export const defaultAboutUs3Data: AboutUs3Data = {
     completeYear: "2026",
     unitsAvailable: "50+ UNITS",
   },
+};
+export const defaultAboutUs4Data: AboutUs4Data = {
+  template: "about-4",
+  title: "Our Vision",
+  subtitle: "Simple, Elegant, Effective.",
+  subSubtitle: "Crafting solutions that make a difference.",
+  imageUrl:
+    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1770&auto=format&fit=crop",
+  imageAlt: "A minimalist office setting with a computer and plants.",
 };

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,12 +12,24 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { AboutUsComponentData } from "@/types/owner-site/components/about";
-import { AboutUsSettingsDialog } from "./about-editor-dialog";
+import {
+  AboutUsComponentData,
+  AboutUsData,
+  AboutUs1Data,
+  AboutUs2Data,
+  AboutUs3Data,
+  AboutUs4Data,
+  UpdateAboutUsRequest,
+} from "@/types/owner-site/components/about";
 import { AboutUsTemplate1 } from "./about-style-1";
 import { AboutUsTemplate2 } from "./about-style-2";
 import { AboutUsTemplate3 } from "./about-style-3";
-import { useDeleteAboutUsMutation } from "@/hooks/owner-site/components/use-about";
+import { AboutUsTemplate4 } from "./about-style-4";
+import {
+  useDeleteAboutUsMutation,
+  useUpdateAboutUsMutation,
+} from "@/hooks/owner-site/components/use-about";
+import { toast } from "sonner";
 
 interface AboutUsComponentProps {
   component: AboutUsComponentData;
@@ -30,13 +42,33 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
   isEditable = false,
   pageSlug,
 }) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
   const deleteAboutUsMutation = useDeleteAboutUsMutation(pageSlug);
+  const updateAboutUsMutation = useUpdateAboutUsMutation(
+    pageSlug,
+    (component.component_id || component.id).toString()
+  );
 
   const handleDelete = () => {
     deleteAboutUsMutation.mutate(
       component.component_id || component.id.toString()
+    );
+  };
+
+  const handleUpdate = (updatedData: Partial<AboutUsData>) => {
+    const mergedData = { ...component.data, ...updatedData };
+
+    updateAboutUsMutation.mutate(
+      { data: mergedData as UpdateAboutUsRequest["data"] },
+      {
+        onSuccess: () => {
+          toast.success("About Us component updated.");
+        },
+        onError: error => {
+          toast.error(`Failed to update: ${error.message}`);
+        },
+      }
     );
   };
 
@@ -51,13 +83,38 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
 
     switch (component.data.template) {
       case "about-1":
-        return <AboutUsTemplate1 aboutUsData={component.data} />;
+        return (
+          <AboutUsTemplate1
+            aboutUsData={component.data as AboutUs1Data}
+            isEditable={isEditable}
+            onUpdate={handleUpdate}
+          />
+        );
       case "about-2":
-        return <AboutUsTemplate2 aboutUsData={component.data} />;
+        return (
+          <AboutUsTemplate2
+            aboutUsData={component.data as AboutUs2Data}
+            isEditable={isEditable}
+            onUpdate={handleUpdate}
+          />
+        );
       case "about-3":
-        return <AboutUsTemplate3 aboutUsData={component.data} />;
+        return (
+          <AboutUsTemplate3
+            aboutUsData={component.data as AboutUs3Data}
+            isEditable={isEditable}
+            onUpdate={handleUpdate}
+          />
+        );
+      case "about-4":
+        return (
+          <AboutUsTemplate4
+            aboutUsData={component.data as AboutUs4Data}
+            isEditable={isEditable}
+            onUpdate={handleUpdate}
+          />
+        );
       default:
-        // This helps catch any unhandled template types
         const exhaustiveCheck: never = component.data;
         return (
           <div className="p-8 text-center">
@@ -69,16 +126,10 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
 
   return (
     <div className="group relative">
+      {/* Simplified delete button for all templates */}
       {isEditable && (
         <>
-          <div className="bg-background/80 absolute top-4 right-4 z-20 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setIsDialogOpen(true)}
-            >
-              <Edit className="mr-2 h-4 w-4" /> Edit
-            </Button>
+          <div className="bg-background/80 absolute top-4 right-4 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
             <Button
               size="sm"
               variant="destructive"
@@ -87,14 +138,6 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
-
-          <AboutUsSettingsDialog
-            isOpen={isDialogOpen}
-            onOpenChange={setIsDialogOpen}
-            aboutUsData={component.data}
-            componentId={(component.component_id || component.id).toString()}
-            pageSlug={pageSlug}
-          />
 
           <AlertDialog
             open={isDeleteDialogOpen}
@@ -120,6 +163,7 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
           </AlertDialog>
         </>
       )}
+
       {renderTemplate()}
     </div>
   );

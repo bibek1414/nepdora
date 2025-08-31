@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,10 +17,12 @@ import {
   HeroData,
   HeroComponentData,
 } from "@/types/owner-site/components/hero";
-import { HeroSettingsDialog } from "./hero-editor-dialog";
 import { HeroTemplate1 } from "./hero-style-1";
 import { HeroTemplate2 } from "./hero-style-2";
-import { useDeleteHeroMutation } from "@/hooks/owner-site/components/use-hero";
+import {
+  useDeleteHeroMutation,
+  useUpdateHeroMutation,
+} from "@/hooks/owner-site/components/use-hero";
 
 interface HeroComponentProps {
   component: HeroComponentData;
@@ -33,9 +35,12 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
   isEditable = false,
   pageSlug,
 }) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteHeroMutation = useDeleteHeroMutation(pageSlug);
+  const updateHeroMutation = useUpdateHeroMutation(
+    pageSlug,
+    (component.component_id || component.id).toString()
+  );
 
   // Debug logging
   console.log("HeroComponent render:", {
@@ -45,6 +50,25 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
     isEditable,
     pageSlug,
   });
+
+  const handleUpdate = (updatedData: Partial<HeroData>) => {
+    const componentId = component.component_id || component.id.toString();
+
+    updateHeroMutation.mutate(
+      {
+        component_id: componentId,
+        data: updatedData,
+      },
+      {
+        onError: error => {
+          toast.error("Failed to update hero section", {
+            description:
+              error instanceof Error ? error.message : "Please try again",
+          });
+        },
+      }
+    );
+  };
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
@@ -86,6 +110,8 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
 
     const props = {
       heroData: component.data,
+      isEditable,
+      onUpdate: handleUpdate,
     };
 
     // Get template from data, default to hero-1 if not specified
@@ -108,15 +134,6 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
               <p className="mt-2 text-yellow-600">
                 Please select a valid template in settings.
               </p>
-              {isEditable && (
-                <Button
-                  onClick={() => setIsDialogOpen(true)}
-                  className="mt-4"
-                  variant="outline"
-                >
-                  Edit Template
-                </Button>
-              )}
             </div>
           </div>
         );
@@ -131,15 +148,6 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
           <div className="bg-background/80 absolute top-4 right-4 z-20 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
             <Button
               size="sm"
-              variant="outline"
-              onClick={() => setIsDialogOpen(true)}
-              className="shadow-sm"
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              Edit Hero
-            </Button>
-            <Button
-              size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
               disabled={deleteHeroMutation.isPending}
@@ -148,16 +156,6 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
-
-          {/* Hero Settings Dialog */}
-          <HeroSettingsDialog
-            isOpen={isDialogOpen}
-            onOpenChange={setIsDialogOpen}
-            heroData={component.data}
-            componentId={(component.component_id || component.id).toString()}
-            pageSlug={pageSlug}
-            mode="edit"
-          />
 
           {/* Delete Confirmation Dialog */}
           <AlertDialog
