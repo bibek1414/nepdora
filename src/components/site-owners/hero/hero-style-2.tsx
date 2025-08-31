@@ -121,7 +121,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
 
   return (
     <section
-      className="relative flex min-h-[80vh] w-full items-end p-8 md:p-16"
+      className="relative flex min-h-[60vh] w-full items-end p-8 md:p-16"
       style={getBackgroundStyles()}
     >
       {/* Overlay */}

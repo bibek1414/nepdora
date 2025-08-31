@@ -1,16 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { X } from "lucide-react";
-import { AboutUsTemplate1 } from "./about-style-1";
-import { AboutUsTemplate2 } from "./about-style-2";
-import { AboutUsTemplate3 } from "./about-style-3";
-import { AboutUsTemplate4 } from "./about-style-4";
-import {
-  defaultAboutUs1Data,
-  defaultAboutUs2Data,
-  defaultAboutUs3Data,
-  defaultAboutUs4Data,
-} from "@/types/owner-site/components/about";
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
 interface AboutUsStylesDialogProps {
   open: boolean;
@@ -20,41 +12,81 @@ interface AboutUsStylesDialogProps {
   ) => void;
 }
 
-const PreviewCard = ({
-  title,
-  description,
-  children,
-  onClick,
-}: {
-  title: string;
-  description: string;
-  children: React.ReactNode;
-  onClick: () => void;
-}) => (
-  <div
-    onClick={onClick}
-    className="group relative cursor-pointer rounded-xl border-2 border-gray-200 bg-white p-4 transition-all duration-200 hover:border-blue-500 hover:shadow-lg"
-  >
-    <div className="mb-3">
-      <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-      <p className="text-sm text-gray-600">{description}</p>
-    </div>
-
-    <div className="relative h-48 overflow-hidden rounded-lg border bg-gray-50">
-      <div className="h-[600px] w-[800px] origin-top-left scale-[0.28] transform-gpu">
-        <div className="bg-white">{children}</div>
-      </div>
-    </div>
-
-    <div className="absolute inset-0 rounded-xl bg-blue-500/5 opacity-0 transition-opacity group-hover:opacity-100" />
-  </div>
-);
-
 export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
   open,
   onOpenChange,
   onStyleSelect,
 }) => {
+  const [selectedStyle, setSelectedStyle] = useState<
+    "about-1" | "about-2" | "about-3" | "about-4" | null
+  >(null);
+
+  const templates = [
+    {
+      id: "about-1" as const,
+      name: "Split Layout with Stats",
+      preview: (
+        <Image
+          src="/images/site-owners/about/about1.png"
+          alt="About Us 1"
+          width={800}
+          height={400}
+          className="rounded-md"
+        />
+      ),
+    },
+    {
+      id: "about-2" as const,
+      name: "Team Showcase",
+      preview: (
+        <Image
+          src="/images/site-owners/about/about2.png"
+          alt="About Us 2"
+          width={800}
+          height={400}
+          className="rounded-md"
+        />
+      ),
+    },
+    {
+      id: "about-3" as const,
+      name: "Modern Design",
+      preview: (
+        <Image
+          src="/images/site-owners/about/about3.png"
+          alt="About Us 3"
+          width={800}
+          height={400}
+          className="rounded-md"
+        />
+      ),
+    },
+    {
+      id: "about-4" as const,
+      name: "Minimalist Image Right",
+      preview: (
+        <Image
+          src="/images/site-owners/about/about4.png"
+          alt="About Us 4"
+          width={800}
+          height={400}
+          className="rounded-md"
+        />
+      ),
+    },
+  ];
+
+  const handleSelect = (
+    templateId: "about-1" | "about-2" | "about-3" | "about-4"
+  ) => {
+    setSelectedStyle(templateId);
+    setTimeout(() => {
+      onStyleSelect(templateId);
+      setSelectedStyle(null);
+      onOpenChange(false);
+    }, 150);
+  };
+
   if (!open) return null;
 
   return (
@@ -66,7 +98,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative mx-4 max-h-[90vh] w-full max-w-4xl overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <div className="relative mx-4 max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 p-6">
           <div>
@@ -89,35 +121,28 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
         {/* Content */}
         <div className="max-h-[calc(90vh-120px)] overflow-y-auto p-6">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <PreviewCard
-              title="Split Layout with Stats"
-              description="A classic layout featuring an image and statistics."
-              onClick={() => onStyleSelect("about-1")}
-            >
-              <AboutUsTemplate1 aboutUsData={defaultAboutUs1Data} />
-            </PreviewCard>
-
-            <PreviewCard
-              title="Team Showcase"
-              description="Introduce the people behind your brand with profile cards."
-              onClick={() => onStyleSelect("about-2")}
-            >
-              <AboutUsTemplate2 aboutUsData={defaultAboutUs2Data} />
-            </PreviewCard>
-            <PreviewCard
-              title="Modern Design"
-              description="A luxurious modern design with bold typography and stats."
-              onClick={() => onStyleSelect("about-3")}
-            >
-              <AboutUsTemplate3 aboutUsData={defaultAboutUs3Data} />
-            </PreviewCard>
-            <PreviewCard
-              title="Minimalist Image Right"
-              description="Clean design with a compelling image and concise text."
-              onClick={() => onStyleSelect("about-4")}
-            >
-              <AboutUsTemplate4 aboutUsData={defaultAboutUs4Data} />
-            </PreviewCard>
+            {templates.map(template => (
+              <div
+                key={template.id}
+                onClick={() => handleSelect(template.id)}
+                className="group relative cursor-pointer rounded-xl border-2 border-gray-200 bg-white p-4 transition-all duration-200 hover:border-blue-500 hover:shadow-lg"
+              >
+                <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                  {template.name}
+                </h3>
+                <div className="relative h-48 overflow-hidden rounded-lg border bg-gray-50">
+                  {template.preview}
+                </div>
+                {selectedStyle === template.id && (
+                  <Badge
+                    variant="default"
+                    className="absolute top-2 right-2 animate-pulse"
+                  >
+                    Adding...
+                  </Badge>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </div>
