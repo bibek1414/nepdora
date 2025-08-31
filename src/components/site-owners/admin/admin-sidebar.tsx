@@ -26,6 +26,7 @@ const navigation = [
   { name: "Testimonials", href: "/admin/testimonials", icon: MessageSquare },
   { name: "Customers", href: "/admin/customers", icon: Users },
   { name: "Settings", href: "/admin/settings", icon: Settings },
+  { name: "Lucky Draw", href: "/admin/luckydraw", icon: Settings },
 ];
 
 interface User {
