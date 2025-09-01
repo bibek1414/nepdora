@@ -8,9 +8,9 @@ import {
   useDeleteBlog,
   useUpdateBlog,
 } from "@/hooks/owner-site/use-blogs";
-import BlogsTable from "@/components/site-owners/blogs/blog-table";
-import BlogsHeader from "@/components/site-owners/blogs/blog-header";
-import BlogsSearch from "@/components/site-owners/blogs/blog-search";
+import BlogsTable from "@/components/site-owners/admin/blogs/blog-table";
+import BlogsHeader from "@/components/site-owners/admin/blogs/blog-header";
+import BlogsSearch from "@/components/site-owners/admin/blogs/blog-search";
 import {
   AlertDialog,
   AlertDialogAction,

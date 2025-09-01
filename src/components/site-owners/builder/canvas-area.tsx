@@ -7,11 +7,13 @@ import { Footer as FooterComponent } from "@/components/site-owners/footer/foote
 import { HeroComponent } from "@/components/site-owners/hero/hero-component";
 import { AboutUsComponent } from "@/components/site-owners/about/about-component";
 import { ProductsComponent } from "@/components/site-owners/products/products-component";
+import { BlogComponent } from "@/components/site-owners/blog/blog-components"; // Import the new BlogComponent
 import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
+import { BlogComponentData } from "@/types/owner-site/components/blog"; // New type for blog component
 import { useDeleteNavbarMutation } from "@/hooks/owner-site/components/use-navbar";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-hero";
@@ -24,6 +26,7 @@ import {
   Sparkles,
   Info,
   ShoppingBag,
+  Rss, // Import Rss for blog
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -40,6 +43,7 @@ interface CanvasAreaProps {
   onAddHero?: () => void;
   onAddAboutUs?: () => void;
   onAddProducts?: () => void;
+  onAddBlog?: () => void; // New prop for adding blog
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -53,6 +57,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddHero,
   onAddAboutUs,
   onAddProducts,
+  onAddBlog, // Destructure new prop
 }) => {
   const deleteNavbarMutation = useDeleteNavbarMutation();
   const deleteFooterMutation = useDeleteFooterMutation();
@@ -94,7 +99,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     const filteredComponents = components.filter((component: any) => {
       const hasValidType =
         component.component_type &&
-        ["hero", "about", "products"].includes(component.component_type);
+        ["hero", "about", "products", "blog"].includes(
+          component.component_type
+        ); // Add 'blog' type
       const hasValidData = component && component.data;
       const hasValidId = component && typeof component.id !== "undefined";
 
@@ -145,6 +152,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const hasHero = pageComponents.some(c => c.component_type === "hero");
   const hasAbout = pageComponents.some(c => c.component_type === "about");
   const hasProducts = pageComponents.some(c => c.component_type === "products");
+  const hasBlog = pageComponents.some(c => c.component_type === "blog"); // New: check for blog component
 
   const handleDeleteNavbar = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -190,6 +198,22 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             onProductClick={(productId, order) => {
               console.log("Product clicked:", productId, order);
               // Handle product click in builder mode
+            }}
+          />
+        );
+      case "blog": // New: Render BlogComponent
+        return (
+          <BlogComponent
+            key={`blog-${component.id}`}
+            component={component as BlogComponentData}
+            isEditable={true}
+            siteId={undefined}
+            pageSlug={currentPageSlug}
+            onUpdate={(componentId, newData) => {
+              console.log("Blog component updated:", componentId, newData);
+            }}
+            onBlogClick={(blogSlug, order) => {
+              console.log("Blog clicked:", blogSlug, order);
             }}
           />
         );
@@ -323,6 +347,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             hasHero &&
             !hasAbout &&
             !hasProducts &&
+            !hasBlog && // Check for blog too
             onAddAboutUs && (
               <div className="py-20 text-center">
                 <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
@@ -350,15 +375,26 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                       Add Products
                     </Button>
                   )}
+                  {onAddBlog && (
+                    <Button
+                      onClick={onAddBlog}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Rss className="h-4 w-4" />
+                      Add Blog
+                    </Button>
+                  )}
                 </div>
               </div>
             )}
 
-          {/* Show products placeholder if hero and about exist but no products */}
+          {/* Show products placeholder if hero and about exist but no products or blog */}
           {!isLoading &&
             hasHero &&
             hasAbout &&
             !hasProducts &&
+            !hasBlog &&
             onAddProducts && (
               <div className="py-20 text-center">
                 <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
@@ -371,9 +407,45 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                   Display your products in an attractive grid or list layout to
                   attract customers.
                 </p>
-                <Button onClick={onAddProducts} className="gap-2">
+                <div className="flex justify-center gap-2">
+                  <Button onClick={onAddProducts} className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    Add Products Section
+                  </Button>
+                  {onAddBlog && (
+                    <Button
+                      onClick={onAddBlog}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Rss className="h-4 w-4" />
+                      Add Blog
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+
+          {/* Show blog placeholder if hero, about, products exist but no blog */}
+          {!isLoading &&
+            hasHero &&
+            hasAbout &&
+            hasProducts &&
+            !hasBlog &&
+            onAddBlog && (
+              <div className="py-20 text-center">
+                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
+                  <Rss className="text-primary h-8 w-8" />
+                </div>
+                <h4 className="text-foreground mb-2 text-lg font-semibold">
+                  Share Your Stories
+                </h4>
+                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
+                  Add a blog section to keep your audience informed and engaged.
+                </p>
+                <Button onClick={onAddBlog} className="gap-2">
                   <Plus className="h-4 w-4" />
-                  Add Products Section
+                  Add Blog Section
                 </Button>
               </div>
             )}

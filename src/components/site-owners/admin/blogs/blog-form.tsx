@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BlogPost, BlogTag } from "@/types/owner-site/blog";
@@ -71,6 +71,10 @@ const BlogForm: React.FC<BlogFormProps> = ({
   const [newTagName, setNewTagName] = useState("");
   const [isTagDialogOpen, setIsTagDialogOpen] = useState(false);
 
+  // Add state to track the selected file
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const form = useForm<BlogFormValues>({
     resolver: zodResolver(blogFormSchema),
     defaultValues: {
@@ -103,26 +107,12 @@ const BlogForm: React.FC<BlogFormProps> = ({
     }
   }, [blog, isEditMode, form, formInitialized]);
 
-  useEffect(() => {
-    if (isEditMode && blog) {
-      const blogTags = blog.tags || [];
-
-      const timer = setTimeout(() => {
-        form.reset({
-          title: blog.title || "",
-          content: blog.content || "",
-          meta_title: blog.meta_title || "",
-          meta_description: blog.meta_description || "",
-          thumbnail_image_alt_description:
-            blog.thumbnail_image_alt_description || "",
-          tag_ids: blogTags.map(tag => tag.id),
-        });
-        setSelectedTags(blogTags);
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [blog, isEditMode, form]);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    setSelectedFile(file);
+    // Update the form value directly
+    form.setValue("thumbnail_image", file, { shouldValidate: true });
+  };
 
   const handleTagToggle = (tag: BlogTag) => {
     const currentTagIds = form.getValues("tag_ids") || [];
@@ -182,12 +172,12 @@ const BlogForm: React.FC<BlogFormProps> = ({
     const transformedData = {
       ...data,
       tag_ids: data.tag_ids && Array.isArray(data.tag_ids) ? data.tag_ids : [],
+      // Ensure the selected file is included
+      thumbnail_image: selectedFile || data.thumbnail_image,
     };
 
     onSubmit(transformedData);
   };
-
-  const fileRef = form.register("thumbnail_image");
 
   // Ensure allTags is always an array to prevent the map error
   const safeAllTags = Array.isArray(allTags) ? allTags : [];
@@ -275,11 +265,16 @@ const BlogForm: React.FC<BlogFormProps> = ({
             <FormField
               control={form.control}
               name="thumbnail_image"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Thumbnail Image</FormLabel>
                   <FormControl>
-                    <Input type="file" {...fileRef} />
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                    />
                   </FormControl>
                   <FormDescription>
                     {isEditMode && "Leave empty to keep current image."}
@@ -288,7 +283,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
                 </FormItem>
               )}
             />
-            {isEditMode && blog?.thumbnail_image && (
+            {isEditMode && blog?.thumbnail_image && !selectedFile && (
               <div className="mt-2">
                 <p className="text-sm text-gray-600">Current image:</p>
                 <Image
@@ -298,6 +293,28 @@ const BlogForm: React.FC<BlogFormProps> = ({
                   height={128}
                   className="mt-1 rounded-md object-cover"
                 />
+              </div>
+            )}
+            {selectedFile && (
+              <div className="mt-2">
+                <p className="text-sm text-gray-600">New image selected:</p>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm">{selectedFile.name}</span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedFile(null);
+                      if (fileInputRef.current) {
+                        fileInputRef.current.value = "";
+                      }
+                      form.setValue("thumbnail_image", null);
+                    }}
+                  >
+                    Remove
+                  </Button>
+                </div>
               </div>
             )}
             <FormField
