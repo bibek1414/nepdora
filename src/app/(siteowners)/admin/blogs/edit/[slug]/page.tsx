@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "sonner";
 import { useBlog, useUpdateBlog } from "@/hooks/owner-site/use-blogs";
-import BlogForm from "@/components/site-owners/blogs/blog-form";
+import BlogForm from "@/components/site-owners/admin/blogs/blog-form";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UpdateBlogPost } from "@/types/owner-site/blog";

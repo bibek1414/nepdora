@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { useCreateBlog } from "@/hooks/owner-site/use-blogs";
-import BlogForm from "@/components/site-owners/blogs/blog-form";
+import BlogForm from "@/components/site-owners/admin/blogs/blog-form";
 import { Button } from "@/components/ui/button";
 import { CreateBlogPost } from "@/types/owner-site/blog";
 

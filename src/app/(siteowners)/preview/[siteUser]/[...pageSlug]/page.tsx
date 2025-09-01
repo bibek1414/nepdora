@@ -7,10 +7,12 @@ import { useRouter } from "next/navigation";
 import { HeroComponent } from "@/components/site-owners/hero/hero-component";
 import { AboutUsComponent } from "@/components/site-owners/about/about-component";
 import { ProductsComponent } from "@/components/site-owners/products/products-component";
+import { BlogComponent } from "@/components/site-owners/blog/blog-components";
 import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-hero";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
+import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { use } from "react";
 
 interface DynamicPageProps {
@@ -22,11 +24,12 @@ interface DynamicPageProps {
 
 interface PageComponent {
   id: string | number;
-  component_type: "hero" | "about" | "products";
+  component_type: "hero" | "about" | "products" | "blog";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
-    | ProductsComponentData["data"];
+    | ProductsComponentData["data"]
+    | BlogComponentData["data"];
   order?: number;
 }
 
@@ -60,7 +63,9 @@ export default function DynamicPage({ params }: DynamicPageProps) {
     return components.filter(
       (component): component is PageComponent =>
         component.component_type &&
-        ["hero", "about", "products"].includes(component.component_type) &&
+        ["hero", "about", "products", "blog"].includes(
+          component.component_type
+        ) &&
         component.data
     );
   }, [pageComponentsResponse]);
@@ -75,10 +80,16 @@ export default function DynamicPage({ params }: DynamicPageProps) {
     router.push(`/preview/${siteUser}/products/${productId}`);
   };
 
-  // Component update handler (not used in preview mode)
+  // Blog click handler - Navigate to blog detail page
+  const handleBlogClick = (blogSlug: string, order: number) => {
+    console.log("Blog clicked in preview:", { blogSlug, order });
+    router.push(`/preview/${siteUser}/blog/${blogSlug}`);
+  };
+
+  // Component update handlers (not used in preview mode)
   const handleComponentUpdate = (
     componentId: string,
-    newData: ProductsComponentData
+    newData: ProductsComponentData | BlogComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
       componentId,
@@ -114,8 +125,27 @@ export default function DynamicPage({ params }: DynamicPageProps) {
             component={component as ProductsComponentData}
             isEditable={false}
             siteId={siteUser}
-            onUpdate={handleComponentUpdate}
+            onUpdate={(componentId, newData) =>
+              handleComponentUpdate(
+                componentId,
+                newData as ProductsComponentData
+              )
+            }
             onProductClick={handleProductClick}
+          />
+        );
+      case "blog":
+        return (
+          <BlogComponent
+            key={component.id}
+            component={component as BlogComponentData}
+            isEditable={false}
+            siteId={siteUser}
+            pageSlug={currentPageSlug}
+            onUpdate={(componentId, newData) =>
+              handleComponentUpdate(componentId, newData as BlogComponentData)
+            }
+            onBlogClick={handleBlogClick}
           />
         );
       default:
@@ -157,11 +187,11 @@ export default function DynamicPage({ params }: DynamicPageProps) {
               <Monitor className="text-muted-foreground h-8 w-8" />
             </div>
             <h3 className="text-foreground mb-2 text-xl font-semibold">
-              No Content for &apos;{currentPageSlug}&apos;page
+              No Content for &apos;{currentPageSlug}&apos; page
             </h3>
             <p className="text-muted-foreground mx-auto max-w-md">
               Go back to the builder and start adding components to the &apos;
-              {currentPageSlug}&apos;page.
+              {currentPageSlug}&apos; page.
             </p>
             <Button onClick={handleBackToBuilder} className="mt-4">
               Open Builder

@@ -13,6 +13,7 @@ import {
   ArrowLeft,
   Eye,
   Palette,
+  Rss, // Import Rss for blog section
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -155,6 +156,16 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
                 <div className="flex items-center">
                   <Package className="mr-3 h-4 w-4 text-gray-500" />
                   <span className="text-sm font-medium">Product Displays</span>
+                </div>
+              </div>
+
+              <div
+                className="flex cursor-pointer items-center rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
+                onClick={() => handleComponentClick("blog-sections")} // New: Blog Section
+              >
+                <div className="flex items-center">
+                  <Rss className="mr-3 h-4 w-4 text-gray-500" />
+                  <span className="text-sm font-medium">Blog Sections</span>
                 </div>
               </div>
 

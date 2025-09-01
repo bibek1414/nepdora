@@ -36,6 +36,9 @@ import { useCreateProductsComponentMutation } from "@/hooks/owner-site/component
 import { defaultProductsData } from "@/types/owner-site/components/products";
 import { ProductsStylesDialog } from "@/components/site-owners/products/products-styles-dialog";
 import { Facebook, Twitter } from "lucide-react";
+import { useCreateBlogComponentMutation } from "@/hooks/owner-site/components/use-blog";
+import { defaultBlogDisplayData } from "@/types/owner-site/components/blog";
+import { BlogStylesDialog } from "@/components/site-owners/blog/blog-style-dialog";
 
 interface Component {
   id: string;
@@ -70,9 +73,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isAboutUsStylesDialogOpen, setIsAboutUsStylesDialogOpen] =
     useState(false);
-  // Add this state for products styles dialog
   const [isProductsStylesDialogOpen, setIsProductsStylesDialogOpen] =
     useState(false);
+  const [isBlogStylesDialogOpen, setIsBlogStylesDialogOpen] = useState(false); // New state for blog dialog
   const [currentPage, setCurrentPage] = useState("");
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
 
@@ -80,6 +83,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createAboutUsMutation = useCreateAboutUsMutation(currentPage);
   const createProductsComponentMutation =
     useCreateProductsComponentMutation(currentPage);
+  const createBlogComponentMutation =
+    useCreateBlogComponentMutation(currentPage); // New mutation for blog
 
   // Auto-create home page if no pages exist
   useEffect(() => {
@@ -133,8 +138,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     } else if (componentId === "about-sections") {
       setIsAboutUsStylesDialogOpen(true);
     } else if (componentId === "products-sections") {
-      // Open the products styles dialog instead of directly creating
       setIsProductsStylesDialogOpen(true);
+    } else if (componentId === "blog-sections") {
+      // New: Open the blog styles dialog
+      setIsBlogStylesDialogOpen(true);
     } else {
       console.log(`${componentId} clicked`);
     }
@@ -291,6 +298,30 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
+  // New: Add the blog template select handler
+  const handleBlogTemplateSelect = (
+    template: "grid-1" | "grid-2" | "list-1"
+  ) => {
+    const payload = {
+      component_id: `blog-${Date.now()}`,
+      component_type: "blog" as const,
+      data: {
+        ...defaultBlogDisplayData, // Assuming you define a defaultBlogDisplayData
+        style: template,
+      },
+      order: 4, // Example order, adjust as needed
+    };
+
+    createBlogComponentMutation.mutate(payload, {
+      onSuccess: () => {
+        setIsBlogStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create blog component:", error);
+      },
+    });
+  };
+
   const handleAddHeroFromCanvas = () => {
     // Open the hero styles dialog when adding from canvas
     setIsHeroStylesDialogOpen(true);
@@ -300,9 +331,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     setIsAboutUsStylesDialogOpen(true);
   };
 
-  // Update the handleAddProducts function
   const handleAddProducts = () => {
     setIsProductsStylesDialogOpen(true);
+  };
+
+  // New: Add the handleAddBlog function
+  const handleAddBlog = () => {
+    setIsBlogStylesDialogOpen(true);
   };
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -370,13 +405,19 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onStyleSelect={handleAboutUsTemplateSelect}
       />
 
-      {/* Add this dialog for products styles */}
+      {/* Products Styles Dialog */}
       <ProductsStylesDialog
         open={isProductsStylesDialogOpen}
         onOpenChange={setIsProductsStylesDialogOpen}
         onStyleSelect={handleProductsTemplateSelect}
       />
 
+      {/* New: Blog Styles Dialog for template selection */}
+      <BlogStylesDialog
+        open={isBlogStylesDialogOpen}
+        onOpenChange={setIsBlogStylesDialogOpen}
+        onStyleSelect={handleBlogTemplateSelect}
+      />
       <div className="bg-background flex min-h-screen flex-col">
         <TopNavigation
           pages={pagesData}
@@ -412,6 +453,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddHero={handleAddHeroFromCanvas}
                   onAddAboutUs={handleAddAboutUsFromCanvas}
                   onAddProducts={handleAddProducts}
+                  onAddBlog={handleAddBlog} // Pass the new handler
                 />
               </div>
             </div>
