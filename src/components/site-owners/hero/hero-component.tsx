@@ -19,6 +19,9 @@ import {
 } from "@/types/owner-site/components/hero";
 import { HeroTemplate1 } from "./hero-style-1";
 import { HeroTemplate2 } from "./hero-style-2";
+import { HeroTemplate3 } from "./hero-style-3";
+import { HeroTemplate4 } from "./hero-style-4";
+import { HeroTemplate5 } from "./hero-style-5";
 import {
   useDeleteHeroMutation,
   useUpdateHeroMutation,
@@ -41,15 +44,6 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
     pageSlug,
     (component.component_id || component.id).toString()
   );
-
-  // Debug logging
-  console.log("HeroComponent render:", {
-    componentId: component.id,
-    componentData: component.data,
-    template: component.data?.template,
-    isEditable,
-    pageSlug,
-  });
 
   const handleUpdate = (updatedData: Partial<HeroData>) => {
     const componentId = component.component_id || component.id.toString();
@@ -124,6 +118,12 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
         return <HeroTemplate1 {...props} />;
       case "hero-2":
         return <HeroTemplate2 {...props} />;
+      case "hero-3":
+        return <HeroTemplate3 {...props} />;
+      case "hero-4":
+        return <HeroTemplate4 {...props} />;
+      case "hero-5":
+        return <HeroTemplate5 {...props} />;
       default:
         return (
           <div className="flex min-h-[60vh] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-20">

@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Monitor, Smartphone, Tablet } from "lucide-react";
+
 import { useRouter } from "next/navigation";
 import { HeroComponent } from "@/components/site-owners/hero/hero-component";
 import { AboutUsComponent } from "@/components/site-owners/about/about-component";
@@ -176,70 +175,6 @@ export default function PreviewPage({ params }: PreviewPageProps) {
             .map(renderComponent)}
         </div>
       )}
-
-      {/* Preview Content Area */}
-      <div className="p-8">
-        {!hasContent ? (
-          <div className="py-20 text-center">
-            <div className="bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
-              <Monitor className="text-muted-foreground h-8 w-8" />
-            </div>
-            <h3 className="text-foreground mb-2 text-xl font-semibold">
-              No Content Yet
-            </h3>
-            <p className="text-muted-foreground mx-auto max-w-md">
-              Go back to the builder and start adding components to see your
-              site preview here.
-            </p>
-            <Button onClick={handleBackToBuilder} className="mt-4">
-              Open Builder
-            </Button>
-          </div>
-        ) : (
-          // Additional content sections when page components exist
-          <div className="space-y-12">
-            <div className="grid gap-8 md:grid-cols-3">
-              <div className="rounded-lg border p-6 text-center">
-                <div className="bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-                  <Monitor className="text-primary h-6 w-6" />
-                </div>
-                <h3 className="mb-2 text-lg font-semibold">Feature One</h3>
-                <p className="text-muted-foreground text-sm">
-                  Add more components to showcase your features and services.
-                </p>
-              </div>
-              <div className="rounded-lg border p-6 text-center">
-                <div className="bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-                  <Smartphone className="text-primary h-6 w-6" />
-                </div>
-                <h3 className="mb-2 text-lg font-semibold">Feature Two</h3>
-                <p className="text-muted-foreground text-sm">
-                  Build responsive designs that work on all devices.
-                </p>
-              </div>
-              <div className="rounded-lg border p-6 text-center">
-                <div className="bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
-                  <Tablet className="text-primary h-6 w-6" />
-                </div>
-                <h3 className="mb-2 text-lg font-semibold">Feature Three</h3>
-                <p className="text-muted-foreground text-sm">
-                  Create professional layouts with our intuitive builder.
-                </p>
-              </div>
-            </div>
-
-            <div className="rounded-lg bg-gray-50 p-8 text-center">
-              <h2 className="mb-4 text-3xl font-bold">Ready to Get Started?</h2>
-              <p className="text-muted-foreground mb-6 text-lg">
-                Continue building your site by adding more components and pages.
-              </p>
-              <Button onClick={handleBackToBuilder} size="lg">
-                Continue Building
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
     </>
   );
 }

@@ -106,8 +106,7 @@ export default function Technology() {
               </p>
               <Link href="/contact">
                 <Button
-                  className="px-6 py-3 text-white"
-                  style={{ backgroundColor: "var(--primary)" }}
+                  className="px-6 py-3 text-white bg-primary"
                 >
                   Contact us
                 </Button>

@@ -37,11 +37,12 @@ const navigation = [
   { name: "Order Management", href: "/admin/orders", icon: FileText },
   { name: "Service Bookings", href: "/admin/service-bookings", icon: Calendar },
   { name: "Issues Tracking", href: "/admin/issues", icon: Bug },
-  { name: "Gifts and Discounts", href: "/admin/gifts-discounts", icon: Gift },
-  { name: "Offers", href: "/admin/offers", icon: Tag },
+  { name: "Offers and Discounts", href: "/admin/offers-discounts", icon: Gift },
   { name: "Profile", href: "/admin/profile", icon: User },
   { name: "AI Chatbot Settings", href: "/admin/chatbot-settings", icon: Bot },
   { name: "Lucky Draw / Sales Fest", href: "/admin/lucky-draw", icon: Trophy },
+  { name: "Popup", href: "/admin/popup", icon: Package },
+  { name: "Settings", href: "/admin/settings/whatsapp", icon: Edit3 },
 ];
 
 interface User {

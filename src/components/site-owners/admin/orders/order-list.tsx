@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useOrders, useUpdateOrderStatus } from "@/hooks/owner-site/use-orders";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,26 +24,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  Package,
-  Search,
-  Filter,
-  ChevronLeft,
-  ChevronRight,
-  ChevronDown,
-  ChevronRight as ChevronRightIcon,
-} from "lucide-react";
+import { Package, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Order, OrderPaginationParams } from "@/types/owner-site/orders";
 import { toast } from "sonner";
-import { OrderDetails } from "./order-details";
+import { OrderDialog } from "./order-dialog";
 
 // Status configuration for filtering and display
 const STATUS_CONFIG = {
   all: { label: "All", color: "default" },
   pending: { label: "Pending", color: "warning" },
   processing: { label: "Processing", color: "info" },
-  fulfilled: { label: "Fulfilled", color: "success" },
-  completed: { label: "Completed", color: "success" },
+  shipped: { label: "Shipped", color: "success" },
+  delivered: { label: "Delivered", color: "success" },
   cancelled: { label: "Cancelled", color: "destructive" },
   open: { label: "Open", color: "info" },
 };
@@ -51,8 +43,8 @@ const STATUS_CONFIG = {
 const STATUS_OPTIONS = [
   { value: "pending", label: "Pending" },
   { value: "processing", label: "Processing" },
-  { value: "fulfilled", label: "Fulfilled" },
-  { value: "completed", label: "Completed" },
+  { value: "shipped", label: "Shipped" },
+  { value: "delivered", label: "Delivered" },
   { value: "cancelled", label: "Cancelled" },
 ];
 
@@ -110,7 +102,9 @@ export default function OrdersPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [expandedOrders, setExpandedOrders] = useState<Set<number>>(new Set());
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const updateOrderStatus = useUpdateOrderStatus();
 
@@ -193,16 +187,30 @@ export default function OrdersPage() {
     }
   };
 
-  const toggleOrderExpansion = (orderId: number) => {
-    const newExpanded = new Set(expandedOrders);
-    if (newExpanded.has(orderId)) {
-      newExpanded.delete(orderId);
-    } else {
-      // Close all others and open this one
-      newExpanded.clear();
-      newExpanded.add(orderId);
+  const handleOpenDialog = (orderId: number) => {
+    setSelectedOrderId(orderId);
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setSelectedOrderId(null);
+  };
+
+  const handleOrderChange = (orderId: number) => {
+    setSelectedOrderId(orderId);
+  };
+
+  const handleRowClick = (orderId: number, event: React.MouseEvent) => {
+    // Check if the click was inside the status dropdown
+    if (
+      dropdownRef.current &&
+      dropdownRef.current.contains(event.target as Node)
+    ) {
+      return; // Don't open the dialog if clicking on the dropdown
     }
-    setExpandedOrders(newExpanded);
+
+    handleOpenDialog(orderId);
   };
 
   const totalPages = ordersResponse
@@ -276,18 +284,18 @@ export default function OrdersPage() {
             All
           </Button>
           <Button
-            variant={statusFilter === "open" ? "default" : "outline"}
+            variant={statusFilter === "processing" ? "default" : "outline"}
             size="sm"
-            onClick={() => setStatusFilter("open")}
+            onClick={() => setStatusFilter("processing")}
           >
-            Open
+            Processing
           </Button>
           <Button
-            variant={statusFilter === "fulfilled" ? "default" : "outline"}
+            variant={statusFilter === "Shipped" ? "default" : "outline"}
             size="sm"
-            onClick={() => setStatusFilter("fulfilled")}
+            onClick={() => setStatusFilter("Shipped")}
           >
-            Fulfilled
+            Shipped
           </Button>
           <Button
             variant={statusFilter === "cancelled" ? "default" : "outline"}
@@ -333,7 +341,6 @@ export default function OrdersPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-12"></TableHead>
                     <TableHead>Order</TableHead>
                     <TableHead>Date</TableHead>
                     <TableHead>Customer</TableHead>
@@ -345,69 +352,53 @@ export default function OrdersPage() {
                 </TableHeader>
                 <TableBody>
                   {orders.map(order => (
-                    <React.Fragment key={order.id}>
-                      <TableRow
-                        className="cursor-pointer hover:bg-gray-50"
-                        onClick={() => toggleOrderExpansion(order.id)}
-                      >
-                        <TableCell>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0"
-                            onClick={e => {
-                              e.stopPropagation();
-                              toggleOrderExpansion(order.id);
-                            }}
-                          >
-                            {expandedOrders.has(order.id) ? (
-                              <ChevronDown className="h-4 w-4" />
-                            ) : (
-                              <ChevronRightIcon className="h-4 w-4" />
-                            )}
-                          </Button>
-                        </TableCell>
-                        <TableCell className="font-medium text-[#4D7399]">
-                          {order.order_number}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {formatDate(order.created_at)}
-                        </TableCell>
-                        <TableCell>
-                          <div className="font-medium text-[#4D7399]">
-                            {order.customer_name}
-                          </div>
-                        </TableCell>
-                        <TableCell>
+                    <TableRow
+                      key={order.id}
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={e => handleRowClick(order.id, e)}
+                    >
+                      <TableCell className="font-medium text-[#4D7399]">
+                        {order.order_number}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {formatDate(order.created_at)}
+                      </TableCell>
+                      <TableCell>
+                        <div className="font-medium text-[#4D7399]">
+                          {order.customer_name}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="secondary"
+                          className="bg-green-100 text-green-800"
+                        >
+                          Paid
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {order.status === "Shipped" ||
+                        order.status === "Delivered" ? (
                           <Badge
                             variant="secondary"
                             className="bg-green-100 text-green-800"
                           >
-                            Paid
+                            Shipped
                           </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {order.status === "fulfilled" ||
-                          order.status === "completed" ? (
-                            <Badge
-                              variant="secondary"
-                              className="bg-green-100 text-green-800"
-                            >
-                              Fulfilled
-                            </Badge>
-                          ) : (
-                            <Badge
-                              variant="secondary"
-                              className="bg-gray-100 text-gray-800"
-                            >
-                              Pending
-                            </Badge>
-                          )}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          ${order.total_amount}
-                        </TableCell>
-                        <TableCell>
+                        ) : (
+                          <Badge
+                            variant="secondary"
+                            className="bg-gray-100 text-gray-800"
+                          >
+                            Pending
+                          </Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        ${order.total_amount}
+                      </TableCell>
+                      <TableCell>
+                        <div ref={dropdownRef}>
                           <Select
                             value={order.status}
                             onValueChange={value =>
@@ -415,10 +406,7 @@ export default function OrdersPage() {
                             }
                             disabled={updateOrderStatus.isPending}
                           >
-                            <SelectTrigger
-                              className="w-auto min-w-[120px]"
-                              onClick={e => e.stopPropagation()}
-                            >
+                            <SelectTrigger className="w-auto min-w-[120px]">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -432,18 +420,9 @@ export default function OrdersPage() {
                               ))}
                             </SelectContent>
                           </Select>
-                        </TableCell>
-                      </TableRow>
-                      {expandedOrders.has(order.id) && (
-                        <TableRow>
-                          <TableCell colSpan={8} className="border-t-0 p-0">
-                            <div className="bg-gray-50/50 px-4 py-4">
-                              <OrderDetails order={order} />
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </React.Fragment>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   ))}
                 </TableBody>
               </Table>
@@ -508,6 +487,15 @@ export default function OrdersPage() {
           </div>
         </div>
       )}
+
+      {/* Order Dialog */}
+      <OrderDialog
+        orders={orders}
+        currentOrderId={selectedOrderId}
+        isOpen={dialogOpen}
+        onClose={handleCloseDialog}
+        onOrderChange={handleOrderChange}
+      />
     </div>
   );
 }

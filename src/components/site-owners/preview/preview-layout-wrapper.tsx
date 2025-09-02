@@ -71,79 +71,9 @@ export function PreviewLayoutWrapper({
 
   return (
     <div className="bg-background min-h-screen">
-      {/* Preview Header */}
-      <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-        <div className="container flex h-16 items-center justify-between px-6">
-          <div className="flex items-center gap-4">
-            {!isPreviewHome ? (
-              <>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleBackToPreview}
-                  className="text-primary flex items-center gap-2"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Back to Preview
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleBackToBuilder}
-                  className="text-muted-foreground flex items-center gap-2"
-                >
-                  Back to Builder
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBackToBuilder}
-                className="text-primary flex items-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back to Builder
-              </Button>
-            )}
-            <Badge variant="secondary" className="text-xs">
-              {getTitle()}
-            </Badge>
-          </div>
-
-          {/* Device Toggle */}
-          <div className="bg-muted flex items-center gap-2 rounded-lg p-1">
-            <Button
-              variant={deviceView === "desktop" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setDeviceView("desktop")}
-              className="h-8 px-3"
-            >
-              <Monitor className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={deviceView === "tablet" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setDeviceView("tablet")}
-              className="h-8 px-3"
-            >
-              <Tablet className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={deviceView === "mobile" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setDeviceView("mobile")}
-              className="h-8 px-3"
-            >
-              <Smartphone className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </header>
-
       {/* Sticky Navbar - positioned outside the preview content */}
       {navbarResponse?.data && (
-        <div className={`sticky top-16 z-40 ${getViewportClass()}`}>
+        <div className={`sticky top-0 z-40 ${getViewportClass()}`}>
           <div className="overflow-hidden bg-white">
             <NavbarComponent
               navbar={navbarResponse.data}
