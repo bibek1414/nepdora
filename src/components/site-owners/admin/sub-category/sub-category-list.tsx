@@ -19,22 +19,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   useSubCategories,
   useDeleteSubCategory,
 } from "@/hooks/owner-site/use-subcategory";
 import { SubCategoryForm } from "./sub-category-form";
-import {
-  MoreHorizontal,
-  Plus,
-  Edit,
-  Trash2,
-  ImageOff,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import Pagination from "@/components/ui/pagination";
+import { MoreHorizontal, Plus, Edit, Trash2, ImageOff } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -80,6 +72,10 @@ export const SubCategoryList: React.FC = () => {
     setEditingSubCategory(null);
   };
 
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
   // Helper function to get category name from either string or object
   const getCategoryName = (
     category: string | { name: string } | null | undefined
@@ -95,7 +91,7 @@ export const SubCategoryList: React.FC = () => {
   if (error) {
     return (
       <Card>
-        <CardContent className="p-6">
+        <CardContent>
           <p className="text-destructive">
             {error instanceof Error
               ? error.message
@@ -107,13 +103,15 @@ export const SubCategoryList: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div>
+      <div className="mb-3 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Subcategories</h1>
-          <p className="text-muted-foreground">Manage your subcategories</p>
         </div>
-        <Button onClick={() => setShowForm(true)}>
+        <Button
+          onClick={() => setShowForm(true)}
+          className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+        >
           <Plus className="mr-2 h-4 w-4" />
           Add Subcategory
         </Button>
@@ -199,37 +197,55 @@ export const SubCategoryList: React.FC = () => {
                 </Table>
               </div>
 
-              {pagination && pagination.totalPages > 1 && (
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="text-muted-foreground text-sm">
-                    Showing {subCategories.length} of {pagination.total} results
+              {/* Empty State */}
+              {subCategories.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="mb-4 rounded-full bg-gray-100 p-4">
+                    <Plus className="h-8 w-8 text-gray-400" />
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPage(page - 1)}
-                      disabled={!pagination.hasPrevious}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      Previous
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPage(page + 1)}
-                      disabled={!pagination.hasNext}
-                    >
-                      Next
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                    No subcategories found
+                  </h3>
+                  <p className="mb-6 max-w-sm text-gray-500">
+                    Get started by creating your first subcategory to further
+                    organize your products
+                  </p>
+                  <Button
+                    onClick={() => setShowForm(true)}
+                    className="bg-black text-white hover:bg-gray-800"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Subcategory
+                  </Button>
                 </div>
               )}
             </>
           )}
         </CardContent>
       </Card>
+
+      {/* Results summary and Pagination */}
+      {pagination && pagination.totalPages > 1 && (
+        <div className="mt-6 space-y-4">
+          {/* Results summary */}
+          <div className="flex justify-center">
+            <div className="text-muted-foreground text-sm">
+              Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
+              {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
+              of {pagination.total} results
+            </div>
+          </div>
+
+          {/* Pagination component */}
+          <Pagination
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
+            onPageChange={handlePageChange}
+            showFirstLast={true}
+            maxVisiblePages={7}
+          />
+        </div>
+      )}
 
       {showForm && (
         <SubCategoryForm

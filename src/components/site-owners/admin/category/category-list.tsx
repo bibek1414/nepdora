@@ -18,27 +18,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   useCategories,
   useDeleteCategory,
 } from "@/hooks/owner-site/use-category";
 import { CategoryForm } from "./category-form";
-import {
-  MoreHorizontal,
-  Plus,
-  Edit,
-  Trash2,
-  ImageOff,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import Pagination from "@/components/ui/pagination";
+import { MoreHorizontal, Plus, Edit, Trash2, ImageOff } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -86,141 +73,200 @@ export const CategoryList: React.FC = () => {
     setEditingCategory(null);
   };
 
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
   const pagination = data?.pagination;
   const categories = data?.results || [];
 
   if (error) {
     return (
-      <Card>
-        <CardContent className="p-6">
-          <p className="text-destructive">
-            {error instanceof Error
-              ? error.message
-              : "Failed to load categories"}
-          </p>
-        </CardContent>
-      </Card>
+      <div className="">
+        <div className="mx-auto">
+          <Card className="rounded-lg border-0 bg-white shadow-sm">
+            <CardContent className="p-6">
+              <p className="text-red-600">
+                {error instanceof Error
+                  ? error.message
+                  : "Failed to load categories"}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
-          <p className="text-muted-foreground">
-            Manage your product categories
-          </p>
+    <div className="">
+      <div className="mx-auto">
+        {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Categories</h1>
+          </div>
+          <Button
+            onClick={() => setShowForm(true)}
+            className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Category
+          </Button>
         </div>
-        <Button onClick={() => setShowForm(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Category
-        </Button>
-      </div>
 
-      <Card>
-        <CardContent>
-          {isLoading ? (
-            <div className="space-y-3">
-              {[...Array(limit)].map((_, i) => (
-                <Skeleton key={i} className="h-16 w-full" />
-              ))}
-            </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto">
+        {/* Categories Card */}
+        <Card className="overflow-hidden rounded-lg border-0 bg-white shadow-sm">
+          <CardContent className="p-0">
+            {isLoading ? (
+              <div className="space-y-4 p-6">
+                {[...Array(limit)].map((_, i) => (
+                  <Skeleton key={i} className="h-16 w-full" />
+                ))}
+              </div>
+            ) : (
+              <>
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[80px]">Image</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Description</TableHead>
-                      <TableHead className="w-[50px]">Actions</TableHead>
+                    <TableRow className="border-b border-gray-100 bg-gray-50/50">
+                      <TableHead className="px-6 py-4 text-sm font-medium text-gray-700">
+                        Image
+                      </TableHead>
+                      <TableHead className="px-6 py-4 text-sm font-medium text-gray-700">
+                        Name
+                      </TableHead>
+                      <TableHead className="px-6 py-4 text-sm font-medium text-gray-700">
+                        Description
+                      </TableHead>
+                      <TableHead className="px-6 py-4 text-right text-sm font-medium text-gray-700">
+                        Actions
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {categories.map(category => (
-                      <TableRow key={category.id}>
-                        <TableCell>
+                    {categories.map((category, index) => (
+                      <TableRow
+                        key={category.id}
+                        className="border-b border-gray-100 transition-colors hover:bg-gray-50/50"
+                      >
+                        <TableCell className="px-6 py-4">
                           {category.image ? (
                             <Image
                               src={category.image}
                               alt={category.name}
                               width={48}
                               height={48}
-                              className="h-12 w-12 rounded-md object-cover"
+                              className="h-12 w-12 rounded-lg border border-gray-200 object-cover"
                             />
                           ) : (
-                            <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-md">
-                              <ImageOff className="text-muted-foreground h-6 w-6" />
+                            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-200 bg-gray-100">
+                              <ImageOff className="h-5 w-5 text-gray-400" />
                             </div>
                           )}
                         </TableCell>
-                        <TableCell className="font-medium">
-                          {category.name}
+
+                        <TableCell className="px-6 py-4">
+                          <div className="font-medium text-gray-900">
+                            {category.name}
+                          </div>
                         </TableCell>
-                        <TableCell className="text-muted-foreground max-w-[400px] truncate">
-                          {category.description}
+
+                        <TableCell className="px-6 py-4">
+                          <div className="max-w-md truncate text-gray-600">
+                            {category.description}
+                          </div>
                         </TableCell>
-                        <TableCell className="flex items-center gap-x-2">
-                          <Button
-                            variant="outline"
-                            onClick={() => handleEdit(category)}
-                            className="text-primary"
-                          >
-                            <Edit className="mr-2 h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            onClick={() => handleDelete(category)}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                          </Button>
+
+                        <TableCell className="px-6 py-4">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 hover:bg-gray-100"
+                              onClick={e => {
+                                e.stopPropagation();
+                                handleEdit(category);
+                              }}
+                            >
+                              <Edit className="h-4 w-4 text-gray-600" />
+                              <span className="sr-only">Edit category</span>
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={e => {
+                                e.stopPropagation();
+                                handleDelete(category);
+                              }}
+                              className="h-8 w-8 p-0 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4 text-red-600" />
+                              <span className="sr-only">Delete category</span>
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
+
+                {/* Empty State */}
+                {categories.length === 0 && (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <div className="mb-4 rounded-full bg-gray-100 p-4">
+                      <Plus className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                      No categories found
+                    </h3>
+                    <p className="mb-6 max-w-sm text-gray-500">
+                      Get started by creating your first category to organize
+                      your products
+                    </p>
+                    <Button
+                      onClick={() => setShowForm(true)}
+                      className="bg-black text-white hover:bg-gray-800"
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Category
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Results summary and Pagination */}
+        {pagination && pagination.totalPages > 1 && (
+          <div className="mt-6 space-y-4">
+            {/* Results summary */}
+            <div className="flex justify-center">
+              <div className="text-sm text-gray-700">
+                Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
+                {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
+                of {pagination.total} results
               </div>
+            </div>
 
-              {/* Pagination Controls */}
-              {pagination && pagination.totalPages > 1 && (
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="text-muted-foreground text-sm">
-                    Showing {categories.length} of {pagination.total} results
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPage(page - 1)}
-                      disabled={!pagination.hasPrevious}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      Previous
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPage(page + 1)}
-                      disabled={!pagination.hasNext}
-                    >
-                      Next
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
+            {/* Pagination component */}
+            <Pagination
+              currentPage={pagination.page}
+              totalPages={pagination.totalPages}
+              onPageChange={handlePageChange}
+              showFirstLast={true}
+              maxVisiblePages={7}
+            />
+          </div>
+        )}
+      </div>
 
+      {/* Category Form Modal */}
       {showForm && (
         <CategoryForm category={editingCategory} onClose={handleCloseForm} />
       )}
 
+      {/* Delete Confirmation Dialog */}
       <AlertDialog
         open={!!deleteCategory}
         onOpenChange={() => setDeleteCategory(null)}
@@ -237,9 +283,10 @@ export const CategoryList: React.FC = () => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
-              className="bg-destructive hover:bg-destructive/90"
+              className="bg-red-600 hover:bg-red-700"
+              disabled={deleteCategoryMutation.isPending}
             >
-              Delete
+              {deleteCategoryMutation.isPending ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

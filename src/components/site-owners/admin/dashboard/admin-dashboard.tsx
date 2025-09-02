@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Dashboard from "./dashboard-stats";
+import Dashboard from "./dashboard";
 import { useDashboardStats } from "@/hooks/owner-site/use-dashboard";
 
 export default function AdminDashboard() {

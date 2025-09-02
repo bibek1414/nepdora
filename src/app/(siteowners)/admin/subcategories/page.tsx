@@ -2,7 +2,7 @@ import { SubCategoryList } from "@/components/site-owners/admin/sub-category/sub
 
 export default function ProductsPage() {
   return (
-    <div className="container mx-auto py-6">
+    <div className="mx-auto p-5 py-10">
       <SubCategoryList />
     </div>
   );

@@ -59,7 +59,7 @@ export default function Dashboard({
       title: "Total Revenue",
       value: new Intl.NumberFormat("en-IN", {
         style: "currency",
-        currency: "INR",
+        currency: "NPR",
         maximumFractionDigits: 0,
       }).format(stats.totalRevenue),
       change: getPercentageChange(
@@ -74,7 +74,7 @@ export default function Dashboard({
       title: "Revenue This Month",
       value: new Intl.NumberFormat("en-IN", {
         style: "currency",
-        currency: "INR",
+        currency: "NPR",
         maximumFractionDigits: 0,
       }).format(stats.revenueThisMonth),
       change: getPercentageChange(
@@ -89,7 +89,7 @@ export default function Dashboard({
 
   return (
     <div className="p-6">
-      <div className="mx-auto mt-15">
+      <div className="mx-auto">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
           {refetch && (

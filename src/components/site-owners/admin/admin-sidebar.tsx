@@ -7,34 +7,48 @@ import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   Package,
-  ShoppingCart,
   FileText,
-  MessageSquare,
   Users,
-  Settings,
   X,
-  Menu,
-  HelpCircle,
-  BarChart2,
-  Store,
-  Zap,
-  Shield,
+  Edit3,
+  Briefcase,
+  Calendar,
+  Globe,
+  Bug,
+  CreditCard,
+  DollarSign,
+  Truck,
+  Phone,
+  Gift,
+  Tag,
+  User,
+  Bot,
+  Trophy,
+  FolderOpen,
+  GitBranch,
 } from "lucide-react";
+
 const navigation = [
+  { name: "Website Builder", href: "/admin/website-builder", icon: Edit3 },
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { name: "Analytics", href: "/admin/analytics", icon: BarChart2 },
   { name: "Products", href: "/admin/products", icon: Package },
-  { name: "Categories", href: "/admin/categories", icon: Package },
-  { name: "Subcategories", href: "/admin/subcategories", icon: Package },
-  { name: "Orders", href: "/admin/orders", icon: ShoppingCart },
-  { name: "Blogs", href: "/admin/blogs", icon: FileText },
-  { name: "Testimonials", href: "/admin/testimonials", icon: MessageSquare },
-  { name: "Customers", href: "/admin/customers", icon: Users },
-  { name: "Store Settings", href: "/admin/store-settings", icon: Store },
-  { name: "Integrations", href: "/admin/integrations", icon: Zap },
-  { name: "Security", href: "/admin/security", icon: Shield },
-  { name: "Lucky Draw", href: "/admin/luckydraw", icon: Settings },
-  { name: "Help & Support", href: "/admin/help", icon: HelpCircle },
+  { name: "Categories", href: "/admin/categories", icon: FolderOpen },
+  { name: "Subcategories", href: "/admin/subcategories", icon: GitBranch },
+  { name: "Services", href: "/admin/services", icon: Briefcase },
+  { name: "Order Management", href: "/admin/orders", icon: FileText },
+  { name: "Service Bookings", href: "/admin/service-bookings", icon: Calendar },
+  { name: "Domains", href: "/admin/domains", icon: Globe },
+  { name: "Issues Tracking", href: "/admin/issues", icon: Bug },
+  { name: "Users", href: "/admin/users", icon: Users },
+  { name: "Billing", href: "/admin/billing", icon: CreditCard },
+  { name: "Payment Setup", href: "/admin/payment-setup", icon: DollarSign },
+  { name: "Shipping Setup", href: "/admin/shipping-setup", icon: Truck },
+  { name: "WhatsApp Setup", href: "/admin/whatsapp-setup", icon: Phone },
+  { name: "Gifts and Discounts", href: "/admin/gifts-discounts", icon: Gift },
+  { name: "Offers", href: "/admin/offers", icon: Tag },
+  { name: "Profile", href: "/admin/profile", icon: User },
+  { name: "AI Chatbot Settings", href: "/admin/chatbot-settings", icon: Bot },
+  { name: "Lucky Draw / Sales Fest", href: "/admin/lucky-draw", icon: Trophy },
 ];
 
 interface User {
@@ -61,52 +75,72 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
 
   return (
     <>
-      {/* Sidebar */}
-      <div
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 transform bg-white px-5 py-16 shadow-lg"
-        )}
-      >
+      {/* Sidebar - Sticky and Scrollable Version */}
+      <div className="sticky top-0 h-screen w-64 border-r border-gray-200 bg-white shadow-lg">
         <div className="flex h-full flex-col">
-          {/* Logo/Brand */}
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="rounded-md p-1 text-gray-400 hover:text-gray-500 lg:hidden"
-          >
-            <X className="h-5 w-5" />
-          </button>
-          {/* Navigation */}
-          <nav className="flex-1 space-y-2 px-2 py-4">
-            {navigation.map(item => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    "group flex items-center rounded-md px-2 py-2 text-sm font-medium transition-colors",
-                    isActive
-                      ? "bg-gray-200 text-gray-700"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  )}
-                >
-                  <item.icon
+          {/* Header - Fixed at top */}
+          <div className="flex-shrink-0 border-b border-gray-200 px-4 py-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Admin Panel
+              </h2>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="rounded-md p-1 text-gray-400 hover:text-gray-500 lg:hidden"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Navigation - Scrollable */}
+          <nav className="flex-1 overflow-y-auto px-4 py-4">
+            <div className="space-y-1">
+              {navigation.map(item => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
                     className={cn(
-                      "mr-3 h-5 w-5 flex-shrink-0",
+                      "group flex items-center rounded-lg px-3 py-2 text-xs font-medium transition-all duration-200 ease-in-out",
                       isActive
-                        ? "text-black"
-                        : "text-gray-400 group-hover:text-gray-500"
+                        ? "bg-gray-50 text-gray-700"
+                        : "text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"
                     )}
-                  />
-                  {item.name}
-                </Link>
-              );
-            })}
+                  >
+                    <item.icon
+                      className={cn(
+                        "mr-3 h-5 w-5 flex-shrink-0 transition-colors",
+                        isActive
+                          ? "text-gray-600"
+                          : "text-gray-400 group-hover:text-gray-600"
+                      )}
+                    />
+                    <span className="truncate">{item.name}</span>
+                  </Link>
+                );
+              })}
+            </div>
           </nav>
 
-          {/* Bottom section */}
-          <div className="border-t px-4 py-4">
-            <div className="text-xs text-gray-500">{user.email}</div>
+          {/* Footer - Fixed at bottom */}
+          <div className="flex-shrink-0 border-t border-gray-200 bg-gray-50 px-4 py-4">
+            <div className="flex items-center space-x-3">
+              <div className="flex-shrink-0">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
+                  <span className="text-sm font-medium text-gray-600 capitalize">
+                    {user.name?.charAt(0) || user.email.charAt(0)}
+                  </span>
+                </div>
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-gray-600 capitalize">
+                  {user.name || "Admin"}
+                </p>
+                <p className="truncate text-xs text-gray-500">{user.email}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { CategoryList } from "@/components/site-owners/admin/category/category-l
 
 export default function ProductsPage() {
   return (
-    <div className="container mx-auto py-6">
+    <div className="mx-auto p-5 py-10">
       <CategoryList />
     </div>
   );
