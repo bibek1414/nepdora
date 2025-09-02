@@ -105,9 +105,7 @@ export default function Technology() {
                 one-on-one interviews.
               </p>
               <Link href="/contact">
-                <Button
-                  className="px-6 py-3 text-white bg-primary"
-                >
+                <Button className="bg-primary px-6 py-3 text-white">
                   Contact us
                 </Button>
               </Link>

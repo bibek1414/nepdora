@@ -104,7 +104,7 @@ function WhatsAppList() {
     <div className="mx-auto max-w-6xl space-y-6">
       <Card className="border-none p-0 shadow-none">
         <CardContent className="p-0">
-          <div className="grid min-h-[400px] max-w-2xl px-2 grid-cols-1 lg:grid-cols-2">
+          <div className="grid min-h-[400px] max-w-2xl grid-cols-1 px-2 lg:grid-cols-2">
             <div className="mt-5 space-y-6">
               <div>
                 <div className="flex items-center justify-start gap-5 py-4">

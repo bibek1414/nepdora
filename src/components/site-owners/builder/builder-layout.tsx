@@ -209,7 +209,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleHeroTemplateSelect = (
-    template: "hero-1" | "hero-2" | "hero-3" | "hero-4"| "hero-5"
+    template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5"
   ) => {
     // Create hero data with the selected template
     const heroData = {
