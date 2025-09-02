@@ -62,34 +62,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
     }
   };
 
-  const handleEdit = () => {
-    router.push(`/builder/${user.id}`);
-  };
-
-  const handlePreview = () => {
-    router.push(`/preview/${user.id}`);
-  };
-
-  const handleShare = () => {
-    // Implement share functionality
-    const isProduction = process.env.NODE_ENV === "production";
-    const liveUrl = isProduction
-      ? `https://${user.subDomain}.${user.domain}`
-      : `http://${user.subDomain}.localhost:3000`;
-
-    if (navigator.share) {
-      navigator.share({
-        title: user.storeName,
-        url: liveUrl,
-      });
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(liveUrl);
-    }
-  };
-
   const handleFeedback = () => {
-    // Navigate to feedback page or open feedback modal
     router.push("/admin/feedback");
   };
 
@@ -112,25 +85,34 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
         </div>
 
         <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePreview}
-            className="rounded-full bg-[#E8EDF2] text-[#074685]"
+          <Link
+            href={`/preview/${user.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Preview
-            <ExternalLink className="mr-2" />
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleEdit}
-            className="rounded-full bg-[#E8EDF2] text-[#074685]"
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+            >
+              Preview
+              <ExternalLink className="mr-2" />
+            </Button>
+          </Link>
+          <Link
+            href={`/builder/${user.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <Pencil className="mr-2" />
-            Website Builder
-          </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+            >
+              <Pencil className="mr-2" />
+              Website Builder
+            </Button>
+          </Link>
           <Button variant="ghost" size="sm">
             Docs
           </Button>

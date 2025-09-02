@@ -116,7 +116,7 @@ export const CategoryList: React.FC = () => {
         </div>
 
         {/* Categories Card */}
-        <Card className="overflow-hidden rounded-lg border-0 bg-white shadow-sm">
+        <Card className="overflow-hidden rounded-lg shadow-none border-none bg-white">
           <CardContent className="p-0">
             {isLoading ? (
               <div className="space-y-4 p-6">

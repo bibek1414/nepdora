@@ -56,13 +56,17 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
   const { data: categoriesData } = useCategories({ limit: 100 });
   const categories = categoriesData?.results || [];
 
-  // Helper function to get category slug from either string or object
-  const getCategorySlug = (
-    category: string | { slug: string } | null | undefined
+  // Helper function to get category ID from either string or object
+  const getCategoryId = (
+    category: string | { id: number } | null | undefined
   ): string | undefined => {
     if (!category) return undefined;
-    if (typeof category === "string") return category;
-    return category.slug;
+    if (typeof category === "string") {
+      // If it's a string, find the category by slug and return its ID
+      const foundCategory = categories.find(cat => cat.slug === category);
+      return foundCategory?.id.toString();
+    }
+    return category.id.toString();
   };
 
   const form = useForm<CreateSubCategoryRequest>({
@@ -70,7 +74,7 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
     defaultValues: {
       name: subCategory?.name || "",
       description: subCategory?.description || "",
-      category: getCategorySlug(subCategory?.category) || "",
+      category: getCategoryId(subCategory?.category) || "",
       image: subCategory?.image || null,
     },
   });
@@ -96,7 +100,7 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? "Edit Subcategory" : "Create New Subcategory"}
@@ -165,7 +169,10 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {categories.map(category => (
-                        <SelectItem key={category.id} value={category.slug}>
+                        <SelectItem
+                          key={category.id}
+                          value={category.id.toString()}
+                        >
                           {category.name}
                         </SelectItem>
                       ))}

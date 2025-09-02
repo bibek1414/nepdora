@@ -127,10 +127,12 @@ const ProductList = () => {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Products</h1>
           </div>
-          <Button className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Product
-          </Button>
+          <Link href="/admin/products/add">
+            <Button className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900">
+              <Plus className="mr-2 h-4 w-4" />
+              Add Product
+            </Button>
+          </Link>
         </div>
 
         {/* Search Bar */}
@@ -146,7 +148,7 @@ const ProductList = () => {
         </div>
 
         {/* Products Card */}
-        <Card className="overflow-hidden rounded-lg border-0 bg-white shadow-sm">
+        <Card className="overflow-hidden rounded-lg border-none shadow-none bg-white">
           <CardContent className="p-0">
             {isLoading ? (
               <div className="space-y-4 p-6">

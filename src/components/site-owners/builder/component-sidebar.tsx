@@ -47,40 +47,8 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
   };
 
   return (
-    <div className="sticky top-15 left-0 z-40 h-screen w-64 border-r bg-white shadow-sm">
+    <div className="sticky top-15 left-0 z-50 h-screen w-64 border-r bg-white shadow-sm">
       <div className="flex h-full flex-col">
-        {/* Action Buttons */}
-        <div className="border-b p-4">
-          <div className="space-y-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBackToDashboard}
-              className="w-full justify-start text-purple-600 hover:bg-purple-50 hover:text-purple-700"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Dashboard
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handlePreview}
-              className="w-full justify-start text-purple-600 hover:bg-purple-50 hover:text-purple-700"
-            >
-              <Eye className="mr-2 h-4 w-4" />
-              Preview
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start text-purple-600 hover:bg-purple-50 hover:text-purple-700"
-            >
-              <Palette className="mr-2 h-4 w-4" />
-              Theme
-            </Button>
-          </div>
-        </div>
-
         {/* Component Sections */}
         <div className="flex-1 overflow-y-auto">
           {/* Site Structure Section */}

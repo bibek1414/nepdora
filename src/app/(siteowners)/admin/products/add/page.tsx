@@ -1,21 +1,42 @@
+"use client";
+
 import { ProductForm } from "@/components/site-owners/admin/products/product-form";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "@/components/ui/breadcrumb";
 
 export default function AddProductPage() {
   return (
-    <div className="container mx-auto mt-15 py-6">
+    <div className="mx-auto p-5 py-10">
       <div className="mb-6">
-        <div className="mb-4 flex items-center gap-4">
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/admin/products" className="flex items-center gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Back to Products
-            </Link>
-          </Button>
-        </div>
-        <h1 className="text-3xl font-bold tracking-tight">Add New Product</h1>
+        {/* Breadcrumb */}
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/admin">Dashboard</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/admin/products">Products</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Add Product</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
 
       <div className="mx-auto">

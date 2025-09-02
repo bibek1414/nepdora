@@ -113,7 +113,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? "Edit Category" : "Create New Category"}

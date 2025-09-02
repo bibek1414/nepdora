@@ -69,8 +69,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
   const [isFooterDialogOpen, setIsFooterDialogOpen] = useState(false);
   const [isHeroStylesDialogOpen, setIsHeroStylesDialogOpen] = useState(false);
-  const [isHeroSettingsDialogOpen, setIsHeroSettingsDialogOpen] =
-    useState(false);
+
   const [isAboutUsStylesDialogOpen, setIsAboutUsStylesDialogOpen] =
     useState(false);
   const [isProductsStylesDialogOpen, setIsProductsStylesDialogOpen] =
@@ -418,13 +417,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsBlogStylesDialogOpen}
         onStyleSelect={handleBlogTemplateSelect}
       />
+      <TopNavigation
+        pages={pagesData}
+        currentPage={currentPage}
+        siteUser={params.siteUser}
+        onPageChange={handlePageChange}
+      />
       <div className="bg-background flex min-h-screen flex-col">
-        <TopNavigation
-          pages={pagesData}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-
         <div className="flex flex-1">
           <ComponentSidebar
             siteUser={params.siteUser}

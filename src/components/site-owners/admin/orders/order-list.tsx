@@ -1,166 +1,225 @@
 "use client";
 
-import React from "react";
-import Image from "next/image"; // Import the Next.js Image component
-import { useOrders } from "@/hooks/owner-site/use-orders";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import React, { useState, useMemo, useEffect } from "react";
+import { useOrders, useUpdateOrderStatus } from "@/hooks/owner-site/use-orders";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Package, User, MapPin, Calendar, DollarSign } from "lucide-react";
-import { Order } from "@/types/owner-site/orders";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const OrderCard = ({ order }: { order: Order }) => {
+import {
+  Package,
+  Search,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  ChevronRight as ChevronRightIcon,
+} from "lucide-react";
+import { Order, OrderPaginationParams } from "@/types/owner-site/orders";
+import { toast } from "sonner";
+import { OrderDetails } from "./order-details";
+
+// Status configuration for filtering and display
+const STATUS_CONFIG = {
+  all: { label: "All", color: "default" },
+  pending: { label: "Pending", color: "warning" },
+  processing: { label: "Processing", color: "info" },
+  fulfilled: { label: "Fulfilled", color: "success" },
+  completed: { label: "Completed", color: "success" },
+  cancelled: { label: "Cancelled", color: "destructive" },
+  open: { label: "Open", color: "info" },
+};
+
+const STATUS_OPTIONS = [
+  { value: "pending", label: "Pending" },
+  { value: "processing", label: "Processing" },
+  { value: "fulfilled", label: "Fulfilled" },
+  { value: "completed", label: "Completed" },
+  { value: "cancelled", label: "Cancelled" },
+];
+
+const OrderTableSkeleton = () => {
+  return (
+    <div className="space-y-4">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Order</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Customer</TableHead>
+            <TableHead>Payment</TableHead>
+            <TableHead>Fulfillment</TableHead>
+            <TableHead>Total</TableHead>
+            <TableHead>Status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {[1, 2, 3, 4, 5].map(i => (
+            <TableRow key={i}>
+              <TableCell>
+                <Skeleton className="h-4 w-20" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-24" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-32" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-16" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-20" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-16" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-20" />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
+
+const ITEMS_PER_PAGE = 10;
+
+export default function OrdersPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [expandedOrders, setExpandedOrders] = useState<Set<number>>(new Set());
+
+  const updateOrderStatus = useUpdateOrderStatus();
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setCurrentPage(1); // Reset to first page on search
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter]);
+
+  // Prepare query parameters
+  const queryParams = useMemo<OrderPaginationParams>(
+    () => ({
+      page: currentPage,
+      page_size: ITEMS_PER_PAGE,
+      search: debouncedSearch || undefined,
+      status: statusFilter !== "all" ? statusFilter : undefined,
+      sortBy: "created_at",
+      sortOrder: "desc",
+    }),
+    [currentPage, debouncedSearch, statusFilter]
+  );
+
+  const { data: ordersResponse, isLoading, error } = useOrders(queryParams);
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
     });
   };
 
-  return (
-    <Card className="transition-shadow hover:shadow-lg">
-      <CardHeader className="bg-primary/5">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-primary flex items-center gap-2">
-            <Package className="h-5 w-5" />
-            Order {order.order_number}
-          </CardTitle>
-          <Badge
-            variant="secondary"
-            className="bg-secondary text-secondary-foreground"
-          >
-            ${order.total_amount}
-          </Badge>
-        </div>
-        <CardDescription className="flex items-center gap-2">
-          <Calendar className="h-4 w-4" />
-          {formatDate(order.created_at)}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4 pt-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm">
-            <User className="text-primary h-4 w-4" />
-            <span className="font-medium">{order.customer_name}</span>
-          </div>
-          <div className="text-muted-foreground ml-6 text-sm">
-            {order.customer_email}
-          </div>
-        </div>
+  const getStatusBadge = (status: string) => {
+    const config =
+      STATUS_CONFIG[status as keyof typeof STATUS_CONFIG] || STATUS_CONFIG.all;
+    return (
+      <Badge
+        variant={
+          config.color === "success"
+            ? "default"
+            : config.color === "warning"
+              ? "secondary"
+              : config.color === "destructive"
+                ? "destructive"
+                : "outline"
+        }
+        className={
+          config.color === "success"
+            ? "bg-green-100 text-green-800 hover:bg-green-200"
+            : config.color === "warning"
+              ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+              : config.color === "info"
+                ? "bg-blue-100 text-blue-800 hover:bg-blue-200"
+                : ""
+        }
+      >
+        {config.label}
+      </Badge>
+    );
+  };
 
-        <div className="space-y-2">
-          <div className="flex items-start gap-2 text-sm">
-            <MapPin className="text-primary mt-0.5 h-4 w-4" />
-            <div>
-              <div className="font-medium">Shipping Address:</div>
-              <div className="text-muted-foreground">
-                {order.shipping_address}
-              </div>
-            </div>
-          </div>
-          <div className="text-muted-foreground ml-6 text-sm">
-            <div className="font-medium">Billing Address:</div>
-            <div>{order.customer_address}</div>
-          </div>
-        </div>
+  const handleStatusChange = async (orderId: number, newStatus: string) => {
+    try {
+      await updateOrderStatus.mutateAsync({
+        id: orderId,
+        statusData: { status: newStatus },
+      });
+      toast.success("Order status updated successfully");
+    } catch (error) {
+      toast.error("Failed to update order status");
+    }
+  };
 
-        <div className="border-t pt-4">
-          <div className="mb-2 flex items-center gap-2">
-            <Package className="text-primary h-4 w-4" />
-            <span className="text-sm font-medium">
-              Order Items ({order.order_items?.length ?? 0})
-            </span>
-          </div>
-          <div className="space-y-2">
-            {order.order_items?.map(item => (
-              <div
-                key={item.id}
-                className="bg-secondary/20 flex items-center justify-between rounded p-2 text-sm"
-              >
-                {/* --- IMAGE & DETAILS --- */}
-                <div className="flex items-center gap-3">
-                  {item.product?.thumbnail_image && (
-                    <Image
-                      src={item.product.thumbnail_image}
-                      alt={
-                        item.product.thumbnail_alt_description ||
-                        item.product.name ||
-                        "Product image"
-                      }
-                      width={40}
-                      height={40}
-                      className="rounded-md object-cover"
-                    />
-                  )}
-                  <div>
-                    <div className="font-medium">
-                      {item.product?.name ?? "Unknown Product"}
-                    </div>
-                    <div className="text-muted-foreground">
-                      Quantity: {item.quantity}
-                    </div>
-                  </div>
-                </div>
-                {/* --- PRICE --- */}
-                <div className="flex items-center gap-1">
-                  <DollarSign className="h-3 w-3" />
-                  <span className="font-medium">{item.price}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
+  const toggleOrderExpansion = (orderId: number) => {
+    const newExpanded = new Set(expandedOrders);
+    if (newExpanded.has(orderId)) {
+      newExpanded.delete(orderId);
+    } else {
+      // Close all others and open this one
+      newExpanded.clear();
+      newExpanded.add(orderId);
+    }
+    setExpandedOrders(newExpanded);
+  };
 
-const OrdersSkeleton = () => {
-  return (
-    <div className="space-y-6">
-      {[1, 2, 3].map(i => (
-        <Card key={i}>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <Skeleton className="h-6 w-32" />
-              <Skeleton className="h-6 w-20" />
-            </div>
-            <Skeleton className="h-4 w-48" />
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Skeleton className="h-4 w-64" />
-            <Skeleton className="h-4 w-48" />
-            <Skeleton className="h-20 w-full" />
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  );
-};
+  const totalPages = ordersResponse
+    ? Math.ceil(ordersResponse.count / ITEMS_PER_PAGE)
+    : 0;
+  const orders = ordersResponse?.results || [];
 
-export default function OrdersPage() {
-  const { data: ordersResponse, isLoading, error } = useOrders();
-
-  if (isLoading) {
+  if (isLoading && !ordersResponse) {
     return (
       <div className="container mx-auto p-6">
         <div className="mb-8">
-          <h1 className="text-primary mb-2 text-3xl font-bold">Orders</h1>
+          <h1 className="mb-2 text-3xl font-bold text-black">Orders</h1>
           <p className="text-muted-foreground">
-            Manage and view all your orders
+            Manage and track your customer orders
           </p>
         </div>
-        <OrdersSkeleton />
+        <OrderTableSkeleton />
       </div>
     );
   }
@@ -169,9 +228,9 @@ export default function OrdersPage() {
     return (
       <div className="container mx-auto p-6">
         <div className="mb-8">
-          <h1 className="text-primary mb-2 text-3xl font-bold">Orders</h1>
+          <h1 className="mb-2 text-3xl font-bold text-black">Orders</h1>
           <p className="text-muted-foreground">
-            Manage and view all your orders
+            Manage and track your customer orders
           </p>
         </div>
         <Alert variant="destructive">
@@ -183,34 +242,270 @@ export default function OrdersPage() {
     );
   }
 
-  const orders = ordersResponse?.results || [];
-
   return (
     <div className="container mx-auto p-6">
+      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-primary mb-2 text-3xl font-bold">Orders</h1>
+        <h1 className="mb-2 text-3xl font-bold text-black">Orders</h1>
         <p className="text-muted-foreground">
-          {ordersResponse?.count
-            ? `${ordersResponse.count} total orders`
-            : "Manage and view all your orders"}
+          Manage and track your customer orders
         </p>
       </div>
 
-      {orders.length === 0 ? (
-        <Card className="py-12 text-center">
-          <CardContent>
-            <Package className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-            <h3 className="mb-2 text-lg font-semibold">No orders found</h3>
-            <p className="text-muted-foreground">
-              You haven&apos;t placed any orders yet.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-6">
-          {orders.map(order => (
-            <OrderCard key={order.id} order={order} />
-          ))}
+      {/* Search and Filters */}
+      <div className="mb-6 space-y-4">
+        {/* Search Bar */}
+        <div className="relative max-w-md">
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Input
+            placeholder="Search orders..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="pl-10 placeholder:text-gray-400"
+          />
+        </div>
+
+        {/* Status Filter Tabs */}
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={statusFilter === "all" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("all")}
+            className="flex items-center gap-2"
+          >
+            All
+          </Button>
+          <Button
+            variant={statusFilter === "open" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("open")}
+          >
+            Open
+          </Button>
+          <Button
+            variant={statusFilter === "fulfilled" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("fulfilled")}
+          >
+            Fulfilled
+          </Button>
+          <Button
+            variant={statusFilter === "cancelled" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("cancelled")}
+          >
+            Cancelled
+          </Button>
+        </div>
+      </div>
+
+      {/* Orders Table */}
+      <Card>
+        <CardContent className="p-0">
+          {orders.length === 0 ? (
+            <div className="py-12 text-center">
+              <Package className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+              <h3 className="mb-2 text-lg font-semibold">
+                {debouncedSearch || statusFilter !== "all"
+                  ? "No orders found"
+                  : "No orders yet"}
+              </h3>
+              <p className="text-muted-foreground">
+                {debouncedSearch || statusFilter !== "all"
+                  ? "Try adjusting your search or filter criteria."
+                  : "You haven't received any orders yet."}
+              </p>
+              {(debouncedSearch || statusFilter !== "all") && (
+                <Button
+                  variant="outline"
+                  className="mt-4"
+                  onClick={() => {
+                    setSearchTerm("");
+                    setStatusFilter("all");
+                  }}
+                >
+                  Clear filters
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-12"></TableHead>
+                    <TableHead>Order</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Payment</TableHead>
+                    <TableHead>Fulfillment</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {orders.map(order => (
+                    <React.Fragment key={order.id}>
+                      <TableRow
+                        className="cursor-pointer hover:bg-gray-50"
+                        onClick={() => toggleOrderExpansion(order.id)}
+                      >
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={e => {
+                              e.stopPropagation();
+                              toggleOrderExpansion(order.id);
+                            }}
+                          >
+                            {expandedOrders.has(order.id) ? (
+                              <ChevronDown className="h-4 w-4" />
+                            ) : (
+                              <ChevronRightIcon className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </TableCell>
+                        <TableCell className="font-medium text-[#4D7399]">
+                          {order.order_number}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {formatDate(order.created_at)}
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-medium text-[#4D7399]">
+                            {order.customer_name}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="secondary"
+                            className="bg-green-100 text-green-800"
+                          >
+                            Paid
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {order.status === "fulfilled" ||
+                          order.status === "completed" ? (
+                            <Badge
+                              variant="secondary"
+                              className="bg-green-100 text-green-800"
+                            >
+                              Fulfilled
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant="secondary"
+                              className="bg-gray-100 text-gray-800"
+                            >
+                              Pending
+                            </Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          ${order.total_amount}
+                        </TableCell>
+                        <TableCell>
+                          <Select
+                            value={order.status}
+                            onValueChange={value =>
+                              handleStatusChange(order.id, value)
+                            }
+                            disabled={updateOrderStatus.isPending}
+                          >
+                            <SelectTrigger
+                              className="w-auto min-w-[120px]"
+                              onClick={e => e.stopPropagation()}
+                            >
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {STATUS_OPTIONS.map(option => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
+                      </TableRow>
+                      {expandedOrders.has(order.id) && (
+                        <TableRow>
+                          <TableCell colSpan={8} className="border-t-0 p-0">
+                            <div className="bg-gray-50/50 px-4 py-4">
+                              <OrderDetails order={order} />
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-between">
+          <div className="text-muted-foreground text-sm">
+            Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{" "}
+            {Math.min(currentPage * ITEMS_PER_PAGE, ordersResponse?.count || 0)}{" "}
+            of {ordersResponse?.count || 0} orders
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage <= 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </Button>
+            <div className="flex items-center space-x-1">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={currentPage === pageNum ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(pageNum)}
+                    className="h-8 w-8 p-0"
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage >= totalPages}
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       )}
     </div>

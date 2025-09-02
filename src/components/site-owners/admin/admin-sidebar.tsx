@@ -29,7 +29,6 @@ import {
 } from "lucide-react";
 
 const navigation = [
-  { name: "Website Builder", href: "/admin/website-builder", icon: Edit3 },
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Products", href: "/admin/products", icon: Package },
   { name: "Categories", href: "/admin/categories", icon: FolderOpen },
@@ -37,13 +36,7 @@ const navigation = [
   { name: "Services", href: "/admin/services", icon: Briefcase },
   { name: "Order Management", href: "/admin/orders", icon: FileText },
   { name: "Service Bookings", href: "/admin/service-bookings", icon: Calendar },
-  { name: "Domains", href: "/admin/domains", icon: Globe },
   { name: "Issues Tracking", href: "/admin/issues", icon: Bug },
-  { name: "Users", href: "/admin/users", icon: Users },
-  { name: "Billing", href: "/admin/billing", icon: CreditCard },
-  { name: "Payment Setup", href: "/admin/payment-setup", icon: DollarSign },
-  { name: "Shipping Setup", href: "/admin/shipping-setup", icon: Truck },
-  { name: "WhatsApp Setup", href: "/admin/whatsapp-setup", icon: Phone },
   { name: "Gifts and Discounts", href: "/admin/gifts-discounts", icon: Gift },
   { name: "Offers", href: "/admin/offers", icon: Tag },
   { name: "Profile", href: "/admin/profile", icon: User },
@@ -76,7 +69,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
   return (
     <>
       {/* Sidebar - Sticky and Scrollable Version */}
-      <div className="sticky top-0 h-screen w-64 border-r border-gray-200 bg-white shadow-lg">
+      <div className="sticky top-0 h-screen w-64 border-r border-gray-200 bg-white">
         <div className="flex h-full flex-col">
           {/* Header - Fixed at top */}
           <div className="flex-shrink-0 border-b border-gray-200 px-4 py-4">

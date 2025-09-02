@@ -25,7 +25,6 @@ export interface CreateOrderRequest {
   items: OrderItem[];
 }
 
-// Updated Order interface to match API response
 export interface Order {
   id: number;
   order_number: string;
@@ -47,4 +46,18 @@ export interface OrdersResponse {
   next: string | null;
   previous: string | null;
   results: Order[];
+}
+
+// New interfaces for pagination and filtering
+export interface OrderPaginationParams {
+  page?: number;
+  page_size?: number;
+  search?: string;
+  status?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
+
+export interface UpdateOrderStatusRequest {
+  status: string;
 }

@@ -119,11 +119,11 @@ export const CreateCategorySchema = z.object({
 // Update Category Schema
 export const UpdateCategorySchema = CreateCategorySchema.partial();
 
-// Create Subcategory Schema
+// Create Subcategory Schema - UPDATED to expect category ID
 export const CreateSubCategorySchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(1, "Description is required"),
-  category: z.string().min(1, "Category is required"), // Category ID as string
+  category: z.string().min(1, "Category is required"),
   image: imageSchema,
 });
 

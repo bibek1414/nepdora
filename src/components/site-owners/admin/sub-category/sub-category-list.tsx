@@ -117,7 +117,7 @@ export const SubCategoryList: React.FC = () => {
         </Button>
       </div>
 
-      <Card>
+      <Card className="border-none shadow-none">
         <CardContent>
           {isLoading ? (
             <div className="space-y-3">

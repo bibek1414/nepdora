@@ -2,9 +2,10 @@
 
 import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import { UploadCloud, X, AlertCircle } from "lucide-react";
+import { UploadCloud, X, AlertCircle, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
 interface ImageUploaderProps {
   value: File[] | string[] | File | string | null | undefined;
@@ -210,65 +211,89 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     <div className="space-y-4">
       {/* Error Display */}
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="border-destructive/20 border">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription className="text-sm">{error}</AlertDescription>
         </Alert>
       )}
 
       {/* Upload Area */}
       <div
         {...getRootProps()}
-        className={`border-muted-foreground/30 relative cursor-pointer rounded-md border-2 border-dashed p-6 text-center transition-colors ${
-          isDragActive ? "border-primary bg-primary/10" : ""
+        className={`group border-border bg-muted/20 hover:bg-muted/30 relative cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition-all duration-200 ${
+          isDragActive ? "border-primary bg-primary/5 scale-[1.02]" : ""
         } ${disabled ? "cursor-not-allowed opacity-50" : ""} ${
-          error ? "border-destructive/50" : ""
+          error ? "border-destructive/50 bg-destructive/5" : ""
         }`}
       >
         <input {...getInputProps()} />
-        <div className="text-muted-foreground flex flex-col items-center justify-center gap-2">
-          <UploadCloud className="h-10 w-10" />
-          <p className="text-sm font-medium">
-            {isDragActive
-              ? "Drop the files here..."
-              : `Drag & drop ${multiple ? "images" : "an image"} here, or click to select`}
-          </p>
-          <p className="text-muted-foreground text-xs">
-            Max file size: {formatFileSize(maxFileSize)} • Supported: JPG, PNG,
-            WebP, GIF
-            {multiple && ` • Max files: ${maxFiles}`}
-          </p>
+        <div className="flex flex-col items-center justify-center gap-3">
+          <div
+            className={`rounded-full p-3 transition-colors ${
+              isDragActive ? "bg-primary/10" : "bg-muted"
+            }`}
+          >
+            <UploadCloud
+              className={`h-8 w-8 ${
+                isDragActive ? "text-primary" : "text-muted-foreground"
+              }`}
+            />
+          </div>
+          <div className="space-y-1">
+            <p className="text-foreground text-sm font-medium">
+              {isDragActive
+                ? "Drop the files here..."
+                : `Click to upload ${multiple ? "images" : "an image"} or drag and drop`}
+            </p>
+            <p className="text-muted-foreground text-xs">
+              Max {formatFileSize(maxFileSize)} • JPG, PNG, WebP, GIF
+              {multiple && ` • Up to ${maxFiles} files`}
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Preview Grid */}
       {previews.length > 0 && (
-        <div
-          className={`grid gap-4 ${multiple ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4" : "mx-auto max-w-xs grid-cols-1"}`}
-        >
-          {previews.map((preview, index) => (
-            <div key={`${preview.url}-${index}`} className="group relative">
-              <div className="relative aspect-square overflow-hidden rounded-lg border">
-                <Image
-                  src={preview.url}
-                  alt={`Preview ${index + 1}`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                />
+        <div className="space-y-3">
+          <p className="text-foreground text-sm font-medium">
+            {multiple ? "Uploaded Images" : "Uploaded Image"} ({previews.length}
+            )
+          </p>
+          <div
+            className={`grid gap-3 ${
+              multiple
+                ? "grid-cols-3 sm:grid-cols-4 md:grid-cols-6"
+                : "max-w-[120px] grid-cols-1"
+            }`}
+          >
+            {previews.map((preview, index) => (
+              <div key={`${preview.url}-${index}`} className="group relative">
+                <div className="border-border bg-muted relative aspect-square overflow-hidden rounded-lg border">
+                  <Image
+                    src={preview.url}
+                    alt={`Preview ${index + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-200 group-hover:scale-105"
+                    sizes={multiple ? "120px" : "120px"}
+                  />
+                  <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
+                </div>
+                {!disabled && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleRemove(index)}
+                    className="absolute -top-1.5 -right-1.5 h-6 w-6 rounded-full p-0 opacity-0 shadow-lg transition-all duration-200 group-hover:opacity-100 hover:scale-110"
+                    aria-label={`Remove image ${index + 1}`}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
               </div>
-              {!disabled && (
-                <button
-                  type="button"
-                  onClick={handleRemove(index)}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90 absolute -top-2 -right-2 rounded-full p-1.5 opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
-                  aria-label={`Remove image ${index + 1}`}
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </div>
