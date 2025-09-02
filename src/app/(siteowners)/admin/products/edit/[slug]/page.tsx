@@ -81,7 +81,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
   }
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="mx-auto p-5 py-6">
       <div className="mb-6">
         <div className="mb-4 flex items-center gap-4">
           <Button variant="outline" size="sm" asChild>

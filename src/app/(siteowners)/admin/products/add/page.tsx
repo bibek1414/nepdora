@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export default function AddProductPage() {
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto mt-15 py-6">
       <div className="mb-6">
         <div className="mb-4 flex items-center gap-4">
           <Button variant="outline" size="sm" asChild>
@@ -16,12 +16,9 @@ export default function AddProductPage() {
           </Button>
         </div>
         <h1 className="text-3xl font-bold tracking-tight">Add New Product</h1>
-        <p className="text-muted-foreground">
-          Create a new product for your inventory
-        </p>
       </div>
 
-      <div className="max-w-4xl">
+      <div className="mx-auto">
         <ProductForm />
       </div>
     </div>

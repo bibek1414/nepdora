@@ -169,7 +169,6 @@ export default function PreviewPage({ params }: PreviewPageProps) {
 
   return (
     <>
-      {/* Render All Page Components - Navbar is now handled by layout */}
       {pageComponents.length > 0 && (
         <div className="space-y-0">
           {pageComponents

@@ -14,10 +14,15 @@ import {
   Settings,
   X,
   Menu,
+  HelpCircle,
+  BarChart2,
+  Store,
+  Zap,
+  Shield,
 } from "lucide-react";
-
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { name: "Analytics", href: "/admin/analytics", icon: BarChart2 },
   { name: "Products", href: "/admin/products", icon: Package },
   { name: "Categories", href: "/admin/categories", icon: Package },
   { name: "Subcategories", href: "/admin/subcategories", icon: Package },
@@ -25,8 +30,11 @@ const navigation = [
   { name: "Blogs", href: "/admin/blogs", icon: FileText },
   { name: "Testimonials", href: "/admin/testimonials", icon: MessageSquare },
   { name: "Customers", href: "/admin/customers", icon: Users },
-  { name: "Settings", href: "/admin/settings", icon: Settings },
+  { name: "Store Settings", href: "/admin/store-settings", icon: Store },
+  { name: "Integrations", href: "/admin/integrations", icon: Zap },
+  { name: "Security", href: "/admin/security", icon: Shield },
   { name: "Lucky Draw", href: "/admin/luckydraw", icon: Settings },
+  { name: "Help & Support", href: "/admin/help", icon: HelpCircle },
 ];
 
 interface User {
@@ -53,61 +61,32 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
 
   return (
     <>
-      {/* Mobile menu button - positioned fixed for easy access */}
-      <button
-        onClick={() => setSidebarOpen(true)}
-        className="fixed top-4 left-4 z-50 rounded-md p-2 text-gray-600 hover:bg-gray-100 lg:hidden"
-      >
-        <Menu className="h-6 w-6" />
-      </button>
-
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div
-          className="bg-opacity-75 fixed inset-0 z-40 bg-gray-600 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 transform bg-white shadow-lg transition-transform duration-300 ease-in-out lg:static lg:inset-0 lg:translate-x-0",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          "fixed inset-y-0 left-0 z-50 w-64 transform bg-white px-5 py-16 shadow-lg"
         )}
       >
         <div className="flex h-full flex-col">
           {/* Logo/Brand */}
-          <div className="flex h-16 items-center justify-between border-b px-4">
-            <div className="flex items-center">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
-                <span className="text-sm font-bold text-white">A</span>
-              </div>
-              <span className="ml-2 text-lg font-semibold text-gray-900">
-                Admin Panel
-              </span>
-            </div>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="rounded-md p-1 text-gray-400 hover:text-gray-500 lg:hidden"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="rounded-md p-1 text-gray-400 hover:text-gray-500 lg:hidden"
+          >
+            <X className="h-5 w-5" />
+          </button>
           {/* Navigation */}
-          <nav className="flex-1 space-y-1 px-2 py-4">
+          <nav className="flex-1 space-y-2 px-2 py-4">
             {navigation.map(item => {
               const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  onClick={() => setSidebarOpen(false)} // Close sidebar on navigation for mobile
                   className={cn(
                     "group flex items-center rounded-md px-2 py-2 text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-blue-100 text-blue-700"
+                      ? "bg-gray-200 text-gray-700"
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                   )}
                 >
@@ -115,7 +94,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
                     className={cn(
                       "mr-3 h-5 w-5 flex-shrink-0",
                       isActive
-                        ? "text-blue-500"
+                        ? "text-black"
                         : "text-gray-400 group-hover:text-gray-500"
                     )}
                   />
@@ -127,7 +106,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
 
           {/* Bottom section */}
           <div className="border-t px-4 py-4">
-            <div className="text-xs text-gray-500">Admin Dashboard v1.0</div>
+            <div className="text-xs text-gray-500">{user.email}</div>
           </div>
         </div>
       </div>

@@ -127,12 +127,14 @@ const ProductList = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="mr-5 ml-5 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Products</h1>
-          <p className="text-muted-foreground">Manage your product inventory</p>
         </div>
-        <Button asChild>
+        <Button
+          asChild
+          className="bg-gray-200 text-black hover:bg-gray-300 hover:text-black"
+        >
           <Link href="/admin/products/add">
             <Plus className="mr-2 h-4 w-4" />
             Add Product
@@ -142,35 +144,14 @@ const ProductList = () => {
 
       <Card className="border-none shadow-none">
         <CardContent>
-          {/* Search and Filter Controls */}
           <div className="mb-6 flex flex-col gap-4 sm:flex-row">
             <div className="relative flex-1">
-              <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-black" />
               <Input
                 placeholder="Search products..."
-                className="pl-10"
+                className="pl-10 text-2xl text-gray-500 placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
                 onChange={e => debouncedSearch(e.target.value)}
               />
-            </div>
-            <div className="flex gap-2">
-              <Select
-                value={sortBy}
-                onValueChange={value => {
-                  setSortBy(value === "none" ? "" : value);
-                  setPage(1);
-                }}
-              >
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">No sorting</SelectItem>
-                  <SelectItem value="name">Name</SelectItem>
-                  <SelectItem value="price">Price</SelectItem>
-                  <SelectItem value="stock">Stock</SelectItem>
-                  <SelectItem value="created_at">Date Created</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
           </div>
 
@@ -371,7 +352,10 @@ const ProductList = () => {
                       ? "Try adjusting your search terms"
                       : "Get started by adding your first product"}
                   </p>
-                  <Button asChild>
+                  <Button
+                    asChild
+                    className="bg-gray-200 text-black hover:bg-gray-300 hover:text-black"
+                  >
                     <Link href="/admin/products/add">
                       <Plus className="mr-2 h-4 w-4" />
                       Add Product

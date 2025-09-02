@@ -1,12 +1,9 @@
-import { StringValidation } from "zod/v3";
-
 export interface User {
   id: number | string;
   username?: string;
   email: string;
   store_name: string;
   has_usable_password?: boolean;
-  // Decoded token fields
   user_id?: number;
   has_profile?: boolean;
   role?: string;

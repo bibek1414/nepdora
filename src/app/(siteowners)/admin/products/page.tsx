@@ -2,7 +2,7 @@ import { ProductList } from "@/components/site-owners/admin/products/product-lis
 
 export default function ProductsPage() {
   return (
-    <div className="container mx-auto py-6">
+    <div className="mx-auto mt-15 p-5 py-10">
       <ProductList />
     </div>
   );
