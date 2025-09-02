@@ -77,7 +77,7 @@ export default function SettingsLayout({
               <TabsTrigger
                 key={item.id}
                 value={item.id}
-                className={`flex w-fit items-center gap-1${
+                className={`flex w-fit cursor-pointer items-center gap-1 ${
                   isActive ? "rounded-full bg-[#f3f4f6]" : "bg-white"
                 }`}
               >
