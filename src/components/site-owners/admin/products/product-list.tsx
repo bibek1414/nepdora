@@ -148,7 +148,7 @@ const ProductList = () => {
         </div>
 
         {/* Products Card */}
-        <Card className="overflow-hidden rounded-lg border-none shadow-none bg-white">
+        <Card className="overflow-hidden rounded-lg border-none bg-white shadow-none">
           <CardContent className="p-0">
             {isLoading ? (
               <div className="space-y-4 p-6">
