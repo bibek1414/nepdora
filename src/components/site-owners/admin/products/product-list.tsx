@@ -374,7 +374,7 @@ const ProductList = () => {
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete the
-              product "{deleteProduct?.name}" from the system.
+              product &apos;{deleteProduct?.name}&apos; from the system.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
