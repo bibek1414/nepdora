@@ -81,9 +81,9 @@ export const FooterStylesDialog: React.FC<FooterStylesDialogProps> = ({
           {templates.map(template => (
             <Card
               key={template.id}
-              className={`cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${
+              className={`hover: cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
                 selectedStyle === template.id
-                  ? "ring-primary border-primary bg-primary/5 shadow-md ring-2"
+                  ? "ring-primary border-primary bg-primary/5 ring-2"
                   : "hover:border-primary/50"
               }`}
               onClick={() => handleSelect(template)}

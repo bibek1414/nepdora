@@ -100,7 +100,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
 
   return (
     <CardWrapper>
-      <Card className="group overflow-hidden border-0 shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+      <Card className="group hover: overflow-hidden border-0 transition-all duration-500 hover:-translate-y-2">
         <CardContent className="p-0">
           {/* Header with gradient */}
           <div className="bg-primary h-2"></div>
@@ -126,7 +126,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-8 w-8 bg-white/90 shadow-lg hover:bg-white"
+                className="h-8 w-8 bg-white/90 hover:bg-white"
                 onClick={handleFavorite}
               >
                 <Heart className="h-4 w-4" />
@@ -136,33 +136,25 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
             {/* Badges */}
             <div className="absolute top-3 left-3 flex flex-col gap-2">
               {discountPercentage > 0 && (
-                <Badge
-                  variant="destructive"
-                  className="text-xs font-bold shadow-lg"
-                >
+                <Badge variant="destructive" className="text-xs font-bold">
                   -{discountPercentage}%
                 </Badge>
               )}
               {product.stock === 0 && (
-                <Badge variant="secondary" className="text-xs shadow-lg">
+                <Badge variant="secondary" className="text-xs">
                   Sold Out
                 </Badge>
               )}
               {product.stock > 0 && product.stock <= 5 && (
-                <Badge className="text-xs shadow-lg">
-                  Only {product.stock} left
-                </Badge>
+                <Badge className="text-xs">Only {product.stock} left</Badge>
               )}
               {product.is_featured && (
-                <Badge variant="default" className="text-xs shadow-lg">
+                <Badge variant="default" className="text-xs">
                   Featured
                 </Badge>
               )}
               {product.is_popular && (
-                <Badge
-                  variant="outline"
-                  className="bg-white/90 text-xs shadow-lg"
-                >
+                <Badge variant="outline" className="bg-white/90 text-xs">
                   Popular
                 </Badge>
               )}

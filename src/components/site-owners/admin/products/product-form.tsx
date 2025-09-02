@@ -160,7 +160,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <Card className="border-0 shadow-sm">
+      <Card className="border-0">
         <CardContent className="space-y-8">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

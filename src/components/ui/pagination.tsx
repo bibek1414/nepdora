@@ -75,14 +75,14 @@ const Pagination: React.FC<PaginationProps> = ({
         ? "text-gray-400 bg-gray-100 border-gray-200 cursor-not-allowed"
         : isActive
           ? "text-white bg-primary"
-          : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md"
+          : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:"
     }`;
 
   const navButtonClass = (isDisabled: boolean) =>
     `inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 border rounded-lg ${
       isDisabled
         ? "text-gray-400 bg-gray-100 border-gray-200 cursor-not-allowed"
-        : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md"
+        : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:"
     }`;
 
   return (

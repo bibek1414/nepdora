@@ -151,7 +151,7 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
               disabled={deleteHeroMutation.isPending}
-              className="shadow-sm"
+              className=""
             >
               <Trash2 className="h-4 w-4" />
             </Button>

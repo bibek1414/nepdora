@@ -59,7 +59,7 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
 
   return (
     <CardWrapper>
-      <Card className="group overflow-hidden rounded-lg border-0 shadow-lg transition-all duration-300 hover:shadow-xl">
+      <Card className="group hover: overflow-hidden rounded-lg border-0 transition-all duration-300">
         <CardContent className="p-0">
           <div className="relative aspect-square overflow-hidden">
             <Image

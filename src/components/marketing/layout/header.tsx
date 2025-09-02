@@ -61,7 +61,7 @@ const Header: React.FC = () => {
             </Button>
           </Link>
           <Link href="/signup">
-            <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 bg-gradient-to-r text-white shadow-lg transition-all duration-200 hover:shadow-xl">
+            <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: bg-gradient-to-r text-white transition-all duration-200">
               Get Started Free
             </Button>
           </Link>
@@ -114,7 +114,7 @@ const Header: React.FC = () => {
                 </Button>
               </Link>
               <Link href="/signup" onClick={closeMenu} className="block">
-                <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 w-full bg-gradient-to-r text-white shadow-lg transition-all duration-200 hover:shadow-xl">
+                <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: w-full bg-gradient-to-r text-white transition-all duration-200">
                   Get Started Free
                 </Button>
               </Link>

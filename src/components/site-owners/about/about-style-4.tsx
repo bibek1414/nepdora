@@ -89,7 +89,7 @@ export const AboutUsTemplate4: React.FC<AboutUsTemplate4Props> = ({
               onImageChange={handleImageUpdate}
               onAltChange={handleAltUpdate}
               isEditable={isEditable}
-              className="relative mx-auto w-full max-w-xl overflow-hidden rounded-xl shadow-xl lg:max-w-none"
+              className="relative mx-auto w-full max-w-xl overflow-hidden rounded-xl lg:max-w-none"
               width={700}
               height={500}
               priority

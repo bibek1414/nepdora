@@ -70,12 +70,7 @@ export function EmailVerification({
   return (
     <div className="bg-background flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="relative w-full max-w-md">
-        <div
-          className={cn(
-            "bg-card relative rounded-2xl p-8 shadow-xl",
-            className
-          )}
-        >
+        <div className={cn("bg-card relative rounded-2xl p-8", className)}>
           <div className="text-center">
             {/* Icon */}
             <div className="bg-primary mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full">

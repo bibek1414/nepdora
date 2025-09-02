@@ -63,7 +63,7 @@ const EditBlogPage = () => {
   const renderContent = () => {
     if (isLoadingBlog) {
       return (
-        <div className="mx-auto max-w-4xl space-y-8 rounded-lg bg-white p-6 shadow-md">
+        <div className="mx-auto max-w-4xl space-y-8 rounded-lg bg-white p-6">
           <Skeleton className="h-10 w-1/2" />
           <Skeleton className="h-40 w-full" />
           <Skeleton className="h-10 w-full" />

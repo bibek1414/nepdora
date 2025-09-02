@@ -98,7 +98,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative mx-4 max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <div className="relative mx-4 max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-2xl bg-white">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 p-6">
           <div>
@@ -125,7 +125,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
               <div
                 key={template.id}
                 onClick={() => handleSelect(template.id)}
-                className="group relative cursor-pointer rounded-xl border-2 border-gray-200 bg-white p-4 transition-all duration-200 hover:border-blue-500 hover:shadow-lg"
+                className="group hover: relative cursor-pointer rounded-xl border-2 border-gray-200 bg-white p-4 transition-all duration-200 hover:border-blue-500"
               >
                 <h3 className="mb-3 text-lg font-semibold text-gray-900">
                   {template.name}

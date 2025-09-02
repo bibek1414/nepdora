@@ -85,7 +85,7 @@ const BlogsTable: React.FC<BlogsTableProps> = ({
 
   if (blogs.length === 0) {
     return (
-      <div className="flex h-64 flex-col items-center justify-center rounded-lg bg-white text-center shadow-sm">
+      <div className="flex h-64 flex-col items-center justify-center rounded-lg bg-white text-center">
         <FileText className="h-12 w-12 text-gray-400" />
         <h3 className="mt-4 text-lg font-medium text-gray-900">
           No blogs found

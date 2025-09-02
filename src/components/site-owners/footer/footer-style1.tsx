@@ -79,7 +79,7 @@ export function FooterStyle1({
             size="sm"
             variant="outline"
             onClick={onEditClick}
-            className="shadow-sm"
+            className=""
           >
             <Edit className="mr-2 h-4 w-4" />
             Edit Footer
@@ -90,7 +90,7 @@ export function FooterStyle1({
             variant="destructive"
             onClick={handleDelete}
             disabled={deleteFooterMutation.isPending}
-            className="shadow-sm"
+            className=""
           >
             <Trash2 className="h-4 w-4" />
           </Button>

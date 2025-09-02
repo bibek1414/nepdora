@@ -68,7 +68,7 @@ const CustomerTestimonials = () => {
           {testimonials.map((testimonial, index) => (
             <Card
               key={index}
-              className="border-border bg-card border transition-shadow duration-300 hover:shadow-lg"
+              className="border-border bg-card hover: border transition-shadow duration-300"
             >
               <CardContent className="p-6">
                 {/* Customer Info */}

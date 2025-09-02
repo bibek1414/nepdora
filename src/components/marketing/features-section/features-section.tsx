@@ -114,7 +114,7 @@ const FeaturesSection: React.FC = () => {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="group border-primary/10 hover:border-primary/20 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              className="group border-primary/10 hover:border-primary/20 hover: transform transition-all duration-300 hover:-translate-y-1"
             >
               <CardContent className="p-6">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl">

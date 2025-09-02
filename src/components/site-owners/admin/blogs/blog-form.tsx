@@ -183,7 +183,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
   const safeAllTags = Array.isArray(allTags) ? allTags : [];
 
   return (
-    <div className="mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-md">
+    <div className="mx-auto max-w-4xl rounded-lg bg-white p-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           <FormField

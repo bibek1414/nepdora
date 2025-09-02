@@ -145,7 +145,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="text-4xl leading-tight font-bold drop-shadow-md md:text-6xl"
+            className="drop- text-4xl leading-tight font-bold md:text-6xl"
             isEditable={isEditable}
             placeholder="Enter your hero title..."
           />
@@ -154,7 +154,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             value={data.subtitle}
             onChange={handleTextUpdate("subtitle")}
             as="p"
-            className="max-w-2xl text-lg drop-shadow-sm md:text-xl"
+            className="drop- max-w-2xl text-lg md:text-xl"
             isEditable={isEditable}
             placeholder="Enter subtitle..."
           />
@@ -164,7 +164,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="text-md max-w-2xl opacity-90 drop-shadow-sm"
+              className="text-md drop- max-w-2xl opacity-90"
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}

@@ -132,9 +132,9 @@ const PricingSection = () => {
             <Link
               key={index}
               href="/signup"
-              className={`bg-background relative block rounded-lg border transition-all duration-300 hover:shadow-xl ${
+              className={`bg-background hover: relative block rounded-lg border transition-all duration-300 ${
                 plan.isPopular
-                  ? "border-primary scale-105 transform border-2 shadow-xl"
+                  ? "border-primary scale-105 transform border-2"
                   : "border-border hover:border-muted-foreground/50"
               }`}
             >

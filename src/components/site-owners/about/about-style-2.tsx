@@ -86,7 +86,7 @@ export function AboutUsTemplate2({
           {data.teamMembers.map(member => (
             <Card
               key={member.id}
-              className="transform overflow-hidden text-center transition-transform hover:scale-105 hover:shadow-xl"
+              className="hover: transform overflow-hidden text-center transition-transform hover:scale-105"
             >
               <CardHeader className="p-0">
                 <EditableImage

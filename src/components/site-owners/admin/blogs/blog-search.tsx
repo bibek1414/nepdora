@@ -23,7 +23,7 @@ const BlogsSearch: React.FC<BlogsSearchProps> = ({ onSearch }) => {
   };
 
   return (
-    <div className="mb-6 rounded-lg bg-white p-4 shadow-md">
+    <div className="mb-6 rounded-lg bg-white p-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
         <div className="min-w-0 flex-1">
           <Label

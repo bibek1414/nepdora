@@ -95,7 +95,7 @@ export default function Dashboard({
           {refetch && (
             <button
               onClick={handleRefresh}
-              className="flex items-center rounded border border-gray-200 bg-white px-4 py-2 font-semibold text-gray-800 shadow-sm hover:bg-gray-100 disabled:opacity-50"
+              className="flex items-center rounded border border-gray-200 bg-white px-4 py-2 font-semibold text-gray-800 hover:bg-gray-100 disabled:opacity-50"
               disabled={isLoading}
             >
               <TrendingUp

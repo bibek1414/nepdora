@@ -18,7 +18,7 @@ const EditableItem: React.FC<{
 }> = ({ onEdit, onDelete, children }) => (
   <div className="group relative">
     {children}
-    <div className="absolute -top-8 -right-3 hidden items-center rounded-full p-1 shadow-lg group-hover:flex">
+    <div className="absolute -top-8 -right-3 hidden items-center rounded-full p-1 group-hover:flex">
       <button
         onClick={onEdit}
         className="text-primary hover:bg-primary-foreground/20 rounded-full p-1"

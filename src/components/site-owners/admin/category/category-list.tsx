@@ -84,7 +84,7 @@ export const CategoryList: React.FC = () => {
     return (
       <div className="">
         <div className="mx-auto">
-          <Card className="rounded-lg border-0 bg-white shadow-sm">
+          <Card className="rounded-lg border-0 bg-white">
             <CardContent className="p-6">
               <p className="text-red-600">
                 {error instanceof Error

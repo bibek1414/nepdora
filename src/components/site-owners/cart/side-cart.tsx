@@ -36,7 +36,7 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteId }) => {
 
       {/* Side Cart */}
       <div
-        className={`fixed top-0 right-0 z-[70] mt-10 h-full w-full transform bg-white shadow-2xl transition-transform duration-300 ease-in-out sm:w-[350px] ${
+        className={`fixed top-0 right-0 z-[70] mt-10 h-full w-full transform bg-white transition-transform duration-300 ease-in-out sm:w-[350px] ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -165,7 +165,7 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteId }) => {
               <Link href={checkoutUrl} className="w-full">
                 <Button
                   onClick={onClose}
-                  className="w-full rounded-lg bg-[#B85450] py-4 text-base font-semibold text-white shadow-sm hover:bg-[#A04A46]"
+                  className="w-full rounded-lg bg-[#B85450] py-4 text-base font-semibold text-white hover:bg-[#A04A46]"
                   size="lg"
                 >
                   GO TO CHECKOUT

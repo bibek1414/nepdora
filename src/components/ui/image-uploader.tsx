@@ -285,7 +285,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
                     variant="destructive"
                     size="sm"
                     onClick={handleRemove(index)}
-                    className="absolute -top-1.5 -right-1.5 h-6 w-6 rounded-full p-0 opacity-0 shadow-lg transition-all duration-200 group-hover:opacity-100 hover:scale-110"
+                    className="absolute -top-1.5 -right-1.5 h-6 w-6 rounded-full p-0 opacity-0 transition-all duration-200 group-hover:opacity-100 hover:scale-110"
                     aria-label={`Remove image ${index + 1}`}
                   >
                     <X className="h-3 w-3" />

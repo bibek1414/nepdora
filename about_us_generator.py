@@ -242,7 +242,7 @@ export function {template_name}({{
 
           {/* Image Section */}
           <div>
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg shadow-xl">
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg ">
               <EditableImage
                 src={data.imageUrl}
                 alt={data.imageAlt || data.title}

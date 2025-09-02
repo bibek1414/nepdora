@@ -58,7 +58,7 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
 
   return (
     <CardWrapper>
-      <div className="bg-card flex items-center gap-4 rounded-lg border p-4 shadow-sm transition-shadow duration-200 hover:shadow-md">
+      <div className="bg-card hover: flex items-center gap-4 rounded-lg border p-4 transition-shadow duration-200">
         <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-md sm:h-24 sm:w-32">
           <Image
             src={blogImage}

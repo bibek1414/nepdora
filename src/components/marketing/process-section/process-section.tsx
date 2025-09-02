@@ -80,7 +80,7 @@ const ProcessSection = () => {
 
           {/* Right Content - Interactive Image Display */}
           <div className="relative">
-            <div className="from-primary via-primary/90 to-secondary relative overflow-hidden rounded-3xl bg-gradient-to-br p-8 shadow-2xl">
+            <div className="from-primary via-primary/90 to-secondary relative overflow-hidden rounded-3xl bg-gradient-to-br p-8">
               {/* Background decorative elements */}
               <div className="bg-secondary absolute top-4 left-4 h-16 w-16 rotate-12 transform rounded-lg"></div>
               <div className="bg-primary absolute top-8 left-8 h-8 w-8 rounded"></div>
@@ -113,7 +113,7 @@ const ProcessSection = () => {
 
               {/* Domain Name Display */}
               <div className="relative z-10 mb-6">
-                <div className="bg-card flex items-center space-x-3 rounded-lg border p-3 shadow-sm">
+                <div className="bg-card flex items-center space-x-3 rounded-lg border p-3">
                   <span className="text-card-foreground font-medium">
                     nepdora.com
                   </span>
@@ -136,7 +136,7 @@ const ProcessSection = () => {
               </div>
 
               {/* Dynamic Image Display */}
-              <div className="bg-card relative z-10 rounded-xl border p-4 shadow-lg">
+              <div className="bg-card relative z-10 rounded-xl border p-4">
                 <div className="bg-muted relative aspect-video overflow-hidden rounded-lg">
                   <Image
                     src={activeStepData?.image || "/images/placeholder.jpg"}

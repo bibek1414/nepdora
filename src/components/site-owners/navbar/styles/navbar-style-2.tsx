@@ -18,7 +18,7 @@ const EditableItem: React.FC<{
 }> = ({ onEdit, onDelete, children }) => (
   <div className="group relative">
     {children}
-    <div className="absolute -top-8 -right-3 hidden items-center rounded-full p-1 shadow-lg group-hover:flex">
+    <div className="absolute -top-8 -right-3 hidden items-center rounded-full p-1 group-hover:flex">
       <button
         onClick={onEdit}
         className="text-primary hover:bg-primary-foreground/20 rounded-full p-1"
@@ -96,7 +96,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
     <>
       <nav
         className={`bg-background flex items-center justify-between p-4 ${
-          !isEditable ? "sticky top-16 z-40 border-b shadow-sm" : ""
+          !isEditable ? "sticky top-16 z-40 border-b" : ""
         }`}
       >
         <div className="hidden flex-1 items-center justify-end gap-4 md:flex">

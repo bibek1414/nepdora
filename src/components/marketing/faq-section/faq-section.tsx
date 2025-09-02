@@ -73,7 +73,7 @@ const FAQSection: React.FC = () => {
             <AccordionItem
               key={index}
               value={`item-${index}`}
-              className="rounded-lg border transition-shadow hover:shadow-md"
+              className="hover: rounded-lg border transition-shadow"
             >
               <AccordionTrigger className="px-6 py-4 text-left text-lg font-semibold hover:no-underline">
                 {faq.question}

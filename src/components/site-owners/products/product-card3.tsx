@@ -81,7 +81,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
 
   return (
     <Link href={detailsUrl} className="block">
-      <Card className="group overflow-hidden border border-gray-200 bg-gradient-to-r from-white to-gray-50 transition-all duration-500 hover:border-gray-300 hover:from-gray-50 hover:to-white hover:shadow-2xl">
+      <Card className="group hover: overflow-hidden border border-gray-200 bg-gradient-to-r from-white to-gray-50 transition-all duration-500 hover:border-gray-300 hover:from-gray-50 hover:to-white">
         <CardContent className="p-0">
           <div className="flex flex-col sm:flex-row">
             {/* Image Section */}
@@ -120,24 +120,24 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
               {/* Floating Badges */}
               <div className="absolute top-4 right-4 flex flex-col gap-2">
                 {discountPercentage > 0 && (
-                  <Badge className="border-0 text-xs font-bold shadow-lg">
+                  <Badge className="border-0 text-xs font-bold">
                     -{discountPercentage}%
                   </Badge>
                 )}
                 {product.stock === 0 && (
-                  <Badge variant="destructive" className="text-xs shadow-lg">
+                  <Badge variant="destructive" className="text-xs">
                     Sold Out
                   </Badge>
                 )}
                 {product.is_featured && (
-                  <Badge className="border-0 bg-yellow-500 text-xs font-bold text-black shadow-lg">
+                  <Badge className="border-0 bg-yellow-500 text-xs font-bold text-black">
                     Featured
                   </Badge>
                 )}
                 {product.is_popular && (
                   <Badge
                     variant="outline"
-                    className="border-red-500 bg-white/90 text-xs text-red-600 shadow-lg"
+                    className="border-red-500 bg-white/90 text-xs text-red-600"
                   >
                     Popular
                   </Badge>
@@ -149,7 +149,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="rounded-full bg-white/90 shadow-lg hover:bg-white"
+                  className="rounded-full bg-white/90 hover:bg-white"
                   onClick={handleFavorite}
                 >
                   <Heart className="h-4 w-4" />
@@ -274,7 +274,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                 {/* Action Buttons */}
                 <div className="flex gap-3">
                   <Button
-                    className="flex-1 py-3 font-semibold text-white transition-all duration-300 group-hover:shadow-lg"
+                    className="group-hover: flex-1 py-3 font-semibold text-white transition-all duration-300"
                     disabled={product.stock === 0}
                     onClick={handleAddToCart}
                     data-cart-action="true"

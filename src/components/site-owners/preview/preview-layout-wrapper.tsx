@@ -144,7 +144,7 @@ export function PreviewLayoutWrapper({
       {/* Sticky Navbar - positioned outside the preview content */}
       {navbarResponse?.data && (
         <div className={`sticky top-16 z-40 ${getViewportClass()}`}>
-          <div className="overflow-hidden bg-white shadow-sm">
+          <div className="overflow-hidden bg-white">
             <NavbarComponent
               navbar={navbarResponse.data}
               isEditable={false}
@@ -158,7 +158,7 @@ export function PreviewLayoutWrapper({
       {/* Preview Content */}
       <main className="min-h-[calc(100vh-64px)] bg-gray-100 p-6">
         <div className={`transition-all duration-300 ${getViewportClass()}`}>
-          <div className="min-h-[600px] overflow-hidden rounded-lg bg-white shadow-lg">
+          <div className="min-h-[600px] overflow-hidden rounded-lg bg-white">
             {/* Main Content - Children no longer includes navbar */}
             {children}
 

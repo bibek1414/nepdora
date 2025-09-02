@@ -11,7 +11,7 @@ interface TemplateCardProps {
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
   return (
     <div className="group cursor-pointer transition-all duration-300 hover:-translate-y-1">
-      <div className="relative overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-200 transition-all duration-300 group-hover:shadow-lg group-hover:ring-gray-300">
+      <div className="group-hover: relative overflow-hidden rounded-lg bg-white ring-1 ring-gray-200 transition-all duration-300 group-hover:ring-gray-300">
         <div className="relative aspect-[4/3] overflow-hidden">
           <img
             src={template.image}
@@ -34,7 +34,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
           <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300 group-hover:opacity-100">
             <Button
               variant="secondary"
-              className="rounded-lg bg-white text-gray-900 shadow-lg transition-all duration-200 hover:bg-gray-50"
+              className="rounded-lg bg-white text-gray-900 transition-all duration-200 hover:bg-gray-50"
             >
               Preview
             </Button>

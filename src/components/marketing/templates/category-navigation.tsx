@@ -23,7 +23,7 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
               onClick={() => onCategoryChange(category.key)}
               className={`rounded-md px-6 py-2 text-sm font-medium transition-all duration-200 ${
                 selectedCategory === category.key
-                  ? "bg-purple-600 text-white shadow-sm"
+                  ? "bg-purple-600 text-white"
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >

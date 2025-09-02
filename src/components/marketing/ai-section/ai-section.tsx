@@ -16,7 +16,7 @@ export default function AISection() {
                 alt="AI Website Builder Interface"
                 width={600}
                 height={400}
-                className="h-auto w-full rounded-2xl shadow-2xl"
+                className="h-auto w-full rounded-2xl"
                 priority
               />
             </div>

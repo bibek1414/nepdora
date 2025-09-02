@@ -125,7 +125,7 @@ export function AboutUsTemplate1({
           <div
             className={`${data.layout === "image-left" ? "md:col-start-1" : ""}`}
           >
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg shadow-xl">
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
               <EditableImage
                 src={data.imageUrl}
                 alt={data.imageAlt || data.title}

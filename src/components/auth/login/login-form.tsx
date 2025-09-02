@@ -171,7 +171,7 @@ export function LoginForm({
   return (
     <div className="bg-card flex min-h-screen flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="rounded-lg bg-white p-8 shadow-lg">
+        <div className="rounded-lg bg-white p-8">
           <div className={cn("grid gap-6", className)} {...props}>
             {formError && (
               <div

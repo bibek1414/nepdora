@@ -106,7 +106,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
 
   return (
     <CardWrapper>
-      <Card className="group overflow-hidden border-0 bg-white/80 shadow-lg backdrop-blur-sm transition-all duration-500 hover:shadow-xl">
+      <Card className="group hover: overflow-hidden border-0 bg-white/80 backdrop-blur-sm transition-all duration-500">
         <CardContent className="p-0">
           <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
             <div className="relative aspect-[4/3]">
@@ -128,14 +128,14 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
               <div className="flex gap-3">
                 <Button
                   size="icon"
-                  className="rounded-full bg-white/90 text-gray-800 shadow-lg hover:bg-white"
+                  className="rounded-full bg-white/90 text-gray-800 hover:bg-white"
                   onClick={handleQuickView}
                 >
                   <Eye className="h-4 w-4" />
                 </Button>
                 <Button
                   size="icon"
-                  className="rounded-full bg-white/90 text-gray-800 shadow-lg hover:bg-white"
+                  className="rounded-full bg-white/90 text-gray-800 hover:bg-white"
                   onClick={handleFavorite}
                 >
                   <Heart className="h-4 w-4" />

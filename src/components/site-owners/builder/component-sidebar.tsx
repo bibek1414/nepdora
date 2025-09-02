@@ -47,7 +47,7 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
   };
 
   return (
-    <div className="sticky top-15 left-0 z-50 h-screen w-64 border-r bg-white shadow-sm">
+    <div className="sticky top-15 left-0 z-50 h-screen w-64 border-r bg-white">
       <div className="flex h-full flex-col">
         {/* Component Sections */}
         <div className="flex-1 overflow-y-auto">
