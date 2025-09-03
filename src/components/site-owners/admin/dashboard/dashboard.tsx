@@ -41,7 +41,7 @@ export default function Dashboard({
       value: stats.totalOrders.toLocaleString(),
       change: getPercentageChange(stats.totalOrders, stats.totalOrders * 0.97),
       icon: "/images/site-owners/dashboard/dashboard1.svg",
-      bgColor: "bg-green-100",
+      bgColor: "bg-green-50",
       trendColor: "bg-green-600",
     },
     {
@@ -52,7 +52,7 @@ export default function Dashboard({
         stats.totalOrdersThisMonth * 1.01
       ),
       icon: "/images/site-owners/dashboard/dashboard2.svg",
-      bgColor: "bg-purple-100",
+      bgColor: "bg-purple-50",
       trendColor: "bg-purple-600",
     },
     {
@@ -67,7 +67,7 @@ export default function Dashboard({
         stats.totalRevenue * 0.97
       ),
       icon: "/images/site-owners/dashboard/dashboard3.svg",
-      bgColor: "bg-yellow-100",
+      bgColor: "bg-yellow-50",
       trendColor: "bg-orange-600",
     },
     {
@@ -82,7 +82,7 @@ export default function Dashboard({
         stats.revenueThisMonth * 0.96
       ),
       icon: "/images/site-owners/dashboard/dashboard4.svg",
-      bgColor: "bg-red-100",
+      bgColor: "bg-red-50",
       trendColor: "bg-red-600",
     },
   ];
