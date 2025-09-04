@@ -22,6 +22,8 @@ import {
 import { ChevronLeft, ChevronRight, Package2, X } from "lucide-react";
 import { useUpdateOrderStatus } from "@/hooks/owner-site/use-orders";
 import { toast } from "sonner";
+import { WhatsAppOrderButton } from "@/components/ui/whatsapp-order-button";
+import { SMSOrderButton } from "@/components/ui/sms-order-button";
 
 interface OrderDialogProps {
   orders: Order[];
@@ -178,7 +180,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
               size="lg"
               onClick={handlePrevious}
               disabled={currentIndex === 0}
-              className="absolute top-1/2 -left-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-50"
+              className="absolute top-1/2 -left-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
             >
               <ChevronLeft className="h-6 w-6 text-black" />
             </Button>
@@ -189,7 +191,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
               size="lg"
               onClick={handleNext}
               disabled={currentIndex === orders.length - 1}
-              className="absolute top-1/2 -right-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-50"
+              className="absolute top-1/2 -right-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
             >
               <ChevronRight className="h-6 w-6 text-black" />
             </Button>
@@ -206,6 +208,8 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
             </div>
 
             <div className="flex items-center gap-2">
+              <WhatsAppOrderButton order={currentOrder} size="sm" />
+              <SMSOrderButton order={currentOrder} size="sm" />
               <Select
                 value={currentOrder.status}
                 onValueChange={handleStatusChange}
@@ -264,7 +268,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
             </div>
 
             {/* Order Info Grid */}
-            <div className="grid grid-cols-1 gap-4 text-xs md:grid-cols-2">
+            <div className="mb-3 grid grid-cols-1 gap-4 text-xs md:grid-cols-2">
               <div>
                 <p className="text-gray-500">Order date</p>
                 <p className="font-medium">
@@ -273,19 +277,30 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
               </div>
               <div>
                 <p className="text-gray-500">Customer</p>
-                <p className="font-medium">{currentOrder.customer_name}</p>
+                <p className="font-medium capitalize">
+                  {currentOrder.customer_name}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500">Email</p>
                 <p className="font-medium">{currentOrder.customer_email}</p>
               </div>
               <div>
+                <p className="text-gray-500">Phone</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-medium">{currentOrder.customer_phone}</p>
+                </div>
+              </div>
+              <div>
                 <p className="text-gray-500">Payment status</p>
                 <p className="font-medium">Paid</p>
               </div>
-              <div className="md:col-span-2">
+              <div>
                 <p className="text-gray-500">Shipping address</p>
-                <p className="font-medium">{currentOrder.shipping_address}</p>
+                <p className="font-medium capitalize">
+                  {" "}
+                  {currentOrder.shipping_address}
+                </p>
               </div>
             </div>
 

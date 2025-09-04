@@ -53,13 +53,6 @@ import {
 } from "@/hooks/owner-site/use-popup";
 import { PopUp } from "@/types/owner-site/popup";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 const PopupListPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -99,6 +92,19 @@ const PopupListPage: React.FC = () => {
       id: popup.id!,
       data: formData,
     });
+  };
+
+  // Handle row click - opens edit modal
+  const handleRowClick = (popup: PopUp, event: React.MouseEvent) => {
+    // Don't trigger if clicking on interactive elements
+    const target = event.target as HTMLElement;
+    const isInteractiveElement = target.closest(
+      'button, [role="switch"], input, select, textarea'
+    );
+
+    if (!isInteractiveElement) {
+      handleOpenEditModal(popup);
+    }
   };
 
   const formatFieldName = (field: string) => {
@@ -202,7 +208,6 @@ const PopupListPage: React.FC = () => {
             </div>
           ) : (
             <>
-              {/* Desktop Table View */}
               <div className="hidden lg:block">
                 <Table>
                   <TableHeader>
@@ -216,7 +221,11 @@ const PopupListPage: React.FC = () => {
                   </TableHeader>
                   <TableBody>
                     {popups?.map(popup => (
-                      <TableRow key={popup.id}>
+                      <TableRow
+                        key={popup.id}
+                        className="hover:bg-muted/50 cursor-pointer"
+                        onClick={e => handleRowClick(popup, e)}
+                      >
                         <TableCell>
                           <Avatar className="h-12 w-12">
                             <AvatarImage
@@ -265,7 +274,7 @@ const PopupListPage: React.FC = () => {
                             )}
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell onClick={e => e.stopPropagation()}>
                           <div className="flex items-center space-x-2">
                             <Switch
                               checked={popup.is_active}
@@ -276,7 +285,7 @@ const PopupListPage: React.FC = () => {
                             />
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell onClick={e => e.stopPropagation()}>
                           <div className="flex items-center gap-1">
                             <Button
                               variant="ghost"
