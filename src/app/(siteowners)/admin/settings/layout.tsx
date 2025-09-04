@@ -31,6 +31,12 @@ const settingsItems: SettingItem[] = [
     path: "/admin/settings/payment",
   },
   {
+    id: "billing",
+    title: "Billing",
+    description: "Set up billing methods and delivery options",
+    path: "/admin/settings/billing",
+  },
+  {
     id: "shipping",
     title: "Shipping Setup",
     description: "Set up shipping methods and delivery options",
