@@ -204,7 +204,7 @@ const ProductList = () => {
                         key={product.id}
                         className="cursor-pointer border-b border-gray-100 transition-colors hover:bg-gray-50/50"
                         onClick={() =>
-                          window.open(`/products/${product.slug}`, "_blank")
+                          (window.location.href = `/admin/products/edit/${product.slug}`)
                         }
                       >
                         <TableCell className="px-6 py-4">
@@ -315,9 +315,6 @@ const ProductList = () => {
                 {/* Empty State */}
                 {products.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <div className="mb-4 rounded-full bg-gray-100 p-4">
-                      <Plus className="h-8 w-8 text-gray-400" />
-                    </div>
                     <h3 className="mb-2 text-lg font-semibold text-gray-900">
                       No products found
                     </h3>

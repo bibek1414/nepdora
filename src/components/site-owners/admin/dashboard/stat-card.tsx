@@ -24,15 +24,14 @@ const StatCard: React.FC<StatCardProps> = ({
 
   return (
     <div className={`${bgColor} relative overflow-hidden rounded-2xl p-6`}>
-      {/* Decorative dots pattern */}
+      {/* Decorative dots pattern
       <div className="absolute inset-0 opacity-10">
         <div className="grid h-full grid-cols-8 gap-1 p-4">
           {Array.from({ length: 64 }).map((_, i) => (
             <div key={i} className="h-1 w-1 rounded-full bg-current"></div>
           ))}
         </div>
-      </div>
-
+      </div> */}
       <div className="relative z-10">
         {/* Header with icon and trend */}
         <div className="mb-4 flex items-start justify-between">

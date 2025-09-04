@@ -213,9 +213,6 @@ export const CategoryList: React.FC = () => {
                 {/* Empty State */}
                 {categories.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <div className="mb-4 rounded-full bg-gray-100 p-4">
-                      <Plus className="h-8 w-8 text-gray-400" />
-                    </div>
                     <h3 className="mb-2 text-lg font-semibold text-gray-900">
                       No categories found
                     </h3>
