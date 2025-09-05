@@ -36,7 +36,7 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteId }) => {
 
       {/* Side Cart */}
       <div
-        className={`fixed top-0 right-0 z-[70] mt-10 h-full w-full transform bg-white transition-transform duration-300 ease-in-out sm:w-[350px] ${
+        className={`fixed top-0 right-0 z-[60] h-full w-full transform bg-white transition-transform duration-300 ease-in-out sm:w-[350px] ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

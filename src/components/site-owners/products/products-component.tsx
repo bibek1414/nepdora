@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useProducts } from "@/hooks/owner-site/use-product";
-import { useDeleteProductsComponentMutation } from "@/hooks/owner-site/components/use-product";
+import {
+  useDeleteProductsComponentMutation,
+  useUpdateProductsComponentMutation, // Add this import
+} from "@/hooks/owner-site/components/use-product";
 import { ProductCard1 } from "./product-card1";
 import { ProductCard2 } from "./product-card2";
 import { ProductCard3 } from "./product-card3";
@@ -21,7 +24,8 @@ import {
 import { AlertCircle, Trash2, ShoppingBag } from "lucide-react";
 import { Product } from "@/types/owner-site/product";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { EditableText } from "@/components/ui/editable-text";
+import Pagination from "@/components/ui/pagination";
 
 interface ProductsComponentProps {
   component: ProductsComponentData;
@@ -41,6 +45,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   onProductClick,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const {
     limit = 8,
@@ -53,19 +58,18 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     itemsPerRow = 4,
   } = component.data || {};
 
-  // Delete mutation hook
+  // Mutation hooks
   const deleteProductsComponent = useDeleteProductsComponentMutation();
+  const updateProductsComponent = useUpdateProductsComponentMutation(); // Add this hook
 
-  // Calculate page size and get first page for the limit
-  const pageSize = Math.min(limit, 50);
+  // Get products with pagination
   const { data, isLoading, error } = useProducts({
-    page: 1,
-    limit: pageSize,
+    page: currentPage,
+    limit: limit,
   });
 
   // Extract products from the API response structure
   const products = data?.results || [];
-  const totalProducts = data?.count || 0;
   const pagination = data?.pagination;
 
   const handleProductClick = (product: Product) => {
@@ -96,6 +100,66 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     setIsDeleteDialogOpen(false);
   };
 
+  const handleTitleChange = (newTitle: string) => {
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
+      return;
+    }
+
+    // Update component data via API
+    updateProductsComponent.mutate({
+      componentId: component.component_id,
+      pageSlug,
+      data: {
+        ...component.data,
+        title: newTitle,
+      },
+    });
+
+    // Also update local state if onUpdate is provided
+    if (onUpdate) {
+      onUpdate(component.component_id, {
+        ...component,
+        data: {
+          ...component.data,
+          title: newTitle,
+        },
+      });
+    }
+  };
+
+  const handleSubtitleChange = (newSubtitle: string) => {
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
+      return;
+    }
+
+    // Update component data via API
+    updateProductsComponent.mutate({
+      componentId: component.component_id,
+      pageSlug,
+      data: {
+        ...component.data,
+        subtitle: newSubtitle,
+      },
+    });
+
+    // Also update local state if onUpdate is provided
+    if (onUpdate) {
+      onUpdate(component.component_id, {
+        ...component,
+        data: {
+          ...component.data,
+          subtitle: newSubtitle,
+        },
+      });
+    }
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const renderProductCard = (product: Product, index: number) => {
     const cardProps = {
       product,
@@ -108,14 +172,14 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
 
     switch (style) {
       case "grid-2":
-        return <ProductCard2 {...cardProps} />;
+        return <ProductCard2 key={product.id} {...cardProps} />;
       case "list-1":
-        return <ProductCard3 {...cardProps} />;
+        return <ProductCard3 key={product.id} {...cardProps} />;
       case "carousel-1":
-        return <ProductCard1 {...cardProps} />;
+        return <ProductCard1 key={product.id} {...cardProps} />;
       case "grid-1":
       default:
-        return <ProductCard1 {...cardProps} />;
+        return <ProductCard1 key={product.id} {...cardProps} />;
     }
   };
 
@@ -183,43 +247,32 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
           </AlertDialog>
         </div>
 
-        {/* Style Info Header */}
-        <div className="bg-muted border-border mb-6 rounded-lg border p-4">
-          <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-muted-foreground flex items-center gap-2 text-sm font-semibold">
-              <ShoppingBag className="h-4 w-4" />
-              Products Section Configuration
-            </h3>
-            <Badge variant="outline" className="text-xs">
-              {style}
-            </Badge>
-          </div>
-          <div className="text-muted-foreground flex flex-wrap gap-4 text-xs">
-            <span>Limit: {limit}</span>
-            <span>Items per row: {itemsPerRow}</span>
-            <span>Show price: {showPrice ? "Yes" : "No"}</span>
-            <span>Show stock: {showStock ? "Yes" : "No"}</span>
-            {pagination && <span>Total available: {pagination.total}</span>}
-          </div>
-        </div>
-
         {/* Products Preview */}
         <div className="py-8">
           <div className="container mx-auto px-4">
             <div className="mb-8 text-center">
-              <h2 className="text-foreground mb-2 text-3xl font-bold tracking-tight">
-                {title}
-              </h2>
-              {subtitle && (
-                <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-                  {subtitle}
-                </p>
-              )}
+              <EditableText
+                value={title}
+                onChange={handleTitleChange}
+                as="h2"
+                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                isEditable={true}
+                placeholder="Enter title..."
+              />
+              <EditableText
+                value={subtitle || ""}
+                onChange={handleSubtitleChange}
+                as="p"
+                className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                isEditable={true}
+                placeholder="Enter subtitle..."
+                multiline={true}
+              />
             </div>
 
             {isLoading && (
               <div className={`grid ${getGridClass()} gap-6`}>
-                {Array.from({ length: Math.min(limit, 4) }).map((_, index) => (
+                {Array.from({ length: Math.min(limit, 8) }).map((_, index) => (
                   <div key={index} className="flex flex-col space-y-3">
                     <Skeleton className="h-[250px] w-full rounded-xl" />
                     <div className="space-y-2">
@@ -245,20 +298,33 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
             )}
 
             {!isLoading && !error && products.length > 0 && (
-              <div
-                className={`${style === "carousel-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-6`}`}
-              >
-                {products.slice(0, Math.min(limit, 6)).map((product, index) => (
-                  <div
-                    key={product.id}
-                    className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
-                  >
-                    {/* Overlay to prevent clicks in builder mode */}
-                    <div className="absolute inset-0 z-10 bg-transparent" />
-                    {renderProductCard(product, index)}
+              <>
+                <div
+                  className={`${style === "carousel-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-6`}`}
+                >
+                  {products.map((product, index) => (
+                    <div
+                      key={product.id}
+                      className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
+                    >
+                      {/* Overlay to prevent clicks in builder mode */}
+                      <div className="absolute inset-0 z-10 bg-transparent" />
+                      {renderProductCard(product, index)}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Pagination for builder mode */}
+                {pagination && pagination.totalPages > 1 && (
+                  <div className="mt-8">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={pagination.totalPages}
+                      onPageChange={handlePageChange}
+                    />
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             )}
 
             {!isLoading && !error && products.length === 0 && (
@@ -269,15 +335,6 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                 </h3>
                 <p className="text-muted-foreground">
                   Add some products to your inventory to display them here.
-                </p>
-              </div>
-            )}
-
-            {!isLoading && !error && products.length > 6 && (
-              <div className="bg-muted/50 mt-6 rounded-md p-3 text-center">
-                <p className="text-muted-foreground text-sm">
-                  Showing 6 of {products.length} products in builder preview
-                  {pagination && ` (${pagination.total} total available)`}
                 </p>
               </div>
             )}
@@ -332,15 +389,28 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
         )}
 
         {!isLoading && !error && products.length > 0 && (
-          <div
-            className={`${style === "carousel-1" ? "flex gap-8 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
-          >
-            {products.slice(0, limit).map((product, index) => (
-              <div key={product.id} className="flex-shrink-0">
-                {renderProductCard(product, index)}
+          <>
+            <div
+              className={`${style === "carousel-1" ? "flex gap-8 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
+            >
+              {products.map((product, index) => (
+                <div key={product.id} className="flex-shrink-0">
+                  {renderProductCard(product, index)}
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination for live site */}
+            {pagination && pagination.totalPages > 1 && (
+              <div className="mt-12">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={pagination.totalPages}
+                  onPageChange={handlePageChange}
+                />
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
 
         {!isLoading && !error && products.length === 0 && (
@@ -352,18 +422,6 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
             <p className="text-muted-foreground mx-auto max-w-md text-lg">
               We&apos;re currently updating our inventory. Please check back
               soon for new products.
-            </p>
-          </div>
-        )}
-
-        {/* Pagination info */}
-        {!isLoading && !error && pagination && pagination.total > limit && (
-          <div className="bg-muted/30 mt-12 rounded-lg p-4 text-center">
-            <p className="text-muted-foreground">
-              Showing {Math.min(limit, products.length)} of {pagination.total}{" "}
-              products
-              {pagination.totalPages > 1 &&
-                ` (Page 1 of ${pagination.totalPages})`}
             </p>
           </div>
         )}

@@ -166,7 +166,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
   return (
     <div className="bg-background">
-      <div className="container mx-auto px-4 py-8 md:py-16">
+      <div className="container mx-auto max-w-7xl px-4 py-8 md:py-8">
         {/* Breadcrumb Navigation */}
         <Breadcrumb className="mb-8">
           <BreadcrumbList>

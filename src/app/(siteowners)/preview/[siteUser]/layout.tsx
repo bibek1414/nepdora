@@ -1,4 +1,5 @@
 import { PreviewLayoutWrapper } from "@/components/site-owners/preview/preview-layout-wrapper";
+import { WhatsApp } from "@/components/site-owners/whatsapp/whatsapp";
 
 interface PreviewLayoutProps {
   children: React.ReactNode;
@@ -12,6 +13,11 @@ export default async function PreviewLayout({
   const { siteUser } = await params;
 
   return (
-    <PreviewLayoutWrapper siteUser={siteUser}>{children}</PreviewLayoutWrapper>
+    <>
+      <PreviewLayoutWrapper siteUser={siteUser}>
+        {children}
+      </PreviewLayoutWrapper>
+      <WhatsApp />
+    </>
   );
 }

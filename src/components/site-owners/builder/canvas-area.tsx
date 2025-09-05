@@ -241,7 +241,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
   return (
     <div
-      className={`min-h-[600px] rounded-lg border-2 border-dashed bg-white transition-colors ${
+      className={`rounded-lg border-2 border-dashed bg-white transition-colors ${
         isActive ? "border-primary bg-primary/5" : "border-muted-foreground/25"
       }`}
     >
@@ -488,20 +488,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           ))}
 
           {/* Drop Zone Indicator */}
-          {(pageComponents.length > 0 || droppedComponents.length > 0) && (
-            <div
-              className={`mt-8 rounded-lg border-2 border-dashed p-8 transition-colors ${
-                isActive
-                  ? "border-primary bg-primary/5"
-                  : "border-muted-foreground/25"
-              }`}
-            >
-              <div className="text-muted-foreground text-center">
-                <Plus className="mx-auto mb-2 h-8 w-8" />
-                <p>Drop components here to add them to your page</p>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 

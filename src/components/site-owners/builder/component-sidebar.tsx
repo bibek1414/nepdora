@@ -1,152 +1,183 @@
 "use client";
 
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Navigation,
-  MessageSquare,
-  Sparkles,
-  Info,
-  Package,
-  FileText,
-  ArrowLeft,
-  Eye,
-  Palette,
-  Rss, // Import Rss for blog section
-} from "lucide-react";
+import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Search,
+  X,
+  LayoutDashboard,
+  Crown,
+  Info,
+  Menu,
+  Package,
+  Mail,
+  Quote,
+  DollarSign,
+  FileText,
+  Image as ImageIcon,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface ComponentSidebarProps {
   siteUser: string;
   onComponentClick?: (componentId: string) => void;
 }
 
+type Item = {
+  id: string;
+  label: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  keywords?: string[];
+};
+
 export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
   siteUser,
   onComponentClick,
 }) => {
   const router = useRouter();
-
-  const handlePreview = () => {
-    router.push(`/preview/${siteUser}`);
-  };
-
-  const handleBackToDashboard = () => {
-    router.push("/admin");
-  };
+  const [query, setQuery] = useState("");
 
   const handleComponentClick = (componentId: string) => {
-    // Simply pass the component click to the parent (BuilderLayout)
-    // All dialog state and logic is handled there
-    if (onComponentClick) {
-      onComponentClick(componentId);
-    } else {
-      console.log(`${componentId} clicked`);
-    }
+    onComponentClick?.(componentId);
   };
 
+  const items: Item[] = [
+    {
+      id: "navbar",
+      label: "Header",
+      icon: LayoutDashboard,
+      keywords: ["navigation", "menu", "top"],
+    },
+    {
+      id: "footer",
+      label: "Footer",
+      icon: LayoutDashboard,
+      keywords: ["bottom", "credits"],
+    },
+    {
+      id: "hero-sections",
+      label: "Hero Section",
+      icon: Crown,
+      keywords: ["banner", "top section", "intro"],
+    },
+    {
+      id: "about-sections",
+      label: "About Us",
+      icon: Info,
+      keywords: ["company", "who we are"],
+    },
+    {
+      id: "services-sections",
+      label: "Services",
+      icon: Menu,
+      keywords: ["what we do", "features"],
+    },
+    {
+      id: "products-sections",
+      label: "Products Display",
+      icon: Package,
+      keywords: ["catalog", "shop", "cards", "grid"],
+    },
+    {
+      id: "contact-sections",
+      label: "Contact",
+      icon: Mail,
+      keywords: ["form", "email", "phone"],
+    },
+    {
+      id: "testimonials-sections",
+      label: "Testimonials",
+      icon: Quote,
+      keywords: ["reviews", "clients", "quotes"],
+    },
+    {
+      id: "pricing-sections",
+      label: "Pricing",
+      icon: DollarSign,
+      keywords: ["plans", "packages", "subscription"],
+    },
+    {
+      id: "blog-sections",
+      label: "Blog",
+      icon: FileText,
+      keywords: ["articles", "posts", "news"],
+    },
+    {
+      id: "gallery-sections",
+      label: "Gallery",
+      icon: ImageIcon,
+      keywords: ["images", "photos", "portfolio"],
+    },
+  ];
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return items;
+    return items.filter(({ label, id, keywords }) => {
+      const haystack = [label, id, ...(keywords ?? [])].join(" ").toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [items, query]);
+
   return (
-    <div className="sticky top-15 left-0 z-50 h-screen w-64 border-r bg-white">
+    <div className="sticky top-15 left-0 z-20 h-screen w-40 border-r bg-white">
       <div className="flex h-full flex-col">
-        {/* Component Sections */}
-        <div className="flex-1 overflow-y-auto">
-          {/* Site Structure Section */}
-          <div className="p-4">
-            <div className="mb-3">
-              <Badge
-                variant="default"
-                className="rounded-full bg-purple-600 px-3 py-1 text-sm font-medium text-white"
-              >
-                Site Structure ( Basics )
-              </Badge>
-            </div>
+        {/* Header */}
+        <div className="px-2 py-2">
+          <h2 className="text-lg font-semibold text-gray-900">Components</h2>
+        </div>
 
-            <div className="space-y-1">
-              <div
-                className="flex cursor-pointer items-center rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
-                onClick={() => handleComponentClick("navbar")}
+        {/* Search Bar */}
+        <div className="px-2">
+          <div className="relative">
+            <Search className="absolute top-1/2 left-3 z-10 h-3 w-4 -translate-y-1/2 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="Search components…"
+              aria-label="Search components"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === "Enter" && filtered.length > 0) {
+                  handleComponentClick(filtered[0].id);
+                }
+              }}
+              className="mb-2 h-2 w-full rounded-md border-gray-200 bg-gray-50 pr-9 pl-8 text-[8px] placeholder:text-[8px] placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500"
+            />
+            {query && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="Clear search"
+                onClick={() => setQuery("")}
+                className="absolute top-1/2 right-2 h-6 w-6 -translate-y-1/2 p-1 hover:bg-gray-100"
               >
-                <div className="flex items-center">
-                  <Navigation className="mr-3 h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium">Navbar</span>
-                </div>
-              </div>
-
-              <div
-                className="flex cursor-pointer items-center rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
-                onClick={() => handleComponentClick("footer")}
-              >
-                <div className="flex items-center">
-                  <MessageSquare className="mr-3 h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium">Footer</span>
-                </div>
-              </div>
-            </div>
+                <X className="h-4 w-4 text-gray-400" />
+              </Button>
+            )}
           </div>
+        </div>
 
-          {/* Site Components Section */}
-          <div className="p-4">
-            <div className="mb-3">
-              <Badge
-                variant="default"
-                className="rounded-full bg-purple-600 px-3 py-1 text-sm font-medium text-white"
-              >
-                Site Components (Advanced)
-              </Badge>
-            </div>
-
-            <div className="space-y-1">
-              <div
-                className="flex cursor-pointer items-center rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
-                onClick={() => handleComponentClick("hero-sections")}
-              >
-                <div className="flex items-center">
-                  <Sparkles className="mr-3 h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium">Hero Sections</span>
-                </div>
-              </div>
-
-              <div
-                className="flex cursor-pointer items-center rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
-                onClick={() => handleComponentClick("about-sections")}
-              >
-                <div className="flex items-center">
-                  <Info className="mr-3 h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium">About Sections</span>
-                </div>
-              </div>
-
-              <div
-                className="flex cursor-pointer items-center rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
-                onClick={() => handleComponentClick("products-sections")}
-              >
-                <div className="flex items-center">
-                  <Package className="mr-3 h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium">Product Displays</span>
-                </div>
-              </div>
-
-              <div
-                className="flex cursor-pointer items-center rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
-                onClick={() => handleComponentClick("blog-sections")} // New: Blog Section
-              >
-                <div className="flex items-center">
-                  <Rss className="mr-3 h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium">Blog Sections</span>
-                </div>
-              </div>
-
-              <div
-                className="flex cursor-pointer items-center rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
-                onClick={() => handleComponentClick("text-block")}
-              >
-                <div className="flex items-center">
-                  <FileText className="mr-3 h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium">Text Block</span>
-                </div>
-              </div>
-            </div>
+        {/* Component Sections */}
+        <div className="flex-1 overflow-y-auto text-gray-600">
+          <div className="space-y-1 px-2">
+            {filtered.length === 0 ? (
+              <div className="px-3 py-3 text-sm text-gray-400">No matches</div>
+            ) : (
+              filtered.map(({ id, label, icon: Icon }) => (
+                <Button
+                  key={id}
+                  variant="ghost"
+                  onClick={() => handleComponentClick(id)}
+                  className="flex h-auto w-full items-center justify-start gap-3 px-3 py-1 text-left text-[9px] font-medium text-gray-700 hover:bg-gray-100"
+                >
+                  <Icon className="h-2 w-2 text-gray-700" />
+                  <span>{label}</span>
+                </Button>
+              ))
+            )}
           </div>
         </div>
       </div>

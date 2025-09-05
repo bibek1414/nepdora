@@ -24,7 +24,7 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
   onSelectTemplate,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "style-1" | "style-2" | null
+    "style-1" | "style-2" | "style-3" | null
   >(null);
 
   const templates = [
@@ -81,10 +81,36 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
         />
       ),
     },
+    {
+      id: "style-3" as const,
+      name: "Navbar Style 2",
+      data: {
+        style: "style-3",
+        logoText: "Centered",
+        logoType: "text",
+        showCart: true,
+        links: [
+          { id: "1", text: "Home", href: "#" },
+          { id: "2", text: "About", href: "#" },
+          { id: "3", text: "Services", href: "#" },
+          { id: "4", text: "Contact", href: "#" },
+        ],
+        buttons: [{ id: "1", text: "Book Now", variant: "primary", href: "#" }],
+      } as NavbarData,
+      preview: (
+        <Image
+          src="/images/site-owners/navbars/navbar2.png"
+          alt="Navbar Style 2"
+          width={800}
+          height={120}
+          className="rounded-md"
+        />
+      ),
+    },
   ];
 
   const handleSelect = (template: {
-    id: "style-1" | "style-2";
+    id: "style-1" | "style-2" | "style-3";
     data: NavbarData;
   }) => {
     setSelectedStyle(template.id);

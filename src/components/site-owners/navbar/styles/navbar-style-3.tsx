@@ -1,0 +1,226 @@
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  NavbarData,
+  NavbarLink,
+  NavbarButton,
+} from "@/types/owner-site/components/navbar";
+import { getButtonVariant } from "@/lib/utils";
+import { Plus, Edit, Trash2, Menu, Search } from "lucide-react";
+import { CartIcon } from "../../cart/cart-icon";
+import { NavbarLogo } from "../navbar-logo";
+import { SearchBar } from "@/components/site-owners/search-bar/search-bar";
+import SideCart from "../../cart/side-cart";
+
+const EditableItem: React.FC<{
+  onEdit: () => void;
+  onDelete?: () => void;
+  children: React.ReactNode;
+}> = ({ onEdit, onDelete, children }) => (
+  <div className="group relative">
+    {children}
+    <div className="absolute -top-8 -right-3 hidden items-center rounded-full p-1 group-hover:flex">
+      <button
+        onClick={onEdit}
+        className="text-primary hover:bg-primary-foreground/20 rounded-full p-1"
+      >
+        <Edit className="h-4 w-4" />
+      </button>
+      {onDelete && (
+        <button
+          onClick={onDelete}
+          className="hover:bg-primary-foreground/20 rounded-full p-1 text-red-500"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      )}
+    </div>
+  </div>
+);
+
+interface NavbarStyleProps {
+  navbarData: NavbarData;
+  siteId: string;
+  siteUser?: string;
+  isEditable?: boolean;
+  onEditLogo?: () => void;
+  onAddLink?: () => void;
+  onEditLink?: (link: NavbarLink) => void;
+  onDeleteLink?: (linkId: string) => void;
+  onAddButton?: () => void;
+  onEditButton?: (button: NavbarButton) => void;
+  onDeleteButton?: (buttonId: string) => void;
+}
+
+export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
+  navbarData,
+  isEditable,
+  siteId,
+  siteUser,
+  onEditLogo,
+  onAddLink,
+  onEditLink,
+  onDeleteLink,
+  onAddButton,
+  onEditButton,
+  onDeleteButton,
+}) => {
+  const { links, buttons, showCart } = navbarData;
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
+
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
+  const closeCart = () => {
+    setIsCartOpen(false);
+  };
+
+  const toggleMobileSearch = () => {
+    setShowMobileSearch(!showMobileSearch);
+  };
+
+  // Function to generate the correct href for links
+  const generateLinkHref = (originalHref: string) => {
+    if (isEditable || !siteUser) return originalHref;
+
+    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
+      return `/preview/${siteUser}`;
+    }
+
+    const cleanHref = originalHref.replace(/^[#/]+/, "");
+    return `/preview/${siteUser}/${cleanHref}`;
+  };
+
+  return (
+    <>
+      <nav
+        className={`bg-background mx-auto flex max-w-7xl items-center justify-between p-4 ${
+          !isEditable ? "sticky top-0 z-40 border-b" : ""
+        }`}
+      >
+        {/* Left side: Logo and Desktop Search */}
+        <div className="flex min-w-0 flex-1 items-center gap-6">
+          <div className="flex-shrink-0">
+            {isEditable && onEditLogo ? (
+              <EditableItem onEdit={onEditLogo}>
+                <NavbarLogo
+                  data={navbarData}
+                  isEditable={isEditable}
+                  onEdit={onEditLogo}
+                />
+              </EditableItem>
+            ) : (
+              <NavbarLogo data={navbarData} />
+            )}
+          </div>
+
+          {/* Desktop Search Bar */}
+          <div className="relative hidden max-w-md flex-1 md:block">
+            <SearchBar
+              siteId={siteId}
+              isEditable={isEditable}
+              className="w-full"
+            />
+          </div>
+        </div>
+
+        {/* Right side: Mobile Search Toggle, Links, Buttons, and Cart */}
+        <div className="flex flex-shrink-0 items-center gap-2">
+          {/* Mobile Search Toggle */}
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleMobileSearch}
+              className="p-2"
+              aria-label="Toggle search"
+            >
+              <SearchBar
+                siteId={siteId}
+                isEditable={isEditable}
+                className="w-full"
+              />
+            </Button>
+          </div>
+
+          {/* Desktop Links */}
+          <div className="hidden items-center gap-4 lg:flex">
+            {links.map(link =>
+              isEditable && onEditLink && onDeleteLink ? (
+                <EditableItem
+                  key={link.id}
+                  onEdit={() => onEditLink(link)}
+                  onDelete={() => onDeleteLink(link.id)}
+                >
+                  <a
+                    href={link.href}
+                    onClick={e => e.preventDefault()}
+                    className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium whitespace-nowrap transition-colors"
+                  >
+                    {link.text}
+                  </a>
+                </EditableItem>
+              ) : (
+                <a
+                  key={link.id}
+                  href={generateLinkHref(link.href)}
+                  className="text-muted-foreground hover:text-foreground text-sm font-medium whitespace-nowrap transition-colors"
+                >
+                  {link.text}
+                </a>
+              )
+            )}
+            {isEditable && onAddLink && (
+              <Button onClick={onAddLink} variant="outline" size="sm">
+                <Plus className="mr-2 h-4 w-4" /> Link
+              </Button>
+            )}
+          </div>
+
+          {/* Buttons */}
+          <div className="flex items-center gap-2">
+            {buttons.map(button =>
+              isEditable && onEditButton && onDeleteButton ? (
+                <EditableItem
+                  key={button.id}
+                  onEdit={() => onEditButton(button)}
+                  onDelete={() => onDeleteButton(button.id)}
+                >
+                  <Button
+                    onClick={e => e.preventDefault()}
+                    variant={getButtonVariant(button.variant)}
+                    size="sm"
+                    className="cursor-pointer"
+                  >
+                    {button.text}
+                  </Button>
+                </EditableItem>
+              ) : (
+                <Button
+                  asChild
+                  key={button.id}
+                  variant={getButtonVariant(button.variant)}
+                  size="sm"
+                >
+                  <a href={generateLinkHref(button.href)}>{button.text}</a>
+                </Button>
+              )
+            )}
+            {isEditable && onAddButton && (
+              <Button onClick={onAddButton} variant="outline" size="sm">
+                <Plus className="mr-2 h-4 w-4" /> Button
+              </Button>
+            )}
+          </div>
+
+          {/* Cart */}
+          {showCart && <CartIcon onToggleCart={toggleCart} />}
+        </div>
+      </nav>
+
+      <SideCart isOpen={isCartOpen} onClose={closeCart} siteId={siteId} />
+    </>
+  );
+};

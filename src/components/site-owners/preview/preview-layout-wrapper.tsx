@@ -74,7 +74,7 @@ export function PreviewLayoutWrapper({
       {/* Sticky Navbar - positioned outside the preview content */}
       {navbarResponse?.data && (
         <div className={`sticky top-0 z-40 ${getViewportClass()}`}>
-          <div className="overflow-hidden border-b bg-white">
+          <div className="border-b bg-white">
             <NavbarComponent
               navbar={navbarResponse.data}
               isEditable={false}
@@ -104,15 +104,6 @@ export function PreviewLayoutWrapper({
           </div>
         </div>
       </main>
-
-      {/* Device Info */}
-      <div className="fixed right-4 bottom-4">
-        <Badge variant="outline" className="bg-white">
-          {deviceView === "desktop" && "Desktop View"}
-          {deviceView === "tablet" && "Tablet View"}
-          {deviceView === "mobile" && "Mobile View"}
-        </Badge>
-      </div>
     </div>
   );
 }
