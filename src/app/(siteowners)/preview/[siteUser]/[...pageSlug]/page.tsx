@@ -8,12 +8,17 @@ import { HeroComponent } from "@/components/site-owners/hero/hero-component";
 import { AboutUsComponent } from "@/components/site-owners/about/about-component";
 import { ProductsComponent } from "@/components/site-owners/products/products-component";
 import { BlogComponent } from "@/components/site-owners/blog/blog-components";
-import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-hero";
+import { usePageComponentsQuery } from "@/hooks/owner-site/components/unified";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { use } from "react";
+import {
+  ComponentTypeMap,
+  ComponentResponse,
+  ApiListResponse,
+} from "@/types/owner-site/components/components";
 
 interface DynamicPageProps {
   params: Promise<{
@@ -24,13 +29,14 @@ interface DynamicPageProps {
 
 interface PageComponent {
   id: string | number;
+  component_id: string;
   component_type: "hero" | "about" | "products" | "blog";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
     | ProductsComponentData["data"]
     | BlogComponentData["data"];
-  order?: number;
+  order: number;
 }
 
 export default function DynamicPage({ params }: DynamicPageProps) {
@@ -43,33 +49,40 @@ export default function DynamicPage({ params }: DynamicPageProps) {
   const currentPageSlug =
     pageSlug && pageSlug.length > 0 ? pageSlug[0] : "home";
 
-  // Fetch components for the current page
+  // Fetch components for the current page using unified hook
   const { data: pageComponentsResponse, isLoading: isComponentsLoading } =
     usePageComponentsQuery(currentPageSlug);
 
   // Process all page components with proper typing
+  // Process all page components with proper typing
+  // Replace the problematic code in preview page
+
+  // Process all page components with proper typing
   const pageComponents = React.useMemo((): PageComponent[] => {
     if (!pageComponentsResponse) return [];
-    //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let components: any[] = [];
-    if (Array.isArray(pageComponentsResponse.data)) {
-      components = pageComponentsResponse.data;
-    } else if (Array.isArray(pageComponentsResponse.components)) {
-      components = pageComponentsResponse.components;
-    } else if (Array.isArray(pageComponentsResponse)) {
+
+    let components: ComponentResponse<keyof ComponentTypeMap>[] = [];
+
+    if (Array.isArray(pageComponentsResponse)) {
+      // Direct array response
       components = pageComponentsResponse;
+    } else if (typeof pageComponentsResponse === "object") {
+      // Object response with nested array
+      const response = pageComponentsResponse as ApiListResponse<
+        ComponentResponse<keyof ComponentTypeMap>
+      >;
+      components = response.data || response.components || [];
     }
 
     return components.filter(
       (component): component is PageComponent =>
-        component.component_type &&
+        !!component.component_type &&
         ["hero", "about", "products", "blog"].includes(
           component.component_type
         ) &&
-        component.data
+        !!component.data
     );
   }, [pageComponentsResponse]);
-
   const handleBackToBuilder = () => {
     router.push(`/builder/${siteUser}`);
   };

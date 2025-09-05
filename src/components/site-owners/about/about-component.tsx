@@ -26,9 +26,9 @@ import { AboutUsTemplate2 } from "./about-style-2";
 import { AboutUsTemplate3 } from "./about-style-3";
 import { AboutUsTemplate4 } from "./about-style-4";
 import {
-  useDeleteAboutUsMutation,
-  useUpdateAboutUsMutation,
-} from "@/hooks/owner-site/components/use-about";
+  useDeleteComponentMutation,
+  useUpdateComponentMutation,
+} from "@/hooks/owner-site/components/unified";
 import { toast } from "sonner";
 
 interface AboutUsComponentProps {
@@ -44,29 +44,30 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const deleteAboutUsMutation = useDeleteAboutUsMutation(pageSlug);
-  const updateAboutUsMutation = useUpdateAboutUsMutation(
-    pageSlug,
-    (component.component_id || component.id).toString()
-  );
+  const deleteAboutUsMutation = useDeleteComponentMutation(pageSlug, "about");
+  const updateAboutUsMutation = useUpdateComponentMutation(pageSlug, "about");
 
   const handleDelete = () => {
-    deleteAboutUsMutation.mutate(
-      component.component_id || component.id.toString()
-    );
+    const componentId = component.component_id || component.id.toString();
+    deleteAboutUsMutation.mutate(componentId);
   };
 
   const handleUpdate = (updatedData: Partial<AboutUsData>) => {
+    const componentId = component.component_id || component.id.toString();
     const mergedData = { ...component.data, ...updatedData };
 
     updateAboutUsMutation.mutate(
-      { data: mergedData as UpdateAboutUsRequest["data"] },
+      { componentId, data: mergedData as UpdateAboutUsRequest["data"] },
       {
         onSuccess: () => {
           toast.success("About Us component updated.");
         },
         onError: error => {
-          toast.error(`Failed to update: ${error.message}`);
+          if (error instanceof Error) {
+            toast.error(`Failed to update: ${error.message}`);
+          } else {
+            toast.error("Failed to update: Unknown error");
+          }
         },
       }
     );

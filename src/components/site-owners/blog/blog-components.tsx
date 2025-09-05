@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { useBlogs } from "@/hooks/owner-site/use-blogs";
-import { useDeleteBlogComponentMutation } from "@/hooks/owner-site/components/use-blog";
+import { useDeleteComponentMutation } from "@/hooks/owner-site/components/unified";
 import { BlogCard1 } from "./blog-card1";
 import { BlogCard2 } from "./blog-card2";
 import { BlogCard3 } from "./blog-card3";
@@ -54,8 +54,11 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     itemsPerRow = 3,
   } = component.data || {};
 
-  // Delete mutation hook
-  const deleteBlogComponent = useDeleteBlogComponentMutation();
+  // Delete mutation hook using unified hook
+  const deleteBlogComponent = useDeleteComponentMutation(
+    pageSlug || "",
+    "blog"
+  );
 
   // Calculate page size and get first page for the limit
   const pageSize = Math.min(limit, 50);
@@ -96,10 +99,10 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
       return;
     }
 
-    deleteBlogComponent.mutate({
-      componentId: component.component_id,
-      pageSlug,
-    });
+    const componentId = component.component_id || component.id?.toString();
+    if (componentId) {
+      deleteBlogComponent.mutate(componentId);
+    }
     setIsDeleteDialogOpen(false);
   };
 

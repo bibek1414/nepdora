@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useProducts } from "@/hooks/owner-site/use-product";
 import {
-  useDeleteProductsComponentMutation,
-  useUpdateProductsComponentMutation, // Add this import
-} from "@/hooks/owner-site/components/use-product";
+  useDeleteComponentMutation,
+  useUpdateComponentMutation,
+} from "@/hooks/owner-site/components/unified";
 import { ProductCard1 } from "./product-card1";
 import { ProductCard2 } from "./product-card2";
 import { ProductCard3 } from "./product-card3";
@@ -58,9 +58,15 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     itemsPerRow = 4,
   } = component.data || {};
 
-  // Mutation hooks
-  const deleteProductsComponent = useDeleteProductsComponentMutation();
-  const updateProductsComponent = useUpdateProductsComponentMutation(); // Add this hook
+  // Use unified mutation hooks
+  const deleteProductsComponent = useDeleteComponentMutation(
+    pageSlug || "",
+    "products"
+  );
+  const updateProductsComponent = useUpdateComponentMutation(
+    pageSlug || "",
+    "products"
+  );
 
   // Get products with pagination
   const { data, isLoading, error } = useProducts({
@@ -93,10 +99,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
       return;
     }
 
-    deleteProductsComponent.mutate({
-      componentId: component.component_id,
-      pageSlug,
-    });
+    deleteProductsComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
@@ -106,10 +109,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
       return;
     }
 
-    // Update component data via API
+    // Update component data via unified API
     updateProductsComponent.mutate({
       componentId: component.component_id,
-      pageSlug,
       data: {
         ...component.data,
         title: newTitle,
@@ -134,10 +136,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
       return;
     }
 
-    // Update component data via API
+    // Update component data via unified API
     updateProductsComponent.mutate({
       componentId: component.component_id,
-      pageSlug,
       data: {
         ...component.data,
         subtitle: newSubtitle,

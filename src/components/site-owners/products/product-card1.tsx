@@ -103,7 +103,6 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
       <Card className="group hover: overflow-hidden border-0 transition-all duration-500 hover:-translate-y-2">
         <CardContent className="p-0">
           {/* Header with gradient */}
-          <div className="bg-primary h-2"></div>
 
           <div className="relative overflow-hidden">
             <div className="relative aspect-square">
@@ -112,11 +111,6 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
                 alt={product.thumbnail_alt_description || product.name}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
-                onError={e => {
-                  // Fallback to placeholder if image fails to load
-                  e.currentTarget.src =
-                    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop";
-                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             </div>
@@ -170,7 +164,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
             )}
 
             {/* Product Title */}
-            <h3 className="text-foreground group-hover:text-primary line-clamp-2 text-lg font-bold transition-colors">
+            <h3 className="line-clamp-2 text-lg font-bold text-gray-800 transition-colors group-hover:text-gray-900">
               {product.name}
             </h3>
 
@@ -208,41 +202,22 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
                     ${discountedPrice}
                   </span>
                   {marketPrice && discountPercentage > 0 && (
-                    <span className="text-muted-foreground text-sm line-through">
+                    <span className="text-sm text-gray-600 line-through">
                       ${marketPrice.toFixed(2)}
                     </span>
                   )}
                 </div>
-
-                {showStock && (
-                  <Badge
-                    variant={
-                      product.stock > 5
-                        ? "default"
-                        : product.stock > 0
-                          ? "secondary"
-                          : "destructive"
-                    }
-                    className="text-xs"
-                  >
-                    {product.stock > 0
-                      ? `${product.stock} in stock`
-                      : "Out of Stock"}
-                  </Badge>
-                )}
               </div>
             )}
 
             {/* Action Button */}
             <Button
-              size="sm"
-              className="w-full font-semibold text-white transition-all duration-300"
+              className="text-primary border-primary/20 hover:bg-primary disabled:cursor-not-allowe flex h-10 w-10 transform items-center justify-center rounded-full border bg-white transition-all duration-300 hover:scale-110 hover:text-white disabled:opacity-50"
               disabled={product.stock === 0}
               onClick={handleAddToCart}
               data-cart-action="true"
             >
-              <ShoppingCart className="mr-2 h-4 w-4" />
-              {product.stock > 0 ? "Add to Cart" : "Notify When Available"}
+              <ShoppingCart className="h-4 w-4" />
             </Button>
           </div>
         </CardContent>

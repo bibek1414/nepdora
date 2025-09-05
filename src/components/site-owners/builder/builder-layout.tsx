@@ -22,8 +22,7 @@ import {
 import { FooterStylesDialog } from "@/components/site-owners/footer/footer-styles-dialog";
 import { HeroStylesDialog } from "@/components/site-owners/hero/hero-styles-dialog";
 import { defaultHeroData } from "@/types/owner-site/components/hero";
-import { useCreateHeroMutation } from "@/hooks/owner-site/components/use-hero";
-import { useCreateAboutUsMutation } from "@/hooks/owner-site/components/use-about";
+import { useCreateComponentMutation } from "@/hooks/owner-site/components/unified";
 import { AboutUsStylesDialog } from "@/components/site-owners/about/about-styles-dialog";
 import {
   defaultAboutUs1Data,
@@ -32,20 +31,15 @@ import {
   defaultAboutUs4Data,
 } from "@/types/owner-site/components/about";
 import { AboutUsData } from "@/types/owner-site/components/about";
-import { useCreateProductsComponentMutation } from "@/hooks/owner-site/components/use-product";
 import { defaultProductsData } from "@/types/owner-site/components/products";
 import { ProductsStylesDialog } from "@/components/site-owners/products/products-styles-dialog";
 import { Facebook, Twitter } from "lucide-react";
-import { useCreateBlogComponentMutation } from "@/hooks/owner-site/components/use-blog";
 import { defaultBlogDisplayData } from "@/types/owner-site/components/blog";
 import { BlogStylesDialog } from "@/components/site-owners/blog/blog-style-dialog";
-
-interface Component {
-  id: string;
-  type: string;
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
-}
+import {
+  ComponentResponse,
+  ComponentTypeMap,
+} from "@/types/owner-site/components/components";
 
 interface BuilderLayoutProps {
   params: {
@@ -65,7 +59,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
   const createPageMutation = useCreatePage();
 
-  const [droppedComponents, setDroppedComponents] = useState<Component[]>([]);
+  const [droppedComponents, setDroppedComponents] = useState<
+    ComponentResponse[]
+  >([]);
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
   const [isFooterDialogOpen, setIsFooterDialogOpen] = useState(false);
   const [isHeroStylesDialogOpen, setIsHeroStylesDialogOpen] = useState(false);
@@ -74,16 +70,24 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isProductsStylesDialogOpen, setIsProductsStylesDialogOpen] =
     useState(false);
-  const [isBlogStylesDialogOpen, setIsBlogStylesDialogOpen] = useState(false); // New state for blog dialog
+  const [isBlogStylesDialogOpen, setIsBlogStylesDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState("");
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
 
-  const createHeroMutation = useCreateHeroMutation(currentPage);
-  const createAboutUsMutation = useCreateAboutUsMutation(currentPage);
-  const createProductsComponentMutation =
-    useCreateProductsComponentMutation(currentPage);
-  const createBlogComponentMutation =
-    useCreateBlogComponentMutation(currentPage); // New mutation for blog
+  // Unified component mutations
+  const createHeroMutation = useCreateComponentMutation(currentPage, "hero");
+  const createAboutUsMutation = useCreateComponentMutation(
+    currentPage,
+    "about"
+  );
+  const createProductsComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "products"
+  );
+  const createBlogComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "blog"
+  );
 
   // Auto-create home page if no pages exist
   useEffect(() => {
@@ -132,14 +136,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     } else if (componentId === "footer") {
       setIsFooterDialogOpen(true);
     } else if (componentId === "hero-sections") {
-      // Open the hero styles dialog for template selection
       setIsHeroStylesDialogOpen(true);
     } else if (componentId === "about-sections") {
       setIsAboutUsStylesDialogOpen(true);
     } else if (componentId === "products-sections") {
       setIsProductsStylesDialogOpen(true);
     } else if (componentId === "blog-sections") {
-      // New: Open the blog styles dialog
       setIsBlogStylesDialogOpen(true);
     } else {
       console.log(`${componentId} clicked`);
@@ -217,14 +219,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       template: template,
     };
 
-    const payload = {
-      component_id: `hero-${Date.now()}`,
-      component_type: "hero" as const,
-      data: heroData,
-      order: 1,
-    };
-
-    createHeroMutation.mutate(payload, {
+    // Use unified mutation with just the data
+    createHeroMutation.mutate(heroData, {
       onSuccess: () => {
         setIsHeroStylesDialogOpen(false);
       },
@@ -257,14 +253,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         aboutUsData = defaultAboutUs1Data;
     }
 
-    const payload = {
-      component_id: `about-${Date.now()}`,
-      component_type: "about" as const,
-      data: aboutUsData,
-      order: 2,
-    };
-
-    createAboutUsMutation.mutate(payload, {
+    // Use unified mutation with just the data
+    createAboutUsMutation.mutate(aboutUsData, {
       onSuccess: () => {
         setIsAboutUsStylesDialogOpen(false);
       },
@@ -274,22 +264,17 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
-  // Add the products template select handler
   const handleProductsTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1" | "carousel-1"
   ) => {
     // Create products component with the selected template
-    const payload = {
-      component_id: `products-${Date.now()}`,
-      component_type: "products" as const,
-      data: {
-        ...defaultProductsData,
-        style: template, // Set the selected style
-      },
-      order: 3,
+    const productsData = {
+      ...defaultProductsData,
+      style: template, // Set the selected style
     };
 
-    createProductsComponentMutation.mutate(payload, {
+    // Use unified mutation with just the data
+    createProductsComponentMutation.mutate(productsData, {
       onSuccess: () => {
         setIsProductsStylesDialogOpen(false);
       },
@@ -299,21 +284,16 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
-  // New: Add the blog template select handler
   const handleBlogTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1"
   ) => {
-    const payload = {
-      component_id: `blog-${Date.now()}`,
-      component_type: "blog" as const,
-      data: {
-        ...defaultBlogDisplayData, // Assuming you define a defaultBlogDisplayData
-        style: template,
-      },
-      order: 4, // Example order, adjust as needed
+    const blogData = {
+      ...defaultBlogDisplayData,
+      style: template,
     };
 
-    createBlogComponentMutation.mutate(payload, {
+    // Use unified mutation with just the data
+    createBlogComponentMutation.mutate(blogData, {
       onSuccess: () => {
         setIsBlogStylesDialogOpen(false);
       },
@@ -324,7 +304,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleAddHeroFromCanvas = () => {
-    // Open the hero styles dialog when adding from canvas
     setIsHeroStylesDialogOpen(true);
   };
 
@@ -336,20 +315,47 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     setIsProductsStylesDialogOpen(true);
   };
 
-  // New: Add the handleAddBlog function
   const handleAddBlog = () => {
     setIsBlogStylesDialogOpen(true);
   };
 
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleDrop = useCallback((item: any) => {
+  // Updated handleDrop with proper typing and component_type mapping
+  const handleDrop = useCallback((item: { type: string; id?: string }) => {
     if (item.type === "navbar" || item.type === "footer") return;
 
-    const newComponent = {
-      id: `${item.type}-${Date.now()}`,
-      type: item.type,
-      data: {},
+    // Map drag item type to component_type
+    let componentType: keyof ComponentTypeMap;
+    switch (item.type) {
+      case "hero-sections":
+        componentType = "hero";
+        break;
+      case "about-sections":
+        componentType = "about";
+        break;
+      case "products-sections":
+        componentType = "products";
+        break;
+      case "blog-sections":
+        componentType = "blog";
+        break;
+      default:
+        // If type doesn't match expected types, try to use it directly
+        if (["hero", "about", "products", "blog"].includes(item.type)) {
+          componentType = item.type as keyof ComponentTypeMap;
+        } else {
+          console.warn(`Unknown component type: ${item.type}`);
+          return;
+        }
+    }
+
+    const newComponent: ComponentResponse = {
+      id: `${componentType}-${Date.now()}`,
+      component_id: item.id || `${componentType}-${Date.now()}`,
+      component_type: componentType,
+      data: {} as ComponentTypeMap[keyof ComponentTypeMap],
+      order: 0,
     };
+
     setDroppedComponents(prev => [...prev, newComponent]);
   }, []);
 
@@ -392,33 +398,30 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onStyleSelect={handleFooterStyleSelect}
       />
 
-      {/* Hero Styles Dialog for template selection */}
       <HeroStylesDialog
         open={isHeroStylesDialogOpen}
         onOpenChange={setIsHeroStylesDialogOpen}
         onStyleSelect={handleHeroTemplateSelect}
       />
 
-      {/* About Us Styles Dialog for template selection */}
       <AboutUsStylesDialog
         open={isAboutUsStylesDialogOpen}
         onOpenChange={setIsAboutUsStylesDialogOpen}
         onStyleSelect={handleAboutUsTemplateSelect}
       />
 
-      {/* Products Styles Dialog */}
       <ProductsStylesDialog
         open={isProductsStylesDialogOpen}
         onOpenChange={setIsProductsStylesDialogOpen}
         onStyleSelect={handleProductsTemplateSelect}
       />
 
-      {/* New: Blog Styles Dialog for template selection */}
       <BlogStylesDialog
         open={isBlogStylesDialogOpen}
         onOpenChange={setIsBlogStylesDialogOpen}
         onStyleSelect={handleBlogTemplateSelect}
       />
+
       <TopNavigation
         pages={pagesData}
         currentPage={currentPage}
@@ -445,7 +448,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                 </div>
                 <CanvasArea
                   droppedComponents={droppedComponents}
-                  onDrop={handleDrop}
                   navbar={navbarResponse?.data}
                   onAddNavbar={() => setIsNavbarDialogOpen(true)}
                   footer={footerResponse?.data}
@@ -454,7 +456,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddHero={handleAddHeroFromCanvas}
                   onAddAboutUs={handleAddAboutUsFromCanvas}
                   onAddProducts={handleAddProducts}
-                  onAddBlog={handleAddBlog} // Pass the new handler
+                  onAddBlog={handleAddBlog}
                 />
               </div>
             </div>

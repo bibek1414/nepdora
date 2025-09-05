@@ -7,16 +7,20 @@ import { Footer as FooterComponent } from "@/components/site-owners/footer/foote
 import { HeroComponent } from "@/components/site-owners/hero/hero-component";
 import { AboutUsComponent } from "@/components/site-owners/about/about-component";
 import { ProductsComponent } from "@/components/site-owners/products/products-component";
-import { BlogComponent } from "@/components/site-owners/blog/blog-components"; // Import the new BlogComponent
+import { BlogComponent } from "@/components/site-owners/blog/blog-components";
 import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
-import { BlogComponentData } from "@/types/owner-site/components/blog"; // New type for blog component
+import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { useDeleteNavbarMutation } from "@/hooks/owner-site/components/use-navbar";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
-import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-hero";
+import { usePageComponentsQuery } from "@/hooks/owner-site/components/unified";
+import {
+  ComponentResponse,
+  ComponentTypeMap,
+} from "@/types/owner-site/components/components";
 import {
   Plus,
   Navigation,
@@ -26,15 +30,18 @@ import {
   Sparkles,
   Info,
   ShoppingBag,
-  Rss, // Import Rss for blog
+  Rss,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// Define proper types for API responses
+interface ApiResponse {
+  data?: ComponentResponse[];
+  components?: ComponentResponse[];
+}
+
 interface CanvasAreaProps {
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  droppedComponents: any[];
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onDrop: (item: any, position: { x: number; y: number }) => void;
+  droppedComponents: ComponentResponse[];
   navbar?: Navbar | null;
   onAddNavbar: () => void;
   footer?: Footer | null;
@@ -43,12 +50,11 @@ interface CanvasAreaProps {
   onAddHero?: () => void;
   onAddAboutUs?: () => void;
   onAddProducts?: () => void;
-  onAddBlog?: () => void; // New prop for adding blog
+  onAddBlog?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
   droppedComponents,
-  onDrop,
   navbar,
   onAddNavbar,
   footer,
@@ -57,19 +63,19 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddHero,
   onAddAboutUs,
   onAddProducts,
-  onAddBlog, // Destructure new prop
+  onAddBlog,
 }) => {
   const deleteNavbarMutation = useDeleteNavbarMutation();
   const deleteFooterMutation = useDeleteFooterMutation();
 
-  // Fetch all components for the current page
+  // Fetch all components for the current page using the unified hook
   const {
     data: pageComponentsResponse,
     isLoading,
     error,
   } = usePageComponentsQuery(currentPageSlug);
 
-  // Process all page components
+  // Process all page components with proper typing
   const pageComponents = React.useMemo(() => {
     if (!pageComponentsResponse) {
       console.log("No page components response");
@@ -79,61 +85,66 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     console.log("Full API Response:", pageComponentsResponse);
 
     // Get components array from the response
-    let components = [];
+    let components: ComponentResponse[] = [];
 
-    // Handle different possible response structures
-    if (Array.isArray(pageComponentsResponse.data)) {
-      components = pageComponentsResponse.data;
-    } else if (Array.isArray(pageComponentsResponse.components)) {
-      components = pageComponentsResponse.components;
-    } else if (Array.isArray(pageComponentsResponse)) {
-      components = pageComponentsResponse;
+    // Handle different possible response structures with proper type checking
+    if (Array.isArray(pageComponentsResponse)) {
+      components = pageComponentsResponse as ComponentResponse[];
     } else {
-      console.log("Unexpected response structure:", pageComponentsResponse);
-      return [];
+      const apiResponse = pageComponentsResponse as ApiResponse;
+      if (Array.isArray(apiResponse.data)) {
+        components = apiResponse.data;
+      } else if (Array.isArray(apiResponse.components)) {
+        components = apiResponse.components;
+      } else {
+        console.log("Unexpected response structure:", pageComponentsResponse);
+        return [];
+      }
     }
 
     console.log("Raw components from API:", components);
 
-    //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const filteredComponents = components.filter((component: any) => {
-      const hasValidType =
-        component.component_type &&
-        ["hero", "about", "products", "blog"].includes(
-          component.component_type
-        ); // Add 'blog' type
-      const hasValidData = component && component.data;
-      const hasValidId = component && typeof component.id !== "undefined";
+    const filteredComponents = components.filter(
+      (component: ComponentResponse) => {
+        const hasValidType =
+          component.component_type &&
+          ["hero", "about", "products", "blog"].includes(
+            component.component_type
+          );
+        const hasValidData = component && component.data;
+        const hasValidId = component && typeof component.id !== "undefined";
 
-      console.log("Component filtering:", {
-        id: component?.id,
-        component_type: component?.component_type,
-        hasData: !!component?.data,
-        isValid: hasValidType && hasValidData && hasValidId,
-      });
+        console.log("Component filtering:", {
+          id: component?.id,
+          component_type: component?.component_type,
+          hasData: !!component?.data,
+          isValid: hasValidType && hasValidData && hasValidId,
+        });
 
-      return hasValidType && hasValidData && hasValidId;
-    });
+        return hasValidType && hasValidData && hasValidId;
+      }
+    );
 
     // Transform to match expected interface structure
-    //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const transformedComponents = filteredComponents.map((component: any) => {
-      console.log("Transforming component:", {
-        original: component,
-        data: component.data,
-        type: component.component_type,
-      });
+    const transformedComponents = filteredComponents.map(
+      (component: ComponentResponse) => {
+        console.log("Transforming component:", {
+          original: component,
+          data: component.data,
+          type: component.component_type,
+        });
 
-      return {
-        id: component.id,
-        component_id: component.component_id,
-        component_type: component.component_type,
-        data: component.data,
-        type: component.component_type,
-        order: component.order || 0,
-        page: component.page,
-      };
-    });
+        return {
+          id: component.id,
+          component_id: component.component_id,
+          component_type: component.component_type,
+          data: component.data,
+          type: component.component_type,
+          order: component.order || 0,
+          page: component.page,
+        };
+      }
+    );
 
     console.log("Transformed page components:", transformedComponents);
     return transformedComponents;
@@ -149,10 +160,18 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   });
 
   // Check for specific component types
-  const hasHero = pageComponents.some(c => c.component_type === "hero");
-  const hasAbout = pageComponents.some(c => c.component_type === "about");
-  const hasProducts = pageComponents.some(c => c.component_type === "products");
-  const hasBlog = pageComponents.some(c => c.component_type === "blog"); // New: check for blog component
+  const hasHero = pageComponents.some(
+    component => component.component_type === "hero"
+  );
+  const hasAbout = pageComponents.some(
+    component => component.component_type === "about"
+  );
+  const hasProducts = pageComponents.some(
+    component => component.component_type === "products"
+  );
+  const hasBlog = pageComponents.some(
+    component => component.component_type === "blog"
+  );
 
   const handleDeleteNavbar = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -161,9 +180,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     }
   };
 
-  // Component renderer
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const renderComponent = (component: any) => {
+  // Component renderer with proper typing
+  const renderComponent = (component: ComponentResponse) => {
     switch (component.component_type) {
       case "hero":
         return (
@@ -191,17 +209,17 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             isEditable={true}
             siteId={undefined}
             pageSlug={currentPageSlug}
-            onUpdate={(componentId, newData) => {
+            onUpdate={(componentId: string, newData: ProductsComponentData) => {
               console.log("Products component updated:", componentId, newData);
               // Handle component update here
             }}
-            onProductClick={(productId, order) => {
+            onProductClick={(productId: number, order: number) => {
               console.log("Product clicked:", productId, order);
               // Handle product click in builder mode
             }}
           />
         );
-      case "blog": // New: Render BlogComponent
+      case "blog":
         return (
           <BlogComponent
             key={`blog-${component.id}`}
@@ -209,10 +227,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             isEditable={true}
             siteId={undefined}
             pageSlug={currentPageSlug}
-            onUpdate={(componentId, newData) => {
+            onUpdate={(componentId: string, newData: BlogComponentData) => {
               console.log("Blog component updated:", componentId, newData);
             }}
-            onBlogClick={(blogSlug, order) => {
+            onBlogClick={(blogSlug: string, order: number) => {
               console.log("Blog clicked:", blogSlug, order);
             }}
           />
@@ -222,29 +240,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     }
   };
 
-  const [{ isOver, canDrop }, drop] = useDrop(() => ({
-    accept: "component",
-    //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    drop: (item: any, monitor) => {
-      const clientOffset = monitor.getClientOffset();
-      if (clientOffset) {
-        onDrop(item, { x: clientOffset.x, y: clientOffset.y });
-      }
-    },
-    collect: monitor => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  }));
-
-  const isActive = isOver && canDrop;
-
   return (
-    <div
-      className={`rounded-lg border-2 border-dashed bg-white transition-colors ${
-        isActive ? "border-primary bg-primary/5" : "border-muted-foreground/25"
-      }`}
-    >
+    <div className="rounded-lg border-2 border-dashed bg-white transition-colors">
       {/* Navbar Section */}
       {navbar ? (
         <div className="group relative border-b">
@@ -343,51 +340,46 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             )}
 
           {/* Show about us placeholder if hero exists but no about */}
-          {!isLoading &&
-            hasHero &&
-            !hasAbout &&
-            !hasProducts &&
-            !hasBlog && // Check for blog too
-            onAddAboutUs && (
-              <div className="py-20 text-center">
-                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-                  <Info className="text-primary h-8 w-8" />
-                </div>
-                <h4 className="text-foreground mb-2 text-lg font-semibold">
-                  Tell Your Story
-                </h4>
-                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
-                  Add an &quot;About Us&quot; section to introduce your company
-                  to visitors.
-                </p>
-                <div className="flex justify-center gap-2">
-                  <Button onClick={onAddAboutUs} className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    Add About Us
-                  </Button>
-                  {onAddProducts && (
-                    <Button
-                      onClick={onAddProducts}
-                      variant="outline"
-                      className="gap-2"
-                    >
-                      <ShoppingBag className="h-4 w-4" />
-                      Add Products
-                    </Button>
-                  )}
-                  {onAddBlog && (
-                    <Button
-                      onClick={onAddBlog}
-                      variant="outline"
-                      className="gap-2"
-                    >
-                      <Rss className="h-4 w-4" />
-                      Add Blog
-                    </Button>
-                  )}
-                </div>
+          {!isLoading && hasHero && !hasAbout && !hasProducts && !hasBlog && (
+            <div className="py-20 text-center">
+              <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
+                <Info className="text-primary h-8 w-8" />
               </div>
-            )}
+              <h4 className="text-foreground mb-2 text-lg font-semibold">
+                Tell Your Story
+              </h4>
+              <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
+                Add an &quot;About Us&quot; section to introduce your company to
+                visitors.
+              </p>
+              <div className="flex justify-center gap-2">
+                <Button onClick={onAddAboutUs} className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Add About Us
+                </Button>
+                {onAddProducts && (
+                  <Button
+                    onClick={onAddProducts}
+                    variant="outline"
+                    className="gap-2"
+                  >
+                    <ShoppingBag className="h-4 w-4" />
+                    Add Products
+                  </Button>
+                )}
+                {onAddBlog && (
+                  <Button
+                    onClick={onAddBlog}
+                    variant="outline"
+                    className="gap-2"
+                  >
+                    <Rss className="h-4 w-4" />
+                    Add Blog
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Show products placeholder if hero and about exist but no products or blog */}
           {!isLoading &&
@@ -477,7 +469,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             >
               <div className="flex items-center justify-between">
                 <p className="text-foreground font-medium">
-                  Component: {component.type}
+                  Component: {component.component_type}
                 </p>
                 <Button variant="outline" size="sm">
                   <Edit className="mr-2 h-4 w-4" />
@@ -486,8 +478,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
               </div>
             </div>
           ))}
-
-          {/* Drop Zone Indicator */}
         </div>
       </div>
 

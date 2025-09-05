@@ -23,9 +23,9 @@ import { HeroTemplate3 } from "./hero-style-3";
 import { HeroTemplate4 } from "./hero-style-4";
 import { HeroTemplate5 } from "./hero-style-5";
 import {
-  useDeleteHeroMutation,
-  useUpdateHeroMutation,
-} from "@/hooks/owner-site/components/use-hero";
+  useDeleteComponentMutation,
+  useUpdateComponentMutation,
+} from "@/hooks/owner-site/components/unified";
 
 interface HeroComponentProps {
   component: HeroComponentData;
@@ -39,18 +39,15 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
   pageSlug,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const deleteHeroMutation = useDeleteHeroMutation(pageSlug);
-  const updateHeroMutation = useUpdateHeroMutation(
-    pageSlug,
-    (component.component_id || component.id).toString()
-  );
+  const deleteHeroMutation = useDeleteComponentMutation(pageSlug, "hero");
+  const updateHeroMutation = useUpdateComponentMutation(pageSlug, "hero");
 
   const handleUpdate = (updatedData: Partial<HeroData>) => {
     const componentId = component.component_id || component.id.toString();
 
     updateHeroMutation.mutate(
       {
-        component_id: componentId,
+        componentId,
         data: updatedData,
       },
       {
