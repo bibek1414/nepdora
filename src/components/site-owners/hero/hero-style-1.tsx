@@ -5,15 +5,17 @@ import { HeroData } from "@/types/owner-site/components/hero";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
-
+import { EditableLink } from "@/components/ui/editable-link";
 interface HeroTemplate1Props {
   heroData: HeroData;
   isEditable?: boolean;
+  siteUser?: string;
   onUpdate?: (updatedData: Partial<HeroData>) => void;
 }
 
 export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
   heroData,
+  siteUser,
   isEditable = false,
   onUpdate,
 }) => {
@@ -48,15 +50,35 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
   };
 
   // Handle button text updates
-  const handleButtonUpdate = (buttonId: string, text: string) => {
+  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
     const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text } : btn
+      btn.id === buttonId ? { ...btn, text, href } : btn
     );
     const updatedData = { ...data, buttons: updatedButtons };
     setData(updatedData);
     onUpdate?.({ buttons: updatedButtons });
   };
+  const getButtonClasses = (variant: string) => {
+    const baseClasses =
+      "inline-block px-6 py-3 rounded-lg font-medium transition-colors min-w-[120px] text-center";
 
+    switch (variant) {
+      case "primary":
+        return `${baseClasses} bg-primary text-primary-foreground hover:bg-primary/90`;
+      case "default":
+        return `${baseClasses} bg-primary text-primary-foreground hover:bg-primary/90`;
+      case "secondary":
+        return `${baseClasses} bg-secondary text-secondary-foreground hover:bg-secondary/80`;
+      case "outline":
+        return `${baseClasses} border border-input bg-background hover:bg-accent hover:text-accent-foreground`;
+      case "ghost":
+        return `${baseClasses} hover:bg-accent hover:text-accent-foreground`;
+      case "link":
+        return `${baseClasses} text-primary underline-offset-4 hover:underline px-0`;
+      default:
+        return `${baseClasses} bg-primary text-primary-foreground hover:bg-primary/90`;
+    }
+  };
   const getBackgroundStyles = (): React.CSSProperties => {
     if (data.backgroundType === "image" && data.backgroundImageUrl) {
       const imageUrl = optimizeCloudinaryUrl(
@@ -183,25 +205,19 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
           {data.buttons.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-4">
               {data.buttons.map(button => (
-                <Button
+                <EditableLink
                   key={button.id}
-                  variant={
-                    button.variant === "primary" ? "default" : button.variant
+                  text={button.text || "Button text"}
+                  href={button.href || "#"}
+                  onChange={(text, href) =>
+                    handleButtonUpdate(button.id, text, href)
                   }
-                  size="lg"
-                  className="min-w-[120px]"
-                  asChild
-                >
-                  <a href={button.href || "#"}>
-                    <EditableText
-                      value={button.text}
-                      onChange={value => handleButtonUpdate(button.id, value)}
-                      as="span"
-                      isEditable={isEditable}
-                      placeholder="Button text..."
-                    />
-                  </a>
-                </Button>
+                  isEditable={isEditable}
+                  siteUser={siteUser}
+                  className={getButtonClasses(button.variant)}
+                  textPlaceholder="Button text..."
+                  hrefPlaceholder="Enter URL (e.g., about-us, contact)..."
+                />
               ))}
             </div>
           )}

@@ -74,6 +74,7 @@ interface FooterProps {
   footerData?: FooterData;
   style?: string;
   isEditable?: boolean;
+  siteUser?: string;
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   onUpdate?: (componentId: string, data: any) => void;
   componentId?: string;
@@ -87,6 +88,7 @@ export function Footer({
   onUpdate,
   componentId = "footer",
   footerId,
+  siteUser,
 }: FooterProps) {
   const [currentFooterData, setCurrentFooterData] = useState(footerData);
   const [showEditor, setShowEditor] = useState(false);
@@ -183,6 +185,7 @@ export function Footer({
         footerData={currentFooterData}
         isEditable={isEditable}
         onEditClick={handleEditClick}
+        siteUser={siteUser}
       />
       {isEditable && (
         <FooterEditorDialog

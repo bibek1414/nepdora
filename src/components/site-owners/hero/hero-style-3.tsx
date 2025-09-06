@@ -6,17 +6,20 @@ import { HeroData } from "@/types/owner-site/components/hero";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
+import { EditableLink } from "@/components/ui/editable-link";
 
 interface HeroTemplate3Props {
   heroData: HeroData;
   isEditable?: boolean;
   onUpdate?: (updatedData: Partial<HeroData>) => void;
+  siteUser?: string;
 }
 
 export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
   heroData,
   isEditable = false,
   onUpdate,
+  siteUser,
 }) => {
   const [data, setData] = useState(heroData);
 
@@ -48,10 +51,16 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
     onUpdate?.({ imageAlt: altText });
   };
 
-  // Handle button text updates
-  const handleButtonUpdate = (buttonId: string, text: string) => {
+  // Handle button text and href updates
+  const handleButtonUpdate = (
+    buttonId: string,
+    text: string,
+    href?: string
+  ) => {
     const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text } : btn
+      btn.id === buttonId
+        ? { ...btn, text, ...(href !== undefined && { href }) }
+        : btn
     );
     const updatedData = { ...data, buttons: updatedButtons };
     setData(updatedData);
@@ -143,7 +152,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
             />
           )}
 
-          {/* Buttons */}
+          {/* Buttons with EditableLink */}
           {data.buttons.length > 0 && (
             <div className="flex items-center gap-4">
               {data.buttons.map((button, index) => (
@@ -166,19 +175,21 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                   }
                   asChild
                 >
-                  <a
+                  <EditableLink
+                    text={button.text}
                     href={button.href || "#"}
+                    onChange={(text, href) =>
+                      handleButtonUpdate(button.id, text, href)
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter button URL..."
                     className="flex items-center gap-2"
                   >
                     {index === 1 && <Play size={18} />}
-                    <EditableText
-                      value={button.text}
-                      onChange={value => handleButtonUpdate(button.id, value)}
-                      as="span"
-                      isEditable={isEditable}
-                      placeholder="Button text..."
-                    />
-                  </a>
+                    <span>{button.text}</span>
+                  </EditableLink>
                 </Button>
               ))}
             </div>

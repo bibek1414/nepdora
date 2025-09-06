@@ -2,23 +2,11 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Monitor, Smartphone, Tablet } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { HeroComponent } from "@/components/site-owners/hero/hero-component";
-import { AboutUsComponent } from "@/components/site-owners/about/about-component";
-import { ProductsComponent } from "@/components/site-owners/products/products-component";
-import { BlogComponent } from "@/components/site-owners/blog/blog-components";
-import { usePageComponentsQuery } from "@/hooks/owner-site/components/unified";
-import { HeroComponentData } from "@/types/owner-site/components/hero";
-import { AboutUsComponentData } from "@/types/owner-site/components/about";
-import { ProductsComponentData } from "@/types/owner-site/components/products";
-import { BlogComponentData } from "@/types/owner-site/components/blog";
+import { Monitor } from "lucide-react";
 import { use } from "react";
-import {
-  ComponentTypeMap,
-  ComponentResponse,
-  ApiListResponse,
-} from "@/types/owner-site/components/components";
+import { usePagePreview } from "@/hooks/preview/use-page-preview";
+import { PageComponentRenderer } from "@/components/site-owners/preview/page-component-render";
+import { LoadingSpinner } from "@/components/site-owners/preview/loading-spinner";
 
 interface DynamicPageProps {
   params: Promise<{
@@ -27,172 +15,38 @@ interface DynamicPageProps {
   }>;
 }
 
-interface PageComponent {
-  id: string | number;
-  component_id: string;
-  component_type: "hero" | "about" | "products" | "blog";
-  data:
-    | HeroComponentData["data"]
-    | AboutUsComponentData["data"]
-    | ProductsComponentData["data"]
-    | BlogComponentData["data"];
-  order: number;
-}
-
 export default function DynamicPage({ params }: DynamicPageProps) {
-  const router = useRouter();
   const { siteUser, pageSlug } = use(params);
 
-  // Determine the current page slug
-  // If no pageSlug, default to home page
-  // If pageSlug exists, use the first segment (e.g., 'about', 'features', etc.)
   const currentPageSlug =
     pageSlug && pageSlug.length > 0 ? pageSlug[0] : "home";
 
-  // Fetch components for the current page using unified hook
-  const { data: pageComponentsResponse, isLoading: isComponentsLoading } =
-    usePageComponentsQuery(currentPageSlug);
-
-  // Process all page components with proper typing
-  // Process all page components with proper typing
-  // Replace the problematic code in preview page
-
-  // Process all page components with proper typing
-  const pageComponents = React.useMemo((): PageComponent[] => {
-    if (!pageComponentsResponse) return [];
-
-    let components: ComponentResponse<keyof ComponentTypeMap>[] = [];
-
-    if (Array.isArray(pageComponentsResponse)) {
-      // Direct array response
-      components = pageComponentsResponse;
-    } else if (typeof pageComponentsResponse === "object") {
-      // Object response with nested array
-      const response = pageComponentsResponse as ApiListResponse<
-        ComponentResponse<keyof ComponentTypeMap>
-      >;
-      components = response.data || response.components || [];
-    }
-
-    return components.filter(
-      (component): component is PageComponent =>
-        !!component.component_type &&
-        ["hero", "about", "products", "blog"].includes(
-          component.component_type
-        ) &&
-        !!component.data
-    );
-  }, [pageComponentsResponse]);
-  const handleBackToBuilder = () => {
-    router.push(`/builder/${siteUser}`);
-  };
-
-  // Product click handler - Navigate to product detail page
-  const handleProductClick = (productId: number, order: number) => {
-    console.log("Product clicked in preview:", { productId, order });
-    router.push(`/preview/${siteUser}/products/${productId}`);
-  };
-
-  // Blog click handler - Navigate to blog detail page
-  const handleBlogClick = (blogSlug: string, order: number) => {
-    console.log("Blog clicked in preview:", { blogSlug, order });
-    router.push(`/preview/${siteUser}/blog/${blogSlug}`);
-  };
-
-  // Component update handlers (not used in preview mode)
-  const handleComponentUpdate = (
-    componentId: string,
-    newData: ProductsComponentData | BlogComponentData
-  ) => {
-    console.log("Component update in preview (not applied):", {
-      componentId,
-      newData,
-    });
-  };
-
-  // Component renderer with proper typing
-  const renderComponent = (component: PageComponent) => {
-    switch (component.component_type) {
-      case "hero":
-        return (
-          <HeroComponent
-            key={component.id}
-            component={component as HeroComponentData}
-            isEditable={false}
-            pageSlug={currentPageSlug}
-          />
-        );
-      case "about":
-        return (
-          <AboutUsComponent
-            key={component.id}
-            component={component as AboutUsComponentData}
-            isEditable={false}
-            pageSlug={currentPageSlug}
-          />
-        );
-      case "products":
-        return (
-          <ProductsComponent
-            key={component.id}
-            component={component as ProductsComponentData}
-            isEditable={false}
-            siteId={siteUser}
-            onUpdate={(componentId, newData) =>
-              handleComponentUpdate(
-                componentId,
-                newData as ProductsComponentData
-              )
-            }
-            onProductClick={handleProductClick}
-          />
-        );
-      case "blog":
-        return (
-          <BlogComponent
-            key={component.id}
-            component={component as BlogComponentData}
-            isEditable={false}
-            siteId={siteUser}
-            pageSlug={currentPageSlug}
-            onUpdate={(componentId, newData) =>
-              handleComponentUpdate(componentId, newData as BlogComponentData)
-            }
-            onBlogClick={handleBlogClick}
-          />
-        );
-      default:
-        return null;
-    }
-  };
+  const {
+    pageComponents,
+    isComponentsLoading,
+    handleBackToBuilder,
+    handleProductClick,
+    handleBlogClick,
+    handleComponentUpdate,
+  } = usePagePreview(siteUser, currentPageSlug);
 
   if (isComponentsLoading) {
-    return (
-      <div className="bg-background flex min-h-screen items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="border-primary h-32 w-32 animate-spin rounded-full border-b-2"></div>
-          <p className="text-muted-foreground text-sm">
-            Loading {currentPageSlug} page...
-          </p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message={`Loading ${currentPageSlug} page...`} />;
   }
 
   const hasContent = pageComponents.length > 0;
 
   return (
     <>
-      {/* Render All Page Components */}
-      {pageComponents.length > 0 && (
-        <div className="space-y-0">
-          {pageComponents
-            .sort((a, b) => (a.order || 0) - (b.order || 0))
-            .map(renderComponent)}
-        </div>
-      )}
+      <PageComponentRenderer
+        components={pageComponents}
+        siteUser={siteUser}
+        pageSlug={currentPageSlug}
+        onProductClick={handleProductClick}
+        onBlogClick={handleBlogClick}
+        onComponentUpdate={handleComponentUpdate}
+      />
 
-      {/* Preview Content Area */}
       <div className="p-8">
         {!hasContent ? (
           <div className="py-20 text-center">
@@ -211,7 +65,6 @@ export default function DynamicPage({ params }: DynamicPageProps) {
             </Button>
           </div>
         ) : (
-          // Additional content sections when page components exist
           <div className="space-y-12">
             <div className="rounded-lg bg-gray-50 p-8 text-center">
               <h2 className="mb-4 text-3xl font-bold">

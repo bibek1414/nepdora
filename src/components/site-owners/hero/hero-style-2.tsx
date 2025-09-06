@@ -5,17 +5,20 @@ import { HeroData } from "@/types/owner-site/components/hero";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
+import { EditableLink } from "@/components/ui/editable-link";
 
 interface HeroTemplate2Props {
   heroData: HeroData;
   isEditable?: boolean;
   onUpdate?: (updatedData: Partial<HeroData>) => void;
+  siteUser?: string;
 }
 
 export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
   heroData,
   isEditable = false,
   onUpdate,
+  siteUser,
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [data, setData] = useState(heroData);
@@ -27,10 +30,16 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     onUpdate?.({ [field]: value } as Partial<HeroData>);
   };
 
-  // Handle button text updates
-  const handleButtonUpdate = (buttonId: string, text: string) => {
+  // Handle button text and href updates
+  const handleButtonUpdate = (
+    buttonId: string,
+    text: string,
+    href?: string
+  ) => {
     const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text } : btn
+      btn.id === buttonId
+        ? { ...btn, text, ...(href !== undefined && { href }) }
+        : btn
     );
     const updatedData = { ...data, buttons: updatedButtons };
     setData(updatedData);
@@ -114,7 +123,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
   // Auto-slide effect
   React.useEffect(() => {
     if (data.showSlider && data.sliderImages.length > 1) {
-      const interval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+      const interval = setInterval(nextSlide, 5000);
       return () => clearInterval(interval);
     }
   }, [data.showSlider, data.sliderImages.length]);
@@ -171,7 +180,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             />
           )}
 
-          {/* Buttons */}
+          {/* Buttons with EditableLink */}
           <div className="mt-4 flex flex-wrap gap-3">
             {data.buttons.map(btn => (
               <Button
@@ -180,15 +189,17 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                 size="lg"
                 asChild
               >
-                <a href={btn.href || "#"}>
-                  <EditableText
-                    value={btn.text}
-                    onChange={value => handleButtonUpdate(btn.id, value)}
-                    as="span"
-                    isEditable={isEditable}
-                    placeholder="Button text..."
-                  />
-                </a>
+                <EditableLink
+                  text={btn.text}
+                  href={btn.href || "#"}
+                  onChange={(text, href) =>
+                    handleButtonUpdate(btn.id, text, href)
+                  }
+                  isEditable={isEditable}
+                  siteUser={siteUser}
+                  textPlaceholder="Button text..."
+                  hrefPlaceholder="Enter button URL..."
+                />
               </Button>
             ))}
           </div>

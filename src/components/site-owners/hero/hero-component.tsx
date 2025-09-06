@@ -31,12 +31,14 @@ interface HeroComponentProps {
   component: HeroComponentData;
   isEditable?: boolean;
   pageSlug: string;
+  siteUser: string;
 }
 
 export const HeroComponent: React.FC<HeroComponentProps> = ({
   component,
   isEditable = false,
   pageSlug,
+  siteUser,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteHeroMutation = useDeleteComponentMutation(pageSlug, "hero");
@@ -102,6 +104,7 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
     const props = {
       heroData: component.data,
       isEditable,
+      siteUser,
       onUpdate: handleUpdate,
     };
 

@@ -9,12 +9,14 @@ import { HeroData } from "@/types/owner-site/components/hero";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
+import { EditableLink } from "@/components/ui/editable-link";
 import { cn } from "@/lib/utils";
 
-interface HeroTemplate3Props {
+interface HeroTemplate4Props {
   heroData: HeroData;
   isEditable?: boolean;
   onUpdate?: (updatedData: Partial<HeroData>) => void;
+  siteUser?: string;
 }
 
 // BlurPanel component for the info strip
@@ -94,10 +96,11 @@ const AnimatedText = ({
   );
 };
 
-export const HeroTemplate4: React.FC<HeroTemplate3Props> = ({
+export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
   heroData,
   isEditable = false,
   onUpdate,
+  siteUser,
 }) => {
   const [data, setData] = useState(heroData);
   const [isBackgroundHovered, setIsBackgroundHovered] = useState(false);
@@ -142,10 +145,16 @@ export const HeroTemplate4: React.FC<HeroTemplate3Props> = ({
     onUpdate?.({ imageAlt: altText });
   };
 
-  // Handle button text updates
-  const handleButtonUpdate = (buttonId: string, text: string) => {
+  // Handle button text and href updates
+  const handleButtonUpdate = (
+    buttonId: string,
+    text: string,
+    href?: string
+  ) => {
     const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text } : btn
+      btn.id === buttonId
+        ? { ...btn, text, ...(href !== undefined && { href }) }
+        : btn
     );
     const updatedData = { ...data, buttons: updatedButtons };
     setData(updatedData);
@@ -193,7 +202,7 @@ export const HeroTemplate4: React.FC<HeroTemplate3Props> = ({
             folder: "hero-backgrounds",
             resourceType: "image",
           }}
-          showAltEditor={false} // Hide alt editor for background
+          showAltEditor={false}
           placeholder={{
             width: 1920,
             height: 1080,
@@ -285,7 +294,7 @@ export const HeroTemplate4: React.FC<HeroTemplate3Props> = ({
             </Reveal>
           )}
 
-          {/* Buttons */}
+          {/* Buttons with EditableLink */}
           {data.buttons.length > 0 && (
             <Reveal delay={0.3}>
               <div className="pointer-events-auto mt-8 flex flex-wrap justify-center gap-4">
@@ -299,15 +308,17 @@ export const HeroTemplate4: React.FC<HeroTemplate3Props> = ({
                     className="min-w-[120px]"
                     asChild
                   >
-                    <a href={button.href || "#"}>
-                      <EditableText
-                        value={button.text}
-                        onChange={value => handleButtonUpdate(button.id, value)}
-                        as="span"
-                        isEditable={isEditable}
-                        placeholder="Button text..."
-                      />
-                    </a>
+                    <EditableLink
+                      text={button.text}
+                      href={button.href || "#"}
+                      onChange={(text, href) =>
+                        handleButtonUpdate(button.id, text, href)
+                      }
+                      isEditable={isEditable}
+                      siteUser={siteUser}
+                      textPlaceholder="Button text..."
+                      hrefPlaceholder="Enter button URL..."
+                    />
                   </Button>
                 ))}
               </div>

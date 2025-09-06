@@ -20,6 +20,7 @@ interface FooterStyle1Props {
   footerData: FooterData;
   isEditable?: boolean;
   onEditClick?: () => void;
+  siteUser?: string;
 }
 
 // Icon mapping to resolve serialized icons
@@ -52,19 +53,53 @@ export function FooterStyle1({
   footerData,
   isEditable,
   onEditClick,
+  siteUser,
 }: FooterStyle1Props) {
   const [email, setEmail] = useState("");
   const deleteFooterMutation = useDeleteFooterMutation();
+
+  // Function to generate the correct href for links
+  const generateLinkHref = (originalHref: string) => {
+    if (isEditable) return originalHref; // Keep original href for editable mode
+
+    // For preview mode, generate the correct route
+    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
+      return `/preview/${siteUser}`;
+    }
+
+    // Remove leading slash and hash if present
+    const cleanHref = originalHref.replace(/^[#/]+/, "");
+
+    return `/preview/${siteUser}/${cleanHref}`;
+  };
 
   const handleLinkClick = (href: string | undefined, e: React.MouseEvent) => {
     if (!href) {
       e.preventDefault();
       return;
     }
-    if (href.includes("/preview?")) {
+
+    if (isEditable) {
+      // In editable mode, prevent navigation
       e.preventDefault();
-      window.location.href = href;
+      return;
     }
+
+    // For external links or special cases
+    if (
+      href.includes("/preview?") ||
+      href.startsWith("http") ||
+      href.startsWith("mailto:") ||
+      href.startsWith("tel:")
+    ) {
+      // Allow these to navigate normally
+      return;
+    }
+
+    // For internal links, use our generated href
+    e.preventDefault();
+    const generatedHref = generateLinkHref(href);
+    window.location.href = generatedHref;
   };
 
   const handleDelete = () => {
@@ -146,6 +181,13 @@ export function FooterStyle1({
                     size="sm"
                     className="text-muted-foreground hover:text-foreground hover:bg-accent"
                     onClick={e => handleLinkClick(social.href, e)}
+                    {...(!isEditable &&
+                      social.href && {
+                        as: "a",
+                        href: social.href.startsWith("http")
+                          ? social.href
+                          : generateLinkHref(social.href),
+                      })}
                   >
                     {renderSocialIcon(social)}
                   </Button>
@@ -162,12 +204,21 @@ export function FooterStyle1({
                 <ul className="space-y-2">
                   {section.links.map(link => (
                     <li key={link.id}>
-                      <button
-                        className="text-muted-foreground hover:text-foreground text-left text-sm transition-colors"
-                        onClick={e => handleLinkClick(link.href, e)}
-                      >
-                        {link.text}
-                      </button>
+                      {isEditable ? (
+                        <button
+                          className="text-muted-foreground hover:text-foreground text-left text-sm transition-colors"
+                          onClick={e => handleLinkClick(link.href, e)}
+                        >
+                          {link.text}
+                        </button>
+                      ) : (
+                        <a
+                          href={generateLinkHref(link.href || "")}
+                          className="text-muted-foreground hover:text-foreground block text-left text-sm transition-colors"
+                        >
+                          {link.text}
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>

@@ -22,6 +22,7 @@ interface FooterStyle2Props {
   footerData: FooterData;
   isEditable?: boolean;
   onEditClick?: () => void;
+  siteUser?: string;
 }
 
 // Icon mapping to resolve serialized icons
@@ -54,19 +55,58 @@ export function FooterStyle2({
   footerData,
   isEditable,
   onEditClick,
+  siteUser,
 }: FooterStyle2Props) {
   const [email, setEmail] = useState("");
   const deleteFooterMutation = useDeleteFooterMutation();
+
+  // Function to generate the correct href for links
+  const generateLinkHref = (originalHref: string) => {
+    if (isEditable) return originalHref; // Keep original href for editable mode
+
+    // Ensure siteUser is defined for preview mode
+    if (!siteUser) {
+      console.warn("siteUser is required for preview mode");
+      return originalHref;
+    }
+    // For preview mode, generate the correct route
+    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
+      return `/preview/${siteUser}`;
+    }
+
+    // Remove leading slash and hash if present
+    const cleanHref = originalHref.replace(/^[#/]+/, "");
+
+    return `/preview/${siteUser}/${cleanHref}`;
+  };
 
   const handleLinkClick = (href: string | undefined, e: React.MouseEvent) => {
     if (!href) {
       e.preventDefault();
       return;
     }
-    if (href.includes("/preview?")) {
+
+    if (isEditable) {
+      // In editable mode, prevent navigation
       e.preventDefault();
-      window.location.href = href;
+      return;
     }
+
+    // For external links or special cases
+    if (
+      href.includes("/preview?") ||
+      href.startsWith("http") ||
+      href.startsWith("mailto:") ||
+      href.startsWith("tel:")
+    ) {
+      // Allow these to navigate normally
+      return;
+    }
+
+    // For internal links, use our generated href
+    e.preventDefault();
+    const generatedHref = generateLinkHref(href);
+    window.location.href = generatedHref;
   };
 
   const handleDelete = () => {
@@ -123,6 +163,13 @@ export function FooterStyle2({
                         size="sm"
                         className="text-muted-foreground hover:text-foreground"
                         onClick={e => handleLinkClick(social.href, e)}
+                        {...(!isEditable &&
+                          social.href && {
+                            as: "a",
+                            href: social.href.startsWith("http")
+                              ? social.href
+                              : generateLinkHref(social.href),
+                          })}
                       >
                         {renderSocialIcon(social)}
                         <span className="ml-2">{social.platform}</span>
@@ -142,14 +189,27 @@ export function FooterStyle2({
                       <ul className="space-y-3">
                         {section.links.map(link => (
                           <li key={link.id}>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-muted-foreground hover:text-foreground h-auto justify-start p-0 font-normal"
-                              onClick={e => handleLinkClick(link.href, e)}
-                            >
-                              {link.text}
-                            </Button>
+                            {isEditable ? (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-muted-foreground hover:text-foreground h-auto justify-start p-0 font-normal"
+                                onClick={e => handleLinkClick(link.href, e)}
+                              >
+                                {link.text}
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-muted-foreground hover:text-foreground h-auto justify-start p-0 font-normal"
+                                asChild
+                              >
+                                <a href={generateLinkHref(link.href || "")}>
+                                  {link.text}
+                                </a>
+                              </Button>
+                            )}
                           </li>
                         ))}
                       </ul>

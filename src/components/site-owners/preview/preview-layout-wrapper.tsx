@@ -99,6 +99,7 @@ export function PreviewLayoutWrapper({
                 footerData={footerResponse.data.data}
                 style={footerResponse.data.data.style}
                 isEditable={false}
+                siteUser={siteUser}
               />
             )}
           </div>

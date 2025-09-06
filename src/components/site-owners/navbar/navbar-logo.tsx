@@ -7,6 +7,7 @@ interface NavbarLogoProps {
   isEditable?: boolean;
   onEdit?: () => void;
   className?: string;
+  siteUser?: string;
 }
 
 export const NavbarLogo: React.FC<NavbarLogoProps> = ({
@@ -14,6 +15,7 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
   isEditable,
   onEdit,
   className = "",
+  siteUser,
 }) => {
   const { logoText, logoImage, logoType } = data;
 
@@ -81,7 +83,7 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
         {renderLogo()}
       </span>
     ) : (
-      <a href="#" className={className}>
+      <a href={`/preview/${siteUser}`} className={className}>
         {renderLogo()}
       </a>
     );

@@ -137,7 +137,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
               />
             </EditableItem>
           ) : (
-            <NavbarLogo data={navbarData} />
+            <NavbarLogo data={navbarData} siteUser={siteUser} />
           )}
         </div>
 

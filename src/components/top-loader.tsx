@@ -58,6 +58,11 @@ export default function TopLoader() {
         return;
       }
 
+      // NEW: Sixth check: if it's an editable link, ignore it
+      if (target.closest("[data-editable-link]")) {
+        return;
+      }
+
       // Now check if it's actually a navigation link
       const link = target.closest("a");
       if (!link) return;

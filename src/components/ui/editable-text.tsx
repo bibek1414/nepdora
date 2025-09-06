@@ -89,31 +89,3 @@ export const EditableText: React.FC<EditableTextProps> = ({
 
   return React.createElement(Tag, commonProps, value);
 };
-
-// Hook for managing editable text state
-export const useEditableText = (initialValue: string) => {
-  const [value, setValue] = React.useState(initialValue);
-  const [isDirty, setIsDirty] = React.useState(false);
-
-  const handleChange = React.useCallback((newValue: string) => {
-    setValue(newValue);
-    setIsDirty(true);
-  }, []);
-
-  const reset = React.useCallback(() => {
-    setValue(initialValue);
-    setIsDirty(false);
-  }, [initialValue]);
-
-  const markClean = React.useCallback(() => {
-    setIsDirty(false);
-  }, []);
-
-  return {
-    value,
-    onChange: handleChange,
-    isDirty,
-    reset,
-    markClean,
-  };
-};

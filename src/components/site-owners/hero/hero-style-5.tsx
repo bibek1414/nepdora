@@ -1,21 +1,23 @@
 import React, { useState } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { HeroData } from "@/types/owner-site/components/hero";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
+import { EditableLink } from "@/components/ui/editable-link";
 
 interface HeroTemplate5Props {
   heroData: HeroData;
   isEditable?: boolean;
   onUpdate?: (updatedData: Partial<HeroData>) => void;
+  siteUser?: string;
 }
 
 export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
   heroData,
   isEditable = false,
   onUpdate,
+  siteUser,
 }) => {
   const [data, setData] = useState(heroData);
 
@@ -71,10 +73,16 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
       onUpdate?.({ [field]: value } as Partial<HeroData>);
     };
 
-  // Handle button text updates
-  const handleButtonUpdate = (buttonId: string, text: string) => {
+  // Handle button text and href updates
+  const handleButtonUpdate = (
+    buttonId: string,
+    text: string,
+    href?: string
+  ) => {
     const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text } : btn
+      btn.id === buttonId
+        ? { ...btn, text, ...(href !== undefined && { href }) }
+        : btn
     );
     const updatedData = { ...data, buttons: updatedButtons };
     setData(updatedData);
@@ -280,7 +288,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           </h3>
         </div>
 
-        {/* Bottom Right Card */}
+        {/* Bottom Right Card with EditableLink */}
         <div className="flex flex-col items-center justify-center rounded-2xl border bg-white p-6 text-center shadow-sm">
           <h3 className="text-4xl font-bold text-gray-900">
             <EditableText
@@ -304,17 +312,23 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
             />
           </p>
           {data.buttons.length > 0 && (
-            <Button className="mt-4 rounded-full border border-gray-300 px-5 py-2 text-gray-700 transition hover:bg-gray-100">
-              <EditableText
-                value={data.buttons[0].text}
-                onChange={value =>
-                  handleButtonUpdate(data.buttons[0].id, value)
-                }
-                as="span"
+            <Button
+              className="mt-4 rounded-full border border-gray-300 px-5 py-2 text-gray-700 transition hover:bg-gray-100"
+              asChild
+            >
+              <EditableLink
+                text={`${data.buttons[0].text} →`}
+                href={data.buttons[0].href || "#"}
+                onChange={(text, href) => {
+                  // Remove the arrow from the text when updating
+                  const cleanText = text.replace(/\s*→\s*$/, "");
+                  handleButtonUpdate(data.buttons[0].id, cleanText, href);
+                }}
                 isEditable={isEditable}
-                placeholder="Button text..."
+                siteUser={siteUser}
+                textPlaceholder="Button text..."
+                hrefPlaceholder="Enter button URL..."
               />
-              {" →"}
             </Button>
           )}
         </div>

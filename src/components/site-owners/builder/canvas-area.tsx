@@ -189,6 +189,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`hero-${component.id}`}
             component={component as HeroComponentData}
             isEditable={true}
+            siteUser=""
             pageSlug={currentPageSlug}
           />
         );
