@@ -37,6 +37,8 @@ const navigation = [
   { name: "Services", href: "/admin/services", icon: Briefcase },
   { name: "Order Management", href: "/admin/orders", icon: FileText },
   { name: "Inquiries", href: "/admin/contacts", icon: MessageSquare },
+  { name: "Testimonials", href: "/admin/testimonials", icon: Tag },
+  { name: "Faq", href: "/admin/faq", icon: Tag },
   { name: "Service Bookings", href: "/admin/service-bookings", icon: Calendar },
   { name: "Issues Tracking", href: "/admin/issues", icon: Bug },
   { name: "Offers and Discounts", href: "/admin/offers-discounts", icon: Gift },

@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useRouter } from "next/navigation";
 import { CanvasArea } from "@/components/site-owners/builder/canvas-area";
 import { TopNavigation } from "@/components/site-owners/builder/top-navigation";
 import { ComponentSidebar } from "@/components/site-owners/builder/component-sidebar";
@@ -40,14 +41,20 @@ import {
   ComponentResponse,
   ComponentTypeMap,
 } from "@/types/owner-site/components/components";
+import { ContactStylesDialog } from "@/components/site-owners/contact/contact-style-dialog";
+import { defaultContactData } from "@/types/owner-site/components/contact";
 
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
+    pageSlug: string;
   };
 }
 
 export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
+  const router = useRouter();
+  const { siteUser, pageSlug } = params;
+
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const createNavbarMutation = useCreateNavbarMutation();
 
@@ -65,14 +72,17 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
   const [isFooterDialogOpen, setIsFooterDialogOpen] = useState(false);
   const [isHeroStylesDialogOpen, setIsHeroStylesDialogOpen] = useState(false);
-
   const [isAboutUsStylesDialogOpen, setIsAboutUsStylesDialogOpen] =
     useState(false);
   const [isProductsStylesDialogOpen, setIsProductsStylesDialogOpen] =
     useState(false);
   const [isBlogStylesDialogOpen, setIsBlogStylesDialogOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState("");
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
+  const [isContactStylesDialogOpen, setIsContactStylesDialogOpen] =
+    useState(false);
+
+  // Use pageSlug from URL params as current page
+  const currentPage = pageSlug;
 
   // Unified component mutations
   const createHeroMutation = useCreateComponentMutation(currentPage, "hero");
@@ -87,6 +97,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createBlogComponentMutation = useCreateComponentMutation(
     currentPage,
     "blog"
+  );
+  const createContactComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "contact"
   );
 
   // Auto-create home page if no pages exist
@@ -104,8 +118,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         {
           onSuccess: (data: Page) => {
             console.log("Default home page created successfully:", data);
-            setCurrentPage(data.slug);
             setIsCreatingHomePage(false);
+            // Redirect to the newly created home page if we're not already there
+            if (pageSlug !== data.slug) {
+              router.push(`/builder/${siteUser}/${data.slug}`);
+            }
           },
           onError: error => {
             console.error("Failed to create default home page:", error);
@@ -114,20 +131,53 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         }
       );
     }
-  }, [pagesData, isPagesLoading, createPageMutation, isCreatingHomePage]);
+  }, [
+    pagesData,
+    isPagesLoading,
+    createPageMutation,
+    isCreatingHomePage,
+    router,
+    siteUser,
+    pageSlug,
+  ]);
 
-  // Initialize current page from API data
+  // Validate current page exists
   useEffect(() => {
     if (pagesData && pagesData.length > 0) {
-      // Set current page to the first page if not set or if current page doesn't exist
-      if (!currentPage || !pagesData.find(page => page.slug === currentPage)) {
-        setCurrentPage(pagesData[0].slug);
+      const pageExists = pagesData.find(page => page.slug === pageSlug);
+
+      if (!pageExists && !isCreatingHomePage) {
+        // Page doesn't exist, redirect to first available page or home
+        const firstPage = pagesData[0];
+        router.push(`/builder/${siteUser}/${firstPage.slug}`);
       }
     }
-  }, [pagesData, currentPage]);
+  }, [pagesData, pageSlug, router, siteUser, isCreatingHomePage]);
 
   // Get current page data
   const currentPageData = pagesData.find(page => page.slug === currentPage);
+
+  // Update page change handler to use router
+  const handlePageChange = (newPageSlug: string) => {
+    router.push(`/builder/${siteUser}/${newPageSlug}`);
+  };
+
+  // Handle page creation and navigation
+  const handlePageCreated = (page: Page) => {
+    router.push(`/builder/${siteUser}/${page.slug}`);
+  };
+
+  // Handle page deletion and navigation
+  const handlePageDeleted = (deletedSlug: string) => {
+    if (currentPage === deletedSlug && pagesData.length > 1) {
+      const remainingPages = pagesData.filter(
+        page => page.slug !== deletedSlug
+      );
+      if (remainingPages.length > 0) {
+        router.push(`/builder/${siteUser}/${remainingPages[0].slug}`);
+      }
+    }
+  };
 
   // Update the component click handler
   const handleComponentClick = (componentId: string) => {
@@ -143,6 +193,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsProductsStylesDialogOpen(true);
     } else if (componentId === "blog-sections") {
       setIsBlogStylesDialogOpen(true);
+    } else if (componentId === "contact-sections") {
+      setIsContactStylesDialogOpen(true);
     } else {
       console.log(`${componentId} clicked`);
     }
@@ -226,6 +278,25 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
       onError: error => {
         console.error("Failed to create hero component:", error);
+      },
+    });
+  };
+
+  const handleContactTemplateSelect = (
+    template: "form-1" | "form-2" | "form-3" | "form-4"
+  ) => {
+    const contactData = {
+      ...defaultContactData,
+      style: template,
+    };
+
+    // Use unified mutation with just the data
+    createContactComponentMutation.mutate(contactData, {
+      onSuccess: () => {
+        setIsContactStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create contact component:", error);
       },
     });
   };
@@ -319,6 +390,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     setIsBlogStylesDialogOpen(true);
   };
 
+  const handleAddContact = () => {
+    setIsContactStylesDialogOpen(true);
+  };
+
   // Updated handleDrop with proper typing and component_type mapping
   const handleDrop = useCallback((item: { type: string; id?: string }) => {
     if (item.type === "navbar" || item.type === "footer") return;
@@ -338,9 +413,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       case "blog-sections":
         componentType = "blog";
         break;
+      case "contact-sections":
+        componentType = "contact";
+        break;
       default:
         // If type doesn't match expected types, try to use it directly
-        if (["hero", "about", "products", "blog"].includes(item.type)) {
+        if (
+          ["hero", "about", "products", "blog", "contact"].includes(item.type)
+        ) {
           componentType = item.type as keyof ComponentTypeMap;
         } else {
           console.warn(`Unknown component type: ${item.type}`);
@@ -358,13 +438,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
     setDroppedComponents(prev => [...prev, newComponent]);
   }, []);
-
-  const handlePageChange = (pageSlug: string) => {
-    setCurrentPage(pageSlug);
-    // TODO: Save current page components before switching
-    // TODO: Load components for the new page
-    setDroppedComponents([]); // Reset components for now
-  };
 
   const isLoading =
     isNavbarLoading || isFooterLoading || isPagesLoading || isCreatingHomePage;
@@ -422,16 +495,25 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onStyleSelect={handleBlogTemplateSelect}
       />
 
+      <ContactStylesDialog
+        open={isContactStylesDialogOpen}
+        onOpenChange={setIsContactStylesDialogOpen}
+        onStyleSelect={handleContactTemplateSelect}
+      />
+
       <TopNavigation
         pages={pagesData}
         currentPage={currentPage}
-        siteUser={params.siteUser}
+        siteUser={siteUser}
         onPageChange={handlePageChange}
+        onPageCreated={handlePageCreated}
+        onPageDeleted={handlePageDeleted}
       />
+
       <div className="bg-background flex min-h-screen flex-col">
         <div className="flex flex-1">
           <ComponentSidebar
-            siteUser={params.siteUser}
+            siteUser={siteUser}
             onComponentClick={handleComponentClick}
           />
 
@@ -457,6 +539,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddAboutUs={handleAddAboutUsFromCanvas}
                   onAddProducts={handleAddProducts}
                   onAddBlog={handleAddBlog}
+                  onAddContact={handleAddContact}
                 />
               </div>
             </div>

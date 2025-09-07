@@ -1,12 +1,12 @@
-import React from "react";
-import { BuilderLayout } from "@/components/site-owners/builder/builder-layout";
+import { redirect } from "next/navigation";
 import { use } from "react";
-interface BuilderPageProps {
+
+interface BuilderRedirectProps {
   params: Promise<{ siteUser: string }>;
 }
 
-export default function BuilderPage({ params }: BuilderPageProps) {
+export default function BuilderRedirect({ params }: BuilderRedirectProps) {
   const { siteUser } = use(params);
 
-  return <BuilderLayout params={{ siteUser }} />;
+  redirect(`/builder/${siteUser}/home`);
 }

@@ -2,13 +2,15 @@ import { HeroData } from "./hero";
 import { AboutUsData } from "./about";
 import { BlogDisplayData } from "./blog";
 import { ProductsData } from "./products";
+import { ContactData } from "./contact";
 
 // Union type for all component data types
 export type ComponentData =
   | HeroData
   | AboutUsData
   | BlogDisplayData
-  | ProductsData;
+  | ProductsData
+  | ContactData;
 
 // Component type mapping for better type safety
 export interface ComponentTypeMap {
@@ -16,6 +18,7 @@ export interface ComponentTypeMap {
   about: AboutUsData;
   blog: BlogDisplayData;
   products: ProductsData;
+  contact: ContactData;
 }
 
 // Generic interfaces that replace the any types
@@ -81,6 +84,11 @@ export const isProductsComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"products"> =>
   component.component_type === "products";
+
+export const isContactComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"contact"> =>
+  component.component_type === "contact";
 
 export interface ApiListResponse<T> {
   data?: T[];

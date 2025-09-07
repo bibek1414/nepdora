@@ -8,67 +8,86 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingBag } from "lucide-react";
+import { Mail } from "lucide-react";
 import Image from "next/image";
 
-interface ProductsStylesDialogProps {
+interface ContactStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (style: "grid-1" | "grid-2" | "list-1") => void;
+  onStyleSelect: (style: "form-1" | "form-2" | "form-3" | "form-4") => void;
 }
 
-export const ProductsStylesDialog: React.FC<ProductsStylesDialogProps> = ({
+export const ContactStylesDialog: React.FC<ContactStylesDialogProps> = ({
   open,
   onOpenChange,
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | "list-1" | null
+    "form-1" | "form-2" | "form-3" | "form-4" | null
   >(null);
 
   const styles = [
     {
-      id: "grid-1" as const,
-      name: "Grid Style 1",
-      description: "Simple grid layout for products.",
+      id: "form-1" as const,
+      name: "Contact Form 1",
+      description: "Two-column layout with contact information sidebar.",
       preview: (
         <Image
-          src="/images/site-owners/products/product1.png"
-          alt="Product grid 1"
-          width={120}
-          height={120}
+          src="/images/site-owners/contact/contact1.png"
+          alt="Contact form 1"
+          width={240}
+          height={180}
+          className="object-cover"
         />
       ),
     },
     {
-      id: "grid-2" as const,
-      name: "Grid Style 2",
-      description: "Alternative grid layout for products.",
+      id: "form-2" as const,
+      name: "Contact Form 2",
+      description: "Gradient background with simplified form layout.",
       preview: (
         <Image
-          src="/images/site-owners/products/product2.png"
-          alt="Product grid 2"
-          width={120}
-          height={120}
+          src="/images/site-owners/contact/contact2.png"
+          alt="Contact form 2"
+          width={240}
+          height={180}
+          className="object-cover"
         />
       ),
     },
     {
-      id: "list-1" as const,
-      name: "List Style",
-      description: "List layout for products.",
+      id: "form-3" as const,
+      name: "Contact Form 3",
+      description: "Centered card design with premium styling.",
       preview: (
         <Image
-          src="/images/site-owners/products/product3.png"
-          alt="Product list"
-          width={120}
-          height={120}
+          src="/images/site-owners/contact/contact3.png"
+          alt="Contact form 3"
+          width={240}
+          height={180}
+          className="object-cover"
+        />
+      ),
+    },
+    {
+      id: "form-4" as const,
+      name: "Contact Form 4",
+      description: "Centered card design with premium styling.",
+      preview: (
+        <Image
+          src="/images/site-owners/contact/contact4.png"
+          alt="Contact form 4"
+          width={280}
+          height={180}
+          className="object-cover"
         />
       ),
     },
   ];
 
-  const handleStyleClick = (styleId: "grid-1" | "grid-2" | "list-1") => {
+  const handleStyleClick = (
+    styleId: "form-1" | "form-2" | "form-3" | "form-4"
+  ) => {
     setSelectedStyle(styleId);
     setTimeout(() => {
       onStyleSelect(styleId);
@@ -78,15 +97,12 @@ export const ProductsStylesDialog: React.FC<ProductsStylesDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-5xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <ShoppingBag className="h-5 w-5" />
-            Choose Products Section Style
+            <Mail className="h-5 w-5" />
+            Choose Contact Section Style
           </DialogTitle>
-          <DialogDescription>
-            Click on a style to add it to your page.
-          </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-1 gap-6 py-6 lg:grid-cols-2">
@@ -100,15 +116,12 @@ export const ProductsStylesDialog: React.FC<ProductsStylesDialogProps> = ({
               }`}
               onClick={() => handleStyleClick(style.id)}
             >
-              <CardContent className="p-6">
+              <CardContent className="">
                 <div className="mb-4 flex items-start justify-between">
                   <div>
                     <h3 className="text-foreground text-lg font-semibold">
                       {style.name}
                     </h3>
-                    <p className="text-muted-foreground text-sm">
-                      {style.description}
-                    </p>
                   </div>
                   {selectedStyle === style.id && (
                     <Badge variant="default" className="ml-2 animate-pulse">
@@ -117,7 +130,7 @@ export const ProductsStylesDialog: React.FC<ProductsStylesDialogProps> = ({
                   )}
                 </div>
 
-                <div className="relative flex h-48 items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-gradient-to-br from-gray-50 to-white">
+                <div className="relative flex h-64 items-center justify-center overflow-hidden">
                   {style.preview}
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white/10 to-transparent" />
                 </div>

@@ -6,10 +6,13 @@ import { Page } from "@/types/owner-site/components/page";
 import { ArrowLeft, Palette, Eye, Upload, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+
 interface TopNavigationProps {
   pages: Page[];
   currentPage: string;
   onPageChange: (pageSlug: string) => void;
+  onPageCreated: (page: Page) => void;
+  onPageDeleted: (deletedSlug: string) => void;
   siteUser: string;
 }
 
@@ -17,22 +20,10 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   pages,
   currentPage,
   onPageChange,
+  onPageCreated,
+  onPageDeleted,
   siteUser,
 }) => {
-  const handlePageCreated = (page: Page) => {
-    onPageChange(page.slug);
-    console.log("New page created:", page);
-  };
-
-  const handlePageDeleted = (deletedSlug: string) => {
-    if (currentPage === deletedSlug && pages.length > 1) {
-      const remainingPages = pages.filter(page => page.slug !== deletedSlug);
-      if (remainingPages.length > 0) {
-        onPageChange(remainingPages[0].slug);
-      }
-    }
-  };
-
   return (
     <div className="sticky top-0 z-40 border-b border-gray-200 bg-white">
       <div className="flex items-center justify-between px-2 py-3">
@@ -48,7 +39,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             </div>
 
             {/* New Page Dialog */}
-            <NewPageDialog onPageCreated={handlePageCreated} />
+            <NewPageDialog onPageCreated={onPageCreated} />
 
             {/* Existing Pages */}
             <div className="flex items-center gap-2">
@@ -69,10 +60,10 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
                   </button>
 
                   {/* Delete button */}
-                  {pages.length > 1 && currentPage !== page.slug && (
+                  {pages.length > 1 && (
                     <DeletePageDialog
                       page={page}
-                      onPageDeleted={handlePageDeleted}
+                      onPageDeleted={onPageDeleted}
                     />
                   )}
                 </div>
@@ -113,7 +104,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
           </Link>
 
           <Link
-            href={`/preview/${siteUser}`}
+            href={`/preview/${siteUser}/${currentPage}`}
             target="_blank"
             rel="noopener noreferrer"
           >

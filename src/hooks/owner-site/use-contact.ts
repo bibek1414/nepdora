@@ -5,6 +5,8 @@ import {
   PaginatedContacts,
   ContactFilters,
 } from "@/types/owner-site/contact";
+import { ContactFormSubmission } from "@/types/owner-site/components/contact";
+import { toast } from "sonner";
 
 export const useGetContacts = (filters: ContactFilters = {}) => {
   return useQuery<PaginatedContacts>({
@@ -13,13 +15,26 @@ export const useGetContacts = (filters: ContactFilters = {}) => {
   });
 };
 
-export const useCreateContact = () => {
-  const queryClient = useQueryClient();
-
+export const useSubmitContactForm = (siteId: string) => {
   return useMutation({
-    mutationFn: (data: ContactFormData) => contactAPI.createContact(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["contacts"] });
+    mutationFn: (data: ContactFormSubmission) => {
+      // Transform ContactFormSubmission to ContactFormData format
+      const contactData: ContactFormData = {
+        name: data.name,
+        email: data.email || undefined,
+        phone_number: data.phone_number || undefined,
+        message: data.message,
+      };
+
+      return contactAPI.createContact(contactData);
+    },
+    onSuccess: data => {
+      toast.success(data.message);
+      console.log("Contact form submitted successfully:", data);
+    },
+    onError: error => {
+      toast.error("Failed to submit contact form");
+      console.error("Failed to submit contact form:", error);
     },
   });
 };

@@ -1,7 +1,5 @@
-import React from "react";
+import TestimonialList from "@/components/site-owners/admin/testimonials/testimonial-list";
 
-function page() {
-  return <div>page</div>;
+export default function Page() {
+  return <TestimonialList />;
 }
-
-export default page;

@@ -5,20 +5,23 @@ import { HeroComponent } from "@/components/site-owners/hero/hero-component";
 import { AboutUsComponent } from "@/components/site-owners/about/about-component";
 import { ProductsComponent } from "@/components/site-owners/products/products-component";
 import { BlogComponent } from "@/components/site-owners/blog/blog-components";
+import { ContactComponent } from "@/components/site-owners/contact/contact-component";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
+import { ContactComponentData } from "@/types/owner-site/components/contact";
 
 interface PageComponent {
   id: string | number;
   component_id: string;
-  component_type: "hero" | "about" | "products" | "blog";
+  component_type: "hero" | "about" | "products" | "blog" | "contact";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
     | ProductsComponentData["data"]
-    | BlogComponentData["data"];
+    | BlogComponentData["data"]
+    | ContactComponentData["data"];
   order: number;
 }
 
@@ -30,7 +33,7 @@ interface PageComponentRendererProps {
   onBlogClick: (blogSlug: string, order: number) => void;
   onComponentUpdate: (
     componentId: string,
-    newData: ProductsComponentData | BlogComponentData
+    newData: ProductsComponentData | BlogComponentData | ContactComponentData
   ) => void;
 }
 
@@ -88,6 +91,19 @@ export function PageComponentRenderer({
               onComponentUpdate(componentId, newData as BlogComponentData)
             }
             onBlogClick={onBlogClick}
+          />
+        );
+      case "contact":
+        return (
+          <ContactComponent
+            key={component.id}
+            component={component as ContactComponentData}
+            isEditable={false}
+            siteId={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as ContactComponentData)
+            }
           />
         );
       default:

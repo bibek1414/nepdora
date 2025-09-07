@@ -31,8 +31,11 @@ import {
   Info,
   ShoppingBag,
   Rss,
+  Mail,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ContactComponent } from "@/components/site-owners/contact/contact-component";
+import { ContactComponentData } from "@/types/owner-site/components/contact";
 
 // Define proper types for API responses
 interface ApiResponse {
@@ -51,6 +54,7 @@ interface CanvasAreaProps {
   onAddAboutUs?: () => void;
   onAddProducts?: () => void;
   onAddBlog?: () => void;
+  onAddContact?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -64,6 +68,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddAboutUs,
   onAddProducts,
   onAddBlog,
+  onAddContact,
 }) => {
   const deleteNavbarMutation = useDeleteNavbarMutation();
   const deleteFooterMutation = useDeleteFooterMutation();
@@ -108,7 +113,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       (component: ComponentResponse) => {
         const hasValidType =
           component.component_type &&
-          ["hero", "about", "products", "blog"].includes(
+          ["hero", "about", "products", "blog", "contact"].includes(
             component.component_type
           );
         const hasValidData = component && component.data;
@@ -172,7 +177,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const hasBlog = pageComponents.some(
     component => component.component_type === "blog"
   );
-
+  const hasContact = pageComponents.some(
+    component => component.component_type === "contact"
+  );
   const handleDeleteNavbar = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (navbar?.id) {
@@ -233,6 +240,19 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             }}
             onBlogClick={(blogSlug: string, order: number) => {
               console.log("Blog clicked:", blogSlug, order);
+            }}
+          />
+        );
+      case "contact":
+        return (
+          <ContactComponent
+            key={`contact-${component.id}`}
+            component={component as ContactComponentData}
+            isEditable={true}
+            siteId={undefined}
+            pageSlug={currentPageSlug}
+            onUpdate={(componentId: string, newData: ContactComponentData) => {
+              console.log("Contact component updated:", componentId, newData);
             }}
           />
         );
@@ -339,6 +359,30 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 )}
               </div>
             )}
+          {!isLoading &&
+            hasHero &&
+            hasAbout &&
+            hasProducts &&
+            hasBlog &&
+            !hasContact &&
+            onAddContact && (
+              <div className="py-20 text-center">
+                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
+                  <Mail className="text-primary h-8 w-8" />
+                </div>
+                <h4 className="text-foreground mb-2 text-lg font-semibold">
+                  Add Contact Form
+                </h4>
+                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
+                  Let visitors easily get in touch with you through a contact
+                  form.
+                </p>
+                <Button onClick={onAddContact} className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Add Contact Section
+                </Button>
+              </div>
+            )}
 
           {/* Show about us placeholder if hero exists but no about */}
           {!isLoading && hasHero && !hasAbout && !hasProducts && !hasBlog && (
@@ -376,6 +420,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                   >
                     <Rss className="h-4 w-4" />
                     Add Blog
+                  </Button>
+                )}
+                {onAddContact && (
+                  <Button
+                    onClick={onAddContact}
+                    variant="outline"
+                    className="gap-2"
+                  >
+                    <Mail className="h-4 w-4" />
+                    Add Contact
                   </Button>
                 )}
               </div>

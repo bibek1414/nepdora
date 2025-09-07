@@ -7,6 +7,7 @@ import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
+import { ContactComponentData } from "@/types/owner-site/components/contact";
 import {
   ComponentTypeMap,
   ComponentResponse,
@@ -16,12 +17,13 @@ import {
 interface PageComponent {
   id: string | number;
   component_id: string;
-  component_type: "hero" | "about" | "products" | "blog";
+  component_type: "hero" | "about" | "products" | "blog" | "contact";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
     | ProductsComponentData["data"]
-    | BlogComponentData["data"];
+    | BlogComponentData["data"]
+    | ContactComponentData["data"];
   order: number;
 }
 
@@ -50,7 +52,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
     return components.filter(
       (component): component is PageComponent =>
         !!component.component_type &&
-        ["hero", "about", "products", "blog"].includes(
+        ["hero", "about", "products", "blog", "contact"].includes(
           component.component_type
         ) &&
         !!component.data
@@ -80,6 +82,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | AboutUsComponentData
       | ProductsComponentData
       | BlogComponentData
+      | ContactComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
       componentId,
