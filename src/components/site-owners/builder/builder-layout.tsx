@@ -43,6 +43,8 @@ import {
 } from "@/types/owner-site/components/components";
 import { ContactStylesDialog } from "@/components/site-owners/contact/contact-style-dialog";
 import { defaultContactData } from "@/types/owner-site/components/contact";
+import { TeamStylesDialog } from "@/components/site-owners/team-member/team-style-dialog";
+import { defaultTeamData } from "@/types/owner-site/components/team";
 
 interface BuilderLayoutProps {
   params: {
@@ -80,6 +82,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
   const [isContactStylesDialogOpen, setIsContactStylesDialogOpen] =
     useState(false);
+  const [isTeamStylesDialogOpen, setIsTeamStylesDialogOpen] = useState(false);
 
   // Use pageSlug from URL params as current page
   const currentPage = pageSlug;
@@ -101,6 +104,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createContactComponentMutation = useCreateComponentMutation(
     currentPage,
     "contact"
+  );
+  const createTeamComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "team"
   );
 
   // Auto-create home page if no pages exist
@@ -195,6 +202,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsBlogStylesDialogOpen(true);
     } else if (componentId === "contact-sections") {
       setIsContactStylesDialogOpen(true);
+    } else if (componentId === "team-members-sections") {
+      setIsTeamStylesDialogOpen(true);
     } else {
       console.log(`${componentId} clicked`);
     }
@@ -374,6 +383,25 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
+  const handleTeamTemplateSelect = (
+    template: "grid-1" | "grid-2" | "list-1"
+  ) => {
+    const teamData = {
+      ...defaultTeamData,
+      style: template,
+    };
+
+    // Use unified mutation with just the data
+    createTeamComponentMutation.mutate(teamData, {
+      onSuccess: () => {
+        setIsTeamStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create team component:", error);
+      },
+    });
+  };
+
   const handleAddHeroFromCanvas = () => {
     setIsHeroStylesDialogOpen(true);
   };
@@ -392,6 +420,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   const handleAddContact = () => {
     setIsContactStylesDialogOpen(true);
+  };
+
+  const handleAddTeam = () => {
+    setIsTeamStylesDialogOpen(true);
   };
 
   // Updated handleDrop with proper typing and component_type mapping
@@ -416,10 +448,15 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       case "contact-sections":
         componentType = "contact";
         break;
+      case "team-members-sections":
+        componentType = "team";
+        break;
       default:
         // If type doesn't match expected types, try to use it directly
         if (
-          ["hero", "about", "products", "blog", "contact"].includes(item.type)
+          ["hero", "about", "products", "blog", "contact", "team"].includes(
+            item.type
+          )
         ) {
           componentType = item.type as keyof ComponentTypeMap;
         } else {
@@ -501,6 +538,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onStyleSelect={handleContactTemplateSelect}
       />
 
+      <TeamStylesDialog
+        open={isTeamStylesDialogOpen}
+        onOpenChange={setIsTeamStylesDialogOpen}
+        onStyleSelect={handleTeamTemplateSelect}
+      />
+
       <TopNavigation
         pages={pagesData}
         currentPage={currentPage}
@@ -540,6 +583,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddProducts={handleAddProducts}
                   onAddBlog={handleAddBlog}
                   onAddContact={handleAddContact}
+                  onAddTeam={handleAddTeam}
                 />
               </div>
             </div>

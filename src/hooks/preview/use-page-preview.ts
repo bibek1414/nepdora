@@ -13,17 +13,21 @@ import {
   ComponentResponse,
   ApiListResponse,
 } from "@/types/owner-site/components/components";
+import { TeamComponent } from "@/components/site-owners/team-member/team-component";
+import { TeamComponentData } from "@/types/owner-site/components/team";
 
 interface PageComponent {
   id: string | number;
   component_id: string;
-  component_type: "hero" | "about" | "products" | "blog" | "contact";
+  component_type: "hero" | "about" | "products" | "blog" | "contact" | "team";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
     | ProductsComponentData["data"]
     | BlogComponentData["data"]
-    | ContactComponentData["data"];
+    | ContactComponentData["data"]
+    | TeamComponentData["data"];
+
   order: number;
 }
 
@@ -52,7 +56,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
     return components.filter(
       (component): component is PageComponent =>
         !!component.component_type &&
-        ["hero", "about", "products", "blog", "contact"].includes(
+        ["hero", "about", "products", "blog", "contact", "team"].includes(
           component.component_type
         ) &&
         !!component.data
@@ -83,6 +87,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | ProductsComponentData
       | BlogComponentData
       | ContactComponentData
+      | TeamComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
       componentId,

@@ -234,3 +234,17 @@ export const productComponentsApi = {
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "products"),
 };
+
+export const teamComponentsApi = {
+  getAll: (pageSlug: string) =>
+    componentsApi.getComponentsByType(pageSlug, "team"),
+  create: (pageSlug: string, data: ComponentTypeMap["team"]) =>
+    componentsApi.createComponent(pageSlug, { component_type: "team", data }),
+  update: (
+    pageSlug: string,
+    componentId: string,
+    data: Partial<ComponentTypeMap["team"]>
+  ) => componentsApi.updateComponent(pageSlug, componentId, { data }, "team"),
+  delete: (pageSlug: string, componentId: string) =>
+    componentsApi.deleteComponent(pageSlug, componentId, "team"),
+};

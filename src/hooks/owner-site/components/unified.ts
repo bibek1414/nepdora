@@ -155,7 +155,12 @@ export const useProductComponents = (pageSlug: string) => ({
   update: useUpdateComponentMutation(pageSlug, "products"),
   delete: useDeleteComponentMutation(pageSlug, "products"),
 });
-
+export const useTeamComponents = (pageSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "team"),
+  create: useCreateComponentMutation(pageSlug, "team"),
+  update: useUpdateComponentMutation(pageSlug, "team"),
+  delete: useDeleteComponentMutation(pageSlug, "team"),
+});
 // Backward compatibility - individual hooks that match the original API
 export const useCreateHeroMutation = (pageSlug: string) =>
   useCreateComponentMutation(pageSlug, "hero");
@@ -177,7 +182,10 @@ export const useDeleteAboutUsMutation = (pageSlug: string) =>
 
 export const useCreateBlogComponentMutation = (pageSlug: string) =>
   useCreateComponentMutation(pageSlug, "blog");
-
+export const isTeamComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"team"> =>
+  component.component_type === "team";
 export const useUpdateBlogComponentMutation = () => {
   const queryClient = useQueryClient();
 
