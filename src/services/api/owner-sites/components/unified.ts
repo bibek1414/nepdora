@@ -188,7 +188,28 @@ export const heroComponentsApi = {
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "hero"),
 };
-
+export const testimonialsComponentsApi = {
+  getAll: (pageSlug: string) =>
+    componentsApi.getComponentsByType(pageSlug, "testimonials"),
+  create: (pageSlug: string, data: ComponentTypeMap["testimonials"]) =>
+    componentsApi.createComponent(pageSlug, {
+      component_type: "testimonials",
+      data,
+    }),
+  update: (
+    pageSlug: string,
+    componentId: string,
+    data: Partial<ComponentTypeMap["testimonials"]>
+  ) =>
+    componentsApi.updateComponent(
+      pageSlug,
+      componentId,
+      { data },
+      "testimonials"
+    ),
+  delete: (pageSlug: string, componentId: string) =>
+    componentsApi.deleteComponent(pageSlug, componentId, "testimonials"),
+};
 export const aboutComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "about"),

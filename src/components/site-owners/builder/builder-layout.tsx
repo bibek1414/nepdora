@@ -45,6 +45,8 @@ import { ContactStylesDialog } from "@/components/site-owners/contact/contact-st
 import { defaultContactData } from "@/types/owner-site/components/contact";
 import { TeamStylesDialog } from "@/components/site-owners/team-member/team-style-dialog";
 import { defaultTeamData } from "@/types/owner-site/components/team";
+import { TestimonialsStylesDialog } from "@/components/site-owners/testimonials/testimonial-style-dialog";
+import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
 
 interface BuilderLayoutProps {
   params: {
@@ -83,6 +85,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isContactStylesDialogOpen, setIsContactStylesDialogOpen] =
     useState(false);
   const [isTeamStylesDialogOpen, setIsTeamStylesDialogOpen] = useState(false);
+  const [isTestimonialsStylesDialogOpen, setIsTestimonialsStylesDialogOpen] =
+    useState(false);
 
   // Use pageSlug from URL params as current page
   const currentPage = pageSlug;
@@ -108,6 +112,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createTeamComponentMutation = useCreateComponentMutation(
     currentPage,
     "team"
+  );
+  const createTestimonialsComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "testimonials"
   );
 
   // Auto-create home page if no pages exist
@@ -202,6 +210,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsBlogStylesDialogOpen(true);
     } else if (componentId === "contact-sections") {
       setIsContactStylesDialogOpen(true);
+    } else if (componentId === "testimonials-sections") {
+      setIsTestimonialsStylesDialogOpen(true);
     } else if (componentId === "team-members-sections") {
       setIsTeamStylesDialogOpen(true);
     } else {
@@ -363,7 +373,28 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+  const handleTestimonialsTemplateSelect = (
+    template: "grid-1" | "grid-2" | "list-1"
+  ) => {
+    const testimonialsData = {
+      ...defaultTestimonialsData,
+      style: template,
+    };
 
+    createTestimonialsComponentMutation.mutate(testimonialsData, {
+      onSuccess: () => {
+        setIsTestimonialsStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create testimonials component:", error);
+      },
+    });
+  };
+
+  // Add this handler with your other add handlers
+  const handleAddTestimonials = () => {
+    setIsTestimonialsStylesDialogOpen(true);
+  };
   const handleBlogTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1"
   ) => {
@@ -451,12 +482,21 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       case "team-members-sections":
         componentType = "team";
         break;
+      case "testimonials-sections":
+        componentType = "testimonials";
+        break;
       default:
         // If type doesn't match expected types, try to use it directly
         if (
-          ["hero", "about", "products", "blog", "contact", "team"].includes(
-            item.type
-          )
+          [
+            "hero",
+            "about",
+            "products",
+            "blog",
+            "contact",
+            "team",
+            "testimonials",
+          ].includes(item.type)
         ) {
           componentType = item.type as keyof ComponentTypeMap;
         } else {
@@ -543,6 +583,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsTeamStylesDialogOpen}
         onStyleSelect={handleTeamTemplateSelect}
       />
+      <TestimonialsStylesDialog
+        open={isTestimonialsStylesDialogOpen}
+        onOpenChange={setIsTestimonialsStylesDialogOpen}
+        onStyleSelect={handleTestimonialsTemplateSelect}
+      />
 
       <TopNavigation
         pages={pagesData}
@@ -584,6 +629,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddBlog={handleAddBlog}
                   onAddContact={handleAddContact}
                   onAddTeam={handleAddTeam}
+                  onAddTestimonials={handleAddTestimonials}
                 />
               </div>
             </div>
