@@ -161,7 +161,78 @@ export const useTeamComponents = (pageSlug: string) => ({
   update: useUpdateComponentMutation(pageSlug, "team"),
   delete: useDeleteComponentMutation(pageSlug, "team"),
 });
-// Backward compatibility - individual hooks that match the original API
+export const useTestimonialsComponents = (pageSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "testimonials"),
+  create: useCreateComponentMutation(pageSlug, "testimonials"),
+  update: useUpdateComponentMutation(pageSlug, "testimonials"),
+  delete: useDeleteComponentMutation(pageSlug, "testimonials"),
+});
+export const useCreateTestimonialsComponentMutation = (pageSlug: string) =>
+  useCreateComponentMutation(pageSlug, "testimonials");
+
+export const useUpdateTestimonialsComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+      data,
+    }: {
+      pageSlug: string;
+      componentId: string;
+      data: Partial<ComponentTypeMap["testimonials"]>;
+    }) =>
+      componentsApi.updateComponent(
+        pageSlug,
+        componentId,
+        { data },
+        "testimonials"
+      ),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Testimonials section updated successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update testimonials section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeleteTestimonialsComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+    }: {
+      pageSlug: string;
+      componentId: string;
+    }) => componentsApi.deleteComponent(pageSlug, componentId, "testimonials"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Testimonials section removed successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to remove testimonials section";
+      toast.error(errorMessage);
+    },
+  });
+};
 export const useCreateHeroMutation = (pageSlug: string) =>
   useCreateComponentMutation(pageSlug, "hero");
 
@@ -182,10 +253,7 @@ export const useDeleteAboutUsMutation = (pageSlug: string) =>
 
 export const useCreateBlogComponentMutation = (pageSlug: string) =>
   useCreateComponentMutation(pageSlug, "blog");
-export const isTeamComponent = (
-  component: ComponentResponse
-): component is ComponentResponse<"team"> =>
-  component.component_type === "team";
+
 export const useUpdateBlogComponentMutation = () => {
   const queryClient = useQueryClient();
 

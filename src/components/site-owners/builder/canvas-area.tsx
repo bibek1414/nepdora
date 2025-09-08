@@ -9,6 +9,9 @@ import { AboutUsComponent } from "@/components/site-owners/about/about-component
 import { ProductsComponent } from "@/components/site-owners/products/products-component";
 import { BlogComponent } from "@/components/site-owners/blog/blog-components";
 import { TeamComponent } from "@/components/site-owners/team-member/team-component";
+import { ContactComponent } from "@/components/site-owners/contact/contact-component";
+import { TestimonialsComponent } from "@/components/site-owners/testimonials/testimonial-component";
+import { PlaceholderManager } from "@/components/ui/content-placeholder";
 import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
@@ -16,6 +19,8 @@ import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { TeamComponentData } from "@/types/owner-site/components/team";
+import { ContactComponentData } from "@/types/owner-site/components/contact";
+import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
 import { useDeleteNavbarMutation } from "@/hooks/owner-site/components/use-navbar";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { usePageComponentsQuery } from "@/hooks/owner-site/components/unified";
@@ -23,22 +28,8 @@ import {
   ComponentResponse,
   ComponentTypeMap,
 } from "@/types/owner-site/components/components";
-import {
-  Plus,
-  Navigation,
-  Edit,
-  X,
-  FileText,
-  Sparkles,
-  Info,
-  ShoppingBag,
-  Rss,
-  Mail,
-  Users,
-} from "lucide-react";
+import { Plus, Navigation, Edit, X, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ContactComponent } from "@/components/site-owners/contact/contact-component";
-import { ContactComponentData } from "@/types/owner-site/components/contact";
 
 // Define proper types for API responses
 interface ApiResponse {
@@ -59,6 +50,7 @@ interface CanvasAreaProps {
   onAddBlog?: () => void;
   onAddContact?: () => void;
   onAddTeam?: () => void;
+  onAddTestimonials?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -74,6 +66,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddBlog,
   onAddContact,
   onAddTeam,
+  onAddTestimonials,
 }) => {
   const deleteNavbarMutation = useDeleteNavbarMutation();
   const deleteFooterMutation = useDeleteFooterMutation();
@@ -118,9 +111,15 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       (component: ComponentResponse) => {
         const hasValidType =
           component.component_type &&
-          ["hero", "about", "products", "blog", "contact", "team"].includes(
-            component.component_type
-          );
+          [
+            "hero",
+            "about",
+            "products",
+            "blog",
+            "contact",
+            "team",
+            "testimonials",
+          ].includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
 
@@ -188,6 +187,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const hasTeam = pageComponents.some(
     component => component.component_type === "team"
   );
+  const hasTestimonials = pageComponents.some(
+    component => component.component_type === "testimonials"
+  );
 
   const handleDeleteNavbar = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -228,11 +230,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             pageSlug={currentPageSlug}
             onUpdate={(componentId: string, newData: ProductsComponentData) => {
               console.log("Products component updated:", componentId, newData);
-              // Handle component update here
             }}
             onProductClick={(productId: number, order: number) => {
               console.log("Product clicked:", productId, order);
-              // Handle product click in builder mode
             }}
           />
         );
@@ -278,6 +278,29 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             }}
             onMemberClick={(memberId: number, order: number) => {
               console.log("Team member clicked:", memberId, order);
+            }}
+          />
+        );
+      case "testimonials":
+        return (
+          <TestimonialsComponent
+            key={`testimonials-${component.id}`}
+            component={component as TestimonialsComponentData}
+            isEditable={true}
+            siteId={undefined}
+            pageSlug={currentPageSlug}
+            onUpdate={(
+              componentId: string,
+              newData: TestimonialsComponentData
+            ) => {
+              console.log(
+                "Testimonials component updated:",
+                componentId,
+                newData
+              );
+            }}
+            onTestimonialClick={(testimonialId: number, order: number) => {
+              console.log("Testimonial clicked:", testimonialId, order);
             }}
           />
         );
@@ -359,257 +382,29 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
         {/* Content area for placeholders and interactions */}
         <div className="p-8">
-          {/* Show hero placeholder if no hero components and navbar exists */}
-          {!isLoading &&
-            !hasHero &&
-            navbar &&
-            pageComponents.length === 0 &&
-            droppedComponents.length === 0 && (
-              <div className="flex h-full flex-col items-center justify-center py-20 text-center">
-                <div className="bg-primary/10 mb-4 rounded-full p-6">
-                  <Sparkles className="text-primary h-12 w-12" />
-                </div>
-                <h3 className="text-foreground mb-2 text-xl font-semibold">
-                  Add Your First Hero Section
-                </h3>
-                <p className="text-muted-foreground mb-6 max-w-md">
-                  Create an engaging hero section to welcome your visitors and
-                  showcase what you offer.
-                </p>
-                {onAddHero && (
-                  <Button onClick={onAddHero} className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    Add Hero Section
-                  </Button>
-                )}
-              </div>
-            )}
+          {/* Placeholder Manager */}
+          <PlaceholderManager
+            isLoading={isLoading}
+            navbar={navbar}
+            hasHero={hasHero}
+            hasAbout={hasAbout}
+            hasTeam={hasTeam}
+            hasTestimonials={hasTestimonials}
+            hasProducts={hasProducts}
+            hasBlog={hasBlog}
+            hasContact={hasContact}
+            pageComponentsLength={pageComponents.length}
+            droppedComponentsLength={droppedComponents.length}
+            onAddHero={onAddHero}
+            onAddAboutUs={onAddAboutUs}
+            onAddTeam={onAddTeam}
+            onAddTestimonials={onAddTestimonials}
+            onAddProducts={onAddProducts}
+            onAddBlog={onAddBlog}
+            onAddContact={onAddContact}
+          />
 
-          {/* Show about us placeholder if hero exists but no about */}
-          {!isLoading &&
-            hasHero &&
-            !hasAbout &&
-            !hasProducts &&
-            !hasBlog &&
-            !hasTeam && (
-              <div className="py-20 text-center">
-                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-                  <Info className="text-primary h-8 w-8" />
-                </div>
-                <h4 className="text-foreground mb-2 text-lg font-semibold">
-                  Tell Your Story
-                </h4>
-                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
-                  Add an &quot;About Us&quot; section to introduce your company
-                  to visitors.
-                </p>
-                <div className="flex justify-center gap-2">
-                  <Button onClick={onAddAboutUs} className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    Add About Us
-                  </Button>
-                  {onAddProducts && (
-                    <Button
-                      onClick={onAddProducts}
-                      variant="outline"
-                      className="gap-2"
-                    >
-                      <ShoppingBag className="h-4 w-4" />
-                      Add Products
-                    </Button>
-                  )}
-                  {onAddTeam && (
-                    <Button
-                      onClick={onAddTeam}
-                      variant="outline"
-                      className="gap-2"
-                    >
-                      <Users className="h-4 w-4" />
-                      Add Team
-                    </Button>
-                  )}
-                  {onAddBlog && (
-                    <Button
-                      onClick={onAddBlog}
-                      variant="outline"
-                      className="gap-2"
-                    >
-                      <Rss className="h-4 w-4" />
-                      Add Blog
-                    </Button>
-                  )}
-                  {onAddContact && (
-                    <Button
-                      onClick={onAddContact}
-                      variant="outline"
-                      className="gap-2"
-                    >
-                      <Mail className="h-4 w-4" />
-                      Add Contact
-                    </Button>
-                  )}
-                </div>
-              </div>
-            )}
-
-          {/* Show team placeholder after about us */}
-          {!isLoading &&
-            hasHero &&
-            hasAbout &&
-            !hasTeam &&
-            !hasProducts &&
-            !hasBlog &&
-            onAddTeam && (
-              <div className="py-20 text-center">
-                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-                  <Users className="text-primary h-8 w-8" />
-                </div>
-                <h4 className="text-foreground mb-2 text-lg font-semibold">
-                  Showcase Your Team
-                </h4>
-                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
-                  Introduce your team members to build trust and connect with
-                  your audience.
-                </p>
-                <div className="flex justify-center gap-2">
-                  <Button onClick={onAddTeam} className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    Add Team Section
-                  </Button>
-                  {onAddProducts && (
-                    <Button
-                      onClick={onAddProducts}
-                      variant="outline"
-                      className="gap-2"
-                    >
-                      <ShoppingBag className="h-4 w-4" />
-                      Add Products
-                    </Button>
-                  )}
-                  {onAddBlog && (
-                    <Button
-                      onClick={onAddBlog}
-                      variant="outline"
-                      className="gap-2"
-                    >
-                      <Rss className="h-4 w-4" />
-                      Add Blog
-                    </Button>
-                  )}
-                </div>
-              </div>
-            )}
-
-          {/* Show products placeholder after team */}
-          {!isLoading &&
-            hasHero &&
-            hasAbout &&
-            hasTeam &&
-            !hasProducts &&
-            !hasBlog &&
-            onAddProducts && (
-              <div className="py-20 text-center">
-                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-                  <ShoppingBag className="text-primary h-8 w-8" />
-                </div>
-                <h4 className="text-foreground mb-2 text-lg font-semibold">
-                  Showcase Your Products
-                </h4>
-                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
-                  Display your products in an attractive grid or list layout to
-                  attract customers.
-                </p>
-                <div className="flex justify-center gap-2">
-                  <Button onClick={onAddProducts} className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    Add Products Section
-                  </Button>
-                  {onAddBlog && (
-                    <Button
-                      onClick={onAddBlog}
-                      variant="outline"
-                      className="gap-2"
-                    >
-                      <Rss className="h-4 w-4" />
-                      Add Blog
-                    </Button>
-                  )}
-                </div>
-              </div>
-            )}
-
-          {/* Show blog placeholder */}
-          {!isLoading &&
-            hasHero &&
-            hasAbout &&
-            hasTeam &&
-            hasProducts &&
-            !hasBlog &&
-            onAddBlog && (
-              <div className="py-20 text-center">
-                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-                  <Rss className="text-primary h-8 w-8" />
-                </div>
-                <h4 className="text-foreground mb-2 text-lg font-semibold">
-                  Share Your Stories
-                </h4>
-                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
-                  Add a blog section to keep your audience informed and engaged.
-                </p>
-                <Button onClick={onAddBlog} className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Blog Section
-                </Button>
-              </div>
-            )}
-
-          {/* Show contact placeholder */}
-          {!isLoading &&
-            hasHero &&
-            hasAbout &&
-            hasTeam &&
-            hasProducts &&
-            hasBlog &&
-            !hasContact &&
-            onAddContact && (
-              <div className="py-20 text-center">
-                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-                  <Mail className="text-primary h-8 w-8" />
-                </div>
-                <h4 className="text-foreground mb-2 text-lg font-semibold">
-                  Add Contact Form
-                </h4>
-                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
-                  Let visitors easily get in touch with you through a contact
-                  form.
-                </p>
-                <Button onClick={onAddContact} className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Contact Section
-                </Button>
-              </div>
-            )}
-
-          {/* Show general start building message if no navbar */}
-          {!isLoading &&
-            !navbar &&
-            pageComponents.length === 0 &&
-            droppedComponents.length === 0 && (
-              <div className="flex h-full flex-col items-center justify-center py-20 text-center">
-                <div className="bg-primary/10 mb-4 rounded-full p-6">
-                  <Sparkles className="text-primary h-12 w-12" />
-                </div>
-                <h3 className="text-foreground mb-2 text-xl font-semibold">
-                  Start Building Your Site
-                </h3>
-                <p className="text-muted-foreground mb-6 max-w-md">
-                  Add a navbar first, then create a compelling hero section to
-                  capture your visitors&apos; attention.
-                </p>
-              </div>
-            )}
-
-          {/* Other Components */}
+          {/* Other Components (existing dropped components) */}
           {droppedComponents.map(component => (
             <div
               key={component.id}
