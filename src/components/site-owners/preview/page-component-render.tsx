@@ -11,17 +11,20 @@ import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
+import { TeamComponent } from "@/components/site-owners/team-member/team-component";
+import { TeamComponentData } from "@/types/owner-site/components/team";
 
 interface PageComponent {
   id: string | number;
   component_id: string;
-  component_type: "hero" | "about" | "products" | "blog" | "contact";
+  component_type: "hero" | "about" | "products" | "blog" | "contact" | "team";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
     | ProductsComponentData["data"]
     | BlogComponentData["data"]
-    | ContactComponentData["data"];
+    | ContactComponentData["data"]
+    | TeamComponentData["data"];
   order: number;
 }
 
@@ -33,7 +36,11 @@ interface PageComponentRendererProps {
   onBlogClick: (blogSlug: string, order: number) => void;
   onComponentUpdate: (
     componentId: string,
-    newData: ProductsComponentData | BlogComponentData | ContactComponentData
+    newData:
+      | ProductsComponentData
+      | BlogComponentData
+      | ContactComponentData
+      | TeamComponentData
   ) => void;
 }
 
@@ -103,6 +110,19 @@ export function PageComponentRenderer({
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as ContactComponentData)
+            }
+          />
+        );
+      case "team":
+        return (
+          <TeamComponent
+            key={component.id}
+            component={component as TeamComponentData}
+            isEditable={false}
+            siteId={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as TeamComponentData)
             }
           />
         );

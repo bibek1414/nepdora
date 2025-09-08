@@ -3,6 +3,7 @@ import { AboutUsData } from "./about";
 import { BlogDisplayData } from "./blog";
 import { ProductsData } from "./products";
 import { ContactData } from "./contact";
+import { TeamData } from "./team";
 
 // Union type for all component data types
 export type ComponentData =
@@ -10,6 +11,7 @@ export type ComponentData =
   | AboutUsData
   | BlogDisplayData
   | ProductsData
+  | TeamData
   | ContactData;
 
 // Component type mapping for better type safety
@@ -19,6 +21,7 @@ export interface ComponentTypeMap {
   blog: BlogDisplayData;
   products: ProductsData;
   contact: ContactData;
+  team: TeamData;
 }
 
 // Generic interfaces that replace the any types

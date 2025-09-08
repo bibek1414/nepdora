@@ -8,12 +8,14 @@ import { HeroComponent } from "@/components/site-owners/hero/hero-component";
 import { AboutUsComponent } from "@/components/site-owners/about/about-component";
 import { ProductsComponent } from "@/components/site-owners/products/products-component";
 import { BlogComponent } from "@/components/site-owners/blog/blog-components";
+import { TeamComponent } from "@/components/site-owners/team-member/team-component";
 import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
+import { TeamComponentData } from "@/types/owner-site/components/team";
 import { useDeleteNavbarMutation } from "@/hooks/owner-site/components/use-navbar";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { usePageComponentsQuery } from "@/hooks/owner-site/components/unified";
@@ -32,6 +34,7 @@ import {
   ShoppingBag,
   Rss,
   Mail,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ContactComponent } from "@/components/site-owners/contact/contact-component";
@@ -55,6 +58,7 @@ interface CanvasAreaProps {
   onAddProducts?: () => void;
   onAddBlog?: () => void;
   onAddContact?: () => void;
+  onAddTeam?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -69,6 +73,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddProducts,
   onAddBlog,
   onAddContact,
+  onAddTeam,
 }) => {
   const deleteNavbarMutation = useDeleteNavbarMutation();
   const deleteFooterMutation = useDeleteFooterMutation();
@@ -113,7 +118,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       (component: ComponentResponse) => {
         const hasValidType =
           component.component_type &&
-          ["hero", "about", "products", "blog", "contact"].includes(
+          ["hero", "about", "products", "blog", "contact", "team"].includes(
             component.component_type
           );
         const hasValidData = component && component.data;
@@ -180,6 +185,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const hasContact = pageComponents.some(
     component => component.component_type === "contact"
   );
+  const hasTeam = pageComponents.some(
+    component => component.component_type === "team"
+  );
+
   const handleDeleteNavbar = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (navbar?.id) {
@@ -253,6 +262,22 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             pageSlug={currentPageSlug}
             onUpdate={(componentId: string, newData: ContactComponentData) => {
               console.log("Contact component updated:", componentId, newData);
+            }}
+          />
+        );
+      case "team":
+        return (
+          <TeamComponent
+            key={`team-${component.id}`}
+            component={component as TeamComponentData}
+            isEditable={true}
+            siteId={undefined}
+            pageSlug={currentPageSlug}
+            onUpdate={(componentId: string, newData: TeamComponentData) => {
+              console.log("Team component updated:", componentId, newData);
+            }}
+            onMemberClick={(memberId: number, order: number) => {
+              console.log("Team member clicked:", memberId, order);
             }}
           />
         );
@@ -359,87 +384,127 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 )}
               </div>
             )}
+
+          {/* Show about us placeholder if hero exists but no about */}
           {!isLoading &&
             hasHero &&
-            hasAbout &&
-            hasProducts &&
-            hasBlog &&
-            !hasContact &&
-            onAddContact && (
+            !hasAbout &&
+            !hasProducts &&
+            !hasBlog &&
+            !hasTeam && (
               <div className="py-20 text-center">
                 <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-                  <Mail className="text-primary h-8 w-8" />
+                  <Info className="text-primary h-8 w-8" />
                 </div>
                 <h4 className="text-foreground mb-2 text-lg font-semibold">
-                  Add Contact Form
+                  Tell Your Story
                 </h4>
                 <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
-                  Let visitors easily get in touch with you through a contact
-                  form.
+                  Add an &quot;About Us&quot; section to introduce your company
+                  to visitors.
                 </p>
-                <Button onClick={onAddContact} className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Contact Section
-                </Button>
+                <div className="flex justify-center gap-2">
+                  <Button onClick={onAddAboutUs} className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    Add About Us
+                  </Button>
+                  {onAddProducts && (
+                    <Button
+                      onClick={onAddProducts}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <ShoppingBag className="h-4 w-4" />
+                      Add Products
+                    </Button>
+                  )}
+                  {onAddTeam && (
+                    <Button
+                      onClick={onAddTeam}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Users className="h-4 w-4" />
+                      Add Team
+                    </Button>
+                  )}
+                  {onAddBlog && (
+                    <Button
+                      onClick={onAddBlog}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Rss className="h-4 w-4" />
+                      Add Blog
+                    </Button>
+                  )}
+                  {onAddContact && (
+                    <Button
+                      onClick={onAddContact}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Mail className="h-4 w-4" />
+                      Add Contact
+                    </Button>
+                  )}
+                </div>
               </div>
             )}
 
-          {/* Show about us placeholder if hero exists but no about */}
-          {!isLoading && hasHero && !hasAbout && !hasProducts && !hasBlog && (
-            <div className="py-20 text-center">
-              <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-                <Info className="text-primary h-8 w-8" />
-              </div>
-              <h4 className="text-foreground mb-2 text-lg font-semibold">
-                Tell Your Story
-              </h4>
-              <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
-                Add an &quot;About Us&quot; section to introduce your company to
-                visitors.
-              </p>
-              <div className="flex justify-center gap-2">
-                <Button onClick={onAddAboutUs} className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add About Us
-                </Button>
-                {onAddProducts && (
-                  <Button
-                    onClick={onAddProducts}
-                    variant="outline"
-                    className="gap-2"
-                  >
-                    <ShoppingBag className="h-4 w-4" />
-                    Add Products
-                  </Button>
-                )}
-                {onAddBlog && (
-                  <Button
-                    onClick={onAddBlog}
-                    variant="outline"
-                    className="gap-2"
-                  >
-                    <Rss className="h-4 w-4" />
-                    Add Blog
-                  </Button>
-                )}
-                {onAddContact && (
-                  <Button
-                    onClick={onAddContact}
-                    variant="outline"
-                    className="gap-2"
-                  >
-                    <Mail className="h-4 w-4" />
-                    Add Contact
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Show products placeholder if hero and about exist but no products or blog */}
+          {/* Show team placeholder after about us */}
           {!isLoading &&
             hasHero &&
             hasAbout &&
+            !hasTeam &&
+            !hasProducts &&
+            !hasBlog &&
+            onAddTeam && (
+              <div className="py-20 text-center">
+                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
+                  <Users className="text-primary h-8 w-8" />
+                </div>
+                <h4 className="text-foreground mb-2 text-lg font-semibold">
+                  Showcase Your Team
+                </h4>
+                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
+                  Introduce your team members to build trust and connect with
+                  your audience.
+                </p>
+                <div className="flex justify-center gap-2">
+                  <Button onClick={onAddTeam} className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    Add Team Section
+                  </Button>
+                  {onAddProducts && (
+                    <Button
+                      onClick={onAddProducts}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <ShoppingBag className="h-4 w-4" />
+                      Add Products
+                    </Button>
+                  )}
+                  {onAddBlog && (
+                    <Button
+                      onClick={onAddBlog}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Rss className="h-4 w-4" />
+                      Add Blog
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+
+          {/* Show products placeholder after team */}
+          {!isLoading &&
+            hasHero &&
+            hasAbout &&
+            hasTeam &&
             !hasProducts &&
             !hasBlog &&
             onAddProducts && (
@@ -473,10 +538,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
               </div>
             )}
 
-          {/* Show blog placeholder if hero, about, products exist but no blog */}
+          {/* Show blog placeholder */}
           {!isLoading &&
             hasHero &&
             hasAbout &&
+            hasTeam &&
             hasProducts &&
             !hasBlog &&
             onAddBlog && (
@@ -493,6 +559,33 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 <Button onClick={onAddBlog} className="gap-2">
                   <Plus className="h-4 w-4" />
                   Add Blog Section
+                </Button>
+              </div>
+            )}
+
+          {/* Show contact placeholder */}
+          {!isLoading &&
+            hasHero &&
+            hasAbout &&
+            hasTeam &&
+            hasProducts &&
+            hasBlog &&
+            !hasContact &&
+            onAddContact && (
+              <div className="py-20 text-center">
+                <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
+                  <Mail className="text-primary h-8 w-8" />
+                </div>
+                <h4 className="text-foreground mb-2 text-lg font-semibold">
+                  Add Contact Form
+                </h4>
+                <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
+                  Let visitors easily get in touch with you through a contact
+                  form.
+                </p>
+                <Button onClick={onAddContact} className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Add Contact Section
                 </Button>
               </div>
             )}

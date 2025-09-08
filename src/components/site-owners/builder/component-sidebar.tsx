@@ -86,6 +86,12 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       keywords: ["form", "email", "phone"],
     },
     {
+      id: "team-members-sections",
+      label: "Team Members",
+      icon: Crown,
+      keywords: ["employees", "staff", "team"],
+    },
+    {
       id: "testimonials-sections",
       label: "Testimonials",
       icon: Quote,
