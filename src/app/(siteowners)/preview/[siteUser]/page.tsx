@@ -68,19 +68,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
               Open Builder
             </Button>
           </div>
-        ) : (
-          <div className="space-y-12">
-            <div className="rounded-lg bg-gray-50 p-8 text-center">
-              <h2 className="mb-4 text-3xl font-bold">Home Page</h2>
-              <p className="text-muted-foreground mb-6 text-lg">
-                You&apos;re viewing the home page preview.
-              </p>
-              <Button onClick={handleBackToBuilder} size="lg">
-                Continue Building
-              </Button>
-            </div>
-          </div>
-        )}
+        ) : null}
       </div>
     </>
   );

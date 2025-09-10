@@ -13,17 +13,30 @@ import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
 import { TeamComponent } from "@/components/site-owners/team-member/team-component";
 import { TeamComponentData } from "@/types/owner-site/components/team";
-
+import { FAQComponentData } from "@/types/owner-site/components/faq";
+import { FAQComponent } from "@/components/site-owners/faq/faq-component";
+import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
+import { TestimonialsComponent } from "@/components/site-owners/testimonials/testimonial-component";
 interface PageComponent {
   id: string | number;
   component_id: string;
-  component_type: "hero" | "about" | "products" | "blog" | "contact" | "team";
+  component_type:
+    | "hero"
+    | "about"
+    | "products"
+    | "blog"
+    | "contact"
+    | "team"
+    | "faq"
+    | "testimonials";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
     | ProductsComponentData["data"]
     | BlogComponentData["data"]
     | ContactComponentData["data"]
+    | FAQComponentData["data"]
+    | TestimonialsComponentData["data"]
     | TeamComponentData["data"];
   order: number;
 }
@@ -41,6 +54,10 @@ interface PageComponentRendererProps {
       | BlogComponentData
       | ContactComponentData
       | TeamComponentData
+      | FAQComponentData
+      | HeroComponentData
+      | AboutUsComponentData
+      | TestimonialsComponentData
   ) => void;
 }
 
@@ -123,6 +140,35 @@ export function PageComponentRenderer({
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as TeamComponentData)
+            }
+          />
+        );
+      case "faq":
+        return (
+          <FAQComponent
+            key={component.id}
+            component={component as FAQComponentData}
+            isEditable={false}
+            siteId={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as FAQComponentData)
+            }
+          />
+        );
+      case "testimonials":
+        return (
+          <TestimonialsComponent
+            key={component.id}
+            component={component as TestimonialsComponentData}
+            isEditable={false}
+            siteId={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(
+                componentId,
+                newData as TestimonialsComponentData
+              )
             }
           />
         );

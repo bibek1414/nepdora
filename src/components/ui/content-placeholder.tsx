@@ -9,6 +9,7 @@ import {
   ShoppingBag,
   Rss,
   Mail,
+  CircleHelp,
 } from "lucide-react";
 
 interface PlaceholderAction {
@@ -80,6 +81,7 @@ interface PlaceholderManagerProps {
   hasProducts: boolean;
   hasBlog: boolean;
   hasContact: boolean;
+  hasFAQ: boolean; // NEW
   pageComponentsLength: number;
   droppedComponentsLength: number;
   onAddHero?: () => void;
@@ -89,6 +91,7 @@ interface PlaceholderManagerProps {
   onAddProducts?: () => void;
   onAddBlog?: () => void;
   onAddContact?: () => void;
+  onAddFAQ?: () => void; // NEW
 }
 
 export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
@@ -101,6 +104,7 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
   hasProducts,
   hasBlog,
   hasContact,
+  hasFAQ, // NEW
   pageComponentsLength,
   droppedComponentsLength,
   onAddHero,
@@ -110,6 +114,7 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
   onAddProducts,
   onAddBlog,
   onAddContact,
+  onAddFAQ, // NEW
 }) => {
   // Don't show placeholders while loading
   if (isLoading) return null;
@@ -160,7 +165,6 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         onClick: onAddTeam,
       });
     }
-
     if (onAddTestimonials) {
       secondaryActions.push({
         label: "Add Testimonials",
@@ -168,7 +172,6 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         onClick: onAddTestimonials,
       });
     }
-
     if (onAddProducts) {
       secondaryActions.push({
         label: "Add Products",
@@ -176,7 +179,6 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         onClick: onAddProducts,
       });
     }
-
     if (onAddBlog) {
       secondaryActions.push({
         label: "Add Blog",
@@ -184,12 +186,18 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         onClick: onAddBlog,
       });
     }
-
     if (onAddContact) {
       secondaryActions.push({
         label: "Add Contact",
         icon: Mail,
         onClick: onAddContact,
+      });
+    }
+    if (onAddFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
       });
     }
 
@@ -200,11 +208,7 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         description="Add content sections to showcase your company and build trust with visitors."
         primaryAction={
           onAddAboutUs
-            ? {
-                label: "Add About Us",
-                icon: Plus,
-                onClick: onAddAboutUs,
-              }
+            ? { label: "Add About Us", icon: Plus, onClick: onAddAboutUs }
             : undefined
         }
         secondaryActions={secondaryActions}
@@ -231,7 +235,6 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         onClick: onAddTestimonials,
       });
     }
-
     if (onAddProducts) {
       secondaryActions.push({
         label: "Add Products",
@@ -239,12 +242,18 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         onClick: onAddProducts,
       });
     }
-
     if (onAddBlog) {
       secondaryActions.push({
         label: "Add Blog",
         icon: Rss,
         onClick: onAddBlog,
+      });
+    }
+    if (onAddFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
       });
     }
 
@@ -282,12 +291,18 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         onClick: onAddProducts,
       });
     }
-
     if (onAddBlog) {
       secondaryActions.push({
         label: "Add Blog",
         icon: Rss,
         onClick: onAddBlog,
+      });
+    }
+    if (onAddFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
       });
     }
 
@@ -325,12 +340,18 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         onClick: onAddTeam,
       });
     }
-
     if (onAddProducts) {
       secondaryActions.push({
         label: "Add Products",
         icon: ShoppingBag,
         onClick: onAddProducts,
+      });
+    }
+    if (onAddFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
       });
     }
 
@@ -360,12 +381,18 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     onAddProducts
   ) {
     const secondaryActions: PlaceholderAction[] = [];
-
     if (onAddBlog) {
       secondaryActions.push({
         label: "Add Blog",
         icon: Rss,
         onClick: onAddBlog,
+      });
+    }
+    if (onAddFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
       });
     }
 
@@ -395,12 +422,18 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     onAddProducts
   ) {
     const secondaryActions: PlaceholderAction[] = [];
-
     if (onAddBlog) {
       secondaryActions.push({
         label: "Add Blog",
         icon: Rss,
         onClick: onAddBlog,
+      });
+    }
+    if (onAddFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
       });
     }
 
@@ -429,6 +462,15 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     !hasBlog &&
     onAddBlog
   ) {
+    const secondaryActions: PlaceholderAction[] = [];
+    if (onAddFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
+      });
+    }
+
     return (
       <ContentPlaceholder
         icon={Rss}
@@ -439,6 +481,7 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           icon: Plus,
           onClick: onAddBlog,
         }}
+        secondaryActions={secondaryActions}
       />
     );
   }
@@ -453,6 +496,15 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     !hasBlog &&
     onAddBlog
   ) {
+    const secondaryActions: PlaceholderAction[] = [];
+    if (onAddFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
+      });
+    }
+
     return (
       <ContentPlaceholder
         icon={Rss}
@@ -463,11 +515,34 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           icon: Plus,
           onClick: onAddBlog,
         }}
+        secondaryActions={secondaryActions}
       />
     );
   }
 
-  // 10. Show contact placeholder after all sections
+  // 10. Dedicated FAQ placeholder (when core sections exist but FAQ is missing)
+  if (
+    hasHero &&
+    hasAbout &&
+    (hasProducts || hasBlog || hasTestimonials || hasTeam) &&
+    !hasFAQ &&
+    onAddFAQ
+  ) {
+    return (
+      <ContentPlaceholder
+        icon={CircleHelp}
+        title="Answer Common Questions"
+        description="Help visitors find quick answers and reduce support by adding an FAQ section."
+        primaryAction={{
+          label: "Add FAQ Section",
+          icon: Plus,
+          onClick: onAddFAQ,
+        }}
+      />
+    );
+  }
+
+  // 11. Show contact placeholder after all sections
   if (
     hasHero &&
     hasAbout &&
@@ -478,6 +553,15 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     !hasContact &&
     onAddContact
   ) {
+    const secondaryActions: PlaceholderAction[] = [];
+    if (onAddFAQ && !hasFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
+      });
+    }
+
     return (
       <ContentPlaceholder
         icon={Mail}
@@ -488,11 +572,12 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           icon: Plus,
           onClick: onAddContact,
         }}
+        secondaryActions={secondaryActions}
       />
     );
   }
 
-  // 11. Alternative contact placeholder - without team but with other sections
+  // 12. Alternative contact placeholder - without team but with other sections
   if (
     hasHero &&
     hasAbout &&
@@ -503,6 +588,15 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     !hasContact &&
     onAddContact
   ) {
+    const secondaryActions: PlaceholderAction[] = [];
+    if (onAddFAQ && !hasFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
+      });
+    }
+
     return (
       <ContentPlaceholder
         icon={Mail}
@@ -513,11 +607,12 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           icon: Plus,
           onClick: onAddContact,
         }}
+        secondaryActions={secondaryActions}
       />
     );
   }
 
-  // 12. Show general start building message if no navbar
+  // 13. Show general start building message if no navbar
   if (!navbar && pageComponentsLength === 0 && droppedComponentsLength === 0) {
     return (
       <div className="flex h-full flex-col items-center justify-center py-20 text-center">

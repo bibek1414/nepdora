@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useDrop } from "react-dnd";
 import { NavbarComponent } from "@/components/site-owners/navbar/navbar-component";
 import { Footer as FooterComponent } from "@/components/site-owners/footer/footer";
 import { HeroComponent } from "@/components/site-owners/hero/hero-component";
@@ -22,14 +21,12 @@ import { TeamComponentData } from "@/types/owner-site/components/team";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
 import { useDeleteNavbarMutation } from "@/hooks/owner-site/components/use-navbar";
-import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { usePageComponentsQuery } from "@/hooks/owner-site/components/unified";
-import {
-  ComponentResponse,
-  ComponentTypeMap,
-} from "@/types/owner-site/components/components";
+import { ComponentResponse } from "@/types/owner-site/components/components";
 import { Plus, Navigation, Edit, X, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FAQComponent } from "@/components/site-owners/faq/faq-component";
+import { FAQComponentData } from "@/types/owner-site/components/faq";
 
 // Define proper types for API responses
 interface ApiResponse {
@@ -51,6 +48,7 @@ interface CanvasAreaProps {
   onAddContact?: () => void;
   onAddTeam?: () => void;
   onAddTestimonials?: () => void;
+  onAddFAQ?: () => void; // kept in the interface to preserve API
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -67,9 +65,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddContact,
   onAddTeam,
   onAddTestimonials,
+  onAddFAQ,
 }) => {
   const deleteNavbarMutation = useDeleteNavbarMutation();
-  const deleteFooterMutation = useDeleteFooterMutation();
 
   // Fetch all components for the current page using the unified hook
   const {
@@ -80,17 +78,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
   // Process all page components with proper typing
   const pageComponents = React.useMemo(() => {
-    if (!pageComponentsResponse) {
-      console.log("No page components response");
-      return [];
-    }
+    if (!pageComponentsResponse) return [];
 
-    console.log("Full API Response:", pageComponentsResponse);
-
-    // Get components array from the response
     let components: ComponentResponse[] = [];
 
-    // Handle different possible response structures with proper type checking
     if (Array.isArray(pageComponentsResponse)) {
       components = pageComponentsResponse as ComponentResponse[];
     } else {
@@ -100,12 +91,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       } else if (Array.isArray(apiResponse.components)) {
         components = apiResponse.components;
       } else {
-        console.log("Unexpected response structure:", pageComponentsResponse);
         return [];
       }
     }
-
-    console.log("Raw components from API:", components);
 
     const filteredComponents = components.filter(
       (component: ComponentResponse) => {
@@ -119,54 +107,28 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             "contact",
             "team",
             "testimonials",
+            "faq",
           ].includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
-
-        console.log("Component filtering:", {
-          id: component?.id,
-          component_type: component?.component_type,
-          hasData: !!component?.data,
-          isValid: hasValidType && hasValidData && hasValidId,
-        });
-
         return hasValidType && hasValidData && hasValidId;
       }
     );
 
-    // Transform to match expected interface structure
     const transformedComponents = filteredComponents.map(
-      (component: ComponentResponse) => {
-        console.log("Transforming component:", {
-          original: component,
-          data: component.data,
-          type: component.component_type,
-        });
-
-        return {
-          id: component.id,
-          component_id: component.component_id,
-          component_type: component.component_type,
-          data: component.data,
-          type: component.component_type,
-          order: component.order || 0,
-          page: component.page,
-        };
-      }
+      (component: ComponentResponse) => ({
+        id: component.id,
+        component_id: component.component_id,
+        component_type: component.component_type,
+        data: component.data,
+        type: component.component_type,
+        order: component.order || 0,
+        page: component.page,
+      })
     );
 
-    console.log("Transformed page components:", transformedComponents);
     return transformedComponents;
   }, [pageComponentsResponse]);
-
-  console.log("Page Components Debug:", {
-    pageComponentsResponse,
-    pageComponents,
-    pageComponentsLength: pageComponents.length,
-    currentPageSlug,
-    isLoading,
-    error,
-  });
 
   // Check for specific component types
   const hasHero = pageComponents.some(
@@ -189,6 +151,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   );
   const hasTestimonials = pageComponents.some(
     component => component.component_type === "testimonials"
+  );
+  const hasFAQ = pageComponents.some(
+    component => component.component_type === "faq"
   );
 
   const handleDeleteNavbar = (e: React.MouseEvent) => {
@@ -228,12 +193,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             isEditable={true}
             siteId={undefined}
             pageSlug={currentPageSlug}
-            onUpdate={(componentId: string, newData: ProductsComponentData) => {
-              console.log("Products component updated:", componentId, newData);
-            }}
-            onProductClick={(productId: number, order: number) => {
-              console.log("Product clicked:", productId, order);
-            }}
+            onUpdate={(
+              _componentId: string,
+              _newData: ProductsComponentData
+            ) => {}}
+            onProductClick={(_productId: number, _order: number) => {}}
           />
         );
       case "blog":
@@ -244,12 +208,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             isEditable={true}
             siteId={undefined}
             pageSlug={currentPageSlug}
-            onUpdate={(componentId: string, newData: BlogComponentData) => {
-              console.log("Blog component updated:", componentId, newData);
-            }}
-            onBlogClick={(blogSlug: string, order: number) => {
-              console.log("Blog clicked:", blogSlug, order);
-            }}
+            onUpdate={(_componentId: string, _newData: BlogComponentData) => {}}
+            onBlogClick={(_blogSlug: string, _order: number) => {}}
           />
         );
       case "contact":
@@ -260,9 +220,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             isEditable={true}
             siteId={undefined}
             pageSlug={currentPageSlug}
-            onUpdate={(componentId: string, newData: ContactComponentData) => {
-              console.log("Contact component updated:", componentId, newData);
-            }}
+            onUpdate={(
+              _componentId: string,
+              _newData: ContactComponentData
+            ) => {}}
           />
         );
       case "team":
@@ -273,12 +234,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             isEditable={true}
             siteId={undefined}
             pageSlug={currentPageSlug}
-            onUpdate={(componentId: string, newData: TeamComponentData) => {
-              console.log("Team component updated:", componentId, newData);
-            }}
-            onMemberClick={(memberId: number, order: number) => {
-              console.log("Team member clicked:", memberId, order);
-            }}
+            onUpdate={(_componentId: string, _newData: TeamComponentData) => {}}
+            onMemberClick={(_memberId: number, _order: number) => {}}
           />
         );
       case "testimonials":
@@ -290,18 +247,21 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             siteId={undefined}
             pageSlug={currentPageSlug}
             onUpdate={(
-              componentId: string,
-              newData: TestimonialsComponentData
-            ) => {
-              console.log(
-                "Testimonials component updated:",
-                componentId,
-                newData
-              );
-            }}
-            onTestimonialClick={(testimonialId: number, order: number) => {
-              console.log("Testimonial clicked:", testimonialId, order);
-            }}
+              _componentId: string,
+              _newData: TestimonialsComponentData
+            ) => {}}
+            onTestimonialClick={(_testimonialId: number, _order: number) => {}}
+          />
+        );
+      case "faq":
+        return (
+          <FAQComponent
+            key={`faq-${component.id}`}
+            component={component as FAQComponentData}
+            isEditable={true}
+            siteId={undefined}
+            pageSlug={currentPageSlug}
+            onUpdate={(_componentId: string, _newData: FAQComponentData) => {}}
           />
         );
       default:
@@ -382,7 +342,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
         {/* Content area for placeholders and interactions */}
         <div className="p-8">
-          {/* Placeholder Manager */}
           <PlaceholderManager
             isLoading={isLoading}
             navbar={navbar}
@@ -393,6 +352,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             hasProducts={hasProducts}
             hasBlog={hasBlog}
             hasContact={hasContact}
+            hasFAQ={hasFAQ}
             pageComponentsLength={pageComponents.length}
             droppedComponentsLength={droppedComponents.length}
             onAddHero={onAddHero}
@@ -402,6 +362,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             onAddProducts={onAddProducts}
             onAddBlog={onAddBlog}
             onAddContact={onAddContact}
+            onAddFAQ={onAddFAQ}
           />
 
           {/* Other Components (existing dropped components) */}

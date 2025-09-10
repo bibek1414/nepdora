@@ -47,7 +47,8 @@ import { TeamStylesDialog } from "@/components/site-owners/team-member/team-styl
 import { defaultTeamData } from "@/types/owner-site/components/team";
 import { TestimonialsStylesDialog } from "@/components/site-owners/testimonials/testimonial-style-dialog";
 import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
-
+import { FAQStylesDialog } from "@/components/site-owners/faq/faq-styles-dialog";
+import { defaultFAQData } from "@/types/owner-site/components/faq";
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -87,7 +88,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isTeamStylesDialogOpen, setIsTeamStylesDialogOpen] = useState(false);
   const [isTestimonialsStylesDialogOpen, setIsTestimonialsStylesDialogOpen] =
     useState(false);
-
+  const [isFAQStylesDialogOpen, setIsFAQStylesDialogOpen] = useState(false);
   // Use pageSlug from URL params as current page
   const currentPage = pageSlug;
 
@@ -116,6 +117,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createTestimonialsComponentMutation = useCreateComponentMutation(
     currentPage,
     "testimonials"
+  );
+  const createFAQComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "faq"
   );
 
   // Auto-create home page if no pages exist
@@ -212,6 +217,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsContactStylesDialogOpen(true);
     } else if (componentId === "testimonials-sections") {
       setIsTestimonialsStylesDialogOpen(true);
+    } else if (componentId === "faq-sections") {
+      setIsFAQStylesDialogOpen(true);
     } else if (componentId === "team-members-sections") {
       setIsTeamStylesDialogOpen(true);
     } else {
@@ -280,7 +287,26 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       onSuccess: () => setIsFooterDialogOpen(false),
     });
   };
+  const handleFAQTemplateSelect = (
+    template: "accordion" | "plus-minus" | "card-grid"
+  ) => {
+    const faqData = {
+      ...defaultFAQData,
+      style: template,
+    };
 
+    createFAQComponentMutation.mutate(faqData, {
+      onSuccess: () => {
+        setIsFAQStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create FAQ component:", error);
+      },
+    });
+  };
+  const handleAddFAQ = () => {
+    setIsFAQStylesDialogOpen(true);
+  };
   const handleHeroTemplateSelect = (
     template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5"
   ) => {
@@ -485,6 +511,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       case "testimonials-sections":
         componentType = "testimonials";
         break;
+      case "faq-sections":
+        componentType = "faq";
+        break;
       default:
         // If type doesn't match expected types, try to use it directly
         if (
@@ -496,6 +525,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "contact",
             "team",
             "testimonials",
+            "faq",
           ].includes(item.type)
         ) {
           componentType = item.type as keyof ComponentTypeMap;
@@ -588,7 +618,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsTestimonialsStylesDialogOpen}
         onStyleSelect={handleTestimonialsTemplateSelect}
       />
-
+      <FAQStylesDialog
+        open={isFAQStylesDialogOpen}
+        onOpenChange={setIsFAQStylesDialogOpen}
+        onStyleSelect={handleFAQTemplateSelect}
+      />
       <TopNavigation
         pages={pagesData}
         currentPage={currentPage}
@@ -630,6 +664,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddContact={handleAddContact}
                   onAddTeam={handleAddTeam}
                   onAddTestimonials={handleAddTestimonials}
+                  onAddFAQ={handleAddFAQ}
                 />
               </div>
             </div>
