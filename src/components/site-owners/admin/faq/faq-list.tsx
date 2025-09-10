@@ -79,9 +79,9 @@ export function FAQList() {
 
       {/* FAQ Table */}
       {isLoading ? (
-        <div className="rounded-lg border border-gray-200 bg-white">
+        <div className="rounded-lg border">
           {/* Table Header */}
-          <div className="grid grid-cols-12 gap-4 border-b border-gray-200 bg-gray-50 px-6 py-4 text-sm font-medium text-gray-600">
+          <div className="grid grid-cols-12 gap-4 border-b border-gray-200 px-6 py-4 text-sm font-medium text-gray-600">
             <div className="col-span-3">Question</div>
             <div className="col-span-7">Answer</div>
             <div className="col-span-2">Actions</div>
@@ -108,7 +108,7 @@ export function FAQList() {
       ) : data && data.length > 0 ? (
         <div className="rounded-lg border border-gray-200 bg-white">
           {/* Table Header */}
-          <div className="grid grid-cols-12 gap-4 border-b border-gray-200 bg-gray-50 px-6 py-4 text-sm font-medium text-gray-600">
+          <div className="grid grid-cols-12 gap-4 border-b border-gray-200 px-6 py-4 text-sm font-medium text-gray-600">
             <div className="col-span-3">Question</div>
             <div className="col-span-7">Answer</div>
             <div className="col-span-2">Actions</div>
@@ -118,8 +118,8 @@ export function FAQList() {
             {data.map((faq, index) => (
               <FAQFormTrigger key={faq.id} mode="edit" faq={faq}>
                 <div
-                  className={`grid cursor-pointer grid-cols-12 gap-4 px-6 py-4 hover:bg-gray-50 ${
-                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  className={`grid cursor-pointer grid-cols-12 gap-4 px-6 py-4 ${
+                    index % 2 === 0 ? "bg-white" : ""
                   }`}
                 >
                   <div className="col-span-3">
