@@ -13,20 +13,30 @@ import {
   ComponentResponse,
   ApiListResponse,
 } from "@/types/owner-site/components/components";
-import { TeamComponent } from "@/components/site-owners/team-member/team-component";
 import { TeamComponentData } from "@/types/owner-site/components/team";
-
+import { FAQComponentData } from "@/types/owner-site/components/faq";
+import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
 interface PageComponent {
   id: string | number;
   component_id: string;
-  component_type: "hero" | "about" | "products" | "blog" | "contact" | "team";
+  component_type:
+    | "hero"
+    | "about"
+    | "products"
+    | "blog"
+    | "contact"
+    | "team"
+    | "faq"
+    | "testimonials";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
     | ProductsComponentData["data"]
     | BlogComponentData["data"]
     | ContactComponentData["data"]
-    | TeamComponentData["data"];
+    | FAQComponentData["data"]
+    | TeamComponentData["data"]
+    | TestimonialsComponentData["data"];
 
   order: number;
 }
@@ -56,9 +66,16 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
     return components.filter(
       (component): component is PageComponent =>
         !!component.component_type &&
-        ["hero", "about", "products", "blog", "contact", "team"].includes(
-          component.component_type
-        ) &&
+        [
+          "hero",
+          "about",
+          "products",
+          "blog",
+          "contact",
+          "team",
+          "faq",
+          "testimonials",
+        ].includes(component.component_type) &&
         !!component.data
     );
   }, [pageComponentsResponse]);
@@ -88,6 +105,8 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | BlogComponentData
       | ContactComponentData
       | TeamComponentData
+      | FAQComponentData
+      | TestimonialsComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
       componentId,

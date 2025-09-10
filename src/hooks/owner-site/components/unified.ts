@@ -167,6 +167,12 @@ export const useTestimonialsComponents = (pageSlug: string) => ({
   update: useUpdateComponentMutation(pageSlug, "testimonials"),
   delete: useDeleteComponentMutation(pageSlug, "testimonials"),
 });
+export const useFAQComponents = (pageSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "faq"),
+  create: useCreateComponentMutation(pageSlug, "faq"),
+  update: useUpdateComponentMutation(pageSlug, "faq"),
+  delete: useDeleteComponentMutation(pageSlug, "faq"),
+});
 export const useCreateTestimonialsComponentMutation = (pageSlug: string) =>
   useCreateComponentMutation(pageSlug, "testimonials");
 
@@ -233,6 +239,7 @@ export const useDeleteTestimonialsComponentMutation = () => {
     },
   });
 };
+
 export const useCreateHeroMutation = (pageSlug: string) =>
   useCreateComponentMutation(pageSlug, "hero");
 
@@ -375,6 +382,63 @@ export const useDeleteProductsComponentMutation = () => {
         error instanceof Error
           ? error.message
           : "Failed to remove products section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useCreateFAQComponentMutation = (pageSlug: string) =>
+  useCreateComponentMutation(pageSlug, "faq");
+
+export const useUpdateFAQComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+      data,
+    }: {
+      pageSlug: string;
+      componentId: string;
+      data: Partial<ComponentTypeMap["faq"]>;
+    }) => componentsApi.updateComponent(pageSlug, componentId, { data }, "faq"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("FAQ section updated successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to update FAQ section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeleteFAQComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+    }: {
+      pageSlug: string;
+      componentId: string;
+    }) => componentsApi.deleteComponent(pageSlug, componentId, "faq"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("FAQ section removed successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to remove FAQ section";
       toast.error(errorMessage);
     },
   });

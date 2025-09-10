@@ -98,6 +98,12 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       keywords: ["reviews", "clients", "quotes"],
     },
     {
+      id: "faq-sections",
+      label: "FAQ",
+      icon: Info,
+      keywords: ["questions", "answers", "help"],
+    },
+    {
       id: "pricing-sections",
       label: "Pricing",
       icon: DollarSign,
