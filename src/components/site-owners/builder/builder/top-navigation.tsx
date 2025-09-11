@@ -1,6 +1,6 @@
 import React from "react";
-import { NewPageDialog } from "@/components/site-owners/new-page/new-page-dialog";
-import { DeletePageDialog } from "@/components/site-owners/new-page/delete-page-dialog";
+import { NewPageDialog } from "@/components/site-owners/builder/new-page/new-page-dialog";
+import { DeletePageDialog } from "@/components/site-owners/builder/new-page/delete-page-dialog";
 import { Button } from "@/components/ui/button";
 import { Page } from "@/types/owner-site/components/page";
 import { ArrowLeft, Palette, Eye, Upload, ChevronDown } from "lucide-react";

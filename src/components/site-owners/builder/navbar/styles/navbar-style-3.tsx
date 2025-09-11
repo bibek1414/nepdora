@@ -9,7 +9,7 @@ import { getButtonVariant } from "@/lib/utils";
 import { Plus, Edit, Trash2, Menu, Search } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
-import { SearchBar } from "@/components/site-owners/search-bar/search-bar";
+import { SearchBar } from "@/components/site-owners/builder/search-bar/search-bar";
 import SideCart from "../../cart/side-cart";
 
 const EditableItem: React.FC<{

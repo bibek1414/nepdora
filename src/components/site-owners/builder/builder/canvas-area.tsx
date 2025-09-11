@@ -1,15 +1,15 @@
 "use client";
 
 import React from "react";
-import { NavbarComponent } from "@/components/site-owners/navbar/navbar-component";
-import { Footer as FooterComponent } from "@/components/site-owners/footer/footer";
-import { HeroComponent } from "@/components/site-owners/hero/hero-component";
-import { AboutUsComponent } from "@/components/site-owners/about/about-component";
-import { ProductsComponent } from "@/components/site-owners/products/products-component";
-import { BlogComponent } from "@/components/site-owners/blog/blog-components";
-import { TeamComponent } from "@/components/site-owners/team-member/team-component";
-import { ContactComponent } from "@/components/site-owners/contact/contact-component";
-import { TestimonialsComponent } from "@/components/site-owners/testimonials/testimonial-component";
+import { NavbarComponent } from "@/components/site-owners/builder/navbar/navbar-component";
+import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer";
+import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
+import { AboutUsComponent } from "@/components/site-owners/builder/about/about-component";
+import { ProductsComponent } from "@/components/site-owners/builder/products/products-component";
+import { BlogComponent } from "@/components/site-owners/builder/blog/blog-components";
+import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
+import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
+import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
 import { PlaceholderManager } from "@/components/ui/content-placeholder";
 import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
@@ -25,7 +25,7 @@ import { usePageComponentsQuery } from "@/hooks/owner-site/components/unified";
 import { ComponentResponse } from "@/types/owner-site/components/components";
 import { Plus, Navigation, Edit, X, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FAQComponent } from "@/components/site-owners/faq/faq-component";
+import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 
 // Define proper types for API responses

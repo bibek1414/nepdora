@@ -1,4 +1,4 @@
-import OrderConfirmationPage from "@/components/site-owners/checkout/order-confirmation-page";
+import OrderConfirmationPage from "@/components/site-owners/builder/checkout/order-confirmation-page";
 import { use } from "react";
 interface PageProps {
   params: Promise<{
