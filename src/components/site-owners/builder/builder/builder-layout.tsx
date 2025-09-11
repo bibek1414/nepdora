@@ -4,15 +4,15 @@ import React, { useState, useCallback, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useRouter } from "next/navigation";
-import { CanvasArea } from "@/components/site-owners/builder/canvas-area";
-import { TopNavigation } from "@/components/site-owners/builder/top-navigation";
-import { ComponentSidebar } from "@/components/site-owners/builder/component-sidebar";
+import { CanvasArea } from "@/components/site-owners/builder/builder/canvas-area";
+import { TopNavigation } from "@/components/site-owners/builder/builder/top-navigation";
+import { ComponentSidebar } from "@/components/site-owners/builder/builder/component-sidebar";
 import {
   useNavbarQuery,
   useCreateNavbarMutation,
 } from "@/hooks/owner-site/components/use-navbar";
 import { NavbarData } from "@/types/owner-site/components/navbar";
-import { NavbarTemplateDialog } from "@/components/site-owners/navbar/navbar-template-dialog";
+import { NavbarTemplateDialog } from "@/components/site-owners/builder/navbar/navbar-template-dialog";
 import { usePages } from "@/hooks/owner-site/use-page";
 import { useCreatePage } from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";
@@ -20,11 +20,11 @@ import {
   useFooterQuery,
   useCreateFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
-import { FooterStylesDialog } from "@/components/site-owners/footer/footer-styles-dialog";
-import { HeroStylesDialog } from "@/components/site-owners/hero/hero-styles-dialog";
+import { FooterStylesDialog } from "@/components/site-owners/builder/footer/footer-styles-dialog";
+import { HeroStylesDialog } from "@/components/site-owners/builder/hero/hero-styles-dialog";
 import { defaultHeroData } from "@/types/owner-site/components/hero";
 import { useCreateComponentMutation } from "@/hooks/owner-site/components/unified";
-import { AboutUsStylesDialog } from "@/components/site-owners/about/about-styles-dialog";
+import { AboutUsStylesDialog } from "@/components/site-owners/builder/about/about-styles-dialog";
 import {
   defaultAboutUs1Data,
   defaultAboutUs2Data,
@@ -33,21 +33,21 @@ import {
 } from "@/types/owner-site/components/about";
 import { AboutUsData } from "@/types/owner-site/components/about";
 import { defaultProductsData } from "@/types/owner-site/components/products";
-import { ProductsStylesDialog } from "@/components/site-owners/products/products-styles-dialog";
+import { ProductsStylesDialog } from "@/components/site-owners/builder/products/products-styles-dialog";
 import { Facebook, Twitter } from "lucide-react";
 import { defaultBlogDisplayData } from "@/types/owner-site/components/blog";
-import { BlogStylesDialog } from "@/components/site-owners/blog/blog-style-dialog";
+import { BlogStylesDialog } from "@/components/site-owners/builder/blog/blog-style-dialog";
 import {
   ComponentResponse,
   ComponentTypeMap,
 } from "@/types/owner-site/components/components";
-import { ContactStylesDialog } from "@/components/site-owners/contact/contact-style-dialog";
+import { ContactStylesDialog } from "@/components/site-owners/builder/contact/contact-style-dialog";
 import { defaultContactData } from "@/types/owner-site/components/contact";
-import { TeamStylesDialog } from "@/components/site-owners/team-member/team-style-dialog";
+import { TeamStylesDialog } from "@/components/site-owners/builder/team-member/team-style-dialog";
 import { defaultTeamData } from "@/types/owner-site/components/team";
-import { TestimonialsStylesDialog } from "@/components/site-owners/testimonials/testimonial-style-dialog";
+import { TestimonialsStylesDialog } from "@/components/site-owners/builder/testimonials/testimonial-style-dialog";
 import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
-import { FAQStylesDialog } from "@/components/site-owners/faq/faq-styles-dialog";
+import { FAQStylesDialog } from "@/components/site-owners/builder/faq/faq-styles-dialog";
 import { defaultFAQData } from "@/types/owner-site/components/faq";
 interface BuilderLayoutProps {
   params: {

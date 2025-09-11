@@ -1,22 +1,22 @@
 "use client";
 
 import React from "react";
-import { HeroComponent } from "@/components/site-owners/hero/hero-component";
-import { AboutUsComponent } from "@/components/site-owners/about/about-component";
-import { ProductsComponent } from "@/components/site-owners/products/products-component";
-import { BlogComponent } from "@/components/site-owners/blog/blog-components";
-import { ContactComponent } from "@/components/site-owners/contact/contact-component";
+import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
+import { AboutUsComponent } from "@/components/site-owners/builder/about/about-component";
+import { ProductsComponent } from "@/components/site-owners/builder/products/products-component";
+import { BlogComponent } from "@/components/site-owners/builder/blog/blog-components";
+import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
-import { TeamComponent } from "@/components/site-owners/team-member/team-component";
+import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
-import { FAQComponent } from "@/components/site-owners/faq/faq-component";
+import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
-import { TestimonialsComponent } from "@/components/site-owners/testimonials/testimonial-component";
+import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
 interface PageComponent {
   id: string | number;
   component_id: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { BlogDetail } from "@/components/site-owners/blog/blog-details";
+import { BlogDetail } from "@/components/site-owners/builder/blog/blog-details";
 import { use } from "react";
 
 interface ProductPageProps {

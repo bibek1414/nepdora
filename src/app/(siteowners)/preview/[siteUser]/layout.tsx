@@ -1,5 +1,6 @@
 import { PreviewLayoutWrapper } from "@/components/site-owners/preview/preview-layout-wrapper";
-import { WhatsApp } from "@/components/site-owners/whatsapp/whatsapp";
+import { WhatsApp } from "@/components/site-owners/builder/whatsapp/whatsapp";
+import PopupManager from "@/components/site-owners/builder/popup/popup-manager";
 
 interface PreviewLayoutProps {
   children: React.ReactNode;
@@ -18,6 +19,7 @@ export default async function PreviewLayout({
         {children}
       </PreviewLayoutWrapper>
       <WhatsApp />
+      <PopupManager />
     </>
   );
 }

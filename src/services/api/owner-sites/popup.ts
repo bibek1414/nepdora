@@ -60,7 +60,7 @@ export const popupApi = {
   getPopupForms: async (): Promise<PopUpForm[]> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popupform/`);
+    const response = await fetch(`${API_BASE_URL}/api/popup-form/`);
     if (!response.ok) throw new Error("Failed to fetch popup forms");
     return response.json();
   },
@@ -68,7 +68,7 @@ export const popupApi = {
   getPopupForm: async (id: number): Promise<PopUpForm> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popupform/${id}/`);
+    const response = await fetch(`${API_BASE_URL}/api/popup-form/${id}/`);
     if (!response.ok) throw new Error("Failed to fetch popup form");
     return response.json();
   },
@@ -76,7 +76,7 @@ export const popupApi = {
   createPopupForm: async (data: PopUpForm): Promise<PopUpForm> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popupform/`, {
+    const response = await fetch(`${API_BASE_URL}/api/popup-form/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export const popupApi = {
   updatePopupForm: async (id: number, data: PopUpForm): Promise<PopUpForm> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popupform/${id}/`, {
+    const response = await fetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -110,7 +110,7 @@ export const popupApi = {
   deletePopupForm: async (id: number): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popupform/${id}/`, {
+    const response = await fetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
       method: "DELETE",
     });
     if (!response.ok) throw new Error("Failed to delete form");
@@ -135,7 +135,7 @@ export const popupApi = {
   ): Promise<{ success: boolean; message: string }> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popupform/`, {
+    const response = await fetch(`${API_BASE_URL}/api/popup-form/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
