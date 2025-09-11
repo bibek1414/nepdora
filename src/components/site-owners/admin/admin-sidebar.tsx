@@ -47,6 +47,11 @@ const navigation = [
   { name: "AI Chatbot Settings", href: "/admin/chatbot-settings", icon: Bot },
   { name: "Lucky Draw / Sales Fest", href: "/admin/lucky-draw", icon: Trophy },
   { name: "Popup", href: "/admin/popup", icon: Package },
+  {
+    name: "Popup Inquiries",
+    href: "/admin/popup-inquiries",
+    icon: MessageSquare,
+  },
   { name: "Banner", href: "/admin/banners", icon: Globe },
   { name: "Settings", href: "/admin/settings/whatsapp", icon: Edit3 },
 ];

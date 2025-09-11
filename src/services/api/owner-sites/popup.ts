@@ -1,4 +1,10 @@
-import { PopUp, PopUpForm, PopupFormData } from "@/types/owner-site/popup";
+import {
+  PopUp,
+  PopUpForm,
+  PopupFormData,
+  PopupFormFilters,
+  PaginatedPopupFormResponse,
+} from "@/types/owner-site/popup";
 import { getApiBaseUrl } from "@/config/site";
 
 export const popupApi = {
@@ -56,11 +62,23 @@ export const popupApi = {
     if (!response.ok) throw new Error("Failed to delete popup");
   },
 
-  // PopupForm operations
-  getPopupForms: async (): Promise<PopUpForm[]> => {
+  // PopupForm operations with pagination
+  getPopupForms: async (
+    filters?: PopupFormFilters
+  ): Promise<PaginatedPopupFormResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup-form/`);
+    const params = new URLSearchParams();
+    if (filters?.page) params.append("page", filters.page.toString());
+    if (filters?.page_size)
+      params.append("page_size", filters.page_size.toString());
+    if (filters?.search) params.append("search", filters.search);
+    if (filters?.popup) params.append("popup", filters.popup.toString());
+
+    const queryString = params.toString();
+    const url = `${API_BASE_URL}/api/popup-form/${queryString ? `?${queryString}` : ""}`;
+
+    const response = await fetch(url);
     if (!response.ok) throw new Error("Failed to fetch popup forms");
     return response.json();
   },
