@@ -14,6 +14,7 @@ export interface PopUpForm {
   phone_number?: string;
   email?: string;
   address?: string;
+  created_at: string;
 }
 
 export interface PopupFormData {
@@ -27,4 +28,18 @@ export interface FormField {
   type: "text" | "email" | "textarea" | "tel";
   required: boolean;
   placeholder?: string;
+}
+
+export interface PaginatedPopupFormResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: PopUpForm[];
+}
+
+export interface PopupFormFilters {
+  page?: number;
+  page_size?: number;
+  search?: string;
+  popup?: number;
 }

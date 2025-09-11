@@ -1,6 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { popupApi } from "@/services/api/owner-sites/popup";
-import { PopUp, PopUpForm, PopupFormData } from "@/types/owner-site/popup";
+import {
+  PopupFormFilters,
+  PopUpForm,
+  PopupFormData,
+} from "@/types/owner-site/popup";
 
 export const usePopups = () => {
   return useQuery({
@@ -68,11 +72,11 @@ export const useDeletePopup = () => {
   });
 };
 
-// PopupForm hooks
-export const usePopupForms = () => {
+// PopupForm hooks with pagination
+export const usePopupForms = (filters?: PopupFormFilters) => {
   return useQuery({
-    queryKey: ["popup-forms"],
-    queryFn: popupApi.getPopupForms,
+    queryKey: ["popup-forms", filters],
+    queryFn: () => popupApi.getPopupForms(filters),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
