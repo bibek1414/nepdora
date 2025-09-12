@@ -4,11 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Mail } from "lucide-react";
 import Image from "next/image";
 
 interface ContactStylesDialogProps {
@@ -26,122 +22,81 @@ export const ContactStylesDialog: React.FC<ContactStylesDialogProps> = ({
     "form-1" | "form-2" | "form-3" | "form-4" | null
   >(null);
 
-  const styles = [
+  const templates = [
     {
       id: "form-1" as const,
       name: "Contact Form 1",
-      description: "Two-column layout with contact information sidebar.",
-      preview: (
-        <Image
-          src="/images/site-owners/contact/contact1.png"
-          alt="Contact form 1"
-          width={240}
-          height={180}
-          className="object-cover"
-        />
-      ),
     },
     {
       id: "form-2" as const,
       name: "Contact Form 2",
-      description: "Gradient background with simplified form layout.",
-      preview: (
-        <Image
-          src="/images/site-owners/contact/contact2.png"
-          alt="Contact form 2"
-          width={240}
-          height={180}
-          className="object-cover"
-        />
-      ),
     },
     {
       id: "form-3" as const,
       name: "Contact Form 3",
-      description: "Centered card design with premium styling.",
-      preview: (
-        <Image
-          src="/images/site-owners/contact/contact3.png"
-          alt="Contact form 3"
-          width={240}
-          height={180}
-          className="object-cover"
-        />
-      ),
     },
     {
       id: "form-4" as const,
       name: "Contact Form 4",
-      description: "Centered card design with premium styling.",
-      preview: (
-        <Image
-          src="/images/site-owners/contact/contact4.png"
-          alt="Contact form 4"
-          width={280}
-          height={180}
-          className="object-cover"
-        />
-      ),
     },
   ];
 
-  const handleStyleClick = (
-    styleId: "form-1" | "form-2" | "form-3" | "form-4"
-  ) => {
-    setSelectedStyle(styleId);
+  const handleSelect = (template: {
+    id: "form-1" | "form-2" | "form-3" | "form-4";
+  }) => {
+    setSelectedStyle(template.id);
     setTimeout(() => {
-      onStyleSelect(styleId);
+      onStyleSelect(template.id);
       setSelectedStyle(null);
+      onOpenChange(false);
     }, 150);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-5xl overflow-y-auto">
+      <DialogContent className="h-auto max-w-7xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Mail className="h-5 w-5" />
-            Choose Contact Section Style
+          <DialogTitle className="text-xl font-semibold">
+            Choose a Contact Style
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 gap-6 py-6 lg:grid-cols-2">
-          {styles.map(style => (
-            <Card
-              key={style.id}
-              className={`hover: cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
-                selectedStyle === style.id
-                  ? "ring-primary border-primary bg-primary/5 ring-2"
-                  : "hover:border-primary/50"
-              }`}
-              onClick={() => handleStyleClick(style.id)}
-            >
-              <CardContent className="">
-                <div className="mb-4 flex items-start justify-between">
-                  <div>
-                    <h3 className="text-foreground text-lg font-semibold">
-                      {style.name}
-                    </h3>
+        <div className="grid grid-cols-2 gap-6 py-4 md:grid-cols-3 lg:grid-cols-2">
+          {templates.map(template => (
+            <div key={template.id} className="flex flex-col items-center">
+              <div
+                className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
+                  selectedStyle === template.id
+                    ? "border-blue-200 ring-2 ring-blue-500"
+                    : "hover:border-gray-300"
+                }`}
+                onClick={() => handleSelect(template)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => {
+                  if (e.key === "Enter" || e.key === " ")
+                    handleSelect(template);
+                }}
+              >
+                <div className="p-3">
+                  <div className="relative w-full">
+                    <Image
+                      src={`/images/site-owners/contact/contact${
+                        template.id.split("-")[1]
+                      }.png`}
+                      alt={template.name}
+                      width={600}
+                      height={400}
+                      className="h-auto w-full rounded"
+                    />
                   </div>
-                  {selectedStyle === style.id && (
-                    <Badge variant="default" className="ml-2 animate-pulse">
-                      Adding...
-                    </Badge>
-                  )}
                 </div>
+              </div>
 
-                <div className="relative flex h-64 items-center justify-center overflow-hidden">
-                  {style.preview}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white/10 to-transparent" />
-                </div>
-
-                <div className="text-muted-foreground mt-3 text-center text-xs font-medium">
-                  {selectedStyle === style.id
-                    ? "Adding to your page..."
-                    : "Click to add this style"}
-                </div>
-              </CardContent>
-            </Card>
+              <h3 className="mt-2 text-center text-sm font-medium text-gray-600">
+                {template.name}
+              </h3>
+            </div>
           ))}
         </div>
       </DialogContent>

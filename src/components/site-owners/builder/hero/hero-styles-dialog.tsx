@@ -5,8 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 
 interface HeroStylesDialogProps {
@@ -26,85 +24,35 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
     "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5" | null
   >(null);
 
-  const styles = [
+  const templates = [
     {
       id: "hero-1" as const,
       name: "Hero Template 1",
-      description: "Centered layout with full-width background",
-      preview: (
-        <Image
-          src="/images/site-owners/hero/hero1.png"
-          alt="Hero Template 1"
-          width={600}
-          height={300}
-          className="rounded-lg"
-        />
-      ),
     },
     {
       id: "hero-2" as const,
       name: "Hero Template 2",
-      description: "Modern slider-based hero section",
-      preview: (
-        <Image
-          src="/images/site-owners/hero/hero2.png"
-          alt="Hero Template 2"
-          width={600}
-          height={300}
-          className="rounded-lg"
-        />
-      ),
     },
     {
       id: "hero-3" as const,
       name: "Hero Template 3",
-      description: "Business-focused two-column layout",
-      preview: (
-        <Image
-          src="/images/site-owners/hero/hero3.png"
-          alt="Hero Template 3"
-          width={600}
-          height={300}
-          className="rounded-lg"
-        />
-      ),
     },
     {
       id: "hero-4" as const,
       name: "Hero Template 4",
-      description: "Elegant furniture design showcase",
-      preview: (
-        <Image
-          src="/images/site-owners/hero/hero4.png"
-          alt="Hero Template 4"
-          width={600}
-          height={300}
-          className="rounded-lg"
-        />
-      ),
     },
     {
       id: "hero-5" as const,
       name: "Hero Template 5",
-      description: "Feature showcase with card-based layout",
-      preview: (
-        <Image
-          src="/images/site-owners/hero/hero5.png"
-          alt="Hero Template 5"
-          width={600}
-          height={300}
-          className="rounded-lg"
-        />
-      ),
     },
   ];
 
-  const handleStyleClick = (
-    template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5"
-  ) => {
-    setSelectedStyle(template);
+  const handleSelect = (template: {
+    id: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5";
+  }) => {
+    setSelectedStyle(template.id);
     setTimeout(() => {
-      onStyleSelect(template);
+      onStyleSelect(template.id);
       setSelectedStyle(null);
       onOpenChange(false);
     }, 150);
@@ -112,39 +60,49 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] max-w-6xl overflow-y-auto">
-        <DialogHeader className="pb-6">
+      <DialogContent className="h-auto max-w-7xl overflow-y-auto">
+        <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Choose Hero Template
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 gap-6 py-6 lg:grid-cols-3">
-          {styles.map(style => (
-            <Card
-              key={style.id}
-              className={`hover: cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
-                selectedStyle === style.id
-                  ? "ring-primary border-primary bg-primary/5 ring-2"
-                  : "hover:border-primary/50"
-              }`}
-              onClick={() => handleStyleClick(style.id)}
-            >
-              <CardContent className="flex flex-col items-center p-4">
-                <h3 className="mb-1 text-lg font-medium">{style.name}</h3>
-                <p className="mb-3 text-center text-sm text-gray-600">
-                  {style.description}
-                </p>
-                <div className="relative flex h-48 w-full items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-gradient-to-br from-gray-50 to-white">
-                  {style.preview}
+        <div className="grid grid-cols-2 gap-6 py-4 md:grid-cols-3 lg:grid-cols-3">
+          {templates.map(template => (
+            <div key={template.id} className="flex flex-col items-center">
+              <div
+                className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
+                  selectedStyle === template.id
+                    ? "border-blue-200 ring-2 ring-blue-500"
+                    : "hover:border-gray-300"
+                }`}
+                onClick={() => handleSelect(template)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => {
+                  if (e.key === "Enter" || e.key === " ")
+                    handleSelect(template);
+                }}
+              >
+                <div className="p-3">
+                  <div className="relative w-full">
+                    <Image
+                      src={`/images/site-owners/hero/hero${
+                        template.id.split("-")[1]
+                      }.png`}
+                      alt={template.name}
+                      width={600}
+                      height={300}
+                      className="h-auto w-full rounded"
+                    />
+                  </div>
                 </div>
-                {selectedStyle === style.id && (
-                  <Badge variant="default" className="mt-2 animate-pulse">
-                    Adding...
-                  </Badge>
-                )}
-              </CardContent>
-            </Card>
+              </div>
+
+              <h3 className="mt-2 text-center text-sm font-medium text-gray-600">
+                {template.name}
+              </h3>
+            </div>
           ))}
         </div>
       </DialogContent>
