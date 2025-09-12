@@ -7,6 +7,7 @@ import { NavbarEditorDialog } from "./navbar-settings";
 import { NavbarStyle1 } from "./styles/navbar-style-1";
 import { NavbarStyle2 } from "./styles/navbar-style-2";
 import { NavbarStyle3 } from "./styles/navbar-style-3";
+import { NavbarStyle4 } from "./styles/navbar-style-4";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 
@@ -15,12 +16,14 @@ interface NavbarComponentProps {
   isEditable?: boolean;
   siteId: string;
   siteUser?: string;
+  disableClicks?: boolean; // New prop to disable all navbar clicks
 }
 
 const styleMap = {
   "style-1": NavbarStyle1,
   "style-2": NavbarStyle2,
   "style-3": NavbarStyle3,
+  "style-4": NavbarStyle4,
 };
 
 export const NavbarComponent: React.FC<NavbarComponentProps> = ({
@@ -28,6 +31,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
   isEditable = true,
   siteId,
   siteUser,
+  disableClicks = false,
 }) => {
   const { mutate: updateNavbar, isPending } = useUpdateNavbarMutation();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -78,6 +82,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
         isEditable={isEditable}
         siteId={siteId}
         siteUser={siteUser}
+        disableClicks={disableClicks}
       />
     </div>
   );

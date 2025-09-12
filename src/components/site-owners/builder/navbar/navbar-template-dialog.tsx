@@ -24,7 +24,7 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
   onSelectTemplate,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "style-1" | "style-2" | "style-3" | null
+    "style-1" | "style-2" | "style-3" | "style-4" | null
   >(null);
 
   const templates = [
@@ -83,7 +83,7 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
     },
     {
       id: "style-3" as const,
-      name: "Navbar Style 2",
+      name: "Navbar Style 3",
       data: {
         style: "style-3",
         logoText: "Centered",
@@ -100,17 +100,46 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
       preview: (
         <Image
           src="/images/site-owners/navbars/navbar2.png"
-          alt="Navbar Style 2"
+          alt="Navbar Style 3"
           width={800}
           height={120}
           className="rounded-md"
         />
       ),
     },
+    {
+      id: "style-4" as const,
+      name: "Navbar with Categories",
+      description: "Navbar with category dropdown and subcategories",
+      data: {
+        style: "style-4",
+        logoText: "Store",
+        logoType: "text",
+        showCart: true,
+        links: [
+          { id: "1", text: "Home", href: "#" },
+          { id: "2", text: "About", href: "#" },
+          { id: "3", text: "Contact", href: "#" },
+        ],
+        buttons: [{ id: "1", text: "Shop Now", variant: "primary", href: "#" }],
+      } as NavbarData,
+      preview: (
+        <div className="flex h-full w-full items-center justify-center bg-gradient-to-r from-blue-50 to-purple-50">
+          <div className="text-center">
+            <div className="mb-2 text-sm font-semibold text-gray-700">
+              Categories Dropdown
+            </div>
+            <div className="text-xs text-gray-500">
+              With subcategories on hover
+            </div>
+          </div>
+        </div>
+      ),
+    },
   ];
 
   const handleSelect = (template: {
-    id: "style-1" | "style-2" | "style-3";
+    id: "style-1" | "style-2" | "style-3" | "style-4";
     data: NavbarData;
   }) => {
     setSelectedStyle(template.id);
@@ -140,7 +169,12 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
               onClick={() => handleSelect(template)}
             >
               <CardContent className="flex flex-col items-center p-4">
-                <h3 className="mb-3 text-lg font-medium">{template.name}</h3>
+                <h3 className="mb-2 text-lg font-medium">{template.name}</h3>
+                {template.id === "style-4" && (
+                  <p className="mb-3 text-center text-xs text-gray-600">
+                    Dynamic categories from your store
+                  </p>
+                )}
                 <div className="relative flex h-24 w-full items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-white">
                   {template.preview}
                 </div>

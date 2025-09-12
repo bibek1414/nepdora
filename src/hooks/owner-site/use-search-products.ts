@@ -1,24 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { productApi as useProductApi } from "@/services/api/owner-sites/product";
-import { PaginationParams } from "@/types/owner-site/product";
+import { productApi } from "@/services/api/owner-sites/product";
+import type { ProductFilterParams } from "@/services/api/owner-sites/product";
 
 export const useSearchProducts = (
   searchQuery: string,
-  options?: {
-    enabled?: boolean;
-    staleTime?: number;
-  }
+  options?: { enabled?: boolean; staleTime?: number }
 ) => {
   return useQuery({
     queryKey: ["products", "search", searchQuery],
     queryFn: () =>
-      useProductApi.getProducts({
+      productApi.getProducts({
         search: searchQuery,
         limit: 10,
-      } as PaginationParams),
+      } satisfies ProductFilterParams),
     enabled: (options?.enabled ?? true) && searchQuery.length > 0,
-    staleTime: options?.staleTime ?? 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: options?.staleTime ?? 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 };
 
@@ -29,11 +26,11 @@ export const useSuggestedProducts = (options?: {
   return useQuery({
     queryKey: ["products", "suggestions"],
     queryFn: () =>
-      useProductApi.getProducts({
+      productApi.getProducts({
         limit: options?.limit ?? 10,
-      } as PaginationParams),
+      } satisfies ProductFilterParams),
     enabled: options?.enabled ?? true,
-    staleTime: 30 * 60 * 1000, // 30 minutes
-    gcTime: 60 * 60 * 1000, // 60 minutes
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
   });
 };
