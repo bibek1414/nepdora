@@ -8,7 +8,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { NavbarData } from "@/types/owner-site/components/navbar";
 
@@ -45,19 +44,10 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
           { id: "1", text: "Get Started", variant: "primary", href: "#" },
         ],
       } as NavbarData,
-      preview: (
-        <Image
-          src="/images/site-owners/navbars/navbar1.png"
-          alt="Navbar Style 1"
-          width={800}
-          height={120}
-          className="rounded-md"
-        />
-      ),
     },
     {
       id: "style-2" as const,
-      name: "Navbar Style 2",
+      name: "Navbar Centerd Logo",
       data: {
         style: "style-2",
         logoText: "Centered",
@@ -71,19 +61,10 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
         ],
         buttons: [{ id: "1", text: "Book Now", variant: "primary", href: "#" }],
       } as NavbarData,
-      preview: (
-        <Image
-          src="/images/site-owners/navbars/navbar2.png"
-          alt="Navbar Style 2"
-          width={800}
-          height={120}
-          className="rounded-md"
-        />
-      ),
     },
     {
       id: "style-3" as const,
-      name: "Navbar Style 3",
+      name: "Navbar with Search ",
       data: {
         style: "style-3",
         logoText: "Centered",
@@ -97,20 +78,10 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
         ],
         buttons: [{ id: "1", text: "Book Now", variant: "primary", href: "#" }],
       } as NavbarData,
-      preview: (
-        <Image
-          src="/images/site-owners/navbars/navbar2.png"
-          alt="Navbar Style 3"
-          width={800}
-          height={120}
-          className="rounded-md"
-        />
-      ),
     },
     {
       id: "style-4" as const,
       name: "Navbar with Categories",
-      description: "Navbar with category dropdown and subcategories",
       data: {
         style: "style-4",
         logoText: "Store",
@@ -123,18 +94,6 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
         ],
         buttons: [{ id: "1", text: "Shop Now", variant: "primary", href: "#" }],
       } as NavbarData,
-      preview: (
-        <div className="flex h-full w-full items-center justify-center bg-gradient-to-r from-blue-50 to-purple-50">
-          <div className="text-center">
-            <div className="mb-2 text-sm font-semibold text-gray-700">
-              Categories Dropdown
-            </div>
-            <div className="text-xs text-gray-500">
-              With subcategories on hover
-            </div>
-          </div>
-        </div>
-      ),
     },
   ];
 
@@ -152,39 +111,49 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl">
+      <DialogContent className="h-auto max-w-7xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Choose a Navbar Style</DialogTitle>
+          <DialogTitle className="text-xl font-semibold">
+            Choose a Navbar Style
+          </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 gap-6 py-6 lg:grid-cols-2">
+        <div className="grid grid-cols-2 gap-6 py-4 md:grid-cols-3 lg:grid-cols-2">
           {templates.map(template => (
-            <Card
-              key={template.id}
-              className={`hover: cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
-                selectedStyle === template.id
-                  ? "ring-primary border-primary bg-primary/5 ring-2"
-                  : "hover:border-primary/50"
-              }`}
-              onClick={() => handleSelect(template)}
-            >
-              <CardContent className="flex flex-col items-center p-4">
-                <h3 className="mb-2 text-lg font-medium">{template.name}</h3>
-                {template.id === "style-4" && (
-                  <p className="mb-3 text-center text-xs text-gray-600">
-                    Dynamic categories from your store
-                  </p>
-                )}
-                <div className="relative flex h-24 w-full items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-white">
-                  {template.preview}
+            <div key={template.id} className="flex flex-col items-center">
+              <div
+                className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
+                  selectedStyle === template.id
+                    ? "border-blue-200 ring-2 ring-blue-500"
+                    : "hover:border-gray-300"
+                }`}
+                onClick={() => handleSelect(template)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => {
+                  if (e.key === "Enter" || e.key === " ")
+                    handleSelect(template);
+                }}
+              >
+                <div className="p-3">
+                  <div className="relative w-full">
+                    <Image
+                      src={`/images/site-owners/navbars/navbar${
+                        template.id.split("-")[1]
+                      }.png`}
+                      alt={template.name}
+                      width={600}
+                      height={400}
+                      className="h-auto w-full rounded"
+                    />
+                  </div>
                 </div>
-                {selectedStyle === template.id && (
-                  <Badge variant="default" className="mt-2 animate-pulse">
-                    Adding...
-                  </Badge>
-                )}
-              </CardContent>
-            </Card>
+              </div>
+
+              <h3 className="mt-2 text-center text-sm font-medium text-gray-600">
+                {template.name}
+              </h3>
+            </div>
           ))}
         </div>
       </DialogContent>

@@ -4,11 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { FolderOpen } from "lucide-react";
 import Image from "next/image";
 
 interface CategoryStylesDialogProps {
@@ -26,109 +22,77 @@ export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
     "grid-1" | "grid-2" | "list-1" | null
   >(null);
 
-  const styles = [
+  const templates = [
     {
       id: "grid-1" as const,
       name: "Grid Style 1",
-      description: "Beautiful grid layout with overlay text for categories.",
-      preview: (
-        <Image
-          src="/images/site-owners/categories/category1.png"
-          alt="Category grid 1"
-          width={120}
-          height={120}
-        />
-      ),
     },
     {
       id: "grid-2" as const,
       name: "Grid Style 2",
-      description: "Compact horizontal card layout for categories.",
-      preview: (
-        <Image
-          src="/images/site-owners/categories/category2.png"
-          alt="Category grid 2"
-          width={120}
-          height={120}
-        />
-      ),
     },
     {
       id: "list-1" as const,
       name: "List Style",
-      description: "Detailed list layout for categories.",
-      preview: (
-        <Image
-          src="/images/site-owners/categories/category3.png"
-          alt="Category list"
-          width={120}
-          height={120}
-        />
-      ),
     },
   ];
 
-  const handleStyleClick = (styleId: "grid-1" | "grid-2" | "list-1") => {
-    setSelectedStyle(styleId);
+  const handleSelect = (template: { id: "grid-1" | "grid-2" | "list-1" }) => {
+    setSelectedStyle(template.id);
     setTimeout(() => {
-      onStyleSelect(styleId);
+      onStyleSelect(template.id);
       setSelectedStyle(null);
+      onOpenChange(false);
     }, 150);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
+      <DialogContent className="h-auto max-w-7xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FolderOpen className="h-5 w-5" />
+          <DialogTitle className="text-xl font-semibold">
             Choose Category Section Style
           </DialogTitle>
-          <DialogDescription>
-            Click on a style to add it to your page.
-          </DialogDescription>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 gap-6 py-6 lg:grid-cols-2">
-          {styles.map(style => (
-            <Card
-              key={style.id}
-              className={`hover: cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
-                selectedStyle === style.id
-                  ? "ring-primary border-primary bg-primary/5 ring-2"
-                  : "hover:border-primary/50"
-              }`}
-              onClick={() => handleStyleClick(style.id)}
-            >
-              <CardContent className="p-6">
-                <div className="mb-4 flex items-start justify-between">
-                  <div>
-                    <h3 className="text-foreground text-lg font-semibold">
-                      {style.name}
-                    </h3>
-                    <p className="text-muted-foreground text-sm">
-                      {style.description}
-                    </p>
+        <div className="grid grid-cols-2 gap-6 py-4 md:grid-cols-3 lg:grid-cols-3">
+          {templates.map(template => (
+            <div key={template.id} className="flex flex-col items-center">
+              <div
+                className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
+                  selectedStyle === template.id
+                    ? "border-blue-200 ring-2 ring-blue-500"
+                    : "hover:border-gray-300"
+                }`}
+                onClick={() => handleSelect(template)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => {
+                  if (e.key === "Enter" || e.key === " ")
+                    handleSelect(template);
+                }}
+              >
+                <div className="p-3">
+                  <div className="relative w-full">
+                    <Image
+                      src={`/images/site-owners/categories/category${
+                        template.id === "list-1"
+                          ? "3"
+                          : template.id.split("-")[1]
+                      }.png`}
+                      alt={template.name}
+                      width={400}
+                      height={300}
+                      className="h-auto w-full rounded"
+                    />
                   </div>
-                  {selectedStyle === style.id && (
-                    <Badge variant="default" className="ml-2 animate-pulse">
-                      Adding...
-                    </Badge>
-                  )}
                 </div>
+              </div>
 
-                <div className="relative flex h-48 items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-gradient-to-br from-gray-50 to-white">
-                  {style.preview}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white/10 to-transparent" />
-                </div>
-
-                <div className="text-muted-foreground mt-3 text-center text-xs font-medium">
-                  {selectedStyle === style.id
-                    ? "Adding to your page..."
-                    : "Click to add this style"}
-                </div>
-              </CardContent>
-            </Card>
+              <h3 className="mt-2 text-center text-sm font-medium text-gray-600">
+                {template.name}
+              </h3>
+            </div>
           ))}
         </div>
       </DialogContent>
