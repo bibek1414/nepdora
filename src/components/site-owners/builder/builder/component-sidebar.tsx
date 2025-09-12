@@ -15,6 +15,8 @@ import {
   DollarSign,
   FileText,
   Image as ImageIcon,
+  FolderOpen,
+  Tag,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -72,6 +74,18 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       label: "Services",
       icon: Menu,
       keywords: ["what we do", "features"],
+    },
+    {
+      id: "categories-sections",
+      label: "Categories Display",
+      icon: FolderOpen,
+      keywords: ["category", "taxonomy", "organization", "groups"],
+    },
+    {
+      id: "subcategories-sections",
+      label: "SubCategories Display",
+      icon: Tag,
+      keywords: ["subcategory", "sub-category", "nested", "subgroups"],
     },
     {
       id: "products-sections",

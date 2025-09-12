@@ -10,6 +10,8 @@ import {
   Rss,
   Mail,
   CircleHelp,
+  Grid3X3,
+  FolderTree,
 } from "lucide-react";
 
 interface PlaceholderAction {
@@ -79,9 +81,11 @@ interface PlaceholderManagerProps {
   hasTeam: boolean;
   hasTestimonials: boolean;
   hasProducts: boolean;
+  hasCategories: boolean;
+  hasSubCategories: boolean;
   hasBlog: boolean;
   hasContact: boolean;
-  hasFAQ: boolean; // NEW
+  hasFAQ: boolean;
   pageComponentsLength: number;
   droppedComponentsLength: number;
   onAddHero?: () => void;
@@ -89,9 +93,11 @@ interface PlaceholderManagerProps {
   onAddTeam?: () => void;
   onAddTestimonials?: () => void;
   onAddProducts?: () => void;
+  onAddCategories?: () => void;
+  onAddSubCategories?: () => void;
   onAddBlog?: () => void;
   onAddContact?: () => void;
-  onAddFAQ?: () => void; // NEW
+  onAddFAQ?: () => void;
 }
 
 export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
@@ -102,9 +108,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
   hasTeam,
   hasTestimonials,
   hasProducts,
+  hasCategories,
+  hasSubCategories,
   hasBlog,
   hasContact,
-  hasFAQ, // NEW
+  hasFAQ,
   pageComponentsLength,
   droppedComponentsLength,
   onAddHero,
@@ -112,9 +120,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
   onAddTeam,
   onAddTestimonials,
   onAddProducts,
+  onAddCategories,
+  onAddSubCategories,
   onAddBlog,
   onAddContact,
-  onAddFAQ, // NEW
+  onAddFAQ,
 }) => {
   // Don't show placeholders while loading
   if (isLoading) return null;
@@ -152,6 +162,8 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     hasHero &&
     !hasAbout &&
     !hasProducts &&
+    !hasCategories &&
+    !hasSubCategories &&
     !hasBlog &&
     !hasTeam &&
     !hasTestimonials
@@ -177,6 +189,20 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         label: "Add Products",
         icon: ShoppingBag,
         onClick: onAddProducts,
+      });
+    }
+    if (onAddCategories) {
+      secondaryActions.push({
+        label: "Add Categories",
+        icon: Grid3X3,
+        onClick: onAddCategories,
+      });
+    }
+    if (onAddSubCategories) {
+      secondaryActions.push({
+        label: "Add Subcategories",
+        icon: FolderTree,
+        onClick: onAddSubCategories,
       });
     }
     if (onAddBlog) {
@@ -223,6 +249,8 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     !hasTeam &&
     !hasTestimonials &&
     !hasProducts &&
+    !hasCategories &&
+    !hasSubCategories &&
     !hasBlog &&
     onAddTeam
   ) {
@@ -240,6 +268,20 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         label: "Add Products",
         icon: ShoppingBag,
         onClick: onAddProducts,
+      });
+    }
+    if (onAddCategories) {
+      secondaryActions.push({
+        label: "Add Categories",
+        icon: Grid3X3,
+        onClick: onAddCategories,
+      });
+    }
+    if (onAddSubCategories) {
+      secondaryActions.push({
+        label: "Add Subcategories",
+        icon: FolderTree,
+        onClick: onAddSubCategories,
       });
     }
     if (onAddBlog) {
@@ -279,6 +321,8 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     hasTeam &&
     !hasTestimonials &&
     !hasProducts &&
+    !hasCategories &&
+    !hasSubCategories &&
     !hasBlog &&
     onAddTestimonials
   ) {
@@ -289,6 +333,20 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         label: "Add Products",
         icon: ShoppingBag,
         onClick: onAddProducts,
+      });
+    }
+    if (onAddCategories) {
+      secondaryActions.push({
+        label: "Add Categories",
+        icon: Grid3X3,
+        onClick: onAddCategories,
+      });
+    }
+    if (onAddSubCategories) {
+      secondaryActions.push({
+        label: "Add Subcategories",
+        icon: FolderTree,
+        onClick: onAddSubCategories,
       });
     }
     if (onAddBlog) {
@@ -328,6 +386,8 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     !hasTeam &&
     !hasTestimonials &&
     !hasProducts &&
+    !hasCategories &&
+    !hasSubCategories &&
     !hasBlog &&
     onAddTestimonials
   ) {
@@ -345,6 +405,20 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
         label: "Add Products",
         icon: ShoppingBag,
         onClick: onAddProducts,
+      });
+    }
+    if (onAddCategories) {
+      secondaryActions.push({
+        label: "Add Categories",
+        icon: Grid3X3,
+        onClick: onAddCategories,
+      });
+    }
+    if (onAddSubCategories) {
+      secondaryActions.push({
+        label: "Add Subcategories",
+        icon: FolderTree,
+        onClick: onAddSubCategories,
       });
     }
     if (onAddFAQ) {
@@ -377,10 +451,27 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     hasTeam &&
     hasTestimonials &&
     !hasProducts &&
+    !hasCategories &&
+    !hasSubCategories &&
     !hasBlog &&
     onAddProducts
   ) {
     const secondaryActions: PlaceholderAction[] = [];
+
+    if (onAddCategories) {
+      secondaryActions.push({
+        label: "Add Categories",
+        icon: Grid3X3,
+        onClick: onAddCategories,
+      });
+    }
+    if (onAddSubCategories) {
+      secondaryActions.push({
+        label: "Add Subcategories",
+        icon: FolderTree,
+        onClick: onAddSubCategories,
+      });
+    }
     if (onAddBlog) {
       secondaryActions.push({
         label: "Add Blog",
@@ -411,17 +502,25 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     );
   }
 
-  // 7. Alternative products placeholder - without team but with testimonials
+  // 7. Show categories placeholder after products
   if (
     hasHero &&
     hasAbout &&
-    !hasTeam &&
-    hasTestimonials &&
-    !hasProducts &&
+    hasProducts &&
+    !hasCategories &&
+    !hasSubCategories &&
     !hasBlog &&
-    onAddProducts
+    onAddCategories
   ) {
     const secondaryActions: PlaceholderAction[] = [];
+
+    if (onAddSubCategories) {
+      secondaryActions.push({
+        label: "Add Subcategories",
+        icon: FolderTree,
+        onClick: onAddSubCategories,
+      });
+    }
     if (onAddBlog) {
       secondaryActions.push({
         label: "Add Blog",
@@ -439,26 +538,179 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
 
     return (
       <ContentPlaceholder
-        icon={ShoppingBag}
-        title="Feature Your Products"
-        description="Now that you've built trust with testimonials, showcase what you're selling."
+        icon={Grid3X3}
+        title="Organize with Categories"
+        description="Help visitors navigate your offerings by organizing them into clear categories."
         primaryAction={{
-          label: "Add Products Section",
+          label: "Add Categories Section",
           icon: Plus,
-          onClick: onAddProducts,
+          onClick: onAddCategories,
         }}
         secondaryActions={secondaryActions}
       />
     );
   }
 
-  // 8. Show blog placeholder after all main sections
+  // 8. Show subcategories placeholder after categories
   if (
     hasHero &&
     hasAbout &&
-    hasTeam &&
-    hasTestimonials &&
     hasProducts &&
+    hasCategories &&
+    !hasSubCategories &&
+    !hasBlog &&
+    onAddSubCategories
+  ) {
+    const secondaryActions: PlaceholderAction[] = [];
+
+    if (onAddBlog) {
+      secondaryActions.push({
+        label: "Add Blog",
+        icon: Rss,
+        onClick: onAddBlog,
+      });
+    }
+    if (onAddFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
+      });
+    }
+
+    return (
+      <ContentPlaceholder
+        icon={FolderTree}
+        title="Add Detailed Organization"
+        description="Provide even more detailed organization with subcategories to help visitors find exactly what they need."
+        primaryAction={{
+          label: "Add Subcategories Section",
+          icon: Plus,
+          onClick: onAddSubCategories,
+        }}
+        secondaryActions={secondaryActions}
+      />
+    );
+  }
+
+  // 9. Alternative categories placeholder - without products but with testimonials
+  if (
+    hasHero &&
+    hasAbout &&
+    hasTestimonials &&
+    !hasProducts &&
+    !hasCategories &&
+    !hasSubCategories &&
+    !hasBlog &&
+    onAddCategories
+  ) {
+    const secondaryActions: PlaceholderAction[] = [];
+
+    if (onAddProducts) {
+      secondaryActions.push({
+        label: "Add Products",
+        icon: ShoppingBag,
+        onClick: onAddProducts,
+      });
+    }
+    if (onAddSubCategories) {
+      secondaryActions.push({
+        label: "Add Subcategories",
+        icon: FolderTree,
+        onClick: onAddSubCategories,
+      });
+    }
+    if (onAddBlog) {
+      secondaryActions.push({
+        label: "Add Blog",
+        icon: Rss,
+        onClick: onAddBlog,
+      });
+    }
+    if (onAddFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
+      });
+    }
+
+    return (
+      <ContentPlaceholder
+        icon={Grid3X3}
+        title="Organize Your Content"
+        description="Help visitors navigate by organizing your content into clear, easy-to-browse categories."
+        primaryAction={{
+          label: "Add Categories Section",
+          icon: Plus,
+          onClick: onAddCategories,
+        }}
+        secondaryActions={secondaryActions}
+      />
+    );
+  }
+
+  // 10. Alternative subcategories placeholder - standalone
+  if (
+    hasHero &&
+    hasAbout &&
+    (hasTestimonials || hasTeam) &&
+    !hasSubCategories &&
+    !hasBlog &&
+    onAddSubCategories
+  ) {
+    const secondaryActions: PlaceholderAction[] = [];
+
+    if (onAddProducts && !hasProducts) {
+      secondaryActions.push({
+        label: "Add Products",
+        icon: ShoppingBag,
+        onClick: onAddProducts,
+      });
+    }
+    if (onAddCategories && !hasCategories) {
+      secondaryActions.push({
+        label: "Add Categories",
+        icon: Grid3X3,
+        onClick: onAddCategories,
+      });
+    }
+    if (onAddBlog) {
+      secondaryActions.push({
+        label: "Add Blog",
+        icon: Rss,
+        onClick: onAddBlog,
+      });
+    }
+    if (onAddFAQ) {
+      secondaryActions.push({
+        label: "Add FAQ",
+        icon: CircleHelp,
+        onClick: onAddFAQ,
+      });
+    }
+
+    return (
+      <ContentPlaceholder
+        icon={FolderTree}
+        title="Add Detailed Navigation"
+        description="Create subcategories to provide detailed organization and help visitors find specific content quickly."
+        primaryAction={{
+          label: "Add Subcategories Section",
+          icon: Plus,
+          onClick: onAddSubCategories,
+        }}
+        secondaryActions={secondaryActions}
+      />
+    );
+  }
+
+  // 11. Show blog placeholder after all main sections
+  if (
+    hasHero &&
+    hasAbout &&
+    (hasTeam || hasTestimonials) &&
+    (hasProducts || hasCategories || hasSubCategories) &&
     !hasBlog &&
     onAddBlog
   ) {
@@ -475,7 +727,7 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
       <ContentPlaceholder
         icon={Rss}
         title="Share Your Stories"
-        description="Add a blog section to keep your audience informed and engaged."
+        description="Add a blog section to keep your audience informed and engaged with fresh content."
         primaryAction={{
           label: "Add Blog Section",
           icon: Plus,
@@ -486,17 +738,16 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     );
   }
 
-  // 9. Alternative blog placeholder - without team but with testimonials and products
+  // 12. Alternative blog placeholder - with basic sections
   if (
     hasHero &&
     hasAbout &&
-    !hasTeam &&
-    hasTestimonials &&
-    hasProducts &&
+    (hasProducts || hasCategories || hasSubCategories) &&
     !hasBlog &&
     onAddBlog
   ) {
     const secondaryActions: PlaceholderAction[] = [];
+
     if (onAddFAQ) {
       secondaryActions.push({
         label: "Add FAQ",
@@ -509,7 +760,7 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
       <ContentPlaceholder
         icon={Rss}
         title="Keep Your Audience Engaged"
-        description="Add a blog to share updates, insights, and keep customers coming back."
+        description="Add a blog to share updates, insights, and keep customers coming back for more."
         primaryAction={{
           label: "Add Blog Section",
           icon: Plus,
@@ -520,11 +771,16 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     );
   }
 
-  // 10. Dedicated FAQ placeholder (when core sections exist but FAQ is missing)
+  // 13. Dedicated FAQ placeholder (when core sections exist but FAQ is missing)
   if (
     hasHero &&
     hasAbout &&
-    (hasProducts || hasBlog || hasTestimonials || hasTeam) &&
+    (hasProducts ||
+      hasCategories ||
+      hasSubCategories ||
+      hasBlog ||
+      hasTestimonials ||
+      hasTeam) &&
     !hasFAQ &&
     onAddFAQ
   ) {
@@ -532,7 +788,7 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
       <ContentPlaceholder
         icon={CircleHelp}
         title="Answer Common Questions"
-        description="Help visitors find quick answers and reduce support by adding an FAQ section."
+        description="Help visitors find quick answers and reduce support requests by adding an FAQ section."
         primaryAction={{
           label: "Add FAQ Section",
           icon: Plus,
@@ -542,14 +798,13 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     );
   }
 
-  // 11. Show contact placeholder after all sections
+  // 14. Show contact placeholder after all sections
   if (
     hasHero &&
     hasAbout &&
-    hasTeam &&
-    hasTestimonials &&
-    hasProducts &&
-    hasBlog &&
+    (hasTeam || hasTestimonials) &&
+    (hasProducts || hasCategories || hasSubCategories) &&
+    (hasBlog || hasFAQ) &&
     !hasContact &&
     onAddContact
   ) {
@@ -566,7 +821,7 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
       <ContentPlaceholder
         icon={Mail}
         title="Add Contact Form"
-        description="Let visitors easily get in touch with you through a contact form."
+        description="Let visitors easily get in touch with you through a professional contact form."
         primaryAction={{
           label: "Add Contact Section",
           icon: Plus,
@@ -577,18 +832,16 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     );
   }
 
-  // 12. Alternative contact placeholder - without team but with other sections
+  // 15. Alternative contact placeholder - with basic sections
   if (
     hasHero &&
     hasAbout &&
-    !hasTeam &&
-    hasTestimonials &&
-    hasProducts &&
-    hasBlog &&
+    (hasProducts || hasCategories || hasSubCategories || hasBlog) &&
     !hasContact &&
     onAddContact
   ) {
     const secondaryActions: PlaceholderAction[] = [];
+
     if (onAddFAQ && !hasFAQ) {
       secondaryActions.push({
         label: "Add FAQ",
@@ -601,7 +854,7 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
       <ContentPlaceholder
         icon={Mail}
         title="Complete Your Site"
-        description="Finish with a contact form so visitors can easily reach out to you."
+        description="Finish with a contact form so visitors can easily reach out to you for inquiries."
         primaryAction={{
           label: "Add Contact Section",
           icon: Plus,
@@ -612,7 +865,7 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     );
   }
 
-  // 13. Show general start building message if no navbar
+  // 16. Show general start building message if no navbar
   if (!navbar && pageComponentsLength === 0 && droppedComponentsLength === 0) {
     return (
       <div className="flex h-full flex-col items-center justify-center py-20 text-center">

@@ -6,17 +6,22 @@ import { AboutUsComponent } from "@/components/site-owners/builder/about/about-c
 import { ProductsComponent } from "@/components/site-owners/builder/products/products-component";
 import { BlogComponent } from "@/components/site-owners/builder/blog/blog-components";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
+import { CategoryComponent } from "@/components/site-owners/builder/category/category-component";
+import { SubCategoryComponent } from "@/components/site-owners/builder/sub-category/sub-category-component";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
+import { CategoryComponentData } from "@/types/owner-site/components/category";
+import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
 import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
 import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
+
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -28,7 +33,9 @@ interface PageComponent {
     | "contact"
     | "team"
     | "faq"
-    | "testimonials";
+    | "testimonials"
+    | "category"
+    | "subcategory";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
@@ -37,7 +44,9 @@ interface PageComponent {
     | ContactComponentData["data"]
     | FAQComponentData["data"]
     | TestimonialsComponentData["data"]
-    | TeamComponentData["data"];
+    | TeamComponentData["data"]
+    | CategoryComponentData["data"]
+    | SubCategoryComponentData["data"];
   order: number;
 }
 
@@ -47,6 +56,8 @@ interface PageComponentRendererProps {
   pageSlug: string;
   onProductClick: (productId: number, order: number) => void;
   onBlogClick: (blogSlug: string, order: number) => void;
+  onCategoryClick?: (categoryId: number, order: number) => void;
+  onSubCategoryClick?: (subcategoryId: number, order: number) => void;
   onComponentUpdate: (
     componentId: string,
     newData:
@@ -58,6 +69,8 @@ interface PageComponentRendererProps {
       | HeroComponentData
       | AboutUsComponentData
       | TestimonialsComponentData
+      | CategoryComponentData
+      | SubCategoryComponentData
   ) => void;
 }
 
@@ -67,6 +80,8 @@ export function PageComponentRenderer({
   pageSlug,
   onProductClick,
   onBlogClick,
+  onCategoryClick,
+  onSubCategoryClick,
   onComponentUpdate,
 }: PageComponentRendererProps) {
   const renderComponent = (component: PageComponent) => {
@@ -170,6 +185,37 @@ export function PageComponentRenderer({
                 newData as TestimonialsComponentData
               )
             }
+          />
+        );
+      case "category":
+        return (
+          <CategoryComponent
+            key={component.id}
+            component={component as CategoryComponentData}
+            isEditable={false}
+            siteId={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as CategoryComponentData)
+            }
+            onCategoryClick={onCategoryClick}
+          />
+        );
+      case "subcategory":
+        return (
+          <SubCategoryComponent
+            key={component.id}
+            component={component as SubCategoryComponentData}
+            isEditable={false}
+            siteId={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(
+                componentId,
+                newData as SubCategoryComponentData
+              )
+            }
+            onSubCategoryClick={onSubCategoryClick}
           />
         );
       default:

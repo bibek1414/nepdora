@@ -6,6 +6,8 @@ import { Footer as FooterComponent } from "@/components/site-owners/builder/foot
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
 import { AboutUsComponent } from "@/components/site-owners/builder/about/about-component";
 import { ProductsComponent } from "@/components/site-owners/builder/products/products-component";
+import { CategoryComponent } from "@/components/site-owners/builder/category/category-component";
+import { SubCategoryComponent } from "@/components/site-owners/builder/sub-category/sub-category-component";
 import { BlogComponent } from "@/components/site-owners/builder/blog/blog-components";
 import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
@@ -16,6 +18,8 @@ import { Footer } from "@/types/owner-site/components/footer";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
+import { CategoryComponentData } from "@/types/owner-site/components/category";
+import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
@@ -44,11 +48,13 @@ interface CanvasAreaProps {
   onAddHero?: () => void;
   onAddAboutUs?: () => void;
   onAddProducts?: () => void;
+  onAddCategories?: () => void;
+  onAddSubCategories?: () => void;
   onAddBlog?: () => void;
   onAddContact?: () => void;
   onAddTeam?: () => void;
   onAddTestimonials?: () => void;
-  onAddFAQ?: () => void; // kept in the interface to preserve API
+  onAddFAQ?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -61,6 +67,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddHero,
   onAddAboutUs,
   onAddProducts,
+  onAddCategories,
+  onAddSubCategories,
   onAddBlog,
   onAddContact,
   onAddTeam,
@@ -103,6 +111,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             "hero",
             "about",
             "products",
+            "category",
+            "subcategory",
             "blog",
             "contact",
             "team",
@@ -139,6 +149,12 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   );
   const hasProducts = pageComponents.some(
     component => component.component_type === "products"
+  );
+  const hasCategories = pageComponents.some(
+    component => component.component_type === "category"
+  );
+  const hasSubCategories = pageComponents.some(
+    component => component.component_type === "subcategory"
   );
   const hasBlog = pageComponents.some(
     component => component.component_type === "blog"
@@ -198,6 +214,36 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
               _newData: ProductsComponentData
             ) => {}}
             onProductClick={(_productId: number, _order: number) => {}}
+          />
+        );
+      case "category":
+        return (
+          <CategoryComponent
+            key={`category-${component.id}`}
+            component={component as CategoryComponentData}
+            isEditable={true}
+            siteId={undefined}
+            pageSlug={currentPageSlug}
+            onUpdate={(
+              _componentId: string,
+              _newData: CategoryComponentData
+            ) => {}}
+            onCategoryClick={(_categoryId: number, _order: number) => {}}
+          />
+        );
+      case "subcategory":
+        return (
+          <SubCategoryComponent
+            key={`subcategory-${component.id}`}
+            component={component as SubCategoryComponentData}
+            isEditable={true}
+            siteId={undefined}
+            pageSlug={currentPageSlug}
+            onUpdate={(
+              _componentId: string,
+              _newData: SubCategoryComponentData
+            ) => {}}
+            onSubCategoryClick={(_subCategoryId: number, _order: number) => {}}
           />
         );
       case "blog":
@@ -350,6 +396,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             hasTeam={hasTeam}
             hasTestimonials={hasTestimonials}
             hasProducts={hasProducts}
+            hasCategories={hasCategories}
+            hasSubCategories={hasSubCategories}
             hasBlog={hasBlog}
             hasContact={hasContact}
             hasFAQ={hasFAQ}
@@ -360,6 +408,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             onAddTeam={onAddTeam}
             onAddTestimonials={onAddTestimonials}
             onAddProducts={onAddProducts}
+            onAddCategories={onAddCategories}
+            onAddSubCategories={onAddSubCategories}
             onAddBlog={onAddBlog}
             onAddContact={onAddContact}
             onAddFAQ={onAddFAQ}

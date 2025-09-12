@@ -34,6 +34,8 @@ import {
 import { AboutUsData } from "@/types/owner-site/components/about";
 import { defaultProductsData } from "@/types/owner-site/components/products";
 import { ProductsStylesDialog } from "@/components/site-owners/builder/products/products-styles-dialog";
+import { CategoryStylesDialog } from "@/components/site-owners/builder/category/category-style-dialog";
+import { SubCategoryStylesDialog } from "@/components/site-owners/builder/sub-category/sub-category-style-dialog";
 import { Facebook, Twitter } from "lucide-react";
 import { defaultBlogDisplayData } from "@/types/owner-site/components/blog";
 import { BlogStylesDialog } from "@/components/site-owners/builder/blog/blog-style-dialog";
@@ -49,6 +51,7 @@ import { TestimonialsStylesDialog } from "@/components/site-owners/builder/testi
 import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
 import { FAQStylesDialog } from "@/components/site-owners/builder/faq/faq-styles-dialog";
 import { defaultFAQData } from "@/types/owner-site/components/faq";
+
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -81,6 +84,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isProductsStylesDialogOpen, setIsProductsStylesDialogOpen] =
     useState(false);
+  const [isCategoriesStylesDialogOpen, setIsCategoriesStylesDialogOpen] =
+    useState(false);
+  const [isSubCategoriesStylesDialogOpen, setIsSubCategoriesStylesDialogOpen] =
+    useState(false);
   const [isBlogStylesDialogOpen, setIsBlogStylesDialogOpen] = useState(false);
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
   const [isContactStylesDialogOpen, setIsContactStylesDialogOpen] =
@@ -101,6 +108,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createProductsComponentMutation = useCreateComponentMutation(
     currentPage,
     "products"
+  );
+  const createCategoryComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "category"
+  );
+  const createSubCategoryComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "subcategory"
   );
   const createBlogComponentMutation = useCreateComponentMutation(
     currentPage,
@@ -211,6 +226,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsAboutUsStylesDialogOpen(true);
     } else if (componentId === "products-sections") {
       setIsProductsStylesDialogOpen(true);
+    } else if (componentId === "categories-sections") {
+      setIsCategoriesStylesDialogOpen(true);
+    } else if (componentId === "subcategories-sections") {
+      setIsSubCategoriesStylesDialogOpen(true);
     } else if (componentId === "blog-sections") {
       setIsBlogStylesDialogOpen(true);
     } else if (componentId === "contact-sections") {
@@ -287,6 +306,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       onSuccess: () => setIsFooterDialogOpen(false),
     });
   };
+
   const handleFAQTemplateSelect = (
     template: "accordion" | "plus-minus" | "card-grid"
   ) => {
@@ -304,9 +324,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+
   const handleAddFAQ = () => {
     setIsFAQStylesDialogOpen(true);
   };
+
   const handleHeroTemplateSelect = (
     template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5"
   ) => {
@@ -399,6 +421,60 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+
+  const handleCategoryTemplateSelect = (
+    template: "grid-1" | "grid-2" | "list-1"
+  ) => {
+    // Create category component with the selected template
+    const categoryData = {
+      limit: 8,
+      component_type: "category" as const,
+      title: "Our Categories",
+      subtitle: "Browse our product categories",
+      style: template,
+      showDescription: true,
+      showProductCount: true,
+      itemsPerRow: 4,
+    };
+
+    // Use unified mutation with just the data
+    createCategoryComponentMutation.mutate(categoryData, {
+      onSuccess: () => {
+        setIsCategoriesStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create category component:", error);
+      },
+    });
+  };
+
+  const handleSubCategoryTemplateSelect = (
+    template: "grid-1" | "grid-2" | "list-1"
+  ) => {
+    // Create subcategory component with the selected template
+    const subCategoryData = {
+      component_type: "subcategory" as const,
+      limit: 8,
+      title: "Our SubCategories",
+      subtitle: "Explore our product subcategories",
+      style: template,
+      showDescription: true,
+      showProductCount: true,
+      showParentCategory: true,
+      itemsPerRow: 4,
+    };
+
+    // Use unified mutation with just the data
+    createSubCategoryComponentMutation.mutate(subCategoryData, {
+      onSuccess: () => {
+        setIsSubCategoriesStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create subcategory component:", error);
+      },
+    });
+  };
+
   const handleTestimonialsTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1"
   ) => {
@@ -421,6 +497,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAddTestimonials = () => {
     setIsTestimonialsStylesDialogOpen(true);
   };
+
   const handleBlogTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1"
   ) => {
@@ -471,6 +548,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     setIsProductsStylesDialogOpen(true);
   };
 
+  const handleAddCategories = () => {
+    setIsCategoriesStylesDialogOpen(true);
+  };
+
+  const handleAddSubCategories = () => {
+    setIsSubCategoriesStylesDialogOpen(true);
+  };
+
   const handleAddBlog = () => {
     setIsBlogStylesDialogOpen(true);
   };
@@ -499,6 +584,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       case "products-sections":
         componentType = "products";
         break;
+      case "categories-sections":
+        componentType = "category";
+        break;
+      case "subcategories-sections":
+        componentType = "subcategory";
+        break;
       case "blog-sections":
         componentType = "blog";
         break;
@@ -521,6 +612,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "hero",
             "about",
             "products",
+            "category",
+            "subcategory",
             "blog",
             "contact",
             "team",
@@ -596,6 +689,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onStyleSelect={handleProductsTemplateSelect}
       />
 
+      <CategoryStylesDialog
+        open={isCategoriesStylesDialogOpen}
+        onOpenChange={setIsCategoriesStylesDialogOpen}
+        onStyleSelect={handleCategoryTemplateSelect}
+      />
+
+      <SubCategoryStylesDialog
+        open={isSubCategoriesStylesDialogOpen}
+        onOpenChange={setIsSubCategoriesStylesDialogOpen}
+        onStyleSelect={handleSubCategoryTemplateSelect}
+      />
+
       <BlogStylesDialog
         open={isBlogStylesDialogOpen}
         onOpenChange={setIsBlogStylesDialogOpen}
@@ -660,6 +765,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddHero={handleAddHeroFromCanvas}
                   onAddAboutUs={handleAddAboutUsFromCanvas}
                   onAddProducts={handleAddProducts}
+                  onAddCategories={handleAddCategories}
+                  onAddSubCategories={handleAddSubCategories}
                   onAddBlog={handleAddBlog}
                   onAddContact={handleAddContact}
                   onAddTeam={handleAddTeam}

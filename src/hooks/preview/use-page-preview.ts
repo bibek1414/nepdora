@@ -8,6 +8,8 @@ import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
+import { CategoryComponentData } from "@/types/owner-site/components/category";
+import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
 import {
   ComponentTypeMap,
   ComponentResponse,
@@ -16,6 +18,7 @@ import {
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
+
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -27,7 +30,9 @@ interface PageComponent {
     | "contact"
     | "team"
     | "faq"
-    | "testimonials";
+    | "testimonials"
+    | "category"
+    | "subcategory";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
@@ -36,8 +41,9 @@ interface PageComponent {
     | ContactComponentData["data"]
     | FAQComponentData["data"]
     | TeamComponentData["data"]
-    | TestimonialsComponentData["data"];
-
+    | TestimonialsComponentData["data"]
+    | CategoryComponentData["data"]
+    | SubCategoryComponentData["data"];
   order: number;
 }
 
@@ -75,6 +81,8 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
           "team",
           "faq",
           "testimonials",
+          "category",
+          "subcategory",
         ].includes(component.component_type) &&
         !!component.data
     );
@@ -95,6 +103,16 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
     router.push(`/preview/${siteUser}/blog/${blogSlug}`);
   };
 
+  const handleCategoryClick = (categoryId: number, order: number) => {
+    console.log("Category clicked in preview:", { categoryId, order });
+    router.push(`/preview/${siteUser}/categories/${categoryId}`);
+  };
+
+  const handleSubCategoryClick = (subcategoryId: number, order: number) => {
+    console.log("SubCategory clicked in preview:", { subcategoryId, order });
+    router.push(`/preview/${siteUser}/subcategories/${subcategoryId}`);
+  };
+
   // Component update handlers (not used in preview mode)
   const handleComponentUpdate = (
     componentId: string,
@@ -107,6 +125,8 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | TeamComponentData
       | FAQComponentData
       | TestimonialsComponentData
+      | CategoryComponentData
+      | SubCategoryComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
       componentId,
@@ -120,6 +140,8 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
     handleBackToBuilder,
     handleProductClick,
     handleBlogClick,
+    handleCategoryClick,
+    handleSubCategoryClick,
     handleComponentUpdate,
   };
 }
