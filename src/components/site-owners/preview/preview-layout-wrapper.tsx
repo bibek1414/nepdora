@@ -1,9 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Monitor, Smartphone, Tablet } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { NavbarComponent } from "@/components/site-owners/builder/navbar/navbar-component";
 import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer";

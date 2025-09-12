@@ -13,6 +13,19 @@ import {
   PaginationParams,
 } from "@/types/owner-site/product";
 
+// Extended interface for filtering parameters
+interface ProductFilterParams extends Omit<PaginationParams, "category"> {
+  category?: string;
+  sub_category?: string;
+  category_id?: number;
+  sub_category_id?: number;
+  is_featured?: boolean;
+  is_popular?: boolean;
+  min_price?: number;
+  max_price?: number;
+  in_stock?: boolean;
+}
+
 const buildProductFormData = (
   data: CreateProductRequest | UpdateProductRequest
 ): FormData => {
@@ -92,20 +105,56 @@ const validateFiles = (
 
 export const productApi = {
   getProducts: async (
-    params: PaginationParams = {}
+    params: ProductFilterParams = {}
   ): Promise<GetProductsResponse> => {
-    const { page = 1, limit = 10, search, sortBy, sortOrder = "asc" } = params;
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      sortBy,
+      sortOrder = "asc",
+      category,
+      sub_category,
+      category_id,
+      sub_category_id,
+      is_featured,
+      is_popular,
+      min_price,
+      max_price,
+      in_stock,
+    } = params;
+
     const API_BASE_URL = getApiBaseUrl();
     const queryParams = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
     });
 
+    // Add existing parameters
     if (search) queryParams.append("search", search);
     if (sortBy) {
       queryParams.append("sort_by", sortBy);
       queryParams.append("sort_order", sortOrder);
     }
+
+    // Add filtering parameters
+    if (category) queryParams.append("category", category);
+    if (sub_category) queryParams.append("sub_category", sub_category);
+    if (category_id) queryParams.append("category_id", category_id.toString());
+    if (sub_category_id)
+      queryParams.append("sub_category_id", sub_category_id.toString());
+    if (is_featured !== undefined)
+      queryParams.append("is_featured", is_featured.toString());
+    if (is_popular !== undefined)
+      queryParams.append("is_popular", is_popular.toString());
+    if (min_price !== undefined)
+      queryParams.append("min_price", min_price.toString());
+    if (max_price !== undefined)
+      queryParams.append("max_price", max_price.toString());
+    if (in_stock !== undefined)
+      queryParams.append("in_stock", in_stock.toString());
+
+    console.log(`Fetching products with params: ${queryParams.toString()}`);
 
     const response = await fetch(
       `${API_BASE_URL}/api/product/?${queryParams.toString()}`,
@@ -222,3 +271,6 @@ export const productApi = {
     };
   },
 };
+
+// Export the extended interface for use in hooks
+export type { ProductFilterParams };

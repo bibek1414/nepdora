@@ -49,6 +49,7 @@ interface NavbarStyleProps {
   onAddButton?: () => void;
   onEditButton?: (button: NavbarButton) => void;
   onDeleteButton?: (buttonId: string) => void;
+  disableClicks?: boolean;
 }
 
 export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
@@ -63,6 +64,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   onAddButton,
   onEditButton,
   onDeleteButton,
+  disableClicks = false,
 }) => {
   const { links, buttons, showCart } = navbarData;
   const midIndex = Math.ceil(links.length / 2);
@@ -73,6 +75,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const toggleCart = () => {
+    if (disableClicks) return;
     setIsCartOpen(!isCartOpen);
   };
 
@@ -82,7 +85,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
 
   // Add the same generateLinkHref function
   const generateLinkHref = (originalHref: string) => {
-    if (isEditable || !siteUser) return originalHref;
+    if (isEditable || !siteUser || disableClicks) return "#";
 
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
       return `/preview/${siteUser}`;
@@ -92,12 +95,20 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
     return `/preview/${siteUser}/${cleanHref}`;
   };
 
+  // Handler to prevent clicks when disabled
+  const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
+    if (disableClicks || isEditable) {
+      e.preventDefault();
+      return;
+    }
+  };
+
   return (
     <>
       <nav
         className={`bg-background flex items-center justify-between p-4 ${
           !isEditable ? "sticky top-16 z-40 border-b" : ""
-        }`}
+        } ${disableClicks ? "pointer-events-none" : ""}`}
       >
         <div className="hidden flex-1 items-center justify-end gap-4 md:flex">
           {leftLinks.map(link =>
@@ -118,8 +129,14 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
             ) : (
               <a
                 key={link.id}
-                href={generateLinkHref(link.href)} // Use generateLinkHref here
-                className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
+                href={generateLinkHref(link.href)}
+                onClick={e => handleLinkClick(e, link.href)}
+                className={`text-muted-foreground text-sm font-medium transition-colors ${
+                  disableClicks
+                    ? "cursor-default opacity-60"
+                    : "hover:text-foreground cursor-pointer"
+                }`}
+                style={disableClicks ? { pointerEvents: "auto" } : {}}
               >
                 {link.text}
               </a>
@@ -127,7 +144,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
           )}
         </div>
 
-        <div className="px-8">
+        <div className={`px-8 ${disableClicks ? "pointer-events-auto" : ""}`}>
           {isEditable && onEditLogo ? (
             <EditableItem onEdit={onEditLogo}>
               <NavbarLogo
@@ -137,7 +154,9 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
               />
             </EditableItem>
           ) : (
-            <NavbarLogo data={navbarData} siteUser={siteUser} />
+            <div onClick={disableClicks ? e => e.preventDefault() : undefined}>
+              <NavbarLogo data={navbarData} siteUser={siteUser} />
+            </div>
           )}
         </div>
 
@@ -160,8 +179,14 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
             ) : (
               <a
                 key={link.id}
-                href={generateLinkHref(link.href)} // Use generateLinkHref here too
-                className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
+                href={generateLinkHref(link.href)}
+                onClick={e => handleLinkClick(e, link.href)}
+                className={`text-muted-foreground text-sm font-medium transition-colors ${
+                  disableClicks
+                    ? "cursor-default opacity-60"
+                    : "hover:text-foreground cursor-pointer"
+                }`}
+                style={disableClicks ? { pointerEvents: "auto" } : {}}
               >
                 {link.text}
               </a>
@@ -185,26 +210,46 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
               </EditableItem>
             ) : (
               <Button
-                asChild
                 key={button.id}
                 variant={getButtonVariant(button.variant)}
                 size="sm"
+                onClick={disableClicks ? e => e.preventDefault() : undefined}
+                className={`${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
+                asChild={!disableClicks}
               >
-                <a href={generateLinkHref(button.href)}>{button.text}</a>
+                {disableClicks ? (
+                  button.text
+                ) : (
+                  <a href={generateLinkHref(button.href)}>{button.text}</a>
+                )}
               </Button>
             )
           )}
           {isEditable && onAddLink && (
-            <Button onClick={onAddLink} variant="outline" size="sm">
+            <Button
+              onClick={onAddLink}
+              variant="outline"
+              size="sm"
+              className="pointer-events-auto"
+            >
               <Plus className="mr-2 h-4 w-4" /> Link
             </Button>
           )}
           {isEditable && onAddButton && (
-            <Button onClick={onAddButton} variant="outline" size="sm">
+            <Button
+              onClick={onAddButton}
+              variant="outline"
+              size="sm"
+              className="pointer-events-auto"
+            >
               <Plus className="mr-2 h-4 w-4" /> Button
             </Button>
           )}
-          {showCart && <CartIcon onToggleCart={toggleCart} />}
+          {showCart && (
+            <div className={disableClicks ? "pointer-events-auto" : ""}>
+              <CartIcon onToggleCart={toggleCart} />
+            </div>
+          )}
         </div>
       </nav>
 
