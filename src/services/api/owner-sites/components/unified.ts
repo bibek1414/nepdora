@@ -188,6 +188,7 @@ export const heroComponentsApi = {
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "hero"),
 };
+
 export const faqComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "faq"),
@@ -224,6 +225,7 @@ export const testimonialsComponentsApi = {
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "testimonials"),
 };
+
 export const aboutComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "about"),
@@ -268,6 +270,49 @@ export const productComponentsApi = {
     componentsApi.updateComponent(pageSlug, componentId, { data }, "products"),
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "products"),
+};
+
+// NEW: Category component APIs
+export const categoryComponentsApi = {
+  getAll: (pageSlug: string) =>
+    componentsApi.getComponentsByType(pageSlug, "category"),
+  create: (pageSlug: string, data: ComponentTypeMap["category"]) =>
+    componentsApi.createComponent(pageSlug, {
+      component_type: "category",
+      data,
+    }),
+  update: (
+    pageSlug: string,
+    componentId: string,
+    data: Partial<ComponentTypeMap["category"]>
+  ) =>
+    componentsApi.updateComponent(pageSlug, componentId, { data }, "category"),
+  delete: (pageSlug: string, componentId: string) =>
+    componentsApi.deleteComponent(pageSlug, componentId, "category"),
+};
+
+// NEW: SubCategory component APIs
+export const subCategoryComponentsApi = {
+  getAll: (pageSlug: string) =>
+    componentsApi.getComponentsByType(pageSlug, "subcategory"),
+  create: (pageSlug: string, data: ComponentTypeMap["subcategory"]) =>
+    componentsApi.createComponent(pageSlug, {
+      component_type: "subcategory",
+      data,
+    }),
+  update: (
+    pageSlug: string,
+    componentId: string,
+    data: Partial<ComponentTypeMap["subcategory"]>
+  ) =>
+    componentsApi.updateComponent(
+      pageSlug,
+      componentId,
+      { data },
+      "subcategory"
+    ),
+  delete: (pageSlug: string, componentId: string) =>
+    componentsApi.deleteComponent(pageSlug, componentId, "subcategory"),
 };
 
 export const teamComponentsApi = {

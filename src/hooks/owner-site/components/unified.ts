@@ -155,24 +155,45 @@ export const useProductComponents = (pageSlug: string) => ({
   update: useUpdateComponentMutation(pageSlug, "products"),
   delete: useDeleteComponentMutation(pageSlug, "products"),
 });
+
+// NEW: Category component hooks
+export const useCategoryComponents = (pageSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "category"),
+  create: useCreateComponentMutation(pageSlug, "category"),
+  update: useUpdateComponentMutation(pageSlug, "category"),
+  delete: useDeleteComponentMutation(pageSlug, "category"),
+});
+
+// NEW: SubCategory component hooks
+export const useSubCategoryComponents = (pageSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "subcategory"),
+  create: useCreateComponentMutation(pageSlug, "subcategory"),
+  update: useUpdateComponentMutation(pageSlug, "subcategory"),
+  delete: useDeleteComponentMutation(pageSlug, "subcategory"),
+});
+
 export const useTeamComponents = (pageSlug: string) => ({
   query: useComponentsByTypeQuery(pageSlug, "team"),
   create: useCreateComponentMutation(pageSlug, "team"),
   update: useUpdateComponentMutation(pageSlug, "team"),
   delete: useDeleteComponentMutation(pageSlug, "team"),
 });
+
 export const useTestimonialsComponents = (pageSlug: string) => ({
   query: useComponentsByTypeQuery(pageSlug, "testimonials"),
   create: useCreateComponentMutation(pageSlug, "testimonials"),
   update: useUpdateComponentMutation(pageSlug, "testimonials"),
   delete: useDeleteComponentMutation(pageSlug, "testimonials"),
 });
+
 export const useFAQComponents = (pageSlug: string) => ({
   query: useComponentsByTypeQuery(pageSlug, "faq"),
   create: useCreateComponentMutation(pageSlug, "faq"),
   update: useUpdateComponentMutation(pageSlug, "faq"),
   delete: useDeleteComponentMutation(pageSlug, "faq"),
 });
+
+// Existing specialized mutation hooks
 export const useCreateTestimonialsComponentMutation = (pageSlug: string) =>
   useCreateComponentMutation(pageSlug, "testimonials");
 
@@ -240,6 +261,143 @@ export const useDeleteTestimonialsComponentMutation = () => {
   });
 };
 
+// NEW: Category specific mutation hooks
+export const useCreateCategoryComponentMutation = (pageSlug: string) =>
+  useCreateComponentMutation(pageSlug, "category");
+
+export const useUpdateCategoryComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+      data,
+    }: {
+      pageSlug: string;
+      componentId: string;
+      data: Partial<ComponentTypeMap["category"]>;
+    }) =>
+      componentsApi.updateComponent(
+        pageSlug,
+        componentId,
+        { data },
+        "category"
+      ),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Category section updated successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update category section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeleteCategoryComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+    }: {
+      pageSlug: string;
+      componentId: string;
+    }) => componentsApi.deleteComponent(pageSlug, componentId, "category"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Category section removed successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to remove category section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+// NEW: SubCategory specific mutation hooks
+export const useCreateSubCategoryComponentMutation = (pageSlug: string) =>
+  useCreateComponentMutation(pageSlug, "subcategory");
+
+export const useUpdateSubCategoryComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+      data,
+    }: {
+      pageSlug: string;
+      componentId: string;
+      data: Partial<ComponentTypeMap["subcategory"]>;
+    }) =>
+      componentsApi.updateComponent(
+        pageSlug,
+        componentId,
+        { data },
+        "subcategory"
+      ),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("SubCategory section updated successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update subcategory section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeleteSubCategoryComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+    }: {
+      pageSlug: string;
+      componentId: string;
+    }) => componentsApi.deleteComponent(pageSlug, componentId, "subcategory"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("SubCategory section removed successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to remove subcategory section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+// Other existing hooks remain the same...
 export const useCreateHeroMutation = (pageSlug: string) =>
   useCreateComponentMutation(pageSlug, "hero");
 

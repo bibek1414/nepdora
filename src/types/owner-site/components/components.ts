@@ -2,6 +2,8 @@ import { HeroData } from "./hero";
 import { AboutUsData } from "./about";
 import { BlogDisplayData } from "./blog";
 import { ProductsData } from "./products";
+import { CategoryData } from "./category";
+import { SubCategoryData } from "./sub-category";
 import { ContactData } from "./contact";
 import { TeamData } from "./team";
 import { TestimonialsData } from "./testimonials";
@@ -13,6 +15,8 @@ export type ComponentData =
   | AboutUsData
   | BlogDisplayData
   | ProductsData
+  | CategoryData
+  | SubCategoryData
   | TeamData
   | ContactData
   | FAQData
@@ -24,6 +28,8 @@ export interface ComponentTypeMap {
   about: AboutUsData;
   blog: BlogDisplayData;
   products: ProductsData;
+  category: CategoryData;
+  subcategory: SubCategoryData;
   contact: ContactData;
   team: TeamData;
   testimonials: TestimonialsData;
@@ -93,6 +99,16 @@ export const isProductsComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"products"> =>
   component.component_type === "products";
+
+export const isCategoryComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"category"> =>
+  component.component_type === "category";
+
+export const isSubCategoryComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"subcategory"> =>
+  component.component_type === "subcategory";
 
 export const isContactComponent = (
   component: ComponentResponse
