@@ -18,7 +18,7 @@ import {
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
-
+import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -32,6 +32,7 @@ interface PageComponent {
     | "faq"
     | "testimonials"
     | "category"
+    | "portfolio"
     | "subcategory";
   data:
     | HeroComponentData["data"]
@@ -42,6 +43,7 @@ interface PageComponent {
     | FAQComponentData["data"]
     | TeamComponentData["data"]
     | TestimonialsComponentData["data"]
+    | PortfolioComponentData["data"]
     | CategoryComponentData["data"]
     | SubCategoryComponentData["data"];
   order: number;
@@ -83,6 +85,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
           "testimonials",
           "category",
           "subcategory",
+          "portfolio",
         ].includes(component.component_type) &&
         !!component.data
     );
@@ -127,6 +130,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | TestimonialsComponentData
       | CategoryComponentData
       | SubCategoryComponentData
+      | PortfolioComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
       componentId,

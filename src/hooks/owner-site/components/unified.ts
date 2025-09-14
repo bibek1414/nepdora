@@ -134,6 +134,12 @@ export const useHeroComponents = (pageSlug: string) => ({
   update: useUpdateComponentMutation(pageSlug, "hero"),
   delete: useDeleteComponentMutation(pageSlug, "hero"),
 });
+export const usePortfolioComponents = (pageSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "portfolio"),
+  create: useCreateComponentMutation(pageSlug, "portfolio"),
+  update: useUpdateComponentMutation(pageSlug, "portfolio"),
+  delete: useDeleteComponentMutation(pageSlug, "portfolio"),
+});
 
 export const useAboutComponents = (pageSlug: string) => ({
   query: useComponentsByTypeQuery(pageSlug, "about"),
@@ -597,6 +603,72 @@ export const useDeleteFAQComponentMutation = () => {
     onError: (error: unknown) => {
       const errorMessage =
         error instanceof Error ? error.message : "Failed to remove FAQ section";
+      toast.error(errorMessage);
+    },
+  });
+};
+export const useCreatePortfolioComponentMutation = (pageSlug: string) =>
+  useCreateComponentMutation(pageSlug, "portfolio");
+
+export const useUpdatePortfolioComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+      data,
+    }: {
+      pageSlug: string;
+      componentId: string;
+      data: Partial<ComponentTypeMap["portfolio"]>;
+    }) =>
+      componentsApi.updateComponent(
+        pageSlug,
+        componentId,
+        { data },
+        "portfolio"
+      ),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Portfolio section updated successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update portfolio section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeletePortfolioComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+    }: {
+      pageSlug: string;
+      componentId: string;
+    }) => componentsApi.deleteComponent(pageSlug, componentId, "portfolio"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Portfolio section removed successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to remove portfolio section";
       toast.error(errorMessage);
     },
   });

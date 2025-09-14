@@ -135,6 +135,12 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       icon: ImageIcon,
       keywords: ["images", "photos", "portfolio"],
     },
+    {
+      id: "portfolio-sections",
+      label: "Portfolio",
+      icon: FolderOpen,
+      keywords: ["projects", "work", "gallery"],
+    },
   ];
 
   const filtered = useMemo(() => {
