@@ -173,7 +173,23 @@ export const componentsApi = {
     );
   },
 };
-
+export const portfolioComponentsApi = {
+  getAll: (pageSlug: string) =>
+    componentsApi.getComponentsByType(pageSlug, "portfolio"),
+  create: (pageSlug: string, data: ComponentTypeMap["portfolio"]) =>
+    componentsApi.createComponent(pageSlug, {
+      component_type: "portfolio",
+      data,
+    }),
+  update: (
+    pageSlug: string,
+    componentId: string,
+    data: Partial<ComponentTypeMap["portfolio"]>
+  ) =>
+    componentsApi.updateComponent(pageSlug, componentId, { data }, "portfolio"),
+  delete: (pageSlug: string, componentId: string) =>
+    componentsApi.deleteComponent(pageSlug, componentId, "portfolio"),
+};
 // Specific component type APIs that use the generic service
 export const heroComponentsApi = {
   getAll: (pageSlug: string) =>

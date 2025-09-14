@@ -51,6 +51,8 @@ import { TestimonialsStylesDialog } from "@/components/site-owners/builder/testi
 import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
 import { FAQStylesDialog } from "@/components/site-owners/builder/faq/faq-styles-dialog";
 import { defaultFAQData } from "@/types/owner-site/components/faq";
+import { PortfolioStylesDialog } from "@/components/site-owners/builder/portfolio/portfolio-styles-dialog";
+import { defaultPortfolioData } from "@/types/owner-site/components/portfolio";
 
 interface BuilderLayoutProps {
   params: {
@@ -96,6 +98,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isTestimonialsStylesDialogOpen, setIsTestimonialsStylesDialogOpen] =
     useState(false);
   const [isFAQStylesDialogOpen, setIsFAQStylesDialogOpen] = useState(false);
+  const [isPortfolioStylesDialogOpen, setIsPortfolioStylesDialogOpen] =
+    useState(false);
   // Use pageSlug from URL params as current page
   const currentPage = pageSlug;
 
@@ -136,6 +140,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createFAQComponentMutation = useCreateComponentMutation(
     currentPage,
     "faq"
+  );
+  const createPortfolioComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "portfolio"
   );
 
   // Auto-create home page if no pages exist
@@ -238,6 +246,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsTestimonialsStylesDialogOpen(true);
     } else if (componentId === "faq-sections") {
       setIsFAQStylesDialogOpen(true);
+    } else if (componentId === "portfolio-sections") {
+      setIsPortfolioStylesDialogOpen(true);
     } else if (componentId === "team-members-sections") {
       setIsTeamStylesDialogOpen(true);
     } else {
@@ -348,7 +358,23 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+  const handlePortfolioTemplateSelect = (
+    template: "portfolio-1" | "portfolio-2" | "portfolio-3"
+  ) => {
+    const portfolioData = {
+      ...defaultPortfolioData,
+      style: template,
+    };
 
+    createPortfolioComponentMutation.mutate(portfolioData, {
+      onSuccess: () => {
+        setIsPortfolioStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create portfolio component:", error);
+      },
+    });
+  };
   const handleContactTemplateSelect = (
     template: "form-1" | "form-2" | "form-3" | "form-4"
   ) => {
@@ -567,6 +593,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAddTeam = () => {
     setIsTeamStylesDialogOpen(true);
   };
+  const handleAddPortfolio = () => {
+    setIsPortfolioStylesDialogOpen(true);
+  };
 
   // Updated handleDrop with proper typing and component_type mapping
   const handleDrop = useCallback((item: { type: string; id?: string }) => {
@@ -602,6 +631,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       case "testimonials-sections":
         componentType = "testimonials";
         break;
+      case "portfolio-sections":
+        componentType = "portfolio";
+        break;
       case "faq-sections":
         componentType = "faq";
         break;
@@ -619,6 +651,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "team",
             "testimonials",
             "faq",
+            "portfolio",
           ].includes(item.type)
         ) {
           componentType = item.type as keyof ComponentTypeMap;
@@ -694,7 +727,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsCategoriesStylesDialogOpen}
         onStyleSelect={handleCategoryTemplateSelect}
       />
-
+      <PortfolioStylesDialog
+        open={isPortfolioStylesDialogOpen}
+        onOpenChange={setIsPortfolioStylesDialogOpen}
+        onStyleSelect={handlePortfolioTemplateSelect}
+      />
       <SubCategoryStylesDialog
         open={isSubCategoriesStylesDialogOpen}
         onOpenChange={setIsSubCategoriesStylesDialogOpen}
@@ -772,6 +809,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddTeam={handleAddTeam}
                   onAddTestimonials={handleAddTestimonials}
                   onAddFAQ={handleAddFAQ}
+                  onAddPortfolio={handleAddPortfolio}
                 />
               </div>
             </div>

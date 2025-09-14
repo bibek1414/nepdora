@@ -21,6 +21,8 @@ import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
 import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
+import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
+import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
 
 interface PageComponent {
   id: string | number;
@@ -35,6 +37,7 @@ interface PageComponent {
     | "faq"
     | "testimonials"
     | "category"
+    | "portfolio"
     | "subcategory";
   data:
     | HeroComponentData["data"]
@@ -46,6 +49,7 @@ interface PageComponent {
     | TestimonialsComponentData["data"]
     | TeamComponentData["data"]
     | CategoryComponentData["data"]
+    | PortfolioComponentData["data"]
     | SubCategoryComponentData["data"];
   order: number;
 }
@@ -71,6 +75,7 @@ interface PageComponentRendererProps {
       | TestimonialsComponentData
       | CategoryComponentData
       | SubCategoryComponentData
+      | PortfolioComponentData
   ) => void;
 }
 
@@ -216,6 +221,19 @@ export function PageComponentRenderer({
               )
             }
             onSubCategoryClick={onSubCategoryClick}
+          />
+        );
+      case "portfolio":
+        return (
+          <PortfolioComponent
+            key={component.id}
+            component={component as PortfolioComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as PortfolioComponentData)
+            }
           />
         );
       default:

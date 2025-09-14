@@ -31,6 +31,8 @@ import { Plus, Navigation, Edit, X, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
+import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
+import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 
 // Define proper types for API responses
 interface ApiResponse {
@@ -55,6 +57,7 @@ interface CanvasAreaProps {
   onAddTeam?: () => void;
   onAddTestimonials?: () => void;
   onAddFAQ?: () => void;
+  onAddPortfolio?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -74,6 +77,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddTeam,
   onAddTestimonials,
   onAddFAQ,
+  onAddPortfolio,
 }) => {
   const deleteNavbarMutation = useDeleteNavbarMutation();
 
@@ -118,6 +122,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             "team",
             "testimonials",
             "faq",
+            "portfolio",
           ].includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
@@ -171,7 +176,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const hasFAQ = pageComponents.some(
     component => component.component_type === "faq"
   );
-
+  const hasPortfolio = pageComponents.some(
+    component => component.component_type === "portfolio"
+  );
   const handleDeleteNavbar = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (navbar?.id) {
@@ -308,6 +315,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             siteId={undefined}
             pageSlug={currentPageSlug}
             onUpdate={(_componentId: string, _newData: FAQComponentData) => {}}
+          />
+        );
+      case "portfolio":
+        return (
+          <PortfolioComponent
+            key={`portfolio-${component.id}`}
+            component={component as PortfolioComponentData}
+            isEditable={true}
+            pageSlug={currentPageSlug}
+            siteUser=""
           />
         );
       default:
