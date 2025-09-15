@@ -214,7 +214,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`products-${component.id}`}
             component={component as ProductsComponentData}
             isEditable={true}
-            siteId={undefined}
             pageSlug={currentPageSlug}
             onUpdate={(
               _componentId: string,
@@ -229,7 +228,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`category-${component.id}`}
             component={component as CategoryComponentData}
             isEditable={true}
-            siteId={undefined}
             pageSlug={currentPageSlug}
             onUpdate={(
               _componentId: string,
@@ -244,7 +242,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`subcategory-${component.id}`}
             component={component as SubCategoryComponentData}
             isEditable={true}
-            siteId={undefined}
             pageSlug={currentPageSlug}
             onUpdate={(
               _componentId: string,
@@ -259,7 +256,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`blog-${component.id}`}
             component={component as BlogComponentData}
             isEditable={true}
-            siteId={undefined}
             pageSlug={currentPageSlug}
             onUpdate={(_componentId: string, _newData: BlogComponentData) => {}}
             onBlogClick={(_blogSlug: string, _order: number) => {}}
@@ -271,7 +267,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`contact-${component.id}`}
             component={component as ContactComponentData}
             isEditable={true}
-            siteId={undefined}
             pageSlug={currentPageSlug}
             onUpdate={(
               _componentId: string,
@@ -285,7 +280,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`team-${component.id}`}
             component={component as TeamComponentData}
             isEditable={true}
-            siteId={undefined}
             pageSlug={currentPageSlug}
             onUpdate={(_componentId: string, _newData: TeamComponentData) => {}}
             onMemberClick={(_memberId: number, _order: number) => {}}
@@ -297,7 +291,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`testimonials-${component.id}`}
             component={component as TestimonialsComponentData}
             isEditable={true}
-            siteId={undefined}
             pageSlug={currentPageSlug}
             onUpdate={(
               _componentId: string,
@@ -312,7 +305,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`faq-${component.id}`}
             component={component as FAQComponentData}
             isEditable={true}
-            siteId={undefined}
             pageSlug={currentPageSlug}
             onUpdate={(_componentId: string, _newData: FAQComponentData) => {}}
           />
@@ -337,7 +329,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       {/* Navbar Section */}
       {navbar ? (
         <div className="group relative border-b">
-          <NavbarComponent navbar={navbar} siteId="" />
+          <NavbarComponent navbar={navbar} siteUser="" />
           <div className="absolute -top-2 -right-2 z-20 opacity-0 transition-opacity group-hover:opacity-100">
             <Button
               onClick={handleDeleteNavbar}

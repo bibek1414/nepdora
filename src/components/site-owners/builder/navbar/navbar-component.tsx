@@ -14,8 +14,7 @@ import { Settings } from "lucide-react";
 interface NavbarComponentProps {
   navbar: Navbar;
   isEditable?: boolean;
-  siteId: string;
-  siteUser?: string;
+  siteUser: string;
   disableClicks?: boolean; // New prop to disable all navbar clicks
 }
 
@@ -29,7 +28,6 @@ const styleMap = {
 export const NavbarComponent: React.FC<NavbarComponentProps> = ({
   navbar,
   isEditable = true,
-  siteId,
   siteUser,
   disableClicks = false,
 }) => {
@@ -80,7 +78,6 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
       <StyleComponent
         navbarData={navbar.data}
         isEditable={isEditable}
-        siteId={siteId}
         siteUser={siteUser}
         disableClicks={disableClicks}
       />

@@ -75,7 +75,6 @@ export function PreviewLayoutWrapper({
             <NavbarComponent
               navbar={navbarResponse.data}
               isEditable={false}
-              siteId={siteUser}
               siteUser={siteUser}
             />
           </div>

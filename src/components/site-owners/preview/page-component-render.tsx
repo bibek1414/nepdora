@@ -116,7 +116,7 @@ export function PageComponentRenderer({
             key={component.id}
             component={component as ProductsComponentData}
             isEditable={false}
-            siteId={siteUser}
+            siteUser={siteUser}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as ProductsComponentData)
             }
@@ -129,7 +129,7 @@ export function PageComponentRenderer({
             key={component.id}
             component={component as BlogComponentData}
             isEditable={false}
-            siteId={siteUser}
+            siteUser={siteUser}
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as BlogComponentData)
@@ -143,7 +143,7 @@ export function PageComponentRenderer({
             key={component.id}
             component={component as ContactComponentData}
             isEditable={false}
-            siteId={siteUser}
+            siteUser={siteUser}
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as ContactComponentData)
@@ -156,7 +156,7 @@ export function PageComponentRenderer({
             key={component.id}
             component={component as TeamComponentData}
             isEditable={false}
-            siteId={siteUser}
+            siteUser={siteUser}
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as TeamComponentData)
@@ -169,7 +169,7 @@ export function PageComponentRenderer({
             key={component.id}
             component={component as FAQComponentData}
             isEditable={false}
-            siteId={siteUser}
+            siteUser={siteUser}
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as FAQComponentData)
@@ -182,7 +182,7 @@ export function PageComponentRenderer({
             key={component.id}
             component={component as TestimonialsComponentData}
             isEditable={false}
-            siteId={siteUser}
+            siteUser={siteUser}
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(
@@ -198,7 +198,7 @@ export function PageComponentRenderer({
             key={component.id}
             component={component as CategoryComponentData}
             isEditable={false}
-            siteId={siteUser}
+            siteUser={siteUser}
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as CategoryComponentData)
@@ -212,7 +212,7 @@ export function PageComponentRenderer({
             key={component.id}
             component={component as SubCategoryComponentData}
             isEditable={false}
-            siteId={siteUser}
+            siteUser={siteUser}
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(

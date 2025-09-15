@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 interface ProductCard3Props {
   product: Product;
-  siteId?: string;
+  siteUser?: string;
   showPrice?: boolean;
   showDescription?: boolean;
   showStock?: boolean;
@@ -20,7 +20,7 @@ interface ProductCard3Props {
 
 export const ProductCard3: React.FC<ProductCard3Props> = ({
   product,
-  siteId,
+  siteUser,
   showPrice = true,
   showDescription = true,
   showStock = true,
@@ -70,8 +70,8 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   };
 
   const getDetailsUrl = (): string => {
-    if (siteId) {
-      return `/preview/${siteId}/products/${product.slug}`;
+    if (siteUser) {
+      return `/preview/${siteUser}/products/${product.slug}`;
     } else {
       return `/preview/products/${product.slug}`;
     }
@@ -106,13 +106,13 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
               </div>
 
               {/* Site Badge */}
-              {siteId && (
+              {siteUser && (
                 <div className="absolute top-4 left-4">
                   <Badge
                     variant="outline"
                     className="border-white/50 bg-white/90 text-xs backdrop-blur-sm"
                   >
-                    {siteId}
+                    {siteUser}
                   </Badge>
                 </div>
               )}

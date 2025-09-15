@@ -8,7 +8,7 @@ import { SubCategory } from "@/types/owner-site/product";
 
 interface SubCategoryCard2Props {
   subcategory: SubCategory;
-  siteId?: string;
+  siteUser?: string;
   showDescription?: boolean;
   showProductCount?: boolean;
   showParentCategory?: boolean;
@@ -17,7 +17,7 @@ interface SubCategoryCard2Props {
 
 export const SubCategoryCard2: React.FC<SubCategoryCard2Props> = ({
   subcategory,
-  siteId,
+  siteUser,
   showDescription = true,
   showProductCount = true,
   showParentCategory = true,
@@ -28,8 +28,8 @@ export const SubCategoryCard2: React.FC<SubCategoryCard2Props> = ({
     "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=400&fit=crop";
 
   const getSubCategoryUrl = (): string => {
-    if (siteId) {
-      return `/preview/${siteId}/products?sub_category=${subcategory.slug}`;
+    if (siteUser) {
+      return `/preview/${siteUser}/products?sub_category=${subcategory.slug}`;
     } else {
       return `/preview/products?sub_category=${subcategory.slug}`;
     }
@@ -52,7 +52,7 @@ export const SubCategoryCard2: React.FC<SubCategoryCard2Props> = ({
       ? subcategory.category.name
       : "Category";
 
-  const CardWrapper = siteId
+  const CardWrapper = siteUser
     ? ({ children }: { children: React.ReactNode }) => (
         <Link href={subcategoryUrl}>{children}</Link>
       )

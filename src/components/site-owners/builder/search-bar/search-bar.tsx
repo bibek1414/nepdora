@@ -18,13 +18,13 @@ interface SearchResults {
 
 // Search Bar Component
 interface SearchBarProps {
-  siteId: string;
+  siteUser: string;
   isEditable?: boolean;
   className?: string;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
-  siteId,
+  siteUser,
   isEditable = false,
   className = "",
 }) => {
@@ -44,7 +44,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   // Generate product URL
   const getProductUrl = (product: Product): string => {
-    return `/preview/${siteId}/products/${product.slug}`;
+    return `/preview/${siteUser}/products/${product.slug}`;
   };
 
   // Handle product click navigation
@@ -153,7 +153,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       setShowDropdown(false);
       setIsSearchFocused(false);
       // Navigate to products page with search
-      window.location.href = `/preview/${siteId}/products?search=${encodeURIComponent(searchQuery.trim())}`;
+      window.location.href = `/preview/${siteUser}/products?search=${encodeURIComponent(searchQuery.trim())}`;
     }
   };
 
@@ -200,7 +200,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleViewAllResults = (): void => {
     closeSearchResults();
-    window.location.href = `/preview/${siteId}/products?search=${encodeURIComponent(searchQuery.trim())}`;
+    window.location.href = `/preview/${siteUser}/products?search=${encodeURIComponent(searchQuery.trim())}`;
   };
 
   const limitedProducts = sortedProducts.slice(0, 5);

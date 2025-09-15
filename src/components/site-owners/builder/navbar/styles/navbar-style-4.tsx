@@ -56,8 +56,7 @@ interface NavbarStyleProps {
   isEditable?: boolean;
   onEditLogo?: () => void;
   onAddLink?: () => void;
-  siteId: string;
-  siteUser?: string;
+  siteUser: string;
   onEditLink?: (link: NavbarLink) => void;
   onDeleteLink?: (linkId: string) => void;
   onAddButton?: () => void;
@@ -69,7 +68,6 @@ interface NavbarStyleProps {
 export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   navbarData,
   isEditable,
-  siteId,
   onEditLogo,
   onAddLink,
   onEditLink,
@@ -206,7 +204,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
               className={`relative hidden max-w-md flex-1 md:block ${disableClicks ? "pointer-events-auto" : ""}`}
             >
               <SearchBar
-                siteId={siteId}
+                siteUser={siteUser}
                 isEditable={isEditable}
                 className="w-full"
               />
@@ -393,7 +391,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
       </nav>
 
       {/* Side Cart */}
-      <SideCart isOpen={isCartOpen} onClose={closeCart} siteId={siteId} />
+      <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
     </>
   );
 };

@@ -4,7 +4,7 @@ import { PortfolioData } from "@/types/owner-site/components/portfolio";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { ExternalLink, Github, Eye, Plus, Trash2 } from "lucide-react";
+import { Github, Eye, Plus, Trash2 } from "lucide-react";
 
 interface PortfolioCard3Props {
   portfolioData: PortfolioData;
@@ -334,13 +334,13 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
               {/* Content */}
               <div className="p-6">
                 {data.showCategories && (
-                  <Badge variant="secondary" className="mb-3">
+                  <Badge variant="outline" className="mb-3">
                     <select
                       value={item.category}
                       onChange={e =>
                         handleItemUpdate(item.id, "category", e.target.value)
                       }
-                      className="border-none bg-transparent text-xs text-inherit"
+                      className="border-none text-xs text-black"
                       disabled={!isEditable}
                     >
                       {data.categories.map(category => (

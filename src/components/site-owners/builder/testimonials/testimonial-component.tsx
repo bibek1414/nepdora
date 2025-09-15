@@ -29,7 +29,7 @@ import { EditableText } from "@/components/ui/editable-text";
 interface TestimonialsComponentProps {
   component: TestimonialsComponentData;
   isEditable?: boolean;
-  siteId?: string;
+  siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: TestimonialsComponentData) => void;
   onTestimonialClick?: (testimonialId: number, order: number) => void;
@@ -38,7 +38,7 @@ interface TestimonialsComponentProps {
 export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   component,
   isEditable = false,
-  siteId,
+  siteUser,
   pageSlug,
   onUpdate,
   onTestimonialClick,

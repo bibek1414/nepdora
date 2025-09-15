@@ -32,7 +32,7 @@ const CheckoutPage = () => {
   const createOrderMutation = useCreateOrder();
 
   const isPreviewMode = !!params?.siteUser;
-  const siteId = params?.siteUser as string;
+  const siteUser = params?.siteUser as string;
 
   const {
     register,
@@ -92,7 +92,7 @@ const CheckoutPage = () => {
 
       // Navigate based on whether we're in preview mode
       if (isPreviewMode) {
-        router.push(`/preview/${siteId}/order-confirmation/${order.id}`);
+        router.push(`/preview/${siteUser}/order-confirmation/${order.id}`);
       } else {
         router.push(`/order-confirmation/${order.id}`);
       }
@@ -104,7 +104,7 @@ const CheckoutPage = () => {
 
   const handleContinueShopping = () => {
     if (isPreviewMode) {
-      router.push(`/preview/${siteId}`);
+      router.push(`/preview/${siteUser}`);
     } else {
       router.push("/");
     }

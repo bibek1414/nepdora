@@ -15,13 +15,13 @@ import { useSubmitContactForm } from "@/hooks/owner-site/use-contact";
 
 interface ContactForm3Props {
   data: ContactData;
-  siteId?: string;
+  siteUser?: string;
   isPreview?: boolean;
 }
 
 export const ContactForm3: React.FC<ContactForm3Props> = ({
   data,
-  siteId,
+  siteUser,
   isPreview = false,
 }) => {
   const [formData, setFormData] = useState<ContactFormSubmission>({
@@ -31,12 +31,12 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
     message: "",
   });
 
-  const submitContactForm = useSubmitContactForm(siteId || "preview");
+  const submitContactForm = useSubmitContactForm(siteUser || "preview");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isPreview && siteId) {
+    if (!isPreview && siteUser) {
       submitContactForm.mutate(formData, {
         onSuccess: () => {
           setFormData({

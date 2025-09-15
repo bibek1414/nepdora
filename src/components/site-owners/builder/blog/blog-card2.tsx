@@ -9,7 +9,7 @@ import { formatDate } from "@/utils/date";
 
 interface BlogCard2Props {
   blog: BlogPost;
-  siteId?: string;
+  siteUser?: string;
   showAuthor?: boolean;
   showDate?: boolean;
   showTags?: boolean;
@@ -19,7 +19,7 @@ interface BlogCard2Props {
 
 export const BlogCard2: React.FC<BlogCard2Props> = ({
   blog,
-  siteId,
+  siteUser,
   showAuthor = true,
   showDate = true,
   showTags = true,
@@ -31,8 +31,8 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
     "https://images.unsplash.com/photo-1507925921958-8186109cbb5a?w=600&h=400&fit=crop";
 
   const getDetailsUrl = (): string => {
-    if (siteId) {
-      return `/preview/${siteId}/blogs/${blog.slug}`;
+    if (siteUser) {
+      return `/preview/${siteUser}/blogs/${blog.slug}`;
     } else {
       return `/blogs/${blog.slug}`;
     }
@@ -47,7 +47,7 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
     }
   };
 
-  const CardWrapper = siteId
+  const CardWrapper = siteUser
     ? ({ children }: { children: React.ReactNode }) => (
         <Link href={getDetailsUrl()}>{children}</Link>
       )

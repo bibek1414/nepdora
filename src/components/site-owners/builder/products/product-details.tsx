@@ -36,12 +36,12 @@ import { Input } from "@/components/ui/input";
 
 interface ProductDetailProps {
   slug: string;
-  siteId?: string;
+  siteUser?: string;
 }
 
 export const ProductDetail: React.FC<ProductDetailProps> = ({
   slug,
-  siteId,
+  siteUser,
 }) => {
   const { data: product, isLoading, error } = useProduct(slug);
   const [selectedImage, setSelectedImage] = React.useState<string>("");
@@ -173,7 +173,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={`/preview?site=${siteId}&page=home`}
+                  href={`/preview?site=${siteUser}&page=home`}
                   className="flex items-center gap-2"
                 >
                   <Home className="h-4 w-4" />
@@ -184,7 +184,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/preview?site=${siteId}&page=products`}>
+                <Link href={`/preview?site=${siteUser}&page=products`}>
                   Products
                 </Link>
               </BreadcrumbLink>
@@ -195,7 +195,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
                     <Link
-                      href={`/preview?site=${siteId}&page=products&category=${product.category.slug}`}
+                      href={`/preview?site=${siteUser}&page=products&category=${product.category.slug}`}
                     >
                       {product.category.name}
                     </Link>

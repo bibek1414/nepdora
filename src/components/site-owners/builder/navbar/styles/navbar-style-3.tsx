@@ -40,8 +40,7 @@ const EditableItem: React.FC<{
 
 interface NavbarStyleProps {
   navbarData: NavbarData;
-  siteId: string;
-  siteUser?: string;
+  siteUser: string;
   isEditable?: boolean;
   onEditLogo?: () => void;
   onAddLink?: () => void;
@@ -56,7 +55,6 @@ interface NavbarStyleProps {
 export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
   navbarData,
   isEditable,
-  siteId,
   siteUser,
   onEditLogo,
   onAddLink,
@@ -139,7 +137,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
             className={`relative hidden max-w-md flex-1 md:block ${disableClicks ? "pointer-events-auto" : ""}`}
           >
             <SearchBar
-              siteId={siteId}
+              siteUser={siteUser}
               isEditable={isEditable}
               className="w-full"
             />
@@ -162,7 +160,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
               aria-label="Toggle search"
             >
               <SearchBar
-                siteId={siteId}
+                siteUser={siteUser}
                 isEditable={isEditable}
                 className="w-full"
               />
@@ -270,7 +268,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
         </div>
       </nav>
 
-      <SideCart isOpen={isCartOpen} onClose={closeCart} siteId={siteId} />
+      <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
     </>
   );
 };

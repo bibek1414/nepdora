@@ -10,10 +10,10 @@ import Link from "next/link";
 interface SideCartProps {
   isOpen: boolean;
   onClose: () => void;
-  siteId: string;
+  siteUser: string;
 }
 
-const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteId }) => {
+const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
   const { cartItems, removeFromCart, updateQuantity, itemCount } = useCart();
 
   const totalPrice = cartItems.reduce(
@@ -21,8 +21,8 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteId }) => {
     0
   );
 
-  // Generate checkout URL with siteId
-  const checkoutUrl = `/preview/${siteId}/checkout`;
+  // Generate checkout URL with siteUser
+  const checkoutUrl = `/preview/${siteUser}/checkout`;
 
   return (
     <>

@@ -28,7 +28,7 @@ import { EditableText } from "@/components/ui/editable-text";
 interface FAQComponentProps {
   component: FAQComponentData;
   isEditable?: boolean;
-  siteId?: string;
+  siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: FAQComponentData) => void;
 }
@@ -36,7 +36,7 @@ interface FAQComponentProps {
 export const FAQComponent: React.FC<FAQComponentProps> = ({
   component,
   isEditable = false,
-  siteId,
+  siteUser,
   pageSlug,
   onUpdate,
 }) => {

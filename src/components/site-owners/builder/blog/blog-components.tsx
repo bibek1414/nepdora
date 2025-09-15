@@ -26,7 +26,7 @@ import { Badge } from "@/components/ui/badge";
 interface BlogComponentProps {
   component: BlogComponentData;
   isEditable?: boolean;
-  siteId?: string;
+  siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: BlogComponentData) => void;
   onBlogClick?: (blogSlug: string, order: number) => void;
@@ -35,7 +35,7 @@ interface BlogComponentProps {
 export const BlogComponent: React.FC<BlogComponentProps> = ({
   component,
   isEditable = false,
-  siteId,
+  siteUser,
   pageSlug,
   onUpdate,
   onBlogClick,
@@ -109,7 +109,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   const renderBlogCard = (blog: BlogPost) => {
     const cardProps = {
       blog,
-      siteId: isEditable ? undefined : siteId,
+      siteUser: isEditable ? undefined : siteUser,
       showAuthor,
       showDate,
       showTags,

@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 interface CategoryCard1Props {
   category: Category;
-  siteId?: string;
+  siteUser?: string;
   showDescription?: boolean;
   showProductCount?: boolean;
   onClick?: () => void;
@@ -18,7 +18,7 @@ interface CategoryCard1Props {
 
 export const CategoryCard1: React.FC<CategoryCard1Props> = ({
   category,
-  siteId,
+  siteUser,
   showDescription = true,
   showProductCount = true,
   onClick,
@@ -36,8 +36,8 @@ export const CategoryCard1: React.FC<CategoryCard1Props> = ({
   };
 
   const getCategoryUrl = (): string => {
-    if (siteId) {
-      return `/preview/${siteId}/products?category=${category.slug}`;
+    if (siteUser) {
+      return `/preview/${siteUser}/products?category=${category.slug}`;
     } else {
       return `/preview/products?category=${category.slug}`;
     }
@@ -54,7 +54,7 @@ export const CategoryCard1: React.FC<CategoryCard1Props> = ({
 
   const categoryUrl = getCategoryUrl();
 
-  const CardWrapper = siteId
+  const CardWrapper = siteUser
     ? ({ children }: { children: React.ReactNode }) => (
         <Link href={categoryUrl}>{children}</Link>
       )

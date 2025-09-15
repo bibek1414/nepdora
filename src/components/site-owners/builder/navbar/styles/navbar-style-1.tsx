@@ -42,8 +42,7 @@ interface NavbarStyleProps {
   isEditable?: boolean;
   onEditLogo?: () => void;
   onAddLink?: () => void;
-  siteId: string;
-  siteUser?: string;
+  siteUser: string;
   onEditLink?: (link: NavbarLink) => void;
   onDeleteLink?: (linkId: string) => void;
   onAddButton?: () => void;
@@ -55,12 +54,11 @@ interface NavbarStyleProps {
 export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
   navbarData,
   isEditable,
-  siteId,
+  siteUser,
   onEditLogo,
   onAddLink,
   onEditLink,
   onDeleteLink,
-  siteUser,
   onAddButton,
   onEditButton,
   onDeleteButton,
@@ -225,7 +223,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
       </nav>
 
       {/* Side Cart */}
-      <SideCart isOpen={isCartOpen} onClose={closeCart} siteId={siteId} />
+      <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
     </>
   );
 };

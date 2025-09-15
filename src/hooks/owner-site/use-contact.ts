@@ -15,7 +15,7 @@ export const useGetContacts = (filters: ContactFilters = {}) => {
   });
 };
 
-export const useSubmitContactForm = (siteId: string) => {
+export const useSubmitContactForm = (siteUser: string) => {
   return useMutation({
     mutationFn: (data: ContactFormSubmission) => {
       // Transform ContactFormSubmission to ContactFormData format

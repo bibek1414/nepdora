@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 interface ProductCard1Props {
   product: Product;
-  siteId?: string;
+  siteUser?: string;
   showPrice?: boolean;
   showDescription?: boolean;
   showStock?: boolean;
@@ -20,7 +20,7 @@ interface ProductCard1Props {
 
 export const ProductCard1: React.FC<ProductCard1Props> = ({
   product,
-  siteId,
+  siteUser,
   showPrice = true,
   showDescription = true,
   showStock = true,
@@ -70,8 +70,8 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
   };
 
   const getDetailsUrl = (): string => {
-    if (siteId) {
-      return `/preview/${siteId}/products/${product.slug}`;
+    if (siteUser) {
+      return `/preview/${siteUser}/products/${product.slug}`;
     } else {
       return `/preview/products/${product.slug}`;
     }
@@ -88,7 +88,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
 
   const detailsUrl = getDetailsUrl();
 
-  const CardWrapper = siteId
+  const CardWrapper = siteUser
     ? ({ children }: { children: React.ReactNode }) => (
         <Link href={detailsUrl}>{children}</Link>
       )

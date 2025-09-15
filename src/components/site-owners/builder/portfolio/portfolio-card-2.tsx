@@ -300,13 +300,13 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
               {/* Content */}
               <div className="w-full p-8 lg:w-1/2">
                 {data.showCategories && (
-                  <Badge variant="secondary" className="mb-4">
+                  <Badge variant="outline" className="mb-4">
                     <select
                       value={item.category}
                       onChange={e =>
                         handleItemUpdate(item.id, "category", e.target.value)
                       }
-                      className="border-none bg-transparent text-xs text-inherit"
+                      className="border-none text-xs text-black"
                       disabled={!isEditable}
                     >
                       {data.categories.map(category => (

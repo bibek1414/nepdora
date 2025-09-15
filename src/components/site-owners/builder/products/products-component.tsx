@@ -30,7 +30,7 @@ import Pagination from "@/components/ui/pagination";
 interface ProductsComponentProps {
   component: ProductsComponentData;
   isEditable?: boolean;
-  siteId?: string;
+  siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: ProductsComponentData) => void;
   onProductClick?: (productId: number, order: number) => void;
@@ -39,7 +39,7 @@ interface ProductsComponentProps {
 export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   component,
   isEditable = false,
-  siteId,
+  siteUser,
   pageSlug,
   onUpdate,
   onProductClick,
@@ -164,7 +164,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   const renderProductCard = (product: Product, index: number) => {
     const cardProps = {
       product,
-      siteId: isEditable ? undefined : siteId,
+      siteUser: isEditable ? undefined : siteUser,
       showPrice,
       showDescription,
       showStock,

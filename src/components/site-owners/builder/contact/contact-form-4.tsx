@@ -25,7 +25,7 @@ import { useSubmitContactForm } from "@/hooks/owner-site/use-contact";
 
 interface ContactForm4Props {
   data: ContactData;
-  siteId?: string;
+  siteUser?: string;
   isPreview?: boolean;
   isEditable?: boolean;
   onDataChange?: (data: ContactData) => void;
@@ -33,7 +33,7 @@ interface ContactForm4Props {
 
 export const ContactForm4: React.FC<ContactForm4Props> = ({
   data,
-  siteId,
+  siteUser,
   isPreview = false,
   isEditable = false,
   onDataChange,
@@ -52,12 +52,12 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
 
   const [showMapSettings, setShowMapSettings] = useState<boolean>(false);
 
-  const submitContactForm = useSubmitContactForm(siteId || "preview");
+  const submitContactForm = useSubmitContactForm(siteUser || "preview");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isPreview && siteId) {
+    if (!isPreview && siteUser) {
       submitContactForm.mutate(formData, {
         onSuccess: () => {
           setFormData({

@@ -29,7 +29,7 @@ import { EditableText } from "@/components/ui/editable-text";
 interface TeamComponentProps {
   component: TeamComponentData;
   isEditable?: boolean;
-  siteId?: string;
+  siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: TeamComponentData) => void;
   onMemberClick?: (memberId: number, order: number) => void;
@@ -38,7 +38,7 @@ interface TeamComponentProps {
 export const TeamComponent: React.FC<TeamComponentProps> = ({
   component,
   isEditable = false,
-  siteId,
+  siteUser,
   pageSlug,
   onUpdate,
   onMemberClick,

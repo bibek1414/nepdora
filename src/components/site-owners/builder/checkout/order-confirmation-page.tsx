@@ -18,14 +18,14 @@ import { use } from "react";
 import Image from "next/image";
 
 interface PreviewOrderConfirmationPageProps {
-  params: { siteId: string; orderId: string };
+  params: { siteUser: string; orderId: string };
 }
 
 const PreviewOrderConfirmationPage: React.FC<
   PreviewOrderConfirmationPageProps
 > = ({ params }) => {
   const router = useRouter();
-  const { siteId, orderId } = params;
+  const { siteUser, orderId } = params;
   const { data: order, isLoading, error } = useOrder(parseInt(orderId));
 
   if (isLoading) {
@@ -47,7 +47,7 @@ const PreviewOrderConfirmationPage: React.FC<
           <p className="mb-8 text-gray-600">
             We couldn&apos;t find the order you&apos;re looking for.
           </p>
-          <Button onClick={() => router.push(`/preview/${siteId}`)}>
+          <Button onClick={() => router.push(`/preview/${siteUser}`)}>
             Continue Shopping
           </Button>
         </div>
@@ -262,7 +262,7 @@ const PreviewOrderConfirmationPage: React.FC<
         {/* Action Buttons */}
         <div className="flex flex-col justify-center gap-4 sm:flex-row">
           <Button
-            onClick={() => router.push(`/preview/${siteId}`)}
+            onClick={() => router.push(`/preview/${siteUser}`)}
             variant="outline"
             className="px-8"
           >

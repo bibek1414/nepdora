@@ -29,7 +29,7 @@ import Pagination from "@/components/ui/pagination";
 interface SubCategoryComponentProps {
   component: SubCategoryComponentData;
   isEditable?: boolean;
-  siteId?: string;
+  siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: SubCategoryComponentData) => void;
   onSubCategoryClick?: (subcategoryId: number, order: number) => void;
@@ -38,7 +38,7 @@ interface SubCategoryComponentProps {
 export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
   component,
   isEditable = false,
-  siteId,
+  siteUser,
   pageSlug,
   onUpdate,
   onSubCategoryClick,
@@ -163,7 +163,7 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
   const renderSubCategoryCard = (subcategory: SubCategory, index: number) => {
     const cardProps = {
       subcategory,
-      siteId: isEditable ? undefined : siteId,
+      siteUser: isEditable ? undefined : siteUser,
       showDescription,
       showProductCount,
       showParentCategory,

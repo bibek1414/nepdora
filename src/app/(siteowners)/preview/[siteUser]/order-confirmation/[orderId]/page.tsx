@@ -12,7 +12,7 @@ export default function OrderConfirmation({ params }: PageProps) {
 
   return (
     <OrderConfirmationPage
-      params={{ siteId: siteUser, orderId: orderId.toString() }}
+      params={{ siteUser: siteUser, orderId: orderId.toString() }}
     />
   );
 }

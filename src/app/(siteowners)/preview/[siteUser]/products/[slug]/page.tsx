@@ -11,5 +11,5 @@ interface ProductPageProps {
 export default function ProductPage({ params }: ProductPageProps) {
   const { siteUser, slug } = use(params);
 
-  return <ProductDetail slug={slug} siteId={siteUser} />;
+  return <ProductDetail slug={slug} siteUser={siteUser} />;
 }

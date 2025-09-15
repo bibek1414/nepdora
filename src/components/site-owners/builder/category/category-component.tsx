@@ -29,7 +29,7 @@ import Pagination from "@/components/ui/pagination";
 interface CategoryComponentProps {
   component: CategoryComponentData;
   isEditable?: boolean;
-  siteId?: string;
+  siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: CategoryComponentData) => void;
   onCategoryClick?: (categoryId: number, order: number) => void;
@@ -38,7 +38,7 @@ interface CategoryComponentProps {
 export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   component,
   isEditable = false,
-  siteId,
+  siteUser,
   pageSlug,
   onUpdate,
   onCategoryClick,
@@ -162,7 +162,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   const renderCategoryCard = (category: Category, index: number) => {
     const cardProps = {
       category,
-      siteId: isEditable ? undefined : siteId,
+      siteUser: isEditable ? undefined : siteUser,
       showDescription,
       showProductCount,
       onClick: () => handleCategoryClick(category),

@@ -29,7 +29,7 @@ import { Trash2, Mail } from "lucide-react";
 interface ContactComponentProps {
   component: ContactComponentData;
   isEditable?: boolean;
-  siteId?: string;
+  siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: ContactComponentData) => void;
 }
@@ -37,7 +37,7 @@ interface ContactComponentProps {
 export const ContactComponent: React.FC<ContactComponentProps> = ({
   component,
   isEditable = false,
-  siteId,
+  siteUser,
   pageSlug,
   onUpdate,
 }) => {
@@ -156,7 +156,7 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
   const renderContactForm = () => {
     const formProps = {
       data: component.data,
-      siteId: isEditable ? undefined : siteId,
+      siteUser: isEditable ? undefined : siteUser,
       isPreview: isEditable,
       isEditable: isEditable,
       onDataChange: isEditable ? handleDataChange : undefined,

@@ -8,7 +8,7 @@ import { Category } from "@/types/owner-site/product";
 
 interface CategoryCard2Props {
   category: Category;
-  siteId?: string;
+  siteUser?: string;
   showDescription?: boolean;
   showProductCount?: boolean;
   onClick?: () => void;
@@ -16,7 +16,7 @@ interface CategoryCard2Props {
 
 export const CategoryCard2: React.FC<CategoryCard2Props> = ({
   category,
-  siteId,
+  siteUser,
   showDescription = true,
   showProductCount = true,
   onClick,
@@ -26,8 +26,8 @@ export const CategoryCard2: React.FC<CategoryCard2Props> = ({
     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop";
 
   const getCategoryUrl = (): string => {
-    if (siteId) {
-      return `/preview/${siteId}/products?category=${category.slug}`;
+    if (siteUser) {
+      return `/preview/${siteUser}/products?category=${category.slug}`;
     } else {
       return `/preview/products?category=${category.slug}`;
     }
@@ -44,7 +44,7 @@ export const CategoryCard2: React.FC<CategoryCard2Props> = ({
 
   const categoryUrl = getCategoryUrl();
 
-  const CardWrapper = siteId
+  const CardWrapper = siteUser
     ? ({ children }: { children: React.ReactNode }) => (
         <Link href={categoryUrl}>{children}</Link>
       )

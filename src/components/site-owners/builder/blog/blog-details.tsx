@@ -26,10 +26,10 @@ import { formatDate } from "@/utils/date";
 
 interface BlogDetailProps {
   slug: string;
-  siteId?: string;
+  siteUser?: string;
 }
 
-export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteId }) => {
+export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
   const { data: blog, isLoading, error } = useBlog(slug); // Assuming useBlog hook fetches a single blog post by slug
 
   // Default fallback image
@@ -114,7 +114,7 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteId }) => {
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={`/preview?site=${siteId}&page=home`}
+                  href={`/preview?site=${siteUser}&page=home`}
                   className="flex items-center gap-2"
                 >
                   <Home className="h-4 w-4" />
@@ -125,7 +125,7 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteId }) => {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/preview?site=${siteId}&page=blogs`}>Blogs</Link>
+                <Link href={`/preview?site=${siteUser}&page=blogs`}>Blogs</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
@@ -243,7 +243,7 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteId }) => {
                 ].map((post, index) => (
                   <li key={index}>
                     <Link
-                      href={`/preview?site=${siteId}&page=blogs/${post.slug}`}
+                      href={`/preview?site=${siteUser}&page=blogs/${post.slug}`}
                       className="text-foreground hover:text-primary text-base transition-colors"
                     >
                       {post.title}

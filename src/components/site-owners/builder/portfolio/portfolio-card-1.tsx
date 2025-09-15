@@ -362,13 +362,13 @@ export const PortfolioCard1: React.FC<PortfolioCard1Props> = ({
               {/* Content */}
               <div className="p-6">
                 {data.showCategories && (
-                  <Badge variant="secondary" className="mb-2">
+                  <Badge variant="outline" className="mb-2">
                     <select
                       value={item.category}
                       onChange={e =>
                         handleItemUpdate(item.id, "category", e.target.value)
                       }
-                      className="border-none bg-transparent text-xs text-inherit"
+                      className="border-none text-xs text-black"
                       disabled={!isEditable}
                     >
                       {data.categories.map(category => (
@@ -464,7 +464,7 @@ export const PortfolioCard1: React.FC<PortfolioCard1Props> = ({
               >
                 <EditableText
                   value="Load More Projects"
-                  onChange={() => {}} // Could make this editable too
+                  onChange={() => {}}
                   as="span"
                   isEditable={false}
                 />
