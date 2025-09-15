@@ -24,18 +24,27 @@ import { PlaceholderManager } from "@/components/ui/content-placeholder";
 import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
 import { ComponentResponse } from "@/types/owner-site/components/components";
+import { HeroComponentData } from "@/types/owner-site/components/hero";
+import { AboutUsComponentData } from "@/types/owner-site/components/about";
+import { ProductsComponentData } from "@/types/owner-site/components/products";
+import { CategoryComponentData } from "@/types/owner-site/components/category";
+import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
+import { BlogComponentData } from "@/types/owner-site/components/blog";
+import { TeamComponentData } from "@/types/owner-site/components/team";
+import { ContactComponentData } from "@/types/owner-site/components/contact";
+import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
+import { FAQComponentData } from "@/types/owner-site/components/faq";
+import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/unified";
 import {
   Plus,
   Navigation,
   GripVertical,
-  X,
   FileText,
   ChevronUp,
   ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
@@ -46,7 +55,7 @@ interface CanvasAreaProps {
   currentPageSlug: string;
   pageComponents: ComponentResponse[];
   isLoading: boolean;
-  error: any;
+  error: Error | null;
   onAddHero?: () => void;
   onAddAboutUs?: () => void;
   onAddProducts?: () => void;
@@ -171,14 +180,14 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       pageSlug: currentPageSlug,
     };
 
-    let componentElement;
+    let componentElement: React.ReactNode;
 
     switch (component.component_type) {
       case "hero":
         componentElement = (
           <HeroComponent
             key={`hero-${component.id}`}
-            component={component as any}
+            component={component as HeroComponentData}
             siteUser=""
             {...commonProps}
           />
@@ -188,7 +197,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         componentElement = (
           <AboutUsComponent
             key={`about-${component.id}`}
-            component={component as any}
+            component={component as AboutUsComponentData}
             {...commonProps}
           />
         );
@@ -197,7 +206,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         componentElement = (
           <ProductsComponent
             key={`products-${component.id}`}
-            component={component as any}
+            component={component as ProductsComponentData}
             onUpdate={() => {}}
             onProductClick={() => {}}
             {...commonProps}
@@ -208,7 +217,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         componentElement = (
           <CategoryComponent
             key={`category-${component.id}`}
-            component={component as any}
+            component={component as CategoryComponentData}
             onUpdate={() => {}}
             onCategoryClick={() => {}}
             {...commonProps}
@@ -219,7 +228,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         componentElement = (
           <SubCategoryComponent
             key={`subcategory-${component.id}`}
-            component={component as any}
+            component={component as SubCategoryComponentData}
             onUpdate={() => {}}
             onSubCategoryClick={() => {}}
             {...commonProps}
@@ -230,7 +239,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         componentElement = (
           <BlogComponent
             key={`blog-${component.id}`}
-            component={component as any}
+            component={component as BlogComponentData}
             onUpdate={() => {}}
             onBlogClick={() => {}}
             {...commonProps}
@@ -241,7 +250,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         componentElement = (
           <ContactComponent
             key={`contact-${component.id}`}
-            component={component as any}
+            component={component as ContactComponentData}
             onUpdate={() => {}}
             {...commonProps}
           />
@@ -251,7 +260,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         componentElement = (
           <TeamComponent
             key={`team-${component.id}`}
-            component={component as any}
+            component={component as TeamComponentData}
             onUpdate={() => {}}
             onMemberClick={() => {}}
             {...commonProps}
@@ -262,7 +271,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         componentElement = (
           <TestimonialsComponent
             key={`testimonials-${component.id}`}
-            component={component as any}
+            component={component as TestimonialsComponentData}
             onUpdate={() => {}}
             onTestimonialClick={() => {}}
             {...commonProps}
@@ -273,7 +282,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         componentElement = (
           <FAQComponent
             key={`faq-${component.id}`}
-            component={component as any}
+            component={component as FAQComponentData}
             onUpdate={() => {}}
             {...commonProps}
           />
@@ -283,7 +292,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         componentElement = (
           <PortfolioComponent
             key={`portfolio-${component.id}`}
-            component={component as any}
+            component={component as PortfolioComponentData}
             siteUser=""
             {...commonProps}
           />
@@ -384,9 +393,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     c => c.component_type === "testimonials"
   );
   const hasFAQ = pageComponents.some(c => c.component_type === "faq");
-  const hasPortfolio = pageComponents.some(
-    c => c.component_type === "portfolio"
-  );
 
   return (
     <div className="rounded-lg border-2 border-dashed bg-white transition-colors">

@@ -166,6 +166,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     if (Array.isArray(pageComponentsResponse)) {
       components = pageComponentsResponse as ComponentResponse[];
     } else {
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       const apiResponse = pageComponentsResponse as any;
       if (Array.isArray(apiResponse.data)) {
         components = apiResponse.data;
