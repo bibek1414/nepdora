@@ -23,7 +23,10 @@ import {
 import { FooterStylesDialog } from "@/components/site-owners/builder/footer/footer-styles-dialog";
 import { HeroStylesDialog } from "@/components/site-owners/builder/hero/hero-styles-dialog";
 import { defaultHeroData } from "@/types/owner-site/components/hero";
-import { useCreateComponentMutation } from "@/hooks/owner-site/components/unified";
+import {
+  useCreateComponentMutation,
+  usePageComponentsQuery,
+} from "@/hooks/owner-site/components/unified";
 import { AboutUsStylesDialog } from "@/components/site-owners/builder/about/about-styles-dialog";
 import {
   defaultAboutUs1Data,
@@ -76,6 +79,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
   const createPageMutation = useCreatePage();
 
+  // Page components with proper ordering
+  const {
+    data: pageComponentsResponse,
+    isLoading: isPageComponentsLoading,
+    error: pageComponentsError,
+  } = usePageComponentsQuery(pageSlug);
+
   const [droppedComponents, setDroppedComponents] = useState<
     ComponentResponse[]
   >([]);
@@ -100,6 +110,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isFAQStylesDialogOpen, setIsFAQStylesDialogOpen] = useState(false);
   const [isPortfolioStylesDialogOpen, setIsPortfolioStylesDialogOpen] =
     useState(false);
+
   // Use pageSlug from URL params as current page
   const currentPage = pageSlug;
 
@@ -146,6 +157,63 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     "portfolio"
   );
 
+  // Process page components with proper typing
+  const pageComponents = React.useMemo(() => {
+    if (!pageComponentsResponse) return [];
+
+    let components: ComponentResponse[] = [];
+
+    if (Array.isArray(pageComponentsResponse)) {
+      components = pageComponentsResponse as ComponentResponse[];
+    } else {
+      const apiResponse = pageComponentsResponse as any;
+      if (Array.isArray(apiResponse.data)) {
+        components = apiResponse.data;
+      } else if (Array.isArray(apiResponse.components)) {
+        components = apiResponse.components;
+      } else {
+        return [];
+      }
+    }
+
+    const filteredComponents = components.filter(
+      (component: ComponentResponse) => {
+        const hasValidType =
+          component.component_type &&
+          [
+            "hero",
+            "about",
+            "products",
+            "category",
+            "subcategory",
+            "blog",
+            "contact",
+            "team",
+            "testimonials",
+            "faq",
+            "portfolio",
+          ].includes(component.component_type);
+        const hasValidData = component && component.data;
+        const hasValidId = component && typeof component.id !== "undefined";
+        return hasValidType && hasValidData && hasValidId;
+      }
+    );
+
+    const transformedComponents = filteredComponents.map(
+      (component: ComponentResponse) => ({
+        id: component.id,
+        component_id: component.component_id,
+        component_type: component.component_type,
+        data: component.data,
+        type: component.component_type,
+        order: component.order || 0,
+        page: component.page,
+      })
+    );
+
+    return transformedComponents;
+  }, [pageComponentsResponse]);
+
   // Auto-create home page if no pages exist
   useEffect(() => {
     if (
@@ -160,9 +228,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         { title: "Home" },
         {
           onSuccess: (data: Page) => {
-            console.log("Default home page created successfully:", data);
             setIsCreatingHomePage(false);
-            // Redirect to the newly created home page if we're not already there
             if (pageSlug !== data.slug) {
               router.push(`/builder/${siteUser}/${data.slug}`);
             }
@@ -190,7 +256,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       const pageExists = pagesData.find(page => page.slug === pageSlug);
 
       if (!pageExists && !isCreatingHomePage) {
-        // Page doesn't exist, redirect to first available page or home
         const firstPage = pagesData[0];
         router.push(`/builder/${siteUser}/${firstPage.slug}`);
       }
@@ -200,7 +265,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   // Get current page data
   const currentPageData = pagesData.find(page => page.slug === currentPage);
 
-  // Update page change handler to use router
+  // Handle page change
   const handlePageChange = (newPageSlug: string) => {
     router.push(`/builder/${siteUser}/${newPageSlug}`);
   };
@@ -222,7 +287,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   };
 
-  // Update the component click handler
+  // Component click handlers - same as before
   const handleComponentClick = (componentId: string) => {
     if (componentId === "navbar") {
       setIsNavbarDialogOpen(true);
@@ -255,6 +320,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   };
 
+  // Template selection handlers - same as before but ensuring proper order assignment
   const handleNavbarTemplateSelect = (templateData: NavbarData) => {
     const payload = {
       content: "navbar content",
@@ -317,38 +383,22 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
-  const handleFAQTemplateSelect = (
-    template: "accordion" | "plus-minus" | "card-grid"
-  ) => {
-    const faqData = {
-      ...defaultFAQData,
-      style: template,
-    };
-
-    createFAQComponentMutation.mutate(faqData, {
-      onSuccess: () => {
-        setIsFAQStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create FAQ component:", error);
-      },
-    });
+  // Helper function to get next order value
+  const getNextOrder = () => {
+    if (pageComponents.length === 0) return 0;
+    const maxOrder = Math.max(...pageComponents.map(c => c.order || 0));
+    return maxOrder + 1;
   };
 
-  const handleAddFAQ = () => {
-    setIsFAQStylesDialogOpen(true);
-  };
-
+  // Template selection handlers with proper order assignment
   const handleHeroTemplateSelect = (
     template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5"
   ) => {
-    // Create hero data with the selected template
     const heroData = {
       ...defaultHeroData,
       template: template,
     };
 
-    // Use unified mutation with just the data
     createHeroMutation.mutate(heroData, {
       onSuccess: () => {
         setIsHeroStylesDialogOpen(false);
@@ -358,6 +408,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+
   const handlePortfolioTemplateSelect = (
     template: "portfolio-1" | "portfolio-2" | "portfolio-3"
   ) => {
@@ -375,6 +426,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+
   const handleContactTemplateSelect = (
     template: "form-1" | "form-2" | "form-3" | "form-4"
   ) => {
@@ -383,7 +435,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       style: template,
     };
 
-    // Use unified mutation with just the data
     createContactComponentMutation.mutate(contactData, {
       onSuccess: () => {
         setIsContactStylesDialogOpen(false);
@@ -397,7 +448,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAboutUsTemplateSelect = (
     template: "about-1" | "about-2" | "about-3" | "about-4"
   ) => {
-    // Select the correct default data based on the chosen template
     let aboutUsData: AboutUsData;
 
     switch (template) {
@@ -417,7 +467,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         aboutUsData = defaultAboutUs1Data;
     }
 
-    // Use unified mutation with just the data
     createAboutUsMutation.mutate(aboutUsData, {
       onSuccess: () => {
         setIsAboutUsStylesDialogOpen(false);
@@ -431,13 +480,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleProductsTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1" | "carousel-1"
   ) => {
-    // Create products component with the selected template
     const productsData = {
       ...defaultProductsData,
-      style: template, // Set the selected style
+      style: template,
     };
 
-    // Use unified mutation with just the data
     createProductsComponentMutation.mutate(productsData, {
       onSuccess: () => {
         setIsProductsStylesDialogOpen(false);
@@ -451,7 +498,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleCategoryTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1"
   ) => {
-    // Create category component with the selected template
     const categoryData = {
       limit: 8,
       component_type: "category" as const,
@@ -463,7 +509,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       itemsPerRow: 4,
     };
 
-    // Use unified mutation with just the data
     createCategoryComponentMutation.mutate(categoryData, {
       onSuccess: () => {
         setIsCategoriesStylesDialogOpen(false);
@@ -477,7 +522,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleSubCategoryTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1"
   ) => {
-    // Create subcategory component with the selected template
     const subCategoryData = {
       component_type: "subcategory" as const,
       limit: 8,
@@ -490,7 +534,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       itemsPerRow: 4,
     };
 
-    // Use unified mutation with just the data
     createSubCategoryComponentMutation.mutate(subCategoryData, {
       onSuccess: () => {
         setIsSubCategoriesStylesDialogOpen(false);
@@ -519,11 +562,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
-  // Add this handler with your other add handlers
-  const handleAddTestimonials = () => {
-    setIsTestimonialsStylesDialogOpen(true);
-  };
-
   const handleBlogTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1"
   ) => {
@@ -532,7 +570,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       style: template,
     };
 
-    // Use unified mutation with just the data
     createBlogComponentMutation.mutate(blogData, {
       onSuccess: () => {
         setIsBlogStylesDialogOpen(false);
@@ -551,7 +588,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       style: template,
     };
 
-    // Use unified mutation with just the data
     createTeamComponentMutation.mutate(teamData, {
       onSuccess: () => {
         setIsTeamStylesDialogOpen(false);
@@ -562,6 +598,25 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
+  const handleFAQTemplateSelect = (
+    template: "accordion" | "plus-minus" | "card-grid"
+  ) => {
+    const faqData = {
+      ...defaultFAQData,
+      style: template,
+    };
+
+    createFAQComponentMutation.mutate(faqData, {
+      onSuccess: () => {
+        setIsFAQStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create FAQ component:", error);
+      },
+    });
+  };
+
+  // Add handlers
   const handleAddHeroFromCanvas = () => {
     setIsHeroStylesDialogOpen(true);
   };
@@ -593,87 +648,102 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAddTeam = () => {
     setIsTeamStylesDialogOpen(true);
   };
+
   const handleAddPortfolio = () => {
     setIsPortfolioStylesDialogOpen(true);
   };
 
+  const handleAddTestimonials = () => {
+    setIsTestimonialsStylesDialogOpen(true);
+  };
+
+  const handleAddFAQ = () => {
+    setIsFAQStylesDialogOpen(true);
+  };
+
   // Updated handleDrop with proper typing and component_type mapping
-  const handleDrop = useCallback((item: { type: string; id?: string }) => {
-    if (item.type === "navbar" || item.type === "footer") return;
+  const handleDrop = useCallback(
+    (item: { type: string; id?: string }) => {
+      if (item.type === "navbar" || item.type === "footer") return;
 
-    // Map drag item type to component_type
-    let componentType: keyof ComponentTypeMap;
-    switch (item.type) {
-      case "hero-sections":
-        componentType = "hero";
-        break;
-      case "about-sections":
-        componentType = "about";
-        break;
-      case "products-sections":
-        componentType = "products";
-        break;
-      case "categories-sections":
-        componentType = "category";
-        break;
-      case "subcategories-sections":
-        componentType = "subcategory";
-        break;
-      case "blog-sections":
-        componentType = "blog";
-        break;
-      case "contact-sections":
-        componentType = "contact";
-        break;
-      case "team-members-sections":
-        componentType = "team";
-        break;
-      case "testimonials-sections":
-        componentType = "testimonials";
-        break;
-      case "portfolio-sections":
-        componentType = "portfolio";
-        break;
-      case "faq-sections":
-        componentType = "faq";
-        break;
-      default:
-        // If type doesn't match expected types, try to use it directly
-        if (
-          [
-            "hero",
-            "about",
-            "products",
-            "category",
-            "subcategory",
-            "blog",
-            "contact",
-            "team",
-            "testimonials",
-            "faq",
-            "portfolio",
-          ].includes(item.type)
-        ) {
-          componentType = item.type as keyof ComponentTypeMap;
-        } else {
-          console.warn(`Unknown component type: ${item.type}`);
-          return;
-        }
-    }
+      // Map drag item type to component_type
+      let componentType: keyof ComponentTypeMap;
+      switch (item.type) {
+        case "hero-sections":
+          componentType = "hero";
+          break;
+        case "about-sections":
+          componentType = "about";
+          break;
+        case "products-sections":
+          componentType = "products";
+          break;
+        case "categories-sections":
+          componentType = "category";
+          break;
+        case "subcategories-sections":
+          componentType = "subcategory";
+          break;
+        case "blog-sections":
+          componentType = "blog";
+          break;
+        case "contact-sections":
+          componentType = "contact";
+          break;
+        case "team-members-sections":
+          componentType = "team";
+          break;
+        case "testimonials-sections":
+          componentType = "testimonials";
+          break;
+        case "portfolio-sections":
+          componentType = "portfolio";
+          break;
+        case "faq-sections":
+          componentType = "faq";
+          break;
+        default:
+          if (
+            [
+              "hero",
+              "about",
+              "products",
+              "category",
+              "subcategory",
+              "blog",
+              "contact",
+              "team",
+              "testimonials",
+              "faq",
+              "portfolio",
+            ].includes(item.type)
+          ) {
+            componentType = item.type as keyof ComponentTypeMap;
+          } else {
+            console.warn(`Unknown component type: ${item.type}`);
+            return;
+          }
+      }
 
-    const newComponent: ComponentResponse = {
-      id: `${componentType}-${Date.now()}`,
-      component_id: item.id || `${componentType}-${Date.now()}`,
-      component_type: componentType,
-      data: {} as ComponentTypeMap[keyof ComponentTypeMap],
-      order: 0,
-    };
+      const newComponent: ComponentResponse = {
+        id: `${componentType}-${Date.now()}`,
+        component_id: item.id || `${componentType}-${Date.now()}`,
+        component_type: componentType,
+        data: {} as ComponentTypeMap[keyof ComponentTypeMap],
+        order: getNextOrder(),
+      };
 
-    setDroppedComponents(prev => [...prev, newComponent]);
-  }, []);
+      setDroppedComponents(prev => [...prev, newComponent]);
+    },
+    [pageComponents]
+  );
 
   const isLoading =
-    isNavbarLoading || isFooterLoading || isPagesLoading || isCreatingHomePage;
+    isNavbarLoading ||
+    isFooterLoading ||
+    isPagesLoading ||
+    isPageComponentsLoading ||
+    isCreatingHomePage;
 
   if (isLoading) {
     return (
@@ -692,6 +762,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   return (
     <DndProvider backend={HTML5Backend}>
+      {/* All dialog components remain the same */}
       <NavbarTemplateDialog
         isOpen={isNavbarDialogOpen}
         onClose={() => setIsNavbarDialogOpen(false)}
@@ -727,11 +798,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsCategoriesStylesDialogOpen}
         onStyleSelect={handleCategoryTemplateSelect}
       />
+
       <PortfolioStylesDialog
         open={isPortfolioStylesDialogOpen}
         onOpenChange={setIsPortfolioStylesDialogOpen}
         onStyleSelect={handlePortfolioTemplateSelect}
       />
+
       <SubCategoryStylesDialog
         open={isSubCategoriesStylesDialogOpen}
         onOpenChange={setIsSubCategoriesStylesDialogOpen}
@@ -755,16 +828,19 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsTeamStylesDialogOpen}
         onStyleSelect={handleTeamTemplateSelect}
       />
+
       <TestimonialsStylesDialog
         open={isTestimonialsStylesDialogOpen}
         onOpenChange={setIsTestimonialsStylesDialogOpen}
         onStyleSelect={handleTestimonialsTemplateSelect}
       />
+
       <FAQStylesDialog
         open={isFAQStylesDialogOpen}
         onOpenChange={setIsFAQStylesDialogOpen}
         onStyleSelect={handleFAQTemplateSelect}
       />
+
       <TopNavigation
         pages={pagesData}
         currentPage={currentPage}
@@ -792,6 +868,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                     /{currentPage}
                   </p>
                 </div>
+
                 <CanvasArea
                   droppedComponents={droppedComponents}
                   navbar={navbarResponse?.data}
@@ -799,6 +876,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   footer={footerResponse?.data}
                   onAddFooter={() => setIsFooterDialogOpen(true)}
                   currentPageSlug={currentPage}
+                  pageComponents={pageComponents}
+                  isLoading={isPageComponentsLoading}
+                  error={pageComponentsError}
                   onAddHero={handleAddHeroFromCanvas}
                   onAddAboutUs={handleAddAboutUsFromCanvas}
                   onAddProducts={handleAddProducts}

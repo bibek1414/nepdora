@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { componentsApi } from "@/services/api/owner-sites/components/unified";
+import {
+  componentsApi,
+  componentOrdersApi,
+  BulkOrderUpdateRequest,
+} from "@/services/api/owner-sites/components/unified";
 import {
   ComponentTypeMap,
   ComponentResponse,
@@ -669,6 +673,29 @@ export const useDeletePortfolioComponentMutation = () => {
         error instanceof Error
           ? error.message
           : "Failed to remove portfolio section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useUpdateComponentOrderMutation = (pageSlug: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ orderUpdates }: BulkOrderUpdateRequest) =>
+      componentOrdersApi.updateComponentOrders(pageSlug, orderUpdates),
+    onSuccess: () => {
+      // Invalidate and refetch page components to get updated order
+      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      toast.success("Component order updated successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update component order";
+      console.error("Order update error:", error);
       toast.error(errorMessage);
     },
   });
