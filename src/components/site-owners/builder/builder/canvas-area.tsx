@@ -1,6 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState, useCallback } from "react";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "@hello-pangea/dnd";
 import { NavbarComponent } from "@/components/site-owners/builder/navbar/navbar-component";
 import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer";
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
@@ -12,9 +18,12 @@ import { BlogComponent } from "@/components/site-owners/builder/blog/blog-compon
 import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
 import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
+import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
+import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
 import { PlaceholderManager } from "@/components/ui/content-placeholder";
 import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
+import { ComponentResponse } from "@/types/owner-site/components/components";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
@@ -24,21 +33,18 @@ import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
-import { useDeleteNavbarMutation } from "@/hooks/owner-site/components/use-navbar";
-import { usePageComponentsQuery } from "@/hooks/owner-site/components/unified";
-import { ComponentResponse } from "@/types/owner-site/components/components";
-import { Plus, Navigation, Edit, X, FileText } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
-import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
-
-// Define proper types for API responses
-interface ApiResponse {
-  data?: ComponentResponse[];
-  components?: ComponentResponse[];
-}
+import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/unified";
+import {
+  Plus,
+  Navigation,
+  GripVertical,
+  FileText,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
@@ -47,6 +53,9 @@ interface CanvasAreaProps {
   footer?: Footer | null;
   onAddFooter: () => void;
   currentPageSlug: string;
+  pageComponents: ComponentResponse[];
+  isLoading: boolean;
+  error: Error | null;
   onAddHero?: () => void;
   onAddAboutUs?: () => void;
   onAddProducts?: () => void;
@@ -67,6 +76,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   footer,
   onAddFooter,
   currentPageSlug,
+  pageComponents: initialPageComponents,
+  isLoading,
+  error,
   onAddHero,
   onAddAboutUs,
   onAddProducts,
@@ -79,268 +91,315 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddFAQ,
   onAddPortfolio,
 }) => {
-  const deleteNavbarMutation = useDeleteNavbarMutation();
+  // Local state to manage component order optimistically
+  const [pageComponents, setPageComponents] = useState<ComponentResponse[]>(
+    initialPageComponents.sort((a, b) => (a.order || 0) - (b.order || 0))
+  );
 
-  // Fetch all components for the current page using the unified hook
-  const {
-    data: pageComponentsResponse,
-    isLoading,
-    error,
-  } = usePageComponentsQuery(currentPageSlug);
-
-  // Process all page components with proper typing
-  const pageComponents = React.useMemo(() => {
-    if (!pageComponentsResponse) return [];
-
-    let components: ComponentResponse[] = [];
-
-    if (Array.isArray(pageComponentsResponse)) {
-      components = pageComponentsResponse as ComponentResponse[];
-    } else {
-      const apiResponse = pageComponentsResponse as ApiResponse;
-      if (Array.isArray(apiResponse.data)) {
-        components = apiResponse.data;
-      } else if (Array.isArray(apiResponse.components)) {
-        components = apiResponse.components;
-      } else {
-        return [];
-      }
-    }
-
-    const filteredComponents = components.filter(
-      (component: ComponentResponse) => {
-        const hasValidType =
-          component.component_type &&
-          [
-            "hero",
-            "about",
-            "products",
-            "category",
-            "subcategory",
-            "blog",
-            "contact",
-            "team",
-            "testimonials",
-            "faq",
-            "portfolio",
-          ].includes(component.component_type);
-        const hasValidData = component && component.data;
-        const hasValidId = component && typeof component.id !== "undefined";
-        return hasValidType && hasValidData && hasValidId;
-      }
+  React.useEffect(() => {
+    setPageComponents(
+      initialPageComponents.sort((a, b) => (a.order || 0) - (b.order || 0))
     );
+  }, [initialPageComponents]);
 
-    const transformedComponents = filteredComponents.map(
-      (component: ComponentResponse) => ({
-        id: component.id,
-        component_id: component.component_id,
-        component_type: component.component_type,
-        data: component.data,
-        type: component.component_type,
-        order: component.order || 0,
-        page: component.page,
-      })
-    );
+  // Hook for updating component order
+  const updateOrderMutation = useUpdateComponentOrderMutation(currentPageSlug);
 
-    return transformedComponents;
-  }, [pageComponentsResponse]);
+  // Handle component reordering (used by both drag-drop and arrows)
+  const handleReorder = useCallback(
+    (sourceIndex: number, destinationIndex: number) => {
+      // Create a new array with the reordered items
+      const reorderedComponents = Array.from(pageComponents);
+      const [movedComponent] = reorderedComponents.splice(sourceIndex, 1);
+      reorderedComponents.splice(destinationIndex, 0, movedComponent);
 
-  // Check for specific component types
-  const hasHero = pageComponents.some(
-    component => component.component_type === "hero"
+      // Update the order values
+      const updatedComponents = reorderedComponents.map((component, index) => ({
+        ...component,
+        order: index,
+      }));
+
+      // Optimistically update the UI
+      setPageComponents(updatedComponents);
+
+      // Create the order updates for the backend
+      const orderUpdates = updatedComponents.map((component, index) => ({
+        componentId: component.component_id,
+        order: index,
+      }));
+
+      // Update the backend
+      updateOrderMutation.mutate({ orderUpdates });
+    },
+    [pageComponents, updateOrderMutation]
   );
-  const hasAbout = pageComponents.some(
-    component => component.component_type === "about"
+
+  // Handle drag end
+  const handleDragEnd = useCallback(
+    (result: DropResult) => {
+      const { destination, source } = result;
+
+      // If no destination, do nothing
+      if (!destination) {
+        return;
+      }
+
+      // If dropped in the same position, do nothing
+      if (destination.index === source.index) {
+        return;
+      }
+
+      handleReorder(source.index, destination.index);
+    },
+    [handleReorder]
   );
-  const hasProducts = pageComponents.some(
-    component => component.component_type === "products"
+
+  // Handle arrow button clicks
+  const handleMoveUp = useCallback(
+    (componentIndex: number) => {
+      if (componentIndex > 0) {
+        handleReorder(componentIndex, componentIndex - 1);
+      }
+    },
+    [handleReorder]
   );
-  const hasCategories = pageComponents.some(
-    component => component.component_type === "category"
+
+  const handleMoveDown = useCallback(
+    (componentIndex: number) => {
+      if (componentIndex < pageComponents.length - 1) {
+        handleReorder(componentIndex, componentIndex + 1);
+      }
+    },
+    [handleReorder, pageComponents.length]
   );
-  const hasSubCategories = pageComponents.some(
-    component => component.component_type === "subcategory"
-  );
-  const hasBlog = pageComponents.some(
-    component => component.component_type === "blog"
-  );
-  const hasContact = pageComponents.some(
-    component => component.component_type === "contact"
-  );
-  const hasTeam = pageComponents.some(
-    component => component.component_type === "team"
-  );
-  const hasTestimonials = pageComponents.some(
-    component => component.component_type === "testimonials"
-  );
-  const hasFAQ = pageComponents.some(
-    component => component.component_type === "faq"
-  );
-  const hasPortfolio = pageComponents.some(
-    component => component.component_type === "portfolio"
-  );
-  const handleDeleteNavbar = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (navbar?.id) {
-      deleteNavbarMutation.mutate(navbar.id);
-    }
-  };
 
   // Component renderer with proper typing
-  const renderComponent = (component: ComponentResponse) => {
+  const renderComponent = (component: ComponentResponse, index: number) => {
+    const commonProps = {
+      isEditable: true,
+      pageSlug: currentPageSlug,
+    };
+
+    let componentElement: React.ReactNode;
+
     switch (component.component_type) {
       case "hero":
-        return (
+        componentElement = (
           <HeroComponent
             key={`hero-${component.id}`}
             component={component as HeroComponentData}
-            isEditable={true}
             siteUser=""
-            pageSlug={currentPageSlug}
+            {...commonProps}
           />
         );
+        break;
       case "about":
-        return (
+        componentElement = (
           <AboutUsComponent
             key={`about-${component.id}`}
             component={component as AboutUsComponentData}
-            isEditable={true}
-            pageSlug={currentPageSlug}
+            {...commonProps}
           />
         );
+        break;
       case "products":
-        return (
+        componentElement = (
           <ProductsComponent
             key={`products-${component.id}`}
             component={component as ProductsComponentData}
-            isEditable={true}
-            pageSlug={currentPageSlug}
-            onUpdate={(
-              _componentId: string,
-              _newData: ProductsComponentData
-            ) => {}}
-            onProductClick={(_productId: number, _order: number) => {}}
+            onUpdate={() => {}}
+            onProductClick={() => {}}
+            {...commonProps}
           />
         );
+        break;
       case "category":
-        return (
+        componentElement = (
           <CategoryComponent
             key={`category-${component.id}`}
             component={component as CategoryComponentData}
-            isEditable={true}
-            pageSlug={currentPageSlug}
-            onUpdate={(
-              _componentId: string,
-              _newData: CategoryComponentData
-            ) => {}}
-            onCategoryClick={(_categoryId: number, _order: number) => {}}
+            onUpdate={() => {}}
+            onCategoryClick={() => {}}
+            {...commonProps}
           />
         );
+        break;
       case "subcategory":
-        return (
+        componentElement = (
           <SubCategoryComponent
             key={`subcategory-${component.id}`}
             component={component as SubCategoryComponentData}
-            isEditable={true}
-            pageSlug={currentPageSlug}
-            onUpdate={(
-              _componentId: string,
-              _newData: SubCategoryComponentData
-            ) => {}}
-            onSubCategoryClick={(_subCategoryId: number, _order: number) => {}}
+            onUpdate={() => {}}
+            onSubCategoryClick={() => {}}
+            {...commonProps}
           />
         );
+        break;
       case "blog":
-        return (
+        componentElement = (
           <BlogComponent
             key={`blog-${component.id}`}
             component={component as BlogComponentData}
-            isEditable={true}
-            pageSlug={currentPageSlug}
-            onUpdate={(_componentId: string, _newData: BlogComponentData) => {}}
-            onBlogClick={(_blogSlug: string, _order: number) => {}}
+            onUpdate={() => {}}
+            onBlogClick={() => {}}
+            {...commonProps}
           />
         );
+        break;
       case "contact":
-        return (
+        componentElement = (
           <ContactComponent
             key={`contact-${component.id}`}
             component={component as ContactComponentData}
-            isEditable={true}
-            pageSlug={currentPageSlug}
-            onUpdate={(
-              _componentId: string,
-              _newData: ContactComponentData
-            ) => {}}
+            onUpdate={() => {}}
+            {...commonProps}
           />
         );
+        break;
       case "team":
-        return (
+        componentElement = (
           <TeamComponent
             key={`team-${component.id}`}
             component={component as TeamComponentData}
-            isEditable={true}
-            pageSlug={currentPageSlug}
-            onUpdate={(_componentId: string, _newData: TeamComponentData) => {}}
-            onMemberClick={(_memberId: number, _order: number) => {}}
+            onUpdate={() => {}}
+            onMemberClick={() => {}}
+            {...commonProps}
           />
         );
+        break;
       case "testimonials":
-        return (
+        componentElement = (
           <TestimonialsComponent
             key={`testimonials-${component.id}`}
             component={component as TestimonialsComponentData}
-            isEditable={true}
-            pageSlug={currentPageSlug}
-            onUpdate={(
-              _componentId: string,
-              _newData: TestimonialsComponentData
-            ) => {}}
-            onTestimonialClick={(_testimonialId: number, _order: number) => {}}
+            onUpdate={() => {}}
+            onTestimonialClick={() => {}}
+            {...commonProps}
           />
         );
+        break;
       case "faq":
-        return (
+        componentElement = (
           <FAQComponent
             key={`faq-${component.id}`}
             component={component as FAQComponentData}
-            isEditable={true}
-            pageSlug={currentPageSlug}
-            onUpdate={(_componentId: string, _newData: FAQComponentData) => {}}
+            onUpdate={() => {}}
+            {...commonProps}
           />
         );
+        break;
       case "portfolio":
-        return (
+        componentElement = (
           <PortfolioComponent
             key={`portfolio-${component.id}`}
             component={component as PortfolioComponentData}
-            isEditable={true}
-            pageSlug={currentPageSlug}
             siteUser=""
+            {...commonProps}
           />
         );
+        break;
       default:
         return null;
     }
+
+    const isFirst = index === 0;
+    const isLast = index === pageComponents.length - 1;
+
+    return (
+      <Draggable
+        key={component.component_id}
+        draggableId={component.component_id}
+        index={index}
+      >
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            className={`group relative ${
+              snapshot.isDragging ? "opacity-75 shadow-2xl" : ""
+            }`}
+          >
+            {/* Control buttons container */}
+            <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+              {/* Drag handle */}
+              <div
+                {...provided.dragHandleProps}
+                className="cursor-grab rounded border bg-white p-1 shadow-md transition-colors hover:bg-gray-50 active:cursor-grabbing"
+                title="Drag to reorder"
+              >
+                <GripVertical className="h-4 w-4 text-gray-500" />
+              </div>
+
+              {/* Arrow controls */}
+              <div className="flex flex-col gap-0.5">
+                <button
+                  onClick={() => handleMoveUp(index)}
+                  disabled={isFirst}
+                  className={`rounded border bg-white p-1 shadow-md transition-colors ${
+                    isFirst
+                      ? "cursor-not-allowed text-gray-300"
+                      : "cursor-pointer text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                  }`}
+                  title={isFirst ? "Already at top" : "Move up"}
+                >
+                  <ChevronUp className="h-4 w-4" />
+                </button>
+
+                <button
+                  onClick={() => handleMoveDown(index)}
+                  disabled={isLast}
+                  className={`rounded border bg-white p-1 shadow-md transition-colors ${
+                    isLast
+                      ? "cursor-not-allowed text-gray-300"
+                      : "cursor-pointer text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                  }`}
+                  title={isLast ? "Already at bottom" : "Move down"}
+                >
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Component wrapper with visual feedback */}
+            <div
+              className={`transition-all duration-200 ${
+                snapshot.isDragging
+                  ? "rounded-lg ring-2 ring-blue-500 ring-offset-2"
+                  : "rounded-lg hover:ring-1 hover:ring-gray-300 hover:ring-offset-1"
+              }`}
+            >
+              {componentElement}
+            </div>
+          </div>
+        )}
+      </Draggable>
+    );
   };
+
+  // Calculate component statistics
+  const hasHero = pageComponents.some(c => c.component_type === "hero");
+  const hasAbout = pageComponents.some(c => c.component_type === "about");
+  const hasProducts = pageComponents.some(c => c.component_type === "products");
+  const hasCategories = pageComponents.some(
+    c => c.component_type === "category"
+  );
+  const hasSubCategories = pageComponents.some(
+    c => c.component_type === "subcategory"
+  );
+  const hasBlog = pageComponents.some(c => c.component_type === "blog");
+  const hasContact = pageComponents.some(c => c.component_type === "contact");
+  const hasTeam = pageComponents.some(c => c.component_type === "team");
+  const hasTestimonials = pageComponents.some(
+    c => c.component_type === "testimonials"
+  );
+  const hasFAQ = pageComponents.some(c => c.component_type === "faq");
 
   return (
     <div className="rounded-lg border-2 border-dashed bg-white transition-colors">
       {/* Navbar Section */}
       {navbar ? (
-        <div className="group relative border-b">
+        <div className="group relative mb-4 border-b">
           <NavbarComponent navbar={navbar} siteUser="" />
-          <div className="absolute -top-2 -right-2 z-20 opacity-0 transition-opacity group-hover:opacity-100">
-            <Button
-              onClick={handleDeleteNavbar}
-              variant="destructive"
-              size="sm"
-              className="h-8 w-8 p-0"
-              disabled={deleteNavbarMutation.isPending}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
         </div>
       ) : (
         <div className="border-b border-dashed border-gray-300 bg-gray-50/50">
@@ -365,9 +424,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         </div>
       )}
 
-      {/* Main Content Area */}
+      {/* Main Content Area with Drag and Drop */}
       <div className="min-h-[400px]">
-        {/* Loading state for components */}
+        {/* Loading state */}
         {isLoading && (
           <div className="flex items-center justify-center py-12">
             <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
@@ -377,7 +436,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           </div>
         )}
 
-        {/* Error state for components */}
+        {/* Error state */}
         {error && (
           <div className="mx-8 my-4 rounded-lg border border-red-200 bg-red-50 p-4">
             <p className="text-sm text-red-600">
@@ -386,13 +445,26 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           </div>
         )}
 
-        {/* Render all sorted components */}
+        {/* Draggable Components */}
         {!isLoading && pageComponents.length > 0 && (
-          <div className="space-y-0">
-            {pageComponents
-              .sort((a, b) => (a.order || 0) - (b.order || 0))
-              .map(renderComponent)}
-          </div>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="page-components" type="COMPONENT">
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={`space-y-0 ${
+                    snapshot.isDraggingOver ? "bg-blue-50" : ""
+                  } transition-colors duration-200`}
+                >
+                  {pageComponents.map((component, index) =>
+                    renderComponent(component, index)
+                  )}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         )}
 
         {/* Content area for placeholders and interactions */}
@@ -434,10 +506,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 <p className="text-foreground font-medium">
                   Component: {component.component_type}
                 </p>
-                <Button variant="outline" size="sm">
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit
-                </Button>
               </div>
             </div>
           ))}

@@ -8,7 +8,14 @@ import {
   UpdateComponentRequest,
   ApiResponse,
 } from "@/types/owner-site/components/components";
+export interface OrderUpdate {
+  componentId: string;
+  order: number;
+}
 
+export interface BulkOrderUpdateRequest {
+  orderUpdates: OrderUpdate[];
+}
 const API_BASE_URL = getApiBaseUrl();
 
 export const componentsApi = {
@@ -343,4 +350,30 @@ export const teamComponentsApi = {
   ) => componentsApi.updateComponent(pageSlug, componentId, { data }, "team"),
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "team"),
+};
+
+export const componentOrdersApi = {
+  updateComponentOrders: async (
+    pageSlug: string,
+    orderUpdates: OrderUpdate[]
+  ): Promise<void> => {
+    try {
+      // Process updates sequentially to avoid conflicts
+      for (const { componentId, order } of orderUpdates) {
+        const response = await fetch(
+          `${API_BASE_URL}/api/pages/${pageSlug}/components/${componentId}/`,
+          {
+            method: "PATCH",
+            headers: createHeaders(),
+            body: JSON.stringify({ order }),
+          }
+        );
+        await handleApiError(response);
+      }
+    } catch (error) {
+      throw new Error(
+        `Failed to update component orders: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  },
 };
