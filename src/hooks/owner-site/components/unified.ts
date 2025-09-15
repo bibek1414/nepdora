@@ -44,11 +44,20 @@ export const useCreateComponentMutation = <T extends keyof ComponentTypeMap>(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: ComponentTypeMap[T]) =>
-      componentsApi.createComponent(pageSlug, {
-        component_type: componentType,
-        data,
-      }),
+    mutationFn: async (data: ComponentTypeMap[T]) => {
+      // Get existing components to calculate proper order
+      const existingComponents =
+        await componentsApi.getPageComponents(pageSlug);
+
+      return componentsApi.createComponent(
+        pageSlug,
+        {
+          component_type: componentType,
+          data,
+        },
+        existingComponents
+      );
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
       queryClient.invalidateQueries({

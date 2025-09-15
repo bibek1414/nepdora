@@ -53,15 +53,29 @@ export const componentsApi = {
   // Create a new component
   createComponent: async <T extends keyof ComponentTypeMap>(
     pageSlug: string,
-    payload: CreateComponentRequest<T>
+    payload: CreateComponentRequest<T>,
+    existingComponents?: ComponentResponse[] // Add this parameter to pass current components
   ): Promise<ComponentResponse<T>> => {
     try {
+      // Calculate next order if not provided
+      let order = payload.order;
+      if (order === undefined || order === 0) {
+        if (existingComponents && existingComponents.length > 0) {
+          const maxOrder = Math.max(
+            ...existingComponents.map(c => c.order || 0)
+          );
+          order = maxOrder + 1;
+        } else {
+          order = 0; // First component starts at 0
+        }
+      }
+
       const componentPayload = {
         component_id:
           payload.component_id || `${payload.component_type}-${Date.now()}`,
         component_type: payload.component_type,
         data: payload.data,
-        order: payload.order || 0,
+        order,
       };
 
       const response = await fetch(
@@ -81,7 +95,7 @@ export const componentsApi = {
         component_id: data.component_id || data.data?.component_id,
         component_type: data.component_type || data.data?.component_type,
         data: data.data?.data || data.data || data,
-        order: data.order || data.data?.order || 0,
+        order: data.order || data.data?.order || order,
         page: data.page || data.data?.page,
       };
     } catch (error) {
