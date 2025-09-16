@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { NewPageDialog } from "@/components/site-owners/builder/new-page/new-page-dialog";
 import { DeletePageDialog } from "@/components/site-owners/builder/new-page/delete-page-dialog";
+import { ThemeDialog } from "@/components/site-owners/builder/theme/theme-dialog";
 import { Button } from "@/components/ui/button";
 import { Page } from "@/types/owner-site/components/page";
 import { ArrowLeft, Palette, Eye, Upload, ChevronDown } from "lucide-react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface TopNavigationProps {
@@ -24,6 +24,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   onPageDeleted,
   siteUser,
 }) => {
+  const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
+
   return (
     <div className="sticky top-0 z-40 border-b border-gray-200 bg-white">
       <div className="flex items-center justify-between px-2 py-3">
@@ -89,19 +91,16 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             </Button>
           </Link>
 
-          <Link
-            href={`/theme-settings/${siteUser}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Theme Settings Button - Now opens dialog instead of navigating */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsThemeDialogOpen(true)}
+            className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
           >
-            <Button
-              variant="outline"
-              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
-            >
-              <Palette className="mr-2 h-4 w-4" />
-              Theme Settings
-            </Button>
-          </Link>
+            <Palette className="mr-2 h-4 w-4" />
+            Theme Settings
+          </Button>
 
           <Link
             href={`/preview/${siteUser}/${currentPage}`}
@@ -118,6 +117,12 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
           </Link>
         </div>
       </div>
+
+      {/* Theme Dialog */}
+      <ThemeDialog
+        open={isThemeDialogOpen}
+        onOpenChange={setIsThemeDialogOpen}
+      />
     </div>
   );
 };
