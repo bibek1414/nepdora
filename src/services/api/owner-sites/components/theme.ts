@@ -7,7 +7,6 @@ import {
   CreateThemeResponse,
   UpdateThemeRequest,
   UpdateThemeResponse,
-  
 } from "@/types/owner-site/components/theme";
 
 export const useThemeApi = {
