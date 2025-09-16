@@ -12,9 +12,7 @@ import Image from "next/image";
 interface AboutUsStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (
-    template: "about-1" | "about-2" | "about-3" | "about-4"
-  ) => void;
+  onStyleSelect: (template: "about-1" | "about-3" | "about-4") => void;
 }
 
 export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
@@ -23,17 +21,13 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "about-1" | "about-2" | "about-3" | "about-4" | null
+    "about-1" | "about-3" | "about-4" | null
   >(null);
 
   const templates = [
     {
       id: "about-1" as const,
       name: "Split Layout with Stats",
-    },
-    {
-      id: "about-2" as const,
-      name: "Team Showcase",
     },
     {
       id: "about-3" as const,
@@ -45,9 +39,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
     },
   ];
 
-  const handleSelect = (
-    templateId: "about-1" | "about-2" | "about-3" | "about-4"
-  ) => {
+  const handleSelect = (templateId: "about-1" | "about-3" | "about-4") => {
     setSelectedStyle(templateId);
     setTimeout(() => {
       onStyleSelect(templateId);

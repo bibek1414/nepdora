@@ -30,7 +30,6 @@ import {
 import { AboutUsStylesDialog } from "@/components/site-owners/builder/about/about-styles-dialog";
 import {
   defaultAboutUs1Data,
-  defaultAboutUs2Data,
   defaultAboutUs3Data,
   defaultAboutUs4Data,
 } from "@/types/owner-site/components/about";
@@ -447,7 +446,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleAboutUsTemplateSelect = (
-    template: "about-1" | "about-2" | "about-3" | "about-4"
+    template: "about-1" | "about-3" | "about-4"
   ) => {
     let aboutUsData: AboutUsData;
 
@@ -455,9 +454,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       case "about-1":
         aboutUsData = defaultAboutUs1Data;
         break;
-      case "about-2":
-        aboutUsData = defaultAboutUs2Data;
-        break;
+
       case "about-3":
         aboutUsData = defaultAboutUs3Data;
         break;

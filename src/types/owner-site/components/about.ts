@@ -21,13 +21,6 @@ export interface AboutUs1Data {
   layout: "image-left" | "image-right";
   stats: AboutUsStat[];
 }
-export interface AboutUs2Data {
-  template: "about-2";
-  title: string;
-  subtitle: string;
-  description: string;
-  teamMembers: TeamMember[];
-}
 
 export interface AboutUs3Data {
   template: "about-3";
@@ -53,11 +46,7 @@ export interface AboutUs4Data {
   imageAlt: string;
 }
 
-export type AboutUsData =
-  | AboutUs1Data
-  | AboutUs2Data
-  | AboutUs3Data
-  | AboutUs4Data;
+export type AboutUsData = AboutUs1Data | AboutUs3Data | AboutUs4Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -89,11 +78,7 @@ export interface CreateAboutUsRequest {
 export interface UpdateAboutUsRequest {
   component_id?: string;
   component_type?: "about";
-  data:
-    | Partial<AboutUs1Data>
-    | Partial<AboutUs2Data>
-    | Partial<AboutUs3Data>
-    | Partial<AboutUs4Data>;
+  data: Partial<AboutUs1Data> | Partial<AboutUs3Data> | Partial<AboutUs4Data>;
   order?: number;
 }
 
@@ -130,37 +115,6 @@ export const defaultAboutUs1Data: AboutUs1Data = {
     { id: "1", value: "10+", label: "Years Experience" },
     { id: "2", value: "500+", label: "Projects Completed" },
     { id: "3", value: "99%", label: "Client Satisfaction" },
-  ],
-};
-
-export const defaultAboutUs2Data: AboutUs2Data = {
-  template: "about-2",
-  title: "Meet Our Team",
-  subtitle: "The Minds Behind Our Success",
-  description:
-    "We are a collective of creators, thinkers, and innovators, united by a passion for building exceptional digital experiences. Get to know the people who make it all happen.",
-  teamMembers: [
-    {
-      id: "1",
-      name: "Jane Doe",
-      role: "CEO & Founder",
-      imageUrl:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400",
-    },
-    {
-      id: "2",
-      name: "John Smith",
-      role: "Lead Developer",
-      imageUrl:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400",
-    },
-    {
-      id: "3",
-      name: "Emily White",
-      role: "UX/UI Designer",
-      imageUrl:
-        "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400",
-    },
   ],
 };
 
