@@ -7,7 +7,7 @@ import TopLoader from "@/components/top-loader";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
 import { CartProvider } from "@/contexts/CartContext";
-
+import { Analytics } from "@vercel/analytics/next";
 const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
@@ -32,6 +32,7 @@ export default function RootLayout({
                 <TopLoader />
               </Suspense>
               {children}
+              <Analytics />
               <Toaster
                 position="bottom-right"
                 richColors
