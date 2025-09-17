@@ -1,12 +1,12 @@
 "use client";
 
 import React, { createContext, useState, useEffect, ReactNode } from "react";
-import { CartItem } from "@/types/owner-site/cart";
+import { CartItem } from "@/types/owner-site/admin/cart";
 import {
   Product,
   ExtendedProduct,
   normalizeProductForCart,
-} from "@/types/owner-site/product";
+} from "@/types/owner-site/admin/product";
 
 // Union type for products that can be added to cart
 type CartableProduct =

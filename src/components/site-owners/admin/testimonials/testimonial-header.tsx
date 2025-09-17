@@ -1,4 +1,4 @@
-import { TestimonialsHeaderProps } from "@/types/owner-site/testimonial";
+import { TestimonialsHeaderProps } from "@/types/owner-site/admin/testimonial";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 

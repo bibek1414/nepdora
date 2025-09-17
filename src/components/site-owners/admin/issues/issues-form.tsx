@@ -38,12 +38,12 @@ import {
   useUpdateIssue,
   useIssueCategories,
   useCreateIssueCategory,
-} from "@/hooks/owner-site/use-issues";
+} from "@/hooks/owner-site/admin/use-issues";
 import {
   Issue,
   PRIORITY_OPTIONS,
   STATUS_OPTIONS,
-} from "@/types/owner-site/issues";
+} from "@/types/owner-site/admin/issues";
 
 type StatusKey = (typeof STATUS_OPTIONS)[number]["value"];
 

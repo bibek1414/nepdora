@@ -3,11 +3,11 @@
 import React from "react";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "sonner";
-import { useBlog, useUpdateBlog } from "@/hooks/owner-site/use-blogs";
+import { useBlog, useUpdateBlog } from "@/hooks/owner-site/admin/use-blogs";
 import BlogForm from "@/components/site-owners/admin/blogs/blog-form";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { UpdateBlogPost } from "@/types/owner-site/blog";
+import { UpdateBlogPost } from "@/types/owner-site/admin/blog";
 
 interface BlogFormData {
   title: string;

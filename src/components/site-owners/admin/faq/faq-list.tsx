@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Edit, Trash2, MessageSquare, Loader2 } from "lucide-react";
-import { useFAQs, useDeleteFAQ } from "@/hooks/owner-site/use-faq";
+import { useFAQs, useDeleteFAQ } from "@/hooks/owner-site/admin/use-faq";
 import { FAQFormTrigger } from "./faq-form";
-import { FAQ } from "@/types/owner-site/faq";
+import { FAQ } from "@/types/owner-site/admin/faq";
 import { toast } from "sonner";
 
 export function FAQList() {

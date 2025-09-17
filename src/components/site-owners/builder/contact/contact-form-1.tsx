@@ -12,7 +12,7 @@ import {
   ContactFormSubmission,
 } from "@/types/owner-site/components/contact";
 
-import { useSubmitContactForm } from "@/hooks/owner-site/use-contact";
+import { useSubmitContactForm } from "@/hooks/owner-site/admin/use-contact";
 
 interface ContactForm1Props {
   data: ContactData;

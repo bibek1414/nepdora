@@ -29,7 +29,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useProducts, useDeleteProduct } from "@/hooks/owner-site/use-product";
+import {
+  useProducts,
+  useDeleteProduct,
+} from "@/hooks/owner-site/admin/use-product";
 import Pagination from "@/components/ui/pagination";
 import { Plus, Edit, Trash2, Search, ImageIcon, Eye } from "lucide-react";
 import {
@@ -43,7 +46,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useDebouncedCallback } from "use-debounce";
-import { Product } from "@/types/owner-site/product";
+import { Product } from "@/types/owner-site/admin/product";
 import { toast } from "sonner";
 
 const ProductList = () => {

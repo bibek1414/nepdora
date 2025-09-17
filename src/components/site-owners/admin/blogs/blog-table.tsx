@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BlogPost } from "@/types/owner-site/blog";
+import { BlogPost } from "@/types/owner-site/admin/blog";
 import { FileText, Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 

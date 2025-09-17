@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare } from "lucide-react";
 import { toast } from "sonner";
-import { Order } from "@/types/owner-site/orders";
+import { Order } from "@/types/owner-site/admin/orders";
 
 interface SMSOrderButtonProps {
   order: Order;

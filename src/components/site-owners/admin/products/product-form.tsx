@@ -33,12 +33,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   useCreateProduct,
   useUpdateProduct,
-} from "@/hooks/owner-site/use-product";
-import { useCategories } from "@/hooks/owner-site/use-category";
-import { useSubCategories } from "@/hooks/owner-site/use-subcategory";
+} from "@/hooks/owner-site/admin/use-product";
+import { useCategories } from "@/hooks/owner-site/admin/use-category";
+import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
 import { CreateProductSchema } from "@/schemas/product.form";
 import { ImageUploader } from "@/components/ui/image-uploader";
-import type { Product, CreateProductRequest } from "@/types/owner-site/product";
+import type {
+  Product,
+  CreateProductRequest,
+} from "@/types/owner-site/admin/product";
 import { z } from "zod";
 import { toast } from "sonner";
 import {

@@ -7,7 +7,7 @@ import {
   useBlogs,
   useDeleteBlog,
   useUpdateBlog,
-} from "@/hooks/owner-site/use-blogs";
+} from "@/hooks/owner-site/admin/use-blogs";
 import BlogsTable from "@/components/site-owners/admin/blogs/blog-table";
 import BlogsHeader from "@/components/site-owners/admin/blogs/blog-header";
 import BlogsSearch from "@/components/site-owners/admin/blogs/blog-search";
@@ -21,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { BlogPost, BlogFilters } from "@/types/owner-site/blog";
+import { BlogPost, BlogFilters } from "@/types/owner-site/admin/blog";
 import Pagination from "@/components/ui/pagination";
 
 const BlogsManagement = () => {

@@ -10,7 +10,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { IssueCard } from "./issues-card";
-import { Issue, STATUS_OPTIONS } from "@/types/owner-site/issues";
+import { Issue, STATUS_OPTIONS } from "@/types/owner-site/admin/issues";
 
 // Extract status key type from the centralized STATUS_OPTIONS
 type StatusKey = (typeof STATUS_OPTIONS)[number]["value"];

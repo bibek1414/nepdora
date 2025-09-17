@@ -4,8 +4,8 @@ import { Plus, Trash2, Eye, EyeOff, Image, X } from "lucide-react";
 import {
   useCreateBannerWithImages,
   useUpdateBannerWithImages,
-} from "@/hooks/owner-site/use-banner";
-import { Banner, BannerImage } from "@/types/owner-site/banner";
+} from "@/hooks/owner-site/admin/use-banner";
+import { Banner, BannerImage } from "@/types/owner-site/admin/banner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TeamComponentData } from "@/types/owner-site/components/team";
-import { useTeamMembers } from "@/hooks/owner-site/use-team-member";
+import { useTeamMembers } from "@/hooks/owner-site/admin/use-team-member";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -22,7 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { AlertCircle, Trash2, Users } from "lucide-react";
-import { TEAM } from "@/types/owner-site/team-member";
+import { TEAM } from "@/types/owner-site/admin/team-member";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 

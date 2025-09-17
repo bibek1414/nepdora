@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail, Facebook, Instagram, Linkedin } from "lucide-react";
-import { TEAM } from "@/types/owner-site/team-member";
+import { TEAM } from "@/types/owner-site/admin/team-member";
 
 interface TeamCard3Props {
   member: TEAM;

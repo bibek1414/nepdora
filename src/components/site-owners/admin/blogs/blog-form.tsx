@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BlogPost, BlogTag } from "@/types/owner-site/blog";
-import { useBlogTags } from "@/hooks/owner-site/use-blogs";
-import { blogApi } from "@/services/api/owner-sites/blog";
+import { BlogPost, BlogTag } from "@/types/owner-site/admin/blog";
+import { useBlogTags } from "@/hooks/owner-site/admin/use-blogs";
+import { blogApi } from "@/services/api/owner-sites/admin/blog";
 import { blogFormSchema, BlogFormValues } from "@/schemas/blog.form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

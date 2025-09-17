@@ -2,7 +2,7 @@
 
 import React from "react";
 import { WhatsAppButton } from "./whatsapp-button";
-import { useWhatsApps } from "@/hooks/owner-site/use-whatsapp";
+import { useWhatsApps } from "@/hooks/owner-site/admin/use-whatsapp";
 
 export function WhatsApp() {
   const { data: whatsappConfigs, isLoading, error } = useWhatsApps();

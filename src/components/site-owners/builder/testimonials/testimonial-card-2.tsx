@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
-import { Testimonial } from "@/types/owner-site/testimonial";
+import { Testimonial } from "@/types/owner-site/admin/testimonial";
 
 interface TestimonialCard2Props {
   testimonial: Testimonial;

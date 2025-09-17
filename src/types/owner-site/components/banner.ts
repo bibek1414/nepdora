@@ -1,4 +1,4 @@
-import { BannerImage } from "../banner";
+import { BannerImage } from "../admin/banner";
 export interface BannerData {
   title: string;
   subtitle?: string;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
-import { useProducts } from "@/hooks/owner-site/use-product";
+import { useProducts } from "@/hooks/owner-site/admin/use-product";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -22,7 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { AlertCircle, Trash2, ShoppingBag } from "lucide-react";
-import { Product } from "@/types/owner-site/product";
+import { Product } from "@/types/owner-site/admin/product";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import Pagination from "@/components/ui/pagination";

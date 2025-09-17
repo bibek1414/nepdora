@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, CalendarDays, User, Tag } from "lucide-react";
-import { BlogPost } from "@/types/owner-site/blog";
+import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
 
 interface BlogCard1Props {

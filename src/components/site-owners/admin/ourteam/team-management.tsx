@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useTeamMembers } from "@/hooks/owner-site/use-team-member";
+import { useTeamMembers } from "@/hooks/owner-site/admin/use-team-member";
 import { TeamMemberDialog } from "./our-team-form";
 import { TeamMembersTable } from "./team-members-table";
-import { TEAM } from "@/types/owner-site/team-member";
+import { TEAM } from "@/types/owner-site/admin/team-member";
 import { Loader2, Plus, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 

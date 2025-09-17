@@ -6,11 +6,11 @@ import {
   useCreateTestimonial,
   useUpdateTestimonial,
   useDeleteTestimonial,
-} from "@/hooks/owner-site/use-testimonials";
+} from "@/hooks/owner-site/admin/use-testimonials";
 import {
   Testimonial,
   CreateTestimonialData,
-} from "@/types/owner-site/testimonial";
+} from "@/types/owner-site/admin/testimonial";
 
 import { TestimonialsHeader } from "./testimonial-header";
 import { TestimonialsTable } from "./testimonial-table";

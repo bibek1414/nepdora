@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
-import { useFAQs } from "@/hooks/owner-site/use-faq";
+import { useFAQs } from "@/hooks/owner-site/admin/use-faq";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,

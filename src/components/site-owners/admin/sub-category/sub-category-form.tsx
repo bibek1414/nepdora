@@ -31,12 +31,12 @@ import { Button } from "@/components/ui/button";
 import {
   useCreateSubCategory,
   useUpdateSubCategory,
-} from "@/hooks/owner-site/use-subcategory";
-import { useCategories } from "@/hooks/owner-site/use-category";
+} from "@/hooks/owner-site/admin/use-subcategory";
+import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import {
   CreateSubCategoryRequest,
   SubCategory,
-} from "@/types/owner-site/product";
+} from "@/types/owner-site/admin/product";
 import { CreateSubCategorySchema } from "@/schemas/product.form";
 import { ImageUploader } from "@/components/ui/image-uploader";
 

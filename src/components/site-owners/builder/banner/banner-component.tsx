@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
-import { useBanners } from "@/hooks/owner-site/use-banner";
+import { useBanners } from "@/hooks/owner-site/admin/use-banner";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -23,7 +23,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { AlertCircle, Trash2, Image as ImageIcon } from "lucide-react";
-import { Banner } from "@/types/owner-site/banner";
+import { Banner } from "@/types/owner-site/admin/banner";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 

@@ -24,8 +24,11 @@ import { Button } from "@/components/ui/button";
 import {
   useCreateCategory,
   useUpdateCategory,
-} from "@/hooks/owner-site/use-category";
-import { CreateCategoryRequest, Category } from "@/types/owner-site/product";
+} from "@/hooks/owner-site/admin/use-category";
+import {
+  CreateCategoryRequest,
+  Category,
+} from "@/types/owner-site/admin/product";
 import { CreateCategorySchema } from "@/schemas/product.form";
 import { ImageUploader } from "@/components/ui/image-uploader";
 

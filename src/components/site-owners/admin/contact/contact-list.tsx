@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useGetContacts } from "@/hooks/owner-site/use-contact";
+import { useGetContacts } from "@/hooks/owner-site/admin/use-contact";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +35,7 @@ import {
   X,
   Eye,
 } from "lucide-react";
-import { ContactFilters, Contact } from "@/types/owner-site/contact";
+import { ContactFilters, Contact } from "@/types/owner-site/admin/contact";
 
 // Debounce hook
 const useDebounce = (value: string, delay: number) => {

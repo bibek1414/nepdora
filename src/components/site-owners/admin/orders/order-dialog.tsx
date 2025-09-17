@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { Order } from "@/types/owner-site/orders";
+import { Order } from "@/types/owner-site/admin/orders";
 import {
   Dialog,
   DialogContent,
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 
 import { ChevronLeft, ChevronRight, Package2, X } from "lucide-react";
-import { useUpdateOrderStatus } from "@/hooks/owner-site/use-orders";
+import { useUpdateOrderStatus } from "@/hooks/owner-site/admin/use-orders";
 import { toast } from "sonner";
 import { WhatsAppOrderButton } from "@/components/ui/whatsapp-order-button";
 import { SMSOrderButton } from "@/components/ui/sms-order-button";

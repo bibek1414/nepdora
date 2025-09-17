@@ -1,8 +1,11 @@
 "use client";
 import React from "react";
 import { Plus, Edit, Trash2, Eye, EyeOff, Image } from "lucide-react";
-import { useBanners, useDeleteBanner } from "@/hooks/owner-site/use-banner";
-import { Banner } from "@/types/owner-site/banner";
+import {
+  useBanners,
+  useDeleteBanner,
+} from "@/hooks/owner-site/admin/use-banner";
+import { Banner } from "@/types/owner-site/admin/banner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

@@ -23,8 +23,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Plus, Edit } from "lucide-react";
-import { useCreateFAQ, useUpdateFAQ } from "@/hooks/owner-site/use-faq";
-import { FAQ } from "@/types/owner-site/faq";
+import { useCreateFAQ, useUpdateFAQ } from "@/hooks/owner-site/admin/use-faq";
+import { FAQ } from "@/types/owner-site/admin/faq";
 
 const faqSchema = z.object({
   question: z

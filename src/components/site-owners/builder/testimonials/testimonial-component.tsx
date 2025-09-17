@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
-import { useTestimonials } from "@/hooks/owner-site/use-testimonials";
+import { useTestimonials } from "@/hooks/owner-site/admin/use-testimonials";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -22,7 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { AlertCircle, Trash2, MessageSquareQuote } from "lucide-react";
-import { Testimonial } from "@/types/owner-site/testimonial";
+import { Testimonial } from "@/types/owner-site/admin/testimonial";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 

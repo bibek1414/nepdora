@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FolderOpen, TrendingUp } from "lucide-react";
-import { Category } from "@/types/owner-site/product";
+import { Category } from "@/types/owner-site/admin/product";
 
 interface CategoryCard2Props {
   category: Category;

@@ -12,7 +12,7 @@ import {
   ChevronRight,
   X,
 } from "lucide-react";
-import { Contact } from "@/types/owner-site/contact";
+import { Contact } from "@/types/owner-site/admin/contact";
 import { useState, useEffect } from "react";
 
 interface ContactDetailsDialogProps {

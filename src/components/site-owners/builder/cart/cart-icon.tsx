@@ -3,7 +3,7 @@
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useCart } from "@/hooks/owner-site/use-cart";
+import { useCart } from "@/hooks/owner-site/admin/use-cart";
 
 interface CartIconProps {
   onToggleCart: () => void;

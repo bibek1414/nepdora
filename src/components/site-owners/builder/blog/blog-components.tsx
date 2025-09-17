@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
-import { useBlogs } from "@/hooks/owner-site/use-blogs";
+import { useBlogs } from "@/hooks/owner-site/admin/use-blogs";
 import { useDeleteComponentMutation } from "@/hooks/owner-site/components/unified";
 import { BlogCard1 } from "./blog-card1";
 import { BlogCard2 } from "./blog-card2";
@@ -19,7 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { AlertCircle, Trash2, Rss } from "lucide-react";
-import { BlogPost } from "@/types/owner-site/blog";
+import { BlogPost } from "@/types/owner-site/admin/blog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 

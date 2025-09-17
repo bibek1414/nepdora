@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useActivePopup } from "@/hooks/owner-site/use-popup";
+import { useActivePopup } from "@/hooks/owner-site/admin/use-popup";
 
 import Popup from "./popup";
 
