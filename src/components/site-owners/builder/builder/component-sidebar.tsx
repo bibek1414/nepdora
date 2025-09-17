@@ -147,6 +147,12 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       icon: ImageIcon,
       keywords: ["banner", "slider", "carousel", "hero", "promotional"],
     },
+    {
+      id: "newsletter-sections",
+      label: "Newsletter",
+      icon: Mail,
+      keywords: ["subscribe", "email", "form"],
+    },
   ];
 
   const filtered = useMemo(() => {

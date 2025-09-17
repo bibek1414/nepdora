@@ -777,3 +777,76 @@ export const useDeleteBannerComponentMutation = () => {
     },
   });
 };
+export const useNewsletterComponents = (pageSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "newsletter"),
+  create: useCreateComponentMutation(pageSlug, "newsletter"),
+  update: useUpdateComponentMutation(pageSlug, "newsletter"),
+  delete: useDeleteComponentMutation(pageSlug, "newsletter"),
+});
+
+export const useCreateNewsletterComponentMutation = (pageSlug: string) =>
+  useCreateComponentMutation(pageSlug, "newsletter");
+
+export const useUpdateNewsletterComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+      data,
+    }: {
+      pageSlug: string;
+      componentId: string;
+      data: Partial<ComponentTypeMap["newsletter"]>;
+    }) =>
+      componentsApi.updateComponent(
+        pageSlug,
+        componentId,
+        { data },
+        "newsletter"
+      ),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Newsletter section updated successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update newsletter section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeleteNewsletterComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+    }: {
+      pageSlug: string;
+      componentId: string;
+    }) => componentsApi.deleteComponent(pageSlug, componentId, "newsletter"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Newsletter section removed successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to remove newsletter section";
+      toast.error(errorMessage);
+    },
+  });
+};

@@ -25,7 +25,8 @@ import { PortfolioComponentData } from "@/types/owner-site/components/portfolio"
 import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
-
+import { NewsletterComponent } from "@/components/site-owners/builder/newsletter/newsletter-component";
+import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -41,6 +42,7 @@ interface PageComponent {
     | "category"
     | "portfolio"
     | "banner"
+    | "newsletter"
     | "subcategory";
   data:
     | HeroComponentData["data"]
@@ -53,6 +55,7 @@ interface PageComponent {
     | TeamComponentData["data"]
     | CategoryComponentData["data"]
     | PortfolioComponentData["data"]
+    | NewsletterComponentData["data"]
     | BannerComponentData["data"]
     | SubCategoryComponentData["data"];
   order: number;
@@ -81,6 +84,7 @@ interface PageComponentRendererProps {
       | SubCategoryComponentData
       | PortfolioComponentData
       | BannerComponentData
+      | NewsletterComponentData
   ) => void;
 }
 
@@ -152,6 +156,19 @@ export function PageComponentRenderer({
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as ContactComponentData)
+            }
+          />
+        );
+      case "newsletter":
+        return (
+          <NewsletterComponent
+            key={component.id}
+            component={component as NewsletterComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as NewsletterComponentData)
             }
           />
         );

@@ -403,3 +403,26 @@ export const componentOrdersApi = {
     }
   },
 };
+
+export const newsletterComponentsApi = {
+  getAll: (pageSlug: string) =>
+    componentsApi.getComponentsByType(pageSlug, "newsletter"),
+  create: (pageSlug: string, data: ComponentTypeMap["newsletter"]) =>
+    componentsApi.createComponent(pageSlug, {
+      component_type: "newsletter",
+      data,
+    }),
+  update: (
+    pageSlug: string,
+    componentId: string,
+    data: Partial<ComponentTypeMap["newsletter"]>
+  ) =>
+    componentsApi.updateComponent(
+      pageSlug,
+      componentId,
+      { data },
+      "newsletter"
+    ),
+  delete: (pageSlug: string, componentId: string) =>
+    componentsApi.deleteComponent(pageSlug, componentId, "newsletter"),
+};

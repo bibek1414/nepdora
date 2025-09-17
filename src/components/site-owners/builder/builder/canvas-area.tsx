@@ -20,6 +20,7 @@ import { ContactComponent } from "@/components/site-owners/builder/contact/conta
 import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
 import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
+import { NewsletterComponent } from "@/components/site-owners/builder/newsletter/newsletter-component";
 import { PlaceholderManager } from "@/components/ui/content-placeholder";
 import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
@@ -35,6 +36,7 @@ import { ContactComponentData } from "@/types/owner-site/components/contact";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
+import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
 import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/unified";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
@@ -70,6 +72,7 @@ interface CanvasAreaProps {
   onAddFAQ?: () => void;
   onAddPortfolio?: () => void;
   onAddBanner?: () => void;
+  onAddNewsletter?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -94,6 +97,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddFAQ,
   onAddPortfolio,
   onAddBanner,
+  onAddNewsletter,
 }) => {
   // Local state to manage component order optimistically
   const [pageComponents, setPageComponents] = useState<ComponentResponse[]>(
@@ -302,6 +306,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           />
         );
         break;
+      case "newsletter":
+        componentElement = (
+          <NewsletterComponent
+            key={`newsletter-${component.id}`}
+            component={component as NewsletterComponentData}
+            siteUser=""
+            {...commonProps}
+          />
+        );
+        break;
       case "banner":
         return (
           <BannerComponent
@@ -406,6 +420,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     c => c.component_type === "testimonials"
   );
   const hasFAQ = pageComponents.some(c => c.component_type === "faq");
+  const hasNewsletter = pageComponents.some(
+    c => c.component_type === "newsletter"
+  );
 
   return (
     <div className="rounded-lg border-2 border-dashed bg-white transition-colors">
