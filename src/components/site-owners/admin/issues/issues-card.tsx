@@ -8,7 +8,7 @@ import {
   Issue,
   STATUS_OPTIONS,
   PRIORITY_OPTIONS,
-} from "@/types/owner-site/issues";
+} from "@/types/owner-site/admin/issues";
 
 type StatusKey = (typeof STATUS_OPTIONS)[number]["value"];
 type PriorityKey = (typeof PRIORITY_OPTIONS)[number]["value"];

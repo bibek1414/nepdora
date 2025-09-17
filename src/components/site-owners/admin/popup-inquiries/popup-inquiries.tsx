@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { usePopupForms, usePopups } from "@/hooks/owner-site/use-popup";
+import { usePopupForms, usePopups } from "@/hooks/owner-site/admin/use-popup";
 import { useDebouncer } from "@/hooks/use-debouncer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,8 +35,8 @@ import {
   FileText,
   User,
 } from "lucide-react";
-import { PopUpForm, PopUp } from "@/types/owner-site/popup";
-import { PopupFormFilters } from "@/types/owner-site/popup";
+import { PopUpForm, PopUp } from "@/types/owner-site/admin/popup";
+import { PopupFormFilters } from "@/types/owner-site/admin/popup";
 
 const PopupFormList = () => {
   const [filters, setFilters] = useState<PopupFormFilters>({

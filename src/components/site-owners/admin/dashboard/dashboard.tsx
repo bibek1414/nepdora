@@ -1,6 +1,6 @@
 import { TrendingUp } from "lucide-react";
 import StatCard from "./stat-card";
-import { DashboardStats } from "@/types/owner-site/dashboard";
+import { DashboardStats } from "@/types/owner-site/admin/dashboard";
 
 interface DashboardProps {
   data?: DashboardStats;

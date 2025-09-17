@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   Testimonial,
   CreateTestimonialData,
-} from "@/types/owner-site/testimonial";
+} from "@/types/owner-site/admin/testimonial";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";

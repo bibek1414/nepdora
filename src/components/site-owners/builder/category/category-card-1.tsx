@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FolderOpen, Star, ArrowRight } from "lucide-react";
-import { Category } from "@/types/owner-site/product";
+import { Category } from "@/types/owner-site/admin/product";
 import { toast } from "sonner";
 
 interface CategoryCard1Props {

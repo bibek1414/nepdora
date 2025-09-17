@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FolderOpen, Tag } from "lucide-react";
-import { SubCategory } from "@/types/owner-site/product";
+import { SubCategory } from "@/types/owner-site/admin/product";
 
 interface SubCategoryCard2Props {
   subcategory: SubCategory;

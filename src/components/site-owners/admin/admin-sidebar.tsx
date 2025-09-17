@@ -15,10 +15,6 @@ import {
   Calendar,
   Globe,
   Bug,
-  CreditCard,
-  DollarSign,
-  Truck,
-  Phone,
   Gift,
   MessageSquare,
   Tag,
@@ -27,6 +23,7 @@ import {
   Trophy,
   FolderOpen,
   GitBranch,
+  Mail,
 } from "lucide-react";
 
 const navigation = [
@@ -37,6 +34,7 @@ const navigation = [
   { name: "Services", href: "/admin/services", icon: Briefcase },
   { name: "Order Management", href: "/admin/orders", icon: FileText },
   { name: "Inquiries", href: "/admin/contacts", icon: MessageSquare },
+  { name: "Newsletter", href: "/admin/newsletter", icon: Mail },
   { name: "Testimonials", href: "/admin/testimonials", icon: Tag },
   { name: "Faq", href: "/admin/faq", icon: Tag },
   { name: "Team Members", href: "/admin/team-member", icon: Users },

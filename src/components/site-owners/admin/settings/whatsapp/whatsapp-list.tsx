@@ -13,7 +13,7 @@ import {
   useWhatsApps,
   useCreateWhatsApp,
   useUpdateWhatsApp,
-} from "@/hooks/owner-site/use-whatsapp";
+} from "@/hooks/owner-site/admin/use-whatsapp";
 import { toast } from "sonner";
 
 interface WhatsApp {

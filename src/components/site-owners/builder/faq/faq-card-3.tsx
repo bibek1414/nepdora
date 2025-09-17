@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FAQ } from "@/types/owner-site/faq";
+import { FAQ } from "@/types/owner-site/admin/faq";
 
 interface FAQCard3Props {
   faqs: FAQ[];

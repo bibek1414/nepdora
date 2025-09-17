@@ -9,8 +9,11 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Save, AlertCircle } from "lucide-react";
 import { ImageUploader } from "@/components/ui/image-uploader";
-import { useCreatePopup, useUpdatePopup } from "@/hooks/owner-site/use-popup";
-import { PopUp } from "@/types/owner-site/popup";
+import {
+  useCreatePopup,
+  useUpdatePopup,
+} from "@/hooks/owner-site/admin/use-popup";
+import { PopUp } from "@/types/owner-site/admin/popup";
 
 interface PopupFormProps {
   initialData?: PopUp | null;

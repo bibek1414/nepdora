@@ -7,14 +7,14 @@ import {
   useCreateIssue,
   useUpdateIssue,
   useDeleteIssue,
-} from "@/hooks/owner-site/use-issues";
+} from "@/hooks/owner-site/admin/use-issues";
 import { IssuesForm } from "./issues-form";
 import { IssueHeader } from "./issues-header";
 import { IssuesComponent } from "./issues-component";
 import { DeleteDialog } from "./delete-dialog";
 import { LoadingState } from "./loading-state";
 import { ErrorState } from "./error-state";
-import { Issue, STATUS_OPTIONS } from "@/types/owner-site/issues";
+import { Issue, STATUS_OPTIONS } from "@/types/owner-site/admin/issues";
 
 type StatusKey = (typeof STATUS_OPTIONS)[number]["value"];
 

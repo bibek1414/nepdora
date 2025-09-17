@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import {
   Testimonial,
   TestimonialsTableProps,
-} from "@/types/owner-site/testimonial";
+} from "@/types/owner-site/admin/testimonial";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {

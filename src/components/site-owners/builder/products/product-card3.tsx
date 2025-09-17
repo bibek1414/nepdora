@@ -5,8 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Star, Heart, ArrowRight, Clock } from "lucide-react";
-import { Product } from "@/types/owner-site/product";
-import { useCart } from "@/hooks/owner-site/use-cart";
+import { Product } from "@/types/owner-site/admin/product";
+import { useCart } from "@/hooks/owner-site/admin/use-cart";
 import { toast } from "sonner";
 
 interface ProductCard3Props {

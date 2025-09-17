@@ -3,8 +3,11 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
-import { useActivePopup, usePopupSubmit } from "@/hooks/owner-site/use-popup";
-import { PopupFormData } from "@/types/owner-site/popup";
+import {
+  useActivePopup,
+  usePopupSubmit,
+} from "@/hooks/owner-site/admin/use-popup";
+import { PopupFormData } from "@/types/owner-site/admin/popup";
 
 import {
   Dialog,

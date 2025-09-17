@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { useOrders, useUpdateOrderStatus } from "@/hooks/owner-site/use-orders";
+import {
+  useOrders,
+  useUpdateOrderStatus,
+} from "@/hooks/owner-site/admin/use-orders";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,7 +28,7 @@ import {
 } from "@/components/ui/select";
 
 import { Package, Search, ChevronLeft, ChevronRight } from "lucide-react";
-import { Order, OrderPaginationParams } from "@/types/owner-site/orders";
+import { Order, OrderPaginationParams } from "@/types/owner-site/admin/orders";
 import { toast } from "sonner";
 import { OrderDialog } from "./order-dialog";
 

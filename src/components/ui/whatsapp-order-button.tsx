@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import { toast } from "sonner";
-import { Order } from "@/types/owner-site/orders";
+import { Order } from "@/types/owner-site/admin/orders";
 
 interface WhatsAppOrderButtonProps {
   order: Order;

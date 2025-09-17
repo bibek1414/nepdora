@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useProduct } from "@/hooks/owner-site/use-product";
+import { useProduct } from "@/hooks/owner-site/admin/use-product";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -30,7 +30,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useCart } from "@/hooks/owner-site/use-cart";
+import { useCart } from "@/hooks/owner-site/admin/use-cart";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 

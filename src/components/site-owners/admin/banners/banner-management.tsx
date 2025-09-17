@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Banner } from "@/types/owner-site/banner";
+import { Banner } from "@/types/owner-site/admin/banner";
 import BannerList from "./banner-list";
 import BannerDialogForm from "./banner-dialog-form";
 

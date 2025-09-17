@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useBlog } from "@/hooks/owner-site/use-blogs";
+import { useBlog } from "@/hooks/owner-site/admin/use-blogs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {

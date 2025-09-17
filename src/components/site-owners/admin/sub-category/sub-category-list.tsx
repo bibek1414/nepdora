@@ -23,7 +23,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   useSubCategories,
   useDeleteSubCategory,
-} from "@/hooks/owner-site/use-subcategory";
+} from "@/hooks/owner-site/admin/use-subcategory";
 import { SubCategoryForm } from "./sub-category-form";
 import Pagination from "@/components/ui/pagination";
 import { MoreHorizontal, Plus, Edit, Trash2, ImageOff } from "lucide-react";
@@ -37,7 +37,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { SubCategory } from "@/types/owner-site/product";
+import { SubCategory } from "@/types/owner-site/admin/product";
 
 export const SubCategoryList: React.FC = () => {
   const [page, setPage] = useState(1);

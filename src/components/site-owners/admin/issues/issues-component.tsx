@@ -2,7 +2,7 @@
 
 import React from "react";
 import { StatusColumn } from "./status-column";
-import { Issue, STATUS_OPTIONS } from "@/types/owner-site/issues";
+import { Issue, STATUS_OPTIONS } from "@/types/owner-site/admin/issues";
 
 type StatusKey = (typeof STATUS_OPTIONS)[number]["value"];
 

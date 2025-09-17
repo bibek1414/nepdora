@@ -8,9 +8,9 @@ import { Search, X } from "lucide-react";
 import {
   useSearchProducts,
   useSuggestedProducts,
-} from "@/hooks/owner-site/use-search-products";
+} from "@/hooks/owner-site/admin/use-search-products";
 import Image from "next/image";
-import { Product } from "@/types/owner-site/product";
+import { Product } from "@/types/owner-site/admin/product";
 
 interface SearchResults {
   results: Product[];

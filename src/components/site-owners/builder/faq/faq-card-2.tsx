@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { FAQ } from "@/types/owner-site/faq";
+import { FAQ } from "@/types/owner-site/admin/faq";
 
 interface FAQCard2Props {
   faqs: FAQ[];

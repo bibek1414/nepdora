@@ -14,8 +14,8 @@ import {
 import {
   useCreateTeamMember,
   useUpdateTeamMember,
-} from "@/hooks/owner-site/use-team-member";
-import { TEAM } from "@/types/owner-site/team-member";
+} from "@/hooks/owner-site/admin/use-team-member";
+import { TEAM } from "@/types/owner-site/admin/team-member";
 import { toast } from "sonner";
 import { ImageUploader } from "@/components/ui/image-uploader";
 

@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FolderOpen, ArrowRight, Tag } from "lucide-react";
-import { SubCategory } from "@/types/owner-site/product";
+import { SubCategory } from "@/types/owner-site/admin/product";
 
 interface SubCategoryCard1Props {
   subcategory: SubCategory;

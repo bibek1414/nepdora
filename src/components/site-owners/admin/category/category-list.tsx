@@ -22,7 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   useCategories,
   useDeleteCategory,
-} from "@/hooks/owner-site/use-category";
+} from "@/hooks/owner-site/admin/use-category";
 import { CategoryForm } from "./category-form";
 import Pagination from "@/components/ui/pagination";
 import { MoreHorizontal, Plus, Edit, Trash2, ImageOff } from "lucide-react";
@@ -36,7 +36,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Category } from "@/types/owner-site/product";
+import { Category } from "@/types/owner-site/admin/product";
 
 export const CategoryList: React.FC = () => {
   const [page, setPage] = useState(1);

@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { FAQ } from "@/types/owner-site/faq";
+import { FAQ } from "@/types/owner-site/admin/faq";
 
 interface FAQCard1Props {
   faqs: FAQ[];

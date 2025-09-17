@@ -10,8 +10,8 @@ import { Plus, Edit, Trash2, ChevronDown } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
-import { useCategories } from "@/hooks/owner-site/use-category";
-import { useSubCategories } from "@/hooks/owner-site/use-subcategory";
+import { useCategories } from "@/hooks/owner-site/admin/use-category";
+import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
 import {
   DropdownMenu,
   DropdownMenuContent,

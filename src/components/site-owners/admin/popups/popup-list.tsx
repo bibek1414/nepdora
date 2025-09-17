@@ -50,8 +50,8 @@ import {
   usePopups,
   useDeletePopup,
   useUpdatePopup,
-} from "@/hooks/owner-site/use-popup";
-import { PopUp } from "@/types/owner-site/popup";
+} from "@/hooks/owner-site/admin/use-popup";
+import { PopUp } from "@/types/owner-site/admin/popup";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const PopupListPage: React.FC = () => {

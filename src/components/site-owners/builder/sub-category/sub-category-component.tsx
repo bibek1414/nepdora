@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
-import { useSubCategories } from "@/hooks/owner-site/use-subcategory";
+import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -21,7 +21,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { AlertCircle, Trash2, FolderOpen } from "lucide-react";
-import { SubCategory } from "@/types/owner-site/product";
+import { SubCategory } from "@/types/owner-site/admin/product";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import Pagination from "@/components/ui/pagination";

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { TestimonialModalProps } from "@/types/owner-site/testimonial";
+import { TestimonialModalProps } from "@/types/owner-site/admin/testimonial";
 import {
   Dialog,
   DialogContent,
