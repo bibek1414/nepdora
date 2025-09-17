@@ -23,6 +23,8 @@ import { TestimonialsComponentData } from "@/types/owner-site/components/testimo
 import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
+import { BannerComponentData } from "@/types/owner-site/components/banner";
+import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
 
 interface PageComponent {
   id: string | number;
@@ -38,6 +40,7 @@ interface PageComponent {
     | "testimonials"
     | "category"
     | "portfolio"
+    | "banner"
     | "subcategory";
   data:
     | HeroComponentData["data"]
@@ -50,6 +53,7 @@ interface PageComponent {
     | TeamComponentData["data"]
     | CategoryComponentData["data"]
     | PortfolioComponentData["data"]
+    | BannerComponentData["data"]
     | SubCategoryComponentData["data"];
   order: number;
 }
@@ -76,6 +80,7 @@ interface PageComponentRendererProps {
       | CategoryComponentData
       | SubCategoryComponentData
       | PortfolioComponentData
+      | BannerComponentData
   ) => void;
 }
 
@@ -233,6 +238,19 @@ export function PageComponentRenderer({
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as PortfolioComponentData)
+            }
+          />
+        );
+      case "banner":
+        return (
+          <BannerComponent
+            key={component.id}
+            component={component as BannerComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as BannerComponentData)
             }
           />
         );

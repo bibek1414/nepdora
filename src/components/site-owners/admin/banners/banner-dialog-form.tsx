@@ -208,15 +208,9 @@ export default function BannerDialogForm({
 
           {/* Banner Images */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Banner Images
-              </h3>
-              <Button type="button" onClick={addImage} size="sm">
-                <Plus size={16} className="mr-2" />
-                Add Image
-              </Button>
-            </div>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Banner Images
+            </h3>
 
             {formData.images.length === 0 ? (
               <Card className="border-2 border-dashed border-gray-300 bg-gray-50">
@@ -226,7 +220,8 @@ export default function BannerDialogForm({
                     No images added yet
                   </p>
                   <Button type="button" variant="ghost" onClick={addImage}>
-                    Click &apos;Add Image&apos; to get started
+                    <Plus size={16} className="mr-2" />
+                    Add Your First Image
                   </Button>
                 </CardContent>
               </Card>
@@ -320,6 +315,21 @@ export default function BannerDialogForm({
                     </CardContent>
                   </Card>
                 ))}
+
+                {/* Add Image Button at the bottom of images */}
+                <Card className="border-2 border-dashed border-gray-300 bg-gray-50/50">
+                  <CardContent className="flex items-center justify-center py-6">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={addImage}
+                      className="text-gray-600 hover:text-gray-800"
+                    >
+                      <Plus size={16} className="mr-2" />
+                      Add Another Image
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
             )}
           </div>

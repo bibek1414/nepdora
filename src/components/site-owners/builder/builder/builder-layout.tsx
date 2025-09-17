@@ -55,7 +55,8 @@ import { FAQStylesDialog } from "@/components/site-owners/builder/faq/faq-styles
 import { defaultFAQData } from "@/types/owner-site/components/faq";
 import { PortfolioStylesDialog } from "@/components/site-owners/builder/portfolio/portfolio-styles-dialog";
 import { defaultPortfolioData } from "@/types/owner-site/components/portfolio";
-
+import { BannerStylesDialog } from "@/components/site-owners/builder/banner/banner-styles-dialog";
+import { defaultBannerData } from "@/types/owner-site/components/banner";
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -109,6 +110,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isFAQStylesDialogOpen, setIsFAQStylesDialogOpen] = useState(false);
   const [isPortfolioStylesDialogOpen, setIsPortfolioStylesDialogOpen] =
     useState(false);
+  const [isBannerStylesDialogOpen, setIsBannerStylesDialogOpen] =
+    useState(false);
 
   // Use pageSlug from URL params as current page
   const currentPage = pageSlug;
@@ -155,6 +158,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     currentPage,
     "portfolio"
   );
+  const createBannerComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "banner"
+  );
 
   // Process page components with proper typing
   const pageComponents = React.useMemo(() => {
@@ -192,6 +199,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "testimonials",
             "faq",
             "portfolio",
+            "banner",
           ].includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
@@ -315,6 +323,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsPortfolioStylesDialogOpen(true);
     } else if (componentId === "team-members-sections") {
       setIsTeamStylesDialogOpen(true);
+    } else if (componentId === "banner-sections") {
+      setIsBannerStylesDialogOpen(true);
     } else {
       console.log(`${componentId} clicked`);
     }
@@ -408,7 +418,23 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+  const handleBannerTemplateSelect = (
+    template: "banner-1" | "banner-2" | "banner-3" | "banner-4"
+  ) => {
+    const bannerData = {
+      ...defaultBannerData,
+      template: template,
+    };
 
+    createBannerComponentMutation.mutate(bannerData, {
+      onSuccess: () => {
+        setIsBannerStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create banner component:", error);
+      },
+    });
+  };
   const handlePortfolioTemplateSelect = (
     template: "portfolio-1" | "portfolio-2" | "portfolio-3"
   ) => {
@@ -651,6 +677,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     setIsPortfolioStylesDialogOpen(true);
   };
 
+  const handleAddBanner = () => {
+    setIsBannerStylesDialogOpen(true);
+  };
+
   const handleAddTestimonials = () => {
     setIsTestimonialsStylesDialogOpen(true);
   };
@@ -700,6 +730,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         case "faq-sections":
           componentType = "faq";
           break;
+        case "banner-sections":
+          componentType = "banner";
+          break;
         default:
           if (
             [
@@ -714,6 +747,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               "testimonials",
               "faq",
               "portfolio",
+              "banner",
             ].includes(item.type)
           ) {
             componentType = item.type as keyof ComponentTypeMap;
@@ -838,6 +872,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsFAQStylesDialogOpen}
         onStyleSelect={handleFAQTemplateSelect}
       />
+      <BannerStylesDialog
+        open={isBannerStylesDialogOpen}
+        onOpenChange={setIsBannerStylesDialogOpen}
+        onStyleSelect={handleBannerTemplateSelect}
+      />
 
       <TopNavigation
         pages={pagesData}
@@ -888,6 +927,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddTestimonials={handleAddTestimonials}
                   onAddFAQ={handleAddFAQ}
                   onAddPortfolio={handleAddPortfolio}
+                  onAddBanner={handleAddBanner}
                 />
               </div>
             </div>

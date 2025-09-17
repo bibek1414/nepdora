@@ -225,7 +225,19 @@ export const heroComponentsApi = {
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "hero"),
 };
-
+export const bannerComponentsApi = {
+  getAll: (pageSlug: string) =>
+    componentsApi.getComponentsByType(pageSlug, "banner"),
+  create: (pageSlug: string, data: ComponentTypeMap["banner"]) =>
+    componentsApi.createComponent(pageSlug, { component_type: "banner", data }),
+  update: (
+    pageSlug: string,
+    componentId: string,
+    data: Partial<ComponentTypeMap["banner"]>
+  ) => componentsApi.updateComponent(pageSlug, componentId, { data }, "banner"),
+  delete: (pageSlug: string, componentId: string) =>
+    componentsApi.deleteComponent(pageSlug, componentId, "banner"),
+};
 export const faqComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "faq"),

@@ -709,3 +709,71 @@ export const useUpdateComponentOrderMutation = (pageSlug: string) => {
     },
   });
 };
+export const useBannerComponents = (pageSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "banner"),
+  create: useCreateComponentMutation(pageSlug, "banner"),
+  update: useUpdateComponentMutation(pageSlug, "banner"),
+  delete: useDeleteComponentMutation(pageSlug, "banner"),
+});
+
+export const useCreateBannerComponentMutation = (pageSlug: string) =>
+  useCreateComponentMutation(pageSlug, "banner");
+
+export const useUpdateBannerComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+      data,
+    }: {
+      pageSlug: string;
+      componentId: string;
+      data: Partial<ComponentTypeMap["banner"]>;
+    }) =>
+      componentsApi.updateComponent(pageSlug, componentId, { data }, "banner"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Banner section updated successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update banner section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeleteBannerComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+    }: {
+      pageSlug: string;
+      componentId: string;
+    }) => componentsApi.deleteComponent(pageSlug, componentId, "banner"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Banner section removed successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to remove banner section";
+      toast.error(errorMessage);
+    },
+  });
+};
