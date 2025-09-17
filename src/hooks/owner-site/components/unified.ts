@@ -850,3 +850,71 @@ export const useDeleteNewsletterComponentMutation = () => {
     },
   });
 };
+export const useYouTubeComponents = (pageSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "youtube"),
+  create: useCreateComponentMutation(pageSlug, "youtube"),
+  update: useUpdateComponentMutation(pageSlug, "youtube"),
+  delete: useDeleteComponentMutation(pageSlug, "youtube"),
+});
+
+export const useCreateYouTubeComponentMutation = (pageSlug: string) =>
+  useCreateComponentMutation(pageSlug, "youtube");
+
+export const useUpdateYouTubeComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+      data,
+    }: {
+      pageSlug: string;
+      componentId: string;
+      data: Partial<ComponentTypeMap["youtube"]>;
+    }) =>
+      componentsApi.updateComponent(pageSlug, componentId, { data }, "youtube"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("YouTube section updated successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update YouTube section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeleteYouTubeComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+    }: {
+      pageSlug: string;
+      componentId: string;
+    }) => componentsApi.deleteComponent(pageSlug, componentId, "youtube"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("YouTube section removed successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to remove YouTube section";
+      toast.error(errorMessage);
+    },
+  });
+};

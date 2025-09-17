@@ -426,3 +426,21 @@ export const newsletterComponentsApi = {
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "newsletter"),
 };
+
+export const youtubeComponentApi = {
+  getAll: (pageSlug: string) =>
+    componentsApi.getComponentsByType(pageSlug, "youtube"),
+  create: (pageSlug: string, data: ComponentTypeMap["youtube"]) =>
+    componentsApi.createComponent(pageSlug, {
+      component_type: "youtube",
+      data,
+    }),
+  update: (
+    pageSlug: string,
+    componentId: string,
+    data: Partial<ComponentTypeMap["youtube"]>
+  ) =>
+    componentsApi.updateComponent(pageSlug, componentId, { data }, "youtube"),
+  delete: (pageSlug: string, componentId: string) =>
+    componentsApi.deleteComponent(pageSlug, componentId, "youtube"),
+};

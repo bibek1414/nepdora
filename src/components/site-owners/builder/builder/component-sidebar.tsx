@@ -153,6 +153,12 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       icon: Mail,
       keywords: ["subscribe", "email", "form"],
     },
+    {
+      id: "youtube-sections",
+      label: "YouTube Videos",
+      icon: ImageIcon,
+      keywords: ["video", "player", "embed", "youtube"],
+    },
   ];
 
   const filtered = useMemo(() => {

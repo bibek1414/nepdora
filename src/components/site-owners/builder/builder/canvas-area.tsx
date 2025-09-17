@@ -40,6 +40,8 @@ import { NewsletterComponentData } from "@/types/owner-site/components/newslette
 import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/unified";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
+import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
+import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 import {
   Plus,
   Navigation,
@@ -73,6 +75,7 @@ interface CanvasAreaProps {
   onAddPortfolio?: () => void;
   onAddBanner?: () => void;
   onAddNewsletter?: () => void;
+  onAddYouTube?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -98,6 +101,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddPortfolio,
   onAddBanner,
   onAddNewsletter,
+  onAddYouTube,
 }) => {
   // Local state to manage component order optimistically
   const [pageComponents, setPageComponents] = useState<ComponentResponse[]>(
@@ -271,6 +275,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             component={component as TeamComponentData}
             onUpdate={() => {}}
             onMemberClick={() => {}}
+            {...commonProps}
+          />
+        );
+        break;
+      case "youtube":
+        componentElement = (
+          <YouTubeComponent
+            key={`youtube-${component.id}`}
+            component={component as YouTubeComponentData}
+            onUpdate={() => {}}
             {...commonProps}
           />
         );

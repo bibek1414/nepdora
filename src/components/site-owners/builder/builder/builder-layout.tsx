@@ -59,7 +59,8 @@ import { BannerStylesDialog } from "@/components/site-owners/builder/banner/bann
 import { defaultBannerData } from "@/types/owner-site/components/banner";
 import { NewsletterStylesDialog } from "@/components/site-owners/builder/newsletter/newsletter-style-dialog";
 import { defaultNewsletterData } from "@/types/owner-site/components/newsletter";
-
+import { YouTubeStylesDialog } from "@/components/site-owners/builder/youtube/youtube-styles-dialog";
+import { defaultYouTubeData } from "@/types/owner-site/components/youtube";
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -117,7 +118,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isNewsletterStylesDialogOpen, setIsNewsletterStylesDialogOpen] =
     useState(false);
-
+  const [isYouTubeStylesDialogOpen, setIsYouTubeStylesDialogOpen] =
+    useState(false);
   // Use pageSlug from URL params as current page
   const currentPage = pageSlug;
 
@@ -171,7 +173,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     currentPage,
     "newsletter"
   );
-
+  const createYouTubeComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "youtube"
+  );
   // Process page components with proper typing
   const pageComponents = React.useMemo(() => {
     if (!pageComponentsResponse) return [];
@@ -210,6 +215,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "portfolio",
             "banner",
             "newsletter",
+            "youtube",
           ].includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
@@ -335,6 +341,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsTeamStylesDialogOpen(true);
     } else if (componentId === "banner-sections") {
       setIsBannerStylesDialogOpen(true);
+    } else if (componentId === "youtube-sections") {
+      setIsYouTubeStylesDialogOpen(true);
     } else if (componentId === "newsletter-sections") {
       setIsNewsletterStylesDialogOpen(true);
     } else {
@@ -427,6 +435,23 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
       onError: error => {
         console.error("Failed to create hero component:", error);
+      },
+    });
+  };
+  const handleYouTubeTemplateSelect = (
+    template: "grid" | "carousel" | "playlist"
+  ) => {
+    const youtubeData = {
+      ...defaultYouTubeData,
+      style: template,
+    };
+
+    createYouTubeComponentMutation.mutate(youtubeData, {
+      onSuccess: () => {
+        setIsYouTubeStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create YouTube component:", error);
       },
     });
   };
@@ -700,6 +725,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAddContact = () => {
     setIsContactStylesDialogOpen(true);
   };
+  const handleAddYouTube = () => {
+    setIsYouTubeStylesDialogOpen(true);
+  };
 
   const handleAddTeam = () => {
     setIsTeamStylesDialogOpen(true);
@@ -772,6 +800,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         case "newsletter-sections":
           componentType = "newsletter";
           break;
+        case "youtube-sections":
+          componentType = "youtube";
+          break;
         default:
           if (
             [
@@ -788,6 +819,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               "portfolio",
               "banner",
               "newsletter",
+              "youtube",
             ].includes(item.type)
           ) {
             componentType = item.type as keyof ComponentTypeMap;
@@ -923,6 +955,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         open={isNewsletterStylesDialogOpen}
         onOpenChange={setIsNewsletterStylesDialogOpen}
         onStyleSelect={handleNewsletterTemplateSelect}
+      />
+      <YouTubeStylesDialog
+        open={isYouTubeStylesDialogOpen}
+        onOpenChange={setIsYouTubeStylesDialogOpen}
+        onStyleSelect={handleYouTubeTemplateSelect}
       />
 
       <TopNavigation
