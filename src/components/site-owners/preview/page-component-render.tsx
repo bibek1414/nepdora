@@ -27,6 +27,8 @@ import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
 import { NewsletterComponent } from "@/components/site-owners/builder/newsletter/newsletter-component";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
+import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
+import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -43,6 +45,7 @@ interface PageComponent {
     | "portfolio"
     | "banner"
     | "newsletter"
+    | "youtube"
     | "subcategory";
   data:
     | HeroComponentData["data"]
@@ -56,6 +59,7 @@ interface PageComponent {
     | CategoryComponentData["data"]
     | PortfolioComponentData["data"]
     | NewsletterComponentData["data"]
+    | YouTubeComponentData["data"]
     | BannerComponentData["data"]
     | SubCategoryComponentData["data"];
   order: number;
@@ -85,6 +89,7 @@ interface PageComponentRendererProps {
       | PortfolioComponentData
       | BannerComponentData
       | NewsletterComponentData
+      | YouTubeComponentData
   ) => void;
 }
 
@@ -268,6 +273,19 @@ export function PageComponentRenderer({
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as BannerComponentData)
+            }
+          />
+        );
+      case "youtube":
+        return (
+          <YouTubeComponent
+            key={component.id}
+            component={component as YouTubeComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as YouTubeComponentData)
             }
           />
         );

@@ -21,6 +21,7 @@ import { TestimonialsComponentData } from "@/types/owner-site/components/testimo
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
+import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -37,6 +38,7 @@ interface PageComponent {
     | "portfolio"
     | "banner"
     | "newsletter"
+    | "youtube"
     | "subcategory";
   data:
     | HeroComponentData["data"]
@@ -51,6 +53,7 @@ interface PageComponent {
     | NewsletterComponentData["data"]
     | CategoryComponentData["data"]
     | BannerComponentData["data"]
+    | YouTubeComponentData["data"]
     | SubCategoryComponentData["data"];
   order: number;
 }
@@ -93,6 +96,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
           "newsletter",
           "subcategory",
           "portfolio",
+          "youtube",
           "banner",
         ].includes(component.component_type) &&
         !!component.data
@@ -141,6 +145,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | NewsletterComponentData
       | PortfolioComponentData
       | BannerComponentData
+      | YouTubeComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
       componentId,
