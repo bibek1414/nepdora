@@ -36,6 +36,8 @@ import { TestimonialsComponentData } from "@/types/owner-site/components/testimo
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/unified";
+import { BannerComponentData } from "@/types/owner-site/components/banner";
+import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
 import {
   Plus,
   Navigation,
@@ -67,6 +69,7 @@ interface CanvasAreaProps {
   onAddTestimonials?: () => void;
   onAddFAQ?: () => void;
   onAddPortfolio?: () => void;
+  onAddBanner?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -90,6 +93,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddTestimonials,
   onAddFAQ,
   onAddPortfolio,
+  onAddBanner,
 }) => {
   // Local state to manage component order optimistically
   const [pageComponents, setPageComponents] = useState<ComponentResponse[]>(
@@ -298,6 +302,15 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           />
         );
         break;
+      case "banner":
+        return (
+          <BannerComponent
+            key={`banner-${component.id}`}
+            component={component as BannerComponentData}
+            siteUser=""
+            {...commonProps}
+          />
+        );
       default:
         return null;
     }
