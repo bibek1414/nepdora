@@ -10,7 +10,7 @@ import { TestimonialsData } from "./testimonials";
 import { FAQData } from "./faq";
 import { PortfolioData } from "./portfolio";
 import { BannerData } from "./banner";
-
+import { NewsletterData } from "./newsletter";
 // Union type for all component data types
 export type ComponentData =
   | HeroData
@@ -24,6 +24,7 @@ export type ComponentData =
   | FAQData
   | PortfolioData
   | BannerData
+  | NewsletterData
   | TestimonialsData;
 
 // Component type mapping for better type safety
@@ -39,6 +40,7 @@ export interface ComponentTypeMap {
   testimonials: TestimonialsData;
   portfolio: PortfolioData;
   faq: FAQData;
+  newsletter: NewsletterData;
   banner: BannerData;
 }
 
@@ -145,6 +147,10 @@ export const isBannerComponent = (
 ): component is ComponentResponse<"banner"> =>
   component.component_type === "banner";
 
+export const isNewsletterComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"newsletter"> =>
+  component.component_type === "newsletter";
 export interface ApiListResponse<T> {
   data?: T[];
   components?: T[];

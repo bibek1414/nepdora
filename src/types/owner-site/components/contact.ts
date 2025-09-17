@@ -18,7 +18,7 @@ export interface ContactData {
     phone?: string;
     address?: string;
   };
-  map_embed_url?: string; // New field for Google Maps embed URL
+  map_embed_url?: string;
   order?: number;
 }
 

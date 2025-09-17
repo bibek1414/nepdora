@@ -57,6 +57,9 @@ import { PortfolioStylesDialog } from "@/components/site-owners/builder/portfoli
 import { defaultPortfolioData } from "@/types/owner-site/components/portfolio";
 import { BannerStylesDialog } from "@/components/site-owners/builder/banner/banner-styles-dialog";
 import { defaultBannerData } from "@/types/owner-site/components/banner";
+import { NewsletterStylesDialog } from "@/components/site-owners/builder/newsletter/newsletter-style-dialog";
+import { defaultNewsletterData } from "@/types/owner-site/components/newsletter";
+
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -112,6 +115,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isBannerStylesDialogOpen, setIsBannerStylesDialogOpen] =
     useState(false);
+  const [isNewsletterStylesDialogOpen, setIsNewsletterStylesDialogOpen] =
+    useState(false);
 
   // Use pageSlug from URL params as current page
   const currentPage = pageSlug;
@@ -162,6 +167,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     currentPage,
     "banner"
   );
+  const createNewsletterComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "newsletter"
+  );
 
   // Process page components with proper typing
   const pageComponents = React.useMemo(() => {
@@ -200,6 +209,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "faq",
             "portfolio",
             "banner",
+            "newsletter",
           ].includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
@@ -325,6 +335,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsTeamStylesDialogOpen(true);
     } else if (componentId === "banner-sections") {
       setIsBannerStylesDialogOpen(true);
+    } else if (componentId === "newsletter-sections") {
+      setIsNewsletterStylesDialogOpen(true);
     } else {
       console.log(`${componentId} clicked`);
     }
@@ -384,7 +396,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           description:
             "Get the latest news and updates delivered to your inbox.",
         },
-        copyright: `© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
+        copyright: `Â© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
       },
       component_id: `footer-${Date.now()}`,
     };
@@ -418,6 +430,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+
   const handleBannerTemplateSelect = (
     template: "banner-1" | "banner-2" | "banner-3" | "banner-4"
   ) => {
@@ -435,6 +448,25 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+
+  const handleNewsletterTemplateSelect = (
+    template: "style-1" | "style-2" | "style-3"
+  ) => {
+    const newsletterData = {
+      ...defaultNewsletterData,
+      style: template,
+    };
+
+    createNewsletterComponentMutation.mutate(newsletterData, {
+      onSuccess: () => {
+        setIsNewsletterStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create newsletter component:", error);
+      },
+    });
+  };
+
   const handlePortfolioTemplateSelect = (
     template: "portfolio-1" | "portfolio-2" | "portfolio-3"
   ) => {
@@ -681,6 +713,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     setIsBannerStylesDialogOpen(true);
   };
 
+  const handleAddNewsletter = () => {
+    setIsNewsletterStylesDialogOpen(true);
+  };
+
   const handleAddTestimonials = () => {
     setIsTestimonialsStylesDialogOpen(true);
   };
@@ -733,6 +769,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         case "banner-sections":
           componentType = "banner";
           break;
+        case "newsletter-sections":
+          componentType = "newsletter";
+          break;
         default:
           if (
             [
@@ -748,6 +787,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               "faq",
               "portfolio",
               "banner",
+              "newsletter",
             ].includes(item.type)
           ) {
             componentType = item.type as keyof ComponentTypeMap;
@@ -872,10 +912,17 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsFAQStylesDialogOpen}
         onStyleSelect={handleFAQTemplateSelect}
       />
+
       <BannerStylesDialog
         open={isBannerStylesDialogOpen}
         onOpenChange={setIsBannerStylesDialogOpen}
         onStyleSelect={handleBannerTemplateSelect}
+      />
+
+      <NewsletterStylesDialog
+        open={isNewsletterStylesDialogOpen}
+        onOpenChange={setIsNewsletterStylesDialogOpen}
+        onStyleSelect={handleNewsletterTemplateSelect}
       />
 
       <TopNavigation
@@ -928,6 +975,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddFAQ={handleAddFAQ}
                   onAddPortfolio={handleAddPortfolio}
                   onAddBanner={handleAddBanner}
+                  onAddNewsletter={handleAddNewsletter}
                 />
               </div>
             </div>

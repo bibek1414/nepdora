@@ -20,6 +20,7 @@ import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
+import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -35,6 +36,7 @@ interface PageComponent {
     | "category"
     | "portfolio"
     | "banner"
+    | "newsletter"
     | "subcategory";
   data:
     | HeroComponentData["data"]
@@ -46,6 +48,7 @@ interface PageComponent {
     | TeamComponentData["data"]
     | TestimonialsComponentData["data"]
     | PortfolioComponentData["data"]
+    | NewsletterComponentData["data"]
     | CategoryComponentData["data"]
     | BannerComponentData["data"]
     | SubCategoryComponentData["data"];
@@ -87,6 +90,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
           "faq",
           "testimonials",
           "category",
+          "newsletter",
           "subcategory",
           "portfolio",
           "banner",
@@ -134,6 +138,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | TestimonialsComponentData
       | CategoryComponentData
       | SubCategoryComponentData
+      | NewsletterComponentData
       | PortfolioComponentData
       | BannerComponentData
   ) => {
