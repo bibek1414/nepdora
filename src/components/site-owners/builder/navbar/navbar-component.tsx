@@ -2,20 +2,34 @@
 
 import React, { useState } from "react";
 import { Navbar, NavbarData } from "@/types/owner-site/components/navbar";
-import { useUpdateNavbarMutation } from "@/hooks/owner-site/components/use-navbar";
+import {
+  useUpdateNavbarMutation,
+  useDeleteNavbarMutation,
+} from "@/hooks/owner-site/components/use-navbar";
 import { NavbarEditorDialog } from "./navbar-settings";
 import { NavbarStyle1 } from "./styles/navbar-style-1";
 import { NavbarStyle2 } from "./styles/navbar-style-2";
 import { NavbarStyle3 } from "./styles/navbar-style-3";
 import { NavbarStyle4 } from "./styles/navbar-style-4";
 import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
+import { Edit, Edit2, Settings, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface NavbarComponentProps {
   navbar: Navbar;
   isEditable?: boolean;
   siteUser: string;
-  disableClicks?: boolean; // New prop to disable all navbar clicks
+  disableClicks?: boolean;
 }
 
 const styleMap = {
@@ -31,7 +45,10 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
   siteUser,
   disableClicks = false,
 }) => {
-  const { mutate: updateNavbar, isPending } = useUpdateNavbarMutation();
+  const { mutate: updateNavbar, isPending: isUpdating } =
+    useUpdateNavbarMutation();
+  const { mutate: deleteNavbar, isPending: isDeleting } =
+    useDeleteNavbarMutation();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
   const handleSaveNavbar = (navbarData: NavbarData) => {
@@ -41,6 +58,12 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
       id: navbar.id,
       navbarData: { ...navbar.data, ...navbarData },
     });
+  };
+
+  const handleDeleteNavbar = () => {
+    if (!isEditable) return;
+
+    deleteNavbar(navbar.id);
   };
 
   const StyleComponent =
@@ -55,14 +78,47 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
       }
     >
       {isEditable && (
-        <div className="absolute -top-2 right-10 z-10">
+        <div className="absolute -top-2 right-2 z-10 flex gap-2">
           <Button
             size="sm"
+            variant="outline"
             onClick={() => setIsEditorOpen(true)}
-            className="h-8 w-8 rounded-md p-0"
+            className=""
           >
-            <Settings className="h-4 w-4" />
+            <Edit className="mr-2 h-4 w-4" />
+            Edit Navbar
           </Button>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 w-8 rounded-md p-0"
+                disabled={isDeleting}
+              >
+                <Trash2 className="h-4 w-4 text-red-500" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your navbar and remove all associated data.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDeleteNavbar}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       )}
 
