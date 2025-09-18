@@ -559,7 +559,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleProductsTemplateSelect = (
-    template: "grid-1" | "grid-2" | "list-1" | "carousel-1"
+    template: "grid-1" | "grid-2" | "list-1" | "carousel-1" | "grid-4"
   ) => {
     const productsData = {
       ...defaultProductsData,

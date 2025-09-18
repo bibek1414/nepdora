@@ -16,10 +16,15 @@ export const useSubCategories = (params: PaginationParams = {}) => {
   });
 };
 
-export const useSubCategory = (slug: string) => {
+export const useSubCategory = (slug: string | undefined) => {
   return useQuery({
     queryKey: ["subcategory", slug],
-    queryFn: () => useSubCategoryApi.getSubCategory(slug),
+    queryFn: () => {
+      if (!slug) {
+        return Promise.resolve(null);
+      }
+      return useSubCategoryApi.getSubCategory(slug);
+    },
     enabled: !!slug,
   });
 };
