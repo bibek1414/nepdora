@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { DM_Sans } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { CustomerAuthProvider } from "@/contexts/customer/AuthContext";
 import { QueryProvider } from "@/providers/query-provider";
 import TopLoader from "@/components/top-loader";
 import { Suspense } from "react";
@@ -26,21 +27,23 @@ export default function RootLayout({
     <html lang="en">
       <body className={dmSans.className}>
         <AuthProvider>
-          <QueryProvider>
-            <CartProvider>
-              <Suspense fallback={null}>
-                <TopLoader />
-              </Suspense>
-              {children}
-              <Analytics />
-              <Toaster
-                position="bottom-right"
-                richColors
-                closeButton
-                duration={3000}
-              />
-            </CartProvider>
-          </QueryProvider>
+          <CustomerAuthProvider>
+            <QueryProvider>
+              <CartProvider>
+                <Suspense fallback={null}>
+                  <TopLoader />
+                </Suspense>
+                {children}
+                <Analytics />
+                <Toaster
+                  position="bottom-right"
+                  richColors
+                  closeButton
+                  duration={3000}
+                />
+              </CartProvider>
+            </QueryProvider>
+          </CustomerAuthProvider>
         </AuthProvider>
       </body>
     </html>
