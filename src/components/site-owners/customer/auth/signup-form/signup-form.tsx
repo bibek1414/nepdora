@@ -41,9 +41,10 @@ export function SignupForm({
   const handleLoginClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    // Use a generic siteuser or get from URL params
-    const urlParams = new URLSearchParams(window.location.search);
-    const siteUser = urlParams.get("siteuser") || "guest";
+    // Extract siteUser from the current pathname
+    const pathSegments = window.location.pathname.split("/");
+    // For path like "/preview/41/signup", siteUser is at index 2
+    const siteUser = pathSegments[2] || "guest";
 
     router.push(`/preview/${siteUser}/login`);
   };
