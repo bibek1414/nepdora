@@ -6,12 +6,22 @@ import {
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
 import { getButtonVariant } from "@/lib/utils";
-import { Plus, Edit, Trash2, ChevronDown } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  ChevronDown,
+  User,
+  Heart,
+  Package,
+  LogOut,
+} from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
+import { useAuth } from "@/hooks/customer/use-auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -80,6 +90,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
 }) => {
   const { links, buttons, showCart } = navbarData;
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
 
   // Fetch categories and subcategories
@@ -159,6 +170,33 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     }
   };
 
+  // Handle login button click
+  const handleLoginClick = () => {
+    if (isEditable || disableClicks) return;
+    router.push(`/preview/${siteUser}/login`);
+  };
+
+  // Handle profile dropdown actions
+  const handleProfileAction = (action: string) => {
+    if (isEditable || disableClicks) return;
+
+    switch (action) {
+      case "profile":
+        router.push(`/preview/${siteUser}/profile`);
+        break;
+      case "wishlist":
+        router.push(`/preview/${siteUser}/wishlist`);
+        break;
+      case "orders":
+        router.push(`/preview/${siteUser}/orders`);
+        break;
+      case "logout":
+        logout();
+        router.push(`/preview/${siteUser}`);
+        break;
+    }
+  };
+
   // Group subcategories by category
   const getSubCategoriesForCategory = (categoryId: number) => {
     return subCategories.filter(subCat => {
@@ -197,8 +235,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
           </div>
 
           <div className="hidden items-center gap-6 md:flex">
-            {/* Categories Dropdown with Filtering */}
-
             {/* Desktop Search Bar */}
             <div
               className={`relative hidden max-w-md flex-1 md:block ${disableClicks ? "pointer-events-auto" : ""}`}
@@ -242,6 +278,8 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                 </a>
               )
             )}
+
+            {/* Categories Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -325,6 +363,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                 </DropdownMenuContent>
               )}
             </DropdownMenu>
+
             {isEditable && onAddLink && (
               <Button
                 onClick={onAddLink}
@@ -339,6 +378,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Regular buttons (editable ones) */}
           {buttons.map(button =>
             isEditable && onEditButton && onDeleteButton ? (
               <EditableItem
@@ -372,6 +412,77 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
               </Button>
             )
           )}
+
+          {/* Fixed Login/Profile Button - Always present, not editable */}
+          {!isAuthenticated ? (
+            <Button
+              variant="default"
+              size="sm"
+              onClick={isEditable ? undefined : handleLoginClick}
+              className={`${
+                isEditable
+                  ? "pointer-events-none opacity-60"
+                  : disableClicks
+                    ? "pointer-events-auto cursor-default opacity-60"
+                    : "pointer-events-auto"
+              }`}
+            >
+              {isEditable ? "Login (Preview Only)" : "Login"}
+            </Button>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className={`flex items-center gap-1 ${
+                    isEditable || disableClicks
+                      ? "pointer-events-auto cursor-default opacity-60"
+                      : ""
+                  }`}
+                  onClick={disableClicks ? e => e.preventDefault() : undefined}
+                >
+                  <User className="h-4 w-4" />
+                  {user?.first_name || "Profile"}
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              {!disableClicks && !isEditable && (
+                <DropdownMenuContent className="w-48" align="end">
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => handleProfileAction("profile")}
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    My Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => handleProfileAction("wishlist")}
+                  >
+                    <Heart className="mr-2 h-4 w-4" />
+                    Wishlist
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => handleProfileAction("orders")}
+                  >
+                    <Package className="mr-2 h-4 w-4" />
+                    My Orders
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="cursor-pointer text-red-600 focus:text-red-600"
+                    onClick={() => handleProfileAction("logout")}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              )}
+            </DropdownMenu>
+          )}
+
           {isEditable && onAddButton && (
             <Button
               onClick={onAddButton}
@@ -382,6 +493,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
               <Plus className="mr-2 h-4 w-4" /> Button
             </Button>
           )}
+
           {showCart && (
             <div className={disableClicks ? "pointer-events-auto" : ""}>
               <CartIcon onToggleCart={toggleCart} />
