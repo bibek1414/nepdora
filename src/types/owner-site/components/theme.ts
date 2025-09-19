@@ -1,7 +1,9 @@
 export interface ThemeColors {
   text: string;
   primary: string;
+  primaryForeground: string;
   secondary: string;
+  secondaryForeground: string;
   background: string;
 }
 
@@ -55,7 +57,7 @@ export interface DeleteThemeResponse {
   message: string;
 }
 
-// Default theme data
+// Updated default theme data
 export const defaultThemeData: ThemeData = {
   name: "Default Theme",
   fonts: {
@@ -63,9 +65,11 @@ export const defaultThemeData: ThemeData = {
     heading: "Poppins",
   },
   colors: {
-    text: "#111827",
-    primary: "#1E40AF",
-    secondary: "#FACC15",
+    text: "#0F172A",
+    primary: "#3B82F6",
+    primaryForeground: "#FFFFFF",
+    secondary: "#F59E0B",
+    secondaryForeground: "#1F2937",
     background: "#FFFFFF",
   },
 };

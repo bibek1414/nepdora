@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
@@ -25,13 +24,19 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
   const [data, setData] = useState(heroData);
   const { data: themeResponse } = useThemeQuery();
 
-  // Get theme colors, fallback to defaults if not available
+  // Get theme colors with updated structure, fallback to defaults if not available
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
-      text: "#111827",
-      primary: "#1E40AF",
-      secondary: "#FACC15",
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
       background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
     },
   };
 
@@ -56,20 +61,6 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
     });
   };
 
-  // Handle secondary image updates (for floor lamp)
-  const handleSecondaryImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      secondaryImageUrl: imageUrl,
-      secondaryImageAlt: altText || data.secondaryImageAlt || "Decorative item",
-    };
-    setData(updatedData);
-    onUpdate?.({
-      secondaryImageUrl: imageUrl,
-      secondaryImageAlt: updatedData.secondaryImageAlt,
-    });
-  };
-
   // Handle button updates
   const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
     const updatedButtons = data.buttons.map(btn =>
@@ -85,6 +76,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
       className="min-h-screen"
       style={{
         background: `linear-gradient(135deg, ${theme.colors.background} 0%, #f8fafc 100%)`,
+        fontFamily: theme.fonts.body,
       }}
     >
       {/* Hero Section */}
@@ -100,7 +92,10 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   onChange={handleTextUpdate("title")}
                   as="h1"
                   className="text-5xl leading-tight font-bold text-balance lg:text-7xl"
-                  style={{ color: theme.colors.text }}
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.heading,
+                  }}
                   isEditable={isEditable}
                   placeholder="Enter main title..."
                 />
@@ -110,7 +105,10 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   onChange={handleTextUpdate("subtitle")}
                   as="div"
                   className="text-5xl leading-tight font-bold lg:text-7xl"
-                  style={{ color: theme.colors.secondary }}
+                  style={{
+                    color: theme.colors.secondary,
+                    fontFamily: theme.fonts.heading,
+                  }}
                   isEditable={isEditable}
                   placeholder="Highlighted text..."
                 />
@@ -122,12 +120,16 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                 onChange={handleTextUpdate("description")}
                 as="p"
                 className="max-w-md text-lg leading-relaxed"
-                style={{ color: "#6B7280" }}
+                style={{
+                  color: "#6B7280",
+                  fontFamily: theme.fonts.body,
+                }}
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
               />
-              {/* CTA Button - Alternative approach */}
+
+              {/* CTA Button */}
               {data.buttons.length > 0 && (
                 <div className="pt-4">
                   <div className="group inline-flex items-center gap-2">
@@ -143,10 +145,11 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                       }
                       isEditable={isEditable}
                       siteUser={siteUser}
-                      className="rounded-none px-8 py-3 font-semibold transition-colors"
+                      className="rounded-none px-6 py-3 font-semibold transition-all hover:shadow-lg"
                       style={{
-                        backgroundColor: theme.colors.secondary,
-                        color: theme.colors.text,
+                        backgroundColor: theme.colors.primary,
+                        color: theme.colors.primaryForeground,
+                        fontFamily: theme.fonts.body,
                       }}
                       textPlaceholder="Button text..."
                       hrefPlaceholder="Enter URL..."
@@ -168,16 +171,22 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   onChange={handleTextUpdate("statsNumber")}
                   as="div"
                   className="text-3xl font-bold"
-                  style={{ color: theme.colors.text }}
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.heading,
+                  }}
                   isEditable={isEditable}
                   placeholder="788+"
                 />
                 <EditableText
-                  value={data.statsLabel || "Furniture &\nHome Equipment"}
+                  value={data.statsLabel || "Happy clients"}
                   onChange={handleTextUpdate("statsLabel")}
                   as="div"
                   className="text-sm whitespace-pre-line"
-                  style={{ color: "#6B7280" }}
+                  style={{
+                    color: "#6B7280",
+                    fontFamily: theme.fonts.body,
+                  }}
                   isEditable={isEditable}
                   placeholder="Stats description..."
                   multiline={true}
@@ -185,33 +194,47 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
               </div>
               <div>
                 <EditableText
-                  value="8k+"
-                  onChange={() => {}} // Static for now
+                  value={data.statsNumber || "8k+"}
+                  onChange={handleTextUpdate("statsNumber")}
                   as="div"
                   className="text-3xl font-bold"
-                  style={{ color: theme.colors.text }}
-                  isEditable={false}
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.heading,
+                  }}
+                  isEditable={isEditable}
+                  placeholder="8k+"
                 />
-                <div className="text-sm" style={{ color: "#6B7280" }}>
-                  Happy Clients
-                  <br />
-                  More of this
-                </div>
+                <EditableText
+                  value={data.statsLabel || "Projects completed"}
+                  onChange={handleTextUpdate("statsLabel")}
+                  as="div"
+                  className="text-sm whitespace-pre-line"
+                  style={{
+                    color: "#6B7280",
+                    fontFamily: theme.fonts.body,
+                  }}
+                  isEditable={isEditable}
+                  placeholder="Second stats description..."
+                  multiline={true}
+                />
               </div>
             </div>
           </div>
 
-          {/* Right Content - Chair Image */}
+          {/* Right Content - Product Image */}
           <div className="relative flex items-center justify-center">
             <div className="relative">
-              {/* Main Chair Image */}
+              {/* Background decoration */}
+
+              {/* Main Product Image */}
               {data.showImage && (
                 <EditableImage
                   src={data.imageUrl || "/api/placeholder/500/500"}
                   alt={data.imageAlt || "Modern furniture piece"}
                   onImageChange={handleImageUpdate}
                   isEditable={isEditable}
-                  className="relative z-10 h-auto w-[500px]"
+                  className="relative z-10 h-auto w-[500px] rounded-lg shadow-2xl"
                   width={500}
                   height={500}
                   placeholder={{
@@ -221,37 +244,6 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   }}
                 />
               )}
-
-              {/* Floor Lamp - Secondary Image */}
-              <div className="absolute top-0 right-0 z-5">
-                <EditableImage
-                  src={data.secondaryImageUrl || "/api/placeholder/128/200"}
-                  alt={data.secondaryImageAlt || "Decorative floor lamp"}
-                  onImageChange={handleSecondaryImageUpdate}
-                  isEditable={isEditable}
-                  className="h-auto w-32"
-                  width={128}
-                  height={200}
-                  placeholder={{
-                    width: 128,
-                    height: 200,
-                    text: "Accent item",
-                  }}
-                />
-              </div>
-
-              {/* Plant - Third decorative element */}
-              <div className="absolute bottom-10 left-0 z-5">
-                <EditableImage
-                  src="/api/placeholder/80/120"
-                  alt="Decorative plant"
-                  onImageChange={() => {}} // Static for now
-                  isEditable={false}
-                  className="h-auto w-20"
-                  width={80}
-                  height={120}
-                />
-              </div>
             </div>
           </div>
         </div>
