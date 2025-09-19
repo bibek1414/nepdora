@@ -1,4 +1,4 @@
-import { getAuthToken } from "./auth";
+import { getAuthToken, getAuthTokenCustomer } from "./auth";
 
 export const createHeaders = (includeAuth: boolean = true): HeadersInit => {
   const headers: HeadersInit = {
@@ -7,6 +7,23 @@ export const createHeaders = (includeAuth: boolean = true): HeadersInit => {
 
   if (includeAuth) {
     const token = getAuthToken();
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+  }
+
+  return headers;
+};
+
+export const createHeadersCustomer = (
+  includeAuth: boolean = true
+): HeadersInit => {
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
+
+  if (includeAuth) {
+    const token = getAuthTokenCustomer();
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
     }

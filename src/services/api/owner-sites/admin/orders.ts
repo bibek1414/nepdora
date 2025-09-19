@@ -1,5 +1,6 @@
+// Modified orderApi in your services file
 import { getApiBaseUrl } from "@/config/site";
-import { createHeaders } from "@/utils/headers";
+import { createHeaders, createHeadersCustomer } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 import {
   CreateOrderRequest,
@@ -12,12 +13,20 @@ import {
 export const orderApi = {
   createOrder: async (
     orderData: CreateOrderRequest,
-    isAuthenticated: boolean = false
+    includeToken: boolean = false
   ): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
+
+    // Create headers conditionally based on login status
+    const headers = includeToken
+      ? createHeadersCustomer()
+      : {
+          "Content-Type": "application/json",
+        };
+
     const response = await fetch(`${API_BASE_URL}/api/order/`, {
       method: "POST",
-      headers: createHeaders(isAuthenticated),
+      headers,
       body: JSON.stringify(orderData),
     });
     await handleApiError(response);
@@ -25,8 +34,7 @@ export const orderApi = {
   },
 
   getOrders: async (
-    params: OrderPaginationParams = {},
-    isAuthenticated: boolean = true
+    params: OrderPaginationParams = {}
   ): Promise<OrdersResponse> => {
     const { page = 1, page_size = 10, search, status, sortBy } = params;
     const API_BASE_URL = getApiBaseUrl();
@@ -42,21 +50,18 @@ export const orderApi = {
       `${API_BASE_URL}/api/order/?${queryParams.toString()}`,
       {
         method: "GET",
-        headers: createHeaders(isAuthenticated),
+        headers: createHeaders(),
       }
     );
     await handleApiError(response);
     return response.json();
   },
 
-  getOrderById: async (
-    id: number,
-    isAuthenticated: boolean = true
-  ): Promise<Order> => {
+  getOrderById: async (id: number): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/order/${id}/`, {
       method: "GET",
-      headers: createHeaders(isAuthenticated),
+      headers: createHeaders(),
     });
     await handleApiError(response);
     return response.json();
@@ -64,13 +69,12 @@ export const orderApi = {
 
   updateOrderStatus: async (
     id: number,
-    statusData: UpdateOrderStatusRequest,
-    isAuthenticated: boolean = true
+    statusData: UpdateOrderStatusRequest
   ): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/order/${id}/`, {
       method: "PATCH",
-      headers: createHeaders(isAuthenticated),
+      headers: createHeaders(),
       body: JSON.stringify(statusData),
     });
     await handleApiError(response);

@@ -24,7 +24,7 @@ import { CreateOrderRequest, OrderItem } from "@/types/owner-site/admin/orders";
 import { toast } from "sonner";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/hooks/customer/use-auth";
 import { checkoutFormSchema, CheckoutFormValues } from "@/schemas/chekout.form";
 const CheckoutPage = () => {
   const router = useRouter();
@@ -61,6 +61,7 @@ const CheckoutPage = () => {
     0
   );
 
+  // Modified onSubmit function in CheckoutPage component
   const onSubmit = async (data: CheckoutFormValues) => {
     if (cartItems.length === 0) {
       toast.error("Your cart is empty");
@@ -85,14 +86,19 @@ const CheckoutPage = () => {
         total_amount: totalAmount.toFixed(2),
         items: orderItems,
       };
-      // If user is authenticated, their info might be pre-filled or associated
+
+      // Check if user is authenticated and pass the token flag accordingly
       if (isAuthenticated && user) {
-        // You can add user-specific data here if needed
         console.log("Order being placed by authenticated user:", user.email);
       } else {
         console.log("Order being placed by guest user");
       }
-      const order = await createOrderMutation.mutateAsync(orderData);
+
+      // Create order with conditional token inclusion
+      const order = await createOrderMutation.mutateAsync({
+        orderData,
+        includeToken: isAuthenticated && !!user,
+      });
 
       toast.success("Order placed successfully!");
       clearCart();
