@@ -4,7 +4,7 @@ export interface TestimonialsData {
   style: "grid-1" | "grid-2" | "list-1";
   title: string;
   subtitle?: string;
-  limit: number;
+  page_size: number;
   order?: number;
 }
 
@@ -23,5 +23,5 @@ export const defaultTestimonialsData: TestimonialsData = {
   title: "What Our Clients Say",
   subtitle:
     "Don't just take our word for it - hear from our satisfied customers",
-  limit: 6,
+  page_size: 6,
 };

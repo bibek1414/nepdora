@@ -41,14 +41,14 @@ import { SubCategory } from "@/types/owner-site/admin/product";
 
 export const SubCategoryList: React.FC = () => {
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [page_size] = useState(10);
   const [showForm, setShowForm] = useState(false);
   const [editingSubCategory, setEditingSubCategory] =
     useState<SubCategory | null>(null);
   const [deleteSubCategory, setDeleteSubCategory] =
     useState<SubCategory | null>(null);
 
-  const { data, isLoading, error } = useSubCategories({ page, limit });
+  const { data, isLoading, error } = useSubCategories();
   const deleteSubCategoryMutation = useDeleteSubCategory();
 
   const handleEdit = (subCategory: SubCategory) => {
@@ -121,7 +121,7 @@ export const SubCategoryList: React.FC = () => {
         <CardContent>
           {isLoading ? (
             <div className="space-y-3">
-              {[...Array(limit)].map((_, i) => (
+              {[...Array(page_size)].map((_, i) => (
                 <Skeleton key={i} className="h-16 w-full" />
               ))}
             </div>
@@ -227,8 +227,11 @@ export const SubCategoryList: React.FC = () => {
           {/* Results summary */}
           <div className="flex justify-center">
             <div className="text-muted-foreground text-sm">
-              Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-              {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
+              Showing {(pagination.page - 1) * pagination.page_size + 1} to{" "}
+              {Math.min(
+                pagination.page * pagination.page_size,
+                pagination.total
+              )}{" "}
               of {pagination.total} results
             </div>
           </div>

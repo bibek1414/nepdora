@@ -11,7 +11,7 @@ export const useSearchProducts = (
     queryFn: () =>
       productApi.getProducts({
         search: searchQuery,
-        limit: 10,
+        page_size: 10,
       } satisfies ProductFilterParams),
     enabled: (options?.enabled ?? true) && searchQuery.length > 0,
     staleTime: options?.staleTime ?? 5 * 60 * 1000,
@@ -21,13 +21,13 @@ export const useSearchProducts = (
 
 export const useSuggestedProducts = (options?: {
   enabled?: boolean;
-  limit?: number;
+  page_size?: number;
 }) => {
   return useQuery({
     queryKey: ["products", "suggestions"],
     queryFn: () =>
       productApi.getProducts({
-        limit: options?.limit ?? 10,
+        page_size: options?.page_size ?? 10,
       } satisfies ProductFilterParams),
     enabled: options?.enabled ?? true,
     staleTime: 30 * 60 * 1000,

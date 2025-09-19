@@ -4,7 +4,7 @@ export interface CategoryData {
   style: "grid-1" | "grid-2" | "list-1" | "carousel-1";
   title: string;
   subtitle?: string;
-  limit: number;
+  page_size: number;
   showPagination?: boolean;
   itemsPerRow?: number;
   showDescription?: boolean;
@@ -27,7 +27,7 @@ export const defaultCategoryData: CategoryData = {
   style: "grid-1",
   title: "Our Categories",
   subtitle: "Browse our product categories",
-  limit: 8,
+  page_size: 8,
   showPagination: false,
   itemsPerRow: 4,
   showDescription: true,

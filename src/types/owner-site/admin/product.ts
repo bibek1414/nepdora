@@ -41,7 +41,7 @@ export interface ProductLike {
 // Pagination related types
 export interface PaginationParams {
   page?: number;
-  limit?: number;
+  page_size?: number;
   search?: string;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
@@ -50,7 +50,7 @@ export interface PaginationParams {
 
 export interface PaginationInfo {
   page: number;
-  limit: number;
+  page_size: number;
   total: number;
   totalPages: number;
   hasNext: boolean;

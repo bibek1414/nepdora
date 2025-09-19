@@ -46,7 +46,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
-    limit = 6,
+    page_size = 6,
     title = "What Our Clients Say",
     subtitle,
     style = "grid-1",
@@ -246,15 +246,17 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
             {isLoading && (
               <div className={`grid ${getGridClass()} gap-6`}>
-                {Array.from({ length: Math.min(limit, 6) }).map((_, index) => (
-                  <div key={index} className="flex flex-col space-y-3">
-                    <Skeleton className="h-[200px] w-full rounded-xl" />
-                    <div className="space-y-2">
-                      <Skeleton className="h-5 w-3/4" />
-                      <Skeleton className="h-4 w-1/2" />
+                {Array.from({ length: Math.min(page_size, 6) }).map(
+                  (_, index) => (
+                    <div key={index} className="flex flex-col space-y-3">
+                      <Skeleton className="h-[200px] w-full rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-5 w-3/4" />
+                        <Skeleton className="h-4 w-1/2" />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             )}
 
@@ -272,7 +274,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
             {!isLoading && !error && testimonials.length > 0 && (
               <div className={`grid ${getGridClass()} gap-6`}>
-                {testimonials.slice(0, limit).map(testimonial => (
+                {testimonials.slice(0, page_size).map(testimonial => (
                   <div
                     key={testimonial.id}
                     className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
@@ -318,7 +320,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
         {isLoading && (
           <div className={`grid ${getGridClass()} gap-8`}>
-            {Array.from({ length: limit }).map((_, index) => (
+            {Array.from({ length: page_size }).map((_, index) => (
               <div key={index} className="flex flex-col space-y-4">
                 <Skeleton className="h-[240px] w-full rounded-lg" />
                 <div className="space-y-3">
@@ -345,7 +347,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
         {!isLoading && !error && testimonials.length > 0 && (
           <div className={`grid ${getGridClass()} gap-8`}>
             {testimonials
-              .slice(0, limit)
+              .slice(0, page_size)
               .map(testimonial => renderTestimonialCard(testimonial))}
           </div>
         )}

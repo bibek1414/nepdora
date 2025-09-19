@@ -40,15 +40,12 @@ import { Category } from "@/types/owner-site/admin/product";
 
 export const CategoryList: React.FC = () => {
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [page_size] = useState(10);
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [deleteCategory, setDeleteCategory] = useState<Category | null>(null);
 
-  const { data, isLoading, error } = useCategories({
-    page,
-    limit,
-  });
+  const { data, isLoading, error } = useCategories();
 
   const deleteCategoryMutation = useDeleteCategory();
 
@@ -120,7 +117,7 @@ export const CategoryList: React.FC = () => {
           <CardContent className="p-0">
             {isLoading ? (
               <div className="space-y-4 p-6">
-                {[...Array(limit)].map((_, i) => (
+                {[...Array(page_size)].map((_, i) => (
                   <Skeleton key={i} className="h-16 w-full" />
                 ))}
               </div>
@@ -240,8 +237,11 @@ export const CategoryList: React.FC = () => {
             {/* Results summary */}
             <div className="flex justify-center">
               <div className="text-sm text-gray-700">
-                Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-                {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
+                Showing {(pagination.page - 1) * pagination.page_size + 1} to{" "}
+                {Math.min(
+                  pagination.page * pagination.page_size,
+                  pagination.total
+                )}{" "}
                 of {pagination.total} results
               </div>
             </div>

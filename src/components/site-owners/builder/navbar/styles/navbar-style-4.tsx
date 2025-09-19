@@ -94,8 +94,8 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   const router = useRouter();
 
   // Fetch categories and subcategories
-  const { data: categoriesData } = useCategories({ limit: 100 });
-  const { data: subCategoriesData } = useSubCategories({ limit: 1000 });
+  const { data: categoriesData } = useCategories();
+  const { data: subCategoriesData } = useSubCategories();
 
   const categories = categoriesData?.results || [];
   const subCategories = subCategoriesData?.results || [];

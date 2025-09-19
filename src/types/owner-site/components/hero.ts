@@ -213,7 +213,7 @@ export const defaultHero3KatachiData: HeroData = {
 };
 
 export const defaultHero5Data: HeroData = {
-  title: "Customize without limits with Avora",
+  title: "Customize without page_sizes with Avora",
   subtitle: "A platform built for full-stack functionality",
   description:
     "Accelerate development cycle to launch apps in days, not months.",

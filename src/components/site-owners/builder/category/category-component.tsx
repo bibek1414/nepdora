@@ -47,7 +47,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
-    limit = 8,
+    page_size = 8,
     title = "Our Categories",
     subtitle,
     style = "grid-1",
@@ -67,10 +67,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   );
 
   // Get categories with pagination
-  const { data, isLoading, error } = useCategories({
-    page: currentPage,
-    limit: limit,
-  });
+  const { data, isLoading, error } = useCategories();
 
   // Extract categories from the API response structure
   const categories = data?.results || [];
@@ -270,16 +267,18 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
             {isLoading && (
               <div className={`grid ${getGridClass()} gap-6`}>
-                {Array.from({ length: Math.min(limit, 8) }).map((_, index) => (
-                  <div key={index} className="flex flex-col space-y-3">
-                    <Skeleton className="h-[250px] w-full rounded-xl" />
-                    <div className="space-y-2">
-                      <Skeleton className="h-5 w-3/4" />
-                      <Skeleton className="h-4 w-1/2" />
-                      <Skeleton className="h-6 w-1/3" />
+                {Array.from({ length: Math.min(page_size, 8) }).map(
+                  (_, index) => (
+                    <div key={index} className="flex flex-col space-y-3">
+                      <Skeleton className="h-[250px] w-full rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-5 w-3/4" />
+                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="h-6 w-1/3" />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             )}
 
@@ -361,7 +360,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
           <div
             className={`${style === "carousel-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
           >
-            {Array.from({ length: limit }).map((_, index) => (
+            {Array.from({ length: page_size }).map((_, index) => (
               <div key={index} className="flex flex-col space-y-4">
                 <Skeleton className="h-[280px] w-full rounded-lg" />
                 <div className="space-y-3">

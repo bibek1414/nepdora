@@ -1,5 +1,3 @@
-// types/auth.ts
-
 export interface User {
   id: number;
   first_name: string;

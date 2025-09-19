@@ -203,7 +203,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     window.location.href = `/preview/${siteUser}/products?search=${encodeURIComponent(searchQuery.trim())}`;
   };
 
-  const limitedProducts = sortedProducts.slice(0, 5);
+  const page_sizeedProducts = sortedProducts.slice(0, 5);
   const showSuggestions =
     searchQuery.length === 0 && isSearchFocused && !isEditable;
   const showSearchResults =
@@ -265,9 +265,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                         <div className="border-primary h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
                         <span className="text-sm">Loading suggestions…</span>
                       </div>
-                    ) : limitedProducts.length > 0 ? (
+                    ) : page_sizeedProducts.length > 0 ? (
                       <div className="space-y-2">
-                        {limitedProducts.map((product: Product) => (
+                        {page_sizeedProducts.map((product: Product) => (
                           <div
                             key={product.id}
                             onClick={() => handleProductClick(product)}
@@ -329,7 +329,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                       </div>
                     ) : (
                       <>
-                        {limitedProducts.length > 0 ? (
+                        {page_sizeedProducts.length > 0 ? (
                           <div className="mb-2">
                             <div className="mb-3 flex items-center gap-2">
                               <Search className="h-4 w-4 text-gray-600" />
@@ -338,7 +338,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                               </span>
                             </div>
                             <div className="space-y-3">
-                              {limitedProducts.map((product: Product) => (
+                              {page_sizeedProducts.map((product: Product) => (
                                 <div
                                   key={product.id}
                                   onClick={() => handleProductClick(product)}

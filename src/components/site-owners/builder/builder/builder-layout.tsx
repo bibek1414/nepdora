@@ -580,7 +580,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     template: "grid-1" | "grid-2" | "list-1"
   ) => {
     const categoryData = {
-      limit: 8,
+      page_size: 8,
       component_type: "category" as const,
       title: "Our Categories",
       subtitle: "Browse our product categories",
@@ -605,7 +605,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   ) => {
     const subCategoryData = {
       component_type: "subcategory" as const,
-      limit: 8,
+      page_size: 8,
       title: "Our SubCategories",
       subtitle: "Explore our product subcategories",
       style: template,
