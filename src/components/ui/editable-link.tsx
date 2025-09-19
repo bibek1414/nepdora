@@ -8,6 +8,7 @@ interface EditableLinkProps {
   href: string;
   onChange: (text: string, href: string) => void;
   className?: string;
+  style?: React.CSSProperties;
   isEditable?: boolean;
   textPlaceholder?: string;
   hrefPlaceholder?: string;
@@ -22,6 +23,7 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
   href,
   onChange,
   className,
+  style, // Already in props, now we'll use it
   isEditable = false,
   textPlaceholder = "Link text...",
   hrefPlaceholder = "Enter URL...",
@@ -175,6 +177,7 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
       <a
         href={finalHref}
         target={isExternal ? "_blank" : target}
+        style={style} // Apply the style prop here
         className={cn(
           "inline-flex items-center gap-1",
           className,

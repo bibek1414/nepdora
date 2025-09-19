@@ -13,8 +13,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import {
   Select,
   SelectContent,
@@ -22,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   useThemeQuery,
@@ -35,7 +32,7 @@ import {
   ThemeFonts,
   defaultThemeData,
 } from "@/types/owner-site/components/theme";
-import { Palette, RefreshCw, Save, Undo2, Eye, Type } from "lucide-react";
+import { Palette, Save } from "lucide-react";
 import { toast } from "sonner";
 
 interface ThemeDialogProps {
@@ -56,20 +53,6 @@ const fontOptions = [
   { value: "Lato", label: "Lato" },
 ];
 
-const containerWidthOptions = [
-  { value: "1200px", label: "Standard (1200px)" },
-  { value: "1400px", label: "Wide (1400px)" },
-  { value: "1600px", label: "Extra Wide (1600px)" },
-  { value: "100%", label: "Full Width" },
-];
-
-const spacingOptions = [
-  { value: "0.5rem", label: "Tight (0.5rem)" },
-  { value: "1rem", label: "Normal (1rem)" },
-  { value: "1.5rem", label: "Relaxed (1.5rem)" },
-  { value: "2rem", label: "Loose (2rem)" },
-];
-
 export const ThemeDialog: React.FC<ThemeDialogProps> = ({
   open,
   onOpenChange,
@@ -81,7 +64,6 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
   const updateThemeMutation = useUpdateThemeMutation();
 
   const [currentTheme, setCurrentTheme] = useState<ThemeData>(defaultThemeData);
-  const [activeTab, setActiveTab] = useState("colors");
   const [hasChanges, setHasChanges] = useState(false);
 
   // Load current theme
@@ -174,109 +156,68 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
 
-      <DialogContent className="max-h-[90vh] max-w-6xl overflow-hidden">
+      <DialogContent className="max-h-[90vh] max-w-3xl overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Palette className="h-5 w-5" />
             Theme Settings
           </DialogTitle>
           <DialogDescription>
-            Customize your website&apos;s appearance with colors, fonts, and
-            layout settings.
+            Customize your website&apos;s appearance with colors and fonts.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex gap-6 overflow-hidden">
-          {/* Main Content */}
-          <div className="flex-1 overflow-auto">
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="colors" className="flex items-center gap-2">
-                  <Palette className="h-4 w-4" />
-                  Colors
-                </TabsTrigger>
-                <TabsTrigger
-                  value="typography"
-                  className="flex items-center gap-2"
-                >
-                  <Type className="h-4 w-4" />
-                  Typography
-                </TabsTrigger>
-              </TabsList>
+        <div className="space-y-6 overflow-auto">
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Colors</h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              <ColorInput
+                label="Primary Color"
+                colorKey="primary"
+                value={currentTheme.colors.primary}
+              />
+              <ColorInput
+                label="Secondary Color"
+                colorKey="secondary"
+                value={currentTheme.colors.secondary}
+              />
+              <ColorInput
+                label="Text Color"
+                colorKey="text"
+                value={currentTheme.colors.text}
+              />
+              <ColorInput
+                label="Background Color"
+                colorKey="background"
+                value={currentTheme.colors.background}
+              />
+            </div>
+          </div>
 
-              <TabsContent value="colors" className="mt-6 space-y-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <ColorInput
-                    label="Primary Color"
-                    colorKey="primary"
-                    value={currentTheme.colors.primary}
-                  />
-                  <ColorInput
-                    label="Secondary Color"
-                    colorKey="secondary"
-                    value={currentTheme.colors.secondary}
-                  />
-                  <ColorInput
-                    label="Text Color"
-                    colorKey="text"
-                    value={currentTheme.colors.text}
-                  />
-                  <ColorInput
-                    label="Background Color"
-                    colorKey="background"
-                    value={currentTheme.colors.background}
-                  />
-                </div>
-              </TabsContent>
+          <Separator />
 
-              <TabsContent value="typography" className="mt-6 space-y-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Heading Font</Label>
-                    <Select
-                      value={currentTheme.fonts.heading}
-                      onValueChange={value =>
-                        handleFontChange("heading", value)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {fontOptions.map(font => (
-                          <SelectItem key={font.value} value={font.value}>
-                            <span style={{ fontFamily: font.value }}>
-                              {font.label}
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Body Font</Label>
-                    <Select
-                      value={currentTheme.fonts.body}
-                      onValueChange={value => handleFontChange("body", value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {fontOptions.map(font => (
-                          <SelectItem key={font.value} value={font.value}>
-                            <span style={{ fontFamily: font.value }}>
-                              {font.label}
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Fonts</h3>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Body Font</Label>
+              <Select
+                value={currentTheme.fonts.body}
+                onValueChange={value => handleFontChange("body", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {fontOptions.map(font => (
+                    <SelectItem key={font.value} value={font.value}>
+                      <span style={{ fontFamily: font.value }}>
+                        {font.label}
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
