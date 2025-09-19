@@ -49,10 +49,15 @@ export const useThemeApi = {
     data: UpdateThemeRequest
   ): Promise<UpdateThemeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
+
+    const requestBody = {
+      data: data.data,
+    };
+
     const response = await fetch(`${API_BASE_URL}/api/theme/${data.id}/`, {
       method: "PATCH",
       headers: createHeaders(),
-      body: JSON.stringify(data.data),
+      body: JSON.stringify(requestBody),
     });
 
     await handleApiError(response);

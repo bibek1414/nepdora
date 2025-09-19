@@ -8,6 +8,7 @@ interface EditableTextProps {
   onChange: (value: string) => void;
   as?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "span";
   className?: string;
+  style?: React.CSSProperties; // Added this line
   isEditable?: boolean;
   placeholder?: string;
   multiline?: boolean;
@@ -18,6 +19,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   onChange,
   as: Tag = "p",
   className,
+  style, // Added this parameter
   isEditable = false,
   placeholder = "Click to edit...",
   multiline = false,
@@ -84,6 +86,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
     ),
     style: {
       position: "relative" as const,
+      ...style, // Merge the passed style with the default position style
     },
   };
 

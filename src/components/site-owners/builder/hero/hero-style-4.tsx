@@ -1,121 +1,39 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import React, { useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { PackageCheck, Rocket, ShieldCheck, ImagePlus } from "lucide-react";
-import { HeroData } from "@/types/owner-site/components/hero";
-import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { cn } from "@/lib/utils";
+import { HeroData } from "@/types/owner-site/components/hero";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface HeroTemplate4Props {
   heroData: HeroData;
   isEditable?: boolean;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
   siteUser?: string;
+  onUpdate?: (updatedData: Partial<HeroData>) => void;
 }
-
-// BlurPanel component for the info strip
-const BlurPanel = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <div
-      className={cn(
-        "mx-auto block w-fit rounded-2xl bg-black/60 backdrop-blur-md will-change-transform",
-        className
-      )}
-      role="region"
-    >
-      {children}
-    </div>
-  );
-};
-
-// Reveal component for animations
-const Reveal = ({
-  children,
-  delay = 0,
-  className,
-}: {
-  children: React.ReactNode;
-  delay?: number;
-  className?: string;
-}) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 4 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{
-        duration: 0.6,
-        delay,
-        ease: [0.21, 0.47, 0.32, 0.98],
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-// AnimatedText component for character-by-character animation
-const AnimatedText = ({
-  text,
-  delay = 0,
-}: {
-  text: string;
-  delay?: number;
-}) => {
-  return (
-    <span>
-      {text.split("").map((char, index) => (
-        <motion.span
-          key={index}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.5,
-            delay: delay + index * 0.03,
-            ease: [0.21, 0.47, 0.32, 0.98],
-          }}
-          style={{ display: char === " " ? "inline" : "inline-block" }}
-        >
-          {char === " " ? "\u00A0" : char}
-        </motion.span>
-      ))}
-    </span>
-  );
-};
 
 export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
   heroData,
+  siteUser,
   isEditable = false,
   onUpdate,
-  siteUser,
 }) => {
   const [data, setData] = useState(heroData);
-  const [isBackgroundHovered, setIsBackgroundHovered] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const { data: themeResponse } = useThemeQuery();
 
-  // Framer Motion scroll animations
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1.05, 0.95]);
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, -50]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  // Get theme colors, fallback to defaults if not available
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#111827",
+      primary: "#1E40AF",
+      secondary: "#FACC15",
+      background: "#FFFFFF",
+    },
+  };
 
   // Handle text field updates
   const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
@@ -124,255 +42,220 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
     onUpdate?.({ [field]: value } as Partial<HeroData>);
   };
 
-  // Handle image updates
+  // Handle main image updates
   const handleImageUpdate = (imageUrl: string, altText?: string) => {
     const updatedData = {
       ...data,
-      backgroundImageUrl: imageUrl,
+      imageUrl,
       imageAlt: altText || data.imageAlt,
     };
     setData(updatedData);
     onUpdate?.({
-      backgroundImageUrl: imageUrl,
+      imageUrl,
       imageAlt: updatedData.imageAlt,
     });
   };
 
-  // Handle alt text updates
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
+  // Handle secondary image updates (for floor lamp)
+  const handleSecondaryImageUpdate = (imageUrl: string, altText?: string) => {
+    const updatedData = {
+      ...data,
+      secondaryImageUrl: imageUrl,
+      secondaryImageAlt: altText || data.secondaryImageAlt || "Decorative item",
+    };
     setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
+    onUpdate?.({
+      secondaryImageUrl: imageUrl,
+      secondaryImageAlt: updatedData.secondaryImageAlt,
+    });
   };
 
-  // Handle button text and href updates
-  const handleButtonUpdate = (
-    buttonId: string,
-    text: string,
-    href?: string
-  ) => {
+  // Handle button updates
+  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
     const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId
-        ? { ...btn, text, ...(href !== undefined && { href }) }
-        : btn
+      btn.id === buttonId ? { ...btn, text, href } : btn
     );
     const updatedData = { ...data, buttons: updatedButtons };
     setData(updatedData);
     onUpdate?.({ buttons: updatedButtons });
   };
 
-  const getBackgroundImageUrl = () => {
-    if (!data.backgroundImageUrl) return "";
-    return optimizeCloudinaryUrl(convertUnsplashUrl(data.backgroundImageUrl), {
-      width: 1920,
-      quality: "auto",
-      format: "auto",
-    });
-  };
-
-  // Default features for the info strip
-  const defaultFeatures = [
-    { icon: PackageCheck, text: "Free shipping", color: "text-green-400" },
-    { icon: Rocket, text: "Delivered in 6 weeks", color: "text-amber-400" },
-    { icon: ShieldCheck, text: "Lifetime guarantee", color: "text-blue-400" },
-  ];
-
   return (
-    <section ref={containerRef} className="relative h-screen overflow-hidden">
-      {/* Background Image Container - Now with better interaction handling */}
-      <motion.div
-        className={cn("group absolute inset-0", isEditable && "cursor-pointer")}
-        style={{ scale: imageScale, y: imageY }}
-        initial={{ scale: 1.05 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 1.2, ease: [0.21, 0.47, 0.32, 0.98] }}
-        onMouseEnter={() => isEditable && setIsBackgroundHovered(true)}
-        onMouseLeave={() => isEditable && setIsBackgroundHovered(false)}
-      >
-        <EditableImage
-          src={getBackgroundImageUrl()}
-          alt={data.imageAlt || "Hero background"}
-          onImageChange={handleImageUpdate}
-          onAltChange={handleAltUpdate}
-          isEditable={isEditable}
-          className="h-full w-full"
-          height={1080}
-          width={1920}
-          cloudinaryOptions={{
-            folder: "hero-backgrounds",
-            resourceType: "image",
-          }}
-          showAltEditor={false}
-          placeholder={{
-            width: 1920,
-            height: 1080,
-            text: "Click to upload background image",
-          }}
-        />
-
-        {/* Original Overlay - with pointer-events-none to allow background interaction */}
-        {data.showOverlay && (
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              backgroundColor: data.overlayColor,
-              opacity: data.overlayOpacity,
-            }}
-          />
-        )}
-      </motion.div>
-
-      {/* Content - with pointer-events-none on container, pointer-events-auto on interactive elements */}
-      <motion.div
-        className="pointer-events-none relative z-10 flex h-full items-center justify-center"
-        style={{ y: contentY, opacity: contentOpacity }}
-      >
-        <div
-          className="container-custom text-center"
-          style={{ color: data.textColor }}
-        >
-          {/* Subtitle Badge */}
-          {data.subtitle && (
-            <Reveal>
-              <Badge variant="secondary" className="pointer-events-auto mb-6">
+    <div
+      className="min-h-screen"
+      style={{
+        background: `linear-gradient(135deg, ${theme.colors.background} 0%, #f8fafc 100%)`,
+      }}
+    >
+      {/* Hero Section */}
+      <main className="relative px-6 py-12 lg:px-12">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
+          {/* Left Content */}
+          <div className="space-y-8">
+            <div className="space-y-6">
+              {/* Main Title */}
+              <div className="space-y-2">
+                <EditableText
+                  value={data.title}
+                  onChange={handleTextUpdate("title")}
+                  as="h1"
+                  className="text-5xl leading-tight font-bold text-balance lg:text-7xl"
+                  style={{ color: theme.colors.text }}
+                  isEditable={isEditable}
+                  placeholder="Enter main title..."
+                />
+                {/* Highlighted word - part of subtitle */}
                 <EditableText
                   value={data.subtitle}
                   onChange={handleTextUpdate("subtitle")}
-                  as="span"
+                  as="div"
+                  className="text-5xl leading-tight font-bold lg:text-7xl"
+                  style={{ color: theme.colors.secondary }}
                   isEditable={isEditable}
-                  placeholder="Enter subtitle..."
+                  placeholder="Highlighted text..."
                 />
-              </Badge>
-            </Reveal>
-          )}
+              </div>
 
-          {/* Title with Character Animation */}
-          <Reveal>
-            <h1 className="pointer-events-auto mb-6 text-6xl leading-none font-bold tracking-tight md:text-7xl lg:text-8xl xl:text-9xl">
+              {/* Description */}
               <EditableText
-                value={data.title}
-                onChange={handleTextUpdate("title")}
-                as="span"
+                value={data.description}
+                onChange={handleTextUpdate("description")}
+                as="p"
+                className="max-w-md text-lg leading-relaxed"
+                style={{ color: "#6B7280" }}
                 isEditable={isEditable}
-                placeholder="Enter your hero title..."
-                className="block"
+                placeholder="Enter description..."
+                multiline={true}
               />
-              {!isEditable && (
-                <span className="block font-light italic">
-                  <AnimatedText
-                    text={data.description || "spaces that breathe."}
-                    delay={1.1}
-                  />
-                </span>
-              )}
-            </h1>
-          </Reveal>
-
-          {/* Description for editable mode */}
-          {isEditable && data.description && (
-            <Reveal delay={0.2}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.7,
-                  ease: [0.21, 0.47, 0.32, 0.98],
-                }}
-                className="pointer-events-auto"
-              >
-                <EditableText
-                  value={data.description}
-                  onChange={handleTextUpdate("description")}
-                  as="p"
-                  className="mb-12 text-lg leading-relaxed opacity-90 md:text-xl"
-                  isEditable={isEditable}
-                  placeholder="Enter description..."
-                  multiline={true}
-                />
-              </motion.div>
-            </Reveal>
-          )}
-
-          {/* Buttons with EditableLink */}
-          {data.buttons.length > 0 && (
-            <Reveal delay={0.3}>
-              <div className="pointer-events-auto mt-8 flex flex-wrap justify-center gap-4">
-                {data.buttons.map(button => (
-                  <Button
-                    key={button.id}
-                    variant={
-                      button.variant === "primary" ? "default" : button.variant
-                    }
-                    size="lg"
-                    className="min-w-[120px]"
-                    asChild
-                  >
+              {/* CTA Button - Alternative approach */}
+              {data.buttons.length > 0 && (
+                <div className="pt-4">
+                  <div className="group inline-flex items-center gap-2">
                     <EditableLink
-                      text={button.text}
-                      href={button.href || "#"}
+                      text={data.buttons[0]?.text || "Shop Now"}
+                      href={data.buttons[0]?.href || "#"}
                       onChange={(text, href) =>
-                        handleButtonUpdate(button.id, text, href)
+                        handleButtonUpdate(
+                          data.buttons[0]?.id || "1",
+                          text,
+                          href
+                        )
                       }
                       isEditable={isEditable}
                       siteUser={siteUser}
+                      className="rounded-none px-8 py-3 font-semibold transition-colors"
+                      style={{
+                        backgroundColor: theme.colors.secondary,
+                        color: theme.colors.text,
+                      }}
                       textPlaceholder="Button text..."
-                      hrefPlaceholder="Enter button URL..."
+                      hrefPlaceholder="Enter URL..."
                     />
-                  </Button>
-                ))}
-              </div>
-            </Reveal>
-          )}
-        </div>
-      </motion.div>
+                    <ArrowRight
+                      className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                      style={{ color: theme.colors.text }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
 
-      {/* Background Image Change Button - Fixed position for better UX */}
-      {isEditable && (
-        <div className="absolute top-4 right-4 z-30">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="mr-15 bg-white/90 text-black shadow-lg backdrop-blur-sm hover:bg-white"
-            onClick={() => {
-              // Trigger the hidden file input in EditableImage
-              const fileInput = document.querySelector(
-                'input[type="file"]'
-              ) as HTMLInputElement;
-              fileInput?.click();
-            }}
-          >
-            <ImagePlus className="mr-2 h-4 w-4" />
-            Change Background
-          </Button>
-        </div>
-      )}
-
-      {/* Info Strip */}
-      <motion.div
-        className="pointer-events-none absolute right-0 bottom-0 left-0 z-20 flex justify-center"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.8,
-          delay: 1.2,
-          ease: [0.21, 0.47, 0.32, 0.98],
-        }}
-      >
-        <BlurPanel className="mx-6 mb-6 border-white/20 bg-black/24 px-6 py-4 backdrop-blur-md">
-          <div
-            className="flex items-center justify-center gap-6"
-            style={{ color: data.textColor }}
-          >
-            {defaultFeatures.map((feature, index) => (
-              <div key={index} className="flex items-center gap-2 opacity-90">
-                <feature.icon className={`h-4 w-4 ${feature.color}`} />
-                <span className="text-sm">{feature.text}</span>
+            {/* Stats */}
+            <div className="flex space-x-12 pt-8">
+              <div>
+                <EditableText
+                  value={data.statsNumber || "788+"}
+                  onChange={handleTextUpdate("statsNumber")}
+                  as="div"
+                  className="text-3xl font-bold"
+                  style={{ color: theme.colors.text }}
+                  isEditable={isEditable}
+                  placeholder="788+"
+                />
+                <EditableText
+                  value={data.statsLabel || "Furniture &\nHome Equipment"}
+                  onChange={handleTextUpdate("statsLabel")}
+                  as="div"
+                  className="text-sm whitespace-pre-line"
+                  style={{ color: "#6B7280" }}
+                  isEditable={isEditable}
+                  placeholder="Stats description..."
+                  multiline={true}
+                />
               </div>
-            ))}
+              <div>
+                <EditableText
+                  value="8k+"
+                  onChange={() => {}} // Static for now
+                  as="div"
+                  className="text-3xl font-bold"
+                  style={{ color: theme.colors.text }}
+                  isEditable={false}
+                />
+                <div className="text-sm" style={{ color: "#6B7280" }}>
+                  Happy Clients
+                  <br />
+                  More of this
+                </div>
+              </div>
+            </div>
           </div>
-        </BlurPanel>
-      </motion.div>
-    </section>
+
+          {/* Right Content - Chair Image */}
+          <div className="relative flex items-center justify-center">
+            <div className="relative">
+              {/* Main Chair Image */}
+              {data.showImage && (
+                <EditableImage
+                  src={data.imageUrl || "/api/placeholder/500/500"}
+                  alt={data.imageAlt || "Modern furniture piece"}
+                  onImageChange={handleImageUpdate}
+                  isEditable={isEditable}
+                  className="relative z-10 h-auto w-[500px]"
+                  width={500}
+                  height={500}
+                  placeholder={{
+                    width: 500,
+                    height: 500,
+                    text: "Upload main product image",
+                  }}
+                />
+              )}
+
+              {/* Floor Lamp - Secondary Image */}
+              <div className="absolute top-0 right-0 z-5">
+                <EditableImage
+                  src={data.secondaryImageUrl || "/api/placeholder/128/200"}
+                  alt={data.secondaryImageAlt || "Decorative floor lamp"}
+                  onImageChange={handleSecondaryImageUpdate}
+                  isEditable={isEditable}
+                  className="h-auto w-32"
+                  width={128}
+                  height={200}
+                  placeholder={{
+                    width: 128,
+                    height: 200,
+                    text: "Accent item",
+                  }}
+                />
+              </div>
+
+              {/* Plant - Third decorative element */}
+              <div className="absolute bottom-10 left-0 z-5">
+                <EditableImage
+                  src="/api/placeholder/80/120"
+                  alt="Decorative plant"
+                  onImageChange={() => {}} // Static for now
+                  isEditable={false}
+                  className="h-auto w-20"
+                  width={80}
+                  height={120}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 };
