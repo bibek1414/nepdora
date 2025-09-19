@@ -34,7 +34,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const storedTokens = localStorage.getItem("authTokens");
+    const storedTokens = localStorage.getItem("customer-authTokens"); // Updated key
     if (storedTokens) {
       try {
         const parsedTokens: AuthTokens = JSON.parse(storedTokens);
@@ -55,12 +55,12 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
           });
         } else {
           // Token expired
-          localStorage.removeItem("authTokens");
+          localStorage.removeItem("customer-authTokens"); // Updated key
           toast.error("Session expired. Please log in again.");
         }
       } catch (error) {
         console.error("Failed to parse stored tokens or decode token:", error);
-        localStorage.removeItem("authTokens");
+        localStorage.removeItem("customer-authTokens"); // Updated key
       }
     }
     setIsLoading(false);
@@ -69,8 +69,15 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   const handleAuthSuccess = (userData: User, tokenData: AuthTokens) => {
     setUser(userData);
     setTokens(tokenData);
-    localStorage.setItem("authTokens", JSON.stringify(tokenData));
+    // Store with updated key and access_token format for compatibility
+    const tokensToStore = {
+      access: tokenData.access,
+      refresh: tokenData.refresh,
+      access_token: tokenData.access, // For backward compatibility
+    };
+    localStorage.setItem("customer-authTokens", JSON.stringify(tokensToStore)); // Updated key
   };
+
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getErrorMessage = (error: any) => {
     if (error.response) {
@@ -150,6 +157,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     }
   };
+
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const login = async (data: any) => {
     setIsLoading(true);
@@ -262,6 +270,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
     }
   };
+
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const signup = async (data: any) => {
     setIsLoading(true);
@@ -298,7 +307,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     setTokens(null);
-    localStorage.removeItem("authTokens");
+    localStorage.removeItem("customer-authTokens"); // Updated key
     // Clear any pending redirects
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("redirectAfterLogin");
