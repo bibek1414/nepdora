@@ -4,7 +4,7 @@ export interface TeamData {
   style: "grid-1" | "grid-2" | "list-1";
   title: string;
   subtitle?: string;
-  limit: number;
+  page_size: number;
   order?: number;
 }
 
@@ -22,5 +22,5 @@ export const defaultTeamData: TeamData = {
   style: "grid-1",
   title: "Meet Our Team",
   subtitle: "Get to know the talented individuals who make it all happen",
-  limit: 8,
+  page_size: 8,
 };

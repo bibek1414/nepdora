@@ -109,7 +109,7 @@ export const productApi = {
   ): Promise<GetProductsResponse> => {
     const {
       page = 1,
-      limit = 10,
+      page_size = 10,
       search,
       sortBy,
       sortOrder = "asc",
@@ -127,7 +127,7 @@ export const productApi = {
     const API_BASE_URL = getApiBaseUrl();
     const queryParams = new URLSearchParams({
       page: page.toString(),
-      limit: limit.toString(),
+      page_size: page_size.toString(),
     });
 
     // Add existing parameters
@@ -168,7 +168,7 @@ export const productApi = {
     const data = await response.json();
     const results = data.results || [];
     const count = data.count || 0;
-    const totalPages = Math.ceil(count / limit);
+    const totalPages = Math.ceil(count / page_size);
 
     return {
       results,
@@ -177,7 +177,7 @@ export const productApi = {
       previous: data.previous || null,
       pagination: {
         page,
-        limit,
+        page_size,
         total: count,
         totalPages,
         hasNext: page < totalPages,

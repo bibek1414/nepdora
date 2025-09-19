@@ -173,7 +173,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                         <div className="flex items-center gap-1 text-orange-600">
                           <Clock className="h-3 w-3" />
                           <span className="text-xs font-medium">
-                            Limited Stock
+                            page_sizeed Stock
                           </span>
                         </div>
                       )}

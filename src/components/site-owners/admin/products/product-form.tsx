@@ -67,9 +67,8 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
   const updateProductMutation = useUpdateProduct();
 
   // Fetch categories and subcategories
-  const { data: categoriesData } = useCategories({ limit: 100 });
+  const { data: categoriesData } = useCategories();
   const { data: subCategoriesData } = useSubCategories({
-    limit: 100,
     category: selectedCategory ? parseInt(selectedCategory) : undefined,
   });
 

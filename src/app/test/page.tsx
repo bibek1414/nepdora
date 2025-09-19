@@ -31,7 +31,7 @@ export default function FeatureShowcase() {
             Faster Workflow
           </button>
           <h3 className="text-xl font-semibold text-gray-900">
-            Customize without limits with Avora
+            Customize without page_sizes with Avora
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-gray-600">
             Accelerate development cycle to launch apps in days, not months.

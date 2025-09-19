@@ -73,7 +73,7 @@
 //       return;
 //     }
 
-//     // Validate file size (5MB limit)
+//     // Validate file size (5MB page_size)
 //     if (file.size > 5 * 1024 * 1024) {
 //       alert("File size must be less than 5MB");
 //       return;

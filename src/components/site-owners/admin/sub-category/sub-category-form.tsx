@@ -53,7 +53,7 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
   const createSubCategoryMutation = useCreateSubCategory();
   const updateSubCategoryMutation = useUpdateSubCategory();
 
-  const { data: categoriesData } = useCategories({ limit: 100 });
+  const { data: categoriesData } = useCategories();
   const categories = categoriesData?.results || [];
 
   // Helper function to get category ID from either string or object

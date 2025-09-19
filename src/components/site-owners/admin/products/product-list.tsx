@@ -51,7 +51,7 @@ import { toast } from "sonner";
 
 const ProductList = () => {
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [page_size, setpage_size] = useState(10);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -65,7 +65,7 @@ const ProductList = () => {
 
   const { data, isLoading, error } = useProducts({
     page,
-    limit,
+    page_size,
     search,
     sortBy: sortBy || undefined,
   });
@@ -155,7 +155,7 @@ const ProductList = () => {
           <CardContent className="p-0">
             {isLoading ? (
               <div className="space-y-4 p-6">
-                {[...Array(limit)].map((_, i) => (
+                {[...Array(page_size)].map((_, i) => (
                   <Skeleton key={i} className="h-16 w-full" />
                 ))}
               </div>
@@ -348,8 +348,11 @@ const ProductList = () => {
             {/* Results summary */}
             <div className="flex justify-center">
               <div className="text-sm text-gray-700">
-                Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-                {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
+                Showing {(pagination.page - 1) * pagination.page_size + 1} to{" "}
+                {Math.min(
+                  pagination.page * pagination.page_size,
+                  pagination.total
+                )}{" "}
                 of {pagination.total} results
               </div>
             </div>

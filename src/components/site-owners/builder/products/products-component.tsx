@@ -55,7 +55,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const {
-    limit = 8,
+    page_size = 8,
     title = "Our Products",
     subtitle,
     style = "grid-1",
@@ -83,7 +83,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   // Get products with pagination and conditionally apply filters
   const { data, isLoading, error } = useProducts({
     page: currentPage,
-    limit: limit,
+    page_size: page_size,
     ...(shouldShowSidebar && !isEditable ? currentFilters : {}), // Only apply filters for ProductCard4 and not in editable mode
   });
 
@@ -327,7 +327,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                 {/* Loading State */}
                 {isLoading && (
                   <div className={`grid ${getGridClass()} gap-6`}>
-                    {Array.from({ length: Math.min(limit, 8) }).map(
+                    {Array.from({ length: Math.min(page_size, 8) }).map(
                       (_, index) => (
                         <div key={index} className="flex flex-col space-y-3">
                           <Skeleton className="h-[250px] w-full rounded-xl" />
@@ -474,7 +474,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                     : `grid ${getGridClass()} gap-8`
                 }`}
               >
-                {Array.from({ length: limit }).map((_, index) => (
+                {Array.from({ length: page_size }).map((_, index) => (
                   <div key={index} className="flex flex-col space-y-4">
                     <Skeleton className="h-[280px] w-full rounded-lg" />
                     <div className="space-y-3">

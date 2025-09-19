@@ -53,11 +53,10 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
   const currentFilters = !isEditable ? productFilters : {};
 
   // Fetch categories and subcategories
-  const { data: categoriesData, isLoading: categoriesLoading } = useCategories({
-    limit: 100,
-  });
+  const { data: categoriesData, isLoading: categoriesLoading } =
+    useCategories();
   const { data: subCategoriesData, isLoading: subCategoriesLoading } =
-    useSubCategories({ limit: 1000 });
+    useSubCategories();
 
   const categories = categoriesData?.results || [];
   const subCategories = subCategoriesData?.results || [];

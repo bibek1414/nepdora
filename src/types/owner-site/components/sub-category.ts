@@ -4,7 +4,7 @@ export interface SubCategoryData {
   style: "grid-1" | "grid-2" | "list-1" | "carousel-1";
   title: string;
   subtitle?: string;
-  limit: number;
+  page_size: number;
   showPagination?: boolean;
   itemsPerRow?: number;
   showDescription?: boolean;
@@ -29,7 +29,7 @@ export const defaultSubCategoryData: SubCategoryData = {
   style: "grid-1",
   title: "Our SubCategories",
   subtitle: "Explore specific product subcategories",
-  limit: 8,
+  page_size: 8,
   showPagination: false,
   itemsPerRow: 4,
   showDescription: true,

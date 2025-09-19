@@ -4,7 +4,7 @@ export interface BlogDisplayData {
   style: "grid-1" | "grid-2" | "list-1" | "carousel-1";
   title: string;
   subtitle?: string;
-  limit: number;
+  page_size: number;
   showPagination?: boolean;
   itemsPerRow?: number;
   showAuthor?: boolean;
@@ -28,7 +28,7 @@ export const defaultBlogDisplayData: BlogDisplayData = {
   style: "grid-1",
   title: "Latest Blog Posts",
   subtitle: "Stay updated with our newest articles and insights.",
-  limit: 6,
+  page_size: 6,
   showPagination: false,
   itemsPerRow: 3,
   showAuthor: true,

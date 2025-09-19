@@ -17,14 +17,20 @@ export const useSubCategoryApi = {
   getSubCategories: async (
     params: PaginationParams = {}
   ): Promise<GetSubCategoriesResponse> => {
-    const { page = 1, limit = 10, search, sortBy, sortOrder = "asc" } = params;
+    const {
+      page = 1,
+      page_size = 10,
+      search,
+      sortBy,
+      sortOrder = "asc",
+    } = params;
 
     const API_BASE_URL = getApiBaseUrl();
 
     // Build query parameters
     const queryParams = new URLSearchParams({
       page: page.toString(),
-      limit: limit.toString(),
+      page_size: page_size.toString(),
     });
 
     if (search) {
@@ -50,7 +56,7 @@ export const useSubCategoryApi = {
     // Enhanced response transformation
     const results = Array.isArray(data) ? data : data.results || [];
     const count = data.count || data.length || 0;
-    const totalPages = Math.ceil(count / limit);
+    const totalPages = Math.ceil(count / page_size);
 
     return {
       results,
@@ -59,7 +65,7 @@ export const useSubCategoryApi = {
       previous: data.previous || null,
       pagination: {
         page,
-        limit,
+        page_size,
         total: count,
         totalPages,
         hasNext: page < totalPages,

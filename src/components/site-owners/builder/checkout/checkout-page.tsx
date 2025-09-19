@@ -24,13 +24,14 @@ import { CreateOrderRequest, OrderItem } from "@/types/owner-site/admin/orders";
 import { toast } from "sonner";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 import { checkoutFormSchema, CheckoutFormValues } from "@/schemas/chekout.form";
 const CheckoutPage = () => {
   const router = useRouter();
   const params = useParams();
   const { cartItems, clearCart } = useCart();
   const createOrderMutation = useCreateOrder();
-
+  const { user, isAuthenticated } = useAuth();
   const isPreviewMode = !!params?.siteUser;
   const siteUser = params?.siteUser as string;
 
@@ -84,7 +85,13 @@ const CheckoutPage = () => {
         total_amount: totalAmount.toFixed(2),
         items: orderItems,
       };
-
+      // If user is authenticated, their info might be pre-filled or associated
+      if (isAuthenticated && user) {
+        // You can add user-specific data here if needed
+        console.log("Order being placed by authenticated user:", user.email);
+      } else {
+        console.log("Order being placed by guest user");
+      }
       const order = await createOrderMutation.mutateAsync(orderData);
 
       toast.success("Order placed successfully!");

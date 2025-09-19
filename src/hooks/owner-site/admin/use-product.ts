@@ -21,10 +21,10 @@ export const useProductFilters = (): ProductFilterParams => {
 
     // Get pagination params
     const page = searchParams.get("page");
-    const limit = searchParams.get("limit");
+    const page_size = searchParams.get("page_size");
 
     if (page) filters.page = parseInt(page, 10);
-    if (limit) filters.limit = parseInt(limit, 10);
+    if (page_size) filters.page_size = parseInt(page_size, 10);
 
     // Get search params
     const search = searchParams.get("search");

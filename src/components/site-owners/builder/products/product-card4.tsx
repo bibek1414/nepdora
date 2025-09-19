@@ -133,15 +133,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
               <Button
                 size="sm"
                 variant="secondary"
-                className="rounded-full bg-white/90 backdrop-blur-sm hover:bg-white"
-                onClick={handleViewDetails}
-              >
-                <Eye className="h-4 w-4" />
-              </Button>
-              <Button
-                size="sm"
-                variant="secondary"
-                className="rounded-full bg-white/90 backdrop-blur-sm hover:bg-white"
+                className="rounded-full bg-gray-600 backdrop-blur-sm hover:bg-white"
                 onClick={handleFavorite}
               >
                 <Heart className="h-4 w-4" />

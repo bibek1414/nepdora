@@ -10,11 +10,14 @@ import {
 } from "@/types/owner-site/admin/orders";
 
 export const orderApi = {
-  createOrder: async (orderData: CreateOrderRequest): Promise<Order> => {
+  createOrder: async (
+    orderData: CreateOrderRequest,
+    isAuthenticated: boolean = false
+  ): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/order/`, {
       method: "POST",
-      headers: createHeaders(),
+      headers: createHeaders(isAuthenticated),
       body: JSON.stringify(orderData),
     });
     await handleApiError(response);
@@ -22,7 +25,8 @@ export const orderApi = {
   },
 
   getOrders: async (
-    params: OrderPaginationParams = {}
+    params: OrderPaginationParams = {},
+    isAuthenticated: boolean = true
   ): Promise<OrdersResponse> => {
     const { page = 1, page_size = 10, search, status, sortBy } = params;
     const API_BASE_URL = getApiBaseUrl();
@@ -38,18 +42,21 @@ export const orderApi = {
       `${API_BASE_URL}/api/order/?${queryParams.toString()}`,
       {
         method: "GET",
-        headers: createHeaders(),
+        headers: createHeaders(isAuthenticated),
       }
     );
     await handleApiError(response);
     return response.json();
   },
 
-  getOrderById: async (id: number): Promise<Order> => {
+  getOrderById: async (
+    id: number,
+    isAuthenticated: boolean = true
+  ): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/order/${id}/`, {
       method: "GET",
-      headers: createHeaders(),
+      headers: createHeaders(isAuthenticated),
     });
     await handleApiError(response);
     return response.json();
@@ -57,12 +64,13 @@ export const orderApi = {
 
   updateOrderStatus: async (
     id: number,
-    statusData: UpdateOrderStatusRequest
+    statusData: UpdateOrderStatusRequest,
+    isAuthenticated: boolean = true
   ): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/order/${id}/`, {
       method: "PATCH",
-      headers: createHeaders(),
+      headers: createHeaders(isAuthenticated),
       body: JSON.stringify(statusData),
     });
     await handleApiError(response);

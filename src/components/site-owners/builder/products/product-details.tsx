@@ -173,7 +173,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={`/preview?site=${siteUser}&page=home`}
+                  href={`/preview/${siteUser}`}
                   className="flex items-center gap-2"
                 >
                   <Home className="h-4 w-4" />
@@ -184,9 +184,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/preview?site=${siteUser}&page=products`}>
-                  Products
-                </Link>
+                <Link href={`/preview/${siteUser}/products`}>Products</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             {product.category && (
@@ -195,7 +193,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
                     <Link
-                      href={`/preview?site=${siteUser}&page=products&category=${product.category.slug}`}
+                      href={`/preview/${siteUser}/products?category=${product.category.slug}`}
                     >
                       {product.category.name}
                     </Link>

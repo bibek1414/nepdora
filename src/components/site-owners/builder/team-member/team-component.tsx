@@ -46,7 +46,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
-    limit = 8,
+    page_size = 8,
     title = "Meet Our Team",
     subtitle,
     style = "grid-1",
@@ -244,15 +244,17 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
 
             {isLoading && (
               <div className={`grid ${getGridClass()} gap-6`}>
-                {Array.from({ length: Math.min(limit, 8) }).map((_, index) => (
-                  <div key={index} className="flex flex-col space-y-3">
-                    <Skeleton className="h-[250px] w-full rounded-xl" />
-                    <div className="space-y-2">
-                      <Skeleton className="h-5 w-3/4" />
-                      <Skeleton className="h-4 w-1/2" />
+                {Array.from({ length: Math.min(page_size, 8) }).map(
+                  (_, index) => (
+                    <div key={index} className="flex flex-col space-y-3">
+                      <Skeleton className="h-[250px] w-full rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-5 w-3/4" />
+                        <Skeleton className="h-4 w-1/2" />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             )}
 
@@ -316,7 +318,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
 
         {isLoading && (
           <div className={`grid ${getGridClass()} gap-8`}>
-            {Array.from({ length: limit }).map((_, index) => (
+            {Array.from({ length: page_size }).map((_, index) => (
               <div key={index} className="flex flex-col space-y-4">
                 <Skeleton className="h-[280px] w-full rounded-lg" />
                 <div className="space-y-3">

@@ -4,7 +4,7 @@ export interface ProductsData {
   style: "grid-1" | "grid-2" | "list-1" | "carousel-1" | "grid-4";
   title: string;
   subtitle?: string;
-  limit: number;
+  page_size: number;
   showPagination?: boolean;
   itemsPerRow?: number;
   showPrice?: boolean;
@@ -28,7 +28,7 @@ export const defaultProductsData: ProductsData = {
   style: "grid-1",
   title: "Our Products",
   subtitle: "Discover our amazing collection of products",
-  limit: 8,
+  page_size: 8,
   showPagination: false,
   itemsPerRow: 4,
   showPrice: true,
