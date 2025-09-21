@@ -100,14 +100,31 @@ export interface AboutUs6Data {
   image2Alt: string;
 }
 
-// Don't forget to update your AboutUsData type union to include AboutUs6Data
+// Add this to your types file (about.ts)
+export interface AboutUs7Data {
+  template: "about-7";
+  subtitle: string;
+  title: string;
+  trainings: Array<{
+    id: string;
+    title: string;
+    description?: string;
+    imageUrl: string;
+    imageAlt: string;
+  }>;
+  buttonText: string;
+  buttonLink: string;
+}
+
+// Don't forget to update your AboutUsData type union to include AboutUs7Data
 export type AboutUsData =
   | AboutUs1Data
   | AboutUs2Data
   | AboutUs3Data
   | AboutUs4Data
   | AboutUs5Data
-  | AboutUs6Data;
+  | AboutUs6Data
+  | AboutUs7Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -313,4 +330,43 @@ export const defaultAboutUs6Data: AboutUs6Data = {
   image2Url:
     "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   image2Alt: "A female barista smiling while holding a coffee cup",
+};
+
+// Add this to your default data exports
+export const defaultAboutUs7Data: AboutUs7Data = {
+  template: "about-7",
+  subtitle: "What we do",
+  title: "Where athletes push their limits and train with purpose.",
+  trainings: [
+    {
+      id: "1",
+      title: "Speed & Endurance Training",
+      imageUrl:
+        "https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      imageAlt: "Athlete running on track",
+    },
+    {
+      id: "2",
+      title: "Agility & Quickness Drills",
+      imageUrl:
+        "https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      imageAlt: "Athlete doing agility drills",
+    },
+    {
+      id: "3",
+      title: "Jump & Plyometric Training",
+      imageUrl:
+        "https://images.unsplash.com/photo-1526676317768-d9b14f15615a?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      imageAlt: "Athlete doing jump training",
+    },
+    {
+      id: "4",
+      title: "Strength & Power Training",
+      imageUrl:
+        "https://images.unsplash.com/photo-1526676317768-d9b14f15615a?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      imageAlt: "Athlete lifting weights",
+    },
+  ],
+  buttonText: "Learn more",
+  buttonLink: "#",
 };

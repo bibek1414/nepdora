@@ -105,10 +105,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
   };
 
   return (
-    <div
-      className="relative min-h-screen bg-gray-50"
-      style={{ backgroundColor: theme.colors.background }}
-    >
+    <div className="relative min-h-screen bg-gray-50">
       {/* Hero Section */}
       <div className="relative flex h-96 items-center justify-center overflow-hidden bg-gradient-to-r from-gray-800 to-gray-600">
         <div className="absolute inset-0 bg-black/40"></div>
@@ -158,7 +155,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
           onChange={handleTextUpdate("storyTitle")}
           as="h2"
           style={{
-            color: theme.colors.text,
+            color: theme.colors.primary,
             fontFamily: theme.fonts.heading,
           }}
           className="mb-12 text-3xl font-bold text-gray-900"
@@ -201,7 +198,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
               onChange={handleTextUpdate("journeyTitle")}
               as="h3"
               style={{
-                color: theme.colors.text,
+                color: theme.colors.secondary,
                 fontFamily: theme.fonts.heading,
               }}
               className="text-4xl leading-tight font-bold text-gray-900"

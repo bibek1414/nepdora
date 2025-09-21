@@ -35,6 +35,7 @@ import {
   defaultAboutUs4Data,
   defaultAboutUs5Data,
   defaultAboutUs6Data,
+  defaultAboutUs7Data,
 } from "@/types/owner-site/components/about";
 import { AboutUsData } from "@/types/owner-site/components/about";
 import { defaultProductsData } from "@/types/owner-site/components/products";
@@ -552,6 +553,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "about-4"
       | "about-5"
       | "about-6"
+      | "about-7"
   ) => {
     let aboutUsData: AboutUsData;
 
@@ -573,6 +575,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         break;
       case "about-6":
         aboutUsData = defaultAboutUs6Data;
+        break;
+      case "about-7":
+        aboutUsData = defaultAboutUs7Data;
         break;
       default:
         aboutUsData = defaultAboutUs1Data;
