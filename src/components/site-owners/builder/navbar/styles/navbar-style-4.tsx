@@ -1,3 +1,4 @@
+// navbar-style-4.tsx
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,6 +35,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SearchBar } from "@/components/site-owners/builder/search-bar/search-bar";
 import { useRouter } from "next/navigation";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 const EditableItem: React.FC<{
   onEdit: () => void;
@@ -93,6 +95,23 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
 
+  // Get theme data
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
   // Fetch categories and subcategories
   const { data: categoriesData } = useCategories();
   const { data: subCategoriesData } = useSubCategories();
@@ -109,7 +128,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     setIsCartOpen(false);
   };
 
-  // Function to generate the correct href for links
   const generateLinkHref = (originalHref: string) => {
     if (isEditable || disableClicks) return "#";
 
@@ -121,7 +139,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     return `/preview/${siteUser}/${cleanHref}`;
   };
 
-  // Function to handle category filtering
   const handleCategoryFilter = (categorySlug: string, categoryName: string) => {
     if (isEditable || disableClicks) return;
 
@@ -129,7 +146,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     router.push(filterUrl);
   };
 
-  // Function to handle subcategory filtering
   const handleSubCategoryFilter = (
     subCategorySlug: string,
     subCategoryName: string
@@ -140,7 +156,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     router.push(filterUrl);
   };
 
-  // Function to handle both category and subcategory filtering
   const handleCombinedFilter = (
     categorySlug: string,
     subCategorySlug: string
@@ -151,7 +166,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     router.push(filterUrl);
   };
 
-  // Function to generate category/subcategory hrefs (legacy support)
   const generateCategoryHref = (categorySlug: string) => {
     if (isEditable || disableClicks) return "#";
     return `/preview/${siteUser}/category/${categorySlug}`;
@@ -162,7 +176,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     return `/preview/${siteUser}/subcategory/${subCategorySlug}`;
   };
 
-  // Handler to prevent clicks when disabled
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
     if (disableClicks || isEditable) {
       e.preventDefault();
@@ -170,13 +183,11 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     }
   };
 
-  // Handle login button click
   const handleLoginClick = () => {
     if (isEditable || disableClicks) return;
     router.push(`/preview/${siteUser}/login`);
   };
 
-  // Handle profile dropdown actions
   const handleProfileAction = (action: string) => {
     if (isEditable || disableClicks) return;
 
@@ -197,10 +208,8 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     }
   };
 
-  // Group subcategories by category
   const getSubCategoriesForCategory = (categoryId: number) => {
     return subCategories.filter(subCat => {
-      // Handle both string and object category references
       if (typeof subCat.category === "object" && subCat.category) {
         return subCat.category.id === categoryId;
       }
@@ -214,6 +223,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
         className={`bg-background flex items-center justify-between border-b p-4 ${
           !isEditable ? "sticky top-16 z-40 mx-auto max-w-7xl" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
+        style={{ fontFamily: theme.fonts.heading }}
       >
         <div className="flex items-center gap-8">
           <div className={disableClicks ? "pointer-events-auto" : ""}>
@@ -258,6 +268,10 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                     href={link.href}
                     onClick={e => e.preventDefault()}
                     className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium transition-colors"
+                    style={{
+                      color: theme.colors.primary,
+                      fontFamily: theme.fonts.heading,
+                    }}
                   >
                     {link.text}
                   </a>
@@ -267,12 +281,16 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                   key={link.id}
                   href={generateLinkHref(link.href)}
                   onClick={e => handleLinkClick(e, link.href)}
-                  className={`text-muted-foreground text-sm font-medium transition-colors ${
+                  className={`text-sm font-medium transition-colors ${
                     disableClicks
                       ? "cursor-default opacity-60"
-                      : "hover:text-foreground cursor-pointer"
+                      : "cursor-pointer hover:opacity-80"
                   }`}
-                  style={disableClicks ? { pointerEvents: "auto" } : {}}
+                  style={{
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.heading,
+                    pointerEvents: disableClicks ? "auto" : undefined,
+                  }}
                 >
                   {link.text}
                 </a>
@@ -284,11 +302,15 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className={`text-muted-foreground hover:text-foreground flex items-center gap-1 text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-1 text-sm font-medium transition-colors ${
                     disableClicks
                       ? "pointer-events-auto cursor-default opacity-60"
-                      : ""
+                      : "cursor-pointer hover:opacity-80"
                   }`}
+                  style={{
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.heading,
+                  }}
                   onClick={disableClicks ? e => e.preventDefault() : undefined}
                 >
                   Categories
@@ -309,7 +331,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                             <span>{category.name}</span>
                           </DropdownMenuSubTrigger>
                           <DropdownMenuSubContent className="w-48">
-                            {/* View All Category Items */}
                             <DropdownMenuItem
                               className="cursor-pointer font-medium"
                               onClick={() =>
@@ -322,7 +343,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                               View All {category.name}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            {/* Subcategory Items */}
                             {categorySubCategories.map(subCategory => (
                               <DropdownMenuItem
                                 key={subCategory.id}
@@ -341,7 +361,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                         </DropdownMenuSub>
                       );
                     } else {
-                      // Category without subcategories
                       return (
                         <DropdownMenuItem
                           key={category.id}
@@ -391,6 +410,11 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                   variant={getButtonVariant(button.variant)}
                   size="sm"
                   className="cursor-pointer"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                    fontFamily: theme.fonts.heading,
+                  }}
                 >
                   {button.text}
                 </Button>
@@ -402,6 +426,11 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                 size="sm"
                 onClick={disableClicks ? e => e.preventDefault() : undefined}
                 className={`${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  color: theme.colors.primaryForeground,
+                  fontFamily: theme.fonts.heading,
+                }}
                 asChild={!disableClicks}
               >
                 {disableClicks ? (
@@ -426,6 +455,11 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                     ? "pointer-events-auto cursor-default opacity-60"
                     : "pointer-events-auto"
               }`}
+              style={{
+                backgroundColor: theme.colors.primary,
+                color: theme.colors.primaryForeground,
+                fontFamily: theme.fonts.heading,
+              }}
             >
               {isEditable ? "Login (Preview Only)" : "Login"}
             </Button>
@@ -440,6 +474,11 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                       ? "pointer-events-auto cursor-default opacity-60"
                       : ""
                   }`}
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                    fontFamily: theme.fonts.heading,
+                  }}
                   onClick={disableClicks ? e => e.preventDefault() : undefined}
                 >
                   <User className="h-4 w-4" />

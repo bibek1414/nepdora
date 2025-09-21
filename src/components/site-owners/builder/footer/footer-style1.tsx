@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
-
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface FooterStyle1Props {
   footerData: FooterData;
   isEditable?: boolean;
@@ -57,7 +57,21 @@ export function FooterStyle1({
 }: FooterStyle1Props) {
   const [email, setEmail] = useState("");
   const deleteFooterMutation = useDeleteFooterMutation();
-
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
   // Function to generate the correct href for links
   const generateLinkHref = (originalHref: string) => {
     if (isEditable) return originalHref; // Keep original href for editable mode
@@ -245,7 +259,12 @@ export function FooterStyle1({
                     className="flex-1"
                     disabled={isEditable}
                   />
-                  <Button variant="default" disabled={isEditable}>
+                  <Button
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                    }}
+                    disabled={isEditable}
+                  >
                     Subscribe
                   </Button>
                 </div>

@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
-
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface FooterStyle2Props {
   footerData: FooterData;
   isEditable?: boolean;
@@ -59,7 +59,22 @@ export function FooterStyle2({
 }: FooterStyle2Props) {
   const [email, setEmail] = useState("");
   const deleteFooterMutation = useDeleteFooterMutation();
-
+  // Get theme data
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
   // Function to generate the correct href for links
   const generateLinkHref = (originalHref: string) => {
     if (isEditable) return originalHref; // Keep original href for editable mode
@@ -147,7 +162,12 @@ export function FooterStyle2({
               <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                 {/* Company Section */}
                 <div className="lg:col-span-1">
-                  <Badge variant="secondary" className="mb-4">
+                  <Badge
+                    className="mb-4 text-white"
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                    }}
+                  >
                     {footerData.companyName}
                   </Badge>
                   <p className="text-muted-foreground mb-6">
@@ -239,10 +259,15 @@ export function FooterStyle2({
                       placeholder="Enter your email"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
-                      className="flex-1"
+                      className="flex-1 border-gray-300 placeholder:text-gray-400"
                       disabled={isEditable}
                     />
-                    <Button variant="default" disabled={isEditable}>
+                    <Button
+                      style={{
+                        backgroundColor: theme.colors.primary,
+                      }}
+                      disabled={isEditable}
+                    >
                       Subscribe
                     </Button>
                   </div>
@@ -257,7 +282,12 @@ export function FooterStyle2({
               <div className="grid grid-cols-1 items-center gap-6 text-center md:grid-cols-3 md:text-left">
                 {footerData.contactInfo.email && (
                   <div className="flex items-center justify-center md:justify-start">
-                    <Mail className="text-primary mr-2 h-4 w-4" />
+                    <Mail
+                      style={{
+                        color: theme.colors.primary,
+                      }}
+                      className="mr-2 h-4 w-4"
+                    />
                     <span className="text-muted-foreground text-sm">
                       {footerData.contactInfo.email}
                     </span>
@@ -265,7 +295,12 @@ export function FooterStyle2({
                 )}
                 {footerData.contactInfo.phone && (
                   <div className="flex items-center justify-center md:justify-start">
-                    <Phone className="text-primary mr-2 h-4 w-4" />
+                    <Phone
+                      style={{
+                        color: theme.colors.primary,
+                      }}
+                      className="mr-2 h-4 w-4"
+                    />
                     <span className="text-muted-foreground text-sm">
                       {footerData.contactInfo.phone}
                     </span>
@@ -274,7 +309,12 @@ export function FooterStyle2({
                 <div className="text-center md:text-right">
                   <p className="text-muted-foreground flex items-center justify-center gap-1 text-sm md:justify-end">
                     {footerData.copyright}
-                    <Heart className="h-3 w-3 text-red-500" />
+                    <Heart
+                      style={{
+                        color: theme.colors.primary,
+                      }}
+                      className="h-3 w-3 text-red-500"
+                    />
                   </p>
                 </div>
               </div>

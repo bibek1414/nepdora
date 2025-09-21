@@ -10,6 +10,7 @@ import { Plus, Edit, Trash2 } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 const EditableItem: React.FC<{
   onEdit: () => void;
@@ -72,6 +73,23 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   // Add state and handlers for the cart
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+  // Get theme data
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
   const toggleCart = () => {
     if (disableClicks) return;
     setIsCartOpen(!isCartOpen);
@@ -107,6 +125,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
         className={`bg-background flex items-center justify-between p-4 ${
           !isEditable ? "sticky top-16 z-40 border-b" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
+        style={{ fontFamily: theme.fonts.heading }}
       >
         <div className="hidden flex-1 items-center justify-end gap-4 md:flex">
           {leftLinks.map(link =>
@@ -119,7 +138,11 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 <a
                   href={link.href}
                   onClick={e => e.preventDefault()}
-                  className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium transition-colors"
+                  className="cursor-pointer text-sm font-medium transition-colors"
+                  style={{
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.heading,
+                  }}
                 >
                   {link.text}
                 </a>
@@ -129,12 +152,16 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 key={link.id}
                 href={generateLinkHref(link.href)}
                 onClick={e => handleLinkClick(e, link.href)}
-                className={`text-muted-foreground text-sm font-medium transition-colors ${
+                className={`text-sm font-medium transition-colors ${
                   disableClicks
                     ? "cursor-default opacity-60"
-                    : "hover:text-foreground cursor-pointer"
+                    : "cursor-pointer hover:opacity-80"
                 }`}
-                style={disableClicks ? { pointerEvents: "auto" } : {}}
+                style={{
+                  color: theme.colors.primary,
+                  fontFamily: theme.fonts.heading,
+                  pointerEvents: disableClicks ? "auto" : undefined,
+                }}
               >
                 {link.text}
               </a>
@@ -169,7 +196,11 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 <a
                   href={link.href}
                   onClick={e => e.preventDefault()}
-                  className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium transition-colors"
+                  className="cursor-pointer text-sm font-medium transition-colors"
+                  style={{
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.heading,
+                  }}
                 >
                   {link.text}
                 </a>
@@ -179,12 +210,16 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 key={link.id}
                 href={generateLinkHref(link.href)}
                 onClick={e => handleLinkClick(e, link.href)}
-                className={`text-muted-foreground text-sm font-medium transition-colors ${
+                className={`text-sm font-medium transition-colors ${
                   disableClicks
                     ? "cursor-default opacity-60"
-                    : "hover:text-foreground cursor-pointer"
+                    : "cursor-pointer hover:opacity-80"
                 }`}
-                style={disableClicks ? { pointerEvents: "auto" } : {}}
+                style={{
+                  color: theme.colors.primary,
+                  fontFamily: theme.fonts.heading,
+                  pointerEvents: disableClicks ? "auto" : undefined,
+                }}
               >
                 {link.text}
               </a>
@@ -202,6 +237,11 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                   variant={getButtonVariant(button.variant)}
                   size="sm"
                   className="cursor-pointer"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                    fontFamily: theme.fonts.heading,
+                  }}
                 >
                   {button.text}
                 </Button>
@@ -213,6 +253,11 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 size="sm"
                 onClick={disableClicks ? e => e.preventDefault() : undefined}
                 className={`${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  color: theme.colors.primaryForeground,
+                  fontFamily: theme.fonts.heading,
+                }}
                 asChild={!disableClicks}
               >
                 {disableClicks ? (
