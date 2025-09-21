@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { AboutUs3Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface AboutUsTemplate3Props {
   aboutUsData: AboutUs3Data;
@@ -16,6 +17,23 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
+  const { data: themeResponse } = useThemeQuery();
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
   const [data, setData] = useState(aboutUsData);
 
   // Handle text field updates
@@ -59,13 +77,22 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
             className="space-y-6 sm:space-y-8"
           >
             <div className="space-y-3 sm:space-y-4">
-              <div className="h-px w-20 bg-gradient-to-r from-green-400 to-emerald-600 sm:w-32"></div>
+              <div
+                className="h-px w-20 sm:w-32"
+                style={{
+                  background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                }}
+              ></div>
+
               <h2 className="text-3xl leading-tight font-light text-black sm:text-4xl lg:text-5xl xl:text-6xl">
                 <EditableText
                   value={data.title}
                   onChange={handleTextUpdate("title")}
                   as="span"
-                  className="block"
+                  style={{
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.heading,
+                  }}
                   isEditable={isEditable}
                   placeholder="Enter title..."
                 />
@@ -74,7 +101,11 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
                   value={data.subtitle}
                   onChange={handleTextUpdate("subtitle")}
                   as="span"
-                  className="block bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text font-normal text-transparent"
+                  className="block bg-clip-text font-normal text-transparent"
+                  style={{
+                    color: theme.colors.secondary,
+                    fontFamily: theme.fonts.heading,
+                  }}
                   isEditable={isEditable}
                   placeholder="Enter subtitle..."
                 />

@@ -67,7 +67,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     },
   };
 
-  // FIX 3: Ensure unique component identification
   const componentId = React.useId();
 
   // Handle text field updates
@@ -109,7 +108,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     onUpdate?.({ sliderImages: updatedSliderImages });
   };
 
-  // FIX 4: More specific background image update with component isolation
   const handleBackgroundImageUpdate = (imageUrl: string, altText?: string) => {
     const updatedData = {
       ...data,
@@ -127,7 +125,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     });
   };
 
-  // FIX 5: Enhanced file handling with better error handling and uniqueness
   const handleBackgroundFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -375,7 +372,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
           <div className="mt-4 flex flex-wrap gap-3">
             {data.buttons.map(btn => (
               <Button
-                key={`btn-${componentId}-${btn.id}`} // Unique button keys
+                key={`btn-${componentId}-${btn.id}`}
                 variant={btn.variant === "primary" ? "default" : btn.variant}
                 size="lg"
                 style={{
@@ -462,9 +459,71 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                   ))}
                 </div>
               </div>
+              {data.sliderImages.length > 1 && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="bg-background/80 absolute top-1/2 left-2 z-10 -translate-y-1/2 backdrop-blur-sm"
+                    onClick={prevSlide}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
 
-              {/* Navigation buttons and indicators remain the same */}
-              {/* ... rest of slider controls ... */}
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="bg-background/80 absolute top-1/2 right-2 z-10 -translate-y-1/2 backdrop-blur-sm"
+                    onClick={nextSlide}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+
+                  {/* Slide indicators */}
+                  <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 transform space-x-2">
+                    {data.sliderImages.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`h-2 w-2 rounded-full transition-colors ${
+                          index === currentSlide ? "bg-white" : "bg-white/50"
+                        }`}
+                        onClick={() => setCurrentSlide(index)}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+              {isEditable && (
+                <div className="mt-6 text-center">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const newSlide = {
+                        id: `slide-${Date.now()}`,
+                        url: "https://via.placeholder.com/600x400?text=New+Slide",
+                        alt: `Slide ${(data.sliderImages?.length || 0) + 1}`,
+                      };
+                      const updatedSliderImages = [
+                        ...(data.sliderImages || []),
+                        newSlide,
+                      ];
+                      const updatedData = {
+                        ...data,
+                        sliderImages: updatedSliderImages,
+                      };
+                      setData(updatedData);
+                      onUpdate?.({ sliderImages: updatedSliderImages });
+                    }}
+                    style={{
+                      borderColor: theme.colors.primary,
+                      color: theme.colors.primary,
+                    }}
+                  >
+                    Add New Slide
+                  </Button>
+                </div>
+              )}
             </div>
           )}
       </div>
