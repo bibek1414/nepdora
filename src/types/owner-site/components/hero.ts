@@ -183,7 +183,6 @@ export const heroTemplateConfigs: Record<string, HeroTemplateConfig> = {
   "hero-3": {
     template: "hero-3",
     backgroundType: "color",
-    backgroundColor: "#EF4444",
   },
   "hero-4": {
     template: "hero-4",

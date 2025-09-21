@@ -103,7 +103,7 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
 
           {/* Editable link overlay for edit mode */}
           {isEditable && (
-            <div className="absolute right-2 bottom-2 z-10">
+            <div className="absolute bottom-2 left-2">
               <EditableLink
                 text="Edit Link"
                 href={activeImage.link || ""}

@@ -1,11 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroData } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { uploadToCloudinary } from "@/utils/cloudinary";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 interface HeroTemplate5Props {
   heroData: HeroData;
@@ -20,10 +23,24 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(heroData);
+  // Generate unique component ID to prevent conflicts
+  const componentId = React.useId();
+
+  const [data, setData] = useState<HeroData>(() => ({
+    ...heroData,
+    buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
+  }));
+
+  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const { data: themeResponse } = useThemeQuery();
 
-  // Get theme colors with updated structure, fallback to defaults if not available
+  useEffect(() => {
+    setData({
+      ...heroData,
+      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
+    });
+  }, [heroData]);
+
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
       text: "#FFFFFF",
@@ -46,15 +63,18 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
     onUpdate?.({ [field]: value } as Partial<HeroData>);
   };
 
-  // Handle main image updates
   const handleImageUpdate = (imageUrl: string, altText?: string) => {
     const updatedData = {
       ...data,
+      backgroundType: "image" as const,
       backgroundImageUrl: imageUrl,
       imageAlt: altText || data.imageAlt,
     };
     setData(updatedData);
+
+    // Only update the specific background fields for this component
     onUpdate?.({
+      backgroundType: "image" as const,
       backgroundImageUrl: imageUrl,
       imageAlt: updatedData.imageAlt,
     });
@@ -70,53 +90,92 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
     onUpdate?.({ buttons: updatedButtons });
   };
 
-  // Handle file input for background change
-  const handleBackgroundFileChange = (
+  const handleBackgroundFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        const imageUrl = e.target?.result as string;
-        if (imageUrl) {
-          // Ensure we're using image background type with proper typing
-          const updatedData: HeroData = {
-            ...data,
-            backgroundType: "image" as const, // Type assertion to ensure correct literal type
-            backgroundImageUrl: imageUrl,
-            imageAlt: `Background image: ${file.name}`,
-          };
-          setData(updatedData);
-          onUpdate?.({
-            backgroundType: "image" as const,
-            backgroundImageUrl: imageUrl,
-            imageAlt: updatedData.imageAlt,
-          });
-        }
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(
+        `Please select a valid image file (${allowedTypes.join(", ")})`
+      );
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    setIsUploadingBackground(true);
+
+    try {
+      // Upload to Cloudinary with unique public_id
+      const imageUrl = await uploadToCloudinary(file, {
+        folder: "hero-backgrounds",
+        resourceType: "image",
+      });
+
+      // Update only this component's background
+      handleImageUpdate(imageUrl, `Background image: ${file.name}`);
+
+      toast.success("Background image uploaded successfully!");
+    } catch (error) {
+      console.error("Background upload failed:", error);
+      toast.error("Failed to upload background image. Please try again.");
+    } finally {
+      setIsUploadingBackground(false);
+      // Reset file input
+      event.target.value = "";
     }
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center text-center">
+    <div
+      className="relative flex min-h-screen items-center justify-center text-center text-white"
+      data-component-id={componentId}
+    >
       {/* Background Change Button - Only visible when editable */}
       {isEditable && (
         <div className="absolute top-6 right-4 z-10">
           <label
-            htmlFor="background-upload"
-            className="mr-12 cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
+            htmlFor={`background-upload-${componentId}`}
+            className={`mr-12 cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
+              isUploadingBackground ? "pointer-events-none opacity-50" : ""
+            }`}
           >
-            Change Background
+            {isUploadingBackground ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Uploading...
+              </span>
+            ) : (
+              "Change Background"
+            )}
           </label>
           <input
-            id="background-upload"
+            id={`background-upload-${componentId}`}
             type="file"
             accept="image/*"
             onChange={handleBackgroundFileChange}
             className="hidden"
+            disabled={isUploadingBackground}
           />
+        </div>
+      )}
+
+      {/* Background Upload Loading Overlay */}
+      {isUploadingBackground && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50">
+          <div className="flex flex-col items-center gap-2 text-white">
+            <Loader2 className="h-8 w-8 animate-spin" />
+            <p className="text-sm font-medium">Uploading background image...</p>
+          </div>
         </div>
       )}
 
@@ -130,14 +189,25 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
               backgroundImage: `url(${data.backgroundImageUrl})`,
             }}
           />
-          {/* EditableImage for additional editing capabilities */}
           <EditableImage
+            key={`bg-${componentId}-${data.backgroundImageUrl}`} // Unique key
             src={data.backgroundImageUrl}
             alt={data.imageAlt || "Background image"}
             onImageChange={handleImageUpdate}
             isEditable={isEditable}
             className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
             priority
+            cloudinaryOptions={{
+              folder: "hero-backgrounds",
+              resourceType: "image",
+            }}
+            imageOptimization={{
+              width: 1920,
+              height: 1080,
+              quality: "auto",
+              format: "auto",
+              crop: "fill",
+            }}
             placeholder={{
               width: 1920,
               height: 1080,
@@ -168,6 +238,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
       <div className="relative z-10 max-w-3xl px-6">
         {/* Badge/Subtitle */}
         <EditableText
+          key={`subtitle-${componentId}`}
           value={data.subtitle || "Introducing the UA-01"}
           onChange={handleTextUpdate("subtitle")}
           as="p"
@@ -182,14 +253,11 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
 
         {/* Main Title */}
         <EditableText
+          key={`title-${componentId}`} // Unique key
           value={data.title}
           onChange={handleTextUpdate("title")}
           as="h1"
           className="text-5xl leading-tight font-bold sm:text-6xl md:text-7xl"
-          style={{
-            color: theme.colors.text,
-            fontFamily: theme.fonts.heading,
-          }}
           isEditable={isEditable}
           placeholder="Enter main title..."
           multiline={true}
@@ -197,23 +265,21 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
 
         {/* Description */}
         <EditableText
+          key={`description-${componentId}`} // Unique key
           value={data.description}
           onChange={handleTextUpdate("description")}
           as="p"
           className="mt-6 text-lg"
-          style={{
-            color: "#D1D5DB", // text-gray-200 equivalent
-            fontFamily: theme.fonts.body,
-          }}
           isEditable={isEditable}
           placeholder="Enter description..."
           multiline={true}
         />
 
-        {/* Buttons */}
+        {/* Buttons with unique keys */}
         <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
           {data.buttons.length > 0 && (
             <EditableLink
+              key={`button-1-${componentId}`} // Unique key
               text={data.buttons[0]?.text || "Discover More"}
               href={data.buttons[0]?.href || "#"}
               onChange={(text, href) =>
@@ -234,6 +300,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
 
           {data.buttons.length > 1 && (
             <EditableLink
+              key={`button-2-${componentId}`} // Unique key
               text={data.buttons[1]?.text || "Explore Collection"}
               href={data.buttons[1]?.href || "#"}
               onChange={(text, href) =>

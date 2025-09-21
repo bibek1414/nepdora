@@ -21,9 +21,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, HelpCircle } from "lucide-react";
+import { AlertCircle, Trash2, HelpCircle, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
+import { FAQForm } from "../../admin/faq/faq-form";
 
 interface FAQComponentProps {
   component: FAQComponentData;
@@ -41,6 +42,7 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   onUpdate,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const {
     title = "Frequently Asked Questions",
@@ -99,6 +101,11 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     }
   };
 
+  const handleAddClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsAddDialogOpen(true);
+  };
+
   const handleSubtitleChange = (newSubtitle: string) => {
     if (!pageSlug) {
       console.error("pageSlug is required for updating component");
@@ -142,15 +149,26 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   if (isEditable) {
     return (
       <div className="group relative">
-        {/* Delete Control */}
-        <div className="absolute top-4 right-4 z-20 opacity-0 transition-opacity group-hover:opacity-100">
+        {/* Controls */}
+        <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          {/* Add Button */}
+          <Button
+            onClick={handleAddClick}
+            variant="default"
+            size="sm"
+            className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+          >
+            <Plus className="mr-1 h-4 w-4" />
+            FAQ
+          </Button>
+
+          {/* Delete Button */}
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
             <AlertDialogTrigger asChild>
               <Button
-                onClick={handleDeleteClick}
                 variant="destructive"
                 size="sm"
                 className="h-8 px-3"
@@ -187,6 +205,13 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
             </AlertDialogContent>
           </AlertDialog>
         </div>
+
+        {/* FAQ Form Dialog - Updated to use correct props */}
+        <FAQForm
+          open={isAddDialogOpen}
+          onOpenChange={setIsAddDialogOpen}
+          mode="create"
+        />
 
         {/* FAQ Preview */}
         <div className="py-8">
