@@ -22,10 +22,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, Image as ImageIcon } from "lucide-react";
+import { AlertCircle, Trash2, Image as ImageIcon, Plus } from "lucide-react";
 import { Banner } from "@/types/owner-site/admin/banner";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
+import BannerDialogForm from "../../admin/banners/banner-dialog-form";
+import { useCreateBannerWithImages } from "@/hooks/owner-site/admin/use-banner";
 
 interface BannerComponentProps {
   component: BannerComponentData;
@@ -45,6 +47,7 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
   onBannerClick,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const {
     title = "Featured Content",
@@ -63,8 +66,9 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
     "banner"
   );
 
-  // Get banners from API
+  // Get banners from API and create mutation
   const { data: banners = [], isLoading, error } = useBanners();
+  const createBannerWithImages = useCreateBannerWithImages();
 
   // Map template to correct banner type
   const getExpectedBannerType = (
@@ -107,6 +111,11 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
     setIsDeleteDialogOpen(true);
   };
 
+  const handleAddClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsAddDialogOpen(true);
+  };
+
   const handleConfirmDelete = () => {
     if (!pageSlug) {
       console.error("pageSlug is required for deletion");
@@ -120,6 +129,10 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
 
     deleteBannerComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
+  };
+
+  const handleBannerFormSuccess = () => {
+    setIsAddDialogOpen(false);
   };
 
   const handleTitleChange = (newTitle: string) => {
@@ -246,8 +259,20 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
   if (isEditable) {
     return (
       <div className="group relative">
-        {/* Delete Control */}
-        <div className="absolute top-4 right-4 z-20 opacity-0 transition-opacity group-hover:opacity-100">
+        {/* Control Buttons */}
+        <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          {/* Add Button */}
+          <Button
+            onClick={handleAddClick}
+            variant="default"
+            size="sm"
+            className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+          >
+            <Plus className="mr-1 h-4 w-4" />
+            Banner
+          </Button>
+
+          {/* Delete Button */}
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
@@ -291,6 +316,13 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
             </AlertDialogContent>
           </AlertDialog>
         </div>
+
+        {/* Add Banner Dialog */}
+        <BannerDialogForm
+          open={isAddDialogOpen}
+          onOpenChange={setIsAddDialogOpen}
+          onSuccess={handleBannerFormSuccess}
+        />
 
         {/* Banner Preview */}
         <div className="py-4">

@@ -94,7 +94,7 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                     </div>
 
                     {/* Edit link overlay */}
-                    <div className="absolute right-2 bottom-2 z-10">
+                    <div className="absolute bottom-2 left-2 z-10">
                       <EditableLink
                         text="Edit Link"
                         href={image.link}

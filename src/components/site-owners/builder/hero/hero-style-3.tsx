@@ -8,6 +8,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { is } from "zod/v4/locales";
 
 interface HeroTemplate3Props {
   heroData: HeroData;
@@ -240,11 +241,11 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
           <div className="mt-4 flex items-center gap-3">
             <EditableText
               value="12k+"
-              onChange={() => {}} // You might want to make this editable too
+              onChange={handleTextUpdate("subtitle")}
               as="span"
               className="font-medium"
               style={{ fontFamily: theme.fonts.body }}
-              isEditable={false}
+              isEditable={isEditable}
             />
             <EditableText
               value="Used by teams and professionals."
@@ -255,30 +256,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
               isEditable={isEditable}
               placeholder="Add stats description..."
             />
-          </div>
-
-          {/* Company Logos - Placeholder */}
-          <div className="mt-8 flex flex-wrap items-center gap-8 opacity-50">
-            <div
-              className="h-8 w-20 rounded opacity-20"
-              style={{ backgroundColor: textColor }}
-            ></div>
-            <div
-              className="h-8 w-20 rounded opacity-20"
-              style={{ backgroundColor: textColor }}
-            ></div>
-            <div
-              className="h-8 w-20 rounded opacity-20"
-              style={{ backgroundColor: textColor }}
-            ></div>
-            <div
-              className="h-8 w-20 rounded opacity-20"
-              style={{ backgroundColor: textColor }}
-            ></div>
-            <div
-              className="h-8 w-20 rounded opacity-20"
-              style={{ backgroundColor: textColor }}
-            ></div>
           </div>
         </div>
 
@@ -324,12 +301,12 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                     }}
                   >
                     <EditableText
-                      value={data.balanceLabel || "🇺🇸 My current balance"}
+                      value={data.balanceLabel || "My current balance"}
                       onChange={handleTextUpdate("balanceLabel")}
                       as="div"
                       isEditable={isEditable}
                       placeholder="Balance label..."
-                      className="text-xs"
+                      className="text-xs text-black"
                       style={{ fontFamily: theme.fonts.body }}
                     />
                     <EditableText
@@ -338,7 +315,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                       as="span"
                       isEditable={isEditable}
                       placeholder="Balance amount..."
-                      className="font-bold"
+                      className="font-bold text-black"
                       style={{ fontFamily: theme.fonts.body }}
                     />
                   </div>

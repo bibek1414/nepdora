@@ -21,10 +21,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, MessageSquareQuote } from "lucide-react";
-import { Testimonial } from "@/types/owner-site/admin/testimonial";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { AlertCircle, Trash2, MessageSquareQuote, Plus } from "lucide-react";
+import {
+  Testimonial,
+  CreateTestimonialData,
+} from "@/types/owner-site/admin/testimonial";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
+import TestimonialForm from "@/components/site-owners/admin/testimonials/testimonial-form";
+import { useCreateTestimonial } from "@/hooks/owner-site/admin/use-testimonials";
 
 interface TestimonialsComponentProps {
   component: TestimonialsComponentData;
@@ -44,6 +55,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   onTestimonialClick,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const {
     page_size = 6,
@@ -61,6 +73,9 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     pageSlug || "",
     "testimonials"
   );
+
+  // Testimonial mutations
+  const createTestimonialMutation = useCreateTestimonial();
 
   // Get testimonials
   const { data: testimonials = [], isLoading, error } = useTestimonials();
@@ -80,6 +95,11 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     setIsDeleteDialogOpen(true);
   };
 
+  const handleAddClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsAddDialogOpen(true);
+  };
+
   const handleConfirmDelete = () => {
     if (!pageSlug) {
       console.error("pageSlug is required for deletion");
@@ -88,6 +108,17 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
     deleteTestimonialsComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
+  };
+
+  const handleCreateTestimonial = (data: CreateTestimonialData) => {
+    createTestimonialMutation.mutate(data, {
+      onSuccess: () => {
+        setIsAddDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create testimonial:", error);
+      },
+    });
   };
 
   const handleTitleChange = (newTitle: string) => {
@@ -173,8 +204,20 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   if (isEditable) {
     return (
       <div className="group relative">
-        {/* Delete Control */}
-        <div className="absolute top-4 right-4 z-20 opacity-0 transition-opacity group-hover:opacity-100">
+        {/* Control Buttons */}
+        <div className="absolute top-4 right-4 z-20 flex gap-2 transition-opacity">
+          {/* Add Button */}
+          <Button
+            onClick={handleAddClick}
+            variant="default"
+            size="sm"
+            className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+          >
+            <Plus className="mr-1 h-4 w-4" />
+            Testimonial
+          </Button>
+
+          {/* Delete Button */}
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
@@ -220,6 +263,20 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
             </AlertDialogContent>
           </AlertDialog>
         </div>
+
+        {/* Add Testimonial Dialog */}
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Add New Testimonial</DialogTitle>
+            </DialogHeader>
+            <TestimonialForm
+              onSubmit={handleCreateTestimonial}
+              onCancel={() => setIsAddDialogOpen(false)}
+              isLoading={createTestimonialMutation.isPending}
+            />
+          </DialogContent>
+        </Dialog>
 
         {/* Testimonials Preview */}
         <div className="py-8">

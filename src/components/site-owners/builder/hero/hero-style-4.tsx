@@ -92,10 +92,6 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   onChange={handleTextUpdate("title")}
                   as="h1"
                   className="text-5xl leading-tight font-bold text-balance lg:text-7xl"
-                  style={{
-                    color: theme.colors.text,
-                    fontFamily: theme.fonts.heading,
-                  }}
                   isEditable={isEditable}
                   placeholder="Enter main title..."
                 />
@@ -106,7 +102,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   as="div"
                   className="text-5xl leading-tight font-bold lg:text-7xl"
                   style={{
-                    color: theme.colors.secondary,
+                    color: theme.colors.primary,
                     fontFamily: theme.fonts.heading,
                   }}
                   isEditable={isEditable}
@@ -171,10 +167,6 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   onChange={handleTextUpdate("statsNumber")}
                   as="div"
                   className="text-3xl font-bold"
-                  style={{
-                    color: theme.colors.text,
-                    fontFamily: theme.fonts.heading,
-                  }}
                   isEditable={isEditable}
                   placeholder="788+"
                 />
@@ -199,7 +191,6 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   as="div"
                   className="text-3xl font-bold"
                   style={{
-                    color: theme.colors.text,
                     fontFamily: theme.fonts.heading,
                   }}
                   isEditable={isEditable}

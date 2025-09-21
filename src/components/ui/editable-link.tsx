@@ -333,7 +333,7 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
   // If in edit mode, show inline editing
   if (isEditing && isEditable) {
     return (
-      <Card className="relative z-[9998] inline-block">
+      <Card className="relative z-[9998] inline-block py-0">
         <CardContent className="space-y-2 p-3">
           <Input
             ref={textInputRef}
@@ -354,15 +354,6 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
               placeholder={hrefPlaceholder}
               className="flex-1 text-sm"
             />
-            <Button
-              onClick={() => setShowPageSelector(true)}
-              size="sm"
-              variant="outline"
-              className="px-2"
-              title="Choose from pages"
-            >
-              <ChevronDown className="h-3 w-3" />
-            </Button>
           </div>
 
           <div className="flex gap-1">

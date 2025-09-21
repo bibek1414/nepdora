@@ -21,11 +21,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, Users } from "lucide-react";
+import { AlertCircle, Trash2, Users, Plus } from "lucide-react";
 import { TEAM } from "@/types/owner-site/admin/team-member";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
-
+import { TeamMemberDialog } from "../../admin/ourteam/our-team-form";
 interface TeamComponentProps {
   component: TeamComponentData;
   isEditable?: boolean;
@@ -44,6 +44,15 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
   onMemberClick,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleAddMember = () => {
+    setDialogOpen(true);
+  };
+
+  const handleDialogSuccess = () => {
+    setDialogOpen(false);
+  };
 
   const {
     page_size = 8,
@@ -175,50 +184,64 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       <div className="group relative">
         {/* Delete Control */}
         <div className="absolute top-4 right-4 z-20 opacity-0 transition-opacity group-hover:opacity-100">
-          <AlertDialog
-            open={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-          >
-            <AlertDialogTrigger asChild>
-              <Button
-                onClick={handleDeleteClick}
-                variant="destructive"
-                size="sm"
-                className="h-8 px-3"
-                disabled={deleteTeamComponent.isPending}
-              >
-                <Trash2 className="mr-1 h-4 w-4" />
-                {deleteTeamComponent.isPending ? "Deleting..." : "Delete"}
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete Team Component
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to delete this team component? This
-                  action cannot be undone and will permanently remove the
-                  component from your page.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleConfirmDelete}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          <div className="flex gap-2">
+            <Button
+              onClick={handleAddMember}
+              className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+            >
+              <Plus className="h-4 w-4" />
+              Team Member
+            </Button>
+
+            <AlertDialog
+              open={isDeleteDialogOpen}
+              onOpenChange={setIsDeleteDialogOpen}
+            >
+              <AlertDialogTrigger asChild>
+                <Button
+                  onClick={handleDeleteClick}
+                  variant="destructive"
+                  size="sm"
+                  className="h-8 px-3"
                   disabled={deleteTeamComponent.isPending}
                 >
-                  {deleteTeamComponent.isPending
-                    ? "Deleting..."
-                    : "Delete Component"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                  <Trash2 className="mr-1 h-4 w-4" />
+                  {deleteTeamComponent.isPending ? "Deleting..." : "Delete"}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center gap-2">
+                    <Trash2 className="text-destructive h-5 w-5" />
+                    Delete Team Component
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete this team component? This
+                    action cannot be undone and will permanently remove the
+                    component from your page.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleConfirmDelete}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    disabled={deleteTeamComponent.isPending}
+                  >
+                    {deleteTeamComponent.isPending
+                      ? "Deleting..."
+                      : "Delete Component"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
-
+        <TeamMemberDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          onSuccess={handleDialogSuccess}
+        />
         {/* Team Preview */}
         <div className="py-8">
           <div className="container mx-auto px-4">
