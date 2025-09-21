@@ -17,31 +17,36 @@ export interface HeroBadge {
   variant?: "default" | "secondary" | "outline";
 }
 
+// Simplified HeroData to match theme structure
 export interface HeroData {
   title: string;
   subtitle: string;
   description: string;
-  textColor: string;
   buttons: HeroButton[];
   layout: "text-left" | "text-center" | "text-right";
+
+  // Simplified background options - only essential fields
   backgroundType: "color" | "gradient" | "image";
-  backgroundColor: string;
-  gradientFrom: string;
-  gradientTo: string;
-  backgroundImageUrl: string;
-  showOverlay: boolean;
-  overlayColor: string;
-  overlayOpacity: number;
-  showSlider: boolean;
-  sliderImages: HeroSliderImage[];
-  showImage: boolean;
-  imageUrl: string;
-  imageAlt: string;
+  backgroundColor?: string; // Single background color
+  backgroundImageUrl?: string;
+  showOverlay?: boolean;
+  overlayOpacity?: number;
+
+  // Image settings
+  showSlider?: boolean;
+  sliderImages?: HeroSliderImage[];
+  showImage?: boolean;
+  imageUrl?: string;
+  imageAlt?: string;
+
+  // Template selection
   template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5";
+
   // Hero 3 specific fields
   balanceLabel?: string;
   balanceAmount?: string;
   showBalanceBadge?: boolean;
+
   // Hero 5 specific fields
   badges?: HeroBadge[];
   overlayTitle?: string;
@@ -111,25 +116,22 @@ export interface GetPageComponentsResponse {
   components?: ApiHeroComponentResponse[] | HeroComponentData[]; // Keep for backward compatibility
 }
 
+// Simplified default hero data
 export const defaultHeroData: HeroData = {
   title: "Welcome to Our Platform",
   subtitle: "Build Something Great",
   description:
     "Create beautiful, responsive websites with our intuitive drag-and-drop builder. No coding required.",
-  textColor: "#FFFFFF",
   buttons: [
     { id: "1", text: "Get Started", variant: "primary", href: "#" },
-    { id: "2", text: "Learn More", variant: "primary", href: "#" },
+    { id: "2", text: "Learn More", variant: "secondary", href: "#" },
   ],
   layout: "text-center",
-  backgroundType: "gradient",
-  backgroundColor: "#1e3a8a",
-  gradientFrom: "#1e3a8a",
-  gradientTo: "#3b82f6",
+  backgroundType: "color",
+  backgroundColor: "#3B82F6", // Use primary color from theme
   backgroundImageUrl:
     "https://images.unsplash.com/photo-1542382257-80dedb725088?q=80&w=2070&auto=format&fit=crop",
   showOverlay: true,
-  overlayColor: "#000000",
   overlayOpacity: 0.5,
   showSlider: true,
   sliderImages: [
@@ -151,122 +153,49 @@ export const defaultHeroData: HeroData = {
   template: "hero-1",
 };
 
-export const defaultHero3Data: HeroData = {
-  title: "All in one App finance for your business",
-  subtitle: "New Multi-currency account",
-  description:
-    "Keep your business account needs safely organized under one roof. Manage money quickly, easily & efficiently.",
-  textColor: "#000000",
-  buttons: [
-    { id: "1", text: "Try for Free", variant: "primary", href: "#" },
-    { id: "2", text: "Preview", variant: "outline", href: "#" },
-  ],
-  layout: "text-left",
-  backgroundType: "color",
-  backgroundColor: "#FFFFFF",
-  gradientFrom: "#f8fafc",
-  gradientTo: "#e2e8f0",
-  backgroundImageUrl: "",
-  showOverlay: false,
-  overlayColor: "#000000",
-  overlayOpacity: 0.3,
-  showSlider: false,
-  sliderImages: [],
-  showImage: true,
-  imageUrl:
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-  imageAlt: "Business finance illustration",
-  template: "hero-3",
-  balanceLabel: "🇺🇸 My current balance",
-  balanceAmount: "$90,438.40",
-  showBalanceBadge: true,
-};
+// Simplified template configurations
+export interface HeroTemplateConfig {
+  template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5";
+  backgroundType: "color" | "gradient" | "image";
+  backgroundColor?: string;
+  backgroundImageUrl?: string;
+  showOverlay?: boolean;
+  showSlider?: boolean;
+  overlayOpacity?: number;
+}
 
-export const defaultHero3KatachiData: HeroData = {
-  title: "Design furniture for",
-  subtitle: "Premium Collection",
-  description: "spaces that breathe.",
-  textColor: "#FFFFFF",
-  buttons: [
-    { id: "1", text: "Explore Collection", variant: "primary", href: "#" },
-    { id: "2", text: "Learn More", variant: "outline", href: "#" },
-  ],
-  layout: "text-center",
-  backgroundType: "image",
-  backgroundColor: "#000000",
-  gradientFrom: "#1e3a8a",
-  gradientTo: "#3b82f6",
-  backgroundImageUrl:
-    "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2070&auto=format&fit=crop",
-  showOverlay: true,
-  overlayColor: "#000000",
-  overlayOpacity: 0.2,
-  showSlider: false,
-  sliderImages: [],
-  showImage: true,
-  imageUrl: "",
-  imageAlt: "Elegant interior with modern furniture design",
-  template: "hero-4",
-  balanceLabel: "",
-  balanceAmount: "",
-  showBalanceBadge: false,
-};
-
-export const defaultHero5Data: HeroData = {
-  title: "Customize without page_sizes with Avora",
-  subtitle: "A platform built for full-stack functionality",
-  description:
-    "Accelerate development cycle to launch apps in days, not months.",
-  textColor: "#000000",
-  buttons: [{ id: "1", text: "Try Demo Now", variant: "outline", href: "#" }],
-  layout: "text-left",
-  backgroundType: "color",
-  backgroundColor: "#FFFFFF",
-  gradientFrom: "#f8fafc",
-  gradientTo: "#e2e8f0",
-  backgroundImageUrl: "",
-  showOverlay: false,
-  overlayColor: "#000000",
-  overlayOpacity: 0.3,
-  showSlider: false,
-  sliderImages: [],
-  showImage: true,
-  imageUrl:
-    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",
-  imageAlt: "Developer working",
-  template: "hero-5",
-  // Hero 5 specific fields
-  badges: [
-    { id: "1", text: "Build Products", variant: "default" },
-    { id: "2", text: "Faster Workflow", variant: "secondary" },
-  ],
-  overlayTitle: "Convert your innovative ideas into powerful products",
-  secondaryImageUrl:
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-  secondaryImageAlt: "Platform stack",
-  statsNumber: "598+",
-  statsLabel: "Apps built on the most secure platform",
-};
-
-// Function to get default data based on template
-export const getDefaultHeroDataByTemplate = (
-  template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5"
-): HeroData => {
-  switch (template) {
-    case "hero-5":
-      return defaultHero5Data;
-    case "hero-4":
-      return defaultHero3KatachiData;
-    case "hero-3":
-      return defaultHero3Data;
-    case "hero-2":
-      return {
-        ...defaultHeroData,
-        template: "hero-2",
-        layout: "text-center",
-        backgroundType: "gradient",
-      };
-    default:
-      return defaultHeroData;
-  }
+// Simplified template configs - colors will come from theme
+export const heroTemplateConfigs: Record<string, HeroTemplateConfig> = {
+  "hero-1": {
+    template: "hero-1",
+    backgroundType: "color",
+    backgroundColor: "#3B82F6",
+  },
+  "hero-2": {
+    template: "hero-2",
+    backgroundType: "image",
+    backgroundImageUrl:
+      "https://images.unsplash.com/photo-1542382257-80dedb725088?q=80&w=2070&auto=format&fit=crop",
+    showOverlay: true,
+    overlayOpacity: 0.6,
+    showSlider: true,
+  },
+  "hero-3": {
+    template: "hero-3",
+    backgroundType: "color",
+    backgroundColor: "#EF4444",
+  },
+  "hero-4": {
+    template: "hero-4",
+    backgroundType: "color",
+    backgroundColor: "#F59E0B",
+  },
+  "hero-5": {
+    template: "hero-5",
+    backgroundType: "image",
+    backgroundImageUrl:
+      "https://images.unsplash.com/photo-1559827291-72ee739d0d95?q=80&w=1974&auto=format&fit=crop",
+    showOverlay: true,
+    overlayOpacity: 0.4,
+  },
 };

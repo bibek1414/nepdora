@@ -7,6 +7,7 @@ import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface HeroTemplate3Props {
   heroData: HeroData;
@@ -22,6 +23,23 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
   siteUser,
 }) => {
   const [data, setData] = useState(heroData);
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   // Handle text field updates
   const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
@@ -79,12 +97,10 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
         backgroundPosition: "center",
       };
     }
-    if (data.backgroundType === "gradient") {
-      return {
-        background: `linear-gradient(135deg, ${data.gradientFrom}, ${data.gradientTo})`,
-      };
-    }
-    return { backgroundColor: data.backgroundColor };
+    // Use theme background color as default, or data.backgroundColor if specified
+    return {
+      backgroundColor: data.backgroundColor || theme.colors.background,
+    };
   };
 
   const getImageUrl = () => {
@@ -96,18 +112,26 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
     });
   };
 
+  const textColor =
+    data.backgroundType === "image" || data.backgroundColor === "#000000"
+      ? "#FFFFFF"
+      : theme.colors.text;
+
   return (
     <section
       className="relative w-full px-6 py-16 md:px-12 lg:px-20"
-      style={{ ...getBackgroundStyles(), color: data.textColor }}
+      style={{
+        ...getBackgroundStyles(),
+        color: textColor,
+        fontFamily: theme.fonts.body,
+      }}
     >
       {/* Overlay */}
       {data.backgroundType === "image" && data.showOverlay && (
         <div
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 bg-black"
           style={{
-            backgroundColor: data.overlayColor,
-            opacity: data.overlayOpacity,
+            opacity: data.overlayOpacity || 0.5,
           }}
         />
       )}
@@ -117,7 +141,15 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
         <div className="flex flex-col gap-6">
           {/* Subtitle Badge */}
           {data.subtitle && (
-            <Badge variant="secondary" className="w-fit">
+            <Badge
+              variant="secondary"
+              className="w-fit"
+              style={{
+                backgroundColor: theme.colors.secondary,
+                color: theme.colors.secondaryForeground,
+                fontFamily: theme.fonts.body,
+              }}
+            >
               <EditableText
                 value={data.subtitle}
                 onChange={handleTextUpdate("subtitle")}
@@ -134,6 +166,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
             onChange={handleTextUpdate("title")}
             as="h1"
             className="text-4xl leading-tight font-bold md:text-5xl"
+            style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter your hero title..."
             multiline={true}
@@ -146,13 +179,14 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
               onChange={handleTextUpdate("description")}
               as="p"
               className="max-w-md text-lg opacity-90"
+              style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}
             />
           )}
 
-          {/* Buttons with EditableLink */}
+          {/* Buttons with theme styling */}
           {data.buttons.length > 0 && (
             <div className="flex items-center gap-4">
               {data.buttons.map((button, index) => (
@@ -168,11 +202,18 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                           : "secondary"
                   }
                   size="lg"
-                  className={
-                    index === 0
-                      ? "rounded-full px-6 py-3"
-                      : "rounded-full border px-6 py-3"
-                  }
+                  className="rounded-full px-6 py-3"
+                  style={{
+                    backgroundColor:
+                      index === 0 ? theme.colors.primary : "transparent",
+                    color:
+                      index === 0
+                        ? theme.colors.primaryForeground
+                        : theme.colors.text,
+                    borderColor:
+                      index === 0 ? "transparent" : theme.colors.primary,
+                    fontFamily: theme.fonts.body,
+                  }}
                   asChild
                 >
                   <EditableLink
@@ -202,6 +243,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
               onChange={() => {}} // You might want to make this editable too
               as="span"
               className="font-medium"
+              style={{ fontFamily: theme.fonts.body }}
               isEditable={false}
             />
             <EditableText
@@ -209,6 +251,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
               onChange={handleTextUpdate("subtitle")}
               as="span"
               className="font-normal opacity-75"
+              style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
               placeholder="Add stats description..."
             />
@@ -216,11 +259,26 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
 
           {/* Company Logos - Placeholder */}
           <div className="mt-8 flex flex-wrap items-center gap-8 opacity-50">
-            <div className="h-8 w-20 rounded bg-current opacity-20"></div>
-            <div className="h-8 w-20 rounded bg-current opacity-20"></div>
-            <div className="h-8 w-20 rounded bg-current opacity-20"></div>
-            <div className="h-8 w-20 rounded bg-current opacity-20"></div>
-            <div className="h-8 w-20 rounded bg-current opacity-20"></div>
+            <div
+              className="h-8 w-20 rounded opacity-20"
+              style={{ backgroundColor: textColor }}
+            ></div>
+            <div
+              className="h-8 w-20 rounded opacity-20"
+              style={{ backgroundColor: textColor }}
+            ></div>
+            <div
+              className="h-8 w-20 rounded opacity-20"
+              style={{ backgroundColor: textColor }}
+            ></div>
+            <div
+              className="h-8 w-20 rounded opacity-20"
+              style={{ backgroundColor: textColor }}
+            ></div>
+            <div
+              className="h-8 w-20 rounded opacity-20"
+              style={{ backgroundColor: textColor }}
+            ></div>
           </div>
         </div>
 
@@ -228,10 +286,16 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
         <div className="relative flex justify-center">
           {data.showImage && data.imageUrl ? (
             <div className="relative w-full max-w-md">
-              <div className="rounded-2xl border bg-gray-50/10 p-6 shadow-xl backdrop-blur-sm">
+              <div
+                className="rounded-2xl border p-6 shadow-xl backdrop-blur-sm"
+                style={{
+                  backgroundColor: `${theme.colors.background}1a`,
+                  borderColor: `${theme.colors.primary}33`,
+                }}
+              >
                 <EditableImage
                   src={getImageUrl()}
-                  alt={data.imageAlt}
+                  alt={data.imageAlt || "Hero image"}
                   onImageChange={handleImageUpdate}
                   onAltChange={handleAltUpdate}
                   isEditable={isEditable}
@@ -252,7 +316,13 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
 
                 {/* Balance Badge - Editable */}
                 {data.showBalanceBadge !== false && (
-                  <div className="absolute top-4 right-4 rounded-lg bg-black px-4 py-2 text-sm text-white">
+                  <div
+                    className="absolute top-4 right-4 rounded-lg px-4 py-2 text-sm"
+                    style={{
+                      backgroundColor: theme.colors.text,
+                      color: theme.colors.background,
+                    }}
+                  >
                     <EditableText
                       value={data.balanceLabel || "🇺🇸 My current balance"}
                       onChange={handleTextUpdate("balanceLabel")}
@@ -260,6 +330,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                       isEditable={isEditable}
                       placeholder="Balance label..."
                       className="text-xs"
+                      style={{ fontFamily: theme.fonts.body }}
                     />
                     <EditableText
                       value={data.balanceAmount || "$90,438.40"}
@@ -268,6 +339,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                       isEditable={isEditable}
                       placeholder="Balance amount..."
                       className="font-bold"
+                      style={{ fontFamily: theme.fonts.body }}
                     />
                   </div>
                 )}
@@ -275,7 +347,13 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
             </div>
           ) : (
             <div className="relative w-full max-w-md">
-              <div className="flex h-96 items-center justify-center rounded-2xl border bg-gray-50/10 p-6 shadow-xl backdrop-blur-sm">
+              <div
+                className="flex h-96 items-center justify-center rounded-2xl border p-6 shadow-xl backdrop-blur-sm"
+                style={{
+                  backgroundColor: `${theme.colors.background}1a`,
+                  borderColor: `${theme.colors.primary}33`,
+                }}
+              >
                 <EditableImage
                   src=""
                   alt="Hero illustration"
@@ -299,7 +377,13 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
 
                 {/* Balance Badge - Editable */}
                 {data.showBalanceBadge !== false && (
-                  <div className="absolute top-4 right-4 rounded-lg bg-black px-4 py-2 text-sm text-white">
+                  <div
+                    className="absolute top-4 right-4 rounded-lg px-4 py-2 text-sm"
+                    style={{
+                      backgroundColor: theme.colors.text,
+                      color: theme.colors.background,
+                    }}
+                  >
                     <EditableText
                       value={data.balanceLabel || "🇺🇸 My current balance"}
                       onChange={handleTextUpdate("balanceLabel")}
@@ -307,6 +391,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                       isEditable={isEditable}
                       placeholder="Balance label..."
                       className="text-xs"
+                      style={{ fontFamily: theme.fonts.body }}
                     />
                     <EditableText
                       value={data.balanceAmount || "$90,438.40"}
@@ -315,6 +400,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                       isEditable={isEditable}
                       placeholder="Balance amount..."
                       className="font-bold"
+                      style={{ fontFamily: theme.fonts.body }}
                     />
                   </div>
                 )}

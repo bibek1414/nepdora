@@ -1,25 +1,43 @@
+"use client";
+
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { HeroData } from "@/types/owner-site/components/hero";
-import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
+import { HeroData } from "@/types/owner-site/components/hero";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface HeroTemplate5Props {
   heroData: HeroData;
   isEditable?: boolean;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
   siteUser?: string;
+  onUpdate?: (updatedData: Partial<HeroData>) => void;
 }
 
 export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
   heroData,
+  siteUser,
   isEditable = false,
   onUpdate,
-  siteUser,
 }) => {
   const [data, setData] = useState(heroData);
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with updated structure, fallback to defaults if not available
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#FFFFFF",
+      primary: "#FFFFFF",
+      primaryForeground: "#000000",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#000000",
+    },
+    fonts: {
+      body: "serif",
+      heading: "serif",
+    },
+  };
 
   // Handle text field updates
   const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
@@ -28,311 +46,213 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
     onUpdate?.({ [field]: value } as Partial<HeroData>);
   };
 
-  // Handle image updates
+  // Handle main image updates
   const handleImageUpdate = (imageUrl: string, altText?: string) => {
     const updatedData = {
       ...data,
-      imageUrl,
+      backgroundImageUrl: imageUrl,
       imageAlt: altText || data.imageAlt,
     };
     setData(updatedData);
     onUpdate?.({
-      imageUrl,
+      backgroundImageUrl: imageUrl,
       imageAlt: updatedData.imageAlt,
     });
   };
 
-  // Handle secondary image update
-  const handleSecondaryImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      secondaryImageUrl: imageUrl,
-      secondaryImageAlt: altText || data.secondaryImageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      secondaryImageUrl: imageUrl,
-      secondaryImageAlt: updatedData.secondaryImageAlt,
-    });
-  };
-
-  // Handle badge updates
-  const handleBadgeUpdate = (badgeIndex: number, text: string) => {
-    const updatedBadges = [...(data.badges || [])];
-    updatedBadges[badgeIndex] = { ...updatedBadges[badgeIndex], text };
-    const updatedData = { ...data, badges: updatedBadges };
-    setData(updatedData);
-    onUpdate?.({ badges: updatedBadges });
-  };
-
-  // Handle stats updates
-  const handleStatUpdate =
-    (field: "statsNumber" | "statsLabel") => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroData>);
-    };
-
-  // Handle button text and href updates
-  const handleButtonUpdate = (
-    buttonId: string,
-    text: string,
-    href?: string
-  ) => {
+  // Handle button updates
+  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
     const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId
-        ? { ...btn, text, ...(href !== undefined && { href }) }
-        : btn
+      btn.id === buttonId ? { ...btn, text, href } : btn
     );
     const updatedData = { ...data, buttons: updatedButtons };
     setData(updatedData);
     onUpdate?.({ buttons: updatedButtons });
   };
 
-  const getOptimizedImageUrl = (url: string, width: number = 600) => {
-    if (!url) return "";
-    return optimizeCloudinaryUrl(convertUnsplashUrl(url), {
-      width,
-      quality: "auto",
-      format: "auto",
-    });
+  // Handle file input for background change
+  const handleBackgroundFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const imageUrl = e.target?.result as string;
+        if (imageUrl) {
+          // Ensure we're using image background type with proper typing
+          const updatedData: HeroData = {
+            ...data,
+            backgroundType: "image" as const, // Type assertion to ensure correct literal type
+            backgroundImageUrl: imageUrl,
+            imageAlt: `Background image: ${file.name}`,
+          };
+          setData(updatedData);
+          onUpdate?.({
+            backgroundType: "image" as const,
+            backgroundImageUrl: imageUrl,
+            imageAlt: updatedData.imageAlt,
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
-    <section className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 p-6 lg:grid-cols-2">
-      {/* Left Image Section */}
-      <div className="relative h-[500px] overflow-hidden rounded-2xl lg:h-auto">
-        {data.showImage && data.imageUrl ? (
-          <EditableImage
-            src={getOptimizedImageUrl(data.imageUrl, 800)}
-            alt={data.imageAlt || "Developer working"}
-            onImageChange={handleImageUpdate}
-            onAltChange={altText => {
-              const updatedData = { ...data, imageAlt: altText };
-              setData(updatedData);
-              onUpdate?.({ imageAlt: altText });
-            }}
-            isEditable={isEditable}
-            className="h-full w-full object-cover"
-            cloudinaryOptions={{
-              folder: "hero-images",
-              resourceType: "image",
-            }}
-            showAltEditor={isEditable}
-            placeholder={{
-              width: 800,
-              height: 500,
-              text: "Upload main image",
+    <div className="relative flex min-h-screen items-center justify-center text-center">
+      {/* Background Change Button - Only visible when editable */}
+      {isEditable && (
+        <div className="absolute top-6 right-4 z-10">
+          <label
+            htmlFor="background-upload"
+            className="mr-12 cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
+          >
+            Change Background
+          </label>
+          <input
+            id="background-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleBackgroundFileChange}
+            className="hidden"
+          />
+        </div>
+      )}
+
+      {/* Background Image */}
+      {data.backgroundType === "image" && data.backgroundImageUrl ? (
+        <>
+          {/* Direct image background */}
+          <div
+            className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url(${data.backgroundImageUrl})`,
             }}
           />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">
-            {isEditable && (
-              <EditableImage
-                src=""
-                alt="Upload main image"
-                onImageChange={handleImageUpdate}
-                onAltChange={altText => {
-                  const updatedData = { ...data, imageAlt: altText };
-                  setData(updatedData);
-                  onUpdate?.({ imageAlt: altText });
-                }}
-                isEditable={isEditable}
-                className="h-full w-full object-cover"
-                cloudinaryOptions={{
-                  folder: "hero-images",
-                  resourceType: "image",
-                }}
-                showAltEditor={isEditable}
-                placeholder={{
-                  width: 800,
-                  height: 500,
-                  text: "Upload main image",
-                }}
-              />
-            )}
-          </div>
-        )}
-
-        {/* Overlay Card */}
-        <div className="absolute bottom-6 left-6 max-w-xs rounded-xl bg-black/50 p-6 text-white backdrop-blur-sm">
-          {data.badges && data.badges[0] && (
-            <button className="mb-3 rounded-full border border-white/30 bg-white/20 px-4 py-1 text-sm">
-              <EditableText
-                value={data.badges[0].text || "Build Products"}
-                onChange={value => handleBadgeUpdate(0, value)}
-                as="span"
-                isEditable={isEditable}
-                placeholder="Badge text..."
-              />
-            </button>
-          )}
-          <h2 className="text-lg leading-snug font-medium">
-            <EditableText
-              value={
-                data.overlayTitle ||
-                "Convert your innovative ideas into powerful products"
-              }
-              onChange={handleTextUpdate("overlayTitle")}
-              as="span"
-              isEditable={isEditable}
-              placeholder="Overlay title..."
-              multiline
-            />
-          </h2>
-        </div>
-      </div>
-
-      {/* Right Content */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {/* Top Card */}
-        <div className="col-span-2 rounded-2xl border bg-white p-6 shadow-sm">
-          {data.badges && data.badges[1] && (
-            <button className="mb-3 rounded-full border bg-gray-100 px-4 py-1 text-sm">
-              <EditableText
-                value={data.badges[1].text || "Faster Workflow"}
-                onChange={value => handleBadgeUpdate(1, value)}
-                as="span"
-                isEditable={isEditable}
-                placeholder="Badge text..."
-              />
-            </button>
-          )}
-          <h3 className="text-xl font-semibold text-gray-900">
-            <EditableText
-              value={data.title}
-              onChange={handleTextUpdate("title")}
-              as="span"
-              isEditable={isEditable}
-              placeholder="Main title..."
-            />
-          </h3>
-          <p className="mt-2 text-sm leading-relaxed text-gray-600">
-            <EditableText
-              value={data.description}
-              onChange={handleTextUpdate("description")}
-              as="span"
-              isEditable={isEditable}
-              placeholder="Description..."
-              multiline
-            />
-          </p>
-        </div>
-
-        {/* Bottom Left Card */}
-        <div className="flex flex-col justify-between rounded-2xl border bg-white p-6 shadow-sm">
-          {data.secondaryImageUrl ? (
-            <EditableImage
-              src={getOptimizedImageUrl(data.secondaryImageUrl, 300)}
-              alt={data.secondaryImageAlt || "Platform stack"}
-              onImageChange={handleSecondaryImageUpdate}
-              onAltChange={altText => {
-                const updatedData = { ...data, secondaryImageAlt: altText };
-                setData(updatedData);
-                onUpdate?.({ secondaryImageAlt: altText });
-              }}
-              isEditable={isEditable}
-              className="rounded-lg"
-              width={300}
-              height={200}
-              cloudinaryOptions={{
-                folder: "hero-images",
-                resourceType: "image",
-              }}
-              showAltEditor={isEditable}
-              placeholder={{
-                width: 300,
-                height: 200,
-                text: "Upload secondary image",
+          {/* EditableImage for additional editing capabilities */}
+          <EditableImage
+            src={data.backgroundImageUrl}
+            alt={data.imageAlt || "Background image"}
+            onImageChange={handleImageUpdate}
+            isEditable={isEditable}
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
+            priority
+            placeholder={{
+              width: 1920,
+              height: 1080,
+              text: "Upload background image",
+            }}
+          />
+          {/* Overlay */}
+          {data.showOverlay && (
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundColor: `rgba(0, 0, 0, ${data.overlayOpacity || 0.7})`,
               }}
             />
-          ) : (
-            <div className="flex h-[200px] w-full items-center justify-center rounded-lg bg-gradient-to-br from-gray-100 to-gray-200">
-              {isEditable && (
-                <EditableImage
-                  src=""
-                  alt="Upload secondary image"
-                  onImageChange={handleSecondaryImageUpdate}
-                  onAltChange={altText => {
-                    const updatedData = { ...data, secondaryImageAlt: altText };
-                    setData(updatedData);
-                    onUpdate?.({ secondaryImageAlt: altText });
-                  }}
-                  isEditable={isEditable}
-                  className="rounded-lg"
-                  width={300}
-                  height={200}
-                  cloudinaryOptions={{
-                    folder: "hero-images",
-                    resourceType: "image",
-                  }}
-                  showAltEditor={isEditable}
-                  placeholder={{
-                    width: 300,
-                    height: 200,
-                    text: "Upload secondary image",
-                  }}
-                />
-              )}
-            </div>
           )}
-          <h3 className="mt-4 text-lg font-semibold">
-            <EditableText
-              value={data.subtitle}
-              onChange={handleTextUpdate("subtitle")}
-              as="span"
-              isEditable={isEditable}
-              placeholder="Subtitle..."
-              multiline
-            />
-          </h3>
-        </div>
+        </>
+      ) : (
+        /* Default/Color Background */
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundColor: data.backgroundColor || theme.colors.background,
+          }}
+        />
+      )}
 
-        {/* Bottom Right Card with EditableLink */}
-        <div className="flex flex-col items-center justify-center rounded-2xl border bg-white p-6 text-center shadow-sm">
-          <h3 className="text-4xl font-bold text-gray-900">
-            <EditableText
-              value={data.statsNumber || "598+"}
-              onChange={handleStatUpdate("statsNumber")}
-              as="span"
-              isEditable={isEditable}
-              placeholder="598+"
-            />
-          </h3>
-          <p className="mt-2 text-sm text-gray-600">
-            <EditableText
-              value={
-                data.statsLabel || "Apps built on the most secure platform"
-              }
-              onChange={handleStatUpdate("statsLabel")}
-              as="span"
-              isEditable={isEditable}
-              placeholder="Stats description..."
-              multiline
-            />
-          </p>
+      {/* Content */}
+      <div className="relative z-10 max-w-3xl px-6">
+        {/* Badge/Subtitle */}
+        <EditableText
+          value={data.subtitle || "Introducing the UA-01"}
+          onChange={handleTextUpdate("subtitle")}
+          as="p"
+          className="mb-4 text-sm tracking-[0.2em] uppercase"
+          style={{
+            color: "#D1D5DB", // text-gray-300 equivalent
+            fontFamily: theme.fonts.body,
+          }}
+          isEditable={isEditable}
+          placeholder="Enter subtitle/badge text..."
+        />
+
+        {/* Main Title */}
+        <EditableText
+          value={data.title}
+          onChange={handleTextUpdate("title")}
+          as="h1"
+          className="text-5xl leading-tight font-bold sm:text-6xl md:text-7xl"
+          style={{
+            color: theme.colors.text,
+            fontFamily: theme.fonts.heading,
+          }}
+          isEditable={isEditable}
+          placeholder="Enter main title..."
+          multiline={true}
+        />
+
+        {/* Description */}
+        <EditableText
+          value={data.description}
+          onChange={handleTextUpdate("description")}
+          as="p"
+          className="mt-6 text-lg"
+          style={{
+            color: "#D1D5DB", // text-gray-200 equivalent
+            fontFamily: theme.fonts.body,
+          }}
+          isEditable={isEditable}
+          placeholder="Enter description..."
+          multiline={true}
+        />
+
+        {/* Buttons */}
+        <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
           {data.buttons.length > 0 && (
-            <Button
-              className="mt-4 rounded-full border border-gray-300 px-5 py-2 text-gray-700 transition hover:bg-gray-100"
-              asChild
-            >
-              <EditableLink
-                text={`${data.buttons[0].text} →`}
-                href={data.buttons[0].href || "#"}
-                onChange={(text, href) => {
-                  // Remove the arrow from the text when updating
-                  const cleanText = text.replace(/\s*→\s*$/, "");
-                  handleButtonUpdate(data.buttons[0].id, cleanText, href);
-                }}
-                isEditable={isEditable}
-                siteUser={siteUser}
-                textPlaceholder="Button text..."
-                hrefPlaceholder="Enter button URL..."
-              />
-            </Button>
+            <EditableLink
+              text={data.buttons[0]?.text || "Discover More"}
+              href={data.buttons[0]?.href || "#"}
+              onChange={(text, href) =>
+                handleButtonUpdate(data.buttons[0]?.id || "1", text, href)
+              }
+              isEditable={isEditable}
+              siteUser={siteUser}
+              className="rounded-full px-8 py-3 font-semibold transition hover:bg-gray-200"
+              style={{
+                backgroundColor: theme.colors.primary,
+                color: theme.colors.primaryForeground,
+                fontFamily: theme.fonts.body,
+              }}
+              textPlaceholder="Primary button text..."
+              hrefPlaceholder="Enter URL..."
+            />
+          )}
+
+          {data.buttons.length > 1 && (
+            <EditableLink
+              text={data.buttons[1]?.text || "Explore Collection"}
+              href={data.buttons[1]?.href || "#"}
+              onChange={(text, href) =>
+                handleButtonUpdate(data.buttons[1]?.id || "2", text, href)
+              }
+              isEditable={isEditable}
+              siteUser={siteUser}
+              className="rounded-full border px-8 py-3 transition hover:bg-white/10"
+              style={{
+                borderColor: theme.colors.text,
+                color: theme.colors.text,
+                fontFamily: theme.fonts.body,
+              }}
+              textPlaceholder="Secondary button text..."
+              hrefPlaceholder="Enter URL..."
+            />
           )}
         </div>
       </div>
-    </section>
+    </div>
   );
 };

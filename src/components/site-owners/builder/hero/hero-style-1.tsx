@@ -1,10 +1,17 @@
+"use client";
+
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ChevronLeft, ChevronRight, Play, ArrowRight } from "lucide-react";
 import { HeroData } from "@/types/owner-site/components/hero";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+
+// Updated HeroTemplate1 with theme integration
 interface HeroTemplate1Props {
   heroData: HeroData;
   isEditable?: boolean;
@@ -19,6 +26,23 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
   onUpdate,
 }) => {
   const [data, setData] = useState(heroData);
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   // Handle text field updates
   const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
@@ -57,27 +81,32 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
     setData(updatedData);
     onUpdate?.({ buttons: updatedButtons });
   };
+
   const getButtonClasses = (variant: string) => {
     const baseClasses =
       "inline-block px-6 py-3 rounded-lg font-medium transition-colors min-w-[120px] text-center";
 
-    switch (variant) {
-      case "primary":
-        return `${baseClasses} bg-primary text-primary-foreground hover:bg-primary/90`;
-      case "default":
-        return `${baseClasses} bg-primary text-primary-foreground hover:bg-primary/90`;
-      case "secondary":
-        return `${baseClasses} bg-secondary text-secondary-foreground hover:bg-secondary/80`;
-      case "outline":
-        return `${baseClasses} border border-input bg-background hover:bg-accent hover:text-accent-foreground`;
-      case "ghost":
-        return `${baseClasses} hover:bg-accent hover:text-accent-foreground`;
-      case "link":
-        return `${baseClasses} text-primary underline-offset-4 hover:underline px-0`;
-      default:
-        return `${baseClasses} bg-primary text-primary-foreground hover:bg-primary/90`;
-    }
+    const buttonStyles = {
+      backgroundColor:
+        variant === "primary"
+          ? theme.colors.primary
+          : variant === "secondary"
+            ? theme.colors.secondary
+            : "transparent",
+      color:
+        variant === "primary"
+          ? theme.colors.primaryForeground
+          : variant === "secondary"
+            ? theme.colors.secondaryForeground
+            : theme.colors.text,
+      border:
+        variant === "outline" ? `1px solid ${theme.colors.primary}` : "none",
+      fontFamily: theme.fonts.body,
+    };
+
+    return { className: baseClasses, style: buttonStyles };
   };
+
   const getBackgroundStyles = (): React.CSSProperties => {
     if (data.backgroundType === "image" && data.backgroundImageUrl) {
       const imageUrl = optimizeCloudinaryUrl(
@@ -91,11 +120,9 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
       };
     }
     if (data.backgroundType === "gradient") {
-      return {
-        background: `linear-gradient(135deg, ${data.gradientFrom}, ${data.gradientTo})`,
-      };
+      return {};
     }
-    return { backgroundColor: data.backgroundColor };
+    return { backgroundColor: data.backgroundColor || theme.colors.background };
   };
 
   const getLayoutClasses = () => {
@@ -118,18 +145,26 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
     });
   };
 
+  const textColor =
+    data.backgroundType === "image" || data.backgroundColor === "#000000"
+      ? "#FFFFFF"
+      : theme.colors.text;
+
   return (
     <section
       className="relative flex min-h-[60vh] items-center justify-center overflow-hidden px-4 py-20"
-      style={{ ...getBackgroundStyles(), color: data.textColor }}
+      style={{
+        ...getBackgroundStyles(),
+        color: textColor,
+        fontFamily: theme.fonts.body,
+      }}
     >
       {/* Overlay */}
       {data.backgroundType === "image" && data.showOverlay && (
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundColor: data.overlayColor,
-            opacity: data.overlayOpacity,
+            opacity: data.overlayOpacity || 0.5,
           }}
         />
       )}
@@ -141,7 +176,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
             <div className="mb-6">
               <EditableImage
                 src={getImageUrl()}
-                alt={data.imageAlt}
+                alt={data.imageAlt || "Modern furniture piece"}
                 onImageChange={handleImageUpdate}
                 onAltChange={handleAltUpdate}
                 isEditable={isEditable}
@@ -165,7 +200,14 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
           {/* Subtitle Badge */}
           {data.subtitle && (
             <div className="w-fit">
-              <Badge variant="secondary">
+              <Badge
+                variant="secondary"
+                style={{
+                  backgroundColor: theme.colors.secondary,
+                  color: theme.colors.secondaryForeground,
+                  fontFamily: theme.fonts.body,
+                }}
+              >
                 <EditableText
                   value={data.subtitle}
                   onChange={handleTextUpdate("subtitle")}
@@ -182,7 +224,8 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="drop- text-4xl leading-tight font-bold md:text-6xl"
+            className="text-4xl leading-tight font-bold md:text-6xl"
+            style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter your hero title..."
           />
@@ -193,7 +236,8 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="drop- max-w-2xl text-lg leading-relaxed opacity-90 md:text-xl"
+              className="max-w-2xl text-lg leading-relaxed opacity-90 md:text-xl"
+              style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}
@@ -203,21 +247,25 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
           {/* Buttons */}
           {data.buttons.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-4">
-              {data.buttons.map(button => (
-                <EditableLink
-                  key={button.id}
-                  text={button.text || "Button text"}
-                  href={button.href || "#"}
-                  onChange={(text, href) =>
-                    handleButtonUpdate(button.id, text, href)
-                  }
-                  isEditable={isEditable}
-                  siteUser={siteUser}
-                  className={getButtonClasses(button.variant)}
-                  textPlaceholder="Button text..."
-                  hrefPlaceholder="Enter URL (e.g., about-us, contact)..."
-                />
-              ))}
+              {data.buttons.map(button => {
+                const buttonClass = getButtonClasses(button.variant);
+                return (
+                  <EditableLink
+                    key={button.id}
+                    text={button.text || "Button text"}
+                    href={button.href || "#"}
+                    onChange={(text, href) =>
+                      handleButtonUpdate(button.id, text, href)
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    className={buttonClass.className}
+                    style={buttonClass.style}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter URL (e.g., about-us, contact)..."
+                  />
+                );
+              })}
             </div>
           )}
         </div>

@@ -1,7 +1,22 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Edit, Check, X, ExternalLink } from "lucide-react";
+import {
+  Edit,
+  Check,
+  X,
+  ExternalLink,
+  Plus,
+  Search,
+  ChevronDown,
+} from "lucide-react";
+import { usePages, useCreatePage } from "@/hooks/owner-site/use-page";
+import { Page } from "@/types/owner-site/components/page";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 interface EditableLinkProps {
   text: string;
@@ -18,12 +33,188 @@ interface EditableLinkProps {
   showExternalIcon?: boolean;
 }
 
+interface PageSelectorProps {
+  onSelect: (href: string, text?: string) => void;
+  onCancel: () => void;
+  currentHref: string;
+}
+
+const PageSelector: React.FC<PageSelectorProps> = ({
+  onSelect,
+  onCancel,
+  currentHref,
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newPageTitle, setNewPageTitle] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+
+  const { data: pages = [], isLoading } = usePages();
+  const createPageMutation = useCreatePage();
+
+  // Filter pages based on search term
+  const filteredPages = pages.filter(
+    (page: Page) =>
+      page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      page.slug.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Update slug when title changes
+  useEffect(() => {
+    if (newPageTitle) {
+      // We don't need to set slug since the API will generate it
+    }
+  }, [newPageTitle]);
+
+  // Handle page selection
+  const handlePageSelect = (page: Page) => {
+    onSelect(`/${page.slug}`, page.title);
+  };
+
+  // Handle external URL selection
+  const handleExternalUrl = () => {
+    const url = prompt("Enter external URL (including https://):");
+    if (url) {
+      onSelect(url, url);
+    }
+  };
+
+  // Handle new page creation
+  const handleCreatePage = async () => {
+    if (!newPageTitle.trim()) return;
+
+    setIsCreating(true);
+    try {
+      const pageData = {
+        title: newPageTitle.trim(),
+      };
+
+      const newPage = await createPageMutation.mutateAsync(pageData);
+      onSelect(`/${newPage.slug}`, newPage.title);
+
+      // Reset form
+      setNewPageTitle("");
+      setShowCreateForm(false);
+    } catch (error) {
+      console.error("Failed to create page:", error);
+      alert("Failed to create page. Please try again.");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  return (
+    <Card className="absolute bottom-full left-0 z-[9999] mb-1 w-80 shadow-xl">
+      <CardContent className="p-0">
+        <ScrollArea className="max-h-60">
+          {/* Existing Pages */}
+          {isLoading ? (
+            <div className="text-muted-foreground p-4 text-center">
+              Loading pages...
+            </div>
+          ) : filteredPages.length > 0 ? (
+            <div className="p-2">
+              {filteredPages.map((page: Page) => (
+                <Button
+                  key={page.id}
+                  onClick={() => handlePageSelect(page)}
+                  variant={
+                    currentHref === `/${page.slug}` ? "secondary" : "ghost"
+                  }
+                  className={cn(
+                    "h-auto w-full justify-between p-3",
+                    currentHref === `/${page.slug}` &&
+                      "bg-primary/10 text-primary"
+                  )}
+                >
+                  <div className="flex-1 text-left">
+                    <div className="font-medium capitalize">{page.title}</div>
+                    <div className="text-muted-foreground text-sm">
+                      /{page.slug}
+                    </div>
+                  </div>
+                </Button>
+              ))}
+            </div>
+          ) : searchTerm && !isLoading ? (
+            <div className="text-muted-foreground p-4 text-center">
+              No pages found matching &quot;{searchTerm}&quot;
+            </div>
+          ) : null}
+
+          <Separator />
+
+          {/* Create New Page */}
+          <div className="p-2">
+            {!showCreateForm ? (
+              <Button
+                onClick={() => setShowCreateForm(true)}
+                variant="ghost"
+                className="w-full justify-start gap-3 text-green-700 hover:bg-green-50 hover:text-green-700"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Create New Page</span>
+              </Button>
+            ) : (
+              <div className="space-y-3 p-2">
+                <div className="text-sm font-medium">Create New Page</div>
+
+                <Input
+                  type="text"
+                  placeholder="Page title..."
+                  value={newPageTitle}
+                  onChange={e => setNewPageTitle(e.target.value)}
+                />
+
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleCreatePage}
+                    disabled={!newPageTitle.trim() || isCreating}
+                    className="flex-1"
+                    size="sm"
+                  >
+                    {isCreating ? "Creating..." : "Create & Link"}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowCreateForm(false);
+                      setNewPageTitle("");
+                    }}
+                    variant="outline"
+                    size="sm"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+
+        <Separator />
+
+        {/* Footer */}
+        <div className="bg-muted/30 p-2">
+          <Button
+            onClick={onCancel}
+            variant="ghost"
+            className="text-muted-foreground hover:text-foreground w-full"
+            size="sm"
+          >
+            Cancel
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 export const EditableLink: React.FC<EditableLinkProps> = ({
   text,
   href,
   onChange,
   className,
-  style, // Already in props, now we'll use it
+  style,
   isEditable = false,
   textPlaceholder = "Link text...",
   hrefPlaceholder = "Enter URL...",
@@ -33,23 +224,22 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
   showExternalIcon = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showPageSelector, setShowPageSelector] = useState(false);
   const [editText, setEditText] = useState(text);
   const [editHref, setEditHref] = useState(href);
   const textInputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Generate the actual href for navigation (fixed logic)
+  // Generate the actual href for navigation
   const generateLinkHref = (originalHref: string) => {
-    // If it's already an absolute URL (http/https/mailto), return as-is
     if (originalHref.startsWith("http") || originalHref.startsWith("mailto:")) {
       return originalHref;
     }
 
-    // If we're in edit mode or no siteUser, return original href
     if (isEditable || !siteUser) {
       return originalHref;
     }
 
-    // Handle empty or home links
     if (
       originalHref === "/" ||
       originalHref === "#" ||
@@ -59,9 +249,18 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
       return `/preview/${siteUser}`;
     }
 
-    // Clean the href and create preview URL
     const cleanHref = originalHref.replace(/^[#/]+/, "");
     return `/preview/${siteUser}/${cleanHref}`;
+  };
+
+  // Handle page selection from dropdown
+  const handlePageSelect = (selectedHref: string, selectedText?: string) => {
+    setEditHref(selectedHref);
+    if (selectedText && (!editText || editText === textPlaceholder)) {
+      setEditText(selectedText);
+    }
+    setShowPageSelector(false);
+    setIsEditing(true);
   };
 
   // Handle saving changes
@@ -75,28 +274,16 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
     setEditText(text);
     setEditHref(href);
     setIsEditing(false);
-  };
-
-  // Handle edit mode - FIXED: Prevent navigation first
-  const handleEdit = (e: React.MouseEvent) => {
-    if (!isEditable) return;
-
-    // Prevent navigation FIRST
-    e.preventDefault();
-    e.stopPropagation();
-
-    setIsEditing(true);
+    setShowPageSelector(false);
   };
 
   // Handle link click when not in edit mode
   const handleLinkClick = (e: React.MouseEvent) => {
     if (isEditable) {
-      // In editable mode, always prevent navigation and enter edit mode
       e.preventDefault();
       e.stopPropagation();
-      setIsEditing(true);
+      setShowPageSelector(true);
     }
-    // If not editable, let the link navigate normally
   };
 
   // Focus text input when entering edit mode
@@ -122,47 +309,77 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
     setEditHref(href);
   }, [text, href]);
 
+  // Close page selector when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setShowPageSelector(false);
+        if (!isEditing) {
+          handleCancel();
+        }
+      }
+    };
+
+    if (showPageSelector) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [showPageSelector, isEditing]);
+
   // If in edit mode, show inline editing
   if (isEditing && isEditable) {
     return (
-      <div className="inline-flex flex-col gap-1">
-        {/* Text input */}
-        <input
-          ref={textInputRef}
-          type="text"
-          value={editText}
-          onChange={e => setEditText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={textPlaceholder}
-          className="rounded border border-blue-300 bg-white px-2 py-1 text-sm text-black focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-        />
+      <Card className="relative z-[9998] inline-block">
+        <CardContent className="space-y-2 p-3">
+          <Input
+            ref={textInputRef}
+            type="text"
+            value={editText}
+            onChange={e => setEditText(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={textPlaceholder}
+            className="text-sm"
+          />
 
-        {/* URL input */}
-        <input
-          type="text"
-          value={editHref}
-          onChange={e => setEditHref(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={hrefPlaceholder}
-          className="rounded border border-blue-300 bg-white px-2 py-1 text-sm text-black focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-        />
+          <div className="flex items-center gap-1">
+            <Input
+              type="text"
+              value={editHref}
+              onChange={e => setEditHref(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={hrefPlaceholder}
+              className="flex-1 text-sm"
+            />
+            <Button
+              onClick={() => setShowPageSelector(true)}
+              size="sm"
+              variant="outline"
+              className="px-2"
+              title="Choose from pages"
+            >
+              <ChevronDown className="h-3 w-3" />
+            </Button>
+          </div>
 
-        {/* Action buttons */}
-        <div className="flex gap-1">
-          <button
-            onClick={handleSave}
-            className="flex items-center justify-center rounded bg-green-500 px-2 py-1 text-xs text-white hover:bg-green-600"
-          >
-            <Check className="h-3 w-3" />
-          </button>
-          <button
-            onClick={handleCancel}
-            className="flex items-center justify-center rounded bg-gray-500 px-2 py-1 text-xs text-white hover:bg-gray-600"
-          >
-            <X className="h-3 w-3" />
-          </button>
-        </div>
-      </div>
+          <div className="flex gap-1">
+            <Button onClick={handleSave} size="sm" className="px-2">
+              <Check className="h-3 w-3" />
+            </Button>
+            <Button
+              onClick={handleCancel}
+              size="sm"
+              variant="outline"
+              className="px-2"
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -173,21 +390,20 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
   const isExternal = href.startsWith("http") || href.startsWith("mailto:");
 
   return (
-    <div className="group relative inline-block">
+    <div className="group relative inline-block" ref={containerRef}>
       <a
         href={finalHref}
         target={isExternal ? "_blank" : target}
-        style={style} // Apply the style prop here
+        style={style}
         className={cn(
           "inline-flex items-center gap-1",
           className,
           isEditable && [
-            "hover:bg-primary cursor-pointer rounded px-1 transition-colors",
-            isEmpty && "text-gray-400 italic",
+            "hover:bg-primary/10 cursor-pointer rounded px-1 transition-colors",
+            isEmpty && "text-muted-foreground italic",
           ]
         )}
         onClick={handleLinkClick}
-        // Add data attribute to identify editable links for TopLoader
         {...(isEditable && { "data-editable-link": "true" })}
       >
         {children || (
@@ -199,6 +415,15 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
           </>
         )}
       </a>
+
+      {/* Page Selector Dropdown */}
+      {showPageSelector && isEditable && (
+        <PageSelector
+          onSelect={handlePageSelect}
+          onCancel={() => setShowPageSelector(false)}
+          currentHref={href}
+        />
+      )}
     </div>
   );
 };
