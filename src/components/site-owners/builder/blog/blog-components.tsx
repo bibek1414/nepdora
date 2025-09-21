@@ -190,26 +190,6 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
           </AlertDialog>
         </div>
 
-        {/* Style Info Header */}
-        <div className="bg-muted border-border mb-6 rounded-lg border p-4">
-          <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-muted-foreground flex items-center gap-2 text-sm font-semibold">
-              <Rss className="h-4 w-4" />
-              Blog Section Configuration
-            </h3>
-            <Badge variant="outline" className="text-xs">
-              {style}
-            </Badge>
-          </div>
-          <div className="text-muted-foreground flex flex-wrap gap-4 text-xs">
-            <span>page_size: {page_size}</span>
-            <span>Items per row: {itemsPerRow}</span>
-            <span>Show author: {showAuthor ? "Yes" : "No"}</span>
-            <span>Show date: {showDate ? "Yes" : "No"}</span>
-            {totalBlogs > 0 && <span>Total available: {totalBlogs}</span>}
-          </div>
-        </div>
-
         {/* Blogs Preview */}
         <div className="py-8">
           <div className="container mx-auto px-4">

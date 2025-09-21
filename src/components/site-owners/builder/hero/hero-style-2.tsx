@@ -1,11 +1,15 @@
+"use client";
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ChevronLeft, ChevronRight, Play, ArrowRight } from "lucide-react";
 import { HeroData } from "@/types/owner-site/components/hero";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface HeroTemplate2Props {
   heroData: HeroData;
@@ -22,6 +26,23 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [data, setData] = useState(heroData);
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   // Handle text field updates
   const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
@@ -52,32 +73,70 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     imageUrl: string,
     altText?: string
   ) => {
-    const updatedSliderImages = data.sliderImages.map((img, idx) =>
-      idx === index ? { ...img, url: imageUrl, alt: altText || img.alt } : img
-    );
+    const updatedSliderImages =
+      data.sliderImages?.map((img, idx) =>
+        idx === index ? { ...img, url: imageUrl, alt: altText || img.alt } : img
+      ) || [];
     const updatedData = { ...data, sliderImages: updatedSliderImages };
     setData(updatedData);
     onUpdate?.({ sliderImages: updatedSliderImages });
   };
 
+  // Handle background image updates
+  const handleBackgroundImageUpdate = (imageUrl: string, altText?: string) => {
+    const updatedData = {
+      ...data,
+      backgroundType: "image" as const,
+      backgroundImageUrl: imageUrl,
+      imageAlt: altText || data.imageAlt,
+    };
+    setData(updatedData);
+    onUpdate?.({
+      backgroundType: "image" as const,
+      backgroundImageUrl: imageUrl,
+      imageAlt: updatedData.imageAlt,
+    });
+  };
+
+  // Handle file input for background change
+  const handleBackgroundFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const imageUrl = e.target?.result as string;
+        if (imageUrl) {
+          const updatedData: HeroData = {
+            ...data,
+            backgroundType: "image" as const,
+            backgroundImageUrl: imageUrl,
+            imageAlt: `Background image: ${file.name}`,
+          };
+          setData(updatedData);
+          onUpdate?.({
+            backgroundType: "image" as const,
+            backgroundImageUrl: imageUrl,
+            imageAlt: updatedData.imageAlt,
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const getBackgroundStyles = (): React.CSSProperties => {
     if (data.backgroundType === "image" && data.backgroundImageUrl) {
-      const imageUrl = optimizeCloudinaryUrl(
-        convertUnsplashUrl(data.backgroundImageUrl),
-        { width: 1920, quality: "auto", format: "auto" }
-      );
       return {
-        backgroundImage: `url(${imageUrl})`,
+        backgroundImage: `url(${data.backgroundImageUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       };
     }
-    if (data.backgroundType === "gradient") {
-      return {
-        background: `linear-gradient(135deg, ${data.gradientFrom}, ${data.gradientTo})`,
-      };
-    }
-    return { backgroundColor: data.backgroundColor };
+    return {
+      backgroundColor: data.backgroundColor || theme.colors.background,
+    };
   };
 
   const getLayoutClasses = () => {
@@ -107,54 +166,97 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
   };
 
   const nextSlide = () => {
-    if (data.sliderImages.length > 0) {
-      setCurrentSlide(prev => (prev + 1) % data.sliderImages.length);
+    if (data.sliderImages && data.sliderImages.length > 0) {
+      setCurrentSlide(prev => (prev + 1) % data.sliderImages!.length);
     }
   };
 
   const prevSlide = () => {
-    if (data.sliderImages.length > 0) {
+    if (data.sliderImages && data.sliderImages.length > 0) {
       setCurrentSlide(prev =>
-        prev === 0 ? data.sliderImages.length - 1 : prev - 1
+        prev === 0 ? data.sliderImages!.length - 1 : prev - 1
       );
     }
   };
 
   // Auto-slide effect
   React.useEffect(() => {
-    if (data.showSlider && data.sliderImages.length > 1) {
+    if (data.showSlider && data.sliderImages && data.sliderImages.length > 1) {
       const interval = setInterval(nextSlide, 5000);
       return () => clearInterval(interval);
     }
-  }, [data.showSlider, data.sliderImages.length]);
+  }, [data.showSlider, data.sliderImages?.length]);
+
+  const textColor =
+    data.backgroundType === "image" || data.backgroundColor === "#000000"
+      ? "#FFFFFF"
+      : theme.colors.text;
 
   return (
     <section
       className="relative flex min-h-[60vh] w-full items-end p-8 md:p-16"
-      style={getBackgroundStyles()}
+      style={{
+        ...getBackgroundStyles(),
+        color: textColor,
+        fontFamily: theme.fonts.body,
+      }}
     >
-      {/* Overlay */}
-      {data.backgroundType === "image" && data.showOverlay && (
-        <div
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundColor: data.overlayColor,
-            opacity: data.overlayOpacity,
+      {/* Background Change Button - Only visible when editable */}
+      {isEditable && (
+        <div className="absolute top-6 right-6 z-20">
+          <label
+            htmlFor="background-upload-hero2"
+            className="mr-10 cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
+          >
+            Change Background
+          </label>
+          <input
+            id="background-upload-hero2"
+            type="file"
+            accept="image/*"
+            onChange={handleBackgroundFileChange}
+            className="hidden"
+          />
+        </div>
+      )}
+
+      {/* Hidden EditableImage for background editing capabilities */}
+      {data.backgroundType === "image" && data.backgroundImageUrl && (
+        <EditableImage
+          src={data.backgroundImageUrl}
+          alt={data.imageAlt || "Background image"}
+          onImageChange={handleBackgroundImageUpdate}
+          isEditable={isEditable}
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
+          priority
+          placeholder={{
+            width: 1920,
+            height: 1080,
+            text: "Upload background image",
           }}
         />
       )}
 
-      <div
-        className="relative z-10 container mx-auto flex max-w-7xl items-end gap-8"
-        style={{ color: data.textColor }}
-      >
+      {/* Overlay */}
+      {data.backgroundType === "image" && data.showOverlay && (
+        <div
+          className="absolute inset-0 z-0 bg-black"
+          style={{
+            opacity: data.overlayOpacity || 0.5,
+          }}
+        />
+      )}
+
+      <div className="relative z-10 container mx-auto flex max-w-7xl items-end gap-8">
         {/* Content */}
         <div className={`flex flex-col gap-4 ${getLayoutClasses()}`}>
+          {/* Editable text components */}
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="drop- text-4xl leading-tight font-bold md:text-6xl"
+            className="text-4xl leading-tight font-bold md:text-6xl"
+            style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter your hero title..."
           />
@@ -163,7 +265,8 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             value={data.subtitle}
             onChange={handleTextUpdate("subtitle")}
             as="p"
-            className="drop- max-w-2xl text-lg md:text-xl"
+            className="max-w-2xl text-lg md:text-xl"
+            style={{ fontFamily: theme.fonts.body }}
             isEditable={isEditable}
             placeholder="Enter subtitle..."
           />
@@ -173,20 +276,32 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="text-md drop- max-w-2xl opacity-90"
+              className="text-md max-w-2xl opacity-90"
+              style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}
             />
           )}
 
-          {/* Buttons with EditableLink */}
+          {/* Buttons with theme styling */}
           <div className="mt-4 flex flex-wrap gap-3">
             {data.buttons.map(btn => (
               <Button
                 key={btn.id}
                 variant={btn.variant === "primary" ? "default" : btn.variant}
                 size="lg"
+                style={{
+                  backgroundColor:
+                    btn.variant === "primary"
+                      ? theme.colors.primary
+                      : theme.colors.secondary,
+                  color:
+                    btn.variant === "primary"
+                      ? theme.colors.primaryForeground
+                      : theme.colors.secondaryForeground,
+                  fontFamily: theme.fonts.body,
+                }}
                 asChild
               >
                 <EditableLink
@@ -205,96 +320,146 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
           </div>
         </div>
 
-        {/* Image Slider */}
-        {data.showSlider && data.sliderImages.length > 0 && (
-          <div className="relative hidden w-1/3 lg:block">
-            <div className="relative overflow-hidden rounded-lg">
-              <div
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-              >
-                {data.sliderImages.map((img, index) => (
-                  <div
-                    className="flex w-full flex-shrink-0 flex-grow-0 justify-center"
-                    key={img.id}
-                  >
-                    <EditableImage
-                      src={getSliderImageUrl(img.url)}
-                      alt={img.alt}
-                      onImageChange={(imageUrl, altText) =>
-                        handleSliderImageUpdate(index, imageUrl, altText)
-                      }
-                      onAltChange={altText => {
-                        const updatedSliderImages = data.sliderImages.map(
-                          (sliderImg, idx) =>
-                            idx === index
-                              ? { ...sliderImg, alt: altText }
-                              : sliderImg
-                        );
-                        const updatedData = {
-                          ...data,
-                          sliderImages: updatedSliderImages,
-                        };
-                        setData(updatedData);
-                        onUpdate?.({ sliderImages: updatedSliderImages });
-                      }}
-                      isEditable={isEditable}
-                      className="h-64 w-full object-cover"
-                      width={600}
-                      height={400}
-                      cloudinaryOptions={{
-                        folder: "hero-slider-images",
-                        resourceType: "image",
-                      }}
-                      showAltEditor={isEditable}
-                      placeholder={{
-                        width: 600,
-                        height: 400,
-                        text: `Upload slide ${index + 1}`,
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Navigation buttons */}
-            {data.sliderImages.length > 1 && (
-              <>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="bg-background/80 absolute top-1/2 left-2 z-10 -translate-y-1/2 backdrop-blur-sm"
-                  onClick={prevSlide}
+        {/* Image Slider - Improved consistency */}
+        {data.showSlider &&
+          data.sliderImages &&
+          data.sliderImages.length > 0 && (
+            <div className="relative w-1/3 md:block">
+              <div className="relative overflow-hidden rounded-lg shadow-lg">
+                <div
+                  className="flex transition-transform duration-500 ease-in-out"
+                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                 >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="bg-background/80 absolute top-1/2 right-2 z-10 -translate-y-1/2 backdrop-blur-sm"
-                  onClick={nextSlide}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-
-                {/* Slide indicators */}
-                <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 transform space-x-2">
-                  {data.sliderImages.map((_, index) => (
-                    <button
-                      key={index}
-                      className={`h-2 w-2 rounded-full transition-colors ${
-                        index === currentSlide ? "bg-white" : "bg-white/50"
-                      }`}
-                      onClick={() => setCurrentSlide(index)}
-                    />
+                  {data.sliderImages.map((img, index) => (
+                    <div className="w-full flex-shrink-0" key={img.id || index}>
+                      <EditableImage
+                        src={getSliderImageUrl(img.url)}
+                        alt={img.alt || `Slide ${index + 1}`}
+                        onImageChange={(imageUrl, altText) =>
+                          handleSliderImageUpdate(index, imageUrl, altText)
+                        }
+                        onAltChange={altText => {
+                          const updatedSliderImages =
+                            data.sliderImages?.map((sliderImg, idx) =>
+                              idx === index
+                                ? { ...sliderImg, alt: altText }
+                                : sliderImg
+                            ) || [];
+                          const updatedData = {
+                            ...data,
+                            sliderImages: updatedSliderImages,
+                          };
+                          setData(updatedData);
+                          onUpdate?.({ sliderImages: updatedSliderImages });
+                        }}
+                        isEditable={isEditable}
+                        className="h-80 w-full object-cover"
+                        width={600}
+                        height={400}
+                        cloudinaryOptions={{
+                          folder: "hero-slider-images",
+                          resourceType: "image",
+                        }}
+                        showAltEditor={isEditable}
+                        placeholder={{
+                          width: 600,
+                          height: 400,
+                          text: `Upload slide ${index + 1}`,
+                        }}
+                      />
+                    </div>
                   ))}
                 </div>
-              </>
-            )}
-          </div>
-        )}
+              </div>
+
+              {/* Navigation buttons */}
+              {data.sliderImages.length > 1 && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="absolute top-1/2 left-2 z-10 -translate-y-1/2 backdrop-blur-sm"
+                    style={{
+                      backgroundColor: `${theme.colors.background}cc`,
+                      borderColor: theme.colors.primary,
+                    }}
+                    onClick={prevSlide}
+                  >
+                    <ChevronLeft
+                      className="h-4 w-4"
+                      style={{ color: theme.colors.primary }}
+                    />
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="absolute top-1/2 right-2 z-10 -translate-y-1/2 backdrop-blur-sm"
+                    style={{
+                      backgroundColor: `${theme.colors.background}cc`,
+                      borderColor: theme.colors.primary,
+                    }}
+                    onClick={nextSlide}
+                  >
+                    <ChevronRight
+                      className="h-4 w-4"
+                      style={{ color: theme.colors.primary }}
+                    />
+                  </Button>
+
+                  {/* Slide indicators */}
+                  <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 transform space-x-2">
+                    {data.sliderImages.map((_, index) => (
+                      <button
+                        key={index}
+                        className="h-2 w-2 rounded-full transition-colors"
+                        style={{
+                          backgroundColor:
+                            index === currentSlide
+                              ? theme.colors.primary
+                              : `${theme.colors.primary}80`,
+                        }}
+                        onClick={() => setCurrentSlide(index)}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {/* Add new slide button - Only visible when editable */}
+              {isEditable && (
+                <div className="mt-4 text-center">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const newSlide = {
+                        id: `slide-${Date.now()}`,
+                        url: "https://via.placeholder.com/600x400?text=New+Slide",
+                        alt: `Slide ${(data.sliderImages?.length || 0) + 1}`,
+                      };
+                      const updatedSliderImages = [
+                        ...(data.sliderImages || []),
+                        newSlide,
+                      ];
+                      const updatedData = {
+                        ...data,
+                        sliderImages: updatedSliderImages,
+                      };
+                      setData(updatedData);
+                      onUpdate?.({ sliderImages: updatedSliderImages });
+                    }}
+                    style={{
+                      borderColor: theme.colors.primary,
+                      color: theme.colors.primary,
+                    }}
+                  >
+                    Add New Slide
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
       </div>
     </section>
   );

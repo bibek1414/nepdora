@@ -61,6 +61,7 @@ import { NewsletterStylesDialog } from "@/components/site-owners/builder/newslet
 import { defaultNewsletterData } from "@/types/owner-site/components/newsletter";
 import { YouTubeStylesDialog } from "@/components/site-owners/builder/youtube/youtube-styles-dialog";
 import { defaultYouTubeData } from "@/types/owner-site/components/youtube";
+import { heroTemplateConfigs } from "@/types/owner-site/components/hero";
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -424,9 +425,21 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleHeroTemplateSelect = (
     template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5"
   ) => {
+    // Get the specific configuration for this template
+    const templateConfig = heroTemplateConfigs[template];
+
     const heroData = {
       ...defaultHeroData,
       template: template,
+      backgroundType: templateConfig.backgroundType,
+      backgroundColor:
+        templateConfig.backgroundColor || defaultHeroData.backgroundColor,
+      backgroundImageUrl:
+        templateConfig.backgroundImageUrl || defaultHeroData.backgroundImageUrl,
+      showOverlay: templateConfig.showOverlay ?? defaultHeroData.showOverlay,
+      overlayOpacity:
+        templateConfig.overlayOpacity ?? defaultHeroData.overlayOpacity,
+      showSlider: templateConfig.showSlider ?? defaultHeroData.showSlider,
     };
 
     createHeroMutation.mutate(heroData, {
