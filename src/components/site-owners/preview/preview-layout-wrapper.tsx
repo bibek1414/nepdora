@@ -82,7 +82,7 @@ export function PreviewLayoutWrapper({
       )}
 
       {/* Preview Content */}
-      <main className="min-h-[calc(100vh-64px)] p-6">
+      <main className="min-h-[calc(100vh-64px)]">
         <div className={`transition-all duration-300 ${getViewportClass()}`}>
           <div className="min-h-[600px] overflow-hidden rounded-lg bg-white">
             {/* Main Content - Children no longer includes navbar */}

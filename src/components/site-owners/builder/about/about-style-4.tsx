@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { AboutUs4Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
-
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface AboutUsTemplate4Props {
   aboutUsData: AboutUs4Data;
   isEditable?: boolean;
@@ -17,7 +17,22 @@ export const AboutUsTemplate4: React.FC<AboutUsTemplate4Props> = ({
   onUpdate,
 }) => {
   const [data, setData] = useState(aboutUsData);
-
+  const { data: themeResponse } = useThemeQuery();
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
   // Handle text field updates
   const handleTextUpdate = (field: keyof AboutUs4Data) => (value: string) => {
     const updatedData = { ...data, [field]: value };
@@ -50,38 +65,6 @@ export const AboutUsTemplate4: React.FC<AboutUsTemplate4Props> = ({
     <section className="relative overflow-hidden bg-white py-16 sm:py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8">
-          {/* Text Content */}
-          <div className="text-center lg:col-span-6 lg:text-left">
-            <EditableText
-              value={data.title}
-              onChange={handleTextUpdate("title")}
-              as="p"
-              className="text-base leading-7 font-semibold text-blue-600"
-              isEditable={isEditable}
-              placeholder="Enter section title..."
-            />
-
-            <EditableText
-              value={data.subtitle}
-              onChange={handleTextUpdate("subtitle")}
-              as="h2"
-              className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
-              isEditable={isEditable}
-              placeholder="Enter main heading..."
-            />
-
-            <EditableText
-              value={data.subSubtitle}
-              onChange={handleTextUpdate("subSubtitle")}
-              as="p"
-              className="mt-6 text-lg leading-8 text-gray-600"
-              isEditable={isEditable}
-              placeholder="Enter description..."
-              multiline={true}
-            />
-          </div>
-
-          {/* Image */}
           <div className="relative mt-16 sm:mt-24 lg:col-span-6 lg:mt-0">
             <EditableImage
               src={data.imageUrl}
@@ -103,6 +86,45 @@ export const AboutUsTemplate4: React.FC<AboutUsTemplate4Props> = ({
                 height: 500,
                 text: "Upload your about us image",
               }}
+            />
+          </div>
+
+          {/* Text on the right */}
+          <div className="text-center lg:col-span-6 lg:text-left">
+            <EditableText
+              value={data.title}
+              onChange={handleTextUpdate("title")}
+              as="p"
+              style={{
+                color: theme.colors.secondary,
+                fontFamily: theme.fonts.heading,
+              }}
+              className="text-base leading-7 font-semibold text-blue-600"
+              isEditable={isEditable}
+              placeholder="Enter section title..."
+            />
+
+            <EditableText
+              value={data.subtitle}
+              onChange={handleTextUpdate("subtitle")}
+              as="h2"
+              style={{
+                color: theme.colors.primary,
+                fontFamily: theme.fonts.heading,
+              }}
+              className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
+              isEditable={isEditable}
+              placeholder="Enter main heading..."
+            />
+
+            <EditableText
+              value={data.subSubtitle}
+              onChange={handleTextUpdate("subSubtitle")}
+              as="p"
+              className="mt-6 text-lg leading-8 text-gray-600"
+              isEditable={isEditable}
+              placeholder="Enter description..."
+              multiline={true}
             />
           </div>
         </div>

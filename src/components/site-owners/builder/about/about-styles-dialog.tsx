@@ -12,7 +12,9 @@ import Image from "next/image";
 interface AboutUsStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (template: "about-1" | "about-3" | "about-4") => void;
+  onStyleSelect: (
+    template: "about-1" | "about-2" | "about-3" | "about-4" | "about-5"
+  ) => void;
 }
 
 export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
@@ -21,7 +23,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "about-1" | "about-3" | "about-4" | null
+    "about-1" | "about-2" | "about-3" | "about-4" | "about-5" | null
   >(null);
 
   const templates = [
@@ -30,16 +32,27 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
       name: "Split Layout with Stats",
     },
     {
+      id: "about-2" as const,
+      name: "Minimalist Image Left",
+    },
+    {
       id: "about-3" as const,
       name: "Modern Design",
     },
+
     {
       id: "about-4" as const,
       name: "Minimalist Image Right",
     },
+    {
+      id: "about-5" as const,
+      name: "Better Design",
+    },
   ];
 
-  const handleSelect = (templateId: "about-1" | "about-3" | "about-4") => {
+  const handleSelect = (
+    templateId: "about-1" | "about-2" | "about-3" | "about-4" | "about-5"
+  ) => {
     setSelectedStyle(templateId);
     setTimeout(() => {
       onStyleSelect(templateId);
@@ -50,7 +63,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-auto max-w-7xl overflow-y-auto">
+      <DialogContent className="h-[80vh] max-w-7xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Choose About Us Template

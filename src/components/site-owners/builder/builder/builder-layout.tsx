@@ -31,7 +31,9 @@ import { AboutUsStylesDialog } from "@/components/site-owners/builder/about/abou
 import {
   defaultAboutUs1Data,
   defaultAboutUs3Data,
+  defaultAboutUs2Data,
   defaultAboutUs4Data,
+  defaultAboutUs5Data,
 } from "@/types/owner-site/components/about";
 import { AboutUsData } from "@/types/owner-site/components/about";
 import { defaultProductsData } from "@/types/owner-site/components/products";
@@ -542,7 +544,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleAboutUsTemplateSelect = (
-    template: "about-1" | "about-3" | "about-4"
+    template: "about-1" | "about-2" | "about-3" | "about-4" | "about-5"
   ) => {
     let aboutUsData: AboutUsData;
 
@@ -550,12 +552,17 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       case "about-1":
         aboutUsData = defaultAboutUs1Data;
         break;
-
+      case "about-2":
+        aboutUsData = defaultAboutUs2Data;
+        break;
       case "about-3":
         aboutUsData = defaultAboutUs3Data;
         break;
       case "about-4":
         aboutUsData = defaultAboutUs4Data;
+        break;
+      case "about-5":
+        aboutUsData = defaultAboutUs5Data;
         break;
       default:
         aboutUsData = defaultAboutUs1Data;

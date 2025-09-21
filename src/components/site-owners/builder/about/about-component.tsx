@@ -16,13 +16,17 @@ import {
   AboutUsComponentData,
   AboutUsData,
   AboutUs1Data,
+  AboutUs2Data,
   AboutUs3Data,
   AboutUs4Data,
+  AboutUs5Data,
   UpdateAboutUsRequest,
 } from "@/types/owner-site/components/about";
 import { AboutUsTemplate1 } from "./about-style-1";
+import { AboutUsTemplate2 } from "./about-style-2";
 import { AboutUsTemplate3 } from "./about-style-3";
 import { AboutUsTemplate4 } from "./about-style-4";
+import { AboutUsTemplate5 } from "./about-style-5";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -90,6 +94,15 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
           />
         );
 
+      case "about-2":
+        return (
+          <AboutUsTemplate2
+            aboutUsData={component.data as AboutUs2Data}
+            isEditable={isEditable}
+            onUpdate={handleUpdate}
+          />
+        );
+
       case "about-3":
         return (
           <AboutUsTemplate3
@@ -102,6 +115,14 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
         return (
           <AboutUsTemplate4
             aboutUsData={component.data as AboutUs4Data}
+            isEditable={isEditable}
+            onUpdate={handleUpdate}
+          />
+        );
+      case "about-5":
+        return (
+          <AboutUsTemplate5
+            aboutUsData={component.data as AboutUs5Data}
             isEditable={isEditable}
             onUpdate={handleUpdate}
           />

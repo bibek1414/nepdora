@@ -31,6 +31,14 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "via.placeholder.com",
       },
+      {
+        protocol: "https",
+        hostname: "plus.unsplash.com",
+      },
+      {
+        protocol: "http",
+        hostname: "plus.unsplash.com",
+      },
     ],
   },
 };
