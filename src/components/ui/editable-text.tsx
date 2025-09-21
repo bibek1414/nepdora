@@ -42,12 +42,14 @@ export const EditableText: React.FC<EditableTextProps> = ({
     const element = e.currentTarget;
     element.focus();
 
-    // Select all text on click for better UX
-    const range = document.createRange();
-    range.selectNodeContents(element);
-    const selection = window.getSelection();
-    selection?.removeAllRanges();
-    selection?.addRange(range);
+    // Only auto-select if it's empty
+    if (!value) {
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
   };
 
   // Handle key events for better UX

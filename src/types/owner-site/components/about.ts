@@ -79,12 +79,36 @@ export interface AboutUs5Data {
   videoLink: string;
 }
 
+// Add this to your types file (about.ts)
+export interface AboutUs6Data {
+  template: "about-6";
+  headline: string;
+  buttonText: string;
+  buttonLink: string;
+  stats: Array<{
+    id: string;
+    value: string;
+    label: string;
+    topIcon: string;
+    bottomIcon: string;
+  }>;
+  image1Url: string;
+  image1Alt: string;
+  centerImageUrl: string;
+  centerImageAlt: string;
+  image2Url: string;
+  image2Alt: string;
+}
+
+// Don't forget to update your AboutUsData type union to include AboutUs6Data
 export type AboutUsData =
   | AboutUs1Data
   | AboutUs2Data
   | AboutUs3Data
   | AboutUs4Data
-  | AboutUs5Data;
+  | AboutUs5Data
+  | AboutUs6Data;
+
 export interface AboutUs4Data {
   template: "about-4";
   title: string;
@@ -256,4 +280,37 @@ export const defaultAboutUs5Data: AboutUs5Data = {
   ],
   videoLinkText: "WATCH INTRO",
   videoLink: "#",
+};
+
+export const defaultAboutUs6Data: AboutUs6Data = {
+  template: "about-6",
+  headline:
+    "Brewhaus is where flavor meets craft. From bean to cup, we focus on quality, speed, and simplicity — perfect for busy mornings or laid-back afternoons.",
+  buttonText: "Our News",
+  buttonLink: "#",
+  stats: [
+    {
+      id: "1",
+      value: "10K+",
+      label: "Happy Customers",
+      topIcon: "Heart",
+      bottomIcon: "Zap",
+    },
+    {
+      id: "2",
+      value: "20",
+      label: "Products",
+      topIcon: "Box",
+      bottomIcon: "Lightbulb",
+    },
+  ],
+  image1Url:
+    "https://images.unsplash.com/photo-1542372147193-a7aca54189cd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  image1Alt: "A female barista smiling while holding a coffee cup",
+  centerImageUrl:
+    "https://images.unsplash.com/photo-1464979681340-bdd28a61699e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  centerImageAlt: "A close-up of coffee beans being roasted",
+  image2Url:
+    "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  image2Alt: "A female barista smiling while holding a coffee cup",
 };

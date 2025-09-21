@@ -13,7 +13,13 @@ interface AboutUsStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
-    template: "about-1" | "about-2" | "about-3" | "about-4" | "about-5"
+    template:
+      | "about-1"
+      | "about-2"
+      | "about-3"
+      | "about-4"
+      | "about-5"
+      | "about-6"
   ) => void;
 }
 
@@ -23,7 +29,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "about-1" | "about-2" | "about-3" | "about-4" | "about-5" | null
+    "about-1" | "about-2" | "about-3" | "about-4" | "about-5" | "about-6" | null
   >(null);
 
   const templates = [
@@ -48,10 +54,20 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
       id: "about-5" as const,
       name: "Better Design",
     },
+    {
+      id: "about-6" as const,
+      name: "Creative Layout",
+    },
   ];
 
   const handleSelect = (
-    templateId: "about-1" | "about-2" | "about-3" | "about-4" | "about-5"
+    templateId:
+      | "about-1"
+      | "about-2"
+      | "about-3"
+      | "about-4"
+      | "about-5"
+      | "about-6"
   ) => {
     setSelectedStyle(templateId);
     setTimeout(() => {
