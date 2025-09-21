@@ -104,10 +104,10 @@ const PageSelector: React.FC<PageSelectorProps> = ({
   };
 
   return (
-    <Card className="absolute bottom-full left-0 z-[9999] mb-1 w-80 shadow-xl">
+    <Card className="absolute bottom-full left-0 z-[9999] mb-1 w-80 bg-white py-0 shadow-xl">
       <CardContent className="p-0">
-        <ScrollArea className="max-h-60">
-          {/* Existing Pages */}
+        {/* Existing Pages - Fixed ScrollArea */}
+        <ScrollArea className="max-h-60 overflow-y-auto">
           {isLoading ? (
             <div className="text-muted-foreground p-4 text-center">
               Loading pages...
@@ -141,64 +141,64 @@ const PageSelector: React.FC<PageSelectorProps> = ({
               No pages found matching &quot;{searchTerm}&quot;
             </div>
           ) : null}
-
-          <Separator />
-
-          {/* Create New Page */}
-          <div className="p-2">
-            {!showCreateForm ? (
-              <Button
-                onClick={() => setShowCreateForm(true)}
-                variant="ghost"
-                className="w-full justify-start gap-3 text-green-700 hover:bg-green-50 hover:text-green-700"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Create New Page</span>
-              </Button>
-            ) : (
-              <div className="space-y-3 p-2">
-                <div className="text-sm font-medium">Create New Page</div>
-
-                <Input
-                  type="text"
-                  placeholder="Page title..."
-                  value={newPageTitle}
-                  onChange={e => setNewPageTitle(e.target.value)}
-                />
-
-                <div className="flex gap-2">
-                  <Button
-                    onClick={handleCreatePage}
-                    disabled={!newPageTitle.trim() || isCreating}
-                    className="flex-1"
-                    size="sm"
-                  >
-                    {isCreating ? "Creating..." : "Create & Link"}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setShowCreateForm(false);
-                      setNewPageTitle("");
-                    }}
-                    variant="outline"
-                    size="sm"
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
         </ScrollArea>
 
         <Separator />
 
-        {/* Footer */}
+        <div className="bg-white p-2">
+          {!showCreateForm ? (
+            <Button
+              onClick={() => setShowCreateForm(true)}
+              variant="ghost"
+              className="w-full justify-start bg-white text-green-700 hover:bg-green-50 hover:text-green-700"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Create New Page</span>
+            </Button>
+          ) : (
+            <div className="space-y-3 rounded bg-white p-2">
+              <div className="text-sm font-medium">Create New Page</div>
+
+              <Input
+                type="text"
+                placeholder="Page title..."
+                value={newPageTitle}
+                onChange={e => setNewPageTitle(e.target.value)}
+                className="bg-white"
+              />
+
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleCreatePage}
+                  disabled={!newPageTitle.trim() || isCreating}
+                  className="flex-1"
+                  size="sm"
+                >
+                  {isCreating ? "Creating..." : "Create & Link"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowCreateForm(false);
+                    setNewPageTitle("");
+                  }}
+                  variant="outline"
+                  size="sm"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Separator />
+
+        {/* Footer - Fixed Background */}
         <div className="bg-muted/30 p-2">
           <Button
             onClick={onCancel}
             variant="ghost"
-            className="text-muted-foreground hover:text-foreground w-full"
+            className="text-muted-foreground hover:text-foreground w-full bg-white"
             size="sm"
           >
             Cancel
