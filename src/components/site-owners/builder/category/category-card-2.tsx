@@ -1,24 +1,18 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { FolderOpen, TrendingUp } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Category } from "@/types/owner-site/admin/product";
 
 interface CategoryCard2Props {
   category: Category;
   siteUser?: string;
-  showDescription?: boolean;
-  showProductCount?: boolean;
   onClick?: () => void;
 }
 
 export const CategoryCard2: React.FC<CategoryCard2Props> = ({
   category,
   siteUser,
-  showDescription = true,
-  showProductCount = true,
   onClick,
 }) => {
   const categoryImage =
@@ -56,36 +50,21 @@ export const CategoryCard2: React.FC<CategoryCard2Props> = ({
 
   return (
     <CardWrapper>
-      <Card className="group overflow-hidden border transition-all duration-300 hover:shadow-xl">
-        <CardContent className="p-0">
-          <div className="flex">
-            {/* Image Section */}
-            <div className="relative h-32 w-32 flex-shrink-0 overflow-hidden">
-              <Image
-                src={categoryImage}
-                alt={category.name}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-110"
-              />
-            </div>
-
-            {/* Content Section */}
-            <div className="flex flex-1 flex-col justify-between p-4">
-              <div>
-                <h3 className="mb-2 text-lg font-bold text-gray-800 transition-colors group-hover:text-blue-600">
-                  {category.name}
-                </h3>
-
-                {showDescription && category.description && (
-                  <p className="text-muted-foreground mb-3 line-clamp-2 text-sm">
-                    {category.description}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="group relative h-80 cursor-pointer overflow-hidden rounded-xl shadow-lg">
+        <Image
+          src={categoryImage}
+          alt={category.name}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute bottom-4 left-4 text-white">
+          <h2 className="text-3xl font-bold md:text-4xl">{category.name}</h2>
+          <a className="mt-2 inline-flex items-center rounded-full bg-black/70 px-4 py-2 text-base font-semibold transition-colors hover:bg-black md:text-lg">
+            SHOP NOW <ArrowRight className="ml-2 h-5 w-5" />
+          </a>
+        </div>
+      </div>
     </CardWrapper>
   );
 };

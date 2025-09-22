@@ -2,25 +2,18 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { FolderOpen, Star, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Category } from "@/types/owner-site/admin/product";
-import { toast } from "sonner";
 
 interface CategoryCard1Props {
   category: Category;
   siteUser?: string;
-  showDescription?: boolean;
-  showProductCount?: boolean;
   onClick?: () => void;
 }
 
 export const CategoryCard1: React.FC<CategoryCard1Props> = ({
   category,
   siteUser,
-  showDescription = true,
-  showProductCount = true,
   onClick,
 }) => {
   // Use actual category data
@@ -66,60 +59,20 @@ export const CategoryCard1: React.FC<CategoryCard1Props> = ({
 
   return (
     <CardWrapper>
-      <Card className="group hover: overflow-hidden border-0 transition-all duration-500 hover:-translate-y-2">
-        <CardContent className="p-0">
-          {/* Header with gradient */}
-          <div className="relative overflow-hidden">
-            <div className="relative aspect-square">
-              <Image
-                src={categoryImage}
-                alt={category.name}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            </div>
-
-            {/* Overlay Content */}
-            <div className="absolute right-4 bottom-4 left-4 text-white">
-              <h3 className="text-xl font-bold drop-shadow-lg">
-                {category.name}
-              </h3>
-            </div>
-
-            {/* Arrow Icon */}
-            <div className="absolute right-4 bottom-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-                <ArrowRight className="h-5 w-5 text-white" />
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4 p-5">
-            {/* Category Title */}
-            <h3 className="line-clamp-1 text-lg font-bold text-gray-800 transition-colors group-hover:text-gray-900">
-              {category.name}
-            </h3>
-
-            {/* Description */}
-            {showDescription && category.description && (
-              <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
-                {category.description}
-              </p>
-            )}
-
-            {/* Action Button */}
-            <Button
-              className="text-primary border-primary/20 hover:bg-primary flex w-full items-center justify-center gap-2 rounded-full border bg-white transition-all duration-300 hover:text-white"
-              onClick={handleViewCategory}
-              data-category-action="true"
-            >
-              Browse Category
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="bg-background-light dark:bg-background-dark">
+        <div className="bg-card-light dark:bg-card-dark mb-4 flex h-64 items-center justify-center rounded-lg p-6 transition-transform hover:scale-105">
+          <Image
+            src={categoryImage}
+            alt={category.name}
+            width={400}
+            height={400}
+            className="max-h-full max-w-full object-contain"
+          />
+        </div>
+        <h3 className="text-text-light dark:text-text-dark text-center text-lg font-semibold">
+          {category.name}
+        </h3>
+      </div>
     </CardWrapper>
   );
 };
