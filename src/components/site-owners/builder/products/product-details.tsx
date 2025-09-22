@@ -346,6 +346,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 }`}
                 onClick={handleFavorite}
                 disabled={isWishlistLoading}
+                data-wishlist="true"
               >
                 <Heart
                   className={`h-5 w-5 ${isWishlisted ? "fill-current" : ""} ${

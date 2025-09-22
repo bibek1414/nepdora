@@ -188,6 +188,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
                 }`}
                 onClick={handleFavorite}
                 disabled={isWishlistLoading}
+                data-wishlist="true"
               >
                 <Heart
                   className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""} ${

@@ -156,7 +156,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
 
   return (
     <CardWrapper>
-      <Card className="group hover: overflow-hidden border-0 bg-white/80 backdrop-blur-sm transition-all duration-500">
+      <Card className="overflow-hidden border-0 bg-white/80 backdrop-blur-sm">
         <CardContent className="p-0">
           <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
             <div className="relative aspect-[4/3]">
@@ -164,7 +164,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
                 src={productImage}
                 alt={product.thumbnail_alt_description || product.name}
                 fill
-                className="object-cover transition-all duration-700 group-hover:scale-105 group-hover:rotate-1"
+                className="object-cover"
                 onError={e => {
                   e.currentTarget.src =
                     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop";
@@ -173,31 +173,30 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
               <div className="absolute inset-0 bg-gradient-to-t from-white/10 via-transparent to-black/5" />
             </div>
 
-            {/* Overlay Actions */}
-            <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/20 group-hover:opacity-100">
-              <div className="flex gap-3">
-                <Button
-                  size="icon"
-                  className="rounded-full bg-white/90 text-gray-800 hover:bg-white"
-                  onClick={handleQuickView}
-                >
-                  <Eye className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="icon"
-                  className={`rounded-full bg-white/90 text-gray-800 hover:bg-white ${
-                    isWishlisted ? "text-red-500" : ""
+            {/* Always Visible Actions */}
+            <div className="absolute top-3 right-3 flex gap-2">
+              <Button
+                size="icon"
+                className="rounded-full bg-white/90 text-gray-800 hover:bg-white"
+                onClick={handleQuickView}
+              >
+                <Eye className="h-4 w-4" />
+              </Button>
+              <Button
+                size="icon"
+                className={`rounded-full bg-white/90 text-gray-800 hover:bg-white ${
+                  isWishlisted ? "text-red-500" : ""
+                }`}
+                onClick={handleFavorite}
+                disabled={isWishlistLoading}
+                data-wishlist="true"
+              >
+                <Heart
+                  className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""} ${
+                    isWishlistLoading ? "animate-pulse" : ""
                   }`}
-                  onClick={handleFavorite}
-                  disabled={isWishlistLoading}
-                >
-                  <Heart
-                    className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""} ${
-                      isWishlistLoading ? "animate-pulse" : ""
-                    }`}
-                  />
-                </Button>
-              </div>
+                />
+              </Button>
             </div>
 
             {/* Corner Badge */}
@@ -222,7 +221,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
             )}
 
             {/* Featured/Popular Badges */}
-            <div className="absolute top-4 right-4 flex flex-col gap-1">
+            <div className="absolute top-4 right-16 flex flex-col gap-1">
               {product.is_featured && (
                 <Badge className="bg-yellow-500 text-xs font-bold text-black">
                   FEATURED
@@ -256,7 +255,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
             </div>
 
             {/* Product Title */}
-            <h3 className="line-clamp-2 text-xl font-light tracking-tight text-gray-900 transition-colors group-hover:text-gray-600">
+            <h3 className="line-clamp-2 text-xl font-light tracking-tight text-gray-900">
               {product.name}
             </h3>
 
@@ -317,7 +316,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
 
             {/* Action Button */}
             <Button
-              className="w-full rounded-none border-0 bg-gray-900 py-6 font-normal tracking-wide text-white transition-all duration-300 hover:bg-gray-800"
+              className="w-full rounded-none border-0 bg-gray-900 py-6 font-normal tracking-wide text-white hover:bg-gray-800"
               disabled={product.stock === 0}
               onClick={handleAddToCart}
               data-cart-action="true"

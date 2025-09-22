@@ -131,7 +131,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
 
   return (
     <Link href={detailsUrl} className="block">
-      <Card className="group hover: overflow-hidden border border-gray-200 bg-gradient-to-r from-white to-gray-50 transition-all duration-500 hover:border-gray-300 hover:from-gray-50 hover:to-white">
+      <Card className="overflow-hidden border border-gray-200 bg-gradient-to-r from-white to-gray-50">
         <CardContent className="p-0">
           <div className="flex flex-col sm:flex-row">
             {/* Image Section */}
@@ -141,13 +141,13 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                   src={productImage}
                   alt={product.thumbnail_alt_description || product.name}
                   fill
-                  className="object-cover transition-all duration-500 group-hover:scale-110"
+                  className="object-cover"
                   onError={e => {
                     e.currentTarget.src =
                       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop";
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/20 transition-all duration-500 group-hover:to-black/40" />
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/20" />
               </div>
 
               {/* Corner Accent */}
@@ -194,8 +194,8 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                 )}
               </div>
 
-              {/* Quick Actions */}
-              <div className="absolute right-4 bottom-4 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              {/* Always Visible Wishlist Button */}
+              <div className="absolute right-4 bottom-4 flex gap-2">
                 <Button
                   size="icon"
                   variant="ghost"
@@ -204,6 +204,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                   }`}
                   onClick={handleFavorite}
                   disabled={isWishlistLoading}
+                  data-wishlist="true"
                 >
                   <Heart
                     className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""} ${
@@ -235,7 +236,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                         </div>
                       )}
                     </div>
-                    <h3 className="line-clamp-2 text-2xl font-bold text-gray-900 transition-colors group-hover:text-gray-700">
+                    <h3 className="line-clamp-2 text-2xl font-bold text-gray-900">
                       {product.name}
                     </h3>
                   </div>
@@ -344,7 +345,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                 {/* Action Buttons */}
                 <div className="flex gap-3">
                   <Button
-                    className="group-hover: flex-1 py-3 font-semibold text-white transition-all duration-300"
+                    className="flex-1 py-3 font-semibold text-white hover:bg-blue-700"
                     disabled={product.stock === 0}
                     onClick={handleAddToCart}
                     data-cart-action="true"
@@ -355,7 +356,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
 
                   <Button
                     variant="outline"
-                    className="px-4 py-3 transition-colors hover:bg-gray-100"
+                    className="px-4 py-3 hover:bg-gray-100"
                     onClick={handleViewDetails}
                   >
                     View Details

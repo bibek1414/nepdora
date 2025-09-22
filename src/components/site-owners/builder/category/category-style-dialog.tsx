@@ -72,9 +72,7 @@ export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
                   <div className="relative w-full">
                     <Image
                       src={`/images/site-owners/categories/category${
-                        template.id === "grid-1"
-                          ? "3"
-                          : template.id.split("-")[1]
+                        template.id.split("-")[1]
                       }.png`}
                       alt={template.name}
                       width={400}
