@@ -7,6 +7,12 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Heart, Star, Eye } from "lucide-react";
 import { Product } from "@/types/owner-site/admin/product";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
+import {
+  useAddToWishlist,
+  useRemoveFromWishlist,
+  useWishlist,
+} from "@/hooks/customer/use-wishlist";
+import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 
 interface ProductCard2Props {
@@ -16,6 +22,7 @@ interface ProductCard2Props {
   showDescription?: boolean;
   showStock?: boolean;
   onClick?: () => void;
+  onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
 }
 
 export const ProductCard2: React.FC<ProductCard2Props> = ({
@@ -25,8 +32,13 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
   showDescription = true,
   showStock = true,
   onClick,
+  onWishlistToggle,
 }) => {
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { data: wishlistItems } = useWishlist();
+  const addToWishlistMutation = useAddToWishlist();
+  const removeFromWishlistMutation = useRemoveFromWishlist();
 
   // Use actual product data
   const productImage =
@@ -45,8 +57,15 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
 
   const discountedPrice = price.toFixed(2);
 
-  // Generate a rating (this could be replaced with actual rating from API)
-  const rating = 3.8 + (product.id % 12) * 0.1;
+  // Use real rating data from API
+  const rating = product.average_rating || 0;
+  const reviewsCount = product.reviews_count || 0;
+
+  // Check if product is in wishlist
+  const wishlistItem = wishlistItems?.find(
+    item => item.product.id === product.id
+  );
+  const isWishlisted = !!wishlistItem;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -63,10 +82,37 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
     window.location.href = detailsUrl;
   };
 
-  const handleFavorite = (e: React.MouseEvent) => {
+  const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toast.info(`${product.name} added to favorites!`);
+
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to your wishlist");
+      return;
+    }
+
+    try {
+      if (isWishlisted && wishlistItem) {
+        // Remove from wishlist
+        await removeFromWishlistMutation.mutateAsync(wishlistItem.id);
+
+        // Call the optional callback if provided
+        if (onWishlistToggle) {
+          onWishlistToggle(product.id, false);
+        }
+      } else {
+        // Add to wishlist
+        await addToWishlistMutation.mutateAsync(product.id);
+
+        // Call the optional callback if provided
+        if (onWishlistToggle) {
+          onWishlistToggle(product.id, true);
+        }
+      }
+    } catch (error) {
+      // Error handling is already done in the mutation hooks
+      console.error("Wishlist operation failed:", error);
+    }
   };
 
   const handleQuickView = (e: React.MouseEvent) => {
@@ -104,6 +150,10 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
         </div>
       );
 
+  // Check if wishlist operations are loading
+  const isWishlistLoading =
+    addToWishlistMutation.isPending || removeFromWishlistMutation.isPending;
+
   return (
     <CardWrapper>
       <Card className="group hover: overflow-hidden border-0 bg-white/80 backdrop-blur-sm transition-all duration-500">
@@ -135,10 +185,17 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
                 </Button>
                 <Button
                   size="icon"
-                  className="rounded-full bg-white/90 text-gray-800 hover:bg-white"
+                  className={`rounded-full bg-white/90 text-gray-800 hover:bg-white ${
+                    isWishlisted ? "text-red-500" : ""
+                  }`}
                   onClick={handleFavorite}
+                  disabled={isWishlistLoading}
                 >
-                  <Heart className="h-4 w-4" />
+                  <Heart
+                    className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""} ${
+                      isWishlistLoading ? "animate-pulse" : ""
+                    }`}
+                  />
                 </Button>
               </div>
             </div>
@@ -226,7 +283,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
               </div>
               <span className="text-sm text-gray-500">{rating.toFixed(1)}</span>
               <span className="text-xs text-gray-400">
-                ({Math.floor(rating * 15 + 5)} reviews)
+                ({reviewsCount} review{reviewsCount !== 1 ? "s" : ""})
               </span>
             </div>
 

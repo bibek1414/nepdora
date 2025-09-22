@@ -7,6 +7,12 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Star, Heart, ArrowRight, Clock } from "lucide-react";
 import { Product } from "@/types/owner-site/admin/product";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
+import {
+  useAddToWishlist,
+  useRemoveFromWishlist,
+  useWishlist,
+} from "@/hooks/customer/use-wishlist";
+import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 
 interface ProductCard3Props {
@@ -16,6 +22,7 @@ interface ProductCard3Props {
   showDescription?: boolean;
   showStock?: boolean;
   onClick?: () => void;
+  onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
 }
 
 export const ProductCard3: React.FC<ProductCard3Props> = ({
@@ -25,8 +32,13 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   showDescription = true,
   showStock = true,
   onClick,
+  onWishlistToggle,
 }) => {
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { data: wishlistItems } = useWishlist();
+  const addToWishlistMutation = useAddToWishlist();
+  const removeFromWishlistMutation = useRemoveFromWishlist();
 
   // Use actual product data
   const productImage =
@@ -45,8 +57,15 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
 
   const discountedPrice = price.toFixed(2);
 
-  // Generate a rating (this could be replaced with actual rating from API)
-  const rating = 4.2 + (product.id % 8) * 0.1;
+  // Use real rating data from API
+  const rating = product.average_rating || 0;
+  const reviewsCount = product.reviews_count || 0;
+
+  // Check if product is in wishlist
+  const wishlistItem = wishlistItems?.find(
+    item => item.product.id === product.id
+  );
+  const isWishlisted = !!wishlistItem;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -63,10 +82,37 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
     window.location.href = detailsUrl;
   };
 
-  const handleFavorite = (e: React.MouseEvent) => {
+  const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toast.info(`${product.name} added to favorites!`);
+
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to your wishlist");
+      return;
+    }
+
+    try {
+      if (isWishlisted && wishlistItem) {
+        // Remove from wishlist
+        await removeFromWishlistMutation.mutateAsync(wishlistItem.id);
+
+        // Call the optional callback if provided
+        if (onWishlistToggle) {
+          onWishlistToggle(product.id, false);
+        }
+      } else {
+        // Add to wishlist
+        await addToWishlistMutation.mutateAsync(product.id);
+
+        // Call the optional callback if provided
+        if (onWishlistToggle) {
+          onWishlistToggle(product.id, true);
+        }
+      }
+    } catch (error) {
+      // Error handling is already done in the mutation hooks
+      console.error("Wishlist operation failed:", error);
+    }
   };
 
   const getDetailsUrl = (): string => {
@@ -78,6 +124,10 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   };
 
   const detailsUrl = getDetailsUrl();
+
+  // Check if wishlist operations are loading
+  const isWishlistLoading =
+    addToWishlistMutation.isPending || removeFromWishlistMutation.isPending;
 
   return (
     <Link href={detailsUrl} className="block">
@@ -145,14 +195,21 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
               </div>
 
               {/* Quick Actions */}
-              <div className="absolute right-4 bottom-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <div className="absolute right-4 bottom-4 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="rounded-full bg-white/90 hover:bg-white"
+                  className={`rounded-full bg-white/90 hover:bg-white ${
+                    isWishlisted ? "text-red-500" : ""
+                  }`}
                   onClick={handleFavorite}
+                  disabled={isWishlistLoading}
                 >
-                  <Heart className="h-4 w-4" />
+                  <Heart
+                    className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""} ${
+                      isWishlistLoading ? "animate-pulse" : ""
+                    }`}
+                  />
                 </Button>
               </div>
             </div>
@@ -173,7 +230,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                         <div className="flex items-center gap-1 text-orange-600">
                           <Clock className="h-3 w-3" />
                           <span className="text-xs font-medium">
-                            page_sizeed Stock
+                            Limited Stock
                           </span>
                         </div>
                       )}
@@ -185,26 +242,39 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                 </div>
 
                 {/* Rating and Reviews */}
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-4 w-4 ${
-                          i < Math.round(rating)
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-200"
-                        }`}
-                      />
-                    ))}
+                {reviewsCount > 0 ? (
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-4 w-4 ${
+                            i < Math.round(rating)
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-200"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="font-medium text-gray-600">
+                      {rating.toFixed(1)}
+                    </span>
+                    <span className="text-sm text-gray-400">
+                      ({reviewsCount} review{reviewsCount !== 1 ? "s" : ""})
+                    </span>
                   </div>
-                  <span className="font-medium text-gray-600">
-                    {rating.toFixed(1)}
-                  </span>
-                  <span className="text-sm text-gray-400">
-                    ({Math.floor(rating * 25 + 8)} reviews)
-                  </span>
-                </div>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 text-gray-200" />
+                      ))}
+                    </div>
+                    <span className="text-sm text-gray-400">
+                      No reviews yet
+                    </span>
+                  </div>
+                )}
 
                 {/* Subcategory */}
                 {product.sub_category && (

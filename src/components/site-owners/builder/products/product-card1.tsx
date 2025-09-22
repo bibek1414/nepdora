@@ -7,6 +7,12 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Star, Heart } from "lucide-react";
 import { Product } from "@/types/owner-site/admin/product";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
+import {
+  useAddToWishlist,
+  useRemoveFromWishlist,
+  useWishlist,
+} from "@/hooks/customer/use-wishlist";
+import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 
 interface ProductCard1Props {
@@ -16,6 +22,7 @@ interface ProductCard1Props {
   showDescription?: boolean;
   showStock?: boolean;
   onClick?: () => void;
+  onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
 }
 
 export const ProductCard1: React.FC<ProductCard1Props> = ({
@@ -25,8 +32,13 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
   showDescription = true,
   showStock = true,
   onClick,
+  onWishlistToggle,
 }) => {
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { data: wishlistItems } = useWishlist();
+  const addToWishlistMutation = useAddToWishlist();
+  const removeFromWishlistMutation = useRemoveFromWishlist();
 
   // Use actual product data instead of mock data
   const productImage =
@@ -45,8 +57,15 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
 
   const discountedPrice = price.toFixed(2);
 
-  // Generate a rating based on product features (this could be replaced with actual rating from API)
-  const rating = 4.0 + (product.id % 10) * 0.1;
+  // Use real rating data from API
+  const rating = product.average_rating || 0;
+  const reviewsCount = product.reviews_count || 0;
+
+  // Check if product is in wishlist
+  const wishlistItem = wishlistItems?.find(
+    item => item.product.id === product.id
+  );
+  const isWishlisted = !!wishlistItem;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -63,10 +82,37 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
     window.location.href = detailsUrl;
   };
 
-  const handleFavorite = (e: React.MouseEvent) => {
+  const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toast.info(`${product.name} added to favorites!`);
+
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to your wishlist");
+      return;
+    }
+
+    try {
+      if (isWishlisted && wishlistItem) {
+        // Remove from wishlist
+        await removeFromWishlistMutation.mutateAsync(wishlistItem.id);
+
+        // Call the optional callback if provided
+        if (onWishlistToggle) {
+          onWishlistToggle(product.id, false);
+        }
+      } else {
+        // Add to wishlist
+        await addToWishlistMutation.mutateAsync(product.id);
+
+        // Call the optional callback if provided
+        if (onWishlistToggle) {
+          onWishlistToggle(product.id, true);
+        }
+      }
+    } catch (error) {
+      // Error handling is already done in the mutation hooks
+      console.error("Wishlist operation failed:", error);
+    }
   };
 
   const getDetailsUrl = (): string => {
@@ -98,6 +144,10 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
         </div>
       );
 
+  // Check if wishlist operations are loading
+  const isWishlistLoading =
+    addToWishlistMutation.isPending || removeFromWishlistMutation.isPending;
+
   return (
     <CardWrapper>
       <Card className="group hover: overflow-hidden border-0 transition-all duration-500 hover:-translate-y-2">
@@ -120,10 +170,19 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-8 w-8 bg-white/90 hover:bg-white"
+                className={`h-8 w-8 transition-colors ${
+                  isWishlisted
+                    ? "bg-red-50 text-red-500 hover:bg-red-100"
+                    : "bg-white/90 text-gray-600 hover:bg-white"
+                }`}
                 onClick={handleFavorite}
+                disabled={isWishlistLoading}
               >
-                <Heart className="h-4 w-4" />
+                <Heart
+                  className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""} ${
+                    isWishlistLoading ? "animate-pulse" : ""
+                  }`}
+                />
               </Button>
             </div>
 
@@ -168,24 +227,44 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
               {product.name}
             </h3>
 
-            {/* Rating */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-4 w-4 ${
-                      i < Math.round(rating)
-                        ? "fill-yellow-500 text-yellow-500"
-                        : "text-muted-foreground/30"
-                    }`}
-                  />
-                ))}
+            {/* Rating - Only show if there are reviews */}
+            {reviewsCount > 0 && (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 ${
+                        i < Math.round(rating)
+                          ? "fill-yellow-500 text-yellow-500"
+                          : "text-muted-foreground/30"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-muted-foreground text-sm font-medium">
+                  {rating.toFixed(1)} ({reviewsCount} review
+                  {reviewsCount !== 1 ? "s" : ""})
+                </span>
               </div>
-              <span className="text-muted-foreground text-sm font-medium">
-                {rating.toFixed(1)} ({Math.floor(rating * 20 + 10)} reviews)
-              </span>
-            </div>
+            )}
+
+            {/* No reviews state */}
+            {reviewsCount === 0 && (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="text-muted-foreground/30 h-4 w-4"
+                    />
+                  ))}
+                </div>
+                <span className="text-muted-foreground text-sm font-medium">
+                  No reviews yet
+                </span>
+              </div>
+            )}
 
             {/* Description */}
             {showDescription && product.description && (
@@ -212,7 +291,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
 
             {/* Action Button */}
             <Button
-              className="text-primary border-primary/20 hover:bg-primary disabled:cursor-not-allowe flex h-10 w-10 transform items-center justify-center rounded-full border bg-white transition-all duration-300 hover:scale-110 hover:text-white disabled:opacity-50"
+              className="text-primary border-primary/20 hover:bg-primary flex h-10 w-10 transform items-center justify-center rounded-full border bg-white transition-all duration-300 hover:scale-110 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               disabled={product.stock === 0}
               onClick={handleAddToCart}
               data-cart-action="true"

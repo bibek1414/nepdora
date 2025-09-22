@@ -64,6 +64,10 @@ export const ProductSchema = z.object({
   sub_category: SubCategoryReferenceSchema.nullable(),
   is_popular: z.boolean().optional(),
   is_featured: z.boolean().optional(),
+  is_wishlist: z.boolean().optional(),
+  // New fields from API response
+  average_rating: z.number().min(0).max(5).optional(),
+  reviews_count: z.number().min(0).optional(),
   created_at: z.string(),
   updated_at: z.string(),
 });

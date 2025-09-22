@@ -21,6 +21,7 @@ import {
   Truck,
   PackageCheck,
   Home,
+  Heart,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
+import {
+  useAddToWishlist,
+  useRemoveFromWishlist,
+  useWishlist,
+} from "@/hooks/customer/use-wishlist";
+import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 
@@ -48,6 +55,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const { addToCart } = useCart();
   const [quantity, setQuantity] = React.useState(1);
 
+  // Wishlist hooks
+  const { isAuthenticated } = useAuth();
+  const { data: wishlistItems } = useWishlist();
+  const addToWishlistMutation = useAddToWishlist();
+  const removeFromWishlistMutation = useRemoveFromWishlist();
+
   // Default fallback image
   const defaultImage =
     "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop";
@@ -58,6 +71,40 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
       setSelectedImage(product.thumbnail_image || defaultImage);
     }
   }, [product, selectedImage]);
+
+  // Check if product is in wishlist
+  const wishlistItem = wishlistItems?.find(
+    item => item.product.id === product?.id
+  );
+  const isWishlisted = !!wishlistItem;
+
+  // Check if wishlist operations are loading
+  const isWishlistLoading =
+    addToWishlistMutation.isPending || removeFromWishlistMutation.isPending;
+
+  const handleFavorite = async () => {
+    if (!product) return;
+
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to your wishlist");
+      return;
+    }
+
+    try {
+      if (isWishlisted && wishlistItem) {
+        // Remove from wishlist
+        await removeFromWishlistMutation.mutateAsync(wishlistItem.id);
+        toast.success(`${product.name} removed from wishlist!`);
+      } else {
+        // Add to wishlist
+        await addToWishlistMutation.mutateAsync(product.id);
+        toast.success(`${product.name} added to wishlist!`);
+      }
+    } catch (error) {
+      // Error handling is already done in the mutation hooks
+      console.error("Wishlist operation failed:", error);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -150,8 +197,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
   const discountedPrice = price.toFixed(2);
 
-  // Generate a rating (this could be replaced with actual rating from API)
-  const rating = 4.5;
+  // Use real rating data from API
+  const rating = product.average_rating || 0;
+  const reviewsCount = product.reviews_count || 0;
 
   // Create image gallery from product data - filter out null/undefined values
   const productImages = [
@@ -267,29 +315,81 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               {product.is_popular && (
                 <Badge className="bg-red-500">Popular</Badge>
               )}
+              {discountPercentage > 0 && (
+                <Badge variant="destructive" className="text-xs font-bold">
+                  -{discountPercentage}%
+                </Badge>
+              )}
+              {product.stock === 0 && (
+                <Badge variant="secondary" className="text-xs">
+                  Sold Out
+                </Badge>
+              )}
+              {product.stock > 0 && product.stock <= 5 && (
+                <Badge className="text-xs">Only {product.stock} left</Badge>
+              )}
             </div>
 
-            <h1 className="text-foreground mt-2 text-3xl font-bold md:text-4xl">
-              {product.name}
-            </h1>
+            <div className="flex items-start justify-between">
+              <h1 className="text-foreground mt-2 text-3xl font-bold md:text-4xl">
+                {product.name}
+              </h1>
 
-            <div className="mt-2 flex items-center gap-2">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-5 w-5 ${
-                      i < Math.round(rating)
-                        ? "fill-yellow-500 text-yellow-500"
-                        : "text-muted-foreground"
-                    }`}
-                  />
-                ))}
+              {/* Wishlist Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`mt-2 h-10 w-10 transition-colors ${
+                  isWishlisted
+                    ? "bg-red-50 text-red-500 hover:bg-red-100"
+                    : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+                }`}
+                onClick={handleFavorite}
+                disabled={isWishlistLoading}
+              >
+                <Heart
+                  className={`h-5 w-5 ${isWishlisted ? "fill-current" : ""} ${
+                    isWishlistLoading ? "animate-pulse" : ""
+                  }`}
+                />
+              </Button>
+            </div>
+
+            {/* Rating Section - Show actual rating data */}
+            {reviewsCount > 0 ? (
+              <div className="mt-2 flex items-center gap-2">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-5 w-5 ${
+                        i < Math.round(rating)
+                          ? "fill-yellow-500 text-yellow-500"
+                          : "text-muted-foreground/30"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-muted-foreground text-sm font-medium">
+                  {rating.toFixed(1)} ({reviewsCount} review
+                  {reviewsCount !== 1 ? "s" : ""})
+                </span>
               </div>
-              <span className="text-muted-foreground text-sm">
-                {rating} (42 reviews)
-              </span>
-            </div>
+            ) : (
+              <div className="mt-2 flex items-center gap-2">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="text-muted-foreground/30 h-5 w-5"
+                    />
+                  ))}
+                </div>
+                <span className="text-muted-foreground text-sm font-medium">
+                  No reviews yet
+                </span>
+              </div>
+            )}
 
             <div className="my-6">
               <span className="text-primary text-4xl font-extrabold">
@@ -355,14 +455,16 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 </div>
               </div>
 
-              <Button
-                size="lg"
-                className="w-full"
-                disabled={product.stock === 0}
-                onClick={handleAddToCart}
-              >
-                {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
-              </Button>
+              <div className="flex gap-3">
+                <Button
+                  size="lg"
+                  className="flex-1"
+                  disabled={product.stock === 0}
+                  onClick={handleAddToCart}
+                >
+                  {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                </Button>
+              </div>
             </div>
 
             <div className="mt-8 grid grid-cols-1 gap-4 text-center text-sm sm:grid-cols-3">
@@ -440,6 +542,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                       </div>
                     )}
                     <div className="flex justify-between">
+                      <span className="font-medium">Average Rating:</span>
+                      <span className="text-muted-foreground">
+                        {rating > 0
+                          ? `${rating.toFixed(1)}/5`
+                          : "No ratings yet"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Total Reviews:</span>
+                      <span className="text-muted-foreground">
+                        {reviewsCount}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
                       <span className="font-medium">Created:</span>
                       <span className="text-muted-foreground">
                         {new Date(product.created_at).toLocaleDateString()}
@@ -455,54 +571,76 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="reviews">
-                <AccordionTrigger>Customer Reviews</AccordionTrigger>
+                <AccordionTrigger>
+                  Customer Reviews ({reviewsCount})
+                </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-4">
-                    {/* Mock reviews since API doesn't provide them yet */}
-                    <div className="border-border border-b pb-3 last:border-b-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-foreground font-semibold">
-                          John Doe
-                        </span>
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${
-                                i < 5
-                                  ? "fill-yellow-500 text-yellow-500"
-                                  : "text-muted-foreground"
-                              }`}
-                            />
-                          ))}
+                    {reviewsCount > 0 ? (
+                      <>
+                        {/* Overall Rating Summary */}
+                        <div className="border-border border-b pb-4">
+                          <div className="flex items-center gap-4">
+                            <div className="text-center">
+                              <div className="text-primary text-3xl font-bold">
+                                {rating.toFixed(1)}
+                              </div>
+                              <div className="flex items-center justify-center">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`h-4 w-4 ${
+                                      i < Math.round(rating)
+                                        ? "fill-yellow-500 text-yellow-500"
+                                        : "text-muted-foreground/30"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                              <div className="text-muted-foreground text-sm">
+                                Based on {reviewsCount} review
+                                {reviewsCount !== 1 ? "s" : ""}
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <p className="text-muted-foreground mt-1 text-sm">
-                        Excellent product! Great quality and fast delivery.
-                      </p>
-                    </div>
-                    <div className="border-border border-b pb-3 last:border-b-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-foreground font-semibold">
-                          Jane Smith
-                        </span>
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${
-                                i < 4
-                                  ? "fill-yellow-500 text-yellow-500"
-                                  : "text-muted-foreground"
-                              }`}
-                            />
-                          ))}
+
+                        {/* Placeholder reviews - Replace with actual review data when available */}
+                        <div className="space-y-3">
+                          <div className="border-border border-b pb-3 last:border-b-0">
+                            <div className="flex items-center justify-between">
+                              <span className="text-foreground font-semibold">
+                                Customer Review
+                              </span>
+                              <div className="flex items-center">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`h-4 w-4 ${
+                                      i < Math.round(rating)
+                                        ? "fill-yellow-500 text-yellow-500"
+                                        : "text-muted-foreground/30"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                            <p className="text-muted-foreground mt-1 text-sm">
+                              Reviews will be displayed here when available from
+                              your API.
+                            </p>
+                          </div>
                         </div>
+                      </>
+                    ) : (
+                      <div className="text-muted-foreground py-8 text-center">
+                        <Star className="text-muted-foreground/30 mx-auto mb-2 h-12 w-12" />
+                        <p>No reviews yet</p>
+                        <p className="text-sm">
+                          Be the first to review this product!
+                        </p>
                       </div>
-                      <p className="text-muted-foreground mt-1 text-sm">
-                        Very satisfied with this purchase. Highly recommended!
-                      </p>
-                    </div>
+                    )}
                   </div>
                 </AccordionContent>
               </AccordionItem>
