@@ -23,7 +23,7 @@ export const reviewsApi = {
       });
     }
 
-    const url = `${API_BASE_URL}/api/product-reviews/?${params.toString()}`;
+    const url = `${API_BASE_URL}/api/product-review/?${params.toString()}`;
 
     const response = await fetch(url, {
       method: "GET",
@@ -51,7 +51,7 @@ export const reviewsApi = {
       });
     }
 
-    const url = `${API_BASE_URL}/api/product-reviews/?${params.toString()}`;
+    const url = `${API_BASE_URL}/api/product-review/?${params.toString()}`;
 
     const response = await fetch(url, {
       method: "GET",
@@ -66,7 +66,7 @@ export const reviewsApi = {
   getReview: async (reviewId: number): Promise<Review> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(
-      `${API_BASE_URL}/api/product-reviews/${reviewId}/`,
+      `${API_BASE_URL}/api/product-review/${reviewId}/`,
       {
         method: "GET",
         headers: createHeadersCustomer(),
@@ -91,7 +91,7 @@ export const reviewsApi = {
       );
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/product-reviews/`, {
+    const response = await fetch(`${API_BASE_URL}/api/product-review/`, {
       method: "POST",
       headers: createHeadersCustomer(),
       body: JSON.stringify(reviewData),
@@ -109,7 +109,7 @@ export const reviewsApi = {
     const API_BASE_URL = getApiBaseUrl();
 
     const response = await fetch(
-      `${API_BASE_URL}/api/product-reviews/${reviewId}/`,
+      `${API_BASE_URL}/api/product-review/${reviewId}/`,
       {
         method: "PATCH",
         headers: createHeadersCustomer(),
@@ -126,7 +126,7 @@ export const reviewsApi = {
     const API_BASE_URL = getApiBaseUrl();
 
     const response = await fetch(
-      `${API_BASE_URL}/api/product-reviews/${reviewId}/`,
+      `${API_BASE_URL}/api/product-review/${reviewId}/`,
       {
         method: "DELETE",
         headers: createHeadersCustomer(),

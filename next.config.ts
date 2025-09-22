@@ -5,19 +5,19 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "*.nepdora.baliyoventures.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.nepdora.com",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
       },
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
-      },
-      {
-        protocol: "https",
-        hostname: "bibek.nepdora.baliyoventures.com",
-      },
-      {
-        protocol: "https",
-        hostname: "nepdora.baliyoventures.com",
       },
       {
         protocol: "https",
