@@ -10,7 +10,9 @@ import Image from "next/image";
 interface FAQStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (style: "accordion" | "plus-minus" | "card-grid") => void;
+  onStyleSelect: (
+    style: "accordion" | "plus-minus" | "card-grid" | "card-grid-4"
+  ) => void;
 }
 
 export const FAQStylesDialog: React.FC<FAQStylesDialogProps> = ({
@@ -19,7 +21,7 @@ export const FAQStylesDialog: React.FC<FAQStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "accordion" | "plus-minus" | "card-grid" | null
+    "accordion" | "plus-minus" | "card-grid" | "card-grid-4" | null
   >(null);
 
   const templates = [
@@ -35,10 +37,14 @@ export const FAQStylesDialog: React.FC<FAQStylesDialogProps> = ({
       id: "card-grid" as const,
       name: "Card Grid Style",
     },
+    {
+      id: "card-grid-4" as const,
+      name: "Card Grid Style 4",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "accordion" | "plus-minus" | "card-grid";
+    id: "accordion" | "plus-minus" | "card-grid" | "card-grid-4";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {

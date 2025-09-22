@@ -150,33 +150,33 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
 
   return (
     <CardWrapper>
-      <Card className="group hover: overflow-hidden border-0 transition-all duration-500 hover:-translate-y-2">
+      <Card className="overflow-hidden border-0">
         <CardContent className="p-0">
           {/* Header with gradient */}
-
           <div className="relative overflow-hidden">
             <div className="relative aspect-square">
               <Image
                 src={productImage}
                 alt={product.thumbnail_alt_description || product.name}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
 
-            {/* Floating Action Buttons */}
-            <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            {/* Always Visible Wishlist Button */}
+            <div className="absolute top-3 right-3 flex flex-col gap-2">
               <Button
                 size="icon"
                 variant="ghost"
-                className={`h-8 w-8 transition-colors ${
+                className={`h-8 w-8 ${
                   isWishlisted
                     ? "bg-red-50 text-red-500 hover:bg-red-100"
                     : "bg-white/90 text-gray-600 hover:bg-white"
                 }`}
                 onClick={handleFavorite}
                 disabled={isWishlistLoading}
+                data-wishlist="true"
               >
                 <Heart
                   className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""} ${
@@ -223,7 +223,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
             )}
 
             {/* Product Title */}
-            <h3 className="line-clamp-2 text-lg font-bold text-gray-800 transition-colors group-hover:text-gray-900">
+            <h3 className="line-clamp-2 text-lg font-bold text-gray-800">
               {product.name}
             </h3>
 
@@ -291,7 +291,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
 
             {/* Action Button */}
             <Button
-              className="text-primary border-primary/20 hover:bg-primary flex h-10 w-10 transform items-center justify-center rounded-full border bg-white transition-all duration-300 hover:scale-110 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="text-primary border-primary/20 hover:bg-primary flex h-10 w-10 items-center justify-center rounded-full border bg-white hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               disabled={product.stock === 0}
               onClick={handleAddToCart}
               data-cart-action="true"

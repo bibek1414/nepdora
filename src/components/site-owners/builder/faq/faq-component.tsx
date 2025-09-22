@@ -8,6 +8,7 @@ import {
 import { FAQCard1 } from "./faq-card-1";
 import { FAQCard2 } from "./faq-card-2";
 import { FAQCard3 } from "./faq-card-3";
+import { FAQCard4 } from "./faq-card-4";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -135,6 +136,8 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     const cardProps = { faqs };
 
     switch (style) {
+      case "card-grid-4":
+        return <FAQCard4 {...cardProps} />;
       case "plus-minus":
         return <FAQCard2 {...cardProps} />;
       case "card-grid":
