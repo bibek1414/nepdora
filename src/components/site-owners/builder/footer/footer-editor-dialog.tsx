@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +20,11 @@ import {
   Trash2,
   Edit3,
   Loader2,
+  Building,
+  Phone,
+  Mail,
+  Link,
+  Share2,
 } from "lucide-react";
 import {
   FooterData,
@@ -32,7 +38,8 @@ interface FooterEditorDialogProps {
   onOpenChange: (open: boolean) => void;
   footerData: FooterData;
   onSave: (data: FooterData) => void;
-  isLoading?: boolean; // Add this prop
+  isLoading?: boolean;
+  footerStyle?: string; // Add this to determine which style is being used
 }
 
 const socialPlatforms = [
@@ -47,9 +54,16 @@ export function FooterEditorDialog({
   onOpenChange,
   footerData,
   onSave,
-  isLoading = false, // Default to false
+  isLoading = false,
+  footerStyle,
 }: FooterEditorDialogProps) {
   const [editingData, setEditingData] = useState<FooterData>(footerData);
+
+  // Check if newsletter should be shown (not for FooterStyle5)
+  const showNewsletter = footerStyle !== "FooterStyle5";
+
+  // Determine grid columns based on whether newsletter is shown
+  const tabsGridCols = showNewsletter ? "grid-cols-5" : "grid-cols-4";
 
   // Update editing data when footerData prop changes
   useEffect(() => {
@@ -207,7 +221,7 @@ export function FooterEditorDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-4xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Edit3 className="h-5 w-5" />
@@ -215,290 +229,361 @@ export function FooterEditorDialog({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6 p-4">
-          {/* Basic Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Company Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Company Name
-                </label>
-                <Input
-                  value={editingData.companyName}
-                  onChange={e => updateBasicInfo("companyName", e.target.value)}
-                  placeholder="Your Company"
-                  disabled={isLoading}
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Description
-                </label>
-                <Textarea
-                  value={editingData.description}
-                  onChange={e => updateBasicInfo("description", e.target.value)}
-                  placeholder="Company description"
-                  rows={3}
-                  disabled={isLoading}
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Copyright Text
-                </label>
-                <Input
-                  value={editingData.copyright}
-                  onChange={e => updateBasicInfo("copyright", e.target.value)}
-                  placeholder="© 2025 Your Company. All rights reserved."
-                  disabled={isLoading}
-                />
-              </div>
-            </CardContent>
-          </Card>
+        <Tabs defaultValue="company" className="w-full">
+          <TabsList className={`grid w-full ${tabsGridCols}`}>
+            <TabsTrigger value="company" className="flex items-center gap-1">
+              <Building className="h-4 w-4" />
+              Company
+            </TabsTrigger>
+            <TabsTrigger value="contact" className="flex items-center gap-1">
+              <Phone className="h-4 w-4" />
+              Contact
+            </TabsTrigger>
+            {showNewsletter && (
+              <TabsTrigger
+                value="newsletter"
+                className="flex items-center gap-1"
+              >
+                <Mail className="h-4 w-4" />
+                Newsletter
+              </TabsTrigger>
+            )}
+            <TabsTrigger value="sections" className="flex items-center gap-1">
+              <Link className="h-4 w-4" />
+              Sections
+            </TabsTrigger>
+            <TabsTrigger value="social" className="flex items-center gap-1">
+              <Share2 className="h-4 w-4" />
+              Social
+            </TabsTrigger>
+          </TabsList>
 
-          {/* Contact Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Contact Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="mb-2 block text-sm font-medium">Email</label>
-                <Input
-                  value={editingData.contactInfo.email || ""}
-                  onChange={e => updateContactInfo("email", e.target.value)}
-                  placeholder="hello@company.com"
-                  type="email"
-                  disabled={isLoading}
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium">Phone</label>
-                <Input
-                  value={editingData.contactInfo.phone || ""}
-                  onChange={e => updateContactInfo("phone", e.target.value)}
-                  placeholder="+977 1234567890"
-                  disabled={isLoading}
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Address
-                </label>
-                <Input
-                  value={editingData.contactInfo.address || ""}
-                  onChange={e => updateContactInfo("address", e.target.value)}
-                  placeholder="Sankhapur, Kathmandu, Nepal"
-                  disabled={isLoading}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Newsletter Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                Newsletter Settings
-                <Badge
-                  variant={
-                    editingData.newsletter.enabled ? "default" : "secondary"
-                  }
-                >
-                  {editingData.newsletter.enabled ? "Enabled" : "Disabled"}
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={editingData.newsletter.enabled}
-                  onChange={e => updateNewsletter("enabled", e.target.checked)}
-                  className="border-border rounded"
-                  disabled={isLoading}
-                />
-                <label className="text-sm">
-                  Enable newsletter subscription
-                </label>
-              </div>
-              {editingData.newsletter.enabled && (
-                <>
+          <div className="mt-4 h-[60vh] overflow-y-auto">
+            {/* Company Information Tab */}
+            <TabsContent value="company" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Company Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
                   <div>
                     <label className="mb-2 block text-sm font-medium">
-                      Newsletter Title
+                      Company Name
                     </label>
                     <Input
-                      value={editingData.newsletter.title}
-                      onChange={e => updateNewsletter("title", e.target.value)}
-                      placeholder="Stay Updated"
+                      value={editingData.companyName}
+                      onChange={e =>
+                        updateBasicInfo("companyName", e.target.value)
+                      }
+                      placeholder="Your Company"
                       disabled={isLoading}
                     />
                   </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium">
-                      Newsletter Description
+                      Description
                     </label>
                     <Textarea
-                      value={editingData.newsletter.description}
+                      value={editingData.description}
                       onChange={e =>
-                        updateNewsletter("description", e.target.value)
+                        updateBasicInfo("description", e.target.value)
                       }
-                      placeholder="Subscribe to our newsletter for the latest updates and news."
-                      rows={2}
+                      placeholder="Company description"
+                      rows={4}
                       disabled={isLoading}
                     />
                   </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Footer Sections */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between text-lg">
-                Footer Sections
-                <Button onClick={addSection} size="sm" disabled={isLoading}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Section
-                </Button>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {editingData.sections.map(section => (
-                <Card key={section.id} className="p-4">
-                  <div className="mb-3 flex items-center justify-between">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium">
+                      Copyright Text
+                    </label>
                     <Input
-                      value={section.title}
+                      value={editingData.copyright}
                       onChange={e =>
-                        updateSection(section.id, "title", e.target.value)
+                        updateBasicInfo("copyright", e.target.value)
                       }
-                      className="font-medium"
-                      placeholder="Section Title"
+                      placeholder="© 2025 Your Company. All rights reserved."
                       disabled={isLoading}
                     />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeSection(section.id)}
-                      className="text-destructive hover:text-destructive"
-                      disabled={isLoading}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
                   </div>
-                  <div className="space-y-2">
-                    {section.links.map(link => (
-                      <div key={link.id} className="flex gap-2">
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Contact Information Tab */}
+            <TabsContent value="contact" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Contact Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium">
+                      Email
+                    </label>
+                    <Input
+                      value={editingData.contactInfo.email || ""}
+                      onChange={e => updateContactInfo("email", e.target.value)}
+                      placeholder="hello@company.com"
+                      type="email"
+                      disabled={isLoading}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium">
+                      Phone
+                    </label>
+                    <Input
+                      value={editingData.contactInfo.phone || ""}
+                      onChange={e => updateContactInfo("phone", e.target.value)}
+                      placeholder="+977 1234567890"
+                      disabled={isLoading}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium">
+                      Address
+                    </label>
+                    <Textarea
+                      value={editingData.contactInfo.address || ""}
+                      onChange={e =>
+                        updateContactInfo("address", e.target.value)
+                      }
+                      placeholder="Sankhapur, Kathmandu, Nepal"
+                      rows={3}
+                      disabled={isLoading}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Newsletter Tab - Only show if not FooterStyle5 */}
+            {showNewsletter && (
+              <TabsContent value="newsletter" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      Newsletter Settings
+                      <Badge
+                        variant={
+                          editingData.newsletter.enabled
+                            ? "default"
+                            : "secondary"
+                        }
+                      >
+                        {editingData.newsletter.enabled
+                          ? "Enabled"
+                          : "Disabled"}
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={editingData.newsletter.enabled}
+                        onChange={e =>
+                          updateNewsletter("enabled", e.target.checked)
+                        }
+                        className="border-border rounded"
+                        disabled={isLoading}
+                      />
+                      <label className="text-sm">
+                        Enable newsletter subscription
+                      </label>
+                    </div>
+                    {editingData.newsletter.enabled && (
+                      <>
+                        <div>
+                          <label className="mb-2 block text-sm font-medium">
+                            Newsletter Title
+                          </label>
+                          <Input
+                            value={editingData.newsletter.title}
+                            onChange={e =>
+                              updateNewsletter("title", e.target.value)
+                            }
+                            placeholder="Stay Updated"
+                            disabled={isLoading}
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-sm font-medium">
+                            Newsletter Description
+                          </label>
+                          <Textarea
+                            value={editingData.newsletter.description}
+                            onChange={e =>
+                              updateNewsletter("description", e.target.value)
+                            }
+                            placeholder="Subscribe to our newsletter for the latest updates and news."
+                            rows={3}
+                            disabled={isLoading}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            )}
+
+            {/* Footer Sections Tab */}
+            <TabsContent value="sections" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between text-lg">
+                    Footer Sections
+                    <Button onClick={addSection} size="sm" disabled={isLoading}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Section
+                    </Button>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {editingData.sections.map(section => (
+                    <Card key={section.id} className="p-4">
+                      <div className="mb-3 flex items-center justify-between">
                         <Input
-                          value={link.text}
+                          value={section.title}
                           onChange={e =>
-                            updateLink(
-                              section.id,
-                              link.id,
-                              "text",
-                              e.target.value
-                            )
+                            updateSection(section.id, "title", e.target.value)
                           }
-                          placeholder="Link Text"
-                          className="flex-1"
-                          disabled={isLoading}
-                        />
-                        <Input
-                          value={link.href || ""}
-                          onChange={e =>
-                            updateLink(
-                              section.id,
-                              link.id,
-                              "href",
-                              e.target.value
-                            )
-                          }
-                          placeholder="URL"
-                          className="flex-1"
+                          className="font-medium"
+                          placeholder="Section Title"
                           disabled={isLoading}
                         />
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => removeLink(section.id, link.id)}
+                          onClick={() => removeSection(section.id)}
                           className="text-destructive hover:text-destructive"
                           disabled={isLoading}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
-                    ))}
+                      <div className="space-y-2">
+                        {section.links.map(link => (
+                          <div key={link.id} className="flex gap-2">
+                            <Input
+                              value={link.text}
+                              onChange={e =>
+                                updateLink(
+                                  section.id,
+                                  link.id,
+                                  "text",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Link Text"
+                              className="flex-1"
+                              disabled={isLoading}
+                            />
+                            <Input
+                              value={link.href || ""}
+                              onChange={e =>
+                                updateLink(
+                                  section.id,
+                                  link.id,
+                                  "href",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="URL"
+                              className="flex-1"
+                              disabled={isLoading}
+                            />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeLink(section.id, link.id)}
+                              className="text-destructive hover:text-destructive"
+                              disabled={isLoading}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => addLink(section.id)}
+                          className="mt-2"
+                          disabled={isLoading}
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          Add Link
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Social Links Tab */}
+            <TabsContent value="social" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between text-lg">
+                    Social Links
                     <Button
-                      variant="outline"
+                      onClick={addSocialLink}
                       size="sm"
-                      onClick={() => addLink(section.id)}
-                      className="mt-2"
                       disabled={isLoading}
                     >
                       <Plus className="mr-2 h-4 w-4" />
-                      Add Link
+                      Add Social Link
                     </Button>
-                  </div>
-                </Card>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Social Links */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between text-lg">
-                Social Links
-                <Button onClick={addSocialLink} size="sm" disabled={isLoading}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Social Link
-                </Button>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {editingData.socialLinks.map(social => (
-                <div key={social.id} className="flex items-center gap-2">
-                  <select
-                    value={social.platform}
-                    onChange={e =>
-                      updateSocialLink(social.id, "platform", e.target.value)
-                    }
-                    className="border-border bg-background rounded-md border px-3 py-2"
-                    disabled={isLoading}
-                  >
-                    {socialPlatforms.map(platform => (
-                      <option key={platform.name} value={platform.name}>
-                        {platform.name}
-                      </option>
-                    ))}
-                  </select>
-                  <Input
-                    value={social.href || ""}
-                    onChange={e =>
-                      updateSocialLink(social.id, "href", e.target.value)
-                    }
-                    placeholder="Social media URL"
-                    className="flex-1"
-                    disabled={isLoading}
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeSocialLink(social.id)}
-                    className="text-destructive hover:text-destructive"
-                    disabled={isLoading}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {editingData.socialLinks.map(social => (
+                    <div key={social.id} className="flex items-center gap-2">
+                      <select
+                        value={social.platform}
+                        onChange={e =>
+                          updateSocialLink(
+                            social.id,
+                            "platform",
+                            e.target.value
+                          )
+                        }
+                        className="border-border bg-background rounded-md border px-3 py-2"
+                        disabled={isLoading}
+                      >
+                        {socialPlatforms.map(platform => (
+                          <option key={platform.name} value={platform.name}>
+                            {platform.name}
+                          </option>
+                        ))}
+                      </select>
+                      <Input
+                        value={social.href || ""}
+                        onChange={e =>
+                          updateSocialLink(social.id, "href", e.target.value)
+                        }
+                        placeholder="Social media URL"
+                        className="flex-1"
+                        disabled={isLoading}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeSocialLink(social.id)}
+                        className="text-destructive hover:text-destructive"
+                        disabled={isLoading}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </div>
 
           {/* Action Buttons */}
           <div className="flex gap-2 border-t pt-4">
@@ -518,7 +603,7 @@ export function FooterEditorDialog({
               Cancel
             </Button>
           </div>
-        </div>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );

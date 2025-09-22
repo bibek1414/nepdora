@@ -21,9 +21,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, Play } from "lucide-react";
+import { AlertCircle, Trash2, Play, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
+import { YouTubeFormTrigger } from "../../admin/youtube/youtube-form";
 
 interface YouTubeComponentProps {
   component: YouTubeComponentData;
@@ -150,50 +151,57 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
       <div className="group relative">
         {/* Delete Control */}
         <div className="absolute top-4 right-4 z-20 opacity-0 transition-opacity group-hover:opacity-100">
-          <AlertDialog
-            open={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-          >
-            <AlertDialogTrigger asChild>
-              <Button
-                onClick={handleDeleteClick}
-                variant="destructive"
-                size="sm"
-                className="h-8 px-3"
-                disabled={deleteYouTubeComponent.isPending}
-              >
-                <Trash2 className="mr-1 h-4 w-4" />
-                {deleteYouTubeComponent.isPending ? "Deleting..." : "Delete"}
+          <div className="flex items-center gap-2">
+            <YouTubeFormTrigger mode="create">
+              <Button className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900">
+                <Plus className="mr-2 h-4 w-4" />
+                Add YouTube Video
               </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete YouTube Component
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to delete this YouTube component? This
-                  action cannot be undone and will permanently remove the
-                  component from your page.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleConfirmDelete}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            </YouTubeFormTrigger>
+            <AlertDialog
+              open={isDeleteDialogOpen}
+              onOpenChange={setIsDeleteDialogOpen}
+            >
+              <AlertDialogTrigger asChild>
+                <Button
+                  onClick={handleDeleteClick}
+                  variant="destructive"
+                  size="sm"
+                  className="h-8 px-3"
                   disabled={deleteYouTubeComponent.isPending}
                 >
-                  {deleteYouTubeComponent.isPending
-                    ? "Deleting..."
-                    : "Delete Component"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                  <Trash2 className="mr-1 h-4 w-4" />
+                  {deleteYouTubeComponent.isPending ? "Deleting..." : "Delete"}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center gap-2">
+                    <Trash2 className="text-destructive h-5 w-5" />
+                    Delete YouTube Component
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete this YouTube component? This
+                    action cannot be undone and will permanently remove the
+                    component from your page.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleConfirmDelete}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    disabled={deleteYouTubeComponent.isPending}
+                  >
+                    {deleteYouTubeComponent.isPending
+                      ? "Deleting..."
+                      : "Delete Component"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
-
         {/* YouTube Preview */}
         <div className="py-8">
           <div className="container mx-auto px-4">
