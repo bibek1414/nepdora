@@ -107,14 +107,14 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
 
   return (
     <div className="bg-background">
-      <div className="container mx-auto px-4 py-8 md:py-16">
+      <div className="container mx-auto max-w-7xl px-4 py-8 md:py-16">
         {/* Breadcrumb Navigation */}
         <Breadcrumb className="mb-8">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={`/preview?site=${siteUser}&page=home`}
+                  href={`/preview/${siteUser}/home`}
                   className="flex items-center gap-2"
                 >
                   <Home className="h-4 w-4" />
@@ -125,7 +125,7 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/preview?site=${siteUser}&page=blogs`}>Blogs</Link>
+                <Link href={`/preview/${siteUser}/blogs`}>Blogs</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

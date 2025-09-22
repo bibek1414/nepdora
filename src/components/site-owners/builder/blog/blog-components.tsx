@@ -21,7 +21,6 @@ import {
 import { AlertCircle, Trash2, Rss } from "lucide-react";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 interface BlogComponentProps {
   component: BlogComponentData;
@@ -51,7 +50,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     showDate = true,
     showTags = true,
     showReadTime = true,
-    itemsPerRow = 3,
+    itemsPerRow = 0,
   } = component.data || {};
 
   // Delete mutation hook using unified hook
@@ -131,12 +130,12 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   const getGridClass = () => {
     switch (style) {
       case "grid-2":
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 3)}`;
+        return `grid-cols-1 sm:grid-cols-4 `;
       case "list-1":
         return "grid-cols-1 gap-6";
       case "grid-1":
       default:
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 4)}`;
+        return `grid-cols-1 sm:grid-cols-4 `;
     }
   };
 

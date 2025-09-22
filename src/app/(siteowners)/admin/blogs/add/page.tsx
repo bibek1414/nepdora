@@ -9,8 +9,14 @@ import BlogForm from "@/components/site-owners/admin/blogs/blog-form";
 import { Button } from "@/components/ui/button";
 import { CreateBlogPost } from "@/types/owner-site/admin/blog";
 
-interface BlogFormData extends Omit<CreateBlogPost, "thumbnail_image"> {
-  thumbnail_image?: FileList;
+interface BlogFormData {
+  title: string;
+  content: string;
+  thumbnail_image?: File | null;
+  thumbnail_image_alt_description?: string;
+  meta_title?: string;
+  meta_description?: string;
+  tag_ids?: number[];
 }
 
 const AddBlogPage = () => {
@@ -19,8 +25,13 @@ const AddBlogPage = () => {
 
   const handleCreateBlog = async (data: BlogFormData) => {
     const blogData: CreateBlogPost = {
-      ...data,
-      thumbnail_image: data.thumbnail_image?.[0] || null,
+      title: data.title,
+      content: data.content,
+      thumbnail_image: data.thumbnail_image,
+      thumbnail_image_alt_description: data.thumbnail_image_alt_description,
+      meta_title: data.meta_title,
+      meta_description: data.meta_description,
+      tag_ids: data.tag_ids,
     };
 
     createBlogMutation.mutate(
