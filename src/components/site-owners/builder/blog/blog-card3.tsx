@@ -1,8 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Clock, CalendarDays, User, Tag } from "lucide-react";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
 
@@ -14,6 +12,7 @@ interface BlogCard3Props {
   showTags?: boolean;
   showReadTime?: boolean;
   onClick?: () => void;
+  index?: number;
 }
 
 export const BlogCard3: React.FC<BlogCard3Props> = ({
@@ -24,10 +23,11 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
   showTags = true,
   showReadTime = true,
   onClick,
+  index = 0,
 }) => {
   const blogImage =
     blog.thumbnail_image ||
-    "https://images.unsplash.com/photo-1516251193007-4560f385c53b?w=200&h=150&fit=crop";
+    "https://images.unsplash.com/photo-1516251193007-4560f385c53b?w=800&h=450&fit=crop";
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
@@ -58,52 +58,58 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
 
   return (
     <CardWrapper>
-      <div className="bg-card hover: flex items-center gap-4 rounded-lg border p-4 transition-shadow duration-200">
-        <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-md sm:h-24 sm:w-32">
+      <div
+        className={`grid items-center gap-8 md:grid-cols-2 ${index % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
+      >
+        <div>
           <Image
             src={blogImage}
             alt={blog.thumbnail_image_alt_description || blog.title}
-            fill
-            className="object-cover"
+            className="aspect-video h-auto w-full rounded-xl object-cover"
+            width={800}
+            height={450}
           />
         </div>
-        <div className="flex-1 space-y-1">
-          {showTags && blog.tags && blog.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {blog.tags.slice(0, 2).map(tag => (
-                <Badge
-                  key={tag.id}
-                  variant="secondary"
-                  className="text-xs font-medium"
-                >
-                  {tag.name}
-                </Badge>
-              ))}
-            </div>
+        <div>
+          {showDate && (
+            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+              {formatDate(blog.created_at)}
+            </p>
           )}
-          <h3 className="text-foreground line-clamp-2 text-base font-semibold">
+          <h2 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
             {blog.title}
-          </h3>
-          <div className="text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+          </h2>
+
+          <div className="flex flex-wrap items-center gap-4">
             {showAuthor && blog.author && (
-              <div className="flex items-center gap-1">
-                <User className="h-3 w-3" />
-                <span>{blog.author.username}</span>
-              </div>
-            )}
-            {showDate && (
-              <div className="flex items-center gap-1">
-                <CalendarDays className="h-3 w-3" />
-                <span>{formatDate(blog.created_at)}</span>
+              <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+                <span>By {blog.author.username}</span>
               </div>
             )}
             {showReadTime && blog.time_to_read && (
-              <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
+              <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
                 <span>{blog.time_to_read} min read</span>
               </div>
             )}
+            {showTags && blog.tags && blog.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {blog.tags.slice(0, 2).map(tag => (
+                  <span
+                    key={tag.id}
+                    className="rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+                  >
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
+          <a
+            className="mt-4 inline-block border-b-2 border-gray-900 pb-1 text-sm font-semibold tracking-wider text-gray-900 dark:border-white dark:text-white"
+            href={getDetailsUrl()}
+          >
+            READ MORE
+          </a>
         </div>
       </div>
     </CardWrapper>

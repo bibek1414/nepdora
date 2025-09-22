@@ -33,6 +33,7 @@ const navigation = [
   { name: "Categories", href: "/admin/categories", icon: FolderOpen },
   { name: "Subcategories", href: "/admin/subcategories", icon: GitBranch },
   { name: "Services", href: "/admin/services", icon: Briefcase },
+  { name: "Blogs", href: "/admin/blogs", icon: Globe },
   { name: "Order Management", href: "/admin/orders", icon: FileText },
   { name: "Inquiries", href: "/admin/contacts", icon: MessageSquare },
   { name: "Newsletter", href: "/admin/newsletter", icon: Mail },
