@@ -14,10 +14,14 @@ import {
   Twitter,
   Instagram,
   Linkedin,
+  CheckCircle,
+  AlertCircle,
 } from "lucide-react";
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
+
 interface FooterStyle2Props {
   footerData: FooterData;
   isEditable?: boolean;
@@ -58,7 +62,14 @@ export function FooterStyle2({
   siteUser,
 }: FooterStyle2Props) {
   const [email, setEmail] = useState("");
+  const [subscriptionStatus, setSubscriptionStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const deleteFooterMutation = useDeleteFooterMutation();
+  const createNewsletterMutation = useCreateNewsletter();
+
   // Get theme data
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -75,6 +86,7 @@ export function FooterStyle2({
       heading: "Poppins",
     },
   };
+
   // Function to generate the correct href for links
   const generateLinkHref = (originalHref: string) => {
     if (isEditable) return originalHref; // Keep original href for editable mode
@@ -126,6 +138,48 @@ export function FooterStyle2({
 
   const handleDelete = () => {
     deleteFooterMutation.mutate();
+  };
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email.trim()) {
+      setErrorMessage("Please enter a valid email address");
+      setSubscriptionStatus("error");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMessage("Please enter a valid email address");
+      setSubscriptionStatus("error");
+      return;
+    }
+
+    try {
+      await createNewsletterMutation.mutateAsync({
+        email: email.trim(),
+        is_subscribed: true,
+      });
+
+      setSubscriptionStatus("success");
+      setEmail("");
+      setErrorMessage("");
+
+      // Reset success message after 3 seconds
+      setTimeout(() => {
+        setSubscriptionStatus("idle");
+      }, 3000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Newsletter subscription error:", error);
+      setErrorMessage(
+        error?.response?.data?.message ||
+          "Failed to subscribe. Please try again."
+      );
+      setSubscriptionStatus("error");
+    }
   };
 
   return (
@@ -253,24 +307,50 @@ export function FooterStyle2({
                       {footerData.newsletter.description}
                     </p>
                   </div>
-                  <div className="flex gap-2">
-                    <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                      className="flex-1 border-gray-300 placeholder:text-gray-400"
-                      disabled={isEditable}
-                    />
-                    <Button
-                      style={{
-                        backgroundColor: theme.colors.primary,
-                      }}
-                      disabled={isEditable}
-                    >
-                      Subscribe
-                    </Button>
-                  </div>
+
+                  {subscriptionStatus === "success" ? (
+                    <div className="flex items-center justify-center gap-2 text-green-600 md:justify-start">
+                      <CheckCircle className="h-5 w-5" />
+                      <span className="text-sm">Successfully subscribed!</span>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleNewsletterSubmit}>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-2">
+                          <Input
+                            type="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            className="flex-1 border-gray-300 placeholder:text-gray-400"
+                            disabled={
+                              isEditable || createNewsletterMutation.isPending
+                            }
+                          />
+                          <Button
+                            type="submit"
+                            style={{
+                              backgroundColor: theme.colors.primary,
+                            }}
+                            disabled={
+                              isEditable || createNewsletterMutation.isPending
+                            }
+                          >
+                            {createNewsletterMutation.isPending
+                              ? "Subscribing..."
+                              : "Subscribe"}
+                          </Button>
+                        </div>
+
+                        {subscriptionStatus === "error" && errorMessage && (
+                          <div className="flex items-center justify-center gap-2 text-red-600 md:justify-start">
+                            <AlertCircle className="h-4 w-4" />
+                            <span className="text-sm">{errorMessage}</span>
+                          </div>
+                        )}
+                      </div>
+                    </form>
+                  )}
                 </div>
               </CardContent>
             </Card>

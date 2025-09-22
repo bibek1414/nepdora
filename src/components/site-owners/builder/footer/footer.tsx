@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { FooterStyle1 } from "./footer-style1";
 import { FooterStyle2 } from "./footer-style2";
+import { FooterStyle3 } from "./footer-style3";
+import { FooterStyle4 } from "./footer-style4";
+import { FooterStyle5 } from "./footer-style5";
 import { FooterEditorDialog } from "./footer-editor-dialog";
 import {
   FooterData,
@@ -114,11 +117,6 @@ export function Footer({
 
   const handleSaveFooter = async (newData: FooterData) => {
     try {
-      console.log("Saving footer data:", newData);
-      console.log("Existing Footer ID:", existingFooterId);
-      console.log("Passed Footer ID:", footerId);
-      console.log("Component ID:", componentId);
-
       // Determine if we should update or create
       const shouldUpdate =
         existingFooterId || footerId || existingFooter?.data?.id;
@@ -142,7 +140,6 @@ export function Footer({
         }
       } else {
         // Create new footer
-        console.log("Creating new footer...");
         const createData = {
           component_id: componentId,
           content: "", // Add empty content if required by API
@@ -173,8 +170,16 @@ export function Footer({
   const handleEditClick = () => {
     setShowEditor(true);
   };
-
-  const FooterComponent = style === "style-2" ? FooterStyle2 : FooterStyle1;
+  const FooterComponent =
+    style === "style-2"
+      ? FooterStyle2
+      : style === "style-3"
+        ? FooterStyle3
+        : style === "style-4"
+          ? FooterStyle4
+          : style === "style-5"
+            ? FooterStyle5
+            : FooterStyle1;
 
   const isLoading =
     updateFooterMutation.isPending || createFooterMutation.isPending;
@@ -194,6 +199,7 @@ export function Footer({
           footerData={currentFooterData}
           onSave={handleSaveFooter}
           isLoading={isLoading}
+          footerStyle="FooterStyle5"
         />
       )}
     </>

@@ -20,7 +20,7 @@ import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-foote
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 
-interface FooterStyle1Props {
+interface FooterStyle3Props {
   footerData: FooterData;
   isEditable?: boolean;
   onEditClick?: () => void;
@@ -53,12 +53,12 @@ const renderSocialIcon = (social: SocialLink) => {
   return <Facebook className="h-4 w-4" />;
 };
 
-export function FooterStyle1({
+export function FooterStyle3({
   footerData,
   isEditable,
   onEditClick,
   siteUser,
-}: FooterStyle1Props) {
+}: FooterStyle3Props) {
   const [email, setEmail] = useState("");
   const [subscriptionStatus, setSubscriptionStatus] = useState<
     "idle" | "success" | "error"
@@ -174,6 +174,9 @@ export function FooterStyle1({
     }
   };
 
+  // Get the first three sections for the grid layout
+  const mainSections = footerData.sections.slice(0, 3);
+
   return (
     <div className="group relative">
       {isEditable && (
@@ -200,81 +203,28 @@ export function FooterStyle1({
         </div>
       )}
 
-      <footer className="bg-background border-t">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {/* Company Info */}
-            <div className="lg:col-span-2">
-              <h3 className="text-foreground mb-4 text-xl font-bold">
-                {footerData.companyName}
-              </h3>
-              <p className="text-muted-foreground mb-6 max-w-md">
-                {footerData.description}
-              </p>
-
-              {/* Contact Info */}
-              <div className="mb-6 space-y-2">
-                {footerData.contactInfo.email && (
-                  <div className="text-muted-foreground flex items-center">
-                    <Mail className="mr-2 h-4 w-4" />
-                    <span className="text-sm">
-                      {footerData.contactInfo.email}
-                    </span>
-                  </div>
-                )}
-                {footerData.contactInfo.phone && (
-                  <div className="text-muted-foreground flex items-center">
-                    <Phone className="mr-2 h-4 w-4" />
-                    <span className="text-sm">
-                      {footerData.contactInfo.phone}
-                    </span>
-                  </div>
-                )}
-                {footerData.contactInfo.address && (
-                  <div className="text-muted-foreground flex items-center">
-                    <MapPin className="mr-2 h-4 w-4" />
-                    <span className="text-sm">
-                      {footerData.contactInfo.address}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Social Links */}
-              <div className="flex space-x-4">
-                {footerData.socialLinks.map(social => (
-                  <Button
-                    key={social.id}
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground hover:text-foreground hover:bg-accent"
-                    onClick={e => handleLinkClick(social.href, e)}
-                    {...(!isEditable &&
-                      social.href && {
-                        as: "a",
-                        href: social.href.startsWith("http")
-                          ? social.href
-                          : generateLinkHref(social.href),
-                      })}
-                  >
-                    {renderSocialIcon(social)}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Link Sections */}
-            {footerData.sections.map(section => (
-              <div key={section.id}>
-                <h4 className="text-foreground mb-4 font-semibold">
+      <footer
+        style={{
+          background: theme.colors.primary,
+          fontFamily: theme.fonts.heading,
+        }}
+        className="px-4 py-16 text-gray-100 sm:px-6 lg:px-8"
+      >
+        <div className="mx-auto max-w-7xl">
+          {/* Footer links grid */}
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
+            {/* Info Section */}
+            {mainSections.map((section, index) => (
+              <div key={section.id} className="col-span-1">
+                <h3 className="mb-4 text-xl font-semibold text-white">
                   {section.title}
-                </h4>
+                </h3>
                 <ul className="space-y-2">
                   {section.links.map(link => (
                     <li key={link.id}>
                       {isEditable ? (
                         <button
-                          className="text-muted-foreground hover:text-foreground text-left text-sm transition-colors"
+                          className="text-left text-white/80 transition-colors hover:text-white"
                           onClick={e => handleLinkClick(link.href, e)}
                         >
                           {link.text}
@@ -282,7 +232,7 @@ export function FooterStyle1({
                       ) : (
                         <a
                           href={generateLinkHref(link.href || "")}
-                          className="text-muted-foreground hover:text-foreground block text-left text-sm transition-colors"
+                          className="block text-white/80 transition-colors hover:text-white"
                         >
                           {link.text}
                         </a>
@@ -292,72 +242,106 @@ export function FooterStyle1({
                 </ul>
               </div>
             ))}
-          </div>
 
-          {/* Newsletter */}
-          {footerData.newsletter.enabled && (
-            <div className="border-border mt-12 border-t pt-8">
-              <div className="mx-auto max-w-md text-center">
-                <h4 className="text-foreground mb-2 font-semibold">
+            {/* Newsletter Section */}
+            {footerData.newsletter.enabled && (
+              <div className="col-span-2 lg:col-span-2">
+                <h3 className="mb-4 text-xl font-semibold text-white">
                   {footerData.newsletter.title}
-                </h4>
-                <p className="text-muted-foreground mb-4 text-sm">
+                </h3>
+                <p className="mb-4 text-sm text-white/80">
                   {footerData.newsletter.description}
                 </p>
 
                 {subscriptionStatus === "success" ? (
-                  <div className="flex items-center justify-center gap-2 text-green-600">
+                  <div className="flex items-center gap-2 text-green-300">
                     <CheckCircle className="h-5 w-5" />
                     <span className="text-sm">Successfully subscribed!</span>
                   </div>
                 ) : (
-                  <form onSubmit={handleNewsletterSubmit}>
-                    <div className="flex flex-col gap-2">
-                      <div className="flex gap-2">
-                        <Input
-                          type="email"
-                          placeholder="Enter your email"
-                          value={email}
-                          onChange={e => setEmail(e.target.value)}
-                          className="flex-1"
-                          disabled={
-                            isEditable || createNewsletterMutation.isPending
-                          }
-                        />
-                        <Button
-                          type="submit"
-                          style={{
-                            backgroundColor: theme.colors.primary,
-                          }}
-                          disabled={
-                            isEditable || createNewsletterMutation.isPending
-                          }
-                        >
-                          {createNewsletterMutation.isPending
-                            ? "Subscribing..."
-                            : "Subscribe"}
-                        </Button>
-                      </div>
-
-                      {subscriptionStatus === "error" && errorMessage && (
-                        <div className="flex items-center justify-center gap-2 text-red-600">
-                          <AlertCircle className="h-4 w-4" />
-                          <span className="text-sm">{errorMessage}</span>
-                        </div>
-                      )}
+                  <form
+                    onSubmit={handleNewsletterSubmit}
+                    className="flex flex-col gap-3"
+                  >
+                    <div className="flex flex-col items-center gap-3 sm:flex-row">
+                      <Input
+                        type="email"
+                        placeholder="Your email address"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        className="w-full rounded-full border-none bg-white px-4 py-3 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-green-300"
+                        disabled={
+                          isEditable || createNewsletterMutation.isPending
+                        }
+                      />
+                      <Button
+                        type="submit"
+                        style={{
+                          backgroundColor: theme.colors.secondary,
+                        }}
+                        className="w-full rounded-full px-8 py-3 font-semibold text-white transition-colors hover:opacity-90 sm:w-auto"
+                        disabled={
+                          isEditable || createNewsletterMutation.isPending
+                        }
+                      >
+                        {createNewsletterMutation.isPending
+                          ? "Subscribing..."
+                          : "Subscribe"}
+                      </Button>
                     </div>
+
+                    {subscriptionStatus === "error" && errorMessage && (
+                      <div className="flex items-center gap-2 text-red-300">
+                        <AlertCircle className="h-4 w-4" />
+                        <span className="text-sm">{errorMessage}</span>
+                      </div>
+                    )}
                   </form>
                 )}
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
-          {/* Copyright */}
-          <div className="border-border mt-8 border-t pt-8 text-center">
-            <p className="text-muted-foreground flex items-center justify-center gap-1 text-sm">
-              {footerData.copyright}
-              <Heart className="inline h-3 w-3 text-red-500" />
-            </p>
+          {/* Bottom section */}
+          <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 text-sm text-gray-200 md:flex-row">
+            {/* Logo and Company Name */}
+            <div className="mb-4 flex items-center md:mb-0">
+              <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-white p-1">
+                <span className="text-lg font-bold text-[#106313]">
+                  {footerData.companyName.charAt(0)}
+                </span>
+              </div>
+              <span className="text-xl font-bold text-white">
+                {footerData.companyName}
+              </span>
+            </div>
+
+            {/* Copyright */}
+            <div className="mb-4 text-center md:mb-0 md:text-left">
+              <p>{footerData.copyright}</p>
+            </div>
+
+            {/* Social links */}
+            <div className="flex items-center space-x-4">
+              {footerData.socialLinks.map(social => (
+                <Button
+                  key={social.id}
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-full p-2 text-white/80 hover:bg-white/10 hover:text-white"
+                  onClick={e => handleLinkClick(social.href, e)}
+                  {...(!isEditable &&
+                    social.href && {
+                      as: "a",
+                      href: social.href.startsWith("http")
+                        ? social.href
+                        : generateLinkHref(social.href),
+                    })}
+                >
+                  {renderSocialIcon(social)}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
       </footer>
