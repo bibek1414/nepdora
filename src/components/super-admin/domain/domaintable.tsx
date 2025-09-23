@@ -1,89 +1,128 @@
-// DomainTable.tsx
 import { Domain } from "@/types/super-admin/domain";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, ExternalLink } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 interface DomainTableProps {
   domains: Domain[];
   onEdit: (domain: Domain) => void;
   onDelete: (id: number) => void;
+  onFrontendUrlClick: (tenantSchemaName: string) => void;
 }
 
 export default function DomainTable({
   domains,
   onEdit,
   onDelete,
+  onFrontendUrlClick,
 }: DomainTableProps) {
+  const handleFrontendUrlClick = (
+    tenantSchemaName: string,
+    domainId: number
+  ) => {
+    const url = `https://${tenantSchemaName}.nepdora.com/preview/${domainId}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+    onFrontendUrlClick(tenantSchemaName);
+  };
+
   return (
-    <div className="overflow-x-auto rounded-lg bg-white shadow">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              Domain
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              Tenant
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              Owner
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              Created On
-            </th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200">
+    <div className="rounded-lg bg-white shadow">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Domain</TableHead>
+            <TableHead>Frontend URL</TableHead>
+            <TableHead>Tenant</TableHead>
+            <TableHead>Owner</TableHead>
+            <TableHead>Created On</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {domains.length > 0 ? (
-            domains.map(domain => (
-              <tr
-                key={domain.id}
-                className="cursor-pointer hover:bg-gray-50"
-                onClick={() => onEdit(domain)}
-              >
-                <td className="px-6 py-4 text-sm text-gray-900">
-                  {domain.domain}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-600">
-                  {domain.tenant.name}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-600">
-                  {domain.tenant.owner.email}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-600">
-                  {domain.tenant.created_on}
-                </td>
-                <td className="space-x-2 px-6 py-4 text-right">
-                  {/* Edit icon button */}
-                  <button
-                    onClick={() => onEdit(domain)}
-                    className="rounded p-2 text-blue-600 hover:bg-blue-100"
-                    title="Edit"
-                  >
-                    <Edit2 size={16} />
-                  </button>
-                  {/* Delete icon button */}
-                  <button
-                    onClick={() => onDelete(domain.id)}
-                    className="rounded p-2 text-red-600 hover:bg-red-100"
-                    title="Delete"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </td>
-              </tr>
-            ))
+            domains.map(domain => {
+              const frontendUrl = `${domain.tenant.schema_name}.nepdora.com/preview/${domain.tenant.owner.id}`;
+
+              return (
+                <TableRow
+                  key={domain.tenant.owner.id}
+                  className="hover:bg-gray-50"
+                >
+                  <TableCell className="font-medium">{domain.domain}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="link"
+                      className="h-auto p-0 text-blue-600 hover:text-blue-800"
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleFrontendUrlClick(
+                          domain.tenant.schema_name,
+                          domain.tenant.owner.id
+                        );
+                      }}
+                    >
+                      <span className="flex items-center gap-1">
+                        {frontendUrl}
+                        <ExternalLink size={14} />
+                      </span>
+                    </Button>
+                  </TableCell>
+                  <TableCell className="text-gray-600">
+                    {domain.tenant.name}
+                  </TableCell>
+                  <TableCell className="text-gray-600">
+                    {domain.tenant.owner.email}
+                  </TableCell>
+                  <TableCell className="text-gray-600">
+                    {new Date(domain.tenant.created_on).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={e => {
+                          e.stopPropagation();
+                          onEdit(domain);
+                        }}
+                        className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-100 hover:text-blue-700"
+                        title="Edit"
+                      >
+                        <Edit2 size={16} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={e => {
+                          e.stopPropagation();
+                          onDelete(domain.tenant.owner.id);
+                        }}
+                        className="h-8 w-8 p-0 text-red-600 hover:bg-red-100 hover:text-red-700"
+                        title="Delete"
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })
           ) : (
-            <tr>
-              <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
+            <TableRow>
+              <TableCell colSpan={6} className="h-24 text-center text-gray-500">
                 No domains available
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           )}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }
