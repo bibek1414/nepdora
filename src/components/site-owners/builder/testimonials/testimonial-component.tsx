@@ -8,6 +8,8 @@ import {
 import { TestimonialCard1 } from "./testimonial-card-1";
 import { TestimonialCard2 } from "./testimonial-card-2";
 import { TestimonialCard3 } from "./testimonial-card-3";
+import { TestimonialCard4 } from "./testimonial-card-4";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -180,6 +182,8 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     switch (style) {
       case "grid-2":
         return <TestimonialCard2 key={testimonial.id} {...cardProps} />;
+      case "grid-3":
+        return <TestimonialCard4 key={testimonial.id} {...cardProps} />;
       case "list-1":
         return <TestimonialCard3 key={testimonial.id} {...cardProps} />;
       case "grid-1":
@@ -191,9 +195,10 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   const getGridClass = () => {
     switch (style) {
       case "grid-2":
-        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-2";
+        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+
       case "list-1":
-        return "grid-cols-1 lg:grid-cols-2 gap-8";
+        return "grid-cols-1 lg:grid-cols-3 gap-8";
       case "grid-1":
       default:
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";

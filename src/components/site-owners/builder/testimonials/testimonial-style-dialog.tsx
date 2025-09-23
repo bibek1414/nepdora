@@ -10,14 +10,14 @@ import Image from "next/image";
 interface TestimonialsStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (style: "grid-1" | "grid-2" | "list-1") => void;
+  onStyleSelect: (style: "grid-1" | "grid-2" | "list-1" | "grid-3") => void;
 }
 
 export const TestimonialsStylesDialog: React.FC<
   TestimonialsStylesDialogProps
 > = ({ open, onOpenChange, onStyleSelect }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | "list-1" | null
+    "grid-1" | "grid-2" | "list-1" | "grid-3" | null
   >(null);
 
   const templates = [
@@ -33,9 +33,15 @@ export const TestimonialsStylesDialog: React.FC<
       id: "list-1" as const,
       name: "Quote Style",
     },
+    {
+      id: "grid-3" as const,
+      name: "Grid Style 3",
+    },
   ];
 
-  const handleSelect = (template: { id: "grid-1" | "grid-2" | "list-1" }) => {
+  const handleSelect = (template: {
+    id: "grid-1" | "grid-2" | "list-1" | "grid-3";
+  }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
       onStyleSelect(template.id);
@@ -74,9 +80,7 @@ export const TestimonialsStylesDialog: React.FC<
                   <div className="relative w-full">
                     <Image
                       src={`/images/site-owners/testimonials/testimonial${
-                        template.id === "list-1"
-                          ? "3"
-                          : template.id.split("-")[1]
+                        template.id.split("-")[1]
                       }.png`}
                       alt={template.name}
                       width={600}

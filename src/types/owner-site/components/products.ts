@@ -1,7 +1,7 @@
 export interface ProductsData {
   component_id?: string;
   component_type: "products";
-  style: "grid-1" | "grid-2" | "list-1" | "carousel-1" | "grid-4";
+  style: "grid-1" | "grid-2" | "list-1" | "carousel-1" | "grid-4" | "grid-5";
   title: string;
   subtitle?: string;
   page_size: number;

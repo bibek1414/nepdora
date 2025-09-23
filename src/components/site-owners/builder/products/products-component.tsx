@@ -9,6 +9,7 @@ import { ProductCard1 } from "./product-card1";
 import { ProductCard2 } from "./product-card2";
 import { ProductCard3 } from "./product-card3";
 import { ProductCard4 } from "./product-card4";
+import { ProductCard5 } from "./product-card5";
 import ProductFilterSidebar from "./products-filter/product-filter-sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -189,6 +190,8 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
         return <ProductCard1 key={product.id} {...cardProps} />;
       case "grid-4":
         return <ProductCard4 key={product.id} {...cardProps} />;
+      case "grid-5":
+        return <ProductCard5 key={product.id} {...cardProps} />;
       case "grid-1":
       default:
         return <ProductCard1 key={product.id} {...cardProps} />;

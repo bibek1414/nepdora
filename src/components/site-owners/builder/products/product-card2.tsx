@@ -177,13 +177,6 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
             <div className="absolute top-3 right-3 flex gap-2">
               <Button
                 size="icon"
-                className="rounded-full bg-white/90 text-gray-800 hover:bg-white"
-                onClick={handleQuickView}
-              >
-                <Eye className="h-4 w-4" />
-              </Button>
-              <Button
-                size="icon"
                 className={`rounded-full bg-white/90 text-gray-800 hover:bg-white ${
                   isWishlisted ? "text-red-500" : ""
                 }`}
@@ -219,20 +212,6 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
                 </Badge>
               </div>
             )}
-
-            {/* Featured/Popular Badges */}
-            <div className="absolute top-4 right-16 flex flex-col gap-1">
-              {product.is_featured && (
-                <Badge className="bg-yellow-500 text-xs font-bold text-black">
-                  FEATURED
-                </Badge>
-              )}
-              {product.is_popular && (
-                <Badge className="bg-red-500 text-xs font-bold text-white">
-                  POPULAR
-                </Badge>
-              )}
-            </div>
           </div>
 
           <div className="space-y-4 p-6">
