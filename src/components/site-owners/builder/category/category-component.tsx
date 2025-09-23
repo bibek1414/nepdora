@@ -7,6 +7,7 @@ import {
 } from "@/hooks/owner-site/components/unified";
 import { CategoryCard1 } from "./category-card-1";
 import { CategoryCard2 } from "./category-card-2";
+import { CategoryCard3 } from "./category-card-3";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -170,6 +171,8 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
         return <CategoryCard2 key={category.id} {...cardProps} />;
       case "list-1":
         return <CategoryCard2 key={category.id} {...cardProps} />;
+      case "grid-3":
+        return <CategoryCard3 key={category.id} index={index} {...cardProps} />;
       case "carousel-1":
         return <CategoryCard1 key={category.id} {...cardProps} />;
       case "grid-1":

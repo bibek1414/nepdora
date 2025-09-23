@@ -20,7 +20,7 @@ export const FAQCard1: React.FC<FAQCard1Props> = ({ faqs }) => {
           value={`item-${index}`}
           className="rounded-lg border border-gray-200 px-4"
         >
-          <AccordionTrigger className="hover:text-primary text-left font-semibold text-gray-900 hover:no-underline">
+          <AccordionTrigger className="text-left font-semibold text-gray-900 hover:no-underline">
             {faq.question}
           </AccordionTrigger>
           <AccordionContent className="pb-4 text-gray-600">

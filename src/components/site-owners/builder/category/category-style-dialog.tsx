@@ -10,7 +10,7 @@ import Image from "next/image";
 interface CategoryStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (style: "grid-1" | "grid-2") => void;
+  onStyleSelect: (style: "grid-1" | "grid-2" | "grid-3") => void;
 }
 
 export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
@@ -19,7 +19,7 @@ export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | null
+    "grid-1" | "grid-2" | "grid-3" | null
   >(null);
 
   const templates = [
@@ -31,9 +31,13 @@ export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
       id: "grid-2" as const,
       name: "Grid Style 2",
     },
+    {
+      id: "grid-3" as const,
+      name: "Grid Style 3",
+    },
   ];
 
-  const handleSelect = (template: { id: "grid-1" | "grid-2" }) => {
+  const handleSelect = (template: { id: "grid-1" | "grid-2" | "grid-3" }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
       onStyleSelect(template.id);

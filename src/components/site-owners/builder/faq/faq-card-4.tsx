@@ -150,7 +150,7 @@ export const FAQCard4: React.FC<FAQCard4Props> = ({
             return (
               <Card
                 key={faq.id}
-                className="bg-card-light dark:bg-card-dark group border-0 shadow-md transition-shadow duration-300 hover:shadow-xl"
+                className="bg-card-light dark:bg-card-dark group gap-0 border-0 py-0 transition-shadow duration-300"
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-start gap-4">
@@ -162,7 +162,7 @@ export const FAQCard4: React.FC<FAQCard4Props> = ({
                       />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-text-light-heading dark:text-text-dark-heading text-lg font-semibold">
+                      <h3 className="text-text-light-heading dark:text-text-dark-heading mt-2 text-lg font-semibold">
                         {faq.question}
                       </h3>
                     </div>

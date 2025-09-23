@@ -161,6 +161,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       case "list-1":
         return <TeamCard3 key={member.id} {...cardProps} />;
       case "grid-1":
+        return <TeamCard1 key={member.id} {...cardProps} />;
       default:
         return <TeamCard1 key={member.id} {...cardProps} />;
     }

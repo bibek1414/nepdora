@@ -12,7 +12,7 @@ interface FAQStylesDialogProps {
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
     style: "accordion" | "plus-minus" | "card-grid" | "card-grid-4"
-  ) => void;
+  ) => void; // Updated to use string values
 }
 
 export const FAQStylesDialog: React.FC<FAQStylesDialogProps> = ({
@@ -20,35 +20,23 @@ export const FAQStylesDialog: React.FC<FAQStylesDialogProps> = ({
   onOpenChange,
   onStyleSelect,
 }) => {
-  const [selectedStyle, setSelectedStyle] = useState<
-    "accordion" | "plus-minus" | "card-grid" | "card-grid-4" | null
-  >(null);
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
 
+  // Updated templates to use the correct style strings that match your switch statement
   const templates = [
-    {
-      id: "accordion" as const,
-      name: "Accordion Style",
-    },
-    {
-      id: "plus-minus" as const,
-      name: "Plus/Minus Style",
-    },
-    {
-      id: "card-grid" as const,
-      name: "Card Grid Style",
-    },
-    {
-      id: "card-grid-4" as const,
-      name: "Card Grid Style 4",
-    },
+    { id: 1, name: "Accordion Style", style: "accordion" as const },
+    { id: 2, name: "Plus/Minus Style", style: "plus-minus" as const },
+    { id: 3, name: "Card Grid Style", style: "card-grid" as const },
+    { id: 4, name: "Card Grid Style 4", style: "card-grid-4" as const },
   ];
 
   const handleSelect = (template: {
-    id: "accordion" | "plus-minus" | "card-grid" | "card-grid-4";
+    id: number;
+    style: "accordion" | "plus-minus" | "card-grid" | "card-grid-4";
   }) => {
-    setSelectedStyle(template.id);
+    setSelectedStyle(template.style);
     setTimeout(() => {
-      onStyleSelect(template.id);
+      onStyleSelect(template.style); // Now passing the correct string value
       setSelectedStyle(null);
       onOpenChange(false);
     }, 150);
@@ -62,13 +50,12 @@ export const FAQStylesDialog: React.FC<FAQStylesDialogProps> = ({
             Choose a FAQ Style
           </DialogTitle>
         </DialogHeader>
-
         <div className="grid grid-cols-2 gap-6 py-4 md:grid-cols-3 lg:grid-cols-3">
           {templates.map(template => (
             <div key={template.id} className="flex flex-col items-center">
               <div
                 className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
-                  selectedStyle === template.id
+                  selectedStyle === template.style
                     ? "border-blue-200 ring-2 ring-blue-500"
                     : "hover:border-gray-300"
                 }`}
@@ -92,7 +79,6 @@ export const FAQStylesDialog: React.FC<FAQStylesDialogProps> = ({
                   </div>
                 </div>
               </div>
-
               <h3 className="mt-2 text-center text-sm font-medium text-gray-600">
                 {template.name}
               </h3>
