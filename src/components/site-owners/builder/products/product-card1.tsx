@@ -201,16 +201,6 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
               {product.stock > 0 && product.stock <= 5 && (
                 <Badge className="text-xs">Only {product.stock} left</Badge>
               )}
-              {product.is_featured && (
-                <Badge variant="default" className="text-xs">
-                  Featured
-                </Badge>
-              )}
-              {product.is_popular && (
-                <Badge variant="outline" className="bg-white/90 text-xs">
-                  Popular
-                </Badge>
-              )}
             </div>
           </div>
 

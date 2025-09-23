@@ -156,17 +156,6 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
                   -{discountPercentage}%
                 </Badge>
               )}
-              {product.is_featured && (
-                <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-xs font-bold text-white">
-                  <Zap className="mr-1 h-3 w-3" />
-                  Featured
-                </Badge>
-              )}
-              {product.is_popular && (
-                <Badge className="bg-purple-500 text-xs font-bold text-white">
-                  Popular
-                </Badge>
-              )}
             </div>
 
             {/* Stock Status */}

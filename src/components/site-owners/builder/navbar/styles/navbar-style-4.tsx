@@ -1,4 +1,3 @@
-// navbar-style-4.tsx
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +22,7 @@ import SideCart from "../../cart/side-cart";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
 import { useAuth } from "@/hooks/customer/use-auth";
+import { useWishlist } from "@/hooks/customer/use-wishlist";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -94,6 +94,10 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
+
+  // Get wishlist data
+  const { data: wishlistData } = useWishlist();
+  const wishlistCount = wishlistData?.length || 0;
 
   // Get theme data
   const { data: themeResponse } = useThemeQuery();
@@ -500,7 +504,14 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                     onClick={() => handleProfileAction("wishlist")}
                   >
                     <Heart className="mr-2 h-4 w-4" />
-                    Wishlist
+                    <div className="flex w-full items-center justify-between">
+                      <span>Wishlist</span>
+                      {wishlistCount > 0 && (
+                        <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                          {wishlistCount}
+                        </span>
+                      )}
+                    </div>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="cursor-pointer"

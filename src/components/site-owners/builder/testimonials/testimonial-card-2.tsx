@@ -13,25 +13,6 @@ export const TestimonialCard2: React.FC<TestimonialCard2Props> = ({
   testimonial,
   onClick,
 }) => {
-  const renderStars = (rating?: number) => {
-    if (!rating) return null;
-
-    return (
-      <div className="mb-3 flex">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <Star
-            key={index}
-            className={`h-4 w-4 ${
-              index < rating
-                ? "fill-yellow-400 text-yellow-400"
-                : "text-gray-300"
-            }`}
-          />
-        ))}
-      </div>
-    );
-  };
-
   return (
     <Card
       className="group cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg"

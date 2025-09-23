@@ -179,19 +179,6 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                     Sold Out
                   </Badge>
                 )}
-                {product.is_featured && (
-                  <Badge className="border-0 bg-yellow-500 text-xs font-bold text-black">
-                    Featured
-                  </Badge>
-                )}
-                {product.is_popular && (
-                  <Badge
-                    variant="outline"
-                    className="border-red-500 bg-white/90 text-xs text-red-600"
-                  >
-                    Popular
-                  </Badge>
-                )}
               </div>
 
               {/* Always Visible Wishlist Button */}
@@ -302,14 +289,6 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                   {product.stock > 0 && (
                     <Badge variant="outline" className="text-xs">
                       In Stock
-                    </Badge>
-                  )}
-                  {product.is_featured && (
-                    <Badge
-                      variant="outline"
-                      className="border-yellow-500 text-xs text-yellow-600"
-                    >
-                      Featured Product
                     </Badge>
                   )}
                 </div>

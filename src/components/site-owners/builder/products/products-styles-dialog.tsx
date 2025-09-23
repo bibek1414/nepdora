@@ -10,7 +10,9 @@ import Image from "next/image";
 interface ProductsStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (style: "grid-1" | "grid-2" | "list-1" | "grid-4") => void;
+  onStyleSelect: (
+    style: "grid-1" | "grid-2" | "list-1" | "grid-4" | "grid-5"
+  ) => void;
 }
 
 export const ProductsStylesDialog: React.FC<ProductsStylesDialogProps> = ({
@@ -19,7 +21,7 @@ export const ProductsStylesDialog: React.FC<ProductsStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | "list-1" | "grid-4" | null
+    "grid-1" | "grid-2" | "list-1" | "grid-4" | "grid-5" | null
   >(null);
 
   const templates = [
@@ -39,10 +41,14 @@ export const ProductsStylesDialog: React.FC<ProductsStylesDialogProps> = ({
       id: "grid-4" as const,
       name: "Grid Style 4",
     },
+    {
+      id: "grid-5" as const,
+      name: "Grid Style 5",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "grid-1" | "grid-2" | "list-1" | "grid-4";
+    id: "grid-1" | "grid-2" | "list-1" | "grid-4" | "grid-5";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {

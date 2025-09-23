@@ -1,7 +1,7 @@
 export interface TestimonialsData {
   component_id?: string;
   component_type: "testimonials";
-  style: "grid-1" | "grid-2" | "list-1";
+  style: "grid-1" | "grid-2" | "list-1" | "grid-3";
   title: string;
   subtitle?: string;
   page_size: number;
