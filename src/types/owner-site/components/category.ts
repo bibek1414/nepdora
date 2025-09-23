@@ -1,7 +1,7 @@
 export interface CategoryData {
   component_id?: string;
   component_type: "category";
-  style: "grid-1" | "grid-2" | "list-1" | "carousel-1";
+  style: "grid-1" | "grid-2" | "list-1" | "carousel-1" | "grid-3";
   title: string;
   subtitle?: string;
   page_size: number;

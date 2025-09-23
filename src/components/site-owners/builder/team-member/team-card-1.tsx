@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail, Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import { TEAM } from "@/types/owner-site/admin/team-member";
-
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface TeamCard1Props {
   member: TEAM;
   onClick?: () => void;
@@ -17,7 +17,21 @@ export const TeamCard1: React.FC<TeamCard1Props> = ({ member, onClick }) => {
       window.open(url, "_blank");
     }
   };
-
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
   return (
     <Card
       className="group cursor-pointer overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
@@ -82,7 +96,15 @@ export const TeamCard1: React.FC<TeamCard1Props> = ({ member, onClick }) => {
           <h3 className="mb-1 text-xl font-bold text-gray-900">
             {member.name}
           </h3>
-          <p className="text-primary mb-2 font-semibold">{member.role}</p>
+          <p
+            className="mb-2 font-semibold"
+            style={{
+              color: theme.colors.primary,
+              fontFamily: theme.fonts.heading,
+            }}
+          >
+            {member.role}
+          </p>
           {member.department && (
             <p className="mb-3 text-sm text-gray-500">
               {member.department.name}

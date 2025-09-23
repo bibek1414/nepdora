@@ -59,7 +59,7 @@ export const YouTubeStylesDialog: React.FC<YouTubeStylesDialogProps> = ({
         </DialogHeader>
 
         <div className="grid-cols grid gap-6 py-4 md:grid-cols-2 lg:grid-cols-3">
-          {templates.map(template => (
+          {templates.map((template, index) => (
             <div key={template.id} className="flex flex-col items-center">
               <div
                 className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
@@ -78,7 +78,7 @@ export const YouTubeStylesDialog: React.FC<YouTubeStylesDialogProps> = ({
                 <div className="p-3">
                   <div className="relative w-full">
                     <Image
-                      src={`/images/site-owners/youtube/youtube-${template.id}.png`}
+                      src={`/images/site-owners/youtube/youtube-${index + 1}.png`}
                       alt={template.name}
                       width={600}
                       height={400}

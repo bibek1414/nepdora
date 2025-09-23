@@ -9,6 +9,7 @@ import { TestimonialCard1 } from "./testimonial-card-1";
 import { TestimonialCard2 } from "./testimonial-card-2";
 import { TestimonialCard3 } from "./testimonial-card-3";
 import { TestimonialCard4 } from "./testimonial-card-4";
+import { TestimonialCard5 } from "./testimonial-card-5";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -173,6 +174,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     }
   };
 
+  // Fixed renderTestimonialCard function
   const renderTestimonialCard = (testimonial: Testimonial) => {
     const cardProps = {
       testimonial,
@@ -192,13 +194,24 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     }
   };
 
+  // Render carousel separately
+  const renderCarousel = () => {
+    return (
+      <TestimonialCard5
+        testimonials={testimonials.slice(0, page_size)}
+        onClick={handleTestimonialClick}
+      />
+    );
+  };
+
   const getGridClass = () => {
     switch (style) {
       case "grid-2":
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
-
       case "list-1":
         return "grid-cols-1 lg:grid-cols-3 gap-8";
+      case "carousel-1":
+        return ""; // No grid for carousel
       case "grid-1":
       default:
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
@@ -307,16 +320,34 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
             </div>
 
             {isLoading && (
-              <div className={`grid ${getGridClass()} gap-6`}>
-                {Array.from({ length: Math.min(page_size, 6) }).map(
-                  (_, index) => (
-                    <div key={index} className="flex flex-col space-y-3">
-                      <Skeleton className="h-[200px] w-full rounded-xl" />
-                      <div className="space-y-2">
-                        <Skeleton className="h-5 w-3/4" />
-                        <Skeleton className="h-4 w-1/2" />
+              <div
+                className={
+                  style === "carousel-1" ? "" : `grid ${getGridClass()} gap-6`
+                }
+              >
+                {style === "carousel-1" ? (
+                  <div className="flex gap-4 overflow-hidden">
+                    {Array.from({ length: 3 }).map((_, index) => (
+                      <div key={index} className="w-80 flex-shrink-0">
+                        <Skeleton className="h-[200px] w-full rounded-xl" />
+                        <div className="mt-3 space-y-2">
+                          <Skeleton className="h-5 w-3/4" />
+                          <Skeleton className="h-4 w-1/2" />
+                        </div>
                       </div>
-                    </div>
+                    ))}
+                  </div>
+                ) : (
+                  Array.from({ length: Math.min(page_size, 6) }).map(
+                    (_, index) => (
+                      <div key={index} className="flex flex-col space-y-3">
+                        <Skeleton className="h-[200px] w-full rounded-xl" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-5 w-3/4" />
+                          <Skeleton className="h-4 w-1/2" />
+                        </div>
+                      </div>
+                    )
                   )
                 )}
               </div>
@@ -335,17 +366,23 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
             )}
 
             {!isLoading && !error && testimonials.length > 0 && (
-              <div className={`grid ${getGridClass()} gap-6`}>
-                {testimonials.slice(0, page_size).map(testimonial => (
-                  <div
-                    key={testimonial.id}
-                    className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
-                  >
-                    <div className="absolute inset-0 z-10 bg-transparent" />
-                    {renderTestimonialCard(testimonial)}
+              <>
+                {style === "carousel-1" ? (
+                  renderCarousel()
+                ) : (
+                  <div className={`grid ${getGridClass()} gap-6`}>
+                    {testimonials.slice(0, page_size).map(testimonial => (
+                      <div
+                        key={testimonial.id}
+                        className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
+                      >
+                        <div className="absolute inset-0 z-10 bg-transparent" />
+                        {renderTestimonialCard(testimonial)}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             )}
 
             {!isLoading && !error && testimonials.length === 0 && (
@@ -381,16 +418,34 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
         </div>
 
         {isLoading && (
-          <div className={`grid ${getGridClass()} gap-8`}>
-            {Array.from({ length: page_size }).map((_, index) => (
-              <div key={index} className="flex flex-col space-y-4">
-                <Skeleton className="h-[240px] w-full rounded-lg" />
-                <div className="space-y-3">
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
+          <div
+            className={
+              style === "carousel-1" ? "" : `grid ${getGridClass()} gap-8`
+            }
+          >
+            {style === "carousel-1" ? (
+              <div className="flex gap-6 overflow-hidden">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <div key={index} className="w-80 flex-shrink-0">
+                    <Skeleton className="h-[240px] w-full rounded-lg" />
+                    <div className="mt-4 space-y-3">
+                      <Skeleton className="h-6 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              Array.from({ length: page_size }).map((_, index) => (
+                <div key={index} className="flex flex-col space-y-4">
+                  <Skeleton className="h-[240px] w-full rounded-lg" />
+                  <div className="space-y-3">
+                    <Skeleton className="h-6 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
 
@@ -407,11 +462,17 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
         )}
 
         {!isLoading && !error && testimonials.length > 0 && (
-          <div className={`grid ${getGridClass()} gap-8`}>
-            {testimonials
-              .slice(0, page_size)
-              .map(testimonial => renderTestimonialCard(testimonial))}
-          </div>
+          <>
+            {style === "carousel-1" ? (
+              renderCarousel()
+            ) : (
+              <div className={`grid ${getGridClass()} gap-8`}>
+                {testimonials
+                  .slice(0, page_size)
+                  .map(testimonial => renderTestimonialCard(testimonial))}
+              </div>
+            )}
+          </>
         )}
 
         {!isLoading && !error && testimonials.length === 0 && (

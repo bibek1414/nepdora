@@ -618,7 +618,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleCategoryTemplateSelect = (
-    template: "grid-1" | "grid-2" | "list-1"
+    template: "grid-1" | "grid-2" | "list-1" | "grid-3"
   ) => {
     const categoryData = {
       page_size: 8,
@@ -667,7 +667,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleTestimonialsTemplateSelect = (
-    template: "grid-1" | "grid-2" | "list-1" | "grid-3"
+    template: "grid-1" | "grid-2" | "list-1" | "grid-3" | "carousel-1"
   ) => {
     const testimonialsData = {
       ...defaultTestimonialsData,

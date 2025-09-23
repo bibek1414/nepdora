@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FAQ } from "@/types/owner-site/admin/faq";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface FAQCard3Props {
   faqs: FAQ[];
@@ -10,6 +11,22 @@ interface FAQCard3Props {
 
 export const FAQCard3: React.FC<FAQCard3Props> = ({ faqs }) => {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
+  const { data: themeResponse } = useThemeQuery();
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   const toggleCard = (id: number) => {
     setExpandedCard(expandedCard === id ? null : id);
@@ -20,12 +37,18 @@ export const FAQCard3: React.FC<FAQCard3Props> = ({ faqs }) => {
       {faqs.map(faq => (
         <Card
           key={faq.id}
-          className="group hover:border-primary/30 border border-gray-200 transition-all duration-300 hover:shadow-lg"
+          className="group hover:border-primary/30 border border-gray-200 transition-all duration-300"
         >
           <CardHeader className="pb-3">
             <div className="flex items-start gap-3">
-              <div className="bg-primary/10 group-hover:bg-primary/20 flex-shrink-0 rounded-full p-2 transition-colors duration-200">
-                <HelpCircle className="text-primary h-5 w-5" />
+              <div className="flex-shrink-0 rounded-full transition-colors duration-200">
+                <HelpCircle
+                  className="text-primary h-5 w-5"
+                  style={{
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.heading,
+                  }}
+                />
               </div>
               <div className="flex-1">
                 <h3 className="text-sm leading-tight font-semibold text-gray-900">
@@ -51,7 +74,11 @@ export const FAQCard3: React.FC<FAQCard3Props> = ({ faqs }) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => toggleCard(faq.id)}
-                className="text-primary hover:text-primary hover:bg-primary/10 h-8 text-xs font-medium"
+                className="h-8 text-xs font-medium"
+                style={{
+                  color: theme.colors.secondary,
+                  fontFamily: theme.fonts.heading,
+                }}
               >
                 {expandedCard === faq.id ? (
                   <>

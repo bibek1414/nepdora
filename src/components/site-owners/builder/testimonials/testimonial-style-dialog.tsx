@@ -10,14 +10,16 @@ import Image from "next/image";
 interface TestimonialsStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (style: "grid-1" | "grid-2" | "list-1" | "grid-3") => void;
+  onStyleSelect: (
+    style: "grid-1" | "grid-2" | "list-1" | "grid-3" | "carousel-1"
+  ) => void;
 }
 
 export const TestimonialsStylesDialog: React.FC<
   TestimonialsStylesDialogProps
 > = ({ open, onOpenChange, onStyleSelect }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | "list-1" | "grid-3" | null
+    "grid-1" | "grid-2" | "list-1" | "grid-3" | "carousel-1" | null
   >(null);
 
   const templates = [
@@ -37,10 +39,14 @@ export const TestimonialsStylesDialog: React.FC<
       id: "grid-3" as const,
       name: "Grid Style 3",
     },
+    {
+      id: "carousel-1" as const,
+      name: "Carousel Style 1",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "grid-1" | "grid-2" | "list-1" | "grid-3";
+    id: "grid-1" | "grid-2" | "list-1" | "grid-3" | "carousel-1";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
@@ -60,7 +66,7 @@ export const TestimonialsStylesDialog: React.FC<
         </DialogHeader>
 
         <div className="grid grid-cols-2 gap-6 py-4 md:grid-cols-3 lg:grid-cols-3">
-          {templates.map(template => (
+          {templates.map((template, index) => (
             <div key={template.id} className="flex flex-col items-center">
               <div
                 className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
@@ -79,9 +85,7 @@ export const TestimonialsStylesDialog: React.FC<
                 <div className="p-3">
                   <div className="relative w-full">
                     <Image
-                      src={`/images/site-owners/testimonials/testimonial${
-                        template.id.split("-")[1]
-                      }.png`}
+                      src={`/images/site-owners/testimonials/testimonial${index + 1}.png`}
                       alt={template.name}
                       width={600}
                       height={400}
@@ -90,7 +94,6 @@ export const TestimonialsStylesDialog: React.FC<
                   </div>
                 </div>
               </div>
-
               <h3 className="mt-2 text-center text-sm font-medium text-gray-600">
                 {template.name}
               </h3>
