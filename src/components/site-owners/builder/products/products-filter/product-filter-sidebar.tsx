@@ -5,6 +5,7 @@ import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
 import { useDebouncer } from "@/hooks/use-debouncer";
 import { useRouter } from "next/navigation";
 import { useProductFilters } from "@/hooks/owner-site/admin/use-product";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import PriceRangeSlider from "./price-range-slider";
 import AppliedFilters from "./applied-filters";
 
@@ -25,6 +26,26 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
   isEditable = false,
 }) => {
   const productFilters = useProductFilters();
+
+  // Theme hook
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
   // State management
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>("all");
@@ -277,7 +298,7 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
 
   return (
     <div
-      className={`w-60 rounded-xl bg-white ${className}`}
+      className={`w-65 rounded-xl bg-white ${className}`}
       onMouseLeave={handleMouseLeave}
     >
       {/* Applied Filters */}
@@ -310,7 +331,12 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
             onChange={e => {
               setSearchQuery(e.target.value);
             }}
-            className="w-full rounded-lg border border-gray-200 py-2.5 pr-4 pl-10 text-sm placeholder-gray-500 focus:border-transparent focus:ring-2 focus:ring-orange-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-200 py-2.5 pr-4 pl-10 text-sm placeholder-gray-500 focus:border-transparent focus:ring-2 focus:outline-none"
+            style={
+              {
+                "--tw-ring-color": theme.colors.primary,
+              } as React.CSSProperties
+            }
             disabled={isEditable}
           />
         </div>
@@ -325,9 +351,36 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
             onClick={() => handleSelectCategory("all")}
             className={`w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-all duration-200 ${
               selectedCategory === "all"
-                ? "bg-primary/90 text-white"
-                : "hover:text-primary/90 text-gray-700 hover:bg-orange-50"
+                ? "text-white"
+                : "text-gray-700 hover:bg-orange-50"
             }`}
+            style={
+              {
+                backgroundColor:
+                  selectedCategory === "all"
+                    ? `${theme.colors.primary}E6`
+                    : undefined,
+                color:
+                  selectedCategory === "all"
+                    ? theme.colors.primaryForeground
+                    : undefined,
+                "--hover-color":
+                  selectedCategory !== "all"
+                    ? `${theme.colors.primary}E6`
+                    : undefined,
+              } as React.CSSProperties
+            }
+            onMouseEnter={e => {
+              if (selectedCategory !== "all") {
+                (e.target as HTMLElement).style.color =
+                  `${theme.colors.primary}E6`;
+              }
+            }}
+            onMouseLeave={e => {
+              if (selectedCategory !== "all") {
+                (e.target as HTMLElement).style.color = "";
+              }
+            }}
             disabled={isEditable}
           >
             All Categories
@@ -345,9 +398,22 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
                   onClick={() => handleSelectCategory(category.slug)}
                   className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition-all duration-200 ${
                     isSelected
-                      ? "bg-primary/90 font-medium text-white shadow-sm"
-                      : "hover:text-primary/90 text-gray-700 hover:bg-orange-50"
+                      ? "font-medium shadow-sm"
+                      : "text-gray-700 hover:bg-orange-50"
                   }`}
+                  style={{
+                    backgroundColor: isSelected
+                      ? `${theme.colors.primary}E6`
+                      : undefined,
+                    color: isSelected
+                      ? theme.colors.primaryForeground
+                      : undefined,
+                  }}
+                  onMouseLeave={e => {
+                    if (!isSelected) {
+                      (e.target as HTMLElement).style.color = "";
+                    }
+                  }}
                   disabled={isEditable}
                 >
                   <span>{category.name}</span>
@@ -378,9 +444,15 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
                               }
                               className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 ${
                                 selectedSubcategory === subcategory.slug
-                                  ? "text-primary font-semibold"
+                                  ? "font-semibold"
                                   : "text-gray-600"
                               }`}
+                              style={{
+                                color:
+                                  selectedSubcategory === subcategory.slug
+                                    ? theme.colors.primary
+                                    : undefined,
+                              }}
                               disabled={isEditable}
                             >
                               <span>{subcategory.name}</span>

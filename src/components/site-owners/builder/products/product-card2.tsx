@@ -3,7 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
+import { Button as SOButton } from "@/components/ui/site-owners/button";
+
 import { ShoppingCart, Heart, Star, Eye } from "lucide-react";
 import { Product } from "@/types/owner-site/admin/product";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
@@ -294,11 +296,12 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
             )}
 
             {/* Action Button */}
-            <Button
-              className="w-full rounded-none border-0 bg-gray-900 py-6 font-normal tracking-wide text-white hover:bg-gray-800"
+            <SOButton
+              className="w-full rounded-none border-0 py-6 font-normal tracking-wide text-white hover:bg-gray-800"
               disabled={product.stock === 0}
               onClick={handleAddToCart}
               data-cart-action="true"
+              variant="default"
             >
               {product.stock > 0 ? (
                 <>
@@ -308,7 +311,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
               ) : (
                 "NOTIFY WHEN AVAILABLE"
               )}
-            </Button>
+            </SOButton>
           </div>
         </CardContent>
       </Card>

@@ -14,6 +14,7 @@ import {
 } from "@/hooks/customer/use-wishlist";
 import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
+import { Button as SOButton } from "@/components/ui/site-owners/button";
 
 interface ProductCard3Props {
   product: Product;
@@ -323,7 +324,8 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
 
                 {/* Action Buttons */}
                 <div className="flex gap-3">
-                  <Button
+                  <SOButton
+                    variant="default"
                     className="flex-1 py-3 font-semibold text-white hover:bg-blue-700"
                     disabled={product.stock === 0}
                     onClick={handleAddToCart}
@@ -331,7 +333,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                   >
                     <ShoppingCart className="mr-2 h-4 w-4" />
                     {product.stock > 0 ? "Add to Cart" : "Notify Me"}
-                  </Button>
+                  </SOButton>
 
                   <Button
                     variant="outline"

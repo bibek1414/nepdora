@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-
+import { Button } from "@/components/ui/site-owners/button";
 interface CategoryLike {
   slug: string;
   name: string;
@@ -93,12 +93,13 @@ const AppliedFilters: React.FC<AppliedFiltersProps> = ({
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-gray-800">Applied Filters</h3>
         {appliedFilters.length > 1 && (
-          <button
+          <Button
+            variant="link"
             onClick={handleClearAll}
-            className="text-primary text-xs font-medium hover:underline"
+            className="text-primary text-xs font-medium hover:text-white hover:underline"
           >
             Clear All
-          </button>
+          </Button>
         )}
       </div>
       <div className="flex flex-wrap gap-2">

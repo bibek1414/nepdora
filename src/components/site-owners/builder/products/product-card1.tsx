@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Button as SOButton } from "@/components/ui/site-owners/button";
 import { ShoppingCart, Star, Heart } from "lucide-react";
 import { Product } from "@/types/owner-site/admin/product";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
@@ -14,7 +15,7 @@ import {
 } from "@/hooks/customer/use-wishlist";
 import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
-
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface ProductCard1Props {
   product: Product;
   siteUser?: string;
@@ -39,7 +40,21 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
   const { data: wishlistItems } = useWishlist();
   const addToWishlistMutation = useAddToWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlist();
-
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
   // Use actual product data instead of mock data
   const productImage =
     product.thumbnail_image ||
@@ -267,7 +282,13 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
             {showPrice && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-primary text-2xl font-bold">
+                  <span
+                    className="text-2xl font-bold"
+                    style={{
+                      color: theme.colors.primary,
+                      fontFamily: theme.fonts.heading,
+                    }}
+                  >
                     ${discountedPrice}
                   </span>
                   {marketPrice && discountPercentage > 0 && (
@@ -286,7 +307,12 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
               onClick={handleAddToCart}
               data-cart-action="true"
             >
-              <ShoppingCart className="h-4 w-4" />
+              <ShoppingCart
+                className="h-4 w-4"
+                style={{
+                  color: theme.colors.primary,
+                }}
+              />
             </Button>
           </div>
         </CardContent>

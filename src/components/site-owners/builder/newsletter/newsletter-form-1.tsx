@@ -92,8 +92,6 @@ export const NewsletterForm1: React.FC<NewsletterForm1Props> = ({
     <div className="mx-auto max-w-md bg-white">
       <div className="p-8">
         <div className="mb-6 text-center">
-          <Mail className="mx-auto mb-4 h-12 w-12 text-blue-600" />
-
           {data.subtitle &&
             (isEditable ? (
               <EditableText

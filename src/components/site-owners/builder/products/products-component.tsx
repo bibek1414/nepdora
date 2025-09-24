@@ -288,7 +288,6 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
               />
             </div>
 
-            {/* Conditional Layout: Sidebar + Products OR Just Products */}
             <div className={shouldShowSidebar ? "relative flex gap-6" : ""}>
               {/* Sidebar - Only show for ProductCard4 (grid-4) */}
               {shouldShowSidebar && (
