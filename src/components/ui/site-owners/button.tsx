@@ -132,7 +132,11 @@ function Button({
 
       case "outline":
         return {} as React.CSSProperties;
-
+      case "link":
+        return {
+          "--hover-bg": "transparent",
+          "--hover-color": theme.colors.primary,
+        } as React.CSSProperties;
       case "ghost":
         return {
           "--hover-bg": `${theme.colors.primary}1a`,

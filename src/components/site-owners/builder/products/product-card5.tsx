@@ -13,6 +13,8 @@ import {
 } from "@/hooks/customer/use-wishlist";
 import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
+import { Button as SOButton } from "@/components/ui/site-owners/button";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface ProductCard5Props {
   product: Product;
@@ -38,6 +40,22 @@ export const ProductCard5: React.FC<ProductCard5Props> = ({
   const { data: wishlistItems } = useWishlist();
   const addToWishlistMutation = useAddToWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlist();
+  const { data: themeResponse } = useThemeQuery();
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   // Use actual product data from backend
   const productImage =
@@ -228,7 +246,13 @@ export const ProductCard5: React.FC<ProductCard5Props> = ({
 
           {/* Price */}
           {showPrice && (
-            <div className="text-primary mt-4 text-3xl font-bold">
+            <div
+              className="mt-4 text-3xl font-bold"
+              style={{
+                color: theme.colors.primary,
+                fontFamily: theme.fonts.heading,
+              }}
+            >
               ${discountedPrice}
               {marketPrice && discountPercentage > 0 && (
                 <span className="ml-2 text-sm text-gray-600 line-through dark:text-gray-400">
@@ -277,14 +301,15 @@ export const ProductCard5: React.FC<ProductCard5Props> = ({
 
         {/* Add to Cart button */}
         <div className="p-4">
-          <Button
-            className="bg-primary h-auto w-full rounded-lg py-3 text-base font-semibold tracking-wider text-white transition-colors hover:bg-teal-600"
+          <SOButton
+            className="bg-primary h-auto w-full rounded-lg py-3 text-base font-semibold tracking-wider text-white transition-colors"
+            variant="default"
             disabled={product.stock === 0}
             onClick={handleAddToCart}
             data-cart-action="true"
           >
             {product.stock === 0 ? "OUT OF STOCK" : "ADD TO CART"}
-          </Button>
+          </SOButton>
         </div>
       </div>
     </CardWrapper>

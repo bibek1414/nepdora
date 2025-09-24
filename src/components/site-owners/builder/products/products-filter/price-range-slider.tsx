@@ -2,6 +2,7 @@
 import React from "react";
 import Range from "rc-slider";
 import "rc-slider/assets/index.css";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface PriceRange {
   min: number;
@@ -14,7 +15,6 @@ interface PriceRangeSliderProps {
   min: number;
   max: number;
   step?: number;
-  primaryColor?: string;
 }
 
 const priceSteps = [0, 5000, 10000, 15000, 20000, 30000, 50000, 75000, 100000];
@@ -25,8 +25,25 @@ export default function PriceRangeSlider({
   min,
   max,
   step = 1000,
-  primaryColor = "#EA7D6A",
 }: PriceRangeSliderProps) {
+  const { data: themeResponse } = useThemeQuery();
+
+  // ✅ Get theme with fallback
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
   const handleSliderChange = (newValues: number | number[]) => {
     if (Array.isArray(newValues) && newValues.length === 2) {
       onChange({ min: newValues[0], max: newValues[1] });
@@ -55,8 +72,8 @@ export default function PriceRangeSlider({
   };
 
   const commonHandleStyle = {
-    backgroundColor: "white",
-    borderColor: primaryColor,
+    backgroundColor: theme.colors.primaryForeground,
+    borderColor: theme.colors.primary,
     borderWidth: 3,
     height: 20,
     width: 20,
@@ -67,7 +84,7 @@ export default function PriceRangeSlider({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full" style={{ fontFamily: theme.fonts.body }}>
       <div className="relative mb-6 px-1">
         <Range
           min={min}
@@ -79,14 +96,25 @@ export default function PriceRangeSlider({
           range
           className="custom-range-slider"
           trackStyle={[
-            { backgroundColor: primaryColor, height: 4, borderRadius: 2 },
+            {
+              backgroundColor: theme.colors.primary,
+              height: 4,
+              borderRadius: 2,
+            },
           ]}
           handleStyle={[commonHandleStyle, commonHandleStyle]}
-          railStyle={{ backgroundColor: "#E5E7EB", height: 4, borderRadius: 2 }}
+          railStyle={{
+            backgroundColor: theme.colors.secondaryForeground,
+            height: 4,
+            borderRadius: 2,
+          }}
           dotStyle={{ display: "none" }}
         />
 
-        <div className="mt-2 flex justify-between text-xs text-gray-500">
+        <div
+          className="mt-2 flex justify-between text-xs"
+          style={{ color: theme.colors.text }}
+        >
           <span>₹{value.min.toLocaleString()}</span>
           <span>₹{value.max.toLocaleString()}</span>
         </div>
@@ -96,14 +124,17 @@ export default function PriceRangeSlider({
         {["min", "max"].map((type, idx) => (
           <React.Fragment key={type}>
             {idx === 1 && (
-              <span className="text-sm whitespace-nowrap text-gray-500">
+              <span
+                className="text-sm whitespace-nowrap"
+                style={{ color: theme.colors.text }}
+              >
                 to
               </span>
             )}
             <select
               value={type === "min" ? value.min : value.max}
               onChange={handleInputChange(type as "min" | "max")}
-              className="price-select focus:border-primary w-full cursor-pointer rounded-md border border-gray-300 bg-white p-2 text-sm transition-colors outline-none focus:ring-2"
+              className="price-select focus:border-primary w-full cursor-pointer rounded-md border border-gray-300 bg-white p-2 text-xs transition-colors outline-none focus:ring-2"
             >
               {generateOptions(type === "min").map(step => (
                 <option key={`${type}-${step}`} value={step}>
@@ -115,41 +146,6 @@ export default function PriceRangeSlider({
           </React.Fragment>
         ))}
       </div>
-
-      <style jsx>{`
-        .custom-range-slider {
-          touch-action: none;
-        }
-
-        .custom-range-slider .rc-slider-handle {
-          cursor: grab !important;
-          touch-action: none;
-        }
-
-        .custom-range-slider .rc-slider-handle:active {
-          cursor: grabbing !important;
-        }
-
-        .custom-range-slider .rc-slider-handle:hover {
-          border-color: ${primaryColor} !important;
-          box-shadow: 0 4px 12px ${primaryColor}4D !important;
-        }
-
-        .custom-range-slider .rc-slider-track,
-        .custom-range-slider .rc-slider-rail {
-          cursor: pointer;
-        }
-
-        .price-select:hover {
-          border-color: ${primaryColor} !important;
-          box-shadow: 0 0 0 1px ${primaryColor} !important;
-        }
-
-        .price-select:focus {
-          ring-color: ${primaryColor} !important;
-          border-color: ${primaryColor} !important;
-        }
-      `}</style>
     </div>
   );
 }

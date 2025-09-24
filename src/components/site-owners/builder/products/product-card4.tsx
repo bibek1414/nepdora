@@ -14,6 +14,8 @@ import {
 } from "@/hooks/customer/use-wishlist";
 import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
+import { Button as SOButton } from "@/components/ui/site-owners/button";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface ProductCard4Props {
   product: Product;
@@ -39,6 +41,22 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
   const { data: wishlistItems } = useWishlist();
   const addToWishlistMutation = useAddToWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlist();
+  const { data: themeResponse } = useThemeQuery();
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   // Use actual product data
   const productImage =
@@ -193,7 +211,13 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
             {/* Category & Rating */}
             <div className="flex items-center justify-between">
               {product.category && (
-                <span className="text-xs font-medium tracking-wide text-blue-600 uppercase">
+                <span
+                  className="text-xs font-medium tracking-wide uppercase"
+                  style={{
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.heading,
+                  }}
+                >
                   {product.category.name}
                 </span>
               )}
@@ -215,7 +239,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
             </div>
 
             {/* Product Name */}
-            <h3 className="line-clamp-2 text-sm leading-tight font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
+            <h3 className="line-clamp-2 text-sm leading-tight font-semibold">
               {product.name}
             </h3>
 
@@ -273,15 +297,16 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
             )}
 
             {/* Add to Cart Button */}
-            <Button
-              className="w-full bg-blue-600 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            <SOButton
+              className="w-full py-2 text-sm font-medium text-white transition-colors"
               disabled={product.stock === 0}
+              variant="default"
               onClick={handleAddToCart}
               data-cart-action="true"
             >
               <ShoppingCart className="mr-2 h-4 w-4" />
               {product.stock > 0 ? "Add to Cart" : "Notify Me"}
-            </Button>
+            </SOButton>
           </div>
         </CardContent>
       </Card>
