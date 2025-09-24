@@ -66,6 +66,10 @@ import { defaultNewsletterData } from "@/types/owner-site/components/newsletter"
 import { YouTubeStylesDialog } from "@/components/site-owners/builder/youtube/youtube-styles-dialog";
 import { defaultYouTubeData } from "@/types/owner-site/components/youtube";
 import { heroTemplateConfigs } from "@/types/owner-site/components/hero";
+import { PageTemplateDialog } from "@/components/site-owners/builder/templates/page-template-dialog";
+import { PageTemplate } from "@/types/owner-site/components/page-template";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -125,9 +129,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isYouTubeStylesDialogOpen, setIsYouTubeStylesDialogOpen] =
     useState(false);
+  const [isPageTemplateDialogOpen, setIsPageTemplateDialogOpen] =
+    useState(false);
   // Use pageSlug from URL params as current page
   const currentPage = pageSlug;
-
+  const queryClient = useQueryClient();
   // Unified component mutations
   const createHeroMutation = useCreateComponentMutation(currentPage, "hero");
   const createAboutUsMutation = useCreateComponentMutation(
@@ -316,9 +322,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   };
 
-  // Component click handlers - same as before
   const handleComponentClick = (componentId: string) => {
-    if (componentId === "navbar") {
+    if (componentId === "page-templates") {
+      setIsPageTemplateDialogOpen(true);
+    } else if (componentId === "navbar") {
       setIsNavbarDialogOpen(true);
     } else if (componentId === "footer") {
       setIsFooterDialogOpen(true);
@@ -368,7 +375,63 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+  const handlePageTemplateSelect = async (template: PageTemplate) => {
+    try {
+      // Create the page first
+      const newPage = await createPageMutation.mutateAsync({
+        title: template.name,
+      });
 
+      // Now create components for the NEW page using its slug
+      // Import the componentsApi directly to create components
+      const { componentsApi } = await import(
+        "@/services/api/owner-sites/components/unified"
+      );
+      // Get existing components for proper ordering (should be empty for new page)
+      const existingComponents = await componentsApi.getPageComponents(
+        newPage.slug
+      );
+
+      // Create all the components for this page
+      for (const component of template.components) {
+        const componentData = {
+          ...component.defaultData,
+          order: component.order,
+        };
+
+        // Create component using the API directly with the NEW page slug
+        await componentsApi.createComponent(
+          newPage.slug, // Use the new page slug, not currentPage!
+          {
+            component_type: component.type as keyof ComponentTypeMap,
+            data: componentData,
+            order: component.order,
+          },
+          existingComponents
+        );
+      }
+
+      // Invalidate queries to refresh the UI when we navigate to the new page
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", newPage.slug],
+      });
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+
+      // Navigate to the new page
+      router.push(`/builder/${siteUser}/${newPage.slug}`);
+
+      // Close the dialog
+      setIsPageTemplateDialogOpen(false);
+
+      // Show success message
+      toast.success(
+        `Page "${template.name}" created successfully with ${template.components.length} components!`
+      );
+    } catch (error) {
+      console.error("Failed to create page from template:", error);
+      toast.error("Failed to create page from template. Please try again.");
+    }
+  };
   const handleFooterStyleSelect = (styleId: string) => {
     const payload = {
       content: "footer content",
@@ -618,7 +681,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleCategoryTemplateSelect = (
-    template: "grid-1" | "grid-2" | "list-1" | "grid-3"
+    template: "grid-1" | "grid-2" | "list-1" | "grid-3" | "link-1" | "card-1"
   ) => {
     const categoryData = {
       page_size: 8,
@@ -943,7 +1006,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsCategoriesStylesDialogOpen}
         onStyleSelect={handleCategoryTemplateSelect}
       />
-
+      <PageTemplateDialog
+        isOpen={isPageTemplateDialogOpen}
+        onClose={() => setIsPageTemplateDialogOpen(false)}
+        onSelectTemplate={handlePageTemplateSelect}
+      />
       <PortfolioStylesDialog
         open={isPortfolioStylesDialogOpen}
         onOpenChange={setIsPortfolioStylesDialogOpen}

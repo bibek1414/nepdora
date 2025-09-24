@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import { CategoryComponentData } from "@/types/owner-site/components/category";
+import React, { useState, useCallback, useRef } from "react";
+import {
+  CategoryComponentData,
+  FeaturedContent,
+} from "@/types/owner-site/components/category";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import {
   useDeleteComponentMutation,
@@ -8,6 +11,9 @@ import {
 import { CategoryCard1 } from "./category-card-1";
 import { CategoryCard2 } from "./category-card-2";
 import { CategoryCard3 } from "./category-card-3";
+import { CategoryCard4 } from "./category-card-4";
+import { CategoryCard5 } from "./category-card-5";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -26,7 +32,6 @@ import { Category } from "@/types/owner-site/admin/product";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import Pagination from "@/components/ui/pagination";
-
 interface CategoryComponentProps {
   component: CategoryComponentData;
   isEditable?: boolean;
@@ -35,7 +40,25 @@ interface CategoryComponentProps {
   onUpdate?: (componentId: string, newData: CategoryComponentData) => void;
   onCategoryClick?: (categoryId: number, order: number) => void;
 }
+const useDebouncedCallback = <T extends unknown[]>(
+  callback: (...args: T) => void,
+  delay: number
+) => {
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
+  return useCallback(
+    (...args: T) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        callback(...args);
+      }, delay);
+    },
+    [callback, delay]
+  );
+};
 export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   component,
   isEditable = false,
@@ -66,7 +89,39 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
     pageSlug || "",
     "category"
   );
+  const debouncedSave = useDebouncedCallback(
+    (updatedData: Partial<FeaturedContent>) => {
+      if (!pageSlug || !isEditable) return;
 
+      const updatedComponentData = {
+        ...component.data,
+        featuredContent: {
+          ...(component.data.featuredContent || {}),
+          ...updatedData,
+        },
+      };
+
+      updateCategoryComponent.mutate({
+        componentId: component.component_id,
+        data: updatedComponentData,
+      });
+
+      if (onUpdate) {
+        onUpdate(component.component_id, {
+          ...component,
+          data: updatedComponentData,
+        });
+      }
+    },
+    1000
+  );
+
+  const handleFeaturedContentUpdate = useCallback(
+    (updatedData: Partial<FeaturedContent>) => {
+      debouncedSave(updatedData);
+    },
+    [debouncedSave]
+  );
   // Get categories with pagination
   const { data, isLoading, error } = useCategories();
 
@@ -175,6 +230,10 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
         return <CategoryCard3 key={category.id} index={index} {...cardProps} />;
       case "carousel-1":
         return <CategoryCard1 key={category.id} {...cardProps} />;
+      case "card-1":
+        return <CategoryCard5 key={category.id} {...cardProps} />;
+      case "link-1":
+        return <CategoryCard4 key={category.id} {...cardProps} />;
       case "grid-1":
       default:
         return <CategoryCard1 key={category.id} {...cardProps} />;
@@ -189,10 +248,45 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
         return "grid-cols-1 lg:grid-cols-2 gap-8";
       case "carousel-1":
         return "flex overflow-x-auto gap-6 pb-4";
+      case "link-1":
+        return "";
       case "grid-1":
       default:
         return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 4)}`;
     }
+  };
+
+  const renderCategoryCard4 = () => {
+    return (
+      <CategoryCard4
+        isEditable={isEditable}
+        siteUser={siteUser}
+        initialFeaturedContent={component.data.featuredContent}
+        onFeaturedContentUpdate={updatedData => {
+          if (!pageSlug || !isEditable) return;
+
+          const updatedComponentData = {
+            ...component.data,
+            featuredContent: {
+              ...(component.data.featuredContent || {}),
+              ...updatedData,
+            },
+          };
+
+          updateCategoryComponent.mutate({
+            componentId: component.component_id,
+            data: updatedComponentData,
+          });
+
+          if (onUpdate) {
+            onUpdate(component.component_id, {
+              ...component,
+              data: updatedComponentData,
+            });
+          }
+        }}
+      />
+    );
   };
 
   // Builder mode preview
@@ -245,54 +339,155 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
           </AlertDialog>
         </div>
 
-        {/* Categories Preview */}
-        <div className="py-8">
-          <div className="container mx-auto px-4">
-            <div className="mb-8 text-center">
-              <EditableText
-                value={title}
-                onChange={handleTitleChange}
-                as="h2"
-                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-              <EditableText
-                value={subtitle || ""}
-                onChange={handleSubtitleChange}
-                as="p"
-                className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                isEditable={true}
-                placeholder="Enter subtitle..."
-                multiline={true}
-              />
+        {/* Special rendering for CategoryCard4 */}
+        {style === "link-1" ? (
+          renderCategoryCard4()
+        ) : (
+          /* Categories Preview for other styles */
+          <div className="py-8">
+            <div className="container mx-auto px-4">
+              <div className="mb-8 text-center">
+                <EditableText
+                  value={title}
+                  onChange={handleTitleChange}
+                  as="h2"
+                  className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                  isEditable={true}
+                  placeholder="Enter title..."
+                />
+                <EditableText
+                  value={subtitle || ""}
+                  onChange={handleSubtitleChange}
+                  as="p"
+                  className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                  isEditable={true}
+                  placeholder="Enter subtitle..."
+                  multiline={true}
+                />
+              </div>
+
+              {isLoading && (
+                <div className={`grid ${getGridClass()} gap-6`}>
+                  {Array.from({ length: Math.min(page_size, 8) }).map(
+                    (_, index) => (
+                      <div key={index} className="flex flex-col space-y-3">
+                        <Skeleton className="h-[250px] w-full rounded-xl" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-5 w-3/4" />
+                          <Skeleton className="h-4 w-1/2" />
+                          <Skeleton className="h-6 w-1/3" />
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
+
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error Loading Categories</AlertTitle>
+                  <AlertDescription>
+                    {error instanceof Error
+                      ? error.message
+                      : "Failed to load categories. Please check your API connection."}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {!isLoading && !error && categories.length > 0 && (
+                <>
+                  <div
+                    className={`${style === "carousel-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-6`}`}
+                  >
+                    {categories.map((category, index) => (
+                      <div
+                        key={category.id}
+                        className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
+                      >
+                        {/* Overlay to prevent clicks in builder mode */}
+                        <div className="absolute inset-0 z-10 bg-transparent" />
+                        {renderCategoryCard(category, index)}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Pagination for builder mode */}
+                  {pagination && pagination.totalPages > 1 && (
+                    <div className="mt-8">
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={pagination.totalPages}
+                        onPageChange={handlePageChange}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+
+              {!isLoading && !error && categories.length === 0 && (
+                <div className="bg-muted/50 rounded-lg py-12 text-center">
+                  <FolderOpen className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+                  <h3 className="text-foreground mb-2 text-lg font-semibold">
+                    No Categories Found
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Add some categories to your inventory to display them here.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Live site rendering
+  return (
+    <section className="bg-background py-12 md:py-16">
+      <div className="container mx-auto max-w-7xl px-4">
+        {/* Special rendering for CategoryCard4 on live site */}
+        {style === "link-1" ? (
+          renderCategoryCard4()
+        ) : (
+          <>
+            <div className="mb-12 text-center">
+              <h2 className="text-foreground mb-4 text-4xl font-bold tracking-tight">
+                {title}
+              </h2>
+              {subtitle && (
+                <p className="text-muted-foreground mx-auto max-w-3xl text-xl">
+                  {subtitle}
+                </p>
+              )}
             </div>
 
             {isLoading && (
-              <div className={`grid ${getGridClass()} gap-6`}>
-                {Array.from({ length: Math.min(page_size, 8) }).map(
-                  (_, index) => (
-                    <div key={index} className="flex flex-col space-y-3">
-                      <Skeleton className="h-[250px] w-full rounded-xl" />
-                      <div className="space-y-2">
-                        <Skeleton className="h-5 w-3/4" />
-                        <Skeleton className="h-4 w-1/2" />
-                        <Skeleton className="h-6 w-1/3" />
-                      </div>
+              <div
+                className={`${style === "carousel-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
+              >
+                {Array.from({ length: page_size }).map((_, index) => (
+                  <div key={index} className="flex flex-col space-y-4">
+                    <Skeleton className="h-[280px] w-full rounded-lg" />
+                    <div className="space-y-3">
+                      <Skeleton className="h-6 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                      <Skeleton className="h-8 w-1/3" />
                     </div>
-                  )
-                )}
+                  </div>
+                ))}
               </div>
             )}
 
             {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error Loading Categories</AlertTitle>
-                <AlertDescription>
+              <Alert variant="destructive" className="mx-auto max-w-2xl">
+                <AlertCircle className="h-5 w-5" />
+                <AlertTitle>Unable to Load Categories</AlertTitle>
+                <AlertDescription className="text-base">
                   {error instanceof Error
                     ? error.message
-                    : "Failed to load categories. Please check your API connection."}
+                    : "We're having trouble loading our categories. Please try refreshing the page."}
                 </AlertDescription>
               </Alert>
             )}
@@ -300,23 +495,18 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
             {!isLoading && !error && categories.length > 0 && (
               <>
                 <div
-                  className={`${style === "carousel-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-6`}`}
+                  className={`${style === "carousel-1" ? "flex gap-8 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
                 >
                   {categories.map((category, index) => (
-                    <div
-                      key={category.id}
-                      className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
-                    >
-                      {/* Overlay to prevent clicks in builder mode */}
-                      <div className="absolute inset-0 z-10 bg-transparent" />
+                    <div key={category.id} className="flex-shrink-0">
                       {renderCategoryCard(category, index)}
                     </div>
                   ))}
                 </div>
 
-                {/* Pagination for builder mode */}
+                {/* Pagination for live site */}
                 {pagination && pagination.totalPages > 1 && (
-                  <div className="mt-8">
+                  <div className="mt-12">
                     <Pagination
                       currentPage={currentPage}
                       totalPages={pagination.totalPages}
@@ -328,102 +518,18 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
             )}
 
             {!isLoading && !error && categories.length === 0 && (
-              <div className="bg-muted/50 rounded-lg py-12 text-center">
-                <FolderOpen className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-                <h3 className="text-foreground mb-2 text-lg font-semibold">
-                  No Categories Found
+              <div className="py-16 text-center">
+                <FolderOpen className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
+                <h3 className="text-foreground mb-4 text-2xl font-semibold">
+                  No Categories Available
                 </h3>
-                <p className="text-muted-foreground">
-                  Add some categories to your inventory to display them here.
+                <p className="text-muted-foreground mx-auto max-w-md text-lg">
+                  We&apos;re currently updating our category structure. Please
+                  check back soon for new categories.
                 </p>
               </div>
             )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Live site rendering
-  return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          <h2 className="text-foreground mb-4 text-4xl font-bold tracking-tight">
-            {title}
-          </h2>
-          {subtitle && (
-            <p className="text-muted-foreground mx-auto max-w-3xl text-xl">
-              {subtitle}
-            </p>
-          )}
-        </div>
-
-        {isLoading && (
-          <div
-            className={`${style === "carousel-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
-          >
-            {Array.from({ length: page_size }).map((_, index) => (
-              <div key={index} className="flex flex-col space-y-4">
-                <Skeleton className="h-[280px] w-full rounded-lg" />
-                <div className="space-y-3">
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                  <Skeleton className="h-8 w-1/3" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {error && (
-          <Alert variant="destructive" className="mx-auto max-w-2xl">
-            <AlertCircle className="h-5 w-5" />
-            <AlertTitle>Unable to Load Categories</AlertTitle>
-            <AlertDescription className="text-base">
-              {error instanceof Error
-                ? error.message
-                : "We're having trouble loading our categories. Please try refreshing the page."}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {!isLoading && !error && categories.length > 0 && (
-          <>
-            <div
-              className={`${style === "carousel-1" ? "flex gap-8 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
-            >
-              {categories.map((category, index) => (
-                <div key={category.id} className="flex-shrink-0">
-                  {renderCategoryCard(category, index)}
-                </div>
-              ))}
-            </div>
-
-            {/* Pagination for live site */}
-            {pagination && pagination.totalPages > 1 && (
-              <div className="mt-12">
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={pagination.totalPages}
-                  onPageChange={handlePageChange}
-                />
-              </div>
-            )}
           </>
-        )}
-
-        {!isLoading && !error && categories.length === 0 && (
-          <div className="py-16 text-center">
-            <FolderOpen className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Categories Available
-            </h3>
-            <p className="text-muted-foreground mx-auto max-w-md text-lg">
-              We&apos;re currently updating our category structure. Please check
-              back soon for new categories.
-            </p>
-          </div>
         )}
       </div>
     </section>

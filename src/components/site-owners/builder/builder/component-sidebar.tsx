@@ -46,6 +46,12 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
 
   const items: Item[] = [
     {
+      id: "page-templates",
+      label: "Page Templates",
+      icon: LayoutDashboard,
+      keywords: ["template", "page", "preset", "quick"],
+    },
+    {
       id: "navbar",
       label: "Header",
       icon: LayoutDashboard,
