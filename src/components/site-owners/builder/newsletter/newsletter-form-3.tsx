@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import { Input } from "@/components/ui/input";
 import {
   Mail,
@@ -191,6 +191,7 @@ export const NewsletterForm3: React.FC<NewsletterForm3Props> = ({
                   disabled={
                     createNewsletter.isPending || isPreview || !formData.email
                   }
+                  variant="default"
                   className="h-12 bg-blue-600 px-8 text-base font-semibold hover:bg-blue-700"
                 >
                   {createNewsletter.isPending ? (

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Send, Loader2, CheckCircle, Sparkles } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
@@ -200,6 +200,7 @@ export const NewsletterForm2: React.FC<NewsletterForm2Props> = ({
             />
             <Button
               type="submit"
+              variant="default"
               disabled={
                 createNewsletter.isPending || isPreview || !formData.email
               }

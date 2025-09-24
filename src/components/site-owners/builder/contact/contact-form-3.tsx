@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -170,6 +170,7 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
 
           <Button
             type="submit"
+            variant="default"
             disabled={submitContactForm.isPending || isPreview}
             className="w-full"
             size="lg"

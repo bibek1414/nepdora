@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Send, Loader2, CheckCircle } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
@@ -143,6 +143,7 @@ export const NewsletterForm1: React.FC<NewsletterForm1Props> = ({
               disabled={
                 createNewsletter.isPending || isPreview || !formData.email
               }
+              variant="default"
               className="w-fit"
             >
               {createNewsletter.isPending ? (

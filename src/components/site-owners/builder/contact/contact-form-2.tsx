@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -157,6 +157,7 @@ export const ContactForm2: React.FC<ContactForm2Props> = ({
         <Button
           type="submit"
           disabled={submitContactForm.isPending || isPreview}
+          variant="default"
           className="w-full"
           size="lg"
         >

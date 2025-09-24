@@ -50,7 +50,8 @@ import {
   ChevronUp,
   ChevronDown,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { Button } from "@/components/ui/site-owners/button";
 
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
@@ -98,16 +99,27 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddTeam,
   onAddTestimonials,
   onAddFAQ,
-  onAddPortfolio,
-  onAddBanner,
-  onAddNewsletter,
-  onAddYouTube,
 }) => {
   // Local state to manage component order optimistically
   const [pageComponents, setPageComponents] = useState<ComponentResponse[]>(
     initialPageComponents.sort((a, b) => (a.order || 0) - (b.order || 0))
   );
-
+  const { data: themeResponse } = useThemeQuery();
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
   React.useEffect(() => {
     setPageComponents(
       initialPageComponents.sort((a, b) => (a.order || 0) - (b.order || 0))
@@ -449,8 +461,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         <div className="border-b border-dashed border-gray-300 bg-gray-50/50">
           <div className="flex items-center justify-center p-8">
             <div className="text-center">
-              <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-                <Navigation className="text-primary h-8 w-8" />
+              <div className="mx-auto mb-4 w-fit rounded-full bg-gray-100 p-4">
+                <Navigation
+                  className="h-8 w-8"
+                  style={{
+                    color: theme.colors.primary,
+                  }}
+                />
               </div>
               <h4 className="text-foreground mb-2 text-lg font-semibold">
                 Add a Navigation Bar
@@ -459,7 +476,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 Every website needs navigation. Start with a professional navbar
                 template.
               </p>
-              <Button onClick={onAddNavbar} className="gap-2">
+              <Button onClick={onAddNavbar} variant="default" className="gap-2">
                 <Plus className="h-4 w-4" />
                 Add Navbar
               </Button>
@@ -570,8 +587,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         <div className="border-t border-dashed border-gray-300 bg-gray-50/50">
           <div className="flex items-center justify-center p-8">
             <div className="text-center">
-              <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-                <FileText className="text-primary h-8 w-8" />
+              <div className="mx-auto mb-4 w-fit rounded-full bg-gray-100 p-4">
+                <FileText
+                  className="h-8 w-8"
+                  style={{
+                    color: theme.colors.primary,
+                  }}
+                />
               </div>
               <h4 className="text-foreground mb-2 text-lg font-semibold">
                 Add a Footer
@@ -580,7 +602,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 Finish your page with a professional footer to provide essential
                 links.
               </p>
-              <Button onClick={onAddFooter} className="gap-2">
+              <Button onClick={onAddFooter} variant="default" className="gap-2">
                 <Plus className="h-4 w-4" />
                 Add Footer
               </Button>

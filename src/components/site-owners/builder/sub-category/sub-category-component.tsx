@@ -7,6 +7,7 @@ import {
 } from "@/hooks/owner-site/components/unified";
 import { SubCategoryCard1 } from "./sub-category-card-1";
 import { SubCategoryCard2 } from "./sub-category-card-2";
+import { SubCategoryCard3 } from "./sub-category-card-3";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -171,7 +172,7 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
       case "grid-2":
         return <SubCategoryCard2 key={subcategory.id} {...cardProps} />;
       case "list-1":
-        return <SubCategoryCard2 key={subcategory.id} {...cardProps} />;
+        return <SubCategoryCard3 key={subcategory.id} {...cardProps} />;
       case "carousel-1":
         return <SubCategoryCard1 key={subcategory.id} {...cardProps} />;
       case "grid-1":
