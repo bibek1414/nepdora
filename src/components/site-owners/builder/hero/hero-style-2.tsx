@@ -249,14 +249,13 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
         color: textColor,
         fontFamily: theme.fonts.body,
       }}
-      // FIX 6: Add unique data attribute for debugging
       data-component-id={componentId}
     >
       {/* Background Change Button - Only visible when editable */}
       {isEditable && (
         <div className="absolute top-6 right-6 z-10">
           <label
-            htmlFor={`background-upload-${componentId}`} // FIX 7: Unique input ID
+            htmlFor={`background-upload-${componentId}`}
             className={`mr-12 cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
               isUploadingBackground ? "pointer-events-none opacity-50" : ""
             }`}

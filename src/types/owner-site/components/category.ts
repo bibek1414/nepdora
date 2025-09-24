@@ -1,17 +1,3 @@
-export interface CategoryData {
-  component_id?: string;
-  component_type: "category";
-  style: "grid-1" | "grid-2" | "list-1" | "carousel-1" | "grid-3";
-  title: string;
-  subtitle?: string;
-  page_size: number;
-  showPagination?: boolean;
-  itemsPerRow?: number;
-  showDescription?: boolean;
-  showProductCount?: boolean;
-  order?: number;
-}
-
 export interface CategoryComponentData {
   id: string | number;
   component_id: string;
@@ -33,3 +19,35 @@ export const defaultCategoryData: CategoryData = {
   showDescription: true,
   showProductCount: true,
 };
+
+export interface FeaturedContent {
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  buttonText?: string;
+  buttonHref?: string;
+  backgroundImages?: string[];
+  currentImageIndex?: number;
+}
+
+export interface CategoryData {
+  component_id?: string;
+  component_type: "category";
+  style:
+    | "grid-1"
+    | "grid-2"
+    | "list-1"
+    | "carousel-1"
+    | "grid-3"
+    | "link-1"
+    | "card-1";
+  title: string;
+  subtitle?: string;
+  page_size: number;
+  showPagination?: boolean;
+  itemsPerRow?: number;
+  showDescription?: boolean;
+  showProductCount?: boolean;
+  order?: number;
+  featuredContent?: FeaturedContent;
+}
