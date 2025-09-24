@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import {
   Plus,
   Sparkles,
@@ -13,6 +13,7 @@ import {
   Grid3X3,
   FolderTree,
 } from "lucide-react";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface PlaceholderAction {
   label: string;
@@ -27,6 +28,8 @@ interface ContentPlaceholderProps {
   description: string;
   primaryAction?: PlaceholderAction;
   secondaryActions?: PlaceholderAction[];
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  theme?: any;
 }
 
 export const ContentPlaceholder: React.FC<ContentPlaceholderProps> = ({
@@ -35,13 +38,19 @@ export const ContentPlaceholder: React.FC<ContentPlaceholderProps> = ({
   description,
   primaryAction,
   secondaryActions = [],
+  theme,
 }) => {
   return (
     <div className="py-20 text-center">
-      <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-        <Icon className="text-primary h-8 w-8" />
+      <div className="mx-auto mb-4 w-fit rounded-full bg-gray-100 p-4">
+        <Icon className="h-8 w-8" />
       </div>
-      <h4 className="text-foreground mb-2 text-lg font-semibold">{title}</h4>
+      <h4
+        className="text-foreground mb-2 text-lg font-semibold"
+        style={{ fontFamily: theme?.fonts?.heading }}
+      >
+        {title}
+      </h4>
       <p className="text-muted-foreground mx-auto mb-4 max-w-xs text-sm">
         {description}
       </p>
@@ -49,7 +58,7 @@ export const ContentPlaceholder: React.FC<ContentPlaceholderProps> = ({
         {primaryAction && (
           <Button
             onClick={primaryAction.onClick}
-            variant={primaryAction.variant || "default"}
+            variant="default"
             className="gap-2"
           >
             <primaryAction.icon className="h-4 w-4" />
@@ -60,7 +69,7 @@ export const ContentPlaceholder: React.FC<ContentPlaceholderProps> = ({
           <Button
             key={index}
             onClick={action.onClick}
-            variant={action.variant || "outline"}
+            variant="outline"
             className="gap-2"
           >
             <action.icon className="h-4 w-4" />
@@ -126,10 +135,24 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
   onAddContact,
   onAddFAQ,
 }) => {
-  // Don't show placeholders while loading
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
   if (isLoading) return null;
 
-  // 1. Show initial hero placeholder if no hero and navbar exists
   if (
     !hasHero &&
     navbar &&
@@ -139,17 +162,23 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
   ) {
     return (
       <div className="flex h-full flex-col items-center justify-center py-20 text-center">
-        <div className="bg-primary/10 mb-4 rounded-full p-6">
-          <Sparkles className="text-primary h-12 w-12" />
+        <div className="mb-4 rounded-full bg-gray-100 p-6">
+          <Sparkles
+            className="h-12 w-12"
+            style={{ color: theme.colors.primary }}
+          />
         </div>
-        <h3 className="text-foreground mb-2 text-xl font-semibold">
+        <h3
+          className="text-foreground mb-2 text-xl font-semibold"
+          style={{ fontFamily: theme.fonts.heading }}
+        >
           Add Your First Hero Section
         </h3>
         <p className="text-muted-foreground mb-6 max-w-md">
           Create an engaging hero section to welcome your visitors and showcase
           what you offer.
         </p>
-        <Button onClick={onAddHero} className="gap-2">
+        <Button onClick={onAddHero} variant="default" className="gap-2">
           <Plus className="h-4 w-4" />
           Add Hero Section
         </Button>
@@ -157,7 +186,6 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     );
   }
 
-  // 2. Show initial options after hero
   if (
     hasHero &&
     !hasAbout &&
@@ -238,11 +266,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
             : undefined
         }
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 3. Show team placeholder after about us
   if (
     hasHero &&
     hasAbout &&
@@ -310,11 +338,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddTeam,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 4. Show testimonials placeholder after team
   if (
     hasHero &&
     hasAbout &&
@@ -375,11 +403,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddTestimonials,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 5. Alternative testimonials placeholder - after about but no team
   if (
     hasHero &&
     hasAbout &&
@@ -440,11 +468,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddTestimonials,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 6. Show products placeholder after testimonials
   if (
     hasHero &&
     hasAbout &&
@@ -498,11 +526,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddProducts,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 7. Show categories placeholder after products
   if (
     hasHero &&
     hasAbout &&
@@ -547,11 +575,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddCategories,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 8. Show subcategories placeholder after categories
   if (
     hasHero &&
     hasAbout &&
@@ -589,11 +617,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddSubCategories,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 9. Alternative categories placeholder - without products but with testimonials
   if (
     hasHero &&
     hasAbout &&
@@ -646,11 +674,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddCategories,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 10. Alternative subcategories placeholder - standalone
   if (
     hasHero &&
     hasAbout &&
@@ -701,11 +729,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddSubCategories,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 11. Show blog placeholder after all main sections
   if (
     hasHero &&
     hasAbout &&
@@ -734,11 +762,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddBlog,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 12. Alternative blog placeholder - with basic sections
   if (
     hasHero &&
     hasAbout &&
@@ -767,11 +795,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddBlog,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 13. Dedicated FAQ placeholder (when core sections exist but FAQ is missing)
   if (
     hasHero &&
     hasAbout &&
@@ -794,11 +822,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           icon: Plus,
           onClick: onAddFAQ,
         }}
+        theme={theme}
       />
     );
   }
 
-  // 14. Show contact placeholder after all sections
   if (
     hasHero &&
     hasAbout &&
@@ -828,11 +856,11 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddContact,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 15. Alternative contact placeholder - with basic sections
   if (
     hasHero &&
     hasAbout &&
@@ -861,18 +889,24 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           onClick: onAddContact,
         }}
         secondaryActions={secondaryActions}
+        theme={theme}
       />
     );
   }
 
-  // 16. Show general start building message if no navbar
   if (!navbar && pageComponentsLength === 0 && droppedComponentsLength === 0) {
     return (
       <div className="flex h-full flex-col items-center justify-center py-20 text-center">
-        <div className="bg-primary/10 mb-4 rounded-full p-6">
-          <Sparkles className="text-primary h-12 w-12" />
+        <div className="mb-4 rounded-full bg-gray-100 p-6">
+          <Sparkles
+            className="h-12 w-12"
+            style={{ color: theme.colors.primary }}
+          />
         </div>
-        <h3 className="text-foreground mb-2 text-xl font-semibold">
+        <h3
+          className="text-foreground mb-2 text-xl font-semibold"
+          style={{ fontFamily: theme.fonts.heading }}
+        >
           Start Building Your Site
         </h3>
         <p className="text-muted-foreground mb-6 max-w-md">
@@ -883,6 +917,5 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     );
   }
 
-  // No placeholder needed
   return null;
 };

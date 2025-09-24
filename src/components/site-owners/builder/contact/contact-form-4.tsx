@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -14,7 +14,6 @@ import {
   Settings,
   X,
 } from "lucide-react";
-import { EditableText } from "@/components/ui/editable-text";
 
 import {
   ContactData,
@@ -213,6 +212,7 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
 
                 <Button
                   type="submit"
+                  variant="default"
                   disabled={submitContactForm.isPending || isPreview}
                   className="w-full"
                 >
@@ -244,7 +244,7 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
                     Google Maps Configuration
                   </Label>
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
                     onClick={() => setShowMapSettings(false)}
                     className="h-6 w-6 p-0 text-gray-500 hover:text-gray-700"
@@ -271,7 +271,7 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
                   </div>
 
                   <div className="rounded-md p-3">
-                    <p className="text-primary text-xs">
+                    <p className="text-xs text-gray-600">
                       <strong>How to get embed URL:</strong>
                       <br />
                       1. Go to Google Maps
@@ -293,7 +293,7 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
               {/* Settings Button - Only show when isEditable */}
               {isEditable && (
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={() => setShowMapSettings(!showMapSettings)}
                   className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full border bg-white/90 p-0 shadow-md hover:bg-white"
