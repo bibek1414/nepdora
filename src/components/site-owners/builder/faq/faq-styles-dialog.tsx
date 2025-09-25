@@ -11,7 +11,7 @@ interface FAQStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
-    style: "accordion" | "plus-minus" | "card-grid" | "card-grid-4"
+    style: "accordion" | "plus-minus" | "card-grid" | "card-grid-4" | "simple"
   ) => void; // Updated to use string values
 }
 
@@ -28,11 +28,12 @@ export const FAQStylesDialog: React.FC<FAQStylesDialogProps> = ({
     { id: 2, name: "Plus/Minus Style", style: "plus-minus" as const },
     { id: 3, name: "Card Grid Style", style: "card-grid" as const },
     { id: 4, name: "Card Grid Style 4", style: "card-grid-4" as const },
+    { id: 5, name: "Simple Style", style: "simple" as const },
   ];
 
   const handleSelect = (template: {
     id: number;
-    style: "accordion" | "plus-minus" | "card-grid" | "card-grid-4";
+    style: "accordion" | "plus-minus" | "card-grid" | "card-grid-4" | "simple";
   }) => {
     setSelectedStyle(template.style);
     setTimeout(() => {

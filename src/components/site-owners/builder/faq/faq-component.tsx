@@ -9,6 +9,7 @@ import { FAQCard1 } from "./faq-card-1";
 import { FAQCard2 } from "./faq-card-2";
 import { FAQCard3 } from "./faq-card-3";
 import { FAQCard4 } from "./faq-card-4";
+import { FAQCard5 } from "./faq-card-5";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -138,6 +139,8 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     switch (style) {
       case "card-grid-4":
         return <FAQCard4 {...cardProps} />;
+      case "simple":
+        return <FAQCard5 {...cardProps} />;
       case "plus-minus":
         return <FAQCard2 {...cardProps} />;
       case "card-grid":

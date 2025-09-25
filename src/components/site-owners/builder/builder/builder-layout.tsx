@@ -792,7 +792,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleFAQTemplateSelect = (
-    template: "accordion" | "plus-minus" | "card-grid" | "card-grid-4"
+    template:
+      | "accordion"
+      | "plus-minus"
+      | "card-grid"
+      | "card-grid-4"
+      | "simple"
   ) => {
     const faqData = {
       ...defaultFAQData,

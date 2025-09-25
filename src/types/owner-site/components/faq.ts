@@ -1,7 +1,7 @@
 export interface FAQData {
   component_id?: string;
   component_type: "faq";
-  style: "accordion" | "plus-minus" | "card-grid" | "card-grid-4";
+  style: "accordion" | "plus-minus" | "card-grid" | "card-grid-4" | "simple";
   title: string;
   subtitle?: string;
   order?: number;
