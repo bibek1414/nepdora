@@ -272,6 +272,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const signup = async (data: any) => {
     setIsLoading(true);
     try {
@@ -286,7 +287,29 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
 
       // Don't auto-login after signup, just redirect to login page
       toast.success("Account created successfully! Please log in to continue.");
-      router.push("/login");
+
+      // FIXED: Extract siteUser from current URL path and redirect to preview-specific login
+      if (typeof window !== "undefined") {
+        const currentPath = window.location.pathname;
+        const pathSegments = currentPath.split("/");
+
+        // Find the siteUser from the URL pattern /preview/{siteUser}/signup
+        let siteUser = null;
+        const previewIndex = pathSegments.indexOf("preview");
+        if (previewIndex !== -1 && previewIndex + 1 < pathSegments.length) {
+          siteUser = pathSegments[previewIndex + 1];
+        }
+
+        if (siteUser) {
+          router.push(`/preview/${siteUser}/login`);
+        } else {
+          // Fallback to general login page if siteUser cannot be determined
+          router.push("/login");
+        }
+      } else {
+        // Fallback for server-side rendering
+        router.push("/login");
+      }
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorMessage = getErrorMessage(error);

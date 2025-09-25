@@ -149,7 +149,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
 
   return (
     <Link href={detailsUrl} className="">
-      <Card className="group relative overflow-hidden border border-gray-200 bg-white transition-all duration-300 hover:border-gray-300 hover:shadow-xl">
+      <Card className="group relative gap-0 overflow-hidden border bg-white py-0 transition-all duration-300">
         <CardContent className="p-0">
           {/* Image Section */}
           <div className="relative overflow-hidden">
@@ -158,13 +158,13 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
                 src={productImage}
                 alt={product.thumbnail_alt_description || product.name}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover transition-transform duration-500"
                 onError={e => {
                   e.currentTarget.src =
                     "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop";
                 }}
               />
-              <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/10" />
+              <div className="absolute inset-0 bg-black/0 transition-all duration-300" />
             </div>
 
             {/* Floating Badges */}
@@ -190,7 +190,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
               <Button
                 size="sm"
                 variant="secondary"
-                className={`rounded-full bg-gray-600 backdrop-blur-sm hover:bg-white ${
+                className={`rounded-full bg-gray-600 backdrop-blur-sm hover:bg-gray-700 ${
                   isWishlisted ? "text-red-500" : ""
                 }`}
                 onClick={handleFavorite}

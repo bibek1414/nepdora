@@ -9,6 +9,7 @@ import {
   useSearchProducts,
   useSuggestedProducts,
 } from "@/hooks/owner-site/admin/use-search-products";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import Image from "next/image";
 import { Product } from "@/types/owner-site/admin/product";
 
@@ -35,6 +36,33 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Theme integration
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
+  // Helper function to create gradient with opacity variations
+  const createGradientStyle = () => {
+    const primaryColor = theme.colors.primary;
+    return {
+      background: `linear-gradient(to right, ${primaryColor}, ${primaryColor}33, ${primaryColor}0D)`,
+    };
+  };
 
   // Truncate text function
   const truncateText = (text: string, maxLength: number = 30): string => {
@@ -212,7 +240,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div ref={searchRef} className={`relative w-full max-w-md ${className}`}>
       <form onSubmit={handleSearchSubmit} className="relative">
-        <div className="from-primary via-primary/20 to-primary/5 relative rounded-xl bg-gradient-to-r p-[1px]">
+        <div
+          className="relative rounded-xl p-[1px]"
+          style={createGradientStyle()}
+        >
           <div className="relative rounded-xl bg-white">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
@@ -229,6 +260,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               className={`h-11 w-full rounded-xl border-0 bg-transparent pr-10 pl-10 text-sm placeholder:text-gray-400 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 ${
                 isEditable ? "cursor-not-allowed opacity-60" : ""
               }`}
+              style={{
+                fontFamily: theme.fonts.body,
+              }}
             />
             {searchQuery && !isEditable && (
               <Button
@@ -246,23 +280,33 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         </div>
       </form>
 
-      {/* FIXED: Updated z-index and positioning */}
       {showDropdown && !isEditable && (
-        <Card className="absolute right-0 left-0 z-[9999] mt-2 min-w-[320px] border-2 shadow-xl">
+        <Card className="absolute right-0 left-0 z-[9999] mt-2 min-w-[320px] border-2">
           <CardContent className="p-0">
             <ScrollArea className="max-h-[500px]">
               <div className="p-4">
                 {showSuggestions && (
                   <>
                     <div className="mb-2">
-                      <span className="text-sm font-medium text-gray-900">
+                      <span
+                        className="text-sm font-medium"
+                        style={{
+                          fontFamily: theme.fonts.heading,
+                        }}
+                      >
                         Suggested Products
                       </span>
                     </div>
 
                     {isSuggestionsLoading ? (
                       <div className="flex items-center justify-center gap-2 py-8 text-gray-500">
-                        <div className="border-primary h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
+                        <div
+                          className="h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
+                          style={{
+                            borderColor: theme.colors.primary + "33",
+                            borderTopColor: "transparent",
+                          }}
+                        ></div>
                         <span className="text-sm">Loading suggestions…</span>
                       </div>
                     ) : page_sizeedProducts.length > 0 ? (
@@ -286,13 +330,22 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                             </div>
                             <div className="min-w-0 flex-1">
                               <div
-                                className="text-sm font-medium text-gray-900"
+                                className="text-sm font-medium"
                                 title={product.name}
+                                style={{
+                                  fontFamily: theme.fonts.body,
+                                }}
                               >
                                 {truncateText(product.name, 45)}
                               </div>
                               <div className="mt-1 flex items-center gap-2">
-                                <span className="text-sm font-bold text-black">
+                                <span
+                                  className="text-sm font-bold"
+                                  style={{
+                                    color: theme.colors.primary,
+                                    fontFamily: theme.fonts.heading,
+                                  }}
+                                >
                                   ₹{product.price}
                                 </span>
                               </div>
@@ -316,7 +369,12 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                     <div className="mb-4">
                       <span className="text-sm text-gray-500">
                         Search results for{" "}
-                        <span className="font-medium text-gray-900">
+                        <span
+                          className="font-medium"
+                          style={{
+                            fontFamily: theme.fonts.heading,
+                          }}
+                        >
                           &ldquo;{debouncedSearchQuery}&rdquo;
                         </span>
                       </span>
@@ -324,7 +382,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
                     {isSearchLoading ? (
                       <div className="flex items-center justify-center gap-2 py-8 text-gray-500">
-                        <div className="border-primary h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></div>
+                        <div
+                          className="h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
+                          style={{
+                            borderColor: theme.colors.primary + "33",
+                            borderTopColor: "transparent",
+                          }}
+                        ></div>
                         <span className="text-sm">Searching…</span>
                       </div>
                     ) : (
@@ -332,8 +396,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                         {page_sizeedProducts.length > 0 ? (
                           <div className="mb-2">
                             <div className="mb-3 flex items-center gap-2">
-                              <Search className="h-4 w-4 text-gray-600" />
-                              <span className="text-sm font-semibold text-gray-800">
+                              <Search
+                                className="h-4 w-4"
+                                style={{ color: theme.colors.primary }}
+                              />
+                              <span
+                                className="text-sm font-semibold"
+                                style={{
+                                  fontFamily: theme.fonts.heading,
+                                }}
+                              >
                                 Products
                               </span>
                             </div>
@@ -357,13 +429,22 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                                   </div>
                                   <div className="min-w-0 flex-1">
                                     <div
-                                      className="text-sm font-medium text-gray-900"
+                                      className="text-sm font-medium"
                                       title={product.name}
+                                      style={{
+                                        fontFamily: theme.fonts.body,
+                                      }}
                                     >
                                       {truncateText(product.name, 45)}
                                     </div>
                                     <div className="mt-1 flex items-center gap-2">
-                                      <span className="text-sm font-bold text-gray-900">
+                                      <span
+                                        className="text-sm font-bold"
+                                        style={{
+                                          color: theme.colors.primary,
+                                          fontFamily: theme.fonts.heading,
+                                        }}
+                                      >
                                         ₹{product.price}
                                       </span>
                                     </div>
@@ -390,7 +471,17 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                             <Separator className="my-3" />
                             <div
                               onClick={handleViewAllResults}
-                              className="text-primary hover:text-primary/80 block w-full cursor-pointer py-2 text-center text-sm font-medium transition-colors"
+                              className="block w-full cursor-pointer py-2 text-center text-sm font-medium transition-colors"
+                              style={{
+                                color: theme.colors.primary,
+                                fontFamily: theme.fonts.heading,
+                              }}
+                              onMouseEnter={e => {
+                                e.currentTarget.style.opacity = "0.8";
+                              }}
+                              onMouseLeave={e => {
+                                e.currentTarget.style.opacity = "1";
+                              }}
                             >
                               View all results for &ldquo;{searchQuery}&rdquo;
                             </div>

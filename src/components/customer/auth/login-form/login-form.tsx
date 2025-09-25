@@ -4,12 +4,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/customer/use-auth";
 import { cn } from "@/lib/utils";
 import { AlertCircle } from "lucide-react";
 import { loginSchema, LoginFormValues } from "@/schemas/customer/login.form";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 export function LoginForm({
   className,
@@ -19,6 +20,22 @@ export function LoginForm({
   const [loginError, setLoginError] = useState<string | null>(null);
   const [attemptCount, setAttemptCount] = useState(0);
   const router = useRouter();
+  const { data: themeResponse } = useThemeQuery();
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   const {
     register,
@@ -230,6 +247,7 @@ export function LoginForm({
                 <Button
                   type="submit"
                   disabled={isLoading}
+                  variant="default"
                   className={cn(
                     "w-full rounded-lg px-4 py-3 font-medium text-white transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none",
                     isLoading
@@ -256,6 +274,9 @@ export function LoginForm({
               <button
                 onClick={handleSignupClick}
                 className="text-primary hover:text-primary cursor-pointer font-medium underline"
+                style={{
+                  color: theme.colors.primary,
+                }}
               >
                 Sign up
               </button>

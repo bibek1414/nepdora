@@ -25,17 +25,16 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
         return logoImage ? (
           <img
             src={optimizeCloudinaryUrl(logoImage, {
-              width: 40,
               height: 40,
               crop: "fill",
               quality: "auto",
               format: "auto",
             })}
             alt={logoText || "Logo"}
-            className="h-10 w-10 object-cover"
+            className="h-10 w-auto object-cover"
           />
         ) : (
-          <div className="bg-primary text-primary-foreground flex h-10 w-10 items-center justify-center">
+          <div className="bg-primary text-primary-foreground flex h-10 w-auto items-center justify-center">
             <span className="text-sm font-bold">
               {logoText?.charAt(0)?.toUpperCase() || "L"}
             </span>
@@ -48,17 +47,16 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
             {logoImage ? (
               <img
                 src={optimizeCloudinaryUrl(logoImage, {
-                  width: 32,
                   height: 32,
                   crop: "fill",
                   quality: "auto",
                   format: "auto",
                 })}
                 alt={logoText || "Logo"}
-                className="h-8 w-8 object-cover"
+                className="h-8 w-auto object-cover"
               />
             ) : (
-              <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center">
+              <div className="bg-primary text-primary-foreground flex h-8 w-auto items-center justify-center">
                 <span className="text-xs font-bold">
                   {logoText?.charAt(0)?.toUpperCase() || "L"}
                 </span>
