@@ -248,7 +248,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 <>
                   {/* Hover Overlay - Only shows when left image is hovered */}
                   <div
-                    className={`absolute inset-0 z-20 flex items-center justify-center bg-black/50 transition-opacity duration-200 ${
+                    className={`absolute inset-0 z-15 flex items-center justify-center bg-black/50 transition-opacity duration-200 ${
                       hoveredImage === "leftImage" ? "opacity-100" : "opacity-0"
                     }`}
                   >

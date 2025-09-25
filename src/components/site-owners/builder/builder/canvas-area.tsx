@@ -373,7 +373,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             }`}
           >
             {/* Control buttons container */}
-            <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+            <div className="absolute top-2 left-2 z-20 flex flex-col gap-1">
               {/* Drag handle */}
               <div
                 {...provided.dragHandleProps}

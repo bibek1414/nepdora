@@ -2,13 +2,14 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/customer/use-auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signupSchema, SignupFormValues } from "@/schemas/customer/signup.form";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 export function SignupForm({
   className,
@@ -16,6 +17,22 @@ export function SignupForm({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const { signup, isLoading } = useAuth();
   const router = useRouter();
+  const { data: themeResponse } = useThemeQuery();
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   const {
     register,
@@ -43,7 +60,6 @@ export function SignupForm({
 
     // Extract siteUser from the current pathname
     const pathSegments = window.location.pathname.split("/");
-    // For path like "/preview/41/signup", siteUser is at index 2
     const siteUser = pathSegments[2] || "guest";
 
     router.push(`/preview/${siteUser}/login`);
@@ -197,6 +213,7 @@ export function SignupForm({
                 <Button
                   type="submit"
                   disabled={isLoading}
+                  variant="default"
                   className={cn(
                     "w-full rounded-lg px-4 py-3 font-medium text-white transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none",
                     isLoading
@@ -221,6 +238,9 @@ export function SignupForm({
                   <button
                     onClick={handleLoginClick}
                     className="text-primary hover:text-primary cursor-pointer font-medium underline"
+                    style={{
+                      color: theme.colors.primary,
+                    }}
                   >
                     Login
                   </button>
@@ -233,6 +253,9 @@ export function SignupForm({
                   <Link
                     href="/terms"
                     className="text-primary hover:text-primary font-medium transition-colors duration-200"
+                    style={{
+                      color: theme.colors.primary,
+                    }}
                   >
                     Terms of Service
                   </Link>{" "}
@@ -240,6 +263,9 @@ export function SignupForm({
                   <Link
                     href="/privacy"
                     className="text-primary hover:text-primary font-medium transition-colors duration-200"
+                    style={{
+                      color: theme.colors.primary,
+                    }}
                   >
                     Privacy Policy
                   </Link>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
 import { HeroData } from "@/types/owner-site/components/hero";
@@ -7,6 +7,7 @@ import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
+
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { is } from "zod/v4/locales";
 
@@ -119,14 +120,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
       : theme.colors.text;
 
   return (
-    <section
-      className="relative w-full px-6 py-16 md:px-12 lg:px-20"
-      style={{
-        ...getBackgroundStyles(),
-        color: textColor,
-        fontFamily: theme.fonts.body,
-      }}
-    >
+    <section className="relative w-full px-6 py-16 md:px-12 lg:px-20">
       {/* Overlay */}
       {data.backgroundType === "image" && data.showOverlay && (
         <div
@@ -193,28 +187,9 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
               {data.buttons.map((button, index) => (
                 <Button
                   key={button.id}
-                  variant={
-                    index === 0
-                      ? "default"
-                      : button.variant === "primary"
-                        ? "default"
-                        : button.variant === "outline"
-                          ? "outline"
-                          : "secondary"
-                  }
                   size="lg"
-                  className="rounded-full px-6 py-3"
-                  style={{
-                    backgroundColor:
-                      index === 0 ? theme.colors.primary : "transparent",
-                    color:
-                      index === 0
-                        ? theme.colors.primaryForeground
-                        : theme.colors.text,
-                    borderColor:
-                      index === 0 ? "transparent" : theme.colors.primary,
-                    fontFamily: theme.fonts.body,
-                  }}
+                  variant={index === 0 ? "default" : "outline"}
+                  className="px-6 py-3"
                   asChild
                 >
                   <EditableLink
