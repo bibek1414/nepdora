@@ -290,11 +290,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                       ? "cursor-default opacity-60"
                       : "cursor-pointer hover:opacity-80"
                   }`}
-                  style={{
-                    color: theme.colors.primary,
-                    fontFamily: theme.fonts.heading,
-                    pointerEvents: disableClicks ? "auto" : undefined,
-                  }}
                 >
                   {link.text}
                 </a>
@@ -311,10 +306,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                       ? "pointer-events-auto cursor-default opacity-60"
                       : "cursor-pointer hover:opacity-80"
                   }`}
-                  style={{
-                    color: theme.colors.primary,
-                    fontFamily: theme.fonts.heading,
-                  }}
                   onClick={disableClicks ? e => e.preventDefault() : undefined}
                 >
                   Categories

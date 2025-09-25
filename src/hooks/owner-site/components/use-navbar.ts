@@ -56,6 +56,8 @@ export const useDeleteNavbarMutation = () => {
     mutationFn: (id: string) => useNavbarApi.deleteNavbar(id),
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: NAVBAR_QUERY_KEY });
+      queryClient.setQueryData(NAVBAR_QUERY_KEY, null);
+
       toast.success(data.message);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

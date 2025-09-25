@@ -179,30 +179,6 @@ export function FooterStyle3({
 
   return (
     <div className="group relative">
-      {isEditable && (
-        <div className="bg-background/80 absolute top-4 right-4 z-20 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={onEditClick}
-            className=""
-          >
-            <Edit className="mr-2 h-4 w-4" />
-            Edit Footer
-          </Button>
-
-          <Button
-            size="sm"
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={deleteFooterMutation.isPending}
-            className=""
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
-
       <footer
         style={{
           background: theme.colors.primary,

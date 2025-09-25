@@ -45,7 +45,14 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
 
   // Handle stats updates
   const handleStatsUpdate =
-    (field: "startYear" | "completeYear" | "unitsAvailable") =>
+    (
+      field:
+        | "startYear"
+        | "completeYear"
+        | "unitsAvailable"
+        | "startLabel"
+        | "completeLabel"
+    ) =>
     (value: string) => {
       const updatedStats = { ...data.stats, [field]: value };
       const updatedData = { ...data, stats: updatedStats };
@@ -122,9 +129,14 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
                   isEditable={isEditable}
                   placeholder="Year"
                 />
-                <div className="text-xs tracking-wider text-gray-500 sm:text-sm">
-                  START
-                </div>
+                <EditableText
+                  value={data.stats.startLabel || "START"}
+                  onChange={handleStatsUpdate("startLabel")}
+                  as="div"
+                  className="text-xs tracking-wider text-gray-500 sm:text-sm"
+                  isEditable={isEditable}
+                  placeholder="START"
+                />
               </div>
               <div className="space-y-2">
                 <EditableText
@@ -135,9 +147,14 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
                   isEditable={isEditable}
                   placeholder="Year"
                 />
-                <div className="text-xs tracking-wider text-gray-500 sm:text-sm">
-                  COMPLETE
-                </div>
+                <EditableText
+                  value={data.stats.completeLabel || "COMPLETE"}
+                  onChange={handleStatsUpdate("completeLabel")}
+                  as="div"
+                  className="text-xs tracking-wider text-gray-500 sm:text-sm"
+                  isEditable={isEditable}
+                  placeholder="COMPLETE"
+                />
               </div>
             </div>
           </motion.div>

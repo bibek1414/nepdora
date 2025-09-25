@@ -11,7 +11,15 @@ interface HeroStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
-    template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5"
+    template:
+      | "hero-1"
+      | "hero-2"
+      | "hero-3"
+      | "hero-4"
+      | "hero-5"
+      | "hero-6"
+      | "hero-7"
+      | "hero-8"
   ) => void;
 }
 
@@ -21,7 +29,15 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5" | null
+    | "hero-1"
+    | "hero-2"
+    | "hero-3"
+    | "hero-4"
+    | "hero-5"
+    | "hero-6"
+    | "hero-7"
+    | "hero-8"
+    | null
   >(null);
 
   const templates = [
@@ -45,10 +61,30 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
       id: "hero-5" as const,
       name: "Hero Template 5",
     },
+    {
+      id: "hero-6" as const,
+      name: "Hero Template 6",
+    },
+    {
+      id: "hero-7" as const,
+      name: "Hero Template 7",
+    },
+    {
+      id: "hero-8" as const,
+      name: "Hero Template 8",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5";
+    id:
+      | "hero-1"
+      | "hero-2"
+      | "hero-3"
+      | "hero-4"
+      | "hero-5"
+      | "hero-6"
+      | "hero-8"
+      | "hero-7";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {

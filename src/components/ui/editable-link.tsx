@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-
+import { Button as SOButton } from "@/components/ui/site-owners/button";
 interface EditableLinkProps {
   text: string;
   href: string;
@@ -168,14 +168,15 @@ const PageSelector: React.FC<PageSelectorProps> = ({
               />
 
               <div className="flex gap-2">
-                <Button
+                <SOButton
                   onClick={handleCreatePage}
+                  variant="default"
                   disabled={!newPageTitle.trim() || isCreating}
                   className="flex-1"
                   size="sm"
                 >
                   {isCreating ? "Creating..." : "Create & Link"}
-                </Button>
+                </SOButton>
                 <Button
                   onClick={() => {
                     setShowCreateForm(false);

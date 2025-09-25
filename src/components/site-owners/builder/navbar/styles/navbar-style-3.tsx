@@ -216,11 +216,6 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                       ? "cursor-default opacity-60"
                       : "cursor-pointer hover:opacity-80"
                   }`}
-                  style={{
-                    color: theme.colors.primary,
-                    fontFamily: theme.fonts.heading,
-                    pointerEvents: disableClicks ? "auto" : undefined,
-                  }}
                 >
                   {link.text}
                 </a>

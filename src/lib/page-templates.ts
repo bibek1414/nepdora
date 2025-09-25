@@ -12,6 +12,8 @@ import { defaultHeroData } from "@/types/owner-site/components/hero";
 import { defaultContactData } from "@/types/owner-site/components/contact";
 import { defaultAboutUs1Data } from "@/types/owner-site/components/about";
 import { defaultProductsData } from "@/types/owner-site/components/products";
+import { defaultCategoryData } from "@/types/owner-site/components/category";
+import { defaultFAQData } from "@/types/owner-site/components/faq";
 import { defaultTeamData } from "@/types/owner-site/components/team";
 import { defaultBlogDisplayData } from "@/types/owner-site/components/blog";
 import { defaultPortfolioData } from "@/types/owner-site/components/portfolio";

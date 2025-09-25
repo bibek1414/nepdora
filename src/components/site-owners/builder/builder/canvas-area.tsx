@@ -8,7 +8,7 @@ import {
   DropResult,
 } from "@hello-pangea/dnd";
 import { NavbarComponent } from "@/components/site-owners/builder/navbar/navbar-component";
-import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer";
+import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer-component";
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
 import { AboutUsComponent } from "@/components/site-owners/builder/about/about-component";
 import { ProductsComponent } from "@/components/site-owners/builder/products/products-component";

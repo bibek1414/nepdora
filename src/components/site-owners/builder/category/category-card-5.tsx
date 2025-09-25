@@ -1,8 +1,8 @@
-// components/category-card-5.tsx
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Category } from "@/types/owner-site/admin/product";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface CategoryCard5Props {
   category: Category;
@@ -17,6 +17,23 @@ export const CategoryCard5: React.FC<CategoryCard5Props> = ({
   onClick,
   className = "",
 }) => {
+  const { data: themeResponse } = useThemeQuery();
+  // ✅ fallback theme
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
   const categoryImage =
     category.image ||
     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop";
@@ -54,8 +71,14 @@ export const CategoryCard5: React.FC<CategoryCard5Props> = ({
 
   return (
     <CardWrapper>
-      <div className="group flex items-center justify-between border-r border-b border-gray-200 bg-white p-6 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
-        <h3 className="text-lg font-medium text-black transition-colors duration-200 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+      <div className="group flex items-center justify-between border-r border-b border-gray-200 p-6 transition-shadow duration-200 dark:border-gray-700">
+        <h3
+          className="text-lg font-medium transition-colors duration-200"
+          style={{
+            color: theme.colors.primary,
+            fontFamily: theme.fonts.heading,
+          }}
+        >
           {category.name}
         </h3>
         <div className="relative h-20 w-20">

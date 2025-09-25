@@ -56,6 +56,7 @@ export const useDeleteFooterMutation = () => {
     mutationFn: () => useFooterApi.deleteFooter(),
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
+      queryClient.setQueryData(FOOTER_QUERY_KEY, null);
       toast.success(data.message);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
