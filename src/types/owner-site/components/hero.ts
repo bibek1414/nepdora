@@ -40,7 +40,15 @@ export interface HeroData {
   imageAlt?: string;
 
   // Template selection
-  template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5";
+  template:
+    | "hero-1"
+    | "hero-2"
+    | "hero-3"
+    | "hero-4"
+    | "hero-5"
+    | "hero-6"
+    | "hero-8"
+    | "hero-7";
 
   // Hero 3 specific fields
   balanceLabel?: string;
@@ -54,19 +62,47 @@ export interface HeroData {
   secondaryImageAlt?: string;
   statsNumber?: string;
   statsLabel?: string;
+  collections?: HeroCollection[];
+  features?: HeroFeature[];
+  trustIndicators?: HeroTrustIndicators;
+  leftImageUrl?: string;
+  leftImageAlt?: string;
+  rightImageUrl?: string;
+  rightImageAlt?: string;
+  mobileImageUrl?: string;
+  mobileImageAlt?: string;
+}
+export interface HeroFeature {
+  id: string;
+  text: string;
 }
 
+export interface HeroTrustIndicators {
+  rating: string;
+  stars: string;
+  features: string[];
+  customerText: string;
+}
 // Updated interface to match API response structure
 export interface HeroComponentData {
   id: string | number;
   component_id?: string;
   component_type?: "hero";
   data: HeroData;
-  type?: "hero"; // Keep for backward compatibility
+  type?: "hero";
   order: number;
   page?: number;
 }
-
+export interface HeroCollection {
+  id: string;
+  title: string;
+  subtitle: string;
+  badge: string;
+  imageUrl: string;
+  imageAlt: string;
+  buttonText: string;
+  buttonHref: string;
+}
 // API response interface that matches your actual data structure
 export interface ApiHeroComponentResponse {
   id: number;
@@ -155,7 +191,15 @@ export const defaultHeroData: HeroData = {
 
 // Simplified template configurations
 export interface HeroTemplateConfig {
-  template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5";
+  template:
+    | "hero-1"
+    | "hero-2"
+    | "hero-3"
+    | "hero-4"
+    | "hero-5"
+    | "hero-6"
+    | "hero-8"
+    | "hero-7";
   backgroundType: "color" | "gradient" | "image";
   backgroundColor?: string;
   backgroundImageUrl?: string;
@@ -196,5 +240,24 @@ export const heroTemplateConfigs: Record<string, HeroTemplateConfig> = {
       "https://images.unsplash.com/photo-1559827291-72ee739d0d95?q=80&w=1974&auto=format&fit=crop",
     showOverlay: true,
     overlayOpacity: 0.4,
+  },
+  "hero-6": {
+    template: "hero-6",
+    backgroundType: "image",
+    showSlider: true,
+    showOverlay: true,
+    overlayOpacity: 0.5,
+  },
+  "hero-7": {
+    template: "hero-7",
+    backgroundType: "color",
+    showOverlay: true,
+    overlayOpacity: 0.1,
+  },
+  "hero-8": {
+    template: "hero-8",
+    backgroundType: "color",
+    backgroundColor: "#FDFAF6",
+    showOverlay: true,
   },
 };

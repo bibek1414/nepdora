@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { NavbarComponent } from "@/components/site-owners/builder/navbar/navbar-component";
-import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer";
+import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer-component";
 import { useNavbarQuery } from "@/hooks/owner-site/components/use-navbar";
 import { useFooterQuery } from "@/hooks/owner-site/components/use-footer";
 

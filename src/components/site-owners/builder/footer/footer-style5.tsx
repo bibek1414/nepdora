@@ -137,30 +137,6 @@ export function FooterStyle5({
   const sectionsToShow = availableSections.slice(0, 4);
   return (
     <div className="group relative">
-      {isEditable && (
-        <div className="bg-background/80 absolute top-4 right-4 z-20 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={onEditClick}
-            className=""
-          >
-            <Edit className="mr-2 h-4 w-4" />
-            Edit Footer
-          </Button>
-
-          <Button
-            size="sm"
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={deleteFooterMutation.isPending}
-            className=""
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
-
       <footer className="bg-background-light dark:bg-background-dark font-display px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
           {/* Render the first 4 sections */}

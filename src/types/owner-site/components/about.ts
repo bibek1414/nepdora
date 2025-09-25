@@ -47,6 +47,8 @@ export interface AboutUs3Data {
     startYear: string;
     completeYear: string;
     unitsAvailable: string;
+    startLabel: string;
+    completeLabel: string;
   };
 }
 
@@ -220,6 +222,8 @@ export const defaultAboutUs3Data: AboutUs3Data = {
     startYear: "2024",
     completeYear: "2026",
     unitsAvailable: "50+ UNITS",
+    startLabel: "Start Date",
+    completeLabel: "Completion Date",
   },
 };
 export const defaultAboutUs4Data: AboutUs4Data = {

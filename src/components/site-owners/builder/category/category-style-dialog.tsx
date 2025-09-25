@@ -68,7 +68,7 @@ export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
         </DialogHeader>
 
         <div className="grid grid-cols-2 gap-6 py-4 md:grid-cols-3 lg:grid-cols-3">
-          {templates.map(template => (
+          {templates.map((template, index) => (
             <div key={template.id} className="flex flex-col items-center">
               <div
                 className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
@@ -87,9 +87,7 @@ export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
                 <div className="p-3">
                   <div className="relative w-full">
                     <Image
-                      src={`/images/site-owners/categories/category${
-                        template.id.split("-")[1]
-                      }.png`}
+                      src={`/images/site-owners/categories/category${index + 1}.png`}
                       alt={template.name}
                       width={400}
                       height={300}

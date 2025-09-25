@@ -1,6 +1,24 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Edit,
+  Trash2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { FooterStyle1 } from "./footer-style1";
 import { FooterStyle2 } from "./footer-style2";
 import { FooterStyle3 } from "./footer-style3";
@@ -15,6 +33,7 @@ import {
   useUpdateFooterMutation,
   useCreateFooterMutation,
   useFooterQuery,
+  useDeleteFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
 
 const defaultFooterData: FooterData = {
@@ -95,12 +114,14 @@ export function Footer({
 }: FooterProps) {
   const [currentFooterData, setCurrentFooterData] = useState(footerData);
   const [showEditor, setShowEditor] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [existingFooterId, setExistingFooterId] = useState<string | null>(
     footerId || null
   );
 
   const updateFooterMutation = useUpdateFooterMutation();
   const createFooterMutation = useCreateFooterMutation();
+  const deleteFooterMutation = useDeleteFooterMutation();
   const { data: existingFooter } = useFooterQuery();
 
   // Update local state when footerData prop changes
@@ -170,6 +191,17 @@ export function Footer({
   const handleEditClick = () => {
     setShowEditor(true);
   };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteFooterMutation.mutate();
+    setIsDeleteDialogOpen(false);
+  };
+
   const FooterComponent =
     style === "style-2"
       ? FooterStyle2
@@ -182,16 +214,46 @@ export function Footer({
             : FooterStyle1;
 
   const isLoading =
-    updateFooterMutation.isPending || createFooterMutation.isPending;
+    updateFooterMutation.isPending ||
+    createFooterMutation.isPending ||
+    deleteFooterMutation.isPending;
 
   return (
-    <>
+    <div className="group relative">
+      {/* Centralized Edit/Delete Controls */}
+      {isEditable && (
+        <div className="bg-background/80 absolute top-4 right-4 z-20 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleEditClick}
+            disabled={isLoading}
+          >
+            <Edit className="mr-2 h-4 w-4" />
+            Edit Footer
+          </Button>
+
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={handleDeleteClick}
+            disabled={isLoading}
+          >
+            <Trash2 className="h-4 w-4" />
+            {deleteFooterMutation.isPending ? "Deleting..." : "Delete"}
+          </Button>
+        </div>
+      )}
+
+      {/* Footer Component - Pass isEditable as false to prevent individual delete buttons */}
       <FooterComponent
         footerData={currentFooterData}
-        isEditable={isEditable}
+        isEditable={false} // Always false since we handle editing centrally
         onEditClick={handleEditClick}
         siteUser={siteUser}
       />
+
+      {/* Editor Dialog */}
       {isEditable && (
         <FooterEditorDialog
           open={showEditor}
@@ -202,6 +264,41 @@ export function Footer({
           footerStyle="FooterStyle5"
         />
       )}
-    </>
+
+      {/* Centralized Delete Dialog */}
+      {isEditable && (
+        <AlertDialog
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <Trash2 className="text-destructive h-5 w-5" />
+                Delete Footer Component
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete this footer? This action cannot
+                be undone and will permanently remove the footer from your site.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={deleteFooterMutation.isPending}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleConfirmDelete}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                disabled={deleteFooterMutation.isPending}
+              >
+                {deleteFooterMutation.isPending
+                  ? "Deleting..."
+                  : "Delete Footer"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+    </div>
   );
 }

@@ -490,7 +490,15 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   // Template selection handlers with proper order assignment
   const handleHeroTemplateSelect = (
-    template: "hero-1" | "hero-2" | "hero-3" | "hero-4" | "hero-5"
+    template:
+      | "hero-1"
+      | "hero-2"
+      | "hero-3"
+      | "hero-4"
+      | "hero-5"
+      | "hero-6"
+      | "hero-7"
+      | "hero-8"
   ) => {
     // Get the specific configuration for this template
     const templateConfig = heroTemplateConfigs[template];

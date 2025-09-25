@@ -151,14 +151,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
       : theme.colors.text;
 
   return (
-    <section
-      className="relative flex min-h-[60vh] items-center justify-center overflow-hidden px-4 py-20"
-      style={{
-        ...getBackgroundStyles(),
-        color: textColor,
-        fontFamily: theme.fonts.body,
-      }}
-    >
+    <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden px-4 py-20">
       {/* Overlay */}
       {data.backgroundType === "image" && data.showOverlay && (
         <div

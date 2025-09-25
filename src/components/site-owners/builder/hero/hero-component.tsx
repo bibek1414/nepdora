@@ -22,10 +22,13 @@ import { HeroTemplate2 } from "./hero-style-2";
 import { HeroTemplate3 } from "./hero-style-3";
 import { HeroTemplate4 } from "./hero-style-4";
 import { HeroTemplate5 } from "./hero-style-5";
+import { HeroTemplate6 } from "./hero-style-6";
+import { HeroTemplate7 } from "./hero-style-7";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/unified";
+import { HeroTemplate8 } from "./hero-style-8";
 
 interface HeroComponentProps {
   component: HeroComponentData;
@@ -124,6 +127,12 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
         return <HeroTemplate4 {...props} />;
       case "hero-5":
         return <HeroTemplate5 {...props} />;
+      case "hero-6":
+        return <HeroTemplate6 {...props} />;
+      case "hero-7":
+        return <HeroTemplate7 {...props} />;
+      case "hero-8":
+        return <HeroTemplate8 {...props} />;
       default:
         return (
           <div className="flex min-h-[60vh] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-20">
@@ -145,7 +154,7 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
       {/* Edit Controls - Only show when editable */}
       {isEditable && (
         <>
-          <div className="bg-background/80 absolute top-4 right-4 z-20 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="bg-background/80 absolute top-4 right-4 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
             <Button
               size="sm"
               variant="destructive"
