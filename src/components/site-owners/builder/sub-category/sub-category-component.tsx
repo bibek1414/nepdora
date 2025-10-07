@@ -26,6 +26,7 @@ import { SubCategory } from "@/types/owner-site/admin/product";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import Pagination from "@/components/ui/pagination";
+import Link from "next/link";
 
 interface SubCategoryComponentProps {
   component: SubCategoryComponentData;
@@ -205,20 +206,27 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <AlertDialogTrigger asChild>
-              <Button
-                onClick={handleDeleteClick}
-                variant="destructive"
-                size="sm"
-                className="h-8 px-3"
-                disabled={deleteSubCategoryComponent.isPending}
-              >
-                <Trash2 className="mr-1 h-4 w-4" />
-                {deleteSubCategoryComponent.isPending
-                  ? "Deleting..."
-                  : "Delete"}
-              </Button>
-            </AlertDialogTrigger>
+            <div className="flex items-center gap-2">
+              <Link href="/admin/subcategories/" target="_blank" rel="noopener">
+                <Button size="sm" variant="outline">
+                  Manage Subcategories
+                </Button>
+              </Link>
+              <AlertDialogTrigger asChild>
+                <Button
+                  onClick={handleDeleteClick}
+                  variant="destructive"
+                  size="sm"
+                  className="h-8 px-3"
+                  disabled={deleteSubCategoryComponent.isPending}
+                >
+                  <Trash2 className="mr-1 h-4 w-4" />
+                  {deleteSubCategoryComponent.isPending
+                    ? "Deleting..."
+                    : "Delete"}
+                </Button>
+              </AlertDialogTrigger>
+            </div>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="flex items-center gap-2">

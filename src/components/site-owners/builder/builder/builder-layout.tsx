@@ -43,7 +43,7 @@ import { ProductsStylesDialog } from "@/components/site-owners/builder/products/
 import { CategoryStylesDialog } from "@/components/site-owners/builder/category/category-style-dialog";
 import { SubCategoryStylesDialog } from "@/components/site-owners/builder/sub-category/sub-category-style-dialog";
 import { Facebook, Twitter } from "lucide-react";
-import { defaultBlogDisplayData } from "@/types/owner-site/components/blog";
+import { defaultBlogData } from "@/types/owner-site/components/blog";
 import { BlogStylesDialog } from "@/components/site-owners/builder/blog/blog-style-dialog";
 import {
   ComponentResponse,
@@ -759,7 +759,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     template: "grid-1" | "grid-2" | "list-1"
   ) => {
     const blogData = {
-      ...defaultBlogDisplayData,
+      ...defaultBlogData,
       style: template,
     };
 

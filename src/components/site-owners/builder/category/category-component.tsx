@@ -32,6 +32,7 @@ import { Category } from "@/types/owner-site/admin/product";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import Pagination from "@/components/ui/pagination";
+import Link from "next/link";
 interface CategoryComponentProps {
   component: CategoryComponentData;
   isEditable?: boolean;
@@ -299,18 +300,25 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <AlertDialogTrigger asChild>
-              <Button
-                onClick={handleDeleteClick}
-                variant="destructive"
-                size="sm"
-                className="h-8 px-3"
-                disabled={deleteCategoryComponent.isPending}
-              >
-                <Trash2 className="mr-1 h-4 w-4" />
-                {deleteCategoryComponent.isPending ? "Deleting..." : "Delete"}
-              </Button>
-            </AlertDialogTrigger>
+            <div className="flex items-center gap-2">
+              <Link href="/admin/categories/" target="_blank" rel="noopener">
+                <Button size="sm" variant="outline">
+                  Manage Categories
+                </Button>
+              </Link>
+              <AlertDialogTrigger asChild>
+                <Button
+                  onClick={handleDeleteClick}
+                  variant="destructive"
+                  size="sm"
+                  className="h-8 px-3"
+                  disabled={deleteCategoryComponent.isPending}
+                >
+                  <Trash2 className="mr-1 h-4 w-4" />
+                  {deleteCategoryComponent.isPending ? "Deleting..." : "Delete"}
+                </Button>
+              </AlertDialogTrigger>
+            </div>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="flex items-center gap-2">

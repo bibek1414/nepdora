@@ -15,7 +15,7 @@ import { defaultProductsData } from "@/types/owner-site/components/products";
 import { defaultCategoryData } from "@/types/owner-site/components/category";
 import { defaultFAQData } from "@/types/owner-site/components/faq";
 import { defaultTeamData } from "@/types/owner-site/components/team";
-import { defaultBlogDisplayData } from "@/types/owner-site/components/blog";
+import { defaultBlogData } from "@/types/owner-site/components/blog";
 import { defaultPortfolioData } from "@/types/owner-site/components/portfolio";
 import { PageTemplate } from "@/types/owner-site/components/page-template";
 export const pageTemplates: PageTemplate[] = [
@@ -293,7 +293,7 @@ export const pageTemplates: PageTemplate[] = [
         type: "blog",
         order: 1,
         defaultData: {
-          ...defaultBlogDisplayData,
+          ...defaultBlogData,
           title: "Latest Articles",
           subtitle: "Stay up to date with our latest posts",
           style: "grid-1",

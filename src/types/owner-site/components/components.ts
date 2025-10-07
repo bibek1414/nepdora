@@ -1,6 +1,6 @@
 import { HeroData } from "./hero";
 import { AboutUsData } from "./about";
-import { BlogDisplayData } from "./blog";
+import { BlogData } from "./blog";
 import { ProductsData } from "./products";
 import { CategoryData } from "./category";
 import { SubCategoryData } from "./sub-category";
@@ -16,7 +16,7 @@ import { YouTubeData } from "./youtube";
 export type ComponentData =
   | HeroData
   | AboutUsData
-  | BlogDisplayData
+  | BlogData
   | ProductsData
   | CategoryData
   | SubCategoryData
@@ -33,7 +33,7 @@ export type ComponentData =
 export interface ComponentTypeMap {
   hero: HeroData;
   about: AboutUsData;
-  blog: BlogDisplayData;
+  blog: BlogData;
   products: ProductsData;
   category: CategoryData;
   subcategory: SubCategoryData;
