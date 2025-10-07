@@ -1,0 +1,36 @@
+import React from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+interface PortfolioModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  title: string;
+}
+
+const PortfolioModal: React.FC<PortfolioModalProps> = ({
+  isOpen,
+  onClose,
+  children,
+  title,
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-4xl">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
+        <div className="py-4">{children}</div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default PortfolioModal;

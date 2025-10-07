@@ -40,6 +40,7 @@ const navigation = [
   { name: "Testimonials", href: "/admin/testimonials", icon: Tag },
   { name: "Faq", href: "/admin/faq", icon: Tag },
   { name: "YouTube Videos", href: "/admin/youtube", icon: Youtube },
+  { name: "Portfolios", href: "/admin/portfolio", icon: Briefcase },
   { name: "Team Members", href: "/admin/team-member", icon: Users },
   { name: "Service Bookings", href: "/admin/service-bookings", icon: Calendar },
   { name: "Issues Tracking", href: "/admin/issues", icon: Bug },

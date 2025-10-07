@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import Pagination from "@/components/ui/pagination";
 import { useProductFilters } from "@/hooks/owner-site/admin/use-product";
+import Link from "next/link";
 
 interface ProductsComponentProps {
   component: ProductsComponentData;
@@ -224,18 +225,30 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <AlertDialogTrigger asChild>
-              <Button
-                onClick={handleDeleteClick}
-                variant="destructive"
-                size="sm"
-                className="h-8 px-3"
-                disabled={deleteProductsComponent.isPending}
+            <div className="flex items-center gap-2">
+              <Link
+                href="/admin/products"
+                target="_blank"
+                onClick={e => e.stopPropagation()}
+                className="z-30"
               >
-                <Trash2 className="mr-1 h-4 w-4" />
-                {deleteProductsComponent.isPending ? "Deleting..." : "Delete"}
-              </Button>
-            </AlertDialogTrigger>
+                <Button variant="outline" size="sm">
+                  Manage Products
+                </Button>
+              </Link>
+              <AlertDialogTrigger asChild>
+                <Button
+                  onClick={handleDeleteClick}
+                  variant="destructive"
+                  size="sm"
+                  className="z-30 h-8 px-3"
+                  disabled={deleteProductsComponent.isPending}
+                >
+                  <Trash2 className="mr-1 h-4 w-4" />
+                  {deleteProductsComponent.isPending ? "Deleting..." : "Delete"}
+                </Button>
+              </AlertDialogTrigger>
+            </div>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="flex items-center gap-2">

@@ -25,18 +25,18 @@ export const PortfolioStylesDialog: React.FC<PortfolioStylesDialogProps> = ({
   const templates = [
     {
       id: "portfolio-1" as const,
-      name: "Portfolio Grid - Modern",
-      description: "Modern grid layout with filters and hover effects",
+      name: "Portfolio Grid 1",
+      description: "Classic grid layout with overlays",
     },
     {
       id: "portfolio-2" as const,
-      name: "Portfolio List - Clean",
-      description: "Clean list layout with detailed project information",
+      name: "Portfolio Grid 2",
+      description: "Compact grid with hover effects",
     },
     {
       id: "portfolio-3" as const,
-      name: "Portfolio Masonry - Creative",
-      description: "Creative masonry layout for showcasing diverse projects",
+      name: "Portfolio List",
+      description: "Horizontal list layout with details",
     },
   ];
 
@@ -53,21 +53,21 @@ export const PortfolioStylesDialog: React.FC<PortfolioStylesDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-auto max-w-4xl overflow-y-auto">
+      <DialogContent className="h-auto max-w-7xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            Choose Portfolio Template
+            Choose Portfolio Section Style
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 gap-6 py-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 py-4 md:grid-cols-2 lg:grid-cols-3">
           {templates.map(template => (
-            <div key={template.id} className="flex flex-col items-center">
+            <div key={template.id} className="flex flex-col">
               <div
-                className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
+                className={`group cursor-pointer overflow-hidden rounded-lg border transition-all duration-200 hover:shadow-lg ${
                   selectedStyle === template.id
-                    ? "border-blue-200 ring-2 ring-blue-500"
-                    : "hover:border-gray-300"
+                    ? "border-blue-500 ring-2 ring-blue-500"
+                    : "border-border hover:border-gray-300"
                 }`}
                 onClick={() => handleSelect(template)}
                 role="button"
@@ -78,25 +78,22 @@ export const PortfolioStylesDialog: React.FC<PortfolioStylesDialogProps> = ({
                 }}
               >
                 <div className="p-3">
-                  <div className="relative w-full">
+                  <div className="relative aspect-video w-full overflow-hidden rounded bg-gray-100">
                     <Image
-                      src={`/images/site-owners/portfolio/portfolio${
-                        template.id.split("-")[1]
-                      }.png`}
+                      src={`/images/site-owners/portfolio/portfolio${template.id.split("-")[1]}.png`}
                       alt={template.name}
-                      width={300}
-                      height={200}
-                      className="h-auto w-full rounded"
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="mt-2 text-center">
-                <h3 className="text-sm font-medium text-gray-900">
+              <div className="mt-3 px-1">
+                <h3 className="text-foreground font-semibold">
                   {template.name}
                 </h3>
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="text-muted-foreground mt-1 text-sm">
                   {template.description}
                 </p>
               </div>

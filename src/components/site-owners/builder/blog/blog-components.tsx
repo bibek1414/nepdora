@@ -18,10 +18,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, Rss } from "lucide-react";
+import { AlertCircle, Trash2, Rss, Plus } from "lucide-react";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { Button } from "@/components/ui/button";
-
+import Link from "next/link";
 interface BlogComponentProps {
   component: BlogComponentData;
   isEditable?: boolean;
@@ -149,18 +149,25 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <AlertDialogTrigger asChild>
-              <Button
-                onClick={handleDeleteClick}
-                variant="destructive"
-                size="sm"
-                className="h-8 px-3"
-                disabled={deleteBlogComponent.isPending}
-              >
-                <Trash2 className="mr-1 h-4 w-4" />
-                {deleteBlogComponent.isPending ? "Deleting..." : "Delete"}
-              </Button>
-            </AlertDialogTrigger>
+            <div className="flex items-center gap-2">
+              <Link href="/admin/blogs/" target="_blank" rel="noopener">
+                <Button size="sm" variant="outline">
+                  Manage Blogs
+                </Button>
+              </Link>
+              <AlertDialogTrigger asChild>
+                <Button
+                  onClick={handleDeleteClick}
+                  variant="destructive"
+                  size="sm"
+                  className="h-8 px-3"
+                  disabled={deleteBlogComponent.isPending}
+                >
+                  <Trash2 className="mr-1 h-4 w-4" />
+                  {deleteBlogComponent.isPending ? "Deleting..." : "Delete"}
+                </Button>
+              </AlertDialogTrigger>
+            </div>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="flex items-center gap-2">

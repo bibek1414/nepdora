@@ -1,4 +1,4 @@
-export interface BlogDisplayData {
+export interface BlogData {
   component_id?: string;
   component_type: "blog";
   style: "grid-1" | "grid-2" | "list-1" | "carousel-1";
@@ -18,12 +18,12 @@ export interface BlogComponentData {
   id: string | number;
   component_id: string;
   component_type: "blog";
-  data: BlogDisplayData;
+  data: BlogData;
   order?: number;
   page?: string;
 }
 
-export const defaultBlogDisplayData: BlogDisplayData = {
+export const defaultBlogData: BlogData = {
   component_type: "blog",
   style: "grid-1",
   title: "Latest Blog Posts",
