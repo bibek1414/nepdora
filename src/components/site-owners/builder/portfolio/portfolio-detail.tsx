@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePortfolio } from "@/hooks/owner-site/admin/use-portfolio";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -20,6 +21,7 @@ import {
   ExternalLink,
   Github,
   Calendar,
+  Folder,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,13 +37,30 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
   siteUser,
 }) => {
   const { data: portfolio, isLoading, error } = usePortfolio(slug);
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   const defaultImage =
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=800&fit=crop";
 
   if (isLoading) {
     return (
-      <div className="bg-background">
+      <div>
         <div className="container mx-auto px-4 py-8">
           <div className="mb-6">
             <Skeleton className="h-5 w-64" />
@@ -67,13 +86,16 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
 
   if (error || !portfolio) {
     return (
-      <div className="bg-background">
+      <div style={{ backgroundColor: theme.colors.background }}>
         <div className="container mx-auto px-4 py-8">
           <Breadcrumb className="mb-6">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/" className="flex items-center gap-2">
+                  <Link
+                    href={`/preview/${siteUser}/home`}
+                    className="flex items-center gap-2"
+                  >
                     <Home className="h-4 w-4" />
                     Home
                   </Link>
@@ -82,7 +104,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/portfolio">Portfolio</Link>
+                  <Link href={`/preview/${siteUser}/portfolio`}>Portfolio</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
@@ -108,8 +130,8 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
   const portfolioImage = portfolio.thumbnail_image || defaultImage;
 
   return (
-    <div className="bg-background">
-      <div className="container mx-auto max-w-7xl px-4 py-8 md:py-16">
+    <div>
+      <div className="mx-auto max-w-7xl px-4 py-8">
         {/* Breadcrumb Navigation */}
         <Breadcrumb className="mb-8">
           <BreadcrumbList>
@@ -132,7 +154,12 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-foreground font-medium">
+              <BreadcrumbPage
+                className="font-medium"
+                style={{
+                  fontFamily: theme.fonts.heading,
+                }}
+              >
                 {portfolio.title}
               </BreadcrumbPage>
             </BreadcrumbItem>
@@ -142,15 +169,27 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
         <div className="grid gap-8 md:grid-cols-3 lg:gap-16">
           {/* Main Content */}
           <div className="md:col-span-2">
-            <h1 className="text-foreground mb-4 text-3xl font-bold md:text-5xl">
+            <h1
+              className="mb-4 text-3xl font-bold md:text-5xl"
+              style={{
+                fontFamily: theme.fonts.heading,
+              }}
+            >
               {portfolio.title}
             </h1>
 
-            <div className="text-muted-foreground mb-6 flex flex-wrap items-center gap-4 text-sm">
+            <div className="mb-6 flex flex-wrap items-center gap-4 text-sm">
               {portfolio.category && (
-                <Badge variant="secondary" className="text-base">
+                <div
+                  className="flex text-base"
+                  style={{
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.heading,
+                  }}
+                >
+                  <Folder className="mr-1 w-4" />
                   {portfolio.category.name}
-                </Badge>
+                </div>
               )}
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
@@ -166,7 +205,13 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button>
+                  <Button
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                      fontFamily: theme.fonts.body,
+                    }}
+                  >
                     <ExternalLink className="mr-2 h-4 w-4" />
                     View Live Project
                   </Button>
@@ -178,7 +223,14 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button variant="outline">
+                  <Button
+                    variant="outline"
+                    style={{
+                      borderColor: theme.colors.primary,
+                      color: theme.colors.primary,
+                      fontFamily: theme.fonts.body,
+                    }}
+                  >
                     <Github className="mr-2 h-4 w-4" />
                     View Source Code
                   </Button>
@@ -205,15 +257,15 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
             {/* Content */}
             <div
               className="prose prose-lg dark:prose-invert max-w-none"
+              style={{
+                fontFamily: theme.fonts.body,
+              }}
               dangerouslySetInnerHTML={{ __html: portfolio.content }}
             />
 
             {/* Tags */}
             {portfolio.tags && portfolio.tags.length > 0 && (
-              <div className="mt-8 flex flex-wrap items-center gap-2">
-                <span className="text-foreground font-semibold">
-                  Technologies:
-                </span>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
                 {portfolio.tags.map(tag => (
                   <Badge key={tag.id} variant="outline">
                     <Tag className="mr-1 h-3 w-3" />
@@ -222,54 +274,6 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
                 ))}
               </div>
             )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-8 md:col-span-1">
-            {/* Project Info */}
-            <div className="bg-muted/50 rounded-lg p-6">
-              <h3 className="text-foreground mb-4 text-lg font-semibold">
-                Project Details
-              </h3>
-              <div className="space-y-3 text-sm">
-                {portfolio.category && (
-                  <div>
-                    <span className="text-muted-foreground font-medium">
-                      Category:
-                    </span>
-                    <p className="text-foreground mt-1">
-                      {portfolio.category.name}
-                    </p>
-                  </div>
-                )}
-                <div>
-                  <span className="text-muted-foreground font-medium">
-                    Completed:
-                  </span>
-                  <p className="text-foreground mt-1">
-                    {formatDate(portfolio.created_at)}
-                  </p>
-                </div>
-                {portfolio.tags && portfolio.tags.length > 0 && (
-                  <div>
-                    <span className="text-muted-foreground font-medium">
-                      Technologies:
-                    </span>
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {portfolio.tags.map(tag => (
-                        <Badge
-                          key={tag.id}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {tag.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
         </div>
       </div>

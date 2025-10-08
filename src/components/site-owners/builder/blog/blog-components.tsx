@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { useBlogs } from "@/hooks/owner-site/admin/use-blogs";
-import { useDeleteComponentMutation } from "@/hooks/owner-site/components/unified";
+import {
+  useDeleteComponentMutation,
+  useUpdateComponentMutation,
+} from "@/hooks/owner-site/components/unified";
 import { BlogCard1 } from "./blog-card1";
 import { BlogCard2 } from "./blog-card2";
 import { BlogCard3 } from "./blog-card3";
@@ -18,10 +21,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, Rss, Plus } from "lucide-react";
+import { AlertCircle, Trash2, Rss } from "lucide-react";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { EditableText } from "@/components/ui/editable-text";
+import { toast } from "sonner";
+
 interface BlogComponentProps {
   component: BlogComponentData;
   isEditable?: boolean;
@@ -53,8 +59,12 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     itemsPerRow = 0,
   } = component.data || {};
 
-  // Delete mutation hook using unified hook
+  // Delete and update mutation hooks
   const deleteBlogComponent = useDeleteComponentMutation(
+    pageSlug || "",
+    "blog"
+  );
+  const updateBlogComponent = useUpdateComponentMutation(
     pageSlug || "",
     "blog"
   );
@@ -62,7 +72,6 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   // Calculate page size and get first page for the page_size
   const pageSize = Math.min(page_size, 50);
 
-  // Fix: Use page_size instead of page_size in the BlogFilters
   const { data, isLoading, error } = useBlogs({
     page: 1,
     page_size: pageSize,
@@ -72,10 +81,85 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   const blogs = data?.results || [];
   const totalBlogs = data?.count || 0;
 
-  // Fix: Access pagination info from the response structure
   const hasNext = data?.next !== null;
   const hasPrevious = data?.previous !== null;
   const totalPages = Math.ceil(totalBlogs / pageSize);
+
+  const handleTitleChange = (newTitle: string) => {
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
+      return;
+    }
+
+    const componentId = component.component_id || component.id?.toString();
+    if (!componentId) return;
+
+    updateBlogComponent.mutate(
+      {
+        componentId,
+        data: {
+          ...component.data,
+          title: newTitle,
+        },
+      },
+      {
+        onError: error => {
+          toast.error("Failed to update title", {
+            description:
+              error instanceof Error ? error.message : "Please try again",
+          });
+        },
+      }
+    );
+
+    if (onUpdate) {
+      onUpdate(componentId, {
+        ...component,
+        data: {
+          ...component.data,
+          title: newTitle,
+        },
+      });
+    }
+  };
+
+  const handleSubtitleChange = (newSubtitle: string) => {
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
+      return;
+    }
+
+    const componentId = component.component_id || component.id?.toString();
+    if (!componentId) return;
+
+    updateBlogComponent.mutate(
+      {
+        componentId,
+        data: {
+          ...component.data,
+          subtitle: newSubtitle,
+        },
+      },
+      {
+        onError: error => {
+          toast.error("Failed to update subtitle", {
+            description:
+              error instanceof Error ? error.message : "Please try again",
+          });
+        },
+      }
+    );
+
+    if (onUpdate) {
+      onUpdate(componentId, {
+        ...component,
+        data: {
+          ...component.data,
+          subtitle: newSubtitle,
+        },
+      });
+    }
+  };
 
   const handleBlogClick = (blog: BlogPost) => {
     if (onBlogClick && component.order !== undefined) {
@@ -200,14 +284,23 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
         <div className="py-8">
           <div className="container mx-auto px-4">
             <div className="mb-8 text-center">
-              <h2 className="text-foreground mb-2 text-3xl font-bold tracking-tight">
-                {title}
-              </h2>
-              {subtitle && (
-                <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-                  {subtitle}
-                </p>
-              )}
+              <EditableText
+                value={title}
+                onChange={handleTitleChange}
+                as="h2"
+                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                isEditable={true}
+                placeholder="Enter title..."
+              />
+              <EditableText
+                value={subtitle || ""}
+                onChange={handleSubtitleChange}
+                as="p"
+                className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                isEditable={true}
+                placeholder="Enter subtitle..."
+                multiline={true}
+              />
             </div>
 
             {isLoading && (

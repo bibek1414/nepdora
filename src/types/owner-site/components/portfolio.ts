@@ -1,7 +1,7 @@
 export interface PortfolioData {
   component_id?: string;
   component_type: "portfolio";
-  style: "portfolio-1" | "portfolio-2" | "portfolio-3";
+  style: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4";
   title: string;
   subtitle?: string;
   itemsToShow: number;

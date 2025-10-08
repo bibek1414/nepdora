@@ -10,7 +10,9 @@ import Image from "next/image";
 interface PortfolioStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (style: "portfolio-1" | "portfolio-2" | "portfolio-3") => void;
+  onStyleSelect: (
+    style: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4"
+  ) => void;
 }
 
 export const PortfolioStylesDialog: React.FC<PortfolioStylesDialogProps> = ({
@@ -19,7 +21,7 @@ export const PortfolioStylesDialog: React.FC<PortfolioStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "portfolio-1" | "portfolio-2" | "portfolio-3" | null
+    "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4" | null
   >(null);
 
   const templates = [
@@ -38,10 +40,15 @@ export const PortfolioStylesDialog: React.FC<PortfolioStylesDialogProps> = ({
       name: "Portfolio List",
       description: "Horizontal list layout with details",
     },
+    {
+      id: "portfolio-4" as const,
+      name: "Portfolio Masonry",
+      description: "Dynamic masonry layout for varied content",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "portfolio-1" | "portfolio-2" | "portfolio-3";
+    id: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
