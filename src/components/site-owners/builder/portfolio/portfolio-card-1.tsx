@@ -70,7 +70,7 @@ export const PortfolioCard1: React.FC<PortfolioCard1Props> = ({
 
   return (
     <CardWrapper>
-      <article className="group border-border bg-card relative overflow-hidden rounded-lg border shadow-sm transition-all duration-300 hover:shadow-xl">
+      <article className="group border-border bg-card relative overflow-hidden rounded-lg border transition-all duration-300">
         {/* Image Container */}
         <div className="relative aspect-video w-full overflow-hidden">
           <Image

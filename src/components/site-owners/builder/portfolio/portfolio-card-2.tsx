@@ -1,8 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Github, Tag } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 import { Portfolio } from "@/types/owner-site/admin/portfolio";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
@@ -21,18 +20,12 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
   showCategories = true,
   onClick,
 }) => {
+  // ✅ Fallback image
   const portfolioImage =
     portfolio.thumbnail_image ||
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop";
 
-  const getDetailsUrl = (): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/portfolio/${portfolio.slug}`;
-    } else {
-      return `/portfolio/${portfolio.slug}`;
-    }
-  };
-
+  // ✅ Theme handling
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -49,18 +42,21 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
     },
   };
 
+  // ✅ Generate portfolio details URL
+  const detailsUrl = siteUser
+    ? `/preview/${siteUser}/portfolio/${portfolio.slug}`
+    : `/portfolio/${portfolio.slug}`;
+
+  // ✅ Click handler
   const handleClick = () => {
-    if (onClick) {
-      onClick();
-    } else {
-      const detailsUrl = getDetailsUrl();
-      window.location.href = detailsUrl;
-    }
+    if (onClick) onClick();
+    else window.location.href = detailsUrl;
   };
 
-  const CardWrapper = siteUser
+  // ✅ Wrapper (Link or Div)
+  const Wrapper = siteUser
     ? ({ children }: { children: React.ReactNode }) => (
-        <Link href={getDetailsUrl()}>{children}</Link>
+        <Link href={detailsUrl}>{children}</Link>
       )
     : ({ children }: { children: React.ReactNode }) => (
         <div onClick={handleClick} className="cursor-pointer">
@@ -69,91 +65,85 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
       );
 
   return (
-    <CardWrapper>
-      <article className="group transition-all duration-300 hover:-translate-y-1">
-        {/* Image */}
-        <div className="relative mb-4 aspect-square w-full overflow-hidden rounded-lg">
+    <Wrapper>
+      <div className="group relative flex flex-col overflow-hidden rounded-2xl bg-white transition duration-300 dark:bg-gray-900">
+        {/* Category */}
+        {showCategories && portfolio.category?.name && (
+          <p
+            className="p-2 text-xs font-semibold tracking-wide uppercase"
+            style={{ color: theme.colors.primary }}
+          >
+            {portfolio.category.name}
+          </p>
+        )}
+
+        {/* Image Section */}
+        <div className="relative">
           <Image
             src={portfolioImage}
             alt={portfolio.thumbnail_image_alt_description || portfolio.title}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            width={600}
+            height={400}
+            className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            <div className="flex h-full items-center justify-center gap-3">
-              {portfolio.project_url && (
-                <a
-                  href={portfolio.project_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={e => e.stopPropagation()}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg transition-transform hover:scale-110"
-                >
-                  <ExternalLink className="h-5 w-5 text-gray-700" />
-                </a>
-              )}
-              {portfolio.github_url && (
-                <a
-                  href={portfolio.github_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={e => e.stopPropagation()}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg transition-transform hover:scale-110"
-                >
-                  <Github className="h-5 w-5 text-gray-700" />
-                </a>
-              )}
-            </div>
+
+          {/* Hover overlay */}
+          <div className="absolute inset-0 flex items-center justify-center gap-4 bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            {portfolio.project_url && (
+              <a
+                href={portfolio.project_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                className="rounded-full bg-white p-2 text-gray-900 transition hover:scale-110 dark:bg-gray-800 dark:text-gray-100"
+              >
+                <ExternalLink className="h-5 w-5" />
+              </a>
+            )}
+            {portfolio.github_url && (
+              <a
+                href={portfolio.github_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                className="rounded-full bg-white p-2 text-gray-900 transition hover:scale-110 dark:bg-gray-800 dark:text-gray-100"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+            )}
           </div>
         </div>
 
-        <div>
-          {/* Category */}
-          {showCategories && portfolio.category && (
-            <div className="mb-2">
-              <Badge
-                variant="secondary"
-                className="text-xs"
-                style={{
-                  background: theme.colors.secondary,
-                  color: theme.colors.secondaryForeground,
-                  fontFamily: theme.fonts.heading,
-                }}
-              >
-                {portfolio.category.name}
-              </Badge>
-            </div>
-          )}
-
+        {/* Content Section */}
+        <div className="p-4">
           {/* Title */}
           <h3
-            className="mb-2 line-clamp-1 text-lg font-bold"
-            style={{
-              color: theme.colors.primary,
-              fontFamily: theme.fonts.heading,
-            }}
+            className="text-base font-semibold text-gray-900 dark:text-white"
+            style={{ fontFamily: theme.fonts.heading }}
           >
             {portfolio.title}
           </h3>
 
-          {/* Technologies */}
-          {showTechnologies && portfolio.tags && portfolio.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {portfolio.tags.slice(0, 2).map(tag => (
-                <Badge key={tag.id} variant="outline" className="text-xs">
-                  <Tag className="mr-1 h-2.5 w-2.5" />
-                  {tag.name}
-                </Badge>
+          {/* Tags */}
+          {showTechnologies && portfolio.tags?.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {portfolio.tags.map(tag => (
+                <span
+                  key={tag.id}
+                  className="rounded-full px-2.5 py-0.5 text-xs font-medium"
+                  style={{
+                    backgroundColor: `${theme.colors.primary}15`,
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.body,
+                  }}
+                >
+                  #{tag.name}
+                </span>
               ))}
-              {portfolio.tags.length > 2 && (
-                <Badge variant="outline" className="text-xs">
-                  +{portfolio.tags.length - 2}
-                </Badge>
-              )}
             </div>
           )}
         </div>
-      </article>
-    </CardWrapper>
+      </div>
+    </Wrapper>
   );
 };

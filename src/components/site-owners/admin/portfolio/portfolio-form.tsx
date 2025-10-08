@@ -115,7 +115,7 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
   });
 
   useEffect(() => {
-    if (isEditMode && portfolio && !formInitialized && !isLoadingCategories) {
+    if (isEditMode && portfolio && !formInitialized) {
       const portfolioTags = portfolio.tags || [];
 
       form.reset({
@@ -134,13 +134,34 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
       setSelectedTags(portfolioTags);
       setFormInitialized(true);
     }
+  }, [portfolio, isEditMode, formInitialized, form]);
+
+  // Second useEffect: Force update category field once categories are loaded
+  useEffect(() => {
+    if (
+      isEditMode &&
+      portfolio?.category?.id &&
+      !isLoadingCategories &&
+      allCategories &&
+      allCategories.length > 0 &&
+      formInitialized
+    ) {
+      // Force set the category value again once categories are available
+      const currentCategory = form.getValues("category");
+      if (!currentCategory && portfolio.category?.id) {
+        form.setValue("category", portfolio.category.id, {
+          shouldValidate: true,
+          shouldDirty: false,
+        });
+      }
+    }
   }, [
-    portfolio,
-    isEditMode,
-    form,
-    formInitialized,
     isLoadingCategories,
     allCategories,
+    portfolio,
+    isEditMode,
+    formInitialized,
+    form,
   ]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -291,100 +312,109 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
             <FormField
               control={form.control}
               name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center justify-between">
-                    <FormLabel>Category *</FormLabel>
-                    <Dialog
-                      open={isCategoryDialogOpen}
-                      onOpenChange={setIsCategoryDialogOpen}
-                    >
-                      <DialogTrigger asChild>
-                        <Button type="button" variant="outline" size="sm">
-                          <Plus className="mr-1 h-4 w-4" />
-                          Create Category
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Create New Category</DialogTitle>
-                          <DialogDescription>
-                            Add a new category for portfolio items.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          <div className="space-y-2">
-                            <label
-                              htmlFor="category-name"
-                              className="text-sm font-medium"
-                            >
-                              Category Name
-                            </label>
-                            <Input
-                              id="category-name"
-                              placeholder="Enter category name"
-                              value={newCategoryName}
-                              onChange={e => setNewCategoryName(e.target.value)}
-                              onKeyDown={e => {
-                                if (e.key === "Enter") {
-                                  e.preventDefault();
-                                  handleCreateCategory();
+              render={({ field }) => {
+                // Ensure we have a valid string value for the Select
+                const selectValue = field.value
+                  ? String(field.value)
+                  : undefined;
+
+                return (
+                  <FormItem>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>Category *</FormLabel>
+                      <Dialog
+                        open={isCategoryDialogOpen}
+                        onOpenChange={setIsCategoryDialogOpen}
+                      >
+                        <DialogTrigger asChild>
+                          <Button type="button" variant="outline" size="sm">
+                            <Plus className="mr-1 h-4 w-4" />
+                            Create Category
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Create New Category</DialogTitle>
+                            <DialogDescription>
+                              Add a new category for portfolio items.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <label
+                                htmlFor="category-name"
+                                className="text-sm font-medium"
+                              >
+                                Category Name
+                              </label>
+                              <Input
+                                id="category-name"
+                                placeholder="Enter category name"
+                                value={newCategoryName}
+                                onChange={e =>
+                                  setNewCategoryName(e.target.value)
                                 }
-                              }}
-                            />
+                                onKeyDown={e => {
+                                  if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    handleCreateCategory();
+                                  }
+                                }}
+                              />
+                            </div>
+                            <div className="flex justify-end space-x-2">
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => {
+                                  setIsCategoryDialogOpen(false);
+                                  setNewCategoryName("");
+                                }}
+                                disabled={isCreatingCategory}
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                type="button"
+                                onClick={handleCreateCategory}
+                                disabled={
+                                  isCreatingCategory || !newCategoryName.trim()
+                                }
+                              >
+                                {isCreatingCategory
+                                  ? "Creating..."
+                                  : "Create Category"}
+                              </Button>
+                            </div>
                           </div>
-                          <div className="flex justify-end space-x-2">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={() => {
-                                setIsCategoryDialogOpen(false);
-                                setNewCategoryName("");
-                              }}
-                              disabled={isCreatingCategory}
-                            >
-                              Cancel
-                            </Button>
-                            <Button
-                              type="button"
-                              onClick={handleCreateCategory}
-                              disabled={
-                                isCreatingCategory || !newCategoryName.trim()
-                              }
-                            >
-                              {isCreatingCategory
-                                ? "Creating..."
-                                : "Create Category"}
-                            </Button>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                  <Select
-                    onValueChange={value => field.onChange(Number(value))}
-                    value={field.value?.toString()}
-                    disabled={isLoadingCategories}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a category" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {safeAllCategories.map(category => (
-                        <SelectItem
-                          key={category.id}
-                          value={category.id.toString()}
-                        >
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                    <Select
+                      onValueChange={value => field.onChange(Number(value))}
+                      value={selectValue}
+                      disabled={isLoadingCategories}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {safeAllCategories.map(category => (
+                          <SelectItem
+                            key={category.id}
+                            value={category.id.toString()}
+                          >
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
 
             <FormField

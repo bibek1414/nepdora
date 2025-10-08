@@ -581,7 +581,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handlePortfolioTemplateSelect = (
-    template: "portfolio-1" | "portfolio-2" | "portfolio-3"
+    template: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4"
   ) => {
     const portfolioData = {
       ...defaultPortfolioData,

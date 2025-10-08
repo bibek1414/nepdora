@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2, Briefcase } from "lucide-react";
+import { Trash2, Briefcase, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,11 +25,13 @@ import { Portfolio } from "@/types/owner-site/admin/portfolio";
 import { PortfolioCard1 } from "./portfolio-card-1";
 import { PortfolioCard2 } from "./portfolio-card-2";
 import { PortfolioCard3 } from "./portfolio-card-3";
+import { PortfolioCard4 } from "./portfolio-card-4";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/unified";
 import { usePortfolios } from "@/hooks/owner-site/admin/use-portfolio";
+import { EditableText } from "@/components/ui/editable-text";
 
 interface PortfolioComponentProps {
   component: PortfolioComponentData;
@@ -48,6 +50,9 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   onPortfolioClick,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
   const deletePortfolioMutation = useDeleteComponentMutation(
     pageSlug,
     "portfolio"
@@ -79,7 +84,6 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   // Extract portfolios from the API response structure
   const portfolios = data?.results || [];
   const totalPortfolios = data?.count || 0;
-  const totalPages = Math.ceil(totalPortfolios / pageSize);
 
   const handleUpdate = (updatedData: Partial<PortfolioData>) => {
     const componentId = component.component_id || component.id.toString();
@@ -98,6 +102,20 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
         },
       }
     );
+  };
+
+  const handleTitleChange = (newTitle: string) => {
+    handleUpdate({
+      ...component.data,
+      title: newTitle,
+    });
+  };
+
+  const handleSubtitleChange = (newSubtitle: string) => {
+    handleUpdate({
+      ...component.data,
+      subtitle: newSubtitle,
+    });
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
@@ -131,13 +149,42 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
     }
   };
 
-  const renderPortfolioCard = (portfolio: Portfolio) => {
+  // Carousel navigation functions
+  const goToNextProject = () => {
+    if (isAnimating || portfolios.length === 0) return;
+
+    setIsAnimating(true);
+    setCurrentProjectIndex(prevIndex =>
+      prevIndex === portfolios.length - 1 ? 0 : prevIndex + 1
+    );
+
+    setTimeout(() => setIsAnimating(false), 300);
+  };
+
+  const goToPrevProject = () => {
+    if (isAnimating || portfolios.length === 0) return;
+
+    setIsAnimating(true);
+    setCurrentProjectIndex(prevIndex =>
+      prevIndex === 0 ? portfolios.length - 1 : prevIndex - 1
+    );
+
+    setTimeout(() => setIsAnimating(false), 300);
+  };
+
+  // Reset index when portfolios change
+  useEffect(() => {
+    setCurrentProjectIndex(0);
+  }, [portfolios]);
+
+  const renderPortfolioCard = (portfolio: Portfolio, index: number) => {
     const cardProps = {
       portfolio,
       isEditable: false,
       siteUser: isEditable ? undefined : siteUser,
       onUpdate: handleUpdate,
       onClick: () => handlePortfolioClick(portfolio),
+      index,
     };
 
     switch (style) {
@@ -147,19 +194,14 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
         return <PortfolioCard2 {...cardProps} />;
       case "portfolio-3":
         return <PortfolioCard3 {...cardProps} />;
+      case "portfolio-4":
+        return <PortfolioCard4 {...cardProps} />;
       default:
         return <PortfolioCard1 {...cardProps} />;
     }
   };
 
-  const getGridClass = () => {
-    if (style === "portfolio-3") {
-      return "grid-cols-1 gap-6";
-    }
-    return `grid-cols-1 sm:grid-cols-${columns} gap-6`;
-  };
-
-  // Builder mode preview
+  // Builder mode preview with carousel
   if (isEditable) {
     return (
       <div className="group relative">
@@ -216,33 +258,40 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
           </AlertDialog>
         </div>
 
-        {/* Portfolio Preview */}
+        {/* Portfolio Preview with Carousel */}
         <div className="py-8">
           <div className="container mx-auto px-4">
             <div className="mb-8 text-center">
-              <h2 className="text-foreground mb-2 text-3xl font-bold tracking-tight">
-                {title}
-              </h2>
-              {subtitle && (
-                <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-                  {subtitle}
-                </p>
-              )}
+              <EditableText
+                value={title}
+                onChange={handleTitleChange}
+                as="h2"
+                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                isEditable={true}
+                placeholder="Enter title..."
+              />
+              <EditableText
+                value={subtitle || ""}
+                onChange={handleSubtitleChange}
+                as="p"
+                className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                isEditable={true}
+                placeholder="Enter subtitle..."
+                multiline={true}
+              />
             </div>
 
             {isLoading && (
-              <div className={`grid ${getGridClass()}`}>
-                {Array.from({ length: Math.min(itemsToShow, 3) }).map(
-                  (_, index) => (
-                    <div key={index} className="flex flex-col space-y-3">
-                      <Skeleton className="h-[200px] w-full rounded-xl" />
-                      <div className="space-y-2">
-                        <Skeleton className="h-5 w-3/4" />
-                        <Skeleton className="h-4 w-1/2" />
-                      </div>
+              <div className="flex flex-col items-center">
+                <div className="w-full max-w-6xl">
+                  <div className="flex flex-col space-y-4">
+                    <Skeleton className="h-[400px] w-full rounded-lg" />
+                    <div className="space-y-3">
+                      <Skeleton className="mx-auto h-8 w-3/4" />
+                      <Skeleton className="mx-auto h-6 w-1/2" />
                     </div>
-                  )
-                )}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -259,19 +308,57 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
             )}
 
             {!isLoading && !error && portfolios.length > 0 && (
-              <div className={`grid ${getGridClass()}`}>
-                {portfolios
-                  .slice(0, Math.min(itemsToShow, 6))
-                  .map(portfolio => (
-                    <div
-                      key={portfolio.id}
-                      className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
-                    >
+              <div className="flex flex-col items-center">
+                {/* Single Portfolio Item Display */}
+                <div className="w-full max-w-6xl">
+                  <div
+                    className={`transition-opacity duration-300 ${
+                      isAnimating ? "opacity-0" : "opacity-100"
+                    }`}
+                  >
+                    <div className="relative">
                       {/* Overlay to prevent clicks in builder mode */}
                       <div className="absolute inset-0 z-10 bg-transparent" />
-                      {renderPortfolioCard(portfolio)}
+                      {renderPortfolioCard(
+                        portfolios[currentProjectIndex],
+                        currentProjectIndex
+                      )}
                     </div>
-                  ))}
+                  </div>
+                </div>
+
+                {/* Navigation Controls */}
+                {portfolios.length > 1 && (
+                  <div className="mt-8 flex items-center justify-center gap-4">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={goToPrevProject}
+                      disabled={isAnimating}
+                      className="h-12 w-12 rounded-full border-2"
+                    >
+                      <ChevronLeft className="h-6 w-6" />
+                    </Button>
+
+                    <div className="text-muted-foreground mx-4 text-sm">
+                      <span className="font-medium">
+                        {currentProjectIndex + 1}
+                      </span>
+                      <span className="mx-2">of</span>
+                      <span>{portfolios.length}</span>
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={goToNextProject}
+                      disabled={isAnimating}
+                      className="h-12 w-12 rounded-full border-2"
+                    >
+                      <ChevronRight className="h-6 w-6" />
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -286,24 +373,13 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
                 </p>
               </div>
             )}
-
-            {!isLoading && !error && portfolios.length > 6 && (
-              <div className="bg-muted/50 mt-6 rounded-md p-3 text-center">
-                <p className="text-muted-foreground text-sm">
-                  Showing 6 of {portfolios.length} portfolio items in builder
-                  preview
-                  {totalPortfolios > 0 &&
-                    ` (${totalPortfolios} total available)`}
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>
     );
   }
 
-  // Live site rendering
+  // Live site rendering with carousel
   return (
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
@@ -319,16 +395,16 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
         </div>
 
         {isLoading && (
-          <div className={`grid ${getGridClass()} gap-8`}>
-            {Array.from({ length: itemsToShow }).map((_, index) => (
-              <div key={index} className="flex flex-col space-y-4">
-                <Skeleton className="h-[280px] w-full rounded-lg" />
+          <div className="flex flex-col items-center">
+            <div className="w-full max-w-4xl">
+              <div className="flex flex-col space-y-4">
+                <Skeleton className="h-[400px] w-full rounded-lg" />
                 <div className="space-y-3">
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="mx-auto h-8 w-3/4" />
+                  <Skeleton className="mx-auto h-6 w-1/2" />
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         )}
 
@@ -345,12 +421,51 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
         )}
 
         {!isLoading && !error && portfolios.length > 0 && (
-          <div className={`grid ${getGridClass()} gap-8`}>
-            {portfolios.slice(0, itemsToShow).map(portfolio => (
-              <div key={portfolio.id} className="flex-shrink-0">
-                {renderPortfolioCard(portfolio)}
+          <div className="flex flex-col items-center">
+            {/* Single Portfolio Item Display */}
+            <div className="w-full max-w-6xl">
+              <div
+                className={`transition-opacity duration-300 ${
+                  isAnimating ? "opacity-0" : "opacity-100"
+                }`}
+              >
+                {renderPortfolioCard(
+                  portfolios[currentProjectIndex],
+                  currentProjectIndex
+                )}
               </div>
-            ))}
+            </div>
+
+            {/* Navigation Controls */}
+            {portfolios.length > 1 && (
+              <div className="mt-8 flex items-center justify-center gap-4">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={goToPrevProject}
+                  disabled={isAnimating}
+                  className="h-12 w-12 rounded-full border-2"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </Button>
+
+                <div className="text-muted-foreground mx-4 text-sm">
+                  <span className="font-medium">{currentProjectIndex + 1}</span>
+                  <span className="mx-2">of</span>
+                  <span>{portfolios.length}</span>
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={goToNextProject}
+                  disabled={isAnimating}
+                  className="h-12 w-12 rounded-full border-2"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </Button>
+              </div>
+            )}
           </div>
         )}
 
@@ -363,17 +478,6 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
             <p className="text-muted-foreground mx-auto max-w-md text-lg">
               We&apos;re currently working on new projects. Please check back
               soon for new portfolio items.
-            </p>
-          </div>
-        )}
-
-        {/* Pagination info */}
-        {!isLoading && !error && totalPortfolios > itemsToShow && (
-          <div className="bg-muted/30 mt-12 rounded-lg p-4 text-center">
-            <p className="text-muted-foreground">
-              Showing {Math.min(itemsToShow, portfolios.length)} of{" "}
-              {totalPortfolios} portfolio items
-              {totalPages > 1 && ` (Page 1 of ${totalPages})`}
             </p>
           </div>
         )}

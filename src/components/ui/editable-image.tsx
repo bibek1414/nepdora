@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Button as SOButton } from "@/components/ui/site-owners/button";
 import { ImagePlus, Upload, Loader2, X } from "lucide-react";
 import {
   uploadToCloudinary,
@@ -231,9 +232,9 @@ export const EditableImage: React.FC<EditableImageProps> = ({
               isHovered ? "opacity-100" : "opacity-0"
             )}
           >
-            <Button variant="secondary" className="gap-2">
+            <SOButton variant="default" className="gap-2">
               <ImagePlus className="h-4 w-4" /> Change Image
-            </Button>
+            </SOButton>
           </div>
         )}
       </div>
