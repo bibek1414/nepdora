@@ -107,7 +107,7 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
                   label="Name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  required={data.required_fields.name}
+                  required={data?.required_fields?.name}
                   className="mt-1"
                   placeholder="Your full name"
                 />
@@ -151,7 +151,7 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
-                  required={data.required_fields.message}
+                  required={data?.required_fields?.message}
                   className="mt-1 min-h-[120px]"
                   placeholder="Tell us how we can help you..."
                 />

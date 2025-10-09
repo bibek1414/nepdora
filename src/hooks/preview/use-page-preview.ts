@@ -7,6 +7,7 @@ import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
+import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
@@ -30,6 +31,7 @@ interface PageComponent {
     | "about"
     | "products"
     | "blog"
+    | "services"
     | "contact"
     | "team"
     | "faq"
@@ -45,6 +47,7 @@ interface PageComponent {
     | AboutUsComponentData["data"]
     | ProductsComponentData["data"]
     | BlogComponentData["data"]
+    | ServicesComponentData["data"]
     | ContactComponentData["data"]
     | FAQComponentData["data"]
     | TeamComponentData["data"]
@@ -88,6 +91,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
           "about",
           "products",
           "blog",
+          "services",
           "contact",
           "team",
           "faq",
@@ -104,8 +108,8 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
   }, [pageComponentsResponse]);
 
   // Navigation handlers
-  const handleBackToBuilder = () => {
-    router.push(`/builder/${siteUser}`);
+  const handleBacktoHome = () => {
+    router.push(`/preview/${siteUser}`);
   };
 
   const handleProductClick = (productId: number, order: number) => {
@@ -117,7 +121,10 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
     console.log("Blog clicked in preview:", { blogSlug, order });
     router.push(`/preview/${siteUser}/blog/${blogSlug}`);
   };
-
+  const handleServiceClick = (serviceSlug: string, order: number) => {
+    console.log("Service clicked in preview:", { serviceSlug, order });
+    router.push(`/preview/${siteUser}/services/${serviceSlug}`);
+  };
   const handleCategoryClick = (categoryId: number, order: number) => {
     console.log("Category clicked in preview:", { categoryId, order });
     router.push(`/preview/${siteUser}/categories/${categoryId}`);
@@ -136,6 +143,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | AboutUsComponentData
       | ProductsComponentData
       | BlogComponentData
+      | ServicesComponentData
       | ContactComponentData
       | TeamComponentData
       | FAQComponentData
@@ -156,10 +164,11 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
   return {
     pageComponents,
     isComponentsLoading,
-    handleBackToBuilder,
+    handleBacktoHome,
     handleProductClick,
     handleBlogClick,
     handleCategoryClick,
+    handleServiceClick,
     handleSubCategoryClick,
     handleComponentUpdate,
   };

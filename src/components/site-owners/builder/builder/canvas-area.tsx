@@ -15,6 +15,7 @@ import { ProductsComponent } from "@/components/site-owners/builder/products/pro
 import { CategoryComponent } from "@/components/site-owners/builder/category/category-component";
 import { SubCategoryComponent } from "@/components/site-owners/builder/sub-category/sub-category-component";
 import { BlogComponent } from "@/components/site-owners/builder/blog/blog-components";
+import { ServicesComponent } from "@/components/site-owners/builder/services/services-component";
 import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
 import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
@@ -31,6 +32,7 @@ import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
+import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
@@ -69,6 +71,7 @@ interface CanvasAreaProps {
   onAddCategories?: () => void;
   onAddSubCategories?: () => void;
   onAddBlog?: () => void;
+  onAddServices?: () => void;
   onAddContact?: () => void;
   onAddTeam?: () => void;
   onAddTestimonials?: () => void;
@@ -95,6 +98,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddCategories,
   onAddSubCategories,
   onAddBlog,
+  onAddServices,
   onAddContact,
   onAddTeam,
   onAddTestimonials,
@@ -270,6 +274,17 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           />
         );
         break;
+      case "services":
+        componentElement = (
+          <ServicesComponent
+            key={`services-${component.id}`}
+            component={component as ServicesComponentData}
+            onUpdate={() => {}}
+            onServiceClick={() => {}}
+            {...commonProps}
+          />
+        );
+        break;
       case "contact":
         componentElement = (
           <ContactComponent
@@ -440,6 +455,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     c => c.component_type === "subcategory"
   );
   const hasBlog = pageComponents.some(c => c.component_type === "blog");
+  const hasServices = pageComponents.some(c => c.component_type === "services");
   const hasContact = pageComponents.some(c => c.component_type === "contact");
   const hasTeam = pageComponents.some(c => c.component_type === "team");
   const hasTestimonials = pageComponents.some(

@@ -45,6 +45,8 @@ import { SubCategoryStylesDialog } from "@/components/site-owners/builder/sub-ca
 import { Facebook, Twitter } from "lucide-react";
 import { defaultBlogData } from "@/types/owner-site/components/blog";
 import { BlogStylesDialog } from "@/components/site-owners/builder/blog/blog-style-dialog";
+import { ServicesStyleDialog } from "@/components/site-owners/builder/services/services-style-dialog";
+import { defaultServicesData } from "@/types/owner-site/components/services";
 import {
   ComponentResponse,
   ComponentTypeMap,
@@ -114,6 +116,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isSubCategoriesStylesDialogOpen, setIsSubCategoriesStylesDialogOpen] =
     useState(false);
   const [isBlogStylesDialogOpen, setIsBlogStylesDialogOpen] = useState(false);
+  const [isServicesStylesDialogOpen, setIsServicesStylesDialogOpen] =
+    useState(false);
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
   const [isContactStylesDialogOpen, setIsContactStylesDialogOpen] =
     useState(false);
@@ -155,6 +159,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createBlogComponentMutation = useCreateComponentMutation(
     currentPage,
     "blog"
+  );
+  const createServicesComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "services"
   );
   const createContactComponentMutation = useCreateComponentMutation(
     currentPage,
@@ -219,6 +227,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "category",
             "subcategory",
             "blog",
+            "services",
             "contact",
             "team",
             "testimonials",
@@ -341,6 +350,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsSubCategoriesStylesDialogOpen(true);
     } else if (componentId === "blog-sections") {
       setIsBlogStylesDialogOpen(true);
+    } else if (componentId === "services-sections") {
+      setIsServicesStylesDialogOpen(true);
     } else if (componentId === "contact-sections") {
       setIsContactStylesDialogOpen(true);
     } else if (componentId === "testimonials-sections") {
@@ -772,6 +783,23 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+  const handleServicesTemplateSelect = (
+    template: "grid-1" | "grid-2" | "list-1" | "grid-3"
+  ) => {
+    const servicesData = {
+      ...defaultServicesData,
+      style: template,
+    };
+
+    createServicesComponentMutation.mutate(servicesData, {
+      onSuccess: () => {
+        setIsServicesStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create services component:", error);
+      },
+    });
+  };
 
   const handleTeamTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1"
@@ -838,6 +866,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAddBlog = () => {
     setIsBlogStylesDialogOpen(true);
   };
+  const handleAddServices = () => {
+    setIsServicesStylesDialogOpen(true);
+  };
 
   const handleAddContact = () => {
     setIsContactStylesDialogOpen(true);
@@ -896,6 +927,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         case "blog-sections":
           componentType = "blog";
           break;
+        case "services-sections":
+          componentType = "services";
+          break;
         case "contact-sections":
           componentType = "contact";
           break;
@@ -929,6 +963,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               "category",
               "subcategory",
               "blog",
+              "services",
               "contact",
               "team",
               "testimonials",
@@ -1041,7 +1076,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsBlogStylesDialogOpen}
         onStyleSelect={handleBlogTemplateSelect}
       />
-
+      <ServicesStyleDialog
+        open={isServicesStylesDialogOpen}
+        onOpenChange={setIsServicesStylesDialogOpen}
+        onStyleSelect={handleServicesTemplateSelect}
+      />
       <ContactStylesDialog
         open={isContactStylesDialogOpen}
         onOpenChange={setIsContactStylesDialogOpen}
@@ -1127,6 +1166,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddCategories={handleAddCategories}
                   onAddSubCategories={handleAddSubCategories}
                   onAddBlog={handleAddBlog}
+                  onAddServices={handleAddServices}
                   onAddContact={handleAddContact}
                   onAddTeam={handleAddTeam}
                   onAddTestimonials={handleAddTestimonials}
