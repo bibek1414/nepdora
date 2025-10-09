@@ -155,38 +155,6 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
               dangerouslySetInnerHTML={{ __html: service.description }}
             />
           </div>
-
-          {/* Sidebar for related content (can be extended) */}
-          <div className="space-y-8 md:col-span-1">
-            <div className="bg-muted/50 rounded-lg p-6">
-              <h3 className="text-foreground mb-4 text-lg font-semibold">
-                Popular Services
-              </h3>
-              {/* You might fetch actual popular services here */}
-              <ul className="space-y-3">
-                {[
-                  { title: "The Future of AI", slug: "the-future-of-ai" },
-                  {
-                    title: "Web Development Trends 2024",
-                    slug: "web-development-trends-2024",
-                  },
-                  {
-                    title: "Mastering React Hooks",
-                    slug: "mastering-react-hooks",
-                  },
-                ].map((post, index) => (
-                  <li key={index}>
-                    <Link
-                      href={`/preview?site=${siteUser}&page=services/${post.slug}`}
-                      className="text-foreground hover:text-primary text-base transition-colors"
-                    >
-                      {post.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
     </div>
