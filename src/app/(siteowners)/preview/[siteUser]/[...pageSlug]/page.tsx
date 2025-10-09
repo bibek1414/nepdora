@@ -1,13 +1,11 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Monitor } from "lucide-react";
+import { Button } from "@/components/ui/site-owners/button";
 import { use } from "react";
 import { usePagePreview } from "@/hooks/preview/use-page-preview";
 import { PageComponentRenderer } from "@/components/site-owners/preview/page-component-render";
 import { LoadingSpinner } from "@/components/site-owners/preview/loading-spinner";
-
 interface DynamicPageProps {
   params: Promise<{
     siteUser: string;
@@ -24,9 +22,12 @@ export default function DynamicPage({ params }: DynamicPageProps) {
   const {
     pageComponents,
     isComponentsLoading,
-    handleBackToBuilder,
+    handleBacktoHome,
     handleProductClick,
     handleBlogClick,
+    handleServiceClick,
+    handleCategoryClick,
+    handleSubCategoryClick,
     handleComponentUpdate,
   } = usePagePreview(siteUser, currentPageSlug);
 
@@ -45,23 +46,27 @@ export default function DynamicPage({ params }: DynamicPageProps) {
         onProductClick={handleProductClick}
         onBlogClick={handleBlogClick}
         onComponentUpdate={handleComponentUpdate}
+        onServiceClick={handleServiceClick}
+        onCategoryClick={handleCategoryClick}
+        onSubCategoryClick={handleSubCategoryClick}
       />
 
       <div className="p-8">
         {!hasContent ? (
           <div className="py-20 text-center">
-            <div className="bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
-              <Monitor className="text-muted-foreground h-8 w-8" />
-            </div>
+            {/* Heading */}
+            <h1 className="text-6xl font-bold text-gray-800">404</h1>
             <h3 className="text-foreground mb-2 text-xl font-semibold">
-              No Content for &apos;{currentPageSlug}&apos; page
+              Oops! The &apos;
+              {currentPageSlug}&apos; page you’re looking for doesn’t exist.
             </h3>
-            <p className="text-muted-foreground mx-auto max-w-md">
-              Go back to the builder and start adding components to the &apos;
-              {currentPageSlug}&apos; page.
-            </p>
-            <Button onClick={handleBackToBuilder} className="mt-4">
-              Open Builder
+
+            <Button
+              onClick={handleBacktoHome}
+              className="mt-4"
+              variant="default"
+            >
+              Go back home
             </Button>
           </div>
         ) : null}
