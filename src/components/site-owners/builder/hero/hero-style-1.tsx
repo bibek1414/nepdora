@@ -4,14 +4,13 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, Play, ArrowRight } from "lucide-react";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { HeroData, TextStyle } from "@/types/owner-site/components/hero";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
-// Updated HeroTemplate1 with theme integration
 interface HeroTemplate1Props {
   heroData: HeroData;
   isEditable?: boolean;
@@ -44,7 +43,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
     },
   };
 
-  // Handle text field updates
+  // Handle text field updates - Save HTML content
   const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
     const updatedData = { ...data, [field]: value };
     setData(updatedData);
@@ -81,6 +80,27 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
     setData(updatedData);
     onUpdate?.({ buttons: updatedButtons });
   };
+
+  const [titleStyle, setTitleStyle] = useState<TextStyle>(
+    data.titleStyle || {
+      color: theme.colors.text,
+      fontFamily: theme.fonts.heading,
+    }
+  );
+
+  const [descriptionStyle, setDescriptionStyle] = useState<TextStyle>(
+    data.descriptionStyle || {
+      color: theme.colors.text,
+      fontFamily: theme.fonts.body,
+    }
+  );
+
+  const [subtitleStyle, setSubtitleStyle] = useState<TextStyle>(
+    data.subtitleStyle || {
+      color: theme.colors.secondaryForeground,
+      fontFamily: theme.fonts.body,
+    }
+  );
 
   const getButtonClasses = (variant: string) => {
     const baseClasses =
@@ -124,6 +144,20 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
     }
     return { backgroundColor: data.backgroundColor || theme.colors.background };
   };
+
+  const handleStyleUpdate =
+    (
+      field: "titleStyle" | "descriptionStyle" | "subtitleStyle",
+      setter: React.Dispatch<React.SetStateAction<TextStyle>>
+    ) =>
+    (style: TextStyle) => {
+      setter(style);
+      const updatedData = { ...data, [field]: style };
+      setData(updatedData);
+      onUpdate?.({ [field]: style } as Partial<HeroData>);
+    };
+
+  const themeId = themeResponse?.data?.[0]?.id;
 
   const getLayoutClasses = () => {
     switch (data.layout) {
@@ -197,16 +231,26 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                 variant="secondary"
                 style={{
                   backgroundColor: theme.colors.secondary,
-                  color: theme.colors.secondaryForeground,
                   fontFamily: theme.fonts.body,
                 }}
               >
                 <EditableText
                   value={data.subtitle}
                   onChange={handleTextUpdate("subtitle")}
+                  onStyleChange={handleStyleUpdate(
+                    "subtitleStyle",
+                    setSubtitleStyle
+                  )}
                   as="span"
                   isEditable={isEditable}
                   placeholder="Enter subtitle..."
+                  theme={theme}
+                  currentTextColor={subtitleStyle.color}
+                  currentFontFamily={subtitleStyle.fontFamily}
+                  style={{
+                    color: subtitleStyle.color,
+                    fontFamily: subtitleStyle.fontFamily,
+                  }}
                 />
               </Badge>
             </div>
@@ -216,24 +260,40 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
+            onStyleChange={handleStyleUpdate("titleStyle", setTitleStyle)}
             as="h1"
             className="text-4xl leading-tight font-bold md:text-6xl"
-            style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter your hero title..."
+            theme={theme}
+            currentTextColor={titleStyle.color}
+            currentFontFamily={titleStyle.fontFamily}
+            style={{
+              color: titleStyle.color,
+              fontFamily: titleStyle.fontFamily,
+            }}
           />
 
-          {/* Description */}
           {data.description && (
             <EditableText
               value={data.description}
               onChange={handleTextUpdate("description")}
+              onStyleChange={handleStyleUpdate(
+                "descriptionStyle",
+                setDescriptionStyle
+              )}
               as="p"
-              className="max-w-2xl text-lg leading-relaxed opacity-90 md:text-xl"
-              style={{ fontFamily: theme.fonts.body }}
+              className="mx-auto max-w-2xl text-lg leading-relaxed opacity-90 md:text-xl"
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}
+              theme={theme}
+              currentTextColor={descriptionStyle.color}
+              currentFontFamily={descriptionStyle.fontFamily}
+              style={{
+                color: descriptionStyle.color,
+                fontFamily: descriptionStyle.fontFamily,
+              }}
             />
           )}
 

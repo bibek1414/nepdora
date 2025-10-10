@@ -1,8 +1,9 @@
 export const siteConfig = {
-  name: " ",
-  description: "Nepdora",
+  name: "Nepdora",
+  description: "Nepdora Preview System",
   apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000",
-  baseDomain: process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com",
+  baseDomain:
+    process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.baliyoventures.com",
   protocol:
     process.env.NEXT_PUBLIC_PROTOCOL ||
     (process.env.NODE_ENV === "production" ? "https" : "http"),
@@ -10,10 +11,48 @@ export const siteConfig = {
   frontendDevPort: Number(process.env.NEXT_PUBLIC_FRONTEND_PORT || 3000),
 };
 
-const buildPreviewApi = (subdomain: string) =>
-  `https://${subdomain}.nepdora.baliyoventures.com`;
+export const rootDomain = siteConfig.isDev
+  ? `localhost:${siteConfig.baseDomain}`
+  : siteConfig.baseDomain;
 
-const extractJwtDomain = (): string | null => {
+/**
+ * Build preview API URL for a subdomain
+ */
+export const buildPreviewApi = (subdomain: string) =>
+  `https://${subdomain}.${siteConfig.baseDomain}`;
+
+/**
+ * Extract subdomain from local preview URL
+ */
+export const extractLocalPreviewSubdomain = (url: URL): string | null => {
+  // subdomain.localhost
+  if (url.hostname.endsWith(".localhost")) {
+    const sub = url.hostname.split(".")[0];
+    if (sub && sub !== "localhost") return sub;
+  }
+
+  // /preview/<subdomain>
+  const match = url.pathname.match(/\/preview\/([^/?#]+)/);
+  if (match?.[1]) return match[1];
+
+  // ?previewSubdomain=<subdomain>
+  const qp = url.searchParams.get("previewSubdomain");
+  if (qp) return qp;
+
+  // Env override
+  if (process.env.NEXT_PUBLIC_PREVIEW_SUBDOMAIN) {
+    return process.env.NEXT_PUBLIC_PREVIEW_SUBDOMAIN;
+  }
+
+  return null;
+};
+
+/**
+ * Extract domain from JWT stored in localStorage (client only)
+ */
+export const extractJwtDomain = (): string | null => {
+  if (typeof window === "undefined") return null;
+
   try {
     const raw = localStorage.getItem("authTokens");
     if (!raw) return null;
@@ -22,84 +61,54 @@ const extractJwtDomain = (): string | null => {
     const accessToken = tokens?.access_token;
     if (!accessToken) return null;
 
-    const parts = accessToken.split(".");
-    if (parts.length !== 3) return null;
+    const payload = accessToken.split(".")[1];
+    if (!payload) return null;
 
-    const payload = parts[1]
-      .replace(/-/g, "+")
-      .replace(/_/g, "/")
-      .padEnd(Math.ceil(parts[1].length / 4) * 4, "=");
+    const decoded = JSON.parse(
+      decodeURIComponent(
+        escape(
+          atob(payload.replace(/-/g, "+").replace(/_/g, "/")).padEnd(
+            Math.ceil(payload.length / 4) * 4,
+            "="
+          )
+        )
+      )
+    );
 
-    const decoded = JSON.parse(decodeURIComponent(escape(atob(payload))));
-    if (decoded?.domain) {
-      return `https://${decoded.domain}`;
-    }
-  } catch (e) {
-    console.error("Error decoding JWT for API base URL:", e);
-  }
-  return null;
-};
-
-const extractLocalPreviewSubdomain = (url: URL): string | null => {
-  // 1) subdomain.localhost
-  // e.g., bibek.localhost:3000
-  if (url.hostname.endsWith(".localhost")) {
-    const subdomain = url.hostname.split(".")[0];
-    if (subdomain && subdomain !== "localhost") return subdomain;
-  }
-
-  // 2) /preview/<subdomain> or /preview/<id>
-  // Prefer a nice string slug; fallback to numeric ID if that's what you use
-  const pathMatch = url.pathname.match(/\/preview\/([^/?#]+)/);
-  if (pathMatch?.[1]) return pathMatch[1];
-
-  // 3) ?previewSubdomain=<subdomain>
-  const qp = url.searchParams.get("previewSubdomain");
-  if (qp) return qp;
-
-  // 4) Env override (useful in dev)
-  if (process.env.NEXT_PUBLIC_PREVIEW_SUBDOMAIN) {
-    return process.env.NEXT_PUBLIC_PREVIEW_SUBDOMAIN;
+    if (decoded?.domain) return `https://${decoded.domain}`;
+  } catch (err) {
+    console.error("❌ Error decoding JWT for API domain:", err);
   }
 
   return null;
 };
 
+/**
+ * Get API base URL (works for preview subdomain or normal site)
+ */
 export const getApiBaseUrl = (): string => {
   if (typeof window !== "undefined") {
-    const currentUrl = new URL(window.location.href);
-    const hostname = currentUrl.hostname;
+    const url = new URL(window.location.href);
+    const hostname = url.hostname;
+
+    // 1) Preview handling
     const isPreview =
-      currentUrl.pathname.includes("/preview/") ||
-      currentUrl.searchParams.has("previewSubdomain") ||
+      url.pathname.includes("/preview/") ||
+      url.searchParams.has("previewSubdomain") ||
       hostname.endsWith(".nepdora.baliyoventures.com") ||
       hostname.endsWith(".nepdora.com") ||
       hostname.endsWith(".localhost");
 
-    // 1) Preview handling (hosted + localhost)
     if (isPreview) {
-      // Hosted preview domains
-      if (hostname.includes(".nepdora.baliyoventures.com")) {
-        const subdomain = hostname.split(".")[0];
-        if (subdomain) return buildPreviewApi(subdomain);
-      }
-      if (hostname.includes(".nepdora.com")) {
-        const subdomain = hostname.split(".")[0];
-        if (subdomain) return buildPreviewApi(subdomain);
-      }
-
-      // Localhost variations
-      if (hostname === "localhost" || hostname.endsWith(".localhost")) {
-        const subdomain = extractLocalPreviewSubdomain(currentUrl);
-        if (subdomain) return buildPreviewApi(subdomain);
-      }
+      const subdomain = extractLocalPreviewSubdomain(url);
+      if (subdomain) return buildPreviewApi(subdomain);
     }
 
-    // 2) JWT-derived domain (original logic)
+    // 2) JWT-derived domain (fallback)
     const jwtDomain = extractJwtDomain();
     if (jwtDomain) return jwtDomain;
   }
 
-  // 3) Fallback
+  // 3) Default API
   return siteConfig.apiBaseUrl;
 };

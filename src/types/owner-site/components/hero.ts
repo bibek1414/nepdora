@@ -16,7 +16,10 @@ export interface HeroBadge {
   text: string;
   variant?: "default" | "secondary" | "outline";
 }
-
+export interface TextStyle {
+  color?: string;
+  fontFamily?: string;
+}
 // Simplified HeroData to match theme structure
 export interface HeroData {
   title: string;
@@ -38,7 +41,9 @@ export interface HeroData {
   showImage?: boolean;
   imageUrl?: string;
   imageAlt?: string;
-
+  titleStyle?: TextStyle;
+  descriptionStyle?: TextStyle;
+  subtitleStyle?: TextStyle;
   // Template selection
   template:
     | "hero-1"
