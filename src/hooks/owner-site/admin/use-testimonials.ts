@@ -1,12 +1,7 @@
 "use client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { testimonialsApi } from "@/services/api/owner-sites/admin/testimonials";
-import {
-  TestimonialResponse,
-  Testimonial,
-  CreateTestimonialData,
-  UpdateTestimonialData,
-} from "@/types/owner-site/admin/testimonial";
+import { UpdateTestimonialData } from "@/types/owner-site/admin/testimonial";
 
 // Query keys
 export const testimonialKeys = {

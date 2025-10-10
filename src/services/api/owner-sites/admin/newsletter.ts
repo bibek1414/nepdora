@@ -12,14 +12,17 @@ export const newsletterApi = {
   // Get all newsletter subscriptions with pagination
   getNewsletters: async (
     page = 1,
-    pageSize = 10
+    pageSize = 10,
+    search = ""
   ): Promise<GetNewslettersResponse> => {
     const API_BASE_URL = getApiBaseUrl();
     const params = new URLSearchParams({
       page: page.toString(),
       page_size: pageSize.toString(),
     });
-
+    if (search) {
+      params.append("search", search);
+    }
     const response = await fetch(`${API_BASE_URL}/api/newsletter/?${params}`, {
       method: "GET",
       headers: createHeaders(),

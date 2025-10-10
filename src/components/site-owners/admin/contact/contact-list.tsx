@@ -183,9 +183,6 @@ const ContactDetails = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">Inquiries</CardTitle>
-            <CardDescription>
-              Manage customer inquiries and messages
-            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="py-8 text-center">
@@ -225,9 +222,6 @@ const ContactDetails = () => {
             <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight text-gray-900">
               Inquiries
             </h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Manage customer inquiries and messages
-            </p>
           </div>
           <div className="flex flex-col gap-2 sm:items-end">
             <Badge variant="secondary" className="self-start sm:self-center">

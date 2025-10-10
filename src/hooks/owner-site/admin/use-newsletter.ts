@@ -9,15 +9,15 @@ import {
 export const newsletterKeys = {
   all: ["newsletter"] as const,
   lists: () => [...newsletterKeys.all, "list"] as const,
-  list: (page: number, pageSize: number) =>
-    [...newsletterKeys.lists(), { page, pageSize }] as const,
+  list: (page: number, pageSize: number, search: string) =>
+    [...newsletterKeys.lists(), { page, pageSize, search }] as const,
 };
 
 // Get all newsletter subscriptions
-export const useNewsletters = (page = 1, pageSize = 10) => {
+export const useNewsletters = (page = 1, pageSize = 10, search = "") => {
   return useQuery({
-    queryKey: newsletterKeys.list(page, pageSize),
-    queryFn: () => newsletterApi.getNewsletters(page, pageSize),
+    queryKey: newsletterKeys.list(page, pageSize, search),
+    queryFn: () => newsletterApi.getNewsletters(page, pageSize, search),
   });
 };
 

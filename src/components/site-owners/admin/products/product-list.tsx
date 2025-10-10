@@ -11,30 +11,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   useProducts,
   useDeleteProduct,
 } from "@/hooks/owner-site/admin/use-product";
 import Pagination from "@/components/ui/pagination";
-import { Plus, Edit, Trash2, Search, ImageIcon, Eye } from "lucide-react";
+import { Plus, Edit, Trash2, Search, ImageIcon, X } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -56,13 +44,23 @@ const ProductList = () => {
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
-
+  const [searchInput, setSearchInput] = useState("");
   // Debounced search to avoid too many API calls
   const debouncedSearch = useDebouncedCallback(value => {
     setSearch(value);
     setPage(1); // Reset to first page when searching
   }, 500);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    debouncedSearch(value);
+  };
 
+  const clearSearch = () => {
+    setSearchInput("");
+    setSearch("");
+    setPage(1);
+  };
   const { data, isLoading, error } = useProducts({
     page,
     page_size,
@@ -139,14 +137,24 @@ const ProductList = () => {
         </div>
 
         {/* Search Bar */}
-        <div className="mb-6">
+        <div className="mt-10 mb-6">
           <div className="relative max-w-md">
             <Search className="absolute top-1/2 left-3 z-1 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
-              placeholder="Search products..."
-              className="border-gray-200 bg-white pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
-              onChange={e => debouncedSearch(e.target.value)}
+              placeholder="Search subcategories..."
+              value={searchInput}
+              onChange={handleSearchChange}
+              className="border-gray-200 bg-white pr-10 pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
             />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition hover:text-gray-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
 

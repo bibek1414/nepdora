@@ -24,6 +24,7 @@ import {
   ServicesFilters,
 } from "@/types/owner-site/admin/services";
 import Pagination from "@/components/ui/pagination";
+import ServicesSearch from "./services-search";
 
 const ServicesManagement = () => {
   const router = useRouter();
@@ -117,6 +118,7 @@ const ServicesManagement = () => {
           onRefresh={handleRefresh}
           servicesCount={totalServices}
         />
+        <ServicesSearch onSearch={handleSearch} />
         <ServicesTable
           services={services}
           onEdit={handleEditService}

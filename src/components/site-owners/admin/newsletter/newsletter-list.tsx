@@ -8,13 +8,38 @@ import { Mail, Users, UserPlus } from "lucide-react";
 import { useNewsletters } from "@/hooks/owner-site/admin/use-newsletter";
 import { format } from "date-fns";
 import Pagination from "@/components/ui/pagination";
-
+import { X, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useDebouncedCallback } from "use-debounce";
 export function NewsletterList() {
+  const [page, setPage] = useState(1);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const { data, isLoading, error } = useNewsletters(
+    currentPage,
+    pageSize,
+    search
+  );
 
-  const { data, isLoading, error } = useNewsletters(currentPage, pageSize);
+  const debouncedSearch = useDebouncedCallback(value => {
+    setSearch(value);
+    setPage(1); // Reset to first page when searching
+  }, 500);
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    debouncedSearch(value);
+  };
+
+  const clearSearch = () => {
+    setSearchInput("");
+    setSearch("");
+    setPage(1);
+  };
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -34,8 +59,6 @@ export function NewsletterList() {
     );
   }
 
-  const subscribedCount =
-    data?.results.filter(newsletter => newsletter.is_subscribed).length || 0;
   const totalPages = data ? Math.ceil(data.count / pageSize) : 0;
 
   return (
@@ -43,15 +66,31 @@ export function NewsletterList() {
       {/* Header */}
       <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900">
             Newsletter Subscriptions
           </h1>
-          <p className="mt-1 text-sm text-gray-600">
-            Manage your email newsletter subscribers
-          </p>
         </div>
       </div>
-
+      <div className="mt-10 mb-6">
+        <div className="relative max-w-md">
+          <Search className="absolute top-1/2 left-3 z-1 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Input
+            placeholder="Search newsletter subscribers..."
+            value={searchInput}
+            onChange={handleSearchChange}
+            className="border-gray-200 bg-white pr-10 pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
+          />
+          {searchInput && (
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition hover:text-gray-600"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      </div>
       {/* Newsletter Table */}
       {isLoading ? (
         <div className="rounded-lg border">
@@ -135,18 +174,6 @@ export function NewsletterList() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-
-          {/* Results Info */}
-          <div className="flex items-center justify-between text-sm text-gray-700">
-            <div>
-              Showing {(currentPage - 1) * pageSize + 1} to{" "}
-              {Math.min(currentPage * pageSize, data.count)} of {data.count}{" "}
-              results
-            </div>
-            <div>
-              Page {currentPage} of {totalPages}
             </div>
           </div>
 

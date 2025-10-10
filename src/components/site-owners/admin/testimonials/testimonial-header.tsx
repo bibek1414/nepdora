@@ -12,13 +12,10 @@ export const TestimonialsHeader = ({
         <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">
           Testimonials
         </h1>
-        <p className="mt-1 text-sm text-gray-600 sm:text-base">
-          Manage customer testimonials ({testimonialsCount} total)
-        </p>
       </div>
       <Button
         onClick={onAdd}
-        className="flex w-full items-center justify-center space-x-2 bg-gray-600 text-white hover:bg-gray-700 sm:w-auto"
+        className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
       >
         <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
         <span>Add Testimonial</span>

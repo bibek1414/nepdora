@@ -11,16 +11,22 @@ import {
   Testimonial,
   CreateTestimonialData,
 } from "@/types/owner-site/admin/testimonial";
-
+import { X, Search } from "lucide-react";
+import { useDebouncedCallback } from "use-debounce";
 import { TestimonialsHeader } from "./testimonial-header";
 import { TestimonialsTable } from "./testimonial-table";
 import { TestimonialModal } from "./testimonial-modal";
+import { Input } from "@/components/ui/input";
 
 export default function TestimonialList() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editingTestimonial, setEditingTestimonial] =
     useState<Testimonial | null>(null);
+  const [searchInput, setSearchInput] = useState("");
 
+  const [page, setPage] = useState(1);
+
+  const [search, setSearch] = useState("");
   // TanStack Query hooks
   const {
     data: testimonials = [],
@@ -31,7 +37,21 @@ export default function TestimonialList() {
   const createMutation = useCreateTestimonial();
   const updateMutation = useUpdateTestimonial();
   const deleteMutation = useDeleteTestimonial();
+  const debouncedSearch = useDebouncedCallback(value => {
+    setSearch(value);
+    setPage(1); // Reset to first page when searching
+  }, 500);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    debouncedSearch(value);
+  };
 
+  const clearSearch = () => {
+    setSearchInput("");
+    setSearch("");
+    setPage(1);
+  };
   const handleAdd = (): void => {
     setEditingTestimonial(null);
     setIsModalOpen(true);
@@ -117,7 +137,26 @@ export default function TestimonialList() {
           onAdd={handleAdd}
           testimonialsCount={testimonials.length}
         />
-
+        <div className="mt-10 mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute top-1/2 left-3 z-1 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Input
+              placeholder="Search by name..."
+              value={searchInput}
+              onChange={handleSearchChange}
+              className="border-gray-200 bg-white pr-10 pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
+            />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition hover:text-gray-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
         {/* Content Card with responsive design */}
         <div className="overflow-hidden rounded-lg bg-white">
           <TestimonialsTable

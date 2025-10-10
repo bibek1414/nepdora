@@ -289,11 +289,12 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
                       fontFamily: theme.fonts.heading,
                     }}
                   >
-                    ${discountedPrice}
+                    Rs.{Number(discountedPrice).toLocaleString("en-IN")}
                   </span>
+
                   {marketPrice && discountPercentage > 0 && (
-                    <span className="text-sm text-gray-600 line-through">
-                      ${marketPrice.toFixed(2)}
+                    <span className="text-xl text-gray-400 line-through">
+                      Rs.{Number(marketPrice).toLocaleString("en-IN")}
                     </span>
                   )}
                 </div>

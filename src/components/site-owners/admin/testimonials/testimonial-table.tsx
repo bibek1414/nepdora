@@ -152,15 +152,14 @@ export const TestimonialsTable = ({
                 onClick={() => handleRowClick(testimonial)}
               >
                 <TableCell>
-                  <div className="mb-2 h-10 w-10 flex-shrink-0 xl:h-12 xl:w-12">
+                  <div className="mb-2 flex-shrink-0">
                     {testimonial.image ? (
                       <Image
                         src={testimonial.image}
                         alt={testimonial.name}
-                        width={48}
+                        width={60}
                         height={48}
-                        className="rounded-full object-cover xl:h-12 xl:w-12"
-                        style={{ width: "auto", height: "auto" }}
+                        className="rounded-md object-cover"
                       />
                     ) : (
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-300 xl:h-12 xl:w-12">
