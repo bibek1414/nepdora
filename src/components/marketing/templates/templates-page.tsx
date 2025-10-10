@@ -158,7 +158,6 @@ const TemplatesPage = () => {
     ],
   };
 
-  // Type-safe way to access templates
   const currentTemplates: Template[] =
     templateCategories[selectedCategory] || [];
 
@@ -168,18 +167,21 @@ const TemplatesPage = () => {
 
   return (
     <div className="bg-background min-h-screen">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-3 py-8 sm:px-4 sm:py-12 lg:px-8 lg:py-16">
         {/* Header Section */}
-        <div className="mb-16 text-center">
-          <h1 className="text-foreground mb-6 text-4xl font-bold md:text-5xl lg:text-6xl">
+        <div className="mb-8 text-center sm:mb-12 lg:mb-16">
+          <h1 className="text-foreground mb-4 text-2xl font-bold sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
             Choose a website template that inspires you
           </h1>
-          <p className="text-muted-foreground mx-auto mb-8 max-w-4xl text-lg md:text-xl">
+          <p className="text-muted-foreground mx-auto mb-6 max-w-4xl px-2 text-sm leading-relaxed sm:mb-8 sm:text-base md:text-lg lg:text-xl">
             Take advantage of 150+ responsive, designer-made templates, suitable
             for businesses, ecommerce stores, portfolios, landing pages, blogs,
             and more.
           </p>
-          <Button size="lg" className="rounded-full px-8">
+          <Button
+            size="lg"
+            className="rounded-full px-6 text-sm sm:px-8 sm:text-base"
+          >
             Get started
           </Button>
         </div>
@@ -192,31 +194,39 @@ const TemplatesPage = () => {
         />
 
         {/* Templates Grid */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8 xl:grid-cols-4">
           {currentTemplates.map((template: Template) => (
             <TemplateCard key={template.id} template={template} />
           ))}
         </div>
 
         {/* Bottom Line Separator */}
-        <div className="mt-16 mb-8">
+        <div className="mt-12 mb-6 sm:mt-16 sm:mb-8">
           <div className="via-border h-px bg-gradient-to-r from-transparent to-transparent"></div>
         </div>
 
         {/* Footer CTA */}
-        <div className="mt-16 text-center">
-          <h2 className="text-foreground mb-4 text-2xl font-bold md:text-3xl">
+        <div className="mt-12 text-center sm:mt-16">
+          <h2 className="text-foreground mb-3 text-xl font-bold sm:mb-4 sm:text-2xl md:text-3xl">
             Can&apos;t find the perfect template?
           </h2>
-          <p className="text-muted-foreground mx-auto mb-8 max-w-2xl">
+          <p className="text-muted-foreground mx-auto mb-6 max-w-2xl px-3 text-sm leading-relaxed sm:mb-8 sm:text-base">
             Start with a blank canvas and create something unique, or contact
             our design team for a custom solution tailored to your needs.
           </p>
-          <div className="flex flex-col justify-center gap-4 sm:flex-row">
-            <Button variant="outline" size="lg" className="rounded-full px-8">
+          <div className="flex flex-col justify-center gap-3 px-4 sm:flex-row sm:gap-4">
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full rounded-full px-6 text-sm sm:w-auto sm:px-8 sm:text-base"
+            >
               Start from scratch
             </Button>
-            <Button variant="default" size="lg" className="rounded-full px-8">
+            <Button
+              variant="default"
+              size="lg"
+              className="w-full rounded-full px-6 text-sm sm:w-auto sm:px-8 sm:text-base"
+            >
               Contact design team
             </Button>
           </div>

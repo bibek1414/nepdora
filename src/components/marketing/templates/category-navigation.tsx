@@ -14,14 +14,15 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
   onCategoryChange,
 }) => {
   return (
-    <div className="mb-12">
-      <div className="flex justify-center">
-        <div className="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-1">
+    <div className="mb-8 sm:mb-12">
+      {/* Mobile: Horizontal scroll */}
+      <div className="flex justify-start overflow-x-auto pb-2 sm:justify-center">
+        <div className="inline-flex gap-2 rounded-lg border border-gray-200 bg-gray-50 p-1">
           {categories.map(category => (
             <button
               key={category.key}
               onClick={() => onCategoryChange(category.key)}
-              className={`rounded-md px-6 py-2 text-sm font-medium transition-all duration-200 ${
+              className={`rounded-md px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-all duration-200 sm:px-4 sm:py-2 sm:text-sm md:px-6 ${
                 selectedCategory === category.key
                   ? "bg-purple-600 text-white"
                   : "text-gray-600 hover:text-gray-900"
@@ -30,21 +31,6 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
               {category.label}
             </button>
           ))}
-        </div>
-      </div>
-
-      {/* Active category underline */}
-      <div className="mt-4 flex justify-center">
-        <div className="relative">
-          <div className="flex space-x-16">
-            {categories.map(category => (
-              <div key={category.key} className="relative">
-                {selectedCategory === category.key && (
-                  <div className="absolute right-0 -bottom-1 left-0 h-0.5 bg-purple-600"></div>
-                )}
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>
