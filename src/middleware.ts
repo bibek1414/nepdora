@@ -43,8 +43,8 @@ export async function middleware(request: NextRequest) {
   const subdomain = extractSubdomain(request);
 
   if (subdomain) {
-    // Allow /admin routes to pass through without rewriting
-    if (pathname.startsWith("/admin")) {
+    // Allow /admin and /builder routes to pass through without rewriting
+    if (pathname.startsWith("/admin") || pathname.startsWith("/builder")) {
       return NextResponse.next();
     }
 
