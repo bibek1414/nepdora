@@ -303,14 +303,16 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                     <div className="space-y-1">
                       <div className="flex items-center gap-3">
                         <span className="text-3xl font-bold">
-                          ${discountedPrice}
+                          Rs.{Number(discountedPrice).toLocaleString("en-IN")}
                         </span>
+
                         {marketPrice && discountPercentage > 0 && (
                           <span className="text-xl text-gray-400 line-through">
-                            ${marketPrice.toFixed(2)}
+                            Rs.{Number(marketPrice).toLocaleString("en-IN")}
                           </span>
                         )}
                       </div>
+
                       {showStock && (
                         <p className="text-sm text-gray-500">
                           {product.stock > 0

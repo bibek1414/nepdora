@@ -279,12 +279,13 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
               <div className="flex items-end justify-between pt-2">
                 <div className="space-y-1">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl font-light tracking-tight text-gray-900">
-                      ${discountedPrice}
+                    <span className="text-3xl font-bold">
+                      Rs.{Number(discountedPrice).toLocaleString("en-IN")}
                     </span>
+
                     {marketPrice && discountPercentage > 0 && (
-                      <span className="text-lg font-light text-gray-400 line-through">
-                        ${marketPrice.toFixed(2)}
+                      <span className="text-xl text-gray-400 line-through">
+                        Rs.{Number(marketPrice).toLocaleString("en-IN")}
                       </span>
                     )}
                   </div>

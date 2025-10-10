@@ -25,7 +25,15 @@ import {
 } from "@/hooks/owner-site/admin/use-category";
 import { CategoryForm } from "./category-form";
 import Pagination from "@/components/ui/pagination";
-import { MoreHorizontal, Plus, Edit, Trash2, ImageOff } from "lucide-react";
+import {
+  MoreHorizontal,
+  Plus,
+  Edit,
+  Trash2,
+  ImageOff,
+  Search,
+  X,
+} from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,18 +45,38 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Category } from "@/types/owner-site/admin/product";
-
+import { Input } from "@/components/ui/input";
+import { useDebouncedCallback } from "use-debounce";
 export const CategoryList: React.FC = () => {
   const [page, setPage] = useState(1);
   const [page_size] = useState(10);
+  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [deleteCategory, setDeleteCategory] = useState<Category | null>(null);
-
-  const { data, isLoading, error } = useCategories();
-
+  const { data, isLoading, error } = useCategories({
+    page,
+    page_size,
+    search,
+  });
+  const debouncedSearch = useDebouncedCallback(value => {
+    setSearch(value);
+    setPage(1);
+  }, 500);
   const deleteCategoryMutation = useDeleteCategory();
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    debouncedSearch(value);
+  };
 
+  const clearSearch = () => {
+    setSearchInput("");
+    setSearch("");
+    setPage(1);
+  };
   const handleEdit = (category: Category) => {
     setEditingCategory(category);
     setShowForm(true);
@@ -111,7 +139,26 @@ export const CategoryList: React.FC = () => {
             Add Category
           </Button>
         </div>
-
+        <div className="mt-10 mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute top-1/2 left-3 z-1 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Input
+              placeholder="Search subcategories..."
+              value={searchInput}
+              onChange={handleSearchChange}
+              className="border-gray-200 bg-white pr-10 pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
+            />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition hover:text-gray-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
         {/* Categories Card */}
         <Card className="overflow-hidden rounded-lg border-none bg-white shadow-none">
           <CardContent className="p-0">
@@ -135,7 +182,7 @@ export const CategoryList: React.FC = () => {
                       <TableHead className="px-6 py-4 text-sm font-medium text-gray-700">
                         Description
                       </TableHead>
-                      <TableHead className="px-6 py-4 text-right text-sm font-medium text-gray-700">
+                      <TableHead className="mr-10 px-9 py-4 text-right text-sm font-medium text-gray-700">
                         Actions
                       </TableHead>
                     </TableRow>

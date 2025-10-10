@@ -98,37 +98,38 @@ const BlogsTable: React.FC<BlogsTableProps> = ({
 
   return (
     <>
-      <div className="hidden overflow-x-auto rounded-lg border sm:block">
+      <div className="hidden overflow-x-auto rounded-lg sm:block">
         <Table>
-          <TableHeader>
+          <TableHeader className="[&_tr]:border-b-0">
             <TableRow>
+              <TableHead className="min-w-[80px]">Image</TableHead>
               <TableHead className="min-w-[200px]">Title</TableHead>
               <TableHead className="min-w-[100px]">Created</TableHead>
-              <TableHead className="min-w-[100px] text-right">
+              <TableHead className="min-w-[100px] pr-6 text-right">
                 Actions
               </TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="[&_tr]:border-b-0">
             {blogs.map(blog => (
               <TableRow key={blog.id}>
                 <TableCell>
-                  <div className="flex items-center gap-3">
-                    <div className="relative h-10 w-10 flex-shrink-0">
-                      <Image
-                        src={blog.thumbnail_image || "/images/fallback.png"}
-                        alt={blog.thumbnail_image_alt_description || blog.title}
-                        fill
-                        sizes="40px"
-                        className="rounded-md object-cover"
-                      />
-                    </div>
-                    <Link href={`/admin/blogs/edit/${blog.slug}`}>
-                      <span className="line-clamp-2 font-medium text-gray-900">
-                        {blog.title}
-                      </span>
-                    </Link>
+                  <div className="relative h-10 w-10 flex-shrink-0">
+                    <Image
+                      src={blog.thumbnail_image || "/images/fallback.png"}
+                      alt={blog.thumbnail_image_alt_description || blog.title}
+                      fill
+                      sizes="40px"
+                      className="rounded-md object-cover"
+                    />
                   </div>
+                </TableCell>
+                <TableCell>
+                  <Link href={`/admin/blogs/edit/${blog.slug}`}>
+                    <span className="line-clamp-2 font-medium text-gray-900 hover:underline">
+                      {blog.title}
+                    </span>
+                  </Link>
                 </TableCell>
                 <TableCell className="text-sm">
                   {new Date(blog.created_at).toLocaleDateString()}
