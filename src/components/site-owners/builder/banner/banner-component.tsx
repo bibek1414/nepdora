@@ -1,16 +1,7 @@
+"use client";
 import React, { useState } from "react";
-import { BannerComponentData } from "@/types/owner-site/components/banner";
-import { useBanners } from "@/hooks/owner-site/admin/use-banner";
-import {
-  useDeleteComponentMutation,
-  useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
-import { BannerTemplate1 } from "./banner-template-1";
-import { BannerTemplate2 } from "./banner-template-2";
-import { BannerTemplate3 } from "./banner-template-3";
-import { BannerTemplate4 } from "./banner-template-4";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,453 +11,189 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, Image as ImageIcon, Plus } from "lucide-react";
-import { Banner } from "@/types/owner-site/admin/banner";
-import { Button } from "@/components/ui/button";
-import { EditableText } from "@/components/ui/editable-text";
-import BannerDialogForm from "../../admin/banners/banner-dialog-form";
-import { useCreateBannerWithImages } from "@/hooks/owner-site/admin/use-banner";
+import { toast } from "sonner";
+import {
+  BannerData,
+  BannerComponentData,
+} from "@/types/owner-site/components/banner";
+import { BannerTemplate1 } from "./banner-template-1";
+import { BannerTemplate2 } from "./banner-template-2";
+import {
+  useDeleteComponentMutation,
+  useUpdateComponentMutation,
+} from "@/hooks/owner-site/components/unified";
 
 interface BannerComponentProps {
   component: BannerComponentData;
   isEditable?: boolean;
-  siteUser?: string;
-  pageSlug?: string;
-  onUpdate?: (componentId: string, newData: BannerComponentData) => void;
-  onBannerClick?: (bannerId: number, imageId: number) => void;
+  pageSlug: string;
+  siteUser: string;
+  onUpdate?: (componentId: string, updatedData: BannerComponentData) => void;
 }
 
 export const BannerComponent: React.FC<BannerComponentProps> = ({
   component,
   isEditable = false,
-  siteUser,
   pageSlug,
+  siteUser,
   onUpdate,
-  onBannerClick,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const deleteBannerMutation = useDeleteComponentMutation(pageSlug, "banner");
+  const updateBannerMutation = useUpdateComponentMutation(pageSlug, "banner");
 
-  const {
-    title = "Featured Content",
-    subtitle,
-    template = "banner-1",
-    bannerType = "Banner", // This should match the backend Banner type
-  } = component.data || {};
+  const handleUpdate = (updatedData: Partial<BannerData>) => {
+    const componentId = component.component_id || component.id.toString();
 
-  // Use unified mutation hooks
-  const deleteBannerComponent = useDeleteComponentMutation(
-    pageSlug || "",
-    "banner"
-  );
-  const updateBannerComponent = useUpdateComponentMutation(
-    pageSlug || "",
-    "banner"
-  );
-
-  // Get banners from API and create mutation
-  const { data: banners = [], isLoading, error } = useBanners();
-  const createBannerWithImages = useCreateBannerWithImages();
-
-  // Map template to correct banner type
-  const getExpectedBannerType = (
-    template: string
-  ): "Banner" | "Slider" | "Sidebar" => {
-    switch (template) {
-      case "banner-1":
-        return "Banner";
-      case "banner-2":
-        return "Slider";
-      case "banner-3":
-        return "Sidebar";
-      case "banner-4":
-        return "Banner"; // Advanced banner is still a Banner type
-      default:
-        return "Banner";
-    }
-  };
-
-  // Get the expected banner type based on template
-  const expectedBannerType = getExpectedBannerType(template);
-
-  // Filter banners by the expected banner type for the template
-  const relevantBanner = banners.find(
-    banner => banner.banner_type === expectedBannerType && banner.is_active
-  );
-
-  const handleBannerClick = (banner: Banner, imageId: number) => {
-    if (onBannerClick && component.order !== undefined) {
-      onBannerClick(banner.id, imageId);
-    }
-  };
-
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-    setIsDeleteDialogOpen(true);
-  };
-
-  const handleAddClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsAddDialogOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-
-    if (!component.component_id) {
-      console.error("component_id is required for deletion");
-      return;
-    }
-
-    deleteBannerComponent.mutate(component.component_id);
-    setIsDeleteDialogOpen(false);
-  };
-
-  const handleBannerFormSuccess = () => {
-    setIsAddDialogOpen(false);
-  };
-
-  const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
-
-    if (!component.component_id) {
-      console.error("component_id is required for updating component");
-      return;
-    }
-
-    updateBannerComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        title: newTitle,
-      },
-    });
-
+    // If parent onUpdate is provided, use it (for optimistic updates or custom handling)
     if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
-      });
-    }
-  };
-
-  const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
-
-    if (!component.component_id) {
-      console.error("component_id is required for updating component");
-      return;
-    }
-
-    updateBannerComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        subtitle: newSubtitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
-      });
-    }
-  };
-
-  const handleUpdate = (updatedData: Partial<typeof component.data>) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
-
-    if (!component.component_id) {
-      console.error("component_id is required for updating component");
-      return;
-    }
-
-    updateBannerComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        ...updatedData,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
+      const updatedComponent: BannerComponentData = {
         ...component,
         data: {
           ...component.data,
           ...updatedData,
         },
-      });
+      };
+      onUpdate(componentId, updatedComponent);
     }
+
+    // Also trigger the mutation for server sync
+    updateBannerMutation.mutate(
+      {
+        componentId,
+        data: updatedData,
+      },
+      {
+        onError: error => {
+          toast.error("Failed to update banner", {
+            description:
+              error instanceof Error ? error.message : "Please try again",
+          });
+        },
+      }
+    );
+  };
+
+  const handleDelete = () => {
+    const componentId = component.component_id || component.id.toString();
+
+    // Show loading toast
+    const loadingToast = toast.loading("Deleting banner...");
+
+    deleteBannerMutation.mutate(componentId, {
+      onSuccess: () => {
+        toast.dismiss(loadingToast);
+        toast.success("Banner deleted successfully");
+        setIsDeleteDialogOpen(false);
+      },
+      onError: error => {
+        toast.dismiss(loadingToast);
+        toast.error("Failed to delete banner", {
+          description:
+            error instanceof Error ? error.message : "Please try again",
+        });
+      },
+    });
   };
 
   const renderBannerTemplate = () => {
-    if (!relevantBanner) return null;
-
-    // Convert API banner data to component data format
-    const bannerData = {
-      ...component.data,
-      images: relevantBanner.images.filter(img => img.is_active),
-    };
+    // Check if component data exists
+    if (!component.data) {
+      console.error("Banner component data is missing:", component);
+      return (
+        <div className="flex min-h-[200px] items-center justify-center border border-red-200 bg-red-50 px-4 py-8">
+          <div className="text-center">
+            <h2 className="text-xl font-bold text-red-600">
+              Error: Missing Banner Data
+            </h2>
+            <p className="mt-2 text-red-500">Component ID: {component.id}</p>
+          </div>
+        </div>
+      );
+    }
 
     const props = {
-      bannerData,
+      bannerData: component.data,
       isEditable,
       siteUser,
       onUpdate: handleUpdate,
     };
+
+    // Get template from data, default to banner-1 if not specified
+    const template = component.data.template || "banner-1";
+
+    console.log("Rendering banner template:", template);
 
     switch (template) {
       case "banner-1":
         return <BannerTemplate1 {...props} />;
       case "banner-2":
         return <BannerTemplate2 {...props} />;
-      case "banner-3":
-        return <BannerTemplate3 {...props} />;
-      case "banner-4":
-        return <BannerTemplate4 {...props} />;
+
       default:
-        return <BannerTemplate1 {...props} />;
+        return (
+          <div className="flex min-h-[200px] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-8">
+            <div className="text-center">
+              <h2 className="text-xl font-bold text-yellow-700">
+                Unknown Banner Template: {template}
+              </h2>
+              <p className="mt-2 text-yellow-600">
+                Please select a valid template in settings.
+              </p>
+            </div>
+          </div>
+        );
     }
   };
 
-  // Builder mode preview
-  if (isEditable) {
-    return (
-      <div className="group relative">
-        {/* Control Buttons */}
-        <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-          {/* Add Button */}
-          <Button
-            onClick={handleAddClick}
-            variant="default"
-            size="sm"
-            className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
-          >
-            <Plus className="mr-1 h-4 w-4" />
-            Banner
-          </Button>
+  return (
+    <div className="group relative">
+      {/* Edit Controls - Only show when editable */}
+      {isEditable && (
+        <>
+          <div className="bg-background/80 absolute top-4 right-4 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={() => setIsDeleteDialogOpen(true)}
+              disabled={deleteBannerMutation.isPending}
+              className="h-8 w-8"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
 
-          {/* Delete Button */}
+          {/* Delete Confirmation Dialog */}
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <AlertDialogTrigger asChild>
-              <Button
-                onClick={handleDeleteClick}
-                variant="destructive"
-                size="sm"
-                className="h-8 px-3"
-                disabled={deleteBannerComponent.isPending}
-              >
-                <Trash2 className="mr-1 h-4 w-4" />
-                {deleteBannerComponent.isPending ? "Deleting..." : "Delete"}
-              </Button>
-            </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete Banner Component
-                </AlertDialogTitle>
+                <AlertDialogTitle>Delete Banner</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete this banner component? This
-                  action cannot be undone and will permanently remove the
-                  component from your page.
+                  Are you sure you want to delete this banner? This action
+                  cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={handleConfirmDelete}
+                  onClick={handleDelete}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  disabled={deleteBannerComponent.isPending}
+                  disabled={deleteBannerMutation.isPending}
                 >
-                  {deleteBannerComponent.isPending
-                    ? "Deleting..."
-                    : "Delete Component"}
+                  {deleteBannerMutation.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-        </div>
+        </>
+      )}
 
-        {/* Add Banner Dialog */}
-        <BannerDialogForm
-          open={isAddDialogOpen}
-          onOpenChange={setIsAddDialogOpen}
-          onSuccess={handleBannerFormSuccess}
-        />
-
-        {/* Banner Preview */}
-        <div className="py-4">
-          <div className="container mx-auto px-4">
-            {/* Editable Title and Subtitle */}
-            {(title || subtitle) && (
-              <div className="mb-6 text-center">
-                {title && (
-                  <EditableText
-                    value={title}
-                    onChange={handleTitleChange}
-                    as="h2"
-                    className="text-foreground mb-2 text-2xl font-bold tracking-tight"
-                    isEditable={true}
-                    placeholder="Enter banner title..."
-                  />
-                )}
-                {subtitle && (
-                  <EditableText
-                    value={subtitle}
-                    onChange={handleSubtitleChange}
-                    as="p"
-                    className="text-muted-foreground mx-auto max-w-2xl text-base"
-                    isEditable={true}
-                    placeholder="Enter banner subtitle..."
-                    multiline={true}
-                  />
-                )}
-              </div>
-            )}
-
-            {isLoading && (
-              <div className="space-y-4">
-                <Skeleton className="h-[200px] w-full rounded-xl md:h-[300px]" />
-                <div className="flex gap-2">
-                  <Skeleton className="h-16 w-24 rounded" />
-                  <Skeleton className="h-16 w-24 rounded" />
-                  <Skeleton className="h-16 w-24 rounded" />
-                </div>
-              </div>
-            )}
-
-            {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error Loading Banner</AlertTitle>
-                <AlertDescription>
-                  {error instanceof Error
-                    ? error.message
-                    : "Failed to load banner content. Please check your API connection."}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {!isLoading && !error && relevantBanner && (
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-0 z-10 bg-transparent" />
-                {renderBannerTemplate()}
-              </div>
-            )}
-
-            {!isLoading && !error && !relevantBanner && (
-              <div className="bg-muted/50 rounded-lg py-12 text-center">
-                <ImageIcon className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-                <h3 className="text-foreground mb-2 text-lg font-semibold">
-                  No Banner Content Found
-                </h3>
-                <p className="text-muted-foreground">
-                  Add {expectedBannerType.toLowerCase()} content to display
-                  here.
-                </p>
-                <p className="text-muted-foreground mt-1 text-sm">
-                  Template: {template} • Expected Type: {expectedBannerType}
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Live site rendering
-  return (
-    <section className="bg-background">
-      <div className="container mx-auto max-w-7xl">
-        {/* Optional Title and Subtitle for live site */}
-        {(title || subtitle) && (
-          <div className="mb-8 py-8 text-center">
-            {title && (
-              <h2
-                className="text-foreground mb-4 text-3xl font-bold tracking-tight"
-                dangerouslySetInnerHTML={{ __html: title }}
-              ></h2>
-            )}
-            {subtitle && (
-              <p
-                className="text-muted-foreground mx-auto max-w-3xl text-lg"
-                dangerouslySetInnerHTML={{ __html: subtitle }}
-              ></p>
-            )}
-          </div>
-        )}
-
-        {isLoading && (
-          <div className="space-y-6 p-4">
-            <Skeleton className="h-[250px] w-full rounded-lg md:h-[400px]" />
-            {template === "banner-2" || template === "banner-4" ? (
-              <div className="flex justify-center gap-2">
-                <Skeleton className="h-2 w-2 rounded-full" />
-                <Skeleton className="h-2 w-2 rounded-full" />
-                <Skeleton className="h-2 w-2 rounded-full" />
-              </div>
-            ) : null}
-          </div>
-        )}
-
-        {error && (
-          <Alert variant="destructive" className="mx-auto my-8 max-w-2xl">
-            <AlertCircle className="h-5 w-5" />
-            <AlertTitle>Unable to Load Banner</AlertTitle>
-            <AlertDescription className="text-base">
-              {error instanceof Error
-                ? error.message
-                : "We're having trouble loading the banner. Please try refreshing the page."}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {!isLoading && !error && relevantBanner && renderBannerTemplate()}
-
-        {!isLoading && !error && !relevantBanner && (
-          <div className="py-16 text-center">
-            <ImageIcon className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Banner Content
-            </h3>
-            <p className="text-muted-foreground mx-auto max-w-md text-lg">
-              {expectedBannerType} content is currently being updated. Please
-              check back soon.
-            </p>
-          </div>
-        )}
-      </div>
-    </section>
+      {/* Banner Template Render */}
+      {renderBannerTemplate()}
+    </div>
   );
 };
