@@ -267,13 +267,15 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
         {/* Only show title/subtitle for non-form-4 styles */}
         {style !== "form-4" && (
           <div className="mb-12 text-center">
-            <h2 className="text-foreground mb-4 text-4xl font-bold tracking-tight">
-              {title}
-            </h2>
+            <h2
+              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+              dangerouslySetInnerHTML={{ __html: title }}
+            ></h2>
             {subtitle && (
-              <p className="text-muted-foreground mx-auto max-w-3xl text-xl">
-                {subtitle}
-              </p>
+              <p
+                className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
             )}
           </div>
         )}

@@ -414,7 +414,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
               value={data.title || "Premium Nepali Hand Knotted Rugs"}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="mb-4 max-w-[320px] text-center text-[28px] leading-[1.15] font-bold sm:max-w-[400px] sm:text-[36px] md:mb-6 md:max-w-[500px] md:text-[42px] lg:max-w-[593px] lg:text-[54px]"
+              className="mx-auto mb-4 max-w-[320px] text-center text-[28px] leading-[1.15] font-bold sm:max-w-[400px] sm:text-[36px] md:mb-6 md:max-w-[500px] md:text-[42px] lg:max-w-[593px] lg:text-[54px]"
               isEditable={isEditable}
               placeholder="Enter main title..."
               multiline={true}
@@ -432,7 +432,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
               }
               onChange={handleTextUpdate("description")}
               as="p"
-              className="mb-8 max-w-[320px] text-center text-[14px] leading-[1.5] sm:max-w-[380px] sm:text-[16px] md:mb-12 md:max-w-[450px] lg:max-w-[460px] lg:text-[18px]"
+              className="mx-auto mb-8 max-w-[320px] text-center text-[14px] leading-[1.5] sm:max-w-[380px] sm:text-[16px] md:mb-12 md:max-w-[450px] lg:max-w-[460px] lg:text-[18px]"
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}

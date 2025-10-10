@@ -264,13 +264,15 @@ export const NewsletterComponent: React.FC<NewsletterComponentProps> = ({
         {/* Show title/subtitle for form-1 and form-3 styles */}
         {(style === "style-1" || style === "style-3") && (
           <div className="mb-12 text-center">
-            <h2 className="text-foreground mb-4 text-4xl font-bold tracking-tight">
-              {title}
-            </h2>
+            <h2
+              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+              dangerouslySetInnerHTML={{ __html: title }}
+            ></h2>
             {subtitle && (
-              <p className="text-muted-foreground mx-auto max-w-3xl text-xl">
-                {subtitle}
-              </p>
+              <p
+                className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
             )}
           </div>
         )}

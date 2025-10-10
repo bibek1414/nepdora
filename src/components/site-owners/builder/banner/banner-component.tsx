@@ -413,14 +413,16 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
         {(title || subtitle) && (
           <div className="mb-8 py-8 text-center">
             {title && (
-              <h2 className="text-foreground mb-4 text-3xl font-bold tracking-tight">
-                {title}
-              </h2>
+              <h2
+                className="text-foreground mb-4 text-3xl font-bold tracking-tight"
+                dangerouslySetInnerHTML={{ __html: title }}
+              ></h2>
             )}
             {subtitle && (
-              <p className="text-muted-foreground mx-auto max-w-3xl text-lg">
-                {subtitle}
-              </p>
+              <p
+                className="text-muted-foreground mx-auto max-w-3xl text-lg"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
             )}
           </div>
         )}
