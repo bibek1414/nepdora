@@ -383,23 +383,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       description: "You have been successfully logged out.",
     });
 
-    // Always redirect to main domain for logout
     const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
     const protocol = process.env.NEXT_PUBLIC_PROTOCOL || "https";
 
-    // Check if we're on a subdomain
-    const hostname = window.location.hostname;
-    if (
-      hostname.includes(".") &&
-      hostname.endsWith(baseDomain) &&
-      !hostname.startsWith("www.") &&
-      hostname !== baseDomain
-    ) {
-      // We're on a subdomain, redirect to main domain
-      window.location.href = `${protocol}://www.${baseDomain}/login`;
-    } else {
-      // We're on main domain
-      router.push("/login");
+    // Always redirect to the main domain after logout
+    if (typeof window !== "undefined") {
+      const mainDomainUrl = `${protocol}://${baseDomain}`;
+      window.location.href = mainDomainUrl;
     }
   };
 

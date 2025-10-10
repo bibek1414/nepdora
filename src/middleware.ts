@@ -11,13 +11,9 @@ function extractSubdomain(request: NextRequest): string | null {
 
   // Local development
   if (url.includes("localhost") || url.includes("127.0.0.1")) {
-    // e.g., bibek.localhost:3000
     const match = url.match(/http:\/\/([^.]+)\.localhost/);
     if (match && match[1]) return match[1];
-
-    // fallback
     if (hostname.includes(".localhost")) return hostname.split(".")[0];
-
     return null;
   }
 
@@ -40,29 +36,27 @@ function extractSubdomain(request: NextRequest): string | null {
 }
 
 /**
- * Middleware: rewrites / → /preview/[subdomain] if subdomain exists
+ * Middleware: rewrites subdomain routes to /preview/[subdomain]/[...path]
  */
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const subdomain = extractSubdomain(request);
 
-  // console.log("Middleware triggered:", request.url);
-  // console.log("Extracted subdomain:", subdomain);
-
   if (subdomain) {
-    // Block access to admin pages from subdomains
-
-    // Root path on subdomain → rewrite to /preview/[subdomain]
-    if (pathname === "/") {
-      return NextResponse.rewrite(
-        new URL(`/preview/${subdomain}`, request.url)
-      );
+    // Allow /admin routes to pass through without rewriting
+    if (pathname.startsWith("/admin")) {
+      return NextResponse.next();
     }
 
-    // Optional: rewrite other pages for multi-page previews
-    // e.g., /about → /preview/[subdomain]/about
-    // const newPath = `/preview/${subdomain}${pathname}`;
-    // return NextResponse.rewrite(new URL(newPath, request.url));
+    // If URL already contains /preview/[subdomain], redirect to clean URL
+    if (pathname.startsWith(`/preview/${subdomain}`)) {
+      const cleanPath = pathname.replace(`/preview/${subdomain}`, "") || "/";
+      return NextResponse.redirect(new URL(cleanPath, request.url));
+    }
+
+    // Rewrite all other subdomain routes to /preview/[subdomain]/[...path]
+    const newPath = `/preview/${subdomain}${pathname}`;
+    return NextResponse.rewrite(new URL(newPath, request.url));
   }
 
   // Root domain: allow normal access
@@ -70,10 +64,10 @@ export async function middleware(request: NextRequest) {
 }
 
 /**
- * Matcher: only run middleware on pages (exclude API, Next internals, public files)
+ * Matcher: run middleware on all routes except API, Next internals, and static files
  */
 export const config = {
   matcher: [
-    "/((?!api|_next|[\\w-]+\\.\\w+).*)", // excludes /api, /_next/*, and files like /favicon.ico
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
 };

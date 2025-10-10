@@ -52,7 +52,7 @@ const Header: React.FC = () => {
 
         {/* Desktop Auth Buttons */}
         <div className="hidden items-center space-x-4 md:flex">
-          <Link href="/login">
+          <Link href="admin/login">
             <Button
               variant="ghost"
               className="text-muted-foreground hover:text-primary"

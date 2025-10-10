@@ -310,7 +310,7 @@ export function LoginForm({
               <p className="text-sm text-gray-600">
                 Don&apos;t have an account?{" "}
                 <Link
-                  href="/signup"
+                  href="/admin/signup"
                   className="text-primary hover:text-primary font-medium"
                 >
                   Sign up

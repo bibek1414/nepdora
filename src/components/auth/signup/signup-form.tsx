@@ -394,7 +394,7 @@ export function SignupForm({
                 <p className="text-sm text-gray-600">
                   Already have an account?{" "}
                   <Link
-                    href="/login"
+                    href="/admin/login"
                     className="text-primary hover:text-primary font-medium"
                   >
                     Login
