@@ -18,7 +18,7 @@ export const rootDomain = siteConfig.isDev
   : siteConfig.baseDomain;
 
 /**
- * Build preview API URL for a subdomain
+ * Build API URL for a subdomain
  */
 export const buildPreviewApi = (subdomain: string) =>
   `https://${subdomain}.nepdora.baliyoventures.com`;
@@ -27,56 +27,35 @@ export const buildPreviewApi = (subdomain: string) =>
  * Extract subdomain from URL or query params
  */
 export const extractSubdomain = (url: URL): string | null => {
-  // subdomain.localhost
-  if (url.hostname.endsWith(".localhost")) {
-    const sub = url.hostname.split(".")[0];
+  const hostname = url.hostname; // e.g., bibek.nepdora.com
+  const baseDomain = siteConfig.baseDomain; // nepdora.com
+
+  // 1. Prod subdomain
+  if (hostname.endsWith(`.${baseDomain}`)) {
+    const sub = hostname.replace(`.${baseDomain}`, "");
+    if (sub && sub !== "www") return sub;
+  }
+
+  // 2. Dev localhost subdomain
+  if (hostname.endsWith(".localhost")) {
+    const sub = hostname.split(".")[0];
     if (sub && sub !== "localhost") return sub;
   }
 
-  // /preview/<subdomain>
+  // 3. /preview/<subdomain>
   const match = url.pathname.match(/\/preview\/([^/?#]+)/);
   if (match?.[1]) return match[1];
 
-  // ?previewSubdomain=<subdomain>
+  // 4. Query param
   const qp = url.searchParams.get("previewSubdomain");
   if (qp) return qp;
 
-  // Env override
+  // 5. Env override
   return process.env.NEXT_PUBLIC_PREVIEW_SUBDOMAIN || null;
 };
 
 /**
- * Extract domain from JWT stored in localStorage (client-only)
- */
-export const extractJwtDomain = (): string | null => {
-  if (typeof window === "undefined") return null;
-
-  try {
-    const raw = localStorage.getItem("authTokens");
-    if (!raw) return null;
-
-    const { access_token } = JSON.parse(raw) || {};
-    if (!access_token) return null;
-
-    const payload = JSON.parse(
-      decodeURIComponent(
-        escape(
-          atob(
-            access_token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")
-          ).padEnd(Math.ceil(access_token.split(".")[1].length / 4) * 4, "=")
-        )
-      )
-    );
-
-    return payload?.domain ? `https://${payload.domain}` : null;
-  } catch (err) {
-    console.error("❌ Error decoding JWT for API domain:", err);
-    return null;
-  }
-};
-
-/**
- * Get API base URL (uses preview subdomain if available)
+ * Get API base URL
  */
 export const getApiBaseUrl = (): string => {
   if (typeof window === "undefined") return siteConfig.apiBaseUrl;
