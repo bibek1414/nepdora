@@ -510,6 +510,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "hero-6"
       | "hero-7"
       | "hero-8"
+      | "hero-9"
   ) => {
     // Get the specific configuration for this template
     const templateConfig = heroTemplateConfigs[template];
@@ -749,7 +750,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleTestimonialsTemplateSelect = (
-    template: "grid-1" | "grid-2" | "list-1" | "grid-3" | "carousel-1"
+    template:
+      | "grid-1"
+      | "grid-2"
+      | "list-1"
+      | "grid-3"
+      | "carousel-1"
+      | "stagger-1"
   ) => {
     const testimonialsData = {
       ...defaultTestimonialsData,

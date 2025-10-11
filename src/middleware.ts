@@ -36,12 +36,61 @@ function extractSubdomain(request: NextRequest): string | null {
 }
 
 /**
- * Middleware: rewrites subdomain routes to /preview/[subdomain]/[...path]
+ * Extract subdomain from auth cookie/token
+ */
+function getSubdomainFromAuth(request: NextRequest): string | null {
+  try {
+    // Check for authUser cookie
+    const authUserCookie = request.cookies.get("authUser");
+    if (authUserCookie?.value) {
+      const userData = JSON.parse(authUserCookie.value);
+      return userData.sub_domain || null;
+    }
+
+    // Fallback: check authToken and decode JWT manually
+    const authToken = request.cookies.get("authToken");
+    if (authToken?.value) {
+      // Simple JWT decode (without verification - just for subdomain extraction)
+      const parts = authToken.value.split(".");
+      if (parts.length === 3) {
+        const payload = JSON.parse(atob(parts[1]));
+        return payload.sub_domain || null;
+      }
+    }
+  } catch (error) {
+    console.error("Error extracting subdomain from auth:", error);
+  }
+  return null;
+}
+
+/**
+ * Check if user is on root domain (not subdomain)
+ */
+function isRootDomain(request: NextRequest): boolean {
+  const host = request.headers.get("host") || "";
+  const hostname = host.split(":")[0];
+
+  // Local development - check if it's just localhost without subdomain
+  if (hostname === "localhost" || hostname === "127.0.0.1") {
+    return true;
+  }
+
+  // Production - check if it's root domain or www
+  const rootDomainFormatted = rootDomain.split(":")[0];
+  return (
+    hostname === rootDomainFormatted ||
+    hostname === `www.${rootDomainFormatted}`
+  );
+}
+
+/**
+ * Middleware: rewrites subdomain routes and redirects authenticated users
  */
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const subdomain = extractSubdomain(request);
 
+  // If user is on subdomain, handle normally
   if (subdomain) {
     // Allow /admin and /builder routes to pass through without rewriting
     if (pathname.startsWith("/admin") || pathname.startsWith("/builder")) {
@@ -57,6 +106,39 @@ export async function middleware(request: NextRequest) {
     // Rewrite all other subdomain routes to /preview/[subdomain]/[...path]
     const newPath = `/preview/${subdomain}${pathname}`;
     return NextResponse.rewrite(new URL(newPath, request.url));
+  }
+
+  // User is on root domain - check if they should be redirected to subdomain
+  if (isRootDomain(request)) {
+    const userSubdomain = getSubdomainFromAuth(request);
+
+    // If user is authenticated and trying to access /admin or /builder
+    if (
+      userSubdomain &&
+      (pathname.startsWith("/admin") || pathname.startsWith("/builder"))
+    ) {
+      const host = request.headers.get("host") || "";
+      const protocol = request.url.includes("localhost") ? "http" : "https";
+
+      // Build subdomain URL
+      let subdomainUrl: string;
+      if (host.includes("localhost")) {
+        // Local development
+        const port = host.split(":")[1] || "3000";
+        subdomainUrl = `${protocol}://${userSubdomain}.localhost:${port}${pathname}`;
+      } else {
+        // Production
+        const rootDomainFormatted = rootDomain.split(":")[0];
+        subdomainUrl = `${protocol}://${userSubdomain}.${rootDomainFormatted}${pathname}`;
+      }
+
+      // Preserve query parameters
+      if (request.nextUrl.search) {
+        subdomainUrl += request.nextUrl.search;
+      }
+
+      return NextResponse.redirect(new URL(subdomainUrl));
+    }
   }
 
   // Root domain: allow normal access

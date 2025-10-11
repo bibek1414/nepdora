@@ -383,11 +383,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       description: "You have been successfully logged out.",
     });
 
-    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
-    const protocol = process.env.NEXT_PUBLIC_PROTOCOL || "https";
-
-    // Always redirect to the main domain after logout
     if (typeof window !== "undefined") {
+      const hostname = window.location.hostname;
+
+      // Handle local development
+      if (hostname.includes("localhost")) {
+        // Always redirect to main localhost:3000 (no subdomain)
+        window.location.href = "http://localhost:3000";
+        return;
+      }
+
+      // Production environment
+      const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
+      const protocol = process.env.NEXT_PUBLIC_PROTOCOL || "https";
       const mainDomainUrl = `${protocol}://${baseDomain}`;
       window.location.href = mainDomainUrl;
     }

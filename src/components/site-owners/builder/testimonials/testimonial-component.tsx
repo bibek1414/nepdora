@@ -10,7 +10,7 @@ import { TestimonialCard2 } from "./testimonial-card-2";
 import { TestimonialCard3 } from "./testimonial-card-3";
 import { TestimonialCard4 } from "./testimonial-card-4";
 import { TestimonialCard5 } from "./testimonial-card-5";
-
+import { TestimonialCard6 } from "./testimonial-card-6"; // Add this import
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -194,14 +194,27 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     }
   };
 
-  // Render carousel separately
-  const renderCarousel = () => {
-    return (
-      <TestimonialCard5
-        testimonials={testimonials.slice(0, page_size)}
-        onClick={handleTestimonialClick}
-      />
-    );
+  // Render carousel or stagger separately
+  const renderCarouselOrStagger = () => {
+    if (style === "carousel-1") {
+      return (
+        <TestimonialCard5
+          testimonials={testimonials.slice(0, page_size)}
+          onClick={handleTestimonialClick}
+        />
+      );
+    }
+
+    if (style === "stagger-1") {
+      return (
+        <TestimonialCard6
+          testimonials={testimonials.slice(0, page_size)}
+          onClick={handleTestimonialClick}
+        />
+      );
+    }
+
+    return null;
   };
 
   const getGridClass = () => {
@@ -211,7 +224,8 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
       case "list-1":
         return "grid-cols-1 lg:grid-cols-3 gap-8";
       case "carousel-1":
-        return ""; // No grid for carousel
+      case "stagger-1": // Add stagger-1 here
+        return ""; // No grid for carousel or stagger
       case "grid-1":
       default:
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
@@ -322,10 +336,12 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
             {isLoading && (
               <div
                 className={
-                  style === "carousel-1" ? "" : `grid ${getGridClass()} gap-6`
+                  style === "carousel-1" || style === "stagger-1"
+                    ? ""
+                    : `grid ${getGridClass()} gap-6`
                 }
               >
-                {style === "carousel-1" ? (
+                {style === "carousel-1" || style === "stagger-1" ? (
                   <div className="flex gap-4 overflow-hidden">
                     {Array.from({ length: 3 }).map((_, index) => (
                       <div key={index} className="w-80 flex-shrink-0">
@@ -367,8 +383,8 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
             {!isLoading && !error && testimonials.length > 0 && (
               <>
-                {style === "carousel-1" ? (
-                  renderCarousel()
+                {style === "carousel-1" || style === "stagger-1" ? (
+                  renderCarouselOrStagger()
                 ) : (
                   <div className={`grid ${getGridClass()} gap-6`}>
                     {testimonials.slice(0, page_size).map(testimonial => (
@@ -422,10 +438,12 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
         {isLoading && (
           <div
             className={
-              style === "carousel-1" ? "" : `grid ${getGridClass()} gap-8`
+              style === "carousel-1" || style === "stagger-1"
+                ? ""
+                : `grid ${getGridClass()} gap-8`
             }
           >
-            {style === "carousel-1" ? (
+            {style === "carousel-1" || style === "stagger-1" ? (
               <div className="flex gap-6 overflow-hidden">
                 {Array.from({ length: 3 }).map((_, index) => (
                   <div key={index} className="w-80 flex-shrink-0">
@@ -465,8 +483,8 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
         {!isLoading && !error && testimonials.length > 0 && (
           <>
-            {style === "carousel-1" ? (
-              renderCarousel()
+            {style === "carousel-1" || style === "stagger-1" ? (
+              renderCarouselOrStagger()
             ) : (
               <div className={`grid ${getGridClass()} gap-8`}>
                 {testimonials

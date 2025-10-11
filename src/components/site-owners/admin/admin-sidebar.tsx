@@ -21,41 +21,92 @@ import {
   User,
   Bot,
   Trophy,
-  FolderOpen,
-  GitBranch,
   Mail,
   Youtube,
 } from "lucide-react";
-
-const navigation = [
-  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { name: "Products", href: "/admin/products", icon: Package },
-  { name: "Categories", href: "/admin/categories", icon: FolderOpen },
-  { name: "Subcategories", href: "/admin/subcategories", icon: GitBranch },
-  { name: "Services", href: "/admin/services", icon: Briefcase },
-  { name: "Blogs", href: "/admin/blogs", icon: Globe },
-  { name: "Order Management", href: "/admin/orders", icon: FileText },
-  { name: "Inquiries", href: "/admin/contacts", icon: MessageSquare },
-  { name: "Newsletter", href: "/admin/newsletter", icon: Mail },
-  { name: "Testimonials", href: "/admin/testimonials", icon: Tag },
-  { name: "Faq", href: "/admin/faq", icon: Tag },
-  { name: "YouTube Videos", href: "/admin/youtube", icon: Youtube },
-  { name: "Portfolios", href: "/admin/portfolio", icon: Briefcase },
-  { name: "Team Members", href: "/admin/team-member", icon: Users },
-  { name: "Service Bookings", href: "/admin/service-bookings", icon: Calendar },
-  { name: "Issues Tracking", href: "/admin/issues", icon: Bug },
-  { name: "Offers and Discounts", href: "/admin/offers-discounts", icon: Gift },
-  { name: "Profile", href: "/admin/profile", icon: User },
-  { name: "AI Chatbot Settings", href: "/admin/chatbot-settings", icon: Bot },
-  { name: "Lucky Draw / Sales Fest", href: "/admin/lucky-draw", icon: Trophy },
-  { name: "Popup", href: "/admin/popup", icon: Package },
+import { User as UserType } from "@/types/auth/auth";
+const navigationGroups = [
   {
-    name: "Popup Inquiries",
-    href: "/admin/popup-inquiries",
-    icon: MessageSquare,
+    items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
   },
-  { name: "Banner", href: "/admin/banners", icon: Globe },
-  { name: "Settings", href: "/admin/settings/whatsapp", icon: Edit3 },
+
+  {
+    name: "Products & Services",
+    items: [
+      { name: "Products", href: "/admin/products", icon: Package },
+      { name: "Services", href: "/admin/services", icon: Briefcase },
+      {
+        name: "Offers and Discounts",
+        href: "/admin/offers-discounts",
+        icon: Gift,
+      },
+    ],
+  },
+  {
+    name: "Orders & Bookings",
+    items: [
+      { name: "Order Management", href: "/admin/orders", icon: FileText },
+      {
+        name: "Service Bookings",
+        href: "/admin/service-bookings",
+        icon: Calendar,
+      },
+    ],
+  },
+  {
+    name: "Content Management",
+    items: [
+      { name: "Blogs", href: "/admin/blogs", icon: Globe },
+      { name: "YouTube Videos", href: "/admin/youtube", icon: Youtube },
+      { name: "Portfolios", href: "/admin/portfolio", icon: Briefcase },
+      { name: "Banner", href: "/admin/banners", icon: Globe },
+      { name: "Popup", href: "/admin/popup", icon: Package },
+      { name: "Faq", href: "/admin/faq", icon: Tag },
+      { name: "Testimonials", href: "/admin/testimonials", icon: Tag },
+    ],
+  },
+
+  {
+    name: "Submissions & Inquiries",
+    items: [
+      { name: "Inquiries", href: "/admin/contacts", icon: MessageSquare },
+      {
+        name: "Popup Inquiries",
+        href: "/admin/popup-inquiries",
+        icon: MessageSquare,
+      },
+      { name: "Newsletter", href: "/admin/newsletter", icon: Mail },
+    ],
+  },
+  {
+    name: "Team & Users",
+    items: [
+      { name: "Team Members", href: "/admin/team-member", icon: Users },
+      { name: "Profile", href: "/admin/profile", icon: User },
+    ],
+  },
+  {
+    name: "Marketing & Engagement",
+    items: [
+      {
+        name: "Lucky Draw / Sales Fest",
+        href: "/admin/lucky-draw",
+        icon: Trophy,
+      },
+      {
+        name: "AI Chatbot Settings",
+        href: "/admin/chatbot-settings",
+        icon: Bot,
+      },
+    ],
+  },
+  {
+    name: "System",
+    items: [
+      { name: "Issues Tracking", href: "/admin/issues", icon: Bug },
+      { name: "Settings", href: "/admin/settings/whatsapp", icon: Edit3 },
+    ],
+  },
 ];
 
 interface User {
@@ -102,32 +153,41 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
 
           {/* Navigation - Scrollable */}
           <nav className="flex-1 overflow-y-auto px-4 py-4">
-            <div className="space-y-1">
-              {navigation.map(item => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={cn(
-                      "group flex items-center rounded-lg px-3 py-2 text-xs font-medium transition-all duration-200 ease-in-out",
-                      isActive
-                        ? "bg-gray-50 text-gray-700"
-                        : "text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"
-                    )}
-                  >
-                    <item.icon
-                      className={cn(
-                        "mr-3 h-5 w-5 flex-shrink-0 transition-colors",
-                        isActive
-                          ? "text-gray-600"
-                          : "text-gray-400 group-hover:text-gray-600"
-                      )}
-                    />
-                    <span className="truncate">{item.name}</span>
-                  </Link>
-                );
-              })}
+            <div className="space-y-6">
+              {navigationGroups.map(group => (
+                <div key={group.name}>
+                  <h3 className="mb-2 px-3 text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                    {group.name}
+                  </h3>
+                  <div className="space-y-1">
+                    {group.items.map(item => {
+                      const isActive = pathname === item.href;
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className={cn(
+                            "group flex items-center rounded-lg px-3 py-2 text-xs font-medium transition-all duration-200 ease-in-out",
+                            isActive
+                              ? "bg-gray-50 text-gray-700"
+                              : "text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"
+                          )}
+                        >
+                          <item.icon
+                            className={cn(
+                              "mr-3 h-5 w-5 flex-shrink-0 transition-colors",
+                              isActive
+                                ? "text-gray-600"
+                                : "text-gray-400 group-hover:text-gray-600"
+                            )}
+                          />
+                          <span className="truncate">{item.name}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           </nav>
 

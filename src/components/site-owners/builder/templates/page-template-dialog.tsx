@@ -34,50 +34,61 @@ export const PageTemplateDialog: React.FC<PageTemplateDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Choose a Page Template</DialogTitle>
-          <DialogDescription>
-            Select a template to quickly create a page with pre-configured
-            components
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {pageTemplates.map(template => {
-            const Icon = template.icon;
-            const isSelected = selectedTemplate?.id === template.id;
-
-            return (
-              <div
-                key={template.id}
-                onClick={() => setSelectedTemplate(template)}
-                className={`cursor-pointer rounded-lg border p-4 transition-all hover:shadow-md ${
-                  isSelected ? "border-blue-500 bg-blue-50" : "border-gray-200"
-                }`}
-              >
-                <div className="mb-3 flex items-center gap-3">
-                  <div className="rounded-lg bg-gray-100 p-2">
-                    <Icon className="h-6 w-6 text-gray-600" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900">
-                    {template.name}
-                  </h3>
-                </div>
-
-                <p className="mb-3 text-sm text-gray-600">
-                  {template.description}
-                </p>
-
-                <div className="text-xs text-gray-500">
-                  Components: {template.components.map(c => c.type).join(", ")}
-                </div>
-              </div>
-            );
-          })}
+      {/* Make the entire dialog height limited and inner content scrollable */}
+      <DialogContent className="flex max-h-[80vh] max-w-4xl flex-col overflow-hidden p-0">
+        {/* 🔹 Sticky header */}
+        <div className="sticky top-0 z-10 border-b bg-white px-6 py-4">
+          <DialogHeader>
+            <DialogTitle>Choose a Page Template</DialogTitle>
+            <DialogDescription>
+              Select a template to quickly create a page with pre-configured
+              components
+            </DialogDescription>
+          </DialogHeader>
         </div>
 
-        <div className="mt-6 flex justify-end gap-3">
+        {/* 🔹 Scrollable middle section */}
+        <div className="flex-1 overflow-y-auto px-6 py-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {pageTemplates.map(template => {
+              const Icon = template.icon;
+              const isSelected = selectedTemplate?.id === template.id;
+
+              return (
+                <div
+                  key={template.id}
+                  onClick={() => setSelectedTemplate(template)}
+                  className={`cursor-pointer rounded-lg border p-4 transition-all hover:shadow-md ${
+                    isSelected
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200"
+                  }`}
+                >
+                  <div className="mb-3 flex items-center gap-3">
+                    <div className="rounded-lg bg-gray-100 p-2">
+                      <Icon className="h-6 w-6 text-gray-600" />
+                    </div>
+                    <h3 className="font-semibold text-gray-900">
+                      {template.name}
+                    </h3>
+                  </div>
+
+                  <p className="mb-3 text-sm text-gray-600">
+                    {template.description}
+                  </p>
+
+                  <div className="text-xs text-gray-500">
+                    Components:{" "}
+                    {template.components.map(c => c.type).join(", ")}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 🔹 Sticky footer */}
+        <div className="sticky bottom-0 z-10 flex justify-end gap-3 border-t bg-white px-6 py-4">
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>

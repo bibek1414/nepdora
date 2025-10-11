@@ -11,7 +11,13 @@ interface TestimonialsStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
-    style: "grid-1" | "grid-2" | "list-1" | "grid-3" | "carousel-1"
+    style:
+      | "grid-1"
+      | "grid-2"
+      | "list-1"
+      | "grid-3"
+      | "carousel-1"
+      | "stagger-1"
   ) => void;
 }
 
@@ -19,7 +25,13 @@ export const TestimonialsStylesDialog: React.FC<
   TestimonialsStylesDialogProps
 > = ({ open, onOpenChange, onStyleSelect }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | "list-1" | "grid-3" | "carousel-1" | null
+    | "grid-1"
+    | "grid-2"
+    | "list-1"
+    | "grid-3"
+    | "carousel-1"
+    | "stagger-1"
+    | null
   >(null);
 
   const templates = [
@@ -43,10 +55,14 @@ export const TestimonialsStylesDialog: React.FC<
       id: "carousel-1" as const,
       name: "Carousel Style 1",
     },
+    {
+      id: "stagger-1" as const,
+      name: "Stagger Style 1",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "grid-1" | "grid-2" | "list-1" | "grid-3" | "carousel-1";
+    id: "grid-1" | "grid-2" | "list-1" | "grid-3" | "carousel-1" | "stagger-1";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {

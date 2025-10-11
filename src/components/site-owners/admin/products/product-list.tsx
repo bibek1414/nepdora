@@ -22,7 +22,16 @@ import {
   useDeleteProduct,
 } from "@/hooks/owner-site/admin/use-product";
 import Pagination from "@/components/ui/pagination";
-import { Plus, Edit, Trash2, Search, ImageIcon, X } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Search,
+  ImageIcon,
+  X,
+  Folder,
+  FolderTree,
+} from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -124,10 +133,27 @@ const ProductList = () => {
     <div className="">
       <div className="mx-auto">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Products</h1>
-          </div>
+        <div className="mb-8 flex items-center justify-end gap-3">
+          <Link href="/admin/categories">
+            <Button
+              variant="outline"
+              className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+            >
+              <Folder className="mr-2 h-4 w-4" />
+              Manage Category
+            </Button>
+          </Link>
+
+          <Link href="/admin/subcategories">
+            <Button
+              variant="outline"
+              className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+            >
+              <FolderTree className="mr-2 h-4 w-4" />
+              Manage Subcategory
+            </Button>
+          </Link>
+
           <Link href="/admin/products/add">
             <Button className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900">
               <Plus className="mr-2 h-4 w-4" />
