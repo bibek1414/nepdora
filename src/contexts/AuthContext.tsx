@@ -314,7 +314,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (typeof window !== "undefined") {
         const sub = loggedInUser.sub_domain;
         if (sub) {
-          const path = siteConfig.isDev ? "/admin" : "/";
+          // Check if user is already on /admin route
+          const currentPath = window.location.pathname;
+          const isAdminRoute = currentPath.startsWith("/admin");
+
+          // Use /admin path for both dev and production if user is logging in from admin route
+          const path = isAdminRoute ? "/admin" : "/";
           let url = buildTenantFrontendUrl(sub, {
             path,
             isDev: siteConfig.isDev,
