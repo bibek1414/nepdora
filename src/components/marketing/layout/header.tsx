@@ -2,18 +2,16 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Menu, X } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated, user, isLoading } = useAuth(); // make sure your hook exposes isLoading
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
 
   const navigationItems = [
     "Features",
@@ -22,6 +20,34 @@ const Header: React.FC = () => {
     "About",
     "Contact",
   ];
+
+  if (isLoading) {
+    // Show skeleton while loading
+    return (
+      <header className="border-primary/10 sticky top-0 z-50 border-b bg-white/80 px-4 py-4 backdrop-blur-md sm:px-6">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between">
+          {/* Logo Skeleton */}
+          <Skeleton className="h-8 w-32 sm:h-10" />
+
+          {/* Desktop Navigation Skeleton */}
+          <div className="hidden space-x-8 md:flex">
+            {navigationItems.map((_, index) => (
+              <Skeleton key={index} className="h-5 w-20" />
+            ))}
+          </div>
+
+          {/* Desktop Auth Buttons Skeleton */}
+          <div className="hidden space-x-4 md:flex">
+            <Skeleton className="h-8 w-20" />
+            <Skeleton className="h-8 w-32" />
+          </div>
+
+          {/* Mobile Menu Button Skeleton */}
+          <Skeleton className="h-8 w-8 md:hidden" />
+        </nav>
+      </header>
+    );
+  }
 
   return (
     <header className="border-primary/10 sticky top-0 z-50 border-b bg-white/80 px-4 py-4 backdrop-blur-md sm:px-6">
@@ -52,19 +78,29 @@ const Header: React.FC = () => {
 
         {/* Desktop Auth Buttons */}
         <div className="hidden items-center space-x-4 md:flex">
-          <Link href="admin/login">
-            <Button
-              variant="ghost"
-              className="text-muted-foreground hover:text-primary"
-            >
-              Sign In
-            </Button>
-          </Link>
-          <Link href="/admin">
-            <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: bg-gradient-to-r text-white transition-all duration-200">
-              Admin Panel
-            </Button>
-          </Link>
+          {!isAuthenticated ? (
+            <>
+              <Link href="/admin/login">
+                <Button
+                  variant="ghost"
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/admin/signup">
+                <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: bg-gradient-to-r text-white transition-all duration-200">
+                  Get Started Free
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <Link href="/admin">
+              <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: bg-gradient-to-r text-white transition-all duration-200">
+                Admin Panel
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -105,19 +141,37 @@ const Header: React.FC = () => {
 
             {/* Mobile Auth Buttons */}
             <div className="space-y-3">
-              <Link href="/admin/login" onClick={closeMenu} className="block">
-                <Button
-                  variant="ghost"
-                  className="text-muted-foreground hover:text-primary w-full justify-start"
-                >
-                  Sign In
-                </Button>
-              </Link>
-              <Link href="/admin/signup" onClick={closeMenu} className="block">
-                <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: w-full bg-gradient-to-r text-white transition-all duration-200">
-                  Get Started Free
-                </Button>
-              </Link>
+              {!isAuthenticated ? (
+                <>
+                  <Link
+                    href="/admin/login"
+                    onClick={closeMenu}
+                    className="block"
+                  >
+                    <Button
+                      variant="ghost"
+                      className="text-muted-foreground hover:text-primary w-full justify-start"
+                    >
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link
+                    href="/admin/signup"
+                    onClick={closeMenu}
+                    className="block"
+                  >
+                    <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: w-full bg-gradient-to-r text-white transition-all duration-200">
+                      Get Started Free
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <Link href="/admin" onClick={closeMenu} className="block">
+                  <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: w-full bg-gradient-to-r text-white transition-all duration-200">
+                    Admin Panel
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>

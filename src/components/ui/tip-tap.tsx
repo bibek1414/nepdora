@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useEffect, useState, forwardRef } from "react";
+import React, { useMemo, useEffect, useState, forwardRef, useRef } from "react";
 import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -9,6 +9,7 @@ import Superscript from "@tiptap/extension-superscript";
 import TextAlign from "@tiptap/extension-text-align";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
+import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 import { TextStyle } from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import { Button } from "@/components/ui/button";
@@ -46,7 +47,213 @@ import {
   Loader2,
 } from "lucide-react";
 
-// Predefined toolbar configurations
+// Custom Image extension with resize functionality
+const ResizableImageExtension = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      width: {
+        default: null,
+        parseHTML: element => element.getAttribute("width") || null,
+        renderHTML: attributes => {
+          if (!attributes.width) return {};
+          return { width: attributes.width };
+        },
+      },
+      height: {
+        default: null,
+        parseHTML: element => element.getAttribute("height") || null,
+        renderHTML: attributes => {
+          if (!attributes.height) return {};
+          return { height: attributes.height };
+        },
+      },
+    };
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(ResizableImageComponent);
+  },
+});
+
+// Resizable Image Component with drag handles
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ResizableImageComponent = ({ node, updateAttributes }: any) => {
+  const [isSelected, setIsSelected] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const startSize = useRef({ width: 0, height: 0 });
+  const startPos = useRef({ x: 0, y: 0 });
+  const aspectRatio = useRef(1);
+
+  useEffect(() => {
+    if (imageRef.current && !node.attrs.width) {
+      const img = imageRef.current;
+      if (img.complete) {
+        aspectRatio.current = img.naturalWidth / img.naturalHeight;
+      } else {
+        img.onload = () => {
+          aspectRatio.current = img.naturalWidth / img.naturalHeight;
+        };
+      }
+    }
+  }, [node.attrs.src]);
+  // Handle clicks outside the image to deselect
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node) &&
+        !isResizing
+      ) {
+        setIsSelected(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isSelected) {
+        setIsSelected(false);
+      }
+    };
+
+    if (isSelected) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isSelected, isResizing]);
+  const handleMouseDown = (e: React.MouseEvent, corner: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsResizing(true);
+
+    const img = imageRef.current;
+    if (!img) return;
+
+    const currentWidth = node.attrs.width || img.offsetWidth;
+    const currentHeight = node.attrs.height || img.offsetHeight;
+
+    startSize.current = { width: currentWidth, height: currentHeight };
+    startPos.current = { x: e.clientX, y: e.clientY };
+
+    if (!node.attrs.width) {
+      aspectRatio.current = currentWidth / currentHeight;
+    } else {
+      aspectRatio.current = currentWidth / currentHeight;
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const deltaX = e.clientX - startPos.current.x;
+      const deltaY = e.clientY - startPos.current.y;
+
+      let newWidth = startSize.current.width;
+      let newHeight = startSize.current.height;
+
+      if (
+        corner === "se" ||
+        corner === "sw" ||
+        corner === "ne" ||
+        corner === "nw"
+      ) {
+        if (corner === "se") {
+          newWidth = startSize.current.width + deltaX;
+        } else if (corner === "sw") {
+          newWidth = startSize.current.width - deltaX;
+        } else if (corner === "ne") {
+          newWidth = startSize.current.width + deltaX;
+        } else if (corner === "nw") {
+          newWidth = startSize.current.width - deltaX;
+        }
+
+        newHeight = newWidth / aspectRatio.current;
+      } else if (corner === "e" || corner === "w") {
+        if (corner === "e") {
+          newWidth = startSize.current.width + deltaX;
+        } else {
+          newWidth = startSize.current.width - deltaX;
+        }
+        newHeight = newWidth / aspectRatio.current;
+      }
+
+      if (newWidth > 50 && newHeight > 50) {
+        updateAttributes({
+          width: Math.round(newWidth),
+          height: Math.round(newHeight),
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  };
+
+  return (
+    <NodeViewWrapper
+      as="div"
+      className="group relative my-2 inline-block"
+      ref={containerRef}
+      onClick={() => setIsSelected(true)}
+      onBlur={() => setIsSelected(false)}
+    >
+      <img
+        ref={imageRef}
+        src={node.attrs.src}
+        alt={node.attrs.alt || ""}
+        width={node.attrs.width || undefined}
+        height={node.attrs.height || undefined}
+        style={{
+          width: node.attrs.width ? `${node.attrs.width}px` : undefined,
+          height: node.attrs.height ? `${node.attrs.height}px` : undefined,
+          maxWidth: "100%",
+          cursor: isResizing ? "nwse-resize" : "pointer",
+        }}
+        className={`rounded-lg ${isSelected || isResizing ? "ring-2 ring-blue-500" : "ring-1 ring-gray-200"}`}
+        draggable={false}
+      />
+
+      {(isSelected || isResizing) && (
+        <>
+          <div
+            className="absolute -top-1 -left-1 h-3 w-3 cursor-nw-resize rounded-full border-2 border-blue-500 bg-white"
+            onMouseDown={e => handleMouseDown(e, "nw")}
+          />
+          <div
+            className="absolute -top-1 -right-1 h-3 w-3 cursor-ne-resize rounded-full border-2 border-blue-500 bg-white"
+            onMouseDown={e => handleMouseDown(e, "ne")}
+          />
+          <div
+            className="absolute -bottom-1 -left-1 h-3 w-3 cursor-sw-resize rounded-full border-2 border-blue-500 bg-white"
+            onMouseDown={e => handleMouseDown(e, "sw")}
+          />
+          <div
+            className="absolute -right-1 -bottom-1 h-3 w-3 cursor-se-resize rounded-full border-2 border-blue-500 bg-white"
+            onMouseDown={e => handleMouseDown(e, "se")}
+          />
+          <div
+            className="absolute top-1/2 -right-1 h-6 w-3 -translate-y-1/2 cursor-e-resize rounded-full border-2 border-blue-500 bg-white"
+            onMouseDown={e => handleMouseDown(e, "e")}
+          />
+          <div
+            className="absolute top-1/2 -left-1 h-6 w-3 -translate-y-1/2 cursor-w-resize rounded-full border-2 border-blue-500 bg-white"
+            onMouseDown={e => handleMouseDown(e, "w")}
+          />
+        </>
+      )}
+    </NodeViewWrapper>
+  );
+};
+
 export const TOOLBAR_CONFIGS = {
   basic: [
     "heading",
@@ -104,11 +311,8 @@ export interface ReusableQuillProps {
   onBlur?: () => void;
   disabled?: boolean;
   name?: string;
-  // Image upload handler - optional, if not provided, only URL input will be available
   onImageUpload?: (file: File) => Promise<string>;
-  // Max file size in MB (default: 5MB)
   maxImageSize?: number;
-  // Accepted image types (default: common image formats)
   acceptedImageTypes?: string[];
 }
 
@@ -154,6 +358,8 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
     const [imageUploadError, setImageUploadError] = useState<string | null>(
       null
     );
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const initialValueSet = useRef(false);
 
     useEffect(() => {
       setIsClient(true);
@@ -181,7 +387,7 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
             class: "text-blue-500 underline",
           },
         }),
-        Image.configure({
+        ResizableImageExtension.configure({
           HTMLAttributes: {
             class: "max-w-full h-auto rounded-lg",
           },
@@ -204,7 +410,6 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
         attributes: {
           class:
             "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none",
-          style: `min-height: ${typeof minHeight === "string" ? minHeight : `${minHeight}px`}; ${height ? `height: ${typeof height === "string" ? height : `${height}px`};` : ""}`,
         },
       },
     });
@@ -221,9 +426,11 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
       [editor]
     );
 
+    // Only set initial value once when editor is created
     useEffect(() => {
-      if (editor && (value || "") !== editor.getHTML()) {
-        editor.commands.setContent(value || "");
+      if (editor && !initialValueSet.current && value) {
+        editor.commands.setContent(value);
+        initialValueSet.current = true;
       }
     }, [value, editor]);
 
@@ -277,7 +484,6 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
     const handleImageUpload = async (file: File) => {
       setImageUploadError(null);
 
-      // Validate file type
       if (!acceptedImageTypes.includes(file.type)) {
         setImageUploadError(
           `Invalid file type. Please upload: ${acceptedImageTypes.join(", ")}`
@@ -285,7 +491,6 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
         return;
       }
 
-      // Validate file size
       if (file.size > maxImageSize * 1024 * 1024) {
         setImageUploadError(`File size must be less than ${maxImageSize}MB`);
         return;
@@ -297,10 +502,8 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
         let imageUrl: string;
 
         if (onImageUpload) {
-          // Use custom upload handler
           imageUrl = await onImageUpload(file);
         } else {
-          // Convert to base64 as fallback
           imageUrl = await new Promise<string>(resolve => {
             const reader = new FileReader();
             reader.onload = e => resolve(e.target?.result as string);
@@ -308,8 +511,13 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
           });
         }
 
+        // Insert image at current cursor position
         editor?.chain().focus().setImage({ src: imageUrl }).run();
-        setIsImageOpen(false);
+
+        // Reset file input so the same file can be uploaded again
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       } catch (error) {
         setImageUploadError(
           error instanceof Error ? error.message : "Failed to upload image"
@@ -604,6 +812,7 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
 
                     <div className="rounded-lg border-2 border-dashed border-gray-300 p-4 text-center transition-colors hover:border-gray-400">
                       <input
+                        ref={fileInputRef}
                         type="file"
                         accept={acceptedImageTypes.join(",")}
                         onChange={e => {
@@ -700,26 +909,20 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
       );
     }
 
-    const combinedStyle = {
-      minHeight,
-      height,
-      ...style,
-    };
-
     return (
       <div
-        className={`border-input overflow-hidden rounded-md border bg-white ${className}`}
-        style={combinedStyle}
+        className={`border-input flex flex-col overflow-hidden rounded-md border bg-white ${className}`}
+        style={{
+          minHeight,
+          height,
+          ...style,
+        }}
       >
         {renderToolbar()}
-        <div className="relative">
+        <div className="relative flex-1 overflow-y-auto">
           <EditorContent
             editor={editor}
-            className="p-3 focus-within:outline-none"
-            style={{
-              minHeight:
-                typeof minHeight === "string" ? minHeight : `${minHeight}px`,
-            }}
+            className="h-full p-3 focus-within:outline-none"
           />
           {editor && editor.isEmpty && (
             <div className="pointer-events-none absolute top-3 left-3 text-gray-400">

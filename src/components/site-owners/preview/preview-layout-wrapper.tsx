@@ -36,29 +36,6 @@ export function PreviewLayoutWrapper({
 
   const isLoading = isNavbarLoading || isFooterLoading;
 
-  if (isLoading) {
-    return (
-      <div
-        className="bg-background flex min-h-screen items-center justify-center"
-        style={{
-          color: theme.colors.primary,
-          fontFamily: theme.fonts.heading,
-        }}
-      >
-        <div className="flex flex-col items-center gap-4">
-          <div
-            className="h-32 w-32 animate-spin rounded-full border-b-2"
-            style={{
-              borderColor: theme.colors.primary,
-            }}
-          ></div>
-
-          <p className="text-muted-foreground text-sm">Loading... </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-background min-h-screen">
       {/* Sticky Navbar - positioned outside the preview content */}

@@ -93,7 +93,11 @@ export async function middleware(request: NextRequest) {
   // If user is on subdomain, handle normally
   if (subdomain) {
     // Allow /admin and /builder routes to pass through without rewriting
-    if (pathname.startsWith("/admin") || pathname.startsWith("/builder")) {
+    if (
+      pathname.startsWith("/admin") ||
+      pathname.startsWith("/builder") ||
+      pathname.startsWith("/support")
+    ) {
       return NextResponse.next();
     }
 

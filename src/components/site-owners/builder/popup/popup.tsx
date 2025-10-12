@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
@@ -152,26 +152,26 @@ const Popup: React.FC<PopupProps> = ({ open, onClose }) => {
 
           <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
             {formFieldsToRender.map(field => (
-              <div key={field.id} className="space-y-1 md:space-y-2">
+              <div key={field.id} className="relative">
+                <Input
+                  id={field.name}
+                  type={field.type}
+                  name={field.name}
+                  placeholder=" "
+                  required={field.required}
+                  value={formData[field.name] || ""}
+                  onChange={e => handleInputChange(field.name, e.target.value)}
+                  className="peer block w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-2.5 pt-4 pb-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-0 focus:outline-none md:text-base"
+                />
                 <label
                   htmlFor={field.name}
-                  className="block text-sm font-medium text-gray-700"
+                  className="pointer-events-none absolute start-1 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-white px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600"
                 >
                   {field.label}
                   {field.required && (
                     <span className="ml-1 text-red-500">*</span>
                   )}
                 </label>
-                <Input
-                  id={field.name}
-                  type={field.type}
-                  name={field.name}
-                  placeholder={field.placeholder}
-                  required={field.required}
-                  value={formData[field.name] || ""}
-                  onChange={e => handleInputChange(field.name, e.target.value)}
-                  className="text-sm md:text-base"
-                />
               </div>
             ))}
 
@@ -186,6 +186,7 @@ const Popup: React.FC<PopupProps> = ({ open, onClose }) => {
 
             <Button
               type="submit"
+              variant="default"
               disabled={submitMutation.isPending}
               className="mt-3 h-10 w-full text-sm font-medium text-white md:mt-4 md:h-11 md:text-base"
             >
