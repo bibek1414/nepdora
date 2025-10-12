@@ -63,7 +63,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
   };
 
   const handleFeedback = () => {
-    router.push("/admin/feedback");
+    router.push("/admin/support");
   };
 
   const getUserInitials = (name: string) => {
@@ -117,11 +117,12 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             Docs
           </Button>
 
-          <Button variant="ghost" size="sm">
-            Help
-          </Button>
-
-          <Link href="/admin/feedback">
+          <Link href="/admin/support">
+            <Button variant="ghost" size="sm">
+              Help
+            </Button>
+          </Link>
+          <Link href="/admin/support">
             <Button variant="ghost" size="sm" onClick={handleFeedback}>
               Share Feedback
             </Button>

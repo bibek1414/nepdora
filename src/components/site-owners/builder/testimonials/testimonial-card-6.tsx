@@ -90,14 +90,7 @@ const StaggeredCard: React.FC<StaggeredCardProps> = ({
       </blockquote>
 
       {/* Customer Info */}
-      <div
-        className="absolute right-6 bottom-6 left-6 text-xs italic sm:right-8 sm:bottom-8 sm:left-8 sm:text-sm"
-        style={{
-          color: isCenter
-            ? `${themeColors.primaryForeground}CC`
-            : themeColors.mutedForeground || "#6B7280",
-        }}
-      >
+      <div className="absolute right-6 bottom-6 left-6 text-xs italic sm:right-8 sm:bottom-8 sm:left-8 sm:text-sm">
         <p className="font-semibold">- {testimonial.name}</p>
         {testimonial.designation && (
           <p className="mt-1">{testimonial.designation}</p>
@@ -220,18 +213,6 @@ export const TestimonialCard6: React.FC<TestimonialCard6Props> = ({
             "flex h-12 w-12 items-center justify-center text-xl transition-colors sm:h-14 sm:w-14 sm:text-2xl",
             "border-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           )}
-          style={{
-            backgroundColor: theme.colors.background,
-            color: theme.colors.text,
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.backgroundColor = theme.colors.primary;
-            e.currentTarget.style.color = theme.colors.primaryForeground;
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.backgroundColor = theme.colors.background;
-            e.currentTarget.style.color = theme.colors.text;
-          }}
           aria-label="Previous testimonial"
         >
           <ChevronLeft />
@@ -240,20 +221,8 @@ export const TestimonialCard6: React.FC<TestimonialCard6Props> = ({
           onClick={() => handleMove(1)}
           className={cn(
             "flex h-12 w-12 items-center justify-center text-xl transition-colors sm:h-14 sm:w-14 sm:text-2xl",
-            "border-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            "border-2 bg-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           )}
-          style={{
-            backgroundColor: theme.colors.background,
-            color: theme.colors.text,
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.backgroundColor = theme.colors.primary;
-            e.currentTarget.style.color = theme.colors.primaryForeground;
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.backgroundColor = theme.colors.background;
-            e.currentTarget.style.color = theme.colors.text;
-          }}
           aria-label="Next testimonial"
         >
           <ChevronRight />

@@ -53,6 +53,7 @@ import {
   Settings,
   Tag,
 } from "lucide-react";
+import ReusableQuill from "@/components/ui/tip-tap";
 
 interface ProductFormProps {
   product?: Product | null;
@@ -203,10 +204,12 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                           Description
                         </FormLabel>
                         <FormControl>
-                          <Textarea
-                            placeholder="Enter product description"
-                            className="min-h-[100px] resize-none"
-                            {...field}
+                          <ReusableQuill
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                            placeholder="Write your product descrtiption here..."
+                            height="250px"
+                            toolbar="advanced"
                           />
                         </FormControl>
                         <FormMessage />
