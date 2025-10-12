@@ -9,7 +9,6 @@ import {
   Package,
   FileText,
   Users,
-  X,
   Edit3,
   Briefcase,
   Calendar,
@@ -23,13 +22,17 @@ import {
   Trophy,
   Mail,
   Youtube,
+  ChevronDown,
+  Menu,
+  X,
+  PanelRight,
+  ArrowLeftToLine,
 } from "lucide-react";
-import { User as UserType } from "@/types/auth/auth";
+
 const navigationGroups = [
   {
     items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
   },
-
   {
     name: "Products & Services",
     items: [
@@ -65,7 +68,6 @@ const navigationGroups = [
       { name: "Testimonials", href: "/admin/testimonials", icon: Tag },
     ],
   },
-
   {
     name: "Submissions & Inquiries",
     items: [
@@ -128,89 +130,155 @@ interface AdminSidebarProps {
 }
 
 export default function AdminSidebar({ user }: AdminSidebarProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const [collapsed, setCollapsed] = useState(false);
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    navigationGroups.forEach(group => {
+      if (group.name) {
+        initial[group.name] = true;
+      }
+    });
+    return initial;
+  });
+
+  const toggleGroup = (groupName: string) => {
+    setOpenGroups(prev => ({
+      ...prev,
+      [groupName]: !prev[groupName],
+    }));
+  };
 
   return (
-    <>
-      {/* Sidebar - Sticky and Scrollable Version */}
-      <div className="sticky top-0 h-screen w-64 border-r border-gray-200 bg-white">
-        <div className="flex h-full flex-col">
-          {/* Header - Fixed at top */}
-          <div className="flex-shrink-0 border-b border-gray-200 px-4 py-4">
-            <div className="flex items-center justify-between">
+    <div
+      className={cn(
+        "sticky top-0 mt-15 h-screen border-r border-gray-200 bg-white transition-all duration-300 ease-in-out",
+        collapsed ? "w-16" : "w-64"
+      )}
+    >
+      <div className="flex h-full flex-col">
+        {/* Header with Toggle Button */}
+        <div className="flex-shrink-0 border-b border-gray-200 px-4 py-4">
+          <div className="flex items-center justify-between">
+            {!collapsed && (
               <h2 className="text-lg font-semibold text-gray-900">
                 Admin Panel
               </h2>
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="rounded-md p-1 text-gray-400 hover:text-gray-500 lg:hidden"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
+            )}
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className={cn(
+                "flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-gray-100",
+                collapsed && "mx-auto"
+              )}
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {collapsed ? (
+                <PanelRight className="h-5 w-5 text-gray-600" />
+              ) : (
+                <PanelRight className="h-5 w-5 text-gray-600" />
+              )}
+            </button>
           </div>
+        </div>
 
-          {/* Navigation - Scrollable */}
-          <nav className="flex-1 overflow-y-auto px-4 py-4">
-            <div className="space-y-6">
-              {navigationGroups.map(group => (
-                <div key={group.name}>
-                  <h3 className="mb-2 px-3 text-xs font-semibold tracking-wider text-gray-500 uppercase">
-                    {group.name}
-                  </h3>
-                  <div className="space-y-1">
-                    {group.items.map(item => {
-                      const isActive = pathname === item.href;
-                      return (
-                        <Link
-                          key={item.name}
-                          href={item.href}
+        {/* Navigation */}
+        <nav className="scrollbar-hide flex-1 overflow-y-auto px-2 py-4">
+          <div className="space-y-2">
+            {navigationGroups.map((group, groupIndex) => (
+              <div key={group.name || groupIndex}>
+                {/* Group Header */}
+                {group.name && !collapsed && (
+                  <button
+                    onClick={() => toggleGroup(group.name!)}
+                    className="mb-2 flex w-full items-center justify-between rounded-md px-3 py-1.5 text-xs font-semibold tracking-wider text-gray-500 uppercase transition-colors hover:bg-gray-50"
+                  >
+                    <span>{group.name}</span>
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 transition-transform duration-200",
+                        openGroups[group.name] ? "rotate-0" : "-rotate-90"
+                      )}
+                    />
+                  </button>
+                )}
+
+                {/* Divider for collapsed state */}
+                {collapsed && groupIndex > 0 && (
+                  <div className="my-2 border-t border-gray-200" />
+                )}
+
+                {/* Group Items */}
+                <div
+                  className={cn(
+                    "space-y-1 transition-all duration-200",
+                    !collapsed && group.name && !openGroups[group.name]
+                      ? "hidden"
+                      : "block"
+                  )}
+                >
+                  {group.items.map(item => {
+                    const isActive = pathname === item.href;
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        title={collapsed ? item.name : undefined}
+                        className={cn(
+                          "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out",
+                          collapsed ? "justify-center" : "",
+                          isActive
+                            ? "bg-gray-100 text-gray-900"
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        )}
+                      >
+                        <item.icon
                           className={cn(
-                            "group flex items-center rounded-lg px-3 py-2 text-xs font-medium transition-all duration-200 ease-in-out",
+                            "h-5 w-5 flex-shrink-0 transition-colors",
+                            collapsed ? "mr-0" : "mr-3",
                             isActive
-                              ? "bg-gray-50 text-gray-700"
-                              : "text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"
+                              ? "text-gray-900"
+                              : "text-gray-400 group-hover:text-gray-600"
                           )}
-                        >
-                          <item.icon
-                            className={cn(
-                              "mr-3 h-5 w-5 flex-shrink-0 transition-colors",
-                              isActive
-                                ? "text-gray-600"
-                                : "text-gray-400 group-hover:text-gray-600"
-                            )}
-                          />
+                        />
+                        {!collapsed && (
                           <span className="truncate">{item.name}</span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </nav>
-
-          {/* Footer - Fixed at bottom */}
-          <div className="flex-shrink-0 border-t border-gray-200 bg-gray-50 px-4 py-4">
-            <div className="flex items-center space-x-3">
-              <div className="flex-shrink-0">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
-                  <span className="text-sm font-medium text-gray-600 capitalize">
-                    {user.name?.charAt(0) || user.email.charAt(0)}
-                  </span>
+                        )}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
+            ))}
+          </div>
+        </nav>
+
+        {/* Footer */}
+        <div className="flex-shrink-0 border-t border-gray-200 bg-gray-50 px-3 py-4">
+          <div
+            className={cn(
+              "flex items-center",
+              collapsed ? "justify-center" : "space-x-3"
+            )}
+          >
+            <div className="flex-shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
+                <span className="text-sm font-medium text-gray-600 capitalize">
+                  {user.name?.charAt(0) || user.email.charAt(0)}
+                </span>
+              </div>
+            </div>
+            {!collapsed && (
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-gray-600 capitalize">
                   {user.name || "Admin"}
                 </p>
                 <p className="truncate text-xs text-gray-500">{user.email}</p>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

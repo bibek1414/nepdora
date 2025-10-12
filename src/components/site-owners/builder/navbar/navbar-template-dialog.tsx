@@ -7,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { NavbarData } from "@/types/owner-site/components/navbar";
 
@@ -111,18 +110,21 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="h-auto max-w-7xl overflow-y-auto">
+      <DialogContent className="fixed right-0 !left-auto h-full w-full max-w-2xl transform overflow-y-auto rounded-none border-l bg-white p-6 shadow-xl transition-all duration-300 data-[state=closed]:translate-x-full data-[state=open]:translate-x-0">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Choose a Navbar Style
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 gap-6 py-4 md:grid-cols-3 lg:grid-cols-2">
+        <div className="flex flex-col gap-6">
           {templates.map(template => (
-            <div key={template.id} className="flex flex-col items-center">
+            <div
+              key={template.id}
+              className="flex flex-col items-center justify-center"
+            >
               <div
-                className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
+                className={`group w-full cursor-pointer border transition-all duration-200 hover:shadow-md ${
                   selectedStyle === template.id
                     ? "border-blue-200 ring-2 ring-blue-500"
                     : "hover:border-gray-300"

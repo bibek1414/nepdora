@@ -47,7 +47,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
           <p className="mb-4 text-sm leading-relaxed text-gray-600">
             {template.description}
           </p>
-          <Link href={"/signup"}>
+          <Link href={"/admin/signup"}>
             <Button
               variant="outline"
               className="w-full border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50"

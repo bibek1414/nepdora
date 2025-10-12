@@ -1,3 +1,4 @@
+// testimonial-style-dialog.tsx
 import React, { useState } from "react";
 import {
   Dialog,
@@ -74,20 +75,23 @@ export const TestimonialsStylesDialog: React.FC<
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-auto max-w-7xl overflow-y-auto">
+      <DialogContent className="fixed right-0 !left-auto h-full w-full max-w-2xl transform overflow-y-auto rounded-none border-r bg-white p-6 shadow-xl transition-all duration-300 data-[state=closed]:-translate-x-full data-[state=open]:translate-x-0">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Choose a Testimonials Style
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 gap-6 py-4 md:grid-cols-3 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 py-4">
           {templates.map((template, index) => (
-            <div key={template.id} className="flex flex-col items-center">
+            <div
+              key={template.id}
+              className="flex flex-col items-center justify-center"
+            >
               <div
-                className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
+                className={`group w-full cursor-pointer border transition-all duration-200 hover:shadow-md ${
                   selectedStyle === template.id
-                    ? "border-blue-200 ring-2 ring-blue-500"
+                    ? "border-blue-300 ring-2 ring-blue-500"
                     : "hover:border-gray-300"
                 }`}
                 onClick={() => handleSelect(template)}

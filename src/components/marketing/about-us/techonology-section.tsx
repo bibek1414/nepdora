@@ -33,7 +33,7 @@ export default function Technology() {
               blazing-fast NVMe SSD drives, LiteSpeed-powered tech stack, and
               our custom-built control panel – hPanel.
             </p>
-            <Link href="/signup">
+            <Link href="/admin/signup">
               <Button className="px-6 py-3 text-white">
                 Learn more about our tech
               </Button>
@@ -58,7 +58,7 @@ export default function Technology() {
                 that we can grow professionally and take our customers to the
                 next level. Join Nepdora and hustle with us.
               </p>
-              <Link href="/signup">
+              <Link href="/admin/signup">
                 <Button className="px-6 py-3">Get Started</Button>
               </Link>
             </div>

@@ -41,35 +41,13 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
   >(null);
 
   const templates = [
-    {
-      id: "about-1" as const,
-      name: "Split Layout with Stats",
-    },
-    {
-      id: "about-2" as const,
-      name: "Minimalist Image Left",
-    },
-    {
-      id: "about-3" as const,
-      name: "Modern Design",
-    },
-
-    {
-      id: "about-4" as const,
-      name: "Minimalist Image Right",
-    },
-    {
-      id: "about-5" as const,
-      name: "Better Design",
-    },
-    {
-      id: "about-6" as const,
-      name: "Creative Layout",
-    },
-    {
-      id: "about-7" as const,
-      name: "Training Focused",
-    },
+    { id: "about-1" as const, name: "Split Layout with Stats" },
+    { id: "about-2" as const, name: "Minimalist Image Left" },
+    { id: "about-3" as const, name: "Modern Design" },
+    { id: "about-4" as const, name: "Minimalist Image Right" },
+    { id: "about-5" as const, name: "Better Design" },
+    { id: "about-6" as const, name: "Creative Layout" },
+    { id: "about-7" as const, name: "Training Focused" },
   ];
 
   const handleSelect = (
@@ -92,20 +70,25 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-[80vh] max-w-7xl overflow-y-auto">
+      {/* Slide-in right panel */}
+      <DialogContent className="fixed right-0 !left-auto h-full w-full max-w-2xl transform overflow-y-auto rounded-none border-l bg-white p-6 shadow-xl transition-all duration-300 data-[state=closed]:translate-x-full data-[state=open]:translate-x-0">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Choose About Us Template
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 gap-6 py-4 md:grid-cols-3 lg:grid-cols-2">
+        {/* Single-column layout */}
+        <div className="flex flex-col gap-6 py-4">
           {templates.map(template => (
-            <div key={template.id} className="flex flex-col items-center">
+            <div
+              key={template.id}
+              className="flex flex-col items-center justify-center"
+            >
               <div
-                className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
+                className={`group w-full cursor-pointer border transition-all duration-200 hover:shadow-md ${
                   selectedStyle === template.id
-                    ? "border-blue-200 ring-2 ring-blue-500"
+                    ? "border-blue-300 ring-2 ring-blue-500"
                     : "hover:border-gray-300"
                 }`}
                 onClick={() => handleSelect(template.id)}
@@ -117,17 +100,15 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
                 }}
               >
                 <div className="p-3">
-                  <div className="relative w-full">
-                    <Image
-                      src={`/images/site-owners/about/about${
-                        template.id.split("-")[1]
-                      }.png`}
-                      alt={template.name}
-                      width={600}
-                      height={400}
-                      className="h-auto w-full rounded"
-                    />
-                  </div>
+                  <Image
+                    src={`/images/site-owners/about/about${
+                      template.id.split("-")[1]
+                    }.png`}
+                    alt={template.name}
+                    width={600}
+                    height={400}
+                    className="h-auto w-full rounded"
+                  />
                 </div>
               </div>
 

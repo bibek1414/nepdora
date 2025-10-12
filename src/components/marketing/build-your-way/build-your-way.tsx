@@ -88,7 +88,7 @@ export default function BuildYourWay() {
 
       {/* CTA Button */}
       <div className="text-center">
-        <Link href="/signup">
+        <Link href="admin/signup">
           <Button size="lg" className="px-10 py-4">
             Get started
           </Button>

@@ -131,7 +131,7 @@ const PricingSection = () => {
           {plans.map((plan, index) => (
             <Link
               key={index}
-              href="/signup"
+              href="/admin/signup"
               className={`bg-background hover: relative block rounded-lg border transition-all duration-300 ${
                 plan.isPopular
                   ? "border-primary scale-105 transform border-2"

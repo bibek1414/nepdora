@@ -71,7 +71,7 @@ const ProcessSection = () => {
               ))}
             </div>
 
-            <Link href={"/signup"}>
+            <Link href={"/admin/signup"}>
               <Button size="lg" className="rounded-lg px-8 py-3 font-medium">
                 Get started
               </Button>
@@ -104,7 +104,7 @@ const ProcessSection = () => {
                         d="M13 10V3L4 14h7v7l9-11h-7z"
                       />
                     </svg>
-                    <Link href="/signup">
+                    <Link href="/admin/signup">
                       <span className="font-medium">Go live</span>
                     </Link>
                   </div>

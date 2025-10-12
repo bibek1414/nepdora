@@ -97,7 +97,7 @@ const CustomerTestimonials = () => {
 
         {/* CTA Button */}
         <div className="text-center">
-          <Link href={"/signup"}>
+          <Link href={"/admin/signup"}>
             <Button
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-8 py-3 font-medium transition-colors duration-200"

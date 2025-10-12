@@ -42,6 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [tokens, setTokens] = useState<AuthTokens | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const router = useRouter();
 
@@ -306,6 +307,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         description: "Welcome back!",
       });
 
+      // Set redirecting state to keep loading spinner visible
+      setIsRedirecting(true);
+
       // Environment-based tenant redirect
       if (typeof window !== "undefined") {
         const sub = loggedInUser.sub_domain;
@@ -322,10 +326,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             tokens.access_token
           )}&refresh_token=${encodeURIComponent(tokens.refresh_token)}`;
           window.location.href = url;
-          return;
+          return; // Don't set isLoading to false, keep loading state during redirect
         }
       }
       router.push("/");
+      // Keep loading state during router navigation
     } catch (error) {
       const errorResponse = error as ErrorResponse;
       const parsedError = AuthErrorHandler.parseAuthError(errorResponse);
@@ -336,10 +341,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       console.error("Login error:", error);
       clearAuthData();
+      setIsLoading(false); // Only set to false on error
+      setIsRedirecting(false);
       throw error;
-    } finally {
-      setIsLoading(false);
     }
+    // Don't set isLoading to false here - let it stay true during redirect
   };
 
   const signup = async (data: SignupData) => {
@@ -410,7 +416,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signup,
         logout,
         updateTokens,
-        isLoading,
+        isLoading: isLoading || isRedirecting, // Keep loading true during redirect
         isAuthenticated: !!user && !!tokens?.access_token,
         clearAuthData,
       }}

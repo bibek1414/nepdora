@@ -141,7 +141,7 @@ export function EmailVerification({
               <p className="text-muted-foreground mb-4 text-sm">
                 Already verified your email?
               </p>
-              <Link href="/login">
+              <Link href="/admin/login">
                 <Button className="bg-primary text-primary-foreground hover:bg-primary/90 w-full">
                   Continue to Login
                 </Button>

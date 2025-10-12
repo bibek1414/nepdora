@@ -60,18 +60,21 @@ export const PortfolioStylesDialog: React.FC<PortfolioStylesDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-auto max-w-7xl overflow-y-auto">
+      <DialogContent className="fixed right-0 !left-auto h-full w-full max-w-2xl transform overflow-y-auto rounded-none border-l bg-white p-6 shadow-xl transition-all duration-300 data-[state=closed]:translate-x-full data-[state=open]:translate-x-0">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Choose Portfolio Section Style
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 gap-6 py-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 py-4">
           {templates.map(template => (
-            <div key={template.id} className="flex flex-col">
+            <div
+              key={template.id}
+              className="flex flex-col items-center justify-center"
+            >
               <div
-                className={`group cursor-pointer overflow-hidden rounded-lg border transition-all duration-200 hover:shadow-lg ${
+                className={`group w-full cursor-pointer overflow-hidden rounded-lg border transition-all duration-200 hover:shadow-lg ${
                   selectedStyle === template.id
                     ? "border-blue-500 ring-2 ring-blue-500"
                     : "border-border hover:border-gray-300"
@@ -89,8 +92,9 @@ export const PortfolioStylesDialog: React.FC<PortfolioStylesDialogProps> = ({
                     <Image
                       src={`/images/site-owners/portfolio/portfolio${template.id.split("-")[1]}.png`}
                       alt={template.name}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      width={400}
+                      height={200}
+                      className="h-auto w-full rounded"
                     />
                   </div>
                 </div>

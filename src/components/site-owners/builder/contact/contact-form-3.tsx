@@ -61,9 +61,6 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
     <Card className="border-primary/20 mx-auto max-w-2xl border-2 bg-white shadow-xl">
       <CardContent className="p-10">
         <div className="mb-8 text-center">
-          <div className="bg-primary/10 mx-auto mb-4 w-fit rounded-full p-4">
-            <Mail className="text-primary h-8 w-8" />
-          </div>
           <h3 className="text-foreground mb-2 text-2xl font-bold">
             Send us a Message
           </h3>

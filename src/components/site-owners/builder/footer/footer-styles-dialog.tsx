@@ -69,18 +69,20 @@ export const FooterStylesDialog: React.FC<FooterStylesDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-auto max-w-5xl overflow-y-auto">
+      <DialogContent className="fixed right-0 !left-auto h-full w-full max-w-2xl transform overflow-y-auto rounded-none border-l bg-white p-2 shadow-xl transition-all duration-300 data-[state=closed]:translate-x-full data-[state=open]:translate-x-0">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Choose a Footer Style
           </DialogTitle>
         </DialogHeader>
-
-        <div className="grid grid-cols-1 gap-6 py-4 md:grid-cols-2">
+        <div className="flex flex-col gap-6 py-4">
           {templates.map(t => (
-            <div key={t.id} className="flex flex-col items-center">
+            <div
+              key={t.id}
+              className="flex flex-col items-center justify-center"
+            >
               <div
-                className={`group cursor-pointer border transition-all duration-200 hover:shadow-md ${
+                className={`group w-full cursor-pointer border transition-all duration-200 hover:shadow-md ${
                   selectedStyle === t.id
                     ? "border-blue-200 ring-2 ring-blue-500"
                     : "hover:border-gray-300"

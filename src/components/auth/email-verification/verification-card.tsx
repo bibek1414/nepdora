@@ -67,7 +67,7 @@ export function VerificationCard({
   useEffect(() => {
     if (status === "success" && autoRedirect) {
       const timer = setTimeout(() => {
-        router.push("/login");
+        router.push("/admin/login");
       }, 3000);
       return () => clearTimeout(timer);
     }

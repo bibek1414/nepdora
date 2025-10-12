@@ -86,7 +86,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
 
         <div className="flex items-center space-x-2">
           <Link
-            href={`/preview/${user.id}`}
+            href={`/preview/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -100,7 +100,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             </Button>
           </Link>
           <Link
-            href={`/builder/${user.id}`}
+            href={`/builder/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"
           >

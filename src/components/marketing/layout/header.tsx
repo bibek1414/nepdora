@@ -105,7 +105,7 @@ const Header: React.FC = () => {
 
             {/* Mobile Auth Buttons */}
             <div className="space-y-3">
-              <Link href="/login" onClick={closeMenu} className="block">
+              <Link href="/admin/login" onClick={closeMenu} className="block">
                 <Button
                   variant="ghost"
                   className="text-muted-foreground hover:text-primary w-full justify-start"
@@ -113,7 +113,7 @@ const Header: React.FC = () => {
                   Sign In
                 </Button>
               </Link>
-              <Link href="/signup" onClick={closeMenu} className="block">
+              <Link href="/admin/signup" onClick={closeMenu} className="block">
                 <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: w-full bg-gradient-to-r text-white transition-all duration-200">
                   Get Started Free
                 </Button>
