@@ -1,9 +1,14 @@
 import { getAuthToken, getAuthTokenCustomer } from "./auth";
 
-export const createHeaders = (includeAuth: boolean = true): HeadersInit => {
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-  };
+export const createHeaders = (
+  includeAuth: boolean = true,
+  isFormData: boolean = false
+): HeadersInit => {
+  const headers: HeadersInit = {};
+
+  if (!isFormData) {
+    headers["Content-Type"] = "application/json";
+  }
 
   if (includeAuth) {
     const token = getAuthToken();
