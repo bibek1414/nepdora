@@ -16,6 +16,14 @@ export const useNavbarQuery = () => {
     retry: 2,
   });
 };
+export const useNavbarQueryPublished = () => {
+  return useQuery({
+    queryKey: NAVBAR_QUERY_KEY,
+    queryFn: useNavbarApi.getNavbarPublished,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 2,
+  });
+};
 
 export const useCreateNavbarMutation = () => {
   const queryClient = useQueryClient();

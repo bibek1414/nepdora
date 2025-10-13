@@ -22,6 +22,17 @@ export const usePageComponentsQuery = <
     enabled: !!pageSlug,
   });
 };
+export const usePageComponentsQueryPublished = <
+  T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
+>(
+  pageSlug: string
+) => {
+  return useQuery({
+    queryKey: ["pageComponents", pageSlug],
+    queryFn: () => componentsApi.getPageComponentsPublished<T>(pageSlug),
+    enabled: !!pageSlug,
+  });
+};
 
 // Generic hook for fetching components by type
 export const useComponentsByTypeQuery = <T extends keyof ComponentTypeMap>(

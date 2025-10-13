@@ -12,6 +12,22 @@ import {
 export const useThemeApi = {
   getThemes: async (): Promise<GetThemeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/theme/?status=preview`, {
+      method: "GET",
+      headers: createHeaders(),
+    });
+
+    await handleApiError(response);
+    const data = await response.json();
+
+    return {
+      data: data || [],
+      message:
+        data?.length > 0 ? "Themes retrieved successfully" : "No themes found",
+    };
+  },
+  getThemesPublished: async (): Promise<GetThemeResponse> => {
+    const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/theme/`, {
       method: "GET",
       headers: createHeaders(),

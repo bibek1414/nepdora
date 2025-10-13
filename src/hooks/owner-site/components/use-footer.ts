@@ -16,6 +16,14 @@ export const useFooterQuery = () => {
     retry: 2,
   });
 };
+export const useFooterQueryPublished = () => {
+  return useQuery({
+    queryKey: FOOTER_QUERY_KEY,
+    queryFn: useFooterApi.getFooterPublished,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 2,
+  });
+};
 
 export const useCreateFooterMutation = () => {
   const queryClient = useQueryClient();

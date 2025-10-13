@@ -17,6 +17,15 @@ export const useThemeQuery = () => {
   });
 };
 
+export const useThemeQueryPublished = () => {
+  return useQuery({
+    queryKey: THEME_QUERY_KEY,
+    queryFn: useThemeApi.getThemesPublished,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 2,
+  });
+};
+
 export const useCreateThemeMutation = () => {
   const queryClient = useQueryClient();
 

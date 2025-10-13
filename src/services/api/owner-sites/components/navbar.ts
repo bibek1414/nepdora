@@ -14,6 +14,21 @@ import {
 export const useNavbarApi = {
   getNavbar: async (): Promise<GetNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/navbar/?status=preview`, {
+      method: "GET",
+      headers: createHeaders(),
+    });
+
+    await handleApiError(response);
+    const data = await response.json();
+
+    return {
+      data: data || null,
+      message: data ? "Navbar retrieved successfully" : "No navbar found",
+    };
+  },
+  getNavbarPublished: async (): Promise<GetNavbarResponse> => {
+    const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/navbar/`, {
       method: "GET",
       headers: createHeaders(),
