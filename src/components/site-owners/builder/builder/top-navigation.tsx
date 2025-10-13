@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Page } from "@/types/owner-site/components/page";
 import { ArrowLeft, Palette, Eye, Upload, ChevronDown } from "lucide-react";
 import Link from "next/link";
-
+import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
 interface TopNavigationProps {
   pages: Page[];
   currentPage: string;
@@ -25,7 +25,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   siteUser,
 }) => {
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
-
+  const { mutate: publish, isPending } = usePublishSite();
   return (
     <div className="sticky top-0 z-40 border-b border-gray-200 bg-white">
       <div className="flex items-center justify-between px-2 py-3">
@@ -115,6 +115,15 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
               Preview
             </Button>
           </Link>
+          <Button
+            variant="outline"
+            className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+            onClick={() => publish()}
+            disabled={isPending}
+          >
+            <Upload className="mr-2 h-4 w-4" />
+            {isPending ? "Publishing..." : "Publish"}
+          </Button>
         </div>
       </div>
 

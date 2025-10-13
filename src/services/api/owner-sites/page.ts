@@ -15,7 +15,7 @@ export const pageApi = {
   // Get all pages
   getPages: async (): Promise<Page[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/pages/`, {
+    const response = await fetch(`${API_BASE_URL}/api/pages/?status=preview`, {
       method: "GET",
       headers: createHeaders(),
     });

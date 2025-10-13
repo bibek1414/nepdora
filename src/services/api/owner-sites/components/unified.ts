@@ -27,6 +27,35 @@ export const componentsApi = {
   ): Promise<ComponentResponse<T>[]> => {
     try {
       const response = await fetch(
+        `${API_BASE_URL}/api/pages/${pageSlug}/components/?status=preview`,
+        {
+          method: "GET",
+          headers: createHeaders(),
+        }
+      );
+
+      await handleApiError(response);
+      const data = await response.json();
+
+      // Handle both array response and object with data/components property
+      if (Array.isArray(data)) {
+        return data;
+      }
+
+      return data.data || data.components || [];
+    } catch (error) {
+      throw new Error(
+        `Failed to fetch components: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  },
+  getPageComponentsPublished: async <
+    T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
+  >(
+    pageSlug: string
+  ): Promise<ComponentResponse<T>[]> => {
+    try {
+      const response = await fetch(
         `${API_BASE_URL}/api/pages/${pageSlug}/components/`,
         {
           method: "GET",

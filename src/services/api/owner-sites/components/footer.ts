@@ -13,6 +13,21 @@ import {
 export const useFooterApi = {
   getFooter: async (): Promise<GetFooterResponse> => {
     const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/footer/?status=preview`, {
+      method: "GET",
+      headers: createHeaders(),
+    });
+
+    await handleApiError(response);
+    const data = await response.json();
+
+    return {
+      data: data || null,
+      message: data ? "Footer retrieved successfully" : "No footer found",
+    };
+  },
+  getFooterPublished: async (): Promise<GetFooterResponse> => {
+    const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/footer/`, {
       method: "GET",
       headers: createHeaders(),

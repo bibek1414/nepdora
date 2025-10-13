@@ -96,7 +96,8 @@ export async function middleware(request: NextRequest) {
     if (
       pathname.startsWith("/admin") ||
       pathname.startsWith("/builder") ||
-      pathname.startsWith("/support")
+      pathname.startsWith("/support") ||
+      pathname.startsWith("/publish")
     ) {
       return NextResponse.next();
     }
