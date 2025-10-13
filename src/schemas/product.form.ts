@@ -12,19 +12,44 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const imageSchema = z
   .any()
   .refine(file => {
-    if (!file) return true; // Allow null/undefined
-    if (typeof file === "string") return true; // Allow existing image URLs
+    if (!file) return true;
+    if (typeof file === "string") return true;
     return file.size <= MAX_FILE_SIZE;
   }, `Max file size is 5MB.`)
   .refine(file => {
-    if (!file) return true; // Allow null/undefined
-    if (typeof file === "string") return true; // Allow existing image URLs
+    if (!file) return true;
+    if (typeof file === "string") return true;
     return ACCEPTED_IMAGE_TYPES.includes(file.type);
   }, ".jpg, .jpeg, .png and .webp files are accepted.")
   .optional()
   .nullable();
 
-// Category Reference Schema (for nested objects)
+// Variant Schemas
+export const ProductOptionValueSchema = z.object({
+  id: z.number(),
+  value: z.string(),
+  option: z.number(),
+});
+
+export const ProductOptionSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  product: z.number(),
+  values: z.array(ProductOptionValueSchema).optional(),
+});
+
+export const ProductVariantSchema = z.object({
+  id: z.number(),
+  price: z.string().nullable(),
+  stock: z.number().nullable(),
+  image: z.string().nullable(),
+  option_values: z.array(z.number()),
+  product: z.number(),
+  created_at: z.string(),
+  updated_at: z.string(),
+});
+
+// Category Reference Schema
 export const CategoryReferenceSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -33,7 +58,7 @@ export const CategoryReferenceSchema = z.object({
   image: z.string().optional().nullable(),
 });
 
-// Subcategory Reference Schema (for nested objects)
+// Subcategory Reference Schema
 export const SubCategoryReferenceSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -42,13 +67,13 @@ export const SubCategoryReferenceSchema = z.object({
   image: z.string().optional().nullable(),
 });
 
-// Product Image Schema (for the nested array in the API response)
+// Product Image Schema
 export const ProductImageSchema = z.object({
   id: z.number(),
   image: z.string(),
 });
 
-// Base Product Schema (matches API response)
+// Base Product Schema with variants
 export const ProductSchema = z.object({
   id: z.number(),
   name: z.string().min(1, "Name is required"),
@@ -56,7 +81,8 @@ export const ProductSchema = z.object({
   description: z.string().nullable(),
   price: z.string().regex(/^\d+(\.\d{1,2})?$/, "Invalid price format"),
   market_price: z.string().nullable(),
-  stock: z.number().min(0, "Stock cannot be negative"),
+  track_stock: z.boolean().optional(),
+  stock: z.number().min(0, "Stock cannot be negative").default(0),
   thumbnail_image: z.string().nullable(),
   images: z.array(ProductImageSchema).optional(),
   thumbnail_alt_description: z.string().nullable(),
@@ -65,9 +91,10 @@ export const ProductSchema = z.object({
   is_popular: z.boolean().optional(),
   is_featured: z.boolean().optional(),
   is_wishlist: z.boolean().optional(),
-  // New fields from API response
   average_rating: z.number().min(0).max(5).optional(),
   reviews_count: z.number().min(0).optional(),
+  options: z.array(ProductOptionSchema).optional(),
+  variants: z.array(ProductVariantSchema).optional(),
   created_at: z.string(),
   updated_at: z.string(),
 });
@@ -95,22 +122,43 @@ export const SubCategorySchema = z.object({
   updated_at: z.string(),
 });
 
+// Create Variant Schema for form submission
+// FIXED: Make stock required (no default or optional)
+export const CreateVariantSchema = z.object({
+  price: z.string().optional(),
+  stock: z.number().min(0, "Stock cannot be negative"), // Required, no default
+  image: imageSchema,
+  options: z.record(z.string(), z.string()),
+});
+
+// Create Product Option Schema for form submission
+export const CreateProductOptionSchema = z.object({
+  name: z.string().min(1, "Option name is required"),
+  values: z.array(z.string()).min(1, "At least one value is required"),
+});
+
+// Create Product Schema with variants
+// FIXED: Make stock required (no default or optional), matching CreateVariantSchema
 export const CreateProductSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
   price: z.string().regex(/^\d+(\.\d{1,2})?$/, "Invalid price format"),
   market_price: z.string().optional(),
-  stock: z.number().min(0, "Stock cannot be negative"),
+  stock: z.number().min(0, "Stock cannot be negative"), // Required, no default
   thumbnail_image: imageSchema,
   image_files: z.array(z.any()).optional(),
   thumbnail_alt_description: z.string().optional(),
   category_id: z.string().optional(),
   sub_category_id: z.string().optional(),
+  track_stock: z.boolean(),
   is_popular: z.boolean(),
   is_featured: z.boolean(),
+  // Variant-related fields
+  options: z.array(CreateProductOptionSchema).optional(),
+  variants: z.array(CreateVariantSchema).optional(),
 });
 
-// Update Product Schema (partial of create schema)
+// Update Product Schema
 export const UpdateProductSchema = CreateProductSchema.partial();
 
 // Create Category Schema
@@ -123,7 +171,7 @@ export const CreateCategorySchema = z.object({
 // Update Category Schema
 export const UpdateCategorySchema = CreateCategorySchema.partial();
 
-// Create Subcategory Schema - UPDATED to expect category ID
+// Create Subcategory Schema
 export const CreateSubCategorySchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(1, "Description is required"),

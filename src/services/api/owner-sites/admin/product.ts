@@ -32,9 +32,7 @@ const buildProductFormData = (
   const formData = new FormData();
 
   Object.entries(data).forEach(([key, value]) => {
-    if (value === null || value === undefined) {
-      return; // Skip null or undefined values
-    }
+    if (value === null || value === undefined) return;
 
     if (key === "image_files" && Array.isArray(value)) {
       let imageCount = 0;
@@ -47,8 +45,35 @@ const buildProductFormData = (
       console.log(`Appended ${imageCount} new image files to FormData`);
     } else if (key === "thumbnail_image" && value instanceof File) {
       formData.append("thumbnail_image", value);
+    } else if (key === "variants" && Array.isArray(value)) {
+      // Handle variants
+      const variantsData = value.map((variant, index) => {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const variantData: any = {
+          price: variant.price,
+          stock: variant.stock,
+          options: variant.options,
+        };
+
+        // If variant has an image File, append it with consistent key name
+        if (variant.image instanceof File) {
+          const variantImageKey = `variant_image_${index}`;
+          formData.append(variantImageKey, variant.image);
+          variantData.image = variantImageKey; // <-- SAME NAME as the FormData key
+        } else if (typeof variant.image === "string") {
+          variantData.image = variant.image; // Existing URL
+        } else {
+          variantData.image = null;
+        }
+
+        return variantData;
+      });
+
+      // Send variants as JSON string
+      formData.append("variants", JSON.stringify(variantsData));
+      console.log("Variants data:", JSON.stringify(variantsData));
     } else if (key === "image_files") {
-      return;
+      return; // Already handled above
     } else if (typeof value === "boolean") {
       formData.append(key, value.toString());
     } else if (typeof value === "number") {
@@ -58,7 +83,7 @@ const buildProductFormData = (
     }
   });
 
-  // Debug: Log FormData contents
+  // Debug log
   console.log("FormData contents:");
   for (const [key, value] of formData.entries()) {
     if (value instanceof File) {
@@ -212,10 +237,7 @@ export const productApi = {
 
     const response = await fetch(`${API_BASE_URL}/api/product/`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-        // Don't set Content-Type header - let the browser set it with boundary
-      },
+
       body: formData,
     });
 

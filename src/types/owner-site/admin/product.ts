@@ -9,6 +9,10 @@ import {
   UpdateCategorySchema,
   CreateSubCategorySchema,
   UpdateSubCategorySchema,
+  ProductOptionSchema,
+  ProductVariantSchema,
+  CreateVariantSchema,
+  CreateProductOptionSchema,
 } from "@/schemas/product.form";
 
 // Inferred types from schemas
@@ -23,6 +27,13 @@ export type CreateCategoryRequest = z.infer<typeof CreateCategorySchema>;
 export type UpdateCategoryRequest = z.infer<typeof UpdateCategorySchema>;
 export type CreateSubCategoryRequest = z.infer<typeof CreateSubCategorySchema>;
 export type UpdateSubCategoryRequest = z.infer<typeof UpdateSubCategorySchema>;
+
+// Variant types
+export type ProductOption = z.infer<typeof ProductOptionSchema>;
+export type ProductVariant = z.infer<typeof ProductVariantSchema>;
+export type CreateVariant = z.infer<typeof CreateVariantSchema>;
+export type CreateProductOption = z.infer<typeof CreateProductOptionSchema>;
+
 export interface ExtendedProduct extends Product {
   [key: string]: unknown;
 }
@@ -137,6 +148,7 @@ export const normalizeProductForCart = (product: ProductLike): Product => {
         : product.price?.toString() || "0",
     market_price: productData.market_price || null,
     description: product.description || null,
+    track_stock: productData.track_stock ?? true,
     stock:
       typeof product.stock === "number"
         ? product.stock
@@ -148,6 +160,8 @@ export const normalizeProductForCart = (product: ProductLike): Product => {
     sub_category: productData.sub_category || null,
     is_popular: productData.is_popular || false,
     is_featured: productData.is_featured || false,
+    options: productData.options || [],
+    variants: productData.variants || [],
     created_at: productData.created_at || new Date().toISOString(),
     updated_at: productData.updated_at || new Date().toISOString(),
   };

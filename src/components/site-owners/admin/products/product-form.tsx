@@ -4,13 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -27,7 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -54,15 +47,41 @@ import {
   Tag,
 } from "lucide-react";
 import ReusableQuill from "@/components/ui/tip-tap";
+import InventoryVariants from "./inventory-varient";
 
 interface ProductFormProps {
   product?: Product | null;
-  onClose?: () => void; // Optional for backward compatibility
+  onClose?: () => void;
+}
+
+interface OptionValue {
+  id: string;
+  value: string;
+}
+
+interface ProductOption {
+  id: string;
+  name: string;
+  values: OptionValue[];
+}
+
+interface Variant {
+  id: string;
+  options: Record<string, string>;
+  price: string;
+  stock: number;
+  image: File | string | null;
 }
 
 const ProductForm = ({ product, onClose }: ProductFormProps) => {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [trackStock, setTrackStock] = useState<boolean>(
+    product?.track_stock ?? true
+  );
+  const [options, setOptions] = useState<ProductOption[]>([]);
+  const [variants, setVariants] = useState<Variant[]>([]);
+
   const isEditing = !!product;
   const createProductMutation = useCreateProduct();
   const updateProductMutation = useUpdateProduct();
@@ -83,14 +102,15 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
       description: product?.description || "",
       price: product?.price || "0.00",
       market_price: product?.market_price || "",
-      stock: product?.stock || 0,
+      stock: product?.stock ?? 0,
       thumbnail_image: null,
       image_files: product?.images?.map(img => img.image) || [],
       thumbnail_alt_description: product?.thumbnail_alt_description || "",
       category_id: product?.category?.id?.toString() || "",
       sub_category_id: product?.sub_category?.id?.toString() || "",
-      is_popular: Boolean(product?.is_popular),
-      is_featured: Boolean(product?.is_featured),
+      track_stock: product?.track_stock ?? false,
+      is_popular: product?.is_popular ?? false,
+      is_featured: product?.is_featured ?? false,
     },
   });
 
@@ -101,6 +121,45 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
     }
   }, [product]);
 
+  // Initialize variants from product if editing
+  useEffect(() => {
+    if (product?.options && product.options.length > 0) {
+      const mappedOptions: ProductOption[] = product.options.map(opt => ({
+        id: opt.id.toString(),
+        name: opt.name,
+        values:
+          opt.values?.map(v => ({
+            id: v.id.toString(),
+            value: v.value,
+          })) || [],
+      }));
+      setOptions(mappedOptions);
+    }
+
+    if (product?.variants && product.variants.length > 0) {
+      const mappedVariants: Variant[] = product.variants.map(v => ({
+        id: v.id.toString(),
+        options: {},
+        price: v.price || "0.00",
+        stock: v.stock || 0,
+        image: v.image,
+      }));
+      setVariants(mappedVariants);
+    }
+  }, [product]);
+
+  // Sync stock value to all variants when track stock is disabled
+  useEffect(() => {
+    if (!trackStock && variants.length > 0) {
+      const stockValue = form.watch("stock");
+      const updatedVariants = variants.map(v => ({
+        ...v,
+        stock: stockValue,
+      }));
+      setVariants(updatedVariants);
+    }
+  }, [trackStock, form.watch("stock")]);
+
   // Handle category change
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId);
@@ -109,8 +168,28 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
 
   const onSubmit = async (data: z.infer<typeof CreateProductSchema>) => {
     try {
+      // Transform options and variants for API
+      const transformedOptions = options.map(opt => ({
+        name: opt.name,
+        values: opt.values.map(v => v.value),
+      }));
+
+      // When track stock is disabled, use the main stock value for all variants
+      const stockValue = trackStock ? undefined : data.stock;
+
+      const transformedVariants = variants.map(v => {
+        const variantStock = trackStock ? v.stock : stockValue;
+        return {
+          price: v.price || undefined,
+          stock: variantStock ?? 0,
+          image: v.image instanceof File ? v.image : undefined,
+          options: v.options,
+        };
+      });
+
       const productData: CreateProductRequest = {
         ...data,
+        track_stock: trackStock,
         market_price: data.market_price || undefined,
         thumbnail_alt_description: data.thumbnail_alt_description || undefined,
         category_id: data.category_id || undefined,
@@ -120,6 +199,9 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
             ? data.thumbnail_image
             : undefined,
         image_files: data.image_files || [],
+        options: transformedOptions.length > 0 ? transformedOptions : undefined,
+        variants:
+          transformedVariants.length > 0 ? transformedVariants : undefined,
       };
 
       if (isEditing && product) {
@@ -207,7 +289,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                           <ReusableQuill
                             value={field.value || ""}
                             onChange={field.onChange}
-                            placeholder="Write your product descrtiption here..."
+                            placeholder="Write your product description here..."
                             height="250px"
                             toolbar="advanced"
                           />
@@ -291,14 +373,36 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                             onChange={e =>
                               field.onChange(parseInt(e.target.value) || 0)
                             }
+                            value={field.value}
+                            disabled={trackStock && variants.length > 0}
                           />
                         </FormControl>
                         <FormMessage />
+                        {trackStock && variants.length > 0 && (
+                          <p className="text-xs text-gray-500">
+                            Stock is managed per variant
+                          </p>
+                        )}
+                        {!trackStock && variants.length > 0 && (
+                          <p className="text-xs text-blue-600">
+                            This stock value will apply to all variants
+                          </p>
+                        )}
                       </FormItem>
                     )}
                   />
                 </div>
               </div>
+
+              {/* Inventory & Variants */}
+              <InventoryVariants
+                trackStock={trackStock}
+                onTrackStockChange={setTrackStock}
+                variants={variants}
+                onVariantsChange={setVariants}
+                options={options}
+                onOptionsChange={setOptions}
+              />
 
               {/* Categories */}
               <div className="space-y-6">

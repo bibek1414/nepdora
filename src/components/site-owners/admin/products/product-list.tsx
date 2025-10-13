@@ -15,7 +15,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   useProducts,
@@ -31,6 +30,7 @@ import {
   X,
   Folder,
   FolderTree,
+  Upload,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -45,6 +45,7 @@ import {
 import { useDebouncedCallback } from "use-debounce";
 import { Product } from "@/types/owner-site/admin/product";
 import { toast } from "sonner";
+import BulkUploadDialog from "@/components/site-owners/admin/bulk-upload/bulk-upload-dialog";
 
 const ProductList = () => {
   const [page, setPage] = useState(1);
@@ -54,11 +55,14 @@ const ProductList = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
   const [searchInput, setSearchInput] = useState("");
+  const [showBulkUploadDialog, setShowBulkUploadDialog] = useState(false);
+
   // Debounced search to avoid too many API calls
   const debouncedSearch = useDebouncedCallback(value => {
     setSearch(value);
     setPage(1); // Reset to first page when searching
   }, 500);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchInput(value);
@@ -70,6 +74,7 @@ const ProductList = () => {
     setSearch("");
     setPage(1);
   };
+
   const { data, isLoading, error } = useProducts({
     page,
     page_size,
@@ -154,6 +159,15 @@ const ProductList = () => {
             </Button>
           </Link>
 
+          <Button
+            variant="outline"
+            onClick={() => setShowBulkUploadDialog(true)}
+            className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+          >
+            <Upload className="mr-2 h-4 w-4" />
+            Import Products
+          </Button>
+
           <Link href="/admin/products/add">
             <Button className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900">
               <Plus className="mr-2 h-4 w-4" />
@@ -167,7 +181,7 @@ const ProductList = () => {
           <div className="relative max-w-md">
             <Search className="absolute top-1/2 left-3 z-1 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
-              placeholder="Search subcategories..."
+              placeholder="Search products..."
               value={searchInput}
               onChange={handleSearchChange}
               className="border-gray-200 bg-white pr-10 pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
@@ -236,7 +250,7 @@ const ProductList = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {products.map((product, index) => (
+                    {products.map(product => (
                       <TableRow
                         key={product.id}
                         className="cursor-pointer border-b border-gray-100 transition-colors hover:bg-gray-50/50"
@@ -402,6 +416,12 @@ const ProductList = () => {
           </div>
         )}
       </div>
+
+      {/* Bulk Upload Dialog */}
+      <BulkUploadDialog
+        open={showBulkUploadDialog}
+        onOpenChange={setShowBulkUploadDialog}
+      />
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog
