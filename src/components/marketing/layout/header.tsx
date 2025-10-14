@@ -19,6 +19,7 @@ const Header: React.FC = () => {
     "Pricing",
     "About",
     "Contact",
+    "Docs",
   ];
 
   if (isLoading) {
@@ -34,8 +35,6 @@ const Header: React.FC = () => {
             {navigationItems.map((_, index) => (
               <Skeleton key={index} className="h-5 w-20" />
             ))}
-            {/* Docs skeleton */}
-            <Skeleton className="h-5 w-16" />
           </div>
 
           {/* Desktop Auth Buttons Skeleton */}
@@ -50,6 +49,60 @@ const Header: React.FC = () => {
       </header>
     );
   }
+
+  const renderNavigationItem = (item: string) => {
+    if (item === "Docs") {
+      return (
+        <a
+          key={item}
+          href="https://docs.nepdora.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-muted-foreground hover:text-primary cursor-pointer font-medium transition-colors"
+        >
+          {item}
+        </a>
+      );
+    }
+
+    return (
+      <Link
+        key={item}
+        href={`/${item.toLowerCase()}`}
+        className="text-muted-foreground hover:text-primary cursor-pointer font-medium transition-colors"
+      >
+        {item}
+      </Link>
+    );
+  };
+
+  const renderMobileNavigationItem = (item: string) => {
+    if (item === "Docs") {
+      return (
+        <a
+          key={item}
+          href="https://docs.nepdora.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={closeMenu}
+          className="text-muted-foreground hover:text-primary block cursor-pointer font-medium transition-colors"
+        >
+          {item}
+        </a>
+      );
+    }
+
+    return (
+      <Link
+        key={item}
+        href={`/${item.toLowerCase()}`}
+        onClick={closeMenu}
+        className="text-muted-foreground hover:text-primary block cursor-pointer font-medium transition-colors"
+      >
+        {item}
+      </Link>
+    );
+  };
 
   return (
     <header className="border-primary/10 sticky top-0 z-50 border-b bg-white/80 px-4 py-4 backdrop-blur-md sm:px-6">
@@ -67,29 +120,7 @@ const Header: React.FC = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden items-center space-x-8 md:flex">
-          {navigationItems.map(item => (
-            <Link
-              key={item}
-              href={`/${item.toLowerCase()}`}
-              className="text-muted-foreground hover:text-primary cursor-pointer font-medium transition-colors"
-            >
-              {item}
-            </Link>
-          ))}
-          {/* Docs Link */}
-          <a
-            href="https://docs.nepdora.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button
-              variant="ghost"
-              size="lg"
-              className="text-muted-foreground hover:text-primary cursor-pointer text-lg font-medium transition-colors"
-            >
-              Docs
-            </Button>
-          </a>
+          {navigationItems.map(item => renderNavigationItem(item))}
         </div>
 
         {/* Desktop Auth Buttons */}
@@ -143,26 +174,7 @@ const Header: React.FC = () => {
           <div className="mx-auto max-w-7xl px-4 py-4">
             {/* Mobile Navigation Links */}
             <div className="mb-6 space-y-4">
-              {navigationItems.map(item => (
-                <Link
-                  key={item}
-                  href={`/${item.toLowerCase()}`}
-                  onClick={closeMenu}
-                  className="text-muted-foreground hover:text-primary block cursor-pointer font-medium transition-colors"
-                >
-                  {item}
-                </Link>
-              ))}
-              {/* Mobile Docs Link */}
-              <a
-                href="https://docs.nepdora.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={closeMenu}
-                className="text-muted-foreground hover:text-primary block cursor-pointer font-medium transition-colors"
-              >
-                Docs
-              </a>
+              {navigationItems.map(item => renderMobileNavigationItem(item))}
             </div>
 
             {/* Mobile Auth Buttons */}
