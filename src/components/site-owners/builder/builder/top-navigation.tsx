@@ -4,21 +4,22 @@ import { DeletePageDialog } from "@/components/site-owners/builder/new-page/dele
 import { ThemeDialog } from "@/components/site-owners/builder/theme/theme-dialog";
 import { Button } from "@/components/ui/button";
 import { Page } from "@/types/owner-site/components/page";
-import { ArrowLeft, Palette, Eye, Upload, ChevronDown } from "lucide-react";
+import { ArrowLeft, Palette, Eye, Upload } from "lucide-react";
 import Link from "next/link";
 import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
+
 interface TopNavigationProps {
   pages: Page[];
-  currentPage: string;
-  onPageChange: (pageSlug: string) => void;
+  currentPageId: number; // Changed from currentPage: string
+  onPageChange: (pageId: number) => void; // Changed from pageSlug: string
   onPageCreated: (page: Page) => void;
-  onPageDeleted: (deletedSlug: string) => void;
+  onPageDeleted: (deletedId: number) => void; // Changed from deletedSlug: string
   siteUser: string;
 }
 
 export const TopNavigation: React.FC<TopNavigationProps> = ({
   pages,
-  currentPage,
+  currentPageId,
   onPageChange,
   onPageCreated,
   onPageDeleted,
@@ -26,6 +27,11 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 }) => {
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const { mutate: publish, isPending } = usePublishSite();
+
+  // Get current page slug for preview/live links
+  const currentPageSlug =
+    pages.find(page => page.id === currentPageId)?.slug || "home";
+
   return (
     <div className="sticky top-0 z-40 border-b border-gray-200 bg-white">
       <div className="flex items-center justify-between px-2 py-3">
@@ -47,15 +53,15 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             <div className="flex items-center gap-2">
               {pages.map(page => (
                 <div
-                  key={page.slug}
+                  key={page.id} // Changed from page.slug
                   className={`flex items-center gap-1 rounded-md border text-sm ${
-                    currentPage === page.slug
+                    currentPageId === page.id // Changed comparison
                       ? "border-gray-600 bg-gray-600 text-white"
                       : "border-gray-200 bg-white hover:bg-gray-50"
                   }`}
                 >
                   <button
-                    onClick={() => onPageChange(page.slug)}
+                    onClick={() => onPageChange(page.id)} // Pass page.id
                     className="px-3 py-1.5 capitalize"
                   >
                     {page.title}
@@ -91,7 +97,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             </Button>
           </Link>
 
-          {/* Theme Settings Button - Now opens dialog instead of navigating */}
+          {/* Theme Settings Button */}
           <Button
             variant="outline"
             size="sm"
@@ -102,8 +108,23 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             Theme Settings
           </Button>
 
+          {/* Preview/Live links still use slug for URL */}
           <Link
-            href={`/preview/${siteUser}/${currentPage}`}
+            href={`/publish/${siteUser}/${currentPageId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button
+              variant="outline"
+              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+            >
+              <Eye className="mr-2 h-4 w-4" />
+              Live
+            </Button>
+          </Link>
+
+          <Link
+            href={`/preview/${siteUser}/${currentPageId}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -115,6 +136,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
               Preview
             </Button>
           </Link>
+
           <Button
             variant="outline"
             className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"

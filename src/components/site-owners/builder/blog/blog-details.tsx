@@ -243,7 +243,7 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
                 ].map((post, index) => (
                   <li key={index}>
                     <Link
-                      href={`/preview?site=${siteUser}&page=blogs/${post.slug}`}
+                      href={`/preview/${siteUser}/${post.slug}`}
                       className="text-foreground hover:text-primary text-base transition-colors"
                     >
                       {post.title}

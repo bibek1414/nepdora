@@ -40,30 +40,28 @@ import { AboutUsTemplate7 } from "./about-style-7";
 interface AboutUsComponentProps {
   component: AboutUsComponentData;
   isEditable?: boolean;
-  pageSlug: string;
+  pageId: string | number;
 }
 
 export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
   component,
   isEditable = false,
-  pageSlug,
+  pageId,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const deleteAboutUsMutation = useDeleteComponentMutation(pageSlug, "about");
-  const updateAboutUsMutation = useUpdateComponentMutation(pageSlug, "about");
+  const deleteAboutUsMutation = useDeleteComponentMutation(pageId, "about");
+  const updateAboutUsMutation = useUpdateComponentMutation(pageId, "about");
 
   const handleDelete = () => {
-    const componentId = component.component_id || component.id.toString();
-    deleteAboutUsMutation.mutate(componentId);
+    deleteAboutUsMutation.mutate(component.id);
   };
 
   const handleUpdate = (updatedData: Partial<AboutUsData>) => {
-    const componentId = component.component_id || component.id.toString();
     const mergedData = { ...component.data, ...updatedData };
 
     updateAboutUsMutation.mutate(
-      { componentId, data: mergedData as UpdateAboutUsRequest["data"] },
+      { id: component.id, data: mergedData as UpdateAboutUsRequest["data"] },
       {
         onSuccess: () => {
           toast.success("About Us component updated.");

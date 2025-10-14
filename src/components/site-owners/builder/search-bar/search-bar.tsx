@@ -72,7 +72,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   // Generate product URL
   const getProductUrl = (product: Product): string => {
-    return `/preview/${siteUser}/products/${product.slug}`;
+    return `/publish/${siteUser}/products/${product.slug}`;
   };
 
   // Handle product click navigation
@@ -181,7 +181,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       setShowDropdown(false);
       setIsSearchFocused(false);
       // Navigate to products page with search
-      window.location.href = `/preview/${siteUser}/products?search=${encodeURIComponent(searchQuery.trim())}`;
+      window.location.href = `/publish/${siteUser}/products?search=${encodeURIComponent(searchQuery.trim())}`;
     }
   };
 
@@ -228,7 +228,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleViewAllResults = (): void => {
     closeSearchResults();
-    window.location.href = `/preview/${siteUser}/products?search=${encodeURIComponent(searchQuery.trim())}`;
+    window.location.href = `/publish/${siteUser}/products?search=${encodeURIComponent(searchQuery.trim())}`;
   };
 
   const page_sizeedProducts = sortedProducts.slice(0, 5);

@@ -8,14 +8,16 @@ import {
   UpdateComponentRequest,
   ApiResponse,
 } from "@/types/owner-site/components/components";
+
 export interface OrderUpdate {
-  componentId: string;
+  id: string | number; // Changed from componentId
   order: number;
 }
 
 export interface BulkOrderUpdateRequest {
   orderUpdates: OrderUpdate[];
 }
+
 const API_BASE_URL = getApiBaseUrl();
 
 export const componentsApi = {
@@ -23,11 +25,11 @@ export const componentsApi = {
   getPageComponents: async <
     T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
   >(
-    pageSlug: string
+    pageId: string | number // Changed from pageSlug
   ): Promise<ComponentResponse<T>[]> => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/pages/${pageSlug}/components/?status=preview`,
+        `${API_BASE_URL}/api/pages/${pageId}/components/?status=preview`,
         {
           method: "GET",
           headers: createHeaders(),
@@ -37,7 +39,6 @@ export const componentsApi = {
       await handleApiError(response);
       const data = await response.json();
 
-      // Handle both array response and object with data/components property
       if (Array.isArray(data)) {
         return data;
       }
@@ -49,14 +50,15 @@ export const componentsApi = {
       );
     }
   },
+
   getPageComponentsPublished: async <
     T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
   >(
-    pageSlug: string
+    pageId: string | number // Changed from pageSlug
   ): Promise<ComponentResponse<T>[]> => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/pages/${pageSlug}/components/`,
+        `${API_BASE_URL}/api/pages/${pageId}/components/`,
         {
           method: "GET",
           headers: createHeaders(),
@@ -66,7 +68,6 @@ export const componentsApi = {
       await handleApiError(response);
       const data = await response.json();
 
-      // Handle both array response and object with data/components property
       if (Array.isArray(data)) {
         return data;
       }
@@ -81,12 +82,11 @@ export const componentsApi = {
 
   // Create a new component
   createComponent: async <T extends keyof ComponentTypeMap>(
-    pageSlug: string,
+    pageId: string | number, // Changed from pageSlug
     payload: CreateComponentRequest<T>,
-    existingComponents?: ComponentResponse[] // Add this parameter to pass current components
+    existingComponents?: ComponentResponse[]
   ): Promise<ComponentResponse<T>> => {
     try {
-      // Calculate next order if not provided
       let order = payload.order;
       if (order === undefined || order === 0) {
         if (existingComponents && existingComponents.length > 0) {
@@ -95,7 +95,7 @@ export const componentsApi = {
           );
           order = maxOrder + 1;
         } else {
-          order = 0; // First component starts at 0
+          order = 0;
         }
       }
 
@@ -108,7 +108,7 @@ export const componentsApi = {
       };
 
       const response = await fetch(
-        `${API_BASE_URL}/api/pages/${pageSlug}/components/`,
+        `${API_BASE_URL}/api/pages/${pageId}/components/`,
         {
           method: "POST",
           headers: createHeaders(),
@@ -136,8 +136,8 @@ export const componentsApi = {
 
   // Update an existing component
   updateComponent: async <T extends keyof ComponentTypeMap>(
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number, // Changed from pageSlug
+    id: string | number, // Changed from componentId
     payload: UpdateComponentRequest<T>,
     componentType: T
   ): Promise<ComponentResponse<T>> => {
@@ -149,7 +149,7 @@ export const componentsApi = {
       };
 
       const response = await fetch(
-        `${API_BASE_URL}/api/pages/${pageSlug}/components/${componentId}/`,
+        `${API_BASE_URL}/api/pages/${pageId}/components/${id}/`,
         {
           method: "PATCH",
           headers: createHeaders(),
@@ -177,13 +177,13 @@ export const componentsApi = {
 
   // Delete a component
   deleteComponent: async (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number, // Changed from pageSlug
+    id: string | number, // Changed from componentId
     componentType: keyof ComponentTypeMap
   ): Promise<void> => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/pages/${pageSlug}/components/${componentId}/`,
+        `${API_BASE_URL}/api/pages/${pageId}/components/${id}/`,
         {
           method: "DELETE",
           headers: createHeaders(),
@@ -200,10 +200,10 @@ export const componentsApi = {
 
   // Get components by type
   getComponentsByType: async <T extends keyof ComponentTypeMap>(
-    pageSlug: string,
+    pageId: string | number, // Changed from pageSlug
     componentType: T
   ): Promise<ComponentResponse<T>[]> => {
-    const allComponents = await componentsApi.getPageComponents(pageSlug);
+    const allComponents = await componentsApi.getPageComponents(pageId);
     return allComponents.filter(
       (component): component is ComponentResponse<T> =>
         component.component_type === componentType
@@ -212,211 +212,196 @@ export const componentsApi = {
 
   // Get single component by id
   getComponent: async <T extends keyof ComponentTypeMap>(
-    pageSlug: string,
-    componentId: string
+    pageId: string | number, // Changed from pageSlug
+    id: string | number // Changed from componentId
   ): Promise<ComponentResponse<T> | null> => {
-    const allComponents = await componentsApi.getPageComponents(pageSlug);
+    const allComponents = await componentsApi.getPageComponents(pageId);
     return (
       (allComponents.find(
-        component => component.component_id === componentId
+        component => component.id === id
       ) as ComponentResponse<T>) || null
     );
   },
 };
+
 export const portfolioComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "portfolio"),
-  create: (pageSlug: string, data: ComponentTypeMap["portfolio"]) =>
-    componentsApi.createComponent(pageSlug, {
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "portfolio"),
+  create: (pageId: string | number, data: ComponentTypeMap["portfolio"]) =>
+    componentsApi.createComponent(pageId, {
       component_type: "portfolio",
       data,
     }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["portfolio"]>
-  ) =>
-    componentsApi.updateComponent(pageSlug, componentId, { data }, "portfolio"),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "portfolio"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "portfolio"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "portfolio"),
 };
-// Specific component type APIs that use the generic service
+
 export const heroComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "hero"),
-  create: (pageSlug: string, data: ComponentTypeMap["hero"]) =>
-    componentsApi.createComponent(pageSlug, { component_type: "hero", data }),
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "hero"),
+  create: (pageId: string | number, data: ComponentTypeMap["hero"]) =>
+    componentsApi.createComponent(pageId, { component_type: "hero", data }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["hero"]>
-  ) => componentsApi.updateComponent(pageSlug, componentId, { data }, "hero"),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "hero"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "hero"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "hero"),
 };
+
 export const bannerComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "banner"),
-  create: (pageSlug: string, data: ComponentTypeMap["banner"]) =>
-    componentsApi.createComponent(pageSlug, { component_type: "banner", data }),
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "banner"),
+  create: (pageId: string | number, data: ComponentTypeMap["banner"]) =>
+    componentsApi.createComponent(pageId, { component_type: "banner", data }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["banner"]>
-  ) => componentsApi.updateComponent(pageSlug, componentId, { data }, "banner"),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "banner"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "banner"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "banner"),
 };
+
 export const faqComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "faq"),
-  create: (pageSlug: string, data: ComponentTypeMap["faq"]) =>
-    componentsApi.createComponent(pageSlug, { component_type: "faq", data }),
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "faq"),
+  create: (pageId: string | number, data: ComponentTypeMap["faq"]) =>
+    componentsApi.createComponent(pageId, { component_type: "faq", data }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["faq"]>
-  ) => componentsApi.updateComponent(pageSlug, componentId, { data }, "faq"),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "faq"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "faq"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "faq"),
 };
 
 export const testimonialsComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "testimonials"),
-  create: (pageSlug: string, data: ComponentTypeMap["testimonials"]) =>
-    componentsApi.createComponent(pageSlug, {
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "testimonials"),
+  create: (pageId: string | number, data: ComponentTypeMap["testimonials"]) =>
+    componentsApi.createComponent(pageId, {
       component_type: "testimonials",
       data,
     }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["testimonials"]>
-  ) =>
-    componentsApi.updateComponent(
-      pageSlug,
-      componentId,
-      { data },
-      "testimonials"
-    ),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "testimonials"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "testimonials"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "testimonials"),
 };
 
 export const aboutComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "about"),
-  create: (pageSlug: string, data: ComponentTypeMap["about"]) =>
-    componentsApi.createComponent(pageSlug, { component_type: "about", data }),
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "about"),
+  create: (pageId: string | number, data: ComponentTypeMap["about"]) =>
+    componentsApi.createComponent(pageId, { component_type: "about", data }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["about"]>
-  ) => componentsApi.updateComponent(pageSlug, componentId, { data }, "about"),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "about"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "about"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "about"),
 };
 
 export const blogComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "blog"),
-  create: (pageSlug: string, data: ComponentTypeMap["blog"]) =>
-    componentsApi.createComponent(pageSlug, { component_type: "blog", data }),
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "blog"),
+  create: (pageId: string | number, data: ComponentTypeMap["blog"]) =>
+    componentsApi.createComponent(pageId, { component_type: "blog", data }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["blog"]>
-  ) => componentsApi.updateComponent(pageSlug, componentId, { data }, "blog"),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "blog"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "blog"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "blog"),
 };
 
 export const productComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "products"),
-  create: (pageSlug: string, data: ComponentTypeMap["products"]) =>
-    componentsApi.createComponent(pageSlug, {
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "products"),
+  create: (pageId: string | number, data: ComponentTypeMap["products"]) =>
+    componentsApi.createComponent(pageId, {
       component_type: "products",
       data,
     }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["products"]>
-  ) =>
-    componentsApi.updateComponent(pageSlug, componentId, { data }, "products"),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "products"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "products"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "products"),
 };
 
-// NEW: Category component APIs
 export const categoryComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "category"),
-  create: (pageSlug: string, data: ComponentTypeMap["category"]) =>
-    componentsApi.createComponent(pageSlug, {
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "category"),
+  create: (pageId: string | number, data: ComponentTypeMap["category"]) =>
+    componentsApi.createComponent(pageId, {
       component_type: "category",
       data,
     }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["category"]>
-  ) =>
-    componentsApi.updateComponent(pageSlug, componentId, { data }, "category"),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "category"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "category"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "category"),
 };
 
-// NEW: SubCategory component APIs
 export const subCategoryComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "subcategory"),
-  create: (pageSlug: string, data: ComponentTypeMap["subcategory"]) =>
-    componentsApi.createComponent(pageSlug, {
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "subcategory"),
+  create: (pageId: string | number, data: ComponentTypeMap["subcategory"]) =>
+    componentsApi.createComponent(pageId, {
       component_type: "subcategory",
       data,
     }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["subcategory"]>
-  ) =>
-    componentsApi.updateComponent(
-      pageSlug,
-      componentId,
-      { data },
-      "subcategory"
-    ),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "subcategory"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "subcategory"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "subcategory"),
 };
 
 export const teamComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "team"),
-  create: (pageSlug: string, data: ComponentTypeMap["team"]) =>
-    componentsApi.createComponent(pageSlug, { component_type: "team", data }),
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "team"),
+  create: (pageId: string | number, data: ComponentTypeMap["team"]) =>
+    componentsApi.createComponent(pageId, { component_type: "team", data }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["team"]>
-  ) => componentsApi.updateComponent(pageSlug, componentId, { data }, "team"),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "team"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "team"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "team"),
 };
 
 export const componentOrdersApi = {
   updateComponentOrders: async (
-    pageSlug: string,
+    pageId: string | number, // Changed from pageSlug
     orderUpdates: OrderUpdate[]
   ): Promise<void> => {
     try {
-      // Process updates sequentially to avoid conflicts
-      for (const { componentId, order } of orderUpdates) {
+      for (const { id, order } of orderUpdates) {
         const response = await fetch(
-          `${API_BASE_URL}/api/pages/${pageSlug}/components/${componentId}/`,
+          `${API_BASE_URL}/api/pages/${pageId}/components/${id}/`,
           {
             method: "PATCH",
             headers: createHeaders(),
@@ -434,42 +419,35 @@ export const componentOrdersApi = {
 };
 
 export const newsletterComponentsApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "newsletter"),
-  create: (pageSlug: string, data: ComponentTypeMap["newsletter"]) =>
-    componentsApi.createComponent(pageSlug, {
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "newsletter"),
+  create: (pageId: string | number, data: ComponentTypeMap["newsletter"]) =>
+    componentsApi.createComponent(pageId, {
       component_type: "newsletter",
       data,
     }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["newsletter"]>
-  ) =>
-    componentsApi.updateComponent(
-      pageSlug,
-      componentId,
-      { data },
-      "newsletter"
-    ),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "newsletter"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "newsletter"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "newsletter"),
 };
 
 export const youtubeComponentApi = {
-  getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "youtube"),
-  create: (pageSlug: string, data: ComponentTypeMap["youtube"]) =>
-    componentsApi.createComponent(pageSlug, {
+  getAll: (pageId: string | number) =>
+    componentsApi.getComponentsByType(pageId, "youtube"),
+  create: (pageId: string | number, data: ComponentTypeMap["youtube"]) =>
+    componentsApi.createComponent(pageId, {
       component_type: "youtube",
       data,
     }),
   update: (
-    pageSlug: string,
-    componentId: string,
+    pageId: string | number,
+    id: string | number,
     data: Partial<ComponentTypeMap["youtube"]>
-  ) =>
-    componentsApi.updateComponent(pageSlug, componentId, { data }, "youtube"),
-  delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "youtube"),
+  ) => componentsApi.updateComponent(pageId, id, { data }, "youtube"),
+  delete: (pageId: string | number, id: string | number) =>
+    componentsApi.deleteComponent(pageId, id, "youtube"),
 };

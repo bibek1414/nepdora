@@ -11,6 +11,7 @@ import {
 } from "@/types/owner-site/components/footer";
 
 export const useFooterApi = {
+  // Get footer with preview status
   getFooter: async (): Promise<GetFooterResponse> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/footer/?status=preview`, {
@@ -26,6 +27,8 @@ export const useFooterApi = {
       message: data ? "Footer retrieved successfully" : "No footer found",
     };
   },
+
+  // Get published footer
   getFooterPublished: async (): Promise<GetFooterResponse> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/footer/`, {
@@ -42,6 +45,7 @@ export const useFooterApi = {
     };
   },
 
+  // Create footer
   createFooter: async (
     data: CreateFooterRequest
   ): Promise<CreateFooterResponse> => {
@@ -58,49 +62,55 @@ export const useFooterApi = {
 
     await handleApiError(response);
     const responseData = await response.json();
+
     return {
       data: responseData,
       message: "Footer created successfully",
     };
   },
 
+  // Update footer - ID in URL (RESTful approach)
   updateFooter: async (
     data: UpdateFooterRequest
   ): Promise<UpdateFooterResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-
-    console.log("Making PATCH request to:", `${API_BASE_URL}/api/footer/`);
+    console.log(
+      "Making PATCH request to:",
+      `${API_BASE_URL}/api/footer/${data.id}/`
+    );
     console.log("Update payload:", {
-      id: data.id,
       data: data.footerData,
+      ...(data.content && { content: data.content }),
     });
 
-    const response = await fetch(`${API_BASE_URL}/api/footer/`, {
+    const response = await fetch(`${API_BASE_URL}/api/footer/${data.id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify({
-        id: data.id,
-        data: data.footerData, // Use footerData from the request
-        ...(data.content && { content: data.content }), // Only include content if provided
+        data: data.footerData,
+        ...(data.content && { content: data.content }),
       }),
     });
 
     await handleApiError(response);
     const responseData = await response.json();
+
     return {
       data: responseData,
       message: "Footer updated successfully",
     };
   },
 
-  deleteFooter: async (): Promise<DeleteFooterResponse> => {
+  // Delete footer - ID in URL
+  deleteFooter: async (id: string): Promise<DeleteFooterResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/footer/`, {
+    const response = await fetch(`${API_BASE_URL}/api/footer/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });
 
     await handleApiError(response);
+
     return {
       message: "Footer deleted successfully",
     };

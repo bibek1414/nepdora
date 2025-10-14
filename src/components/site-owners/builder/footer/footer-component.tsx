@@ -149,7 +149,7 @@ export function Footer({
         console.log("Updating existing footer with ID:", footerIdToUse);
         const updateData = {
           id: footerIdToUse,
-          footerData: newData, // Changed from 'data' to 'footerData' to match your API type
+          footerData: newData,
         };
 
         const result = await updateFooterMutation.mutateAsync(updateData);
@@ -198,6 +198,12 @@ export function Footer({
   };
 
   const handleConfirmDelete = () => {
+    // Check if we have a footer to delete
+    if (!existingFooter?.data?.id && !existingFooterId && !footerId) {
+      console.error("No footer found to delete");
+      return;
+    }
+
     deleteFooterMutation.mutate();
     setIsDeleteDialogOpen(false);
   };

@@ -34,6 +34,8 @@ const Header: React.FC = () => {
             {navigationItems.map((_, index) => (
               <Skeleton key={index} className="h-5 w-20" />
             ))}
+            {/* Docs skeleton */}
+            <Skeleton className="h-5 w-16" />
           </div>
 
           {/* Desktop Auth Buttons Skeleton */}
@@ -74,6 +76,20 @@ const Header: React.FC = () => {
               {item}
             </Link>
           ))}
+          {/* Docs Link */}
+          <a
+            href="https://docs.nepdora.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button
+              variant="ghost"
+              size="lg"
+              className="text-muted-foreground hover:text-primary cursor-pointer text-lg font-medium transition-colors"
+            >
+              Docs
+            </Button>
+          </a>
         </div>
 
         {/* Desktop Auth Buttons */}
@@ -137,6 +153,16 @@ const Header: React.FC = () => {
                   {item}
                 </Link>
               ))}
+              {/* Mobile Docs Link */}
+              <a
+                href="https://docs.nepdora.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMenu}
+                className="text-muted-foreground hover:text-primary block cursor-pointer font-medium transition-colors"
+              >
+                Docs
+              </a>
             </div>
 
             {/* Mobile Auth Buttons */}

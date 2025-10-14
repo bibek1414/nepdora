@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ServiceDetail } from "@/components/site-owners/builder/services/services-details";
+import { ServiceDetail } from "@/components/site-owners/publish/services/services-details";
 import { use } from "react";
 
 interface ProductPageProps {

@@ -3,11 +3,11 @@ import { BuilderLayout } from "@/components/site-owners/builder/builder/builder-
 import { use } from "react";
 
 interface BuilderPageProps {
-  params: Promise<{ siteUser: string; pageSlug: string }>;
+  params: Promise<{ siteUser: string; pageId: number }>;
 }
 
 export default function BuilderPage({ params }: BuilderPageProps) {
-  const { siteUser, pageSlug } = use(params);
+  const { siteUser, pageId } = use(params);
 
-  return <BuilderLayout params={{ siteUser, pageSlug }} />;
+  return <BuilderLayout params={{ siteUser, pageId }} />;
 }

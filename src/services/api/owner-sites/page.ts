@@ -24,9 +24,12 @@ export const pageApi = {
     return response.json();
   },
 
-  getPage: async (slug: string): Promise<GetPageResponse> => {
+  // Get single page by id
+  getPage: async (id: number): Promise<GetPageResponse> => {
+    // Changed from slug: string to id: number
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/pages/${slug}/`, {
+    const response = await fetch(`${API_BASE_URL}/api/pages/${id}/`, {
+      // Use id in URL
       method: "GET",
       headers: createHeaders(),
     });
@@ -47,12 +50,14 @@ export const pageApi = {
     return response.json();
   },
 
+  // Update page by id
   updatePage: async (
-    slug: string,
+    id: number, // Changed from slug: string to id: number
     data: UpdatePageRequest
   ): Promise<UpdatePageResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/pages/${slug}/`, {
+    const response = await fetch(`${API_BASE_URL}/api/pages/${id}/`, {
+      // Use id in URL
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -62,9 +67,12 @@ export const pageApi = {
     return response.json();
   },
 
-  deletePage: async (slug: string): Promise<DeletePageResponse> => {
+  // Delete page by id
+  deletePage: async (id: number): Promise<DeletePageResponse> => {
+    // Changed from slug: string to id: number
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/pages/${slug}/`, {
+    const response = await fetch(`${API_BASE_URL}/api/pages/${id}/`, {
+      // Use id in URL
       method: "DELETE",
       headers: createHeaders(),
     });

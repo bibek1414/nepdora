@@ -11,7 +11,8 @@
     "format:check": "prettier --check .",
     "lint:fix": "next lint --fix",
     "prepare": "husky",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "lint:errors": "eslint . --ext .js,.jsx,.ts,.tsx --quiet"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

@@ -31,6 +31,7 @@ import { NewsletterComponent } from "@/components/site-owners/builder/newsletter
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
 import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
+
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -72,7 +73,7 @@ interface PageComponent {
 interface PageComponentRendererProps {
   components: PageComponent[];
   siteUser: string;
-  pageSlug: string;
+  pageId: string | number;
   onProductClick: (productId: number, order: number) => void;
   onBlogClick: (blogSlug: string, order: number) => void;
   onServiceClick?: (serviceSlug: string, order: number) => void;
@@ -102,7 +103,7 @@ interface PageComponentRendererProps {
 export function PageComponentRenderer({
   components,
   siteUser,
-  pageSlug,
+  pageId,
   onProductClick,
   onBlogClick,
   onServiceClick,
@@ -119,7 +120,7 @@ export function PageComponentRenderer({
             siteUser={siteUser}
             component={component as HeroComponentData}
             isEditable={false}
-            pageSlug={pageSlug}
+            pageId={pageId}
           />
         );
       case "about":
@@ -128,7 +129,7 @@ export function PageComponentRenderer({
             key={component.id}
             component={component as AboutUsComponentData}
             isEditable={false}
-            pageSlug={pageSlug}
+            pageId={pageId}
           />
         );
       case "products":
@@ -151,7 +152,7 @@ export function PageComponentRenderer({
             component={component as BlogComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as BlogComponentData)
             }
@@ -165,7 +166,7 @@ export function PageComponentRenderer({
             component={component as ServicesComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as ServicesComponentData)
             }
@@ -179,7 +180,7 @@ export function PageComponentRenderer({
             component={component as ContactComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as ContactComponentData)
             }
@@ -192,7 +193,7 @@ export function PageComponentRenderer({
             component={component as NewsletterComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as NewsletterComponentData)
             }
@@ -205,7 +206,7 @@ export function PageComponentRenderer({
             component={component as TeamComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as TeamComponentData)
             }
@@ -218,7 +219,7 @@ export function PageComponentRenderer({
             component={component as FAQComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as FAQComponentData)
             }
@@ -231,7 +232,7 @@ export function PageComponentRenderer({
             component={component as TestimonialsComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(
                 componentId,
@@ -247,7 +248,7 @@ export function PageComponentRenderer({
             component={component as CategoryComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as CategoryComponentData)
             }
@@ -261,7 +262,7 @@ export function PageComponentRenderer({
             component={component as SubCategoryComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(
                 componentId,
@@ -278,7 +279,7 @@ export function PageComponentRenderer({
             component={component as PortfolioComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as PortfolioComponentData)
             }
@@ -291,7 +292,7 @@ export function PageComponentRenderer({
             component={component as BannerComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as BannerComponentData)
             }
@@ -304,7 +305,7 @@ export function PageComponentRenderer({
             component={component as YouTubeComponentData}
             isEditable={false}
             siteUser={siteUser}
-            pageSlug={pageSlug}
+            pageId={pageId}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as YouTubeComponentData)
             }

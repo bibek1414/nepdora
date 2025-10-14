@@ -97,19 +97,19 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith("/admin") ||
       pathname.startsWith("/builder") ||
       pathname.startsWith("/support") ||
-      pathname.startsWith("/publish")
+      pathname.startsWith("/preview")
     ) {
       return NextResponse.next();
     }
 
-    // If URL already contains /preview/[subdomain], redirect to clean URL
-    if (pathname.startsWith(`/preview/${subdomain}`)) {
-      const cleanPath = pathname.replace(`/preview/${subdomain}`, "") || "/";
+    // If URL already contains /publish/[subdomain], redirect to clean URL
+    if (pathname.startsWith(`/publish/${subdomain}`)) {
+      const cleanPath = pathname.replace(`/publish/${subdomain}`, "") || "/";
       return NextResponse.redirect(new URL(cleanPath, request.url));
     }
 
-    // Rewrite all other subdomain routes to /preview/[subdomain]/[...path]
-    const newPath = `/preview/${subdomain}${pathname}`;
+    // Rewrite all other subdomain routes to /publish/[subdomain]/[...path]
+    const newPath = `/publish/${subdomain}${pathname}`;
     return NextResponse.rewrite(new URL(newPath, request.url));
   }
 

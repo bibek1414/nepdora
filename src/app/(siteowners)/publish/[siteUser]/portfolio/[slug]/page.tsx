@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PortfolioDetail } from "@/components/site-owners/builder/portfolio/portfolio-detail";
+import { PortfolioDetail } from "@/components/site-owners/publish/portfolio/portfolio-detail";
 import { use } from "react";
 
 interface ProductPageProps {

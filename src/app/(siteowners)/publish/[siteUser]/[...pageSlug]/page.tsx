@@ -4,21 +4,25 @@ import React from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { use } from "react";
 import { usePagePublished } from "@/hooks/publish/use-page-publish";
-
+import { useDomains } from "@/hooks/superadmin/use-domain";
 import { PageComponentRenderer } from "@/components/site-owners/publish/page-component-render";
 import { LoadingSpinner } from "@/components/site-owners/publish/loading-spinner";
+
 interface DynamicPageProps {
   params: Promise<{
     siteUser: string;
-    pageSlug?: string[];
+    pageId?: number[];
   }>;
 }
 
 export default function DynamicPage({ params }: DynamicPageProps) {
-  const { siteUser, pageSlug } = use(params);
+  const { siteUser, pageId } = use(params);
 
-  const currentPageSlug =
-    pageSlug && pageSlug.length > 0 ? pageSlug[0] : "home";
+  // Fetch all domains to validate the current domain
+  const { data: domainsData, isLoading: isDomainsLoading } = useDomains(1, 100);
+
+  // Get the pageId from the URL params (first element of the array)
+  const currentPageId = pageId && pageId.length > 0 ? pageId[0] : null;
 
   const {
     pageComponents,
@@ -30,20 +34,45 @@ export default function DynamicPage({ params }: DynamicPageProps) {
     handleCategoryClick,
     handleSubCategoryClick,
     handleComponentUpdate,
-  } = usePagePublished(siteUser, currentPageSlug);
+  } = usePagePublished(siteUser, currentPageId || "");
 
-  if (isComponentsLoading) {
-    return <LoadingSpinner message={`Loading ${currentPageSlug} page...`} />;
+  // Check if domain exists
+  const domainExists = domainsData?.results?.some(
+    domain => domain.tenant.schema_name === siteUser
+  );
+
+  if (isDomainsLoading || isComponentsLoading) {
+    return <LoadingSpinner message={`Loading page...`} />;
+  }
+
+  // Show error if domain doesn't exist
+  if (!domainExists) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-8">
+        <div className="text-center">
+          <h1 className="text-6xl font-bold text-gray-800">404</h1>
+          <h2 className="mt-4 text-2xl font-semibold text-gray-700">
+            Domain Not Found
+          </h2>
+          <p className="mt-2 text-lg text-gray-600">
+            The domain{" "}
+            <span className="font-mono font-semibold">{siteUser}</span>{" "}
+            doesn&apos;t exist.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   const hasContent = pageComponents.length > 0;
+  const pageName = currentPageId ? `Page ${currentPageId}` : "Home";
 
   return (
     <>
       <PageComponentRenderer
         components={pageComponents}
         siteUser={siteUser}
-        pageSlug={currentPageSlug}
+        pageId={currentPageId || ""}
         onProductClick={handleProductClick}
         onBlogClick={handleBlogClick}
         onComponentUpdate={handleComponentUpdate}
@@ -58,8 +87,8 @@ export default function DynamicPage({ params }: DynamicPageProps) {
             {/* Heading */}
             <h1 className="text-6xl font-bold text-gray-800">404</h1>
             <h3 className="text-foreground mb-2 text-xl font-semibold">
-              Oops! The &apos;
-              {currentPageSlug}&apos; page you’re looking for doesn’t exist.
+              Oops! The &apos;{pageName}&apos; page you&apos;re looking for
+              doesn&apos;t exist.
             </h3>
 
             <Button

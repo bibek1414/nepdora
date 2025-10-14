@@ -23,6 +23,7 @@ import { PortfolioComponentData } from "@/types/owner-site/components/portfolio"
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
+
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -61,12 +62,12 @@ interface PageComponent {
   order: number;
 }
 
-export function usePagePreview(siteUser: string, pageSlug: string) {
+export function usePagePreview(siteUser: string, pageId: string | number) {
   const router = useRouter();
 
-  // Fetch components for the current page
+  // Fetch components for the current page by pageId
   const { data: pageComponentsResponse, isLoading: isComponentsLoading } =
-    usePageComponentsQuery(pageSlug);
+    usePageComponentsQuery(pageId);
 
   // Process all page components with proper typing
   const pageComponents = React.useMemo((): PageComponent[] => {
@@ -121,10 +122,12 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
     console.log("Blog clicked in preview:", { blogSlug, order });
     router.push(`/preview/${siteUser}/blog/${blogSlug}`);
   };
+
   const handleServiceClick = (serviceSlug: string, order: number) => {
     console.log("Service clicked in preview:", { serviceSlug, order });
     router.push(`/preview/${siteUser}/services/${serviceSlug}`);
   };
+
   const handleCategoryClick = (categoryId: number, order: number) => {
     console.log("Category clicked in preview:", { categoryId, order });
     router.push(`/preview/${siteUser}/categories/${categoryId}`);

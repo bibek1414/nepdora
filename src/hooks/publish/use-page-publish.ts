@@ -61,12 +61,12 @@ interface PageComponent {
   order: number;
 }
 
-export function usePagePublished(siteUser: string, pageSlug: string) {
+export function usePagePublished(siteUser: string, pageId: string | number) {
   const router = useRouter();
 
-  // Fetch components for the current page
+  // Fetch components for the current page by pageId
   const { data: pageComponentsResponse, isLoading: isComponentsLoading } =
-    usePageComponentsQueryPublished(pageSlug);
+    usePageComponentsQueryPublished(pageId);
 
   // Process all page components with proper typing
   const pageComponents = React.useMemo((): PageComponent[] => {
@@ -109,33 +109,33 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
 
   // Navigation handlers
   const handleBacktoHome = () => {
-    router.push(`/preview/${siteUser}`);
+    router.push(`/publish/${siteUser}`);
   };
 
   const handleProductClick = (productId: number, order: number) => {
-    console.log("Product clicked in preview:", { productId, order });
-    router.push(`/preview/${siteUser}/products/${productId}`);
+    console.log("Product clicked in publish:", { productId, order });
+    router.push(`/publish/${siteUser}/products/${productId}`);
   };
 
   const handleBlogClick = (blogSlug: string, order: number) => {
-    console.log("Blog clicked in preview:", { blogSlug, order });
-    router.push(`/preview/${siteUser}/blog/${blogSlug}`);
+    console.log("Blog clicked in publish:", { blogSlug, order });
+    router.push(`/publish/${siteUser}/blog/${blogSlug}`);
   };
   const handleServiceClick = (serviceSlug: string, order: number) => {
-    console.log("Service clicked in preview:", { serviceSlug, order });
-    router.push(`/preview/${siteUser}/services/${serviceSlug}`);
+    console.log("Service clicked in publish:", { serviceSlug, order });
+    router.push(`/publish/${siteUser}/services/${serviceSlug}`);
   };
   const handleCategoryClick = (categoryId: number, order: number) => {
-    console.log("Category clicked in preview:", { categoryId, order });
-    router.push(`/preview/${siteUser}/categories/${categoryId}`);
+    console.log("Category clicked in publish:", { categoryId, order });
+    router.push(`/publish/${siteUser}/categories/${categoryId}`);
   };
 
   const handleSubCategoryClick = (subcategoryId: number, order: number) => {
-    console.log("SubCategory clicked in preview:", { subcategoryId, order });
-    router.push(`/preview/${siteUser}/subcategories/${subcategoryId}`);
+    console.log("SubCategory clicked in publish:", { subcategoryId, order });
+    router.push(`/publish/${siteUser}/subcategories/${subcategoryId}`);
   };
 
-  // Component update handlers (not used in preview mode)
+  // Component update handlers (not used in publish mode)
   const handleComponentUpdate = (
     componentId: string,
     newData:
@@ -155,7 +155,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
       | BannerComponentData
       | YouTubeComponentData
   ) => {
-    console.log("Component update in preview (not applied):", {
+    console.log("Component update in publish (not applied):", {
       componentId,
       newData,
     });
