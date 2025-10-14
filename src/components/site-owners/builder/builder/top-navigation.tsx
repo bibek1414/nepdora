@@ -10,10 +10,10 @@ import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
 
 interface TopNavigationProps {
   pages: Page[];
-  currentPageId: number; // Changed from currentPage: string
-  onPageChange: (pageId: number) => void; // Changed from pageSlug: string
+  currentPageId: number;
+  onPageChange: (pageId: number) => void;
   onPageCreated: (page: Page) => void;
-  onPageDeleted: (deletedId: number) => void; // Changed from deletedSlug: string
+  onPageDeleted: (deletedId: number) => void;
   siteUser: string;
 }
 

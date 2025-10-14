@@ -25,7 +25,7 @@ export const componentsApi = {
   getPageComponents: async <
     T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
   >(
-    pageId: string | number // Changed from pageSlug
+    pageId: string | number
   ): Promise<ComponentResponse<T>[]> => {
     try {
       const response = await fetch(
@@ -54,7 +54,7 @@ export const componentsApi = {
   getPageComponentsPublished: async <
     T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
   >(
-    pageId: string | number // Changed from pageSlug
+    pageId: string | number
   ): Promise<ComponentResponse<T>[]> => {
     try {
       const response = await fetch(
@@ -82,7 +82,7 @@ export const componentsApi = {
 
   // Create a new component
   createComponent: async <T extends keyof ComponentTypeMap>(
-    pageId: string | number, // Changed from pageSlug
+    pageId: string | number,
     payload: CreateComponentRequest<T>,
     existingComponents?: ComponentResponse[]
   ): Promise<ComponentResponse<T>> => {
@@ -136,7 +136,7 @@ export const componentsApi = {
 
   // Update an existing component
   updateComponent: async <T extends keyof ComponentTypeMap>(
-    pageId: string | number, // Changed from pageSlug
+    pageId: string | number,
     id: string | number, // Changed from componentId
     payload: UpdateComponentRequest<T>,
     componentType: T
@@ -177,7 +177,7 @@ export const componentsApi = {
 
   // Delete a component
   deleteComponent: async (
-    pageId: string | number, // Changed from pageSlug
+    pageId: string | number,
     id: string | number, // Changed from componentId
     componentType: keyof ComponentTypeMap
   ): Promise<void> => {
@@ -200,7 +200,7 @@ export const componentsApi = {
 
   // Get components by type
   getComponentsByType: async <T extends keyof ComponentTypeMap>(
-    pageId: string | number, // Changed from pageSlug
+    pageId: string | number,
     componentType: T
   ): Promise<ComponentResponse<T>[]> => {
     const allComponents = await componentsApi.getPageComponents(pageId);
@@ -212,7 +212,7 @@ export const componentsApi = {
 
   // Get single component by id
   getComponent: async <T extends keyof ComponentTypeMap>(
-    pageId: string | number, // Changed from pageSlug
+    pageId: string | number,
     id: string | number // Changed from componentId
   ): Promise<ComponentResponse<T> | null> => {
     const allComponents = await componentsApi.getPageComponents(pageId);
@@ -395,7 +395,7 @@ export const teamComponentsApi = {
 
 export const componentOrdersApi = {
   updateComponentOrders: async (
-    pageId: string | number, // Changed from pageSlug
+    pageId: string | number,
     orderUpdates: OrderUpdate[]
   ): Promise<void> => {
     try {

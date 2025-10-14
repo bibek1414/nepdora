@@ -14,7 +14,7 @@ import {
 export const usePageComponentsQuery = <
   T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
 >(
-  pageId: string | number // Changed from pageSlug
+  pageId: string | number
 ) => {
   return useQuery({
     queryKey: ["pageComponents", pageId],
@@ -26,7 +26,7 @@ export const usePageComponentsQuery = <
 export const usePageComponentsQueryPublished = <
   T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
 >(
-  pageId: string | number // Changed from pageSlug
+  pageId: string | number
 ) => {
   return useQuery({
     queryKey: ["pageComponents", pageId],
@@ -37,7 +37,7 @@ export const usePageComponentsQueryPublished = <
 
 // Generic hook for fetching components by type
 export const useComponentsByTypeQuery = <T extends keyof ComponentTypeMap>(
-  pageId: string | number, // Changed from pageSlug
+  pageId: string | number,
   componentType: T
 ) => {
   return useQuery({
@@ -49,7 +49,7 @@ export const useComponentsByTypeQuery = <T extends keyof ComponentTypeMap>(
 
 // Generic hook for creating components
 export const useCreateComponentMutation = <T extends keyof ComponentTypeMap>(
-  pageId: string | number, // Changed from pageSlug
+  pageId: string | number,
   componentType: T
 ) => {
   const queryClient = useQueryClient();
@@ -85,7 +85,7 @@ export const useCreateComponentMutation = <T extends keyof ComponentTypeMap>(
 
 // Generic hook for updating components
 export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
-  pageId: string | number, // Changed from pageSlug
+  pageId: string | number,
   componentType: T
 ) => {
   const queryClient = useQueryClient();
@@ -117,7 +117,7 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
 
 // Generic hook for deleting components
 export const useDeleteComponentMutation = (
-  pageId: string | number, // Changed from pageSlug
+  pageId: string | number,
   componentType: keyof ComponentTypeMap
 ) => {
   const queryClient = useQueryClient();
