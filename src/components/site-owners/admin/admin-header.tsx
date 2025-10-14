@@ -86,6 +86,20 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
 
         <div className="flex items-center space-x-2">
           <Link
+            href={`/publish/${user.subDomain}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+            >
+              Live Site
+              <ExternalLink className="mr-2" />
+            </Button>
+          </Link>
+          <Link
             href={`/preview/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"

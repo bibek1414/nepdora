@@ -45,6 +45,36 @@ const ContactDetailsDialog = ({
     }
   }, [currentContactId, contacts]);
 
+  // Keyboard navigation handler
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!isOpen || contacts.length <= 1) return;
+
+      switch (event.key) {
+        case "ArrowLeft":
+          event.preventDefault();
+          handlePrevious();
+          break;
+        case "ArrowRight":
+          event.preventDefault();
+          handleNext();
+          break;
+        case "Escape":
+          event.preventDefault();
+          onClose();
+          break;
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, currentIndex, contacts.length]);
+
   const handlePrevious = () => {
     if (currentIndex > 0) {
       const newIndex = currentIndex - 1;
@@ -112,18 +142,20 @@ const ContactDetailsDialog = ({
         <div className="relative max-h-[95vh] w-full overflow-y-auto rounded-lg bg-white shadow">
           {/* Header with navigation indicator */}
           <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-6 py-4">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900">
-                Contact Inquiry #{currentContact.id}
-              </h2>
-              <p className="text-sm text-gray-500">
-                {contacts.length > 1 && (
-                  <span className="mr-2">
-                    {currentIndex + 1} of {contacts.length}
-                  </span>
-                )}
-                Submitted on {formatDate(currentContact.created_at)}
-              </p>
+            <div className="flex items-center gap-4">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Contact Inquiry #{currentContact.id}
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Submitted on {formatDate(currentContact.created_at)}
+                </p>
+              </div>
+              {contacts.length > 1 && (
+                <div className="rounded bg-gray-100 px-2 py-1 text-sm text-gray-500">
+                  {currentIndex + 1} of {contacts.length}
+                </div>
+              )}
             </div>
             <button
               onClick={onClose}

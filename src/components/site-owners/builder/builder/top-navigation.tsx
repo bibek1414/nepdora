@@ -4,7 +4,14 @@ import { DeletePageDialog } from "@/components/site-owners/builder/new-page/dele
 import { ThemeDialog } from "@/components/site-owners/builder/theme/theme-dialog";
 import { Button } from "@/components/ui/button";
 import { Page } from "@/types/owner-site/components/page";
-import { ArrowLeft, Palette, Eye, Upload, ChevronDown } from "lucide-react";
+import {
+  ArrowLeft,
+  Palette,
+  Eye,
+  Upload,
+  ChevronDown,
+  ExternalLink,
+} from "lucide-react";
 import Link from "next/link";
 import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
 interface TopNavigationProps {
@@ -102,7 +109,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             Theme Settings
           </Button>
           <Link
-            href={`/publish/${siteUser}/${currentPage}`}
+            href={`/publish/${siteUser}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -110,8 +117,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
               variant="outline"
               className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
             >
-              <Eye className="mr-2 h-4 w-4" />
-              Live
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Live Site
             </Button>
           </Link>
           <Link

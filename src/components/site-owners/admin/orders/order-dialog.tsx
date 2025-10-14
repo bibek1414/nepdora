@@ -119,6 +119,36 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
     }
   }, [currentOrderId, orders]);
 
+  // Keyboard navigation handler
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!isOpen || orders.length <= 1) return;
+
+      switch (event.key) {
+        case "ArrowLeft":
+          event.preventDefault();
+          handlePrevious();
+          break;
+        case "ArrowRight":
+          event.preventDefault();
+          handleNext();
+          break;
+        case "Escape":
+          event.preventDefault();
+          onClose();
+          break;
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, currentIndex, orders.length]);
+
   const handlePrevious = () => {
     if (currentIndex > 0) {
       const newIndex = currentIndex - 1;
@@ -201,10 +231,15 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
         <div className="relative max-h-[95vh] w-full overflow-y-auto rounded-lg bg-white shadow">
           {/* Header with navigation indicator */}
           <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white p-4">
-            <div className="px-2">
+            <div className="flex items-center gap-4">
               <h2 className="text-sm font-semibold">
                 Order #{currentOrder.order_number}
               </h2>
+              {orders.length > 1 && (
+                <div className="text-xs text-gray-500">
+                  {currentIndex + 1} of {orders.length}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
