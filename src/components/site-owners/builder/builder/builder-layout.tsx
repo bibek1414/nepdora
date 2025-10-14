@@ -75,13 +75,13 @@ import { toast } from "sonner";
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
-    pageId: number;
+    pageSlug: string;
   };
 }
 
 export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const router = useRouter();
-  const { siteUser, pageId } = params;
+  const { siteUser, pageSlug } = params;
 
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const createNavbarMutation = useCreateNavbarMutation();
@@ -99,7 +99,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     data: pageComponentsResponse,
     isLoading: isPageComponentsLoading,
     error: pageComponentsError,
-  } = usePageComponentsQuery(pageId);
+  } = usePageComponentsQuery(pageSlug);
 
   const [droppedComponents, setDroppedComponents] = useState<
     ComponentResponse[]
@@ -135,59 +135,65 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isPageTemplateDialogOpen, setIsPageTemplateDialogOpen] =
     useState(false);
-  // Use pageId from URL params as current page
-
+  // Use pageSlug from URL params as current page
+  const currentPage = pageSlug;
   const queryClient = useQueryClient();
   // Unified component mutations
-  const createHeroMutation = useCreateComponentMutation(pageId, "hero");
-  const createAboutUsMutation = useCreateComponentMutation(pageId, "about");
+  const createHeroMutation = useCreateComponentMutation(currentPage, "hero");
+  const createAboutUsMutation = useCreateComponentMutation(
+    currentPage,
+    "about"
+  );
   const createProductsComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "products"
   );
   const createCategoryComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "category"
   );
   const createSubCategoryComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "subcategory"
   );
   const createBlogComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "blog"
   );
   const createServicesComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "services"
   );
   const createContactComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "contact"
   );
   const createTeamComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "team"
   );
   const createTestimonialsComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "testimonials"
   );
-  const createFAQComponentMutation = useCreateComponentMutation(pageId, "faq");
+  const createFAQComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "faq"
+  );
   const createPortfolioComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "portfolio"
   );
   const createBannerComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "banner"
   );
   const createNewsletterComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "newsletter"
   );
   const createYouTubeComponentMutation = useCreateComponentMutation(
-    pageId,
+    currentPage,
     "youtube"
   );
   // Process page components with proper typing
@@ -267,9 +273,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         {
           onSuccess: (data: Page) => {
             setIsCreatingHomePage(false);
-            if (pageId !== data.id) {
-              // Compare with ID, not slug
-              router.push(`/builder/${siteUser}/${data.id}`);
+            if (pageSlug !== data.slug) {
+              router.push(`/builder/${siteUser}/${data.slug}`);
             }
           },
           onError: error => {
@@ -286,39 +291,42 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     isCreatingHomePage,
     router,
     siteUser,
-    pageId,
+    pageSlug,
   ]);
 
   // Validate current page exists
   useEffect(() => {
     if (pagesData && pagesData.length > 0) {
-      const pageExists = pagesData.find(page => page.id === pageId);
+      const pageExists = pagesData.find(page => page.slug === pageSlug);
 
       if (!pageExists && !isCreatingHomePage) {
         const firstPage = pagesData[0];
-        router.push(`/builder/${siteUser}/${firstPage.id}`);
+        router.push(`/builder/${siteUser}/${firstPage.slug}`);
       }
     }
-  }, [pagesData, pageId, router, siteUser, isCreatingHomePage]);
+  }, [pagesData, pageSlug, router, siteUser, isCreatingHomePage]);
 
   // Get current page data
-  const currentPageData = pagesData.find(page => page.id === pageId);
-  const currentPage = currentPageData?.slug || "home";
+  const currentPageData = pagesData.find(page => page.slug === currentPage);
 
   // Handle page change
-  const handlePageChange = (newPageId: number) => {
-    router.push(`/builder/${siteUser}/${newPageId}`);
+  const handlePageChange = (newPageSlug: string) => {
+    router.push(`/builder/${siteUser}/${newPageSlug}`);
   };
 
+  // Handle page creation and navigation
   const handlePageCreated = (page: Page) => {
-    router.push(`/builder/${siteUser}/${page.id}`);
+    router.push(`/builder/${siteUser}/${page.slug}`);
   };
 
-  const handlePageDeleted = (deletedId: number) => {
-    if (pageId === deletedId && pagesData.length > 1) {
-      const remainingPages = pagesData.filter(page => page.id !== deletedId);
+  // Handle page deletion and navigation
+  const handlePageDeleted = (deletedSlug: string) => {
+    if (currentPage === deletedSlug && pagesData.length > 1) {
+      const remainingPages = pagesData.filter(
+        page => page.slug !== deletedSlug
+      );
       if (remainingPages.length > 0) {
-        router.push(`/builder/${siteUser}/${remainingPages[0].id}`);
+        router.push(`/builder/${siteUser}/${remainingPages[0].slug}`);
       }
     }
   };
@@ -392,7 +400,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       );
       // Get existing components for proper ordering (should be empty for new page)
       const existingComponents = await componentsApi.getPageComponents(
-        newPage.id
+        newPage.slug
       );
 
       // Create all the components for this page
@@ -404,7 +412,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
         // Create component using the API directly with the NEW page slug
         await componentsApi.createComponent(
-          newPage.id, // Use the new page slug, not currentPage!
+          newPage.slug, // Use the new page slug, not currentPage!
           {
             component_type: component.type as keyof ComponentTypeMap,
             data: componentData,
@@ -416,12 +424,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
       // Invalidate queries to refresh the UI when we navigate to the new page
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", newPage.id],
+        queryKey: ["pageComponents", newPage.slug],
       });
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
 
       // Navigate to the new page
-      router.push(`/builder/${siteUser}/${newPage.id}`);
+      router.push(`/builder/${siteUser}/${newPage.slug}`);
 
       // Close the dialog
       setIsPageTemplateDialogOpen(false);
@@ -1123,7 +1131,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
       <TopNavigation
         pages={pagesData}
-        currentPageId={pageId}
+        currentPage={currentPage}
         siteUser={siteUser}
         onPageChange={handlePageChange}
         onPageCreated={handlePageCreated}
@@ -1155,7 +1163,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddNavbar={() => setIsNavbarDialogOpen(true)}
                   footer={footerResponse?.data}
                   onAddFooter={() => setIsFooterDialogOpen(true)}
-                  currentPageId={pageId}
+                  currentPageSlug={currentPage}
                   pageComponents={pageComponents}
                   isLoading={isPageComponentsLoading}
                   error={pageComponentsError}

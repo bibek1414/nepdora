@@ -61,7 +61,7 @@ interface CanvasAreaProps {
   onAddNavbar: () => void;
   footer?: Footer | null;
   onAddFooter: () => void;
-  currentPageId: number | string;
+  currentPageSlug: string;
   pageComponents: ComponentResponse[];
   isLoading: boolean;
   error: Error | null;
@@ -88,7 +88,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddNavbar,
   footer,
   onAddFooter,
-  currentPageId,
+  currentPageSlug,
   pageComponents: initialPageComponents,
   isLoading,
   error,
@@ -131,7 +131,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   }, [initialPageComponents]);
 
   // Hook for updating component order
-  const updateOrderMutation = useUpdateComponentOrderMutation(currentPageId);
+  const updateOrderMutation = useUpdateComponentOrderMutation(currentPageSlug);
 
   // Handle component reordering (used by both drag-drop and arrows)
   const handleReorder = useCallback(
@@ -152,7 +152,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
       // Create the order updates for the backend
       const orderUpdates = updatedComponents.map((component, index) => ({
-        id: component.id,
+        componentId: component.component_id,
         order: index,
       }));
 
@@ -205,7 +205,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const renderComponent = (component: ComponentResponse, index: number) => {
     const commonProps = {
       isEditable: true,
-      pageId: currentPageId,
+      pageSlug: currentPageSlug,
     };
 
     let componentElement: React.ReactNode;

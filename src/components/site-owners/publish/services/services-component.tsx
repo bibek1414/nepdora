@@ -33,7 +33,7 @@ interface ServicesComponentProps {
   component: ServicesComponentData;
   isEditable?: boolean;
   siteUser?: string;
-  pageId?: string | number;
+  pageSlug?: string;
   onUpdate?: (componentId: string, newData: ServicesComponentData) => void;
   onServiceClick?: (serviceSlug: string, order: number) => void;
 }
@@ -42,7 +42,7 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
   component,
   isEditable = false,
   siteUser,
-  pageId,
+  pageSlug,
   onUpdate,
   onServiceClick,
 }) => {
@@ -56,13 +56,13 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
     showDate = true,
   } = component.data || {};
 
-  // Delete and update mutation hooks
+  // Delete and update mutation hooks - changed from 'blog' to 'services'
   const deleteServicesComponent = useDeleteComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "services"
   );
   const updateServicesComponent = useUpdateComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "services"
   );
 
@@ -83,20 +83,17 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
   const totalPages = Math.ceil(totalServices / pageSize);
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
+    const componentId = component.component_id || component.id?.toString();
+    if (!componentId) return;
 
     updateServicesComponent.mutate(
       {
-        id: componentId,
+        componentId,
         data: {
           ...component.data,
           title: newTitle,
@@ -113,7 +110,7 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
     );
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(componentId, {
         ...component,
         data: {
           ...component.data,
@@ -124,20 +121,17 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
+    const componentId = component.component_id || component.id?.toString();
+    if (!componentId) return;
 
     updateServicesComponent.mutate(
       {
-        id: componentId,
+        componentId,
         data: {
           ...component.data,
           subtitle: newSubtitle,
@@ -154,7 +148,7 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
     );
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(componentId, {
         ...component,
         data: {
           ...component.data,
@@ -172,26 +166,23 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
     setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
+    const componentId = component.component_id || component.id?.toString();
+    if (componentId) {
+      deleteServicesComponent.mutate(componentId);
     }
-
-    deleteServicesComponent.mutate(componentId);
     setIsDeleteDialogOpen(false);
   };
 

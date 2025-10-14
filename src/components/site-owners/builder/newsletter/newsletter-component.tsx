@@ -24,13 +24,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import { Trash2, Mail } from "lucide-react";
-import { toast } from "sonner";
 
 interface NewsletterComponentProps {
   component: NewsletterComponentData;
   isEditable?: boolean;
   siteUser?: string;
-  pageId?: string | number;
+  pageSlug?: string;
   onUpdate?: (componentId: string, newData: NewsletterComponentData) => void;
 }
 
@@ -38,7 +37,7 @@ export const NewsletterComponent: React.FC<NewsletterComponentProps> = ({
   component,
   isEditable = false,
   siteUser,
-  pageId,
+  pageSlug,
   onUpdate,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -51,80 +50,51 @@ export const NewsletterComponent: React.FC<NewsletterComponentProps> = ({
 
   // Use unified mutation hooks
   const deleteNewsletterComponent = useDeleteComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "newsletter"
   );
   const updateNewsletterComponent = useUpdateComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "newsletter"
   );
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
-
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
-    }
-
     setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
-    }
-
-    deleteNewsletterComponent.mutate(componentId);
+    deleteNewsletterComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
-      return;
-    }
-
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
     // Update component data via unified API
-    updateNewsletterComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
+    updateNewsletterComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        title: newTitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update title", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     // Also update local state if onUpdate is provided
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,
@@ -135,39 +105,23 @@ export const NewsletterComponent: React.FC<NewsletterComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
-      return;
-    }
-
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
     // Update component data via unified API
-    updateNewsletterComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
+    updateNewsletterComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        subtitle: newSubtitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update subtitle", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     // Also update local state if onUpdate is provided
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,
@@ -178,36 +132,20 @@ export const NewsletterComponent: React.FC<NewsletterComponentProps> = ({
   };
 
   const handleDataChange = (newData: NewsletterData) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
-      return;
-    }
-
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
     // Update component data via unified API
-    updateNewsletterComponent.mutate(
-      {
-        id: componentId,
-        data: newData,
-      },
-      {
-        onError: error => {
-          toast.error("Failed to update newsletter data", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    updateNewsletterComponent.mutate({
+      componentId: component.component_id,
+      data: newData,
+    });
 
     // Also update local state if onUpdate is provided
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: newData,
       });

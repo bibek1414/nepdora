@@ -36,7 +36,7 @@ import { EditableText } from "@/components/ui/editable-text";
 interface PortfolioComponentProps {
   component: PortfolioComponentData;
   isEditable?: boolean;
-  pageId: number | string;
+  pageSlug: string;
   siteUser: string;
   onUpdate?: (componentId: string, newData: PortfolioComponentData) => void;
   onPortfolioClick?: (portfolioSlug: string, order: number) => void;
@@ -45,7 +45,7 @@ interface PortfolioComponentProps {
 export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   component,
   isEditable = false,
-  pageId,
+  pageSlug,
   siteUser,
   onPortfolioClick,
 }) => {
@@ -54,11 +54,11 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   const [isAnimating, setIsAnimating] = useState(false);
 
   const deletePortfolioMutation = useDeleteComponentMutation(
-    pageId,
+    pageSlug,
     "portfolio"
   );
   const updatePortfolioMutation = useUpdateComponentMutation(
-    pageId,
+    pageSlug,
     "portfolio"
   );
 
@@ -67,6 +67,11 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
     title = "Our Portfolio",
     subtitle,
     style = "portfolio-1",
+    columns = 3,
+    showCategories = true,
+    showTechnologies = true,
+    showFilters = true,
+    showPagination = false,
   } = component.data || {};
 
   // Fetch portfolios from API
@@ -81,9 +86,11 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   const totalPortfolios = data?.count || 0;
 
   const handleUpdate = (updatedData: Partial<PortfolioData>) => {
+    const componentId = component.component_id || component.id.toString();
+
     updatePortfolioMutation.mutate(
       {
-        id: component.id,
+        componentId,
         data: updatedData,
       },
       {
@@ -117,7 +124,7 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   };
 
   const handleDelete = () => {
-    const componentId = component.id;
+    const componentId = component.component_id || component.id.toString();
     const loadingToast = toast.loading("Deleting portfolio section...");
 
     deletePortfolioMutation.mutate(componentId, {

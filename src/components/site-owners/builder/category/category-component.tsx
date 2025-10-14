@@ -5,8 +5,8 @@ import {
 } from "@/types/owner-site/components/category";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import {
-  useDeleteCategoryComponentMutation,
-  useUpdateCategoryComponentMutation,
+  useDeleteComponentMutation,
+  useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/unified";
 import { CategoryCard1 } from "./category-card-1";
 import { CategoryCard2 } from "./category-card-2";
@@ -33,17 +33,14 @@ import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import Pagination from "@/components/ui/pagination";
 import Link from "next/link";
-import { toast } from "sonner";
-
 interface CategoryComponentProps {
   component: CategoryComponentData;
   isEditable?: boolean;
   siteUser?: string;
-  pageId?: string | number;
+  pageSlug?: string;
   onUpdate?: (componentId: string, newData: CategoryComponentData) => void;
   onCategoryClick?: (categoryId: number, order: number) => void;
 }
-
 const useDebouncedCallback = <T extends unknown[]>(
   callback: (...args: T) => void,
   delay: number
@@ -63,12 +60,11 @@ const useDebouncedCallback = <T extends unknown[]>(
     [callback, delay]
   );
 };
-
 export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   component,
   isEditable = false,
   siteUser,
-  pageId,
+  pageSlug,
   onUpdate,
   onCategoryClick,
 }) => {
@@ -86,18 +82,17 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   } = component.data || {};
 
   // Use unified mutation hooks
-  const deleteCategoryComponent = useDeleteCategoryComponentMutation();
-  const updateCategoryComponent = useUpdateCategoryComponentMutation();
-
+  const deleteCategoryComponent = useDeleteComponentMutation(
+    pageSlug || "",
+    "category"
+  );
+  const updateCategoryComponent = useUpdateComponentMutation(
+    pageSlug || "",
+    "category"
+  );
   const debouncedSave = useDebouncedCallback(
     (updatedData: Partial<FeaturedContent>) => {
-      if (!pageId || !isEditable) return;
-
-      const componentId = component.id;
-      if (!componentId) {
-        console.error("Component id is required for updating");
-        return;
-      }
+      if (!pageSlug || !isEditable) return;
 
       const updatedComponentData = {
         ...component.data,
@@ -108,13 +103,12 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
       };
 
       updateCategoryComponent.mutate({
-        pageId,
-        id: componentId,
+        componentId: component.component_id,
         data: updatedComponentData,
       });
 
       if (onUpdate) {
-        onUpdate(componentId.toString(), {
+        onUpdate(component.component_id, {
           ...component,
           data: updatedComponentData,
         });
@@ -129,7 +123,6 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
     },
     [debouncedSave]
   );
-
   // Get categories with pagination
   const { data, isLoading, error } = useCategories();
 
@@ -145,67 +138,41 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
     setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
-    }
-
-    deleteCategoryComponent.mutate({
-      pageId,
-      id: componentId,
-    });
+    deleteCategoryComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
-      return;
-    }
-
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
     // Update component data via unified API
-    updateCategoryComponent.mutate(
-      {
-        pageId,
-        id: componentId,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
+    updateCategoryComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        title: newTitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update title", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     // Also update local state if onUpdate is provided
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,
@@ -216,40 +183,23 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
-      return;
-    }
-
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
     // Update component data via unified API
-    updateCategoryComponent.mutate(
-      {
-        pageId,
-        id: componentId,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
+    updateCategoryComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        subtitle: newSubtitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update subtitle", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     // Also update local state if onUpdate is provided
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,
@@ -314,13 +264,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
         siteUser={siteUser}
         initialFeaturedContent={component.data.featuredContent}
         onFeaturedContentUpdate={updatedData => {
-          if (!pageId || !isEditable) return;
-
-          const componentId = component.id;
-          if (!componentId) {
-            console.error("Component id is required for updating");
-            return;
-          }
+          if (!pageSlug || !isEditable) return;
 
           const updatedComponentData = {
             ...component.data,
@@ -331,13 +275,12 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
           };
 
           updateCategoryComponent.mutate({
-            pageId,
-            id: componentId,
+            componentId: component.component_id,
             data: updatedComponentData,
           });
 
           if (onUpdate) {
-            onUpdate(componentId.toString(), {
+            onUpdate(component.component_id, {
               ...component,
               data: updatedComponentData,
             });

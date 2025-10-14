@@ -16,7 +16,6 @@ export const useFooterQuery = () => {
     retry: 2,
   });
 };
-
 export const useFooterQueryPublished = () => {
   return useQuery({
     queryKey: FOOTER_QUERY_KEY,
@@ -78,7 +77,7 @@ export const useCreateFooterMutation = () => {
           if (footerId) {
             try {
               // Delete the existing footer
-              await useFooterApi.deleteFooter(footerId);
+              await useFooterApi.deleteFooter();
 
               // Wait a brief moment to ensure deletion is complete
               await new Promise(resolve => setTimeout(resolve, 300));
@@ -139,18 +138,7 @@ export const useDeleteFooterMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => {
-      // Get footer ID from cache
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const existingFooter = queryClient.getQueryData(FOOTER_QUERY_KEY) as any;
-      const footerId = existingFooter?.data?.id;
-
-      if (!footerId) {
-        throw new Error("No footer found to delete");
-      }
-
-      return useFooterApi.deleteFooter(footerId);
-    },
+    mutationFn: () => useFooterApi.deleteFooter(),
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
       queryClient.setQueryData(FOOTER_QUERY_KEY, null);

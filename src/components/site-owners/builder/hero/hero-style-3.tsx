@@ -269,7 +269,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                 {/* Balance Badge - Editable */}
                 {data.showBalanceBadge !== false && (
                   <div
-                    className="absolute top-4 right-4 z-10 rounded-lg px-4 py-2 text-sm"
+                    className="absolute top-4 right-4 rounded-lg px-4 py-2 text-sm"
                     style={{
                       backgroundColor: theme.colors.text,
                       color: theme.colors.background,

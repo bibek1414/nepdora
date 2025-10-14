@@ -34,24 +34,26 @@ import { HeroTemplate9 } from "./hero-style-9";
 interface HeroComponentProps {
   component: HeroComponentData;
   isEditable?: boolean;
-  pageId: number | string;
+  pageSlug: string;
   siteUser: string;
 }
 
 export const HeroComponent: React.FC<HeroComponentProps> = ({
   component,
   isEditable = false,
-  pageId,
+  pageSlug,
   siteUser,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const deleteHeroMutation = useDeleteComponentMutation(pageId, "hero");
-  const updateHeroMutation = useUpdateComponentMutation(pageId, "hero");
+  const deleteHeroMutation = useDeleteComponentMutation(pageSlug, "hero");
+  const updateHeroMutation = useUpdateComponentMutation(pageSlug, "hero");
 
   const handleUpdate = (updatedData: Partial<HeroData>) => {
+    const componentId = component.component_id || component.id.toString();
+
     updateHeroMutation.mutate(
       {
-        id: component.id,
+        componentId,
         data: updatedData,
       },
       {
@@ -66,7 +68,7 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
   };
 
   const handleDelete = () => {
-    const componentId = component.id;
+    const componentId = component.component_id || component.id.toString();
 
     // Show loading toast
     const loadingToast = toast.loading("Deleting hero section...");

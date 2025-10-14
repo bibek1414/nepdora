@@ -27,13 +27,12 @@ import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import Pagination from "@/components/ui/pagination";
 import Link from "next/link";
-import { toast } from "sonner";
 
 interface SubCategoryComponentProps {
   component: SubCategoryComponentData;
   isEditable?: boolean;
   siteUser?: string;
-  pageId?: string | number;
+  pageSlug?: string;
   onUpdate?: (componentId: string, newData: SubCategoryComponentData) => void;
   onSubCategoryClick?: (subcategoryId: number, order: number) => void;
 }
@@ -42,7 +41,7 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
   component,
   isEditable = false,
   siteUser,
-  pageId,
+  pageSlug,
   onUpdate,
   onSubCategoryClick,
 }) => {
@@ -62,11 +61,11 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
 
   // Use unified mutation hooks
   const deleteSubCategoryComponent = useDeleteComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "subcategory"
   );
   const updateSubCategoryComponent = useUpdateComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "subcategory"
   );
 
@@ -85,70 +84,41 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
-
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
-    }
-
     setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
-    }
-
-    deleteSubCategoryComponent.mutate(componentId);
+    deleteSubCategoryComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
-      return;
-    }
-
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
     // Update component data via unified API
-    updateSubCategoryComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
+    updateSubCategoryComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        title: newTitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update title", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     // Also update local state if onUpdate is provided
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,
@@ -159,39 +129,23 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
-      return;
-    }
-
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
     // Update component data via unified API
-    updateSubCategoryComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
+    updateSubCategoryComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        subtitle: newSubtitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update subtitle", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     // Also update local state if onUpdate is provided
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,

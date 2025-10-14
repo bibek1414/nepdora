@@ -26,6 +26,7 @@ import {
   Menu,
   X,
   PanelRight,
+  PanelLeft,
   ArrowLeftToLine,
 } from "lucide-react";
 
@@ -158,7 +159,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
     >
       <div className="flex h-full flex-col">
         {/* Header with Toggle Button */}
-        <div className="flex-shrink-0 border-b border-gray-200 px-4 py-4">
+        <div className="sticky top-13 z-10 border-b border-gray-200 bg-white px-4 py-4">
           <div className="flex items-center justify-between">
             {!collapsed && (
               <h2 className="text-lg font-semibold text-gray-900">
@@ -174,7 +175,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
               title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               {collapsed ? (
-                <PanelRight className="h-5 w-5 text-gray-600" />
+                <PanelLeft className="h-5 w-5 text-gray-600" />
               ) : (
                 <PanelRight className="h-5 w-5 text-gray-600" />
               )}

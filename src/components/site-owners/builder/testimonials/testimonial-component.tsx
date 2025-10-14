@@ -10,7 +10,7 @@ import { TestimonialCard2 } from "./testimonial-card-2";
 import { TestimonialCard3 } from "./testimonial-card-3";
 import { TestimonialCard4 } from "./testimonial-card-4";
 import { TestimonialCard5 } from "./testimonial-card-5";
-import { TestimonialCard6 } from "./testimonial-card-6";
+import { TestimonialCard6 } from "./testimonial-card-6"; // Add this import
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -39,13 +39,12 @@ import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import TestimonialForm from "@/components/site-owners/admin/testimonials/testimonial-form";
 import { useCreateTestimonial } from "@/hooks/owner-site/admin/use-testimonials";
-import { toast } from "sonner";
 
 interface TestimonialsComponentProps {
   component: TestimonialsComponentData;
   isEditable?: boolean;
   siteUser?: string;
-  pageId?: string | number;
+  pageSlug?: string;
   onUpdate?: (componentId: string, newData: TestimonialsComponentData) => void;
   onTestimonialClick?: (testimonialId: number, order: number) => void;
 }
@@ -54,7 +53,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   component,
   isEditable = false,
   siteUser,
-  pageId,
+  pageSlug,
   onUpdate,
   onTestimonialClick,
 }) => {
@@ -70,11 +69,11 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
   // Use unified mutation hooks
   const deleteTestimonialsComponent = useDeleteComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "testimonials"
   );
   const updateTestimonialsComponent = useUpdateComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "testimonials"
   );
 
@@ -92,17 +91,10 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
-
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
-    }
-
     setIsDeleteDialogOpen(true);
   };
 
@@ -112,18 +104,12 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   };
 
   const handleConfirmDelete = () => {
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
-    }
-
-    deleteTestimonialsComponent.mutate(componentId);
+    deleteTestimonialsComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
@@ -139,37 +125,21 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
-
-    updateTestimonialsComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
+    updateTestimonialsComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        title: newTitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update title", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,
@@ -180,37 +150,21 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
-
-    updateTestimonialsComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
+    updateTestimonialsComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        subtitle: newSubtitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update subtitle", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,
@@ -270,7 +224,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
       case "list-1":
         return "grid-cols-1 lg:grid-cols-3 gap-8";
       case "carousel-1":
-      case "stagger-1":
+      case "stagger-1": // Add stagger-1 here
         return ""; // No grid for carousel or stagger
       case "grid-1":
       default:

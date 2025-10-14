@@ -16,7 +16,7 @@ import { Page } from "@/types/owner-site/components/page";
 
 interface DeletePageDialogProps {
   page: Page;
-  onPageDeleted?: (deletedId: number) => void; // Changed from deletedSlug: string
+  onPageDeleted?: (deletedSlug: string) => void;
   disabled?: boolean;
 }
 
@@ -29,16 +29,15 @@ export const DeletePageDialog: React.FC<DeletePageDialogProps> = ({
   const deletePageMutation = useDeletePage();
 
   const handleDelete = () => {
-    deletePageMutation.mutate(page.id, {
-      // Changed from page.slug to page.id
+    deletePageMutation.mutate(page.slug, {
       onSuccess: () => {
-        console.log("Page deleted successfully:", page.id);
+        console.log("Page deleted successfully:", page.slug);
         setIsOpen(false);
-        onPageDeleted?.(page.id); // Pass page.id instead of page.slug
+        onPageDeleted?.(page.slug);
       },
       onError: error => {
         console.error("Failed to delete page:", error);
-        // Keep dialog open on error so user can try again or see error
+        // Keep dialog open on error so user can try again or see erro  r
       },
     });
   };

@@ -4,22 +4,21 @@ import { DeletePageDialog } from "@/components/site-owners/builder/new-page/dele
 import { ThemeDialog } from "@/components/site-owners/builder/theme/theme-dialog";
 import { Button } from "@/components/ui/button";
 import { Page } from "@/types/owner-site/components/page";
-import { ArrowLeft, Palette, Eye, Upload } from "lucide-react";
+import { ArrowLeft, Palette, Eye, Upload, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
-
 interface TopNavigationProps {
   pages: Page[];
-  currentPageId: number;
-  onPageChange: (pageId: number) => void;
+  currentPage: string;
+  onPageChange: (pageSlug: string) => void;
   onPageCreated: (page: Page) => void;
-  onPageDeleted: (deletedId: number) => void;
+  onPageDeleted: (deletedSlug: string) => void;
   siteUser: string;
 }
 
 export const TopNavigation: React.FC<TopNavigationProps> = ({
   pages,
-  currentPageId,
+  currentPage,
   onPageChange,
   onPageCreated,
   onPageDeleted,
@@ -27,11 +26,6 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 }) => {
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const { mutate: publish, isPending } = usePublishSite();
-
-  // Get current page slug for preview/live links
-  const currentPageSlug =
-    pages.find(page => page.id === currentPageId)?.slug || "home";
-
   return (
     <div className="sticky top-0 z-40 border-b border-gray-200 bg-white">
       <div className="flex items-center justify-between px-2 py-3">
@@ -53,15 +47,15 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             <div className="flex items-center gap-2">
               {pages.map(page => (
                 <div
-                  key={page.id} // Changed from page.slug
+                  key={page.slug}
                   className={`flex items-center gap-1 rounded-md border text-sm ${
-                    currentPageId === page.id // Changed comparison
+                    currentPage === page.slug
                       ? "border-gray-600 bg-gray-600 text-white"
                       : "border-gray-200 bg-white hover:bg-gray-50"
                   }`}
                 >
                   <button
-                    onClick={() => onPageChange(page.id)} // Pass page.id
+                    onClick={() => onPageChange(page.slug)}
                     className="px-3 py-1.5 capitalize"
                   >
                     {page.title}
@@ -97,7 +91,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             </Button>
           </Link>
 
-          {/* Theme Settings Button */}
+          {/* Theme Settings Button - Now opens dialog instead of navigating */}
           <Button
             variant="outline"
             size="sm"
@@ -107,10 +101,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             <Palette className="mr-2 h-4 w-4" />
             Theme Settings
           </Button>
-
-          {/* Preview/Live links still use slug for URL */}
           <Link
-            href={`/publish/${siteUser}/${currentPageId}`}
+            href={`/publish/${siteUser}/${currentPage}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -122,9 +114,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
               Live
             </Button>
           </Link>
-
           <Link
-            href={`/preview/${siteUser}/${currentPageId}`}
+            href={`/preview/${siteUser}/${currentPage}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -136,7 +127,6 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
               Preview
             </Button>
           </Link>
-
           <Button
             variant="outline"
             className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"

@@ -31,13 +31,12 @@ import { EditableText } from "@/components/ui/editable-text";
 import Pagination from "@/components/ui/pagination";
 import { useProductFilters } from "@/hooks/owner-site/admin/use-product";
 import Link from "next/link";
-import { toast } from "sonner";
 
 interface ProductsComponentProps {
   component: ProductsComponentData;
   isEditable?: boolean;
   siteUser?: string;
-  pageId?: string | number;
+  pageSlug?: string;
   onUpdate?: (componentId: string, newData: ProductsComponentData) => void;
   onProductClick?: (productId: number, order: number) => void;
   showSidebar?: boolean;
@@ -47,7 +46,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   component,
   isEditable = false,
   siteUser,
-  pageId,
+  pageSlug,
   onUpdate,
   onProductClick,
   showSidebar = true,
@@ -75,11 +74,11 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
 
   // Use unified mutation hooks
   const deleteProductsComponent = useDeleteComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "products"
   );
   const updateProductsComponent = useUpdateComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "products"
   );
 
@@ -102,61 +101,39 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
     setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
-    }
-
-    deleteProductsComponent.mutate(componentId);
+    deleteProductsComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
-
-    updateProductsComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
+    updateProductsComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        title: newTitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update title", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,
@@ -167,37 +144,21 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
-
-    updateProductsComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
+    updateProductsComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        subtitle: newSubtitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update subtitle", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,

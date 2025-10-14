@@ -25,13 +25,12 @@ import { AlertCircle, Trash2, Play, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import { YouTubeFormTrigger } from "../../admin/youtube/youtube-form";
-import { toast } from "sonner";
 
 interface YouTubeComponentProps {
   component: YouTubeComponentData;
   isEditable?: boolean;
   siteUser?: string;
-  pageId?: string | number;
+  pageSlug?: string;
   onUpdate?: (componentId: string, newData: YouTubeComponentData) => void;
 }
 
@@ -39,7 +38,7 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
   component,
   isEditable = false,
   siteUser,
-  pageId,
+  pageSlug,
   onUpdate,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -52,11 +51,11 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
 
   // Use unified mutation hooks
   const deleteYouTubeComponent = useDeleteComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "youtube"
   );
   const updateYouTubeComponent = useUpdateComponentMutation(
-    pageId || "",
+    pageSlug || "",
     "youtube"
   );
 
@@ -65,61 +64,39 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
     setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
-    }
-
-    deleteYouTubeComponent.mutate(componentId);
+    deleteYouTubeComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
-
-    updateYouTubeComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
+    updateYouTubeComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        title: newTitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update title", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,
@@ -130,37 +107,21 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
-
-    updateYouTubeComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
+    updateYouTubeComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        subtitle: newSubtitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update subtitle", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,

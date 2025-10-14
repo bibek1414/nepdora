@@ -26,13 +26,11 @@ import { TEAM } from "@/types/owner-site/admin/team-member";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import { TeamMemberDialog } from "../../admin/ourteam/our-team-form";
-import { toast } from "sonner";
-
 interface TeamComponentProps {
   component: TeamComponentData;
   isEditable?: boolean;
   siteUser?: string;
-  pageId?: string | number;
+  pageSlug?: string;
   onUpdate?: (componentId: string, newData: TeamComponentData) => void;
   onMemberClick?: (memberId: number, order: number) => void;
 }
@@ -41,7 +39,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
   component,
   isEditable = false,
   siteUser,
-  pageId,
+  pageSlug,
   onUpdate,
   onMemberClick,
 }) => {
@@ -64,8 +62,14 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
   } = component.data || {};
 
   // Use unified mutation hooks
-  const deleteTeamComponent = useDeleteComponentMutation(pageId || "", "team");
-  const updateTeamComponent = useUpdateComponentMutation(pageId || "", "team");
+  const deleteTeamComponent = useDeleteComponentMutation(
+    pageSlug || "",
+    "team"
+  );
+  const updateTeamComponent = useUpdateComponentMutation(
+    pageSlug || "",
+    "team"
+  );
 
   // Get team members
   const { data: members = [], isLoading, error } = useTeamMembers();
@@ -78,61 +82,39 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
     setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
-    }
-
-    deleteTeamComponent.mutate(componentId);
+    deleteTeamComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
-
-    updateTeamComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
+    updateTeamComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        title: newTitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update title", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,
@@ -143,37 +125,21 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
-
-    updateTeamComponent.mutate(
-      {
-        id: componentId,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
+    updateTeamComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        subtitle: newSubtitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update subtitle", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(component.component_id, {
         ...component,
         data: {
           ...component.data,

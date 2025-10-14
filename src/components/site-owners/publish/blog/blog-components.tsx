@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { useBlogs } from "@/hooks/owner-site/admin/use-blogs";
 import {
-  useDeleteBlogComponentMutation,
-  useUpdateBlogComponentMutation,
+  useDeleteComponentMutation,
+  useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/unified";
 import { BlogCard1 } from "./blog-card1";
 import { BlogCard2 } from "./blog-card2";
@@ -32,7 +32,7 @@ interface BlogComponentProps {
   component: BlogComponentData;
   isEditable?: boolean;
   siteUser?: string;
-  pageId?: string | number;
+  pageSlug?: string;
   onUpdate?: (componentId: string, newData: BlogComponentData) => void;
   onBlogClick?: (blogSlug: string, order: number) => void;
 }
@@ -41,7 +41,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   component,
   isEditable = false,
   siteUser,
-  pageId,
+  pageSlug,
   onUpdate,
   onBlogClick,
 }) => {
@@ -60,8 +60,14 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   } = component.data || {};
 
   // Delete and update mutation hooks
-  const deleteBlogComponent = useDeleteBlogComponentMutation();
-  const updateBlogComponent = useUpdateBlogComponentMutation();
+  const deleteBlogComponent = useDeleteComponentMutation(
+    pageSlug || "",
+    "blog"
+  );
+  const updateBlogComponent = useUpdateComponentMutation(
+    pageSlug || "",
+    "blog"
+  );
 
   // Calculate page size and get first page for the page_size
   const pageSize = Math.min(page_size, 50);
@@ -80,21 +86,17 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   const totalPages = Math.ceil(totalBlogs / pageSize);
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
+    const componentId = component.component_id || component.id?.toString();
+    if (!componentId) return;
 
     updateBlogComponent.mutate(
       {
-        pageId,
-        id: componentId,
+        componentId,
         data: {
           ...component.data,
           title: newTitle,
@@ -111,7 +113,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     );
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(componentId, {
         ...component,
         data: {
           ...component.data,
@@ -122,21 +124,17 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageId) {
-      console.error("pageId is required for updating component");
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for updating");
-      return;
-    }
+    const componentId = component.component_id || component.id?.toString();
+    if (!componentId) return;
 
     updateBlogComponent.mutate(
       {
-        pageId,
-        id: componentId,
+        componentId,
         data: {
           ...component.data,
           subtitle: newSubtitle,
@@ -153,7 +151,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     );
 
     if (onUpdate) {
-      onUpdate(componentId.toString(), {
+      onUpdate(componentId, {
         ...component,
         data: {
           ...component.data,
@@ -171,29 +169,23 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
     setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageId) {
-      console.error("pageId is required for deletion");
+    if (!pageSlug) {
+      console.error("pageSlug is required for deletion");
       return;
     }
 
-    const componentId = component.id;
-    if (!componentId) {
-      console.error("Component id is required for deletion");
-      return;
+    const componentId = component.component_id || component.id?.toString();
+    if (componentId) {
+      deleteBlogComponent.mutate(componentId);
     }
-
-    deleteBlogComponent.mutate({
-      pageId,
-      id: componentId,
-    });
     setIsDeleteDialogOpen(false);
   };
 

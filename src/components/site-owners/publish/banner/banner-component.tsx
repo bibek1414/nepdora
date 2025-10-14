@@ -27,7 +27,7 @@ import {
 interface BannerComponentProps {
   component: BannerComponentData;
   isEditable?: boolean;
-  pageId: number | string;
+  pageSlug: string;
   siteUser: string;
   onUpdate?: (componentId: string, updatedData: BannerComponentData) => void;
 }
@@ -35,13 +35,13 @@ interface BannerComponentProps {
 export const BannerComponent: React.FC<BannerComponentProps> = ({
   component,
   isEditable = false,
-  pageId,
+  pageSlug,
   siteUser,
   onUpdate,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const deleteBannerMutation = useDeleteComponentMutation(pageId, "banner");
-  const updateBannerMutation = useUpdateComponentMutation(pageId, "banner");
+  const deleteBannerMutation = useDeleteComponentMutation(pageSlug, "banner");
+  const updateBannerMutation = useUpdateComponentMutation(pageSlug, "banner");
 
   const handleUpdate = (updatedData: Partial<BannerData>) => {
     const componentId = component.component_id || component.id.toString();
@@ -61,7 +61,7 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
     // Also trigger the mutation for server sync
     updateBannerMutation.mutate(
       {
-        id: component.id,
+        componentId,
         data: updatedData,
       },
       {
@@ -76,7 +76,7 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
   };
 
   const handleDelete = () => {
-    const componentId = component.id;
+    const componentId = component.component_id || component.id.toString();
 
     // Show loading toast
     const loadingToast = toast.loading("Deleting banner...");

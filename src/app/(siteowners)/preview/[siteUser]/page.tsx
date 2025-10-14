@@ -17,11 +17,10 @@ export default function PreviewPage({ params }: PreviewPageProps) {
 
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
 
-  // Find the home page by title or default to first page
   const homePage =
     pagesData.find(page => page.title?.trim().toLowerCase() === "home") ??
     pagesData[0];
-  const homePageId = homePage?.id || "";
+  const homePageSlug = homePage?.slug || "home";
 
   const {
     pageComponents,
@@ -33,7 +32,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
     handleServiceClick,
     handleCategoryClick,
     handleSubCategoryClick,
-  } = usePagePreview(siteUser, homePageId);
+  } = usePagePreview(siteUser, homePageSlug);
 
   if (isPagesLoading || isComponentsLoading) {
     return <LoadingSpinner message="Loading preview..." />;
@@ -47,7 +46,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
         <PageComponentRenderer
           components={pageComponents}
           siteUser={siteUser}
-          pageId={homePageId}
+          pageSlug={homePageSlug}
           onProductClick={handleProductClick}
           onBlogClick={handleBlogClick}
           onComponentUpdate={handleComponentUpdate}
@@ -62,8 +61,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
           <div className="py-20 text-center">
             <h1 className="text-6xl font-bold text-gray-800">404</h1>
             <h3 className="text-foreground mb-2 text-xl font-semibold">
-              Oops! The &apos;Home&apos; page you&apos;re looking for
-              doesn&apos;t exist.
+              Oops! The &apos; Home&apos; page you’re looking for doesn’t exist.
             </h3>
 
             <Button
