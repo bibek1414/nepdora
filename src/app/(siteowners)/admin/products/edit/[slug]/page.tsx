@@ -27,7 +27,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-6">
+      <div className="mx-auto p-5 py-10">
         {/* Breadcrumb */}
         <Breadcrumb>
           <BreadcrumbList>
@@ -50,14 +50,6 @@ export default function EditProductPage({ params }: EditProductPageProps) {
         </Breadcrumb>
 
         <div className="mt-4 mb-6">
-          <div className="mb-4 flex items-center gap-4">
-            <Button variant="outline" size="sm" asChild>
-              <Link href="/admin/products" className="flex items-center gap-2">
-                <ArrowLeft className="h-4 w-4" />
-                Back to Products
-              </Link>
-            </Button>
-          </div>
           <Skeleton className="mb-2 h-9 w-64" />
           <Skeleton className="h-5 w-96" />
         </div>
@@ -84,7 +76,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
 
   if (error || !product) {
     return (
-      <div className="container mx-auto py-6">
+      <div className="mx-auto p-5 py-10">
         {/* Breadcrumb */}
         <Breadcrumb>
           <BreadcrumbList>
@@ -132,7 +124,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
   }
 
   return (
-    <div className="mx-auto p-5 py-6">
+    <div className="mx-auto p-5 py-10">
       {/* Breadcrumb */}
       <Breadcrumb>
         <BreadcrumbList>
