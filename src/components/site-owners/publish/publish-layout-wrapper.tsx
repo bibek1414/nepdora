@@ -1,7 +1,7 @@
 "use client";
 
-import { NavbarComponent } from "@/components/site-owners/builder/navbar/navbar-component";
-import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer-component";
+import { NavbarComponent } from "@/components/site-owners/publish/navbar/navbar-component";
+import { Footer as FooterComponent } from "@/components/site-owners/publish/footer/footer-component";
 import { useNavbarQueryPublished } from "@/hooks/owner-site/components/use-navbar";
 import { useFooterQueryPublished } from "@/hooks/owner-site/components/use-footer";
 import { useThemeQueryPublished } from "@/hooks/owner-site/components/use-theme";

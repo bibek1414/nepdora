@@ -215,16 +215,17 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
           {/* Users Stats */}
           <div className="mt-4 flex items-center gap-3">
             <EditableText
-              value="12k+"
-              onChange={handleTextUpdate("subtitle")}
+              value={data.statsNumber || "12k+"}
+              onChange={handleTextUpdate("statsNumber")}
               as="span"
               className="font-medium"
               style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
+              placeholder="Enter stats number..."
             />
             <EditableText
-              value="Used by teams and professionals."
-              onChange={handleTextUpdate("subtitle")}
+              value={data.statsLabel || "Used by teams and professionals."}
+              onChange={handleTextUpdate("statsLabel")}
               as="span"
               className="font-normal opacity-75"
               style={{ fontFamily: theme.fonts.body }}
@@ -267,34 +268,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                 />
 
                 {/* Balance Badge - Editable */}
-                {data.showBalanceBadge !== false && (
-                  <div
-                    className="absolute top-4 right-4 z-10 rounded-lg px-4 py-2 text-sm"
-                    style={{
-                      backgroundColor: theme.colors.text,
-                      color: theme.colors.background,
-                    }}
-                  >
-                    <EditableText
-                      value={data.balanceLabel || "My current balance"}
-                      onChange={handleTextUpdate("balanceLabel")}
-                      as="div"
-                      isEditable={isEditable}
-                      placeholder="Balance label..."
-                      className="text-xs text-black"
-                      style={{ fontFamily: theme.fonts.body }}
-                    />
-                    <EditableText
-                      value={data.balanceAmount || "$90,438.40"}
-                      onChange={handleTextUpdate("balanceAmount")}
-                      as="span"
-                      isEditable={isEditable}
-                      placeholder="Balance amount..."
-                      className="font-bold text-black"
-                      style={{ fontFamily: theme.fonts.body }}
-                    />
-                  </div>
-                )}
               </div>
             </div>
           ) : (
@@ -326,36 +299,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                     text: "Upload hero image",
                   }}
                 />
-
-                {/* Balance Badge - Editable */}
-                {data.showBalanceBadge !== false && (
-                  <div
-                    className="absolute top-4 right-4 rounded-lg px-4 py-2 text-sm"
-                    style={{
-                      backgroundColor: theme.colors.text,
-                      color: theme.colors.background,
-                    }}
-                  >
-                    <EditableText
-                      value={data.balanceLabel || "🇺🇸 My current balance"}
-                      onChange={handleTextUpdate("balanceLabel")}
-                      as="div"
-                      isEditable={isEditable}
-                      placeholder="Balance label..."
-                      className="text-xs"
-                      style={{ fontFamily: theme.fonts.body }}
-                    />
-                    <EditableText
-                      value={data.balanceAmount || "$90,438.40"}
-                      onChange={handleTextUpdate("balanceAmount")}
-                      as="span"
-                      isEditable={isEditable}
-                      placeholder="Balance amount..."
-                      className="font-bold"
-                      style={{ fontFamily: theme.fonts.body }}
-                    />
-                  </div>
-                )}
               </div>
             </div>
           )}
