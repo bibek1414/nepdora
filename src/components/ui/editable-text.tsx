@@ -1,6 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import { Check, X, Palette, Highlighter } from "lucide-react";
+import {
+  Check,
+  X,
+  Palette,
+  Highlighter,
+  Bold,
+  Italic,
+  Underline,
+} from "lucide-react";
 
 interface EditableTextProps {
   value: string;
@@ -41,6 +48,8 @@ interface TextSelection {
   range: Range;
   color?: string;
 }
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+const cn = (...classes: any[]) => classes.filter(Boolean).join(" ");
 
 export const EditableText: React.FC<EditableTextProps> = ({
   value,
@@ -57,8 +66,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   currentFontFamily,
 }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [showSelectionColorPicker, setShowSelectionColorPicker] =
-    useState(false);
+  const [showSelectionToolbar, setShowSelectionToolbar] = useState(false);
   const [selectedColor, setSelectedColor] = useState(
     currentTextColor || style?.color || theme?.colors.text || "#0F172A"
   );
@@ -73,15 +81,15 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const [selectionColor, setSelectionColor] = useState(
     theme?.colors.primary || "#3B82F6"
   );
+  const [showColorInput, setShowColorInput] = useState(false);
 
   const textRef = useRef<HTMLElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
-  const selectionPickerRef = useRef<HTMLDivElement>(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
 
   // Set initial HTML content with preserved inline styles
   useEffect(() => {
     if (textRef.current && value) {
-      // Only update if content is different to avoid cursor issues
       if (textRef.current.innerHTML !== value) {
         textRef.current.innerHTML = value;
       }
@@ -92,6 +100,17 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const handleTextChange = (e: React.FocusEvent<HTMLElement>) => {
     const newValue = e.target.innerHTML;
     if (value !== newValue) {
+      onChange(newValue);
+    }
+  };
+
+  // Apply formatting command
+  const applyFormatting = (command: string, value?: string) => {
+    document.execCommand(command, false, value);
+
+    // Update the value with HTML content
+    if (textRef.current) {
+      const newValue = textRef.current.innerHTML;
       onChange(newValue);
     }
   };
@@ -110,39 +129,29 @@ export const EditableText: React.FC<EditableTextProps> = ({
         range: range,
       });
 
-      // Position the selection color picker near the selected text
+      // Position the selection toolbar near the selected text
       setPickerPosition({
-        top: rect.top - 50,
+        top: rect.top - 60,
         left: rect.left + rect.width / 2,
       });
-      setShowSelectionColorPicker(true);
+      setShowSelectionToolbar(true);
+      setShowColorInput(false);
     } else {
       setTextSelection(null);
-      setShowSelectionColorPicker(false);
+      setShowSelectionToolbar(false);
+      setShowColorInput(false);
     }
   };
 
   // Apply color to selected text
   const applyColorToSelection = (color: string) => {
-    if (!textSelection || !textRef.current) return;
+    if (!textSelection) return;
 
-    const span = document.createElement("span");
-    span.style.color = color;
-    span.textContent = textSelection.text;
+    // Use execCommand to apply color while preserving other formatting
+    applyFormatting("foreColor", color);
 
-    textSelection.range.deleteContents();
-    textSelection.range.insertNode(span);
-
-    // Update the value with HTML content
-    if (textRef.current) {
-      const newValue = textRef.current.innerHTML;
-      onChange(newValue);
-    }
-
-    // Clear selection
-    window.getSelection()?.removeAllRanges();
-    setTextSelection(null);
-    setShowSelectionColorPicker(false);
+    // Clear selection after applying color
+    setShowColorInput(false);
   };
 
   // Handle palette button click for entire text
@@ -186,14 +195,14 @@ export const EditableText: React.FC<EditableTextProps> = ({
         setShowColorPicker(false);
       }
 
-      // Close selection color picker
+      // Close selection toolbar
       if (
-        selectionPickerRef.current &&
-        !selectionPickerRef.current.contains(event.target as Node)
+        toolbarRef.current &&
+        !toolbarRef.current.contains(event.target as Node)
       ) {
-        setShowSelectionColorPicker(false);
+        setShowSelectionToolbar(false);
+        setShowColorInput(false);
         setTextSelection(null);
-        window.getSelection()?.removeAllRanges();
       }
     };
 
@@ -206,6 +215,24 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     if (!isEditable) return;
 
+    // Handle keyboard shortcuts
+    if (e.ctrlKey || e.metaKey) {
+      switch (e.key.toLowerCase()) {
+        case "b":
+          e.preventDefault();
+          applyFormatting("bold");
+          break;
+        case "i":
+          e.preventDefault();
+          applyFormatting("italic");
+          break;
+        case "u":
+          e.preventDefault();
+          applyFormatting("underline");
+          break;
+      }
+    }
+
     if (!multiline && e.key === "Enter") {
       e.preventDefault();
       e.currentTarget.blur();
@@ -214,7 +241,8 @@ export const EditableText: React.FC<EditableTextProps> = ({
     if (e.key === "Escape") {
       e.currentTarget.blur();
       setShowColorPicker(false);
-      setShowSelectionColorPicker(false);
+      setShowSelectionToolbar(false);
+      setShowColorInput(false);
       setTextSelection(null);
       window.getSelection()?.removeAllRanges();
     }
@@ -222,8 +250,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
 
   const commonProps = {
     ref: textRef,
-    contentEditable:
-      isEditable && !showColorPicker && !showSelectionColorPicker,
+    contentEditable: isEditable && !showColorPicker,
     onBlur: handleTextChange,
     onMouseUp: handleTextSelect,
     onKeyDown: handleKeyDown,
@@ -240,7 +267,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         "empty:before:pointer-events-none empty:before:absolute",
         "selection:bg-blue-200 selection:text-blue-900",
       ],
-      (showColorPicker || showSelectionColorPicker) && "ring-2 ring-blue-400"
+      (showColorPicker || showSelectionToolbar) && "ring-2 ring-blue-400"
     ),
     style: {
       position: "relative" as const,
@@ -281,6 +308,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         )}
       </div>
 
+      {/* Main color picker for entire text */}
       {showColorPicker && (
         <div
           ref={pickerRef}
@@ -352,75 +380,111 @@ export const EditableText: React.FC<EditableTextProps> = ({
         </div>
       )}
 
-      {showSelectionColorPicker && textSelection && (
+      {/* Selection toolbar with formatting options */}
+      {showSelectionToolbar && textSelection && (
         <div
-          ref={selectionPickerRef}
-          className="animate-in fade-in slide-in-from-top-2 fixed z-50 rounded-lg border border-gray-200 bg-white p-4 shadow-2xl duration-200"
+          ref={toolbarRef}
+          className="animate-in fade-in slide-in-from-top-2 fixed z-50 rounded-lg border border-gray-200 bg-white shadow-2xl duration-200"
           style={{
             top: `${pickerPosition.top}px`,
             left: `${pickerPosition.left}px`,
             transform: "translate(-50%, -100%)",
-            minWidth: "280px",
           }}
         >
-          <div className="mb-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Highlighter className="h-4 w-4 text-blue-500" />
-              <span className="text-sm font-medium text-gray-700">
-                Color for: &quot;
-                {textSelection.text.length > 20
-                  ? textSelection.text.substring(0, 20) + "..."
-                  : textSelection.text}
-                &quot;
-              </span>
-            </div>
+          <div className="flex items-center gap-1 p-2">
+            {/* Bold Button */}
+            <button
+              onClick={() => applyFormatting("bold")}
+              className="rounded p-2 transition-colors hover:bg-gray-100 active:bg-gray-200"
+              title="Bold (Ctrl+B)"
+            >
+              <Bold className="h-4 w-4 text-gray-700" />
+            </button>
+
+            {/* Italic Button */}
+            <button
+              onClick={() => applyFormatting("italic")}
+              className="rounded p-2 transition-colors hover:bg-gray-100 active:bg-gray-200"
+              title="Italic (Ctrl+I)"
+            >
+              <Italic className="h-4 w-4 text-gray-700" />
+            </button>
+
+            {/* Underline Button */}
+            <button
+              onClick={() => applyFormatting("underline")}
+              className="rounded p-2 transition-colors hover:bg-gray-100 active:bg-gray-200"
+              title="Underline (Ctrl+U)"
+            >
+              <Underline className="h-4 w-4 text-gray-700" />
+            </button>
+
+            {/* Divider */}
+            <div className="mx-1 h-6 w-px bg-gray-300" />
+
+            {/* Color Button */}
+            <button
+              onClick={() => setShowColorInput(!showColorInput)}
+              className="rounded p-2 transition-colors hover:bg-gray-100 active:bg-gray-200"
+              title="Text Color"
+            >
+              <Palette className="h-4 w-4 text-gray-700" />
+            </button>
+
+            {/* Close Button */}
             <button
               onClick={() => {
-                setShowSelectionColorPicker(false);
+                setShowSelectionToolbar(false);
+                setShowColorInput(false);
                 setTextSelection(null);
                 window.getSelection()?.removeAllRanges();
               }}
-              className="rounded-full p-1 transition-colors hover:bg-gray-100"
+              className="ml-1 rounded p-2 transition-colors hover:bg-gray-100"
             >
               <X className="h-4 w-4 text-gray-500" />
             </button>
           </div>
 
-          <div className="mb-3">
-            <div className="flex gap-2">
-              <input
-                type="color"
-                value={selectionColor}
-                onChange={e => setSelectionColor(e.target.value)}
-                className="h-8 w-10 cursor-pointer rounded border border-gray-300"
-              />
-              <input
-                type="text"
-                value={selectionColor}
-                onChange={e => setSelectionColor(e.target.value)}
-                placeholder="#000000"
-                className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              />
-              <button
-                onClick={() => applyColorToSelection(selectionColor)}
-                className="rounded bg-blue-500 px-3 py-1 text-xs text-white hover:bg-blue-600"
-              >
-                Apply
-              </button>
-            </div>
-          </div>
+          {/* Color picker section */}
+          {showColorInput && (
+            <div className="border-t border-gray-200 p-3">
+              <div className="mb-2">
+                <div className="flex gap-2">
+                  <input
+                    type="color"
+                    value={selectionColor}
+                    onChange={e => setSelectionColor(e.target.value)}
+                    className="h-8 w-10 cursor-pointer rounded border border-gray-300"
+                  />
+                  <input
+                    type="text"
+                    value={selectionColor}
+                    onChange={e => setSelectionColor(e.target.value)}
+                    placeholder="#000000"
+                    className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                  />
+                  <button
+                    onClick={() => applyColorToSelection(selectionColor)}
+                    className="rounded bg-blue-500 px-3 py-1 text-xs text-white hover:bg-blue-600"
+                  >
+                    Apply
+                  </button>
+                </div>
+              </div>
 
-          <div className="grid grid-cols-6 gap-1">
-            {quickColors.map(color => (
-              <button
-                key={color}
-                onClick={() => applyColorToSelection(color)}
-                className="h-6 w-6 rounded border border-gray-300 transition-transform hover:scale-110"
-                style={{ backgroundColor: color }}
-                title={color}
-              />
-            ))}
-          </div>
+              <div className="grid grid-cols-6 gap-1">
+                {quickColors.map(color => (
+                  <button
+                    key={color}
+                    onClick={() => applyColorToSelection(color)}
+                    className="h-6 w-6 rounded border border-gray-300 transition-transform hover:scale-110"
+                    style={{ backgroundColor: color }}
+                    title={color}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>

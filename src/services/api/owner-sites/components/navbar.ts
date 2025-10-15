@@ -8,10 +8,10 @@ import {
   UpdateNavbarRequest,
   UpdateNavbarResponse,
   DeleteNavbarResponse,
-  Navbar,
 } from "@/types/owner-site/components/navbar";
 
 export const useNavbarApi = {
+  // Get navbar with preview status
   getNavbar: async (): Promise<GetNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/navbar/?status=preview`, {
@@ -27,6 +27,8 @@ export const useNavbarApi = {
       message: data ? "Navbar retrieved successfully" : "No navbar found",
     };
   },
+
+  // Get published navbar
   getNavbarPublished: async (): Promise<GetNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/navbar/`, {
@@ -43,6 +45,7 @@ export const useNavbarApi = {
     };
   },
 
+  // Create navbar
   createNavbar: async (
     data: CreateNavbarRequest
   ): Promise<CreateNavbarResponse> => {
@@ -59,41 +62,45 @@ export const useNavbarApi = {
 
     await handleApiError(response);
     const responseData = await response.json();
+
     return {
       data: responseData,
       message: "Navbar created successfully",
     };
   },
 
+  // Update navbar - ID in URL (RESTful approach)
   updateNavbar: async (
     data: UpdateNavbarRequest
   ): Promise<UpdateNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/navbar/`, {
+    const response = await fetch(`${API_BASE_URL}/api/navbar/${data.id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify({
-        id: data.id,
         data: data.navbarData,
       }),
     });
 
     await handleApiError(response);
     const responseData = await response.json();
+
     return {
       data: responseData,
       message: "Navbar updated successfully",
     };
   },
 
+  // Delete navbar - ID in URL
   deleteNavbar: async (id: string): Promise<DeleteNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/navbar/`, {
+    const response = await fetch(`${API_BASE_URL}/api/navbar/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });
 
     await handleApiError(response);
+
     return {
       message: "Navbar deleted successfully",
     };

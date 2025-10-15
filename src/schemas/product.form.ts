@@ -28,13 +28,13 @@ const imageSchema = z
 export const ProductOptionValueSchema = z.object({
   id: z.number(),
   value: z.string(),
-  option: z.number(),
+  option: z.number().optional(),
 });
 
 export const ProductOptionSchema = z.object({
   id: z.number(),
   name: z.string(),
-  product: z.number(),
+  product: z.number().optional(),
   values: z.array(ProductOptionValueSchema).optional(),
 });
 
@@ -49,11 +49,20 @@ export const ProductVariantSchema = z.object({
   updated_at: z.string(),
 });
 
+// NEW: Variant Read Schema (from API response with option_values as object)
+export const ProductVariantReadSchema = z.object({
+  id: z.number(),
+  price: z.string(),
+  stock: z.number(),
+  image: z.string().nullable(),
+  option_values: z.record(z.string(), z.string()), // { "size": "large", "color": "red" }
+});
+
 // Category Reference Schema
 export const CategoryReferenceSchema = z.object({
   id: z.number(),
   name: z.string(),
-  slug: z.string(),
+  slug: z.string().optional(),
   description: z.string().optional().nullable(),
   image: z.string().optional().nullable(),
 });
@@ -83,6 +92,7 @@ export const ProductSchema = z.object({
   market_price: z.string().nullable(),
   track_stock: z.boolean().optional(),
   stock: z.number().min(0, "Stock cannot be negative").default(0),
+  weight: z.string().nullable().optional(),
   thumbnail_image: z.string().nullable(),
   images: z.array(ProductImageSchema).optional(),
   thumbnail_alt_description: z.string().nullable(),
@@ -91,10 +101,14 @@ export const ProductSchema = z.object({
   is_popular: z.boolean().optional(),
   is_featured: z.boolean().optional(),
   is_wishlist: z.boolean().optional(),
+  status: z.string().optional(),
+  meta_title: z.string().nullable().optional(),
+  meta_description: z.string().nullable().optional(),
   average_rating: z.number().min(0).max(5).optional(),
   reviews_count: z.number().min(0).optional(),
   options: z.array(ProductOptionSchema).optional(),
   variants: z.array(ProductVariantSchema).optional(),
+  variants_read: z.array(ProductVariantReadSchema).optional(), // NEW: API response format
   created_at: z.string(),
   updated_at: z.string(),
 });
@@ -123,10 +137,9 @@ export const SubCategorySchema = z.object({
 });
 
 // Create Variant Schema for form submission
-// FIXED: Make stock required (no default or optional)
 export const CreateVariantSchema = z.object({
   price: z.string().optional(),
-  stock: z.number().min(0, "Stock cannot be negative"), // Required, no default
+  stock: z.number().min(0, "Stock cannot be negative"),
   image: imageSchema,
   options: z.record(z.string(), z.string()),
 });
@@ -138,13 +151,12 @@ export const CreateProductOptionSchema = z.object({
 });
 
 // Create Product Schema with variants
-// FIXED: Make stock required (no default or optional), matching CreateVariantSchema
 export const CreateProductSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
   price: z.string().regex(/^\d+(\.\d{1,2})?$/, "Invalid price format"),
   market_price: z.string().optional(),
-  stock: z.number().min(0, "Stock cannot be negative"), // Required, no default
+  stock: z.number().min(0, "Stock cannot be negative"),
   thumbnail_image: imageSchema,
   image_files: z.array(z.any()).optional(),
   thumbnail_alt_description: z.string().optional(),

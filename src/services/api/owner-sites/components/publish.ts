@@ -2,11 +2,10 @@ import { getApiBaseUrl } from "@/config/site";
 const publishSiteApi = async () => {
   try {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/publish/`, {
+    const response = await fetch(`${API_BASE_URL}/api/publish-all/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // add auth header if needed
       },
       body: JSON.stringify({}), // empty payload
     });

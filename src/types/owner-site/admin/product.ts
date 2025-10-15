@@ -11,6 +11,7 @@ import {
   UpdateSubCategorySchema,
   ProductOptionSchema,
   ProductVariantSchema,
+  ProductVariantReadSchema,
   CreateVariantSchema,
   CreateProductOptionSchema,
 } from "@/schemas/product.form";
@@ -31,6 +32,7 @@ export type UpdateSubCategoryRequest = z.infer<typeof UpdateSubCategorySchema>;
 // Variant types
 export type ProductOption = z.infer<typeof ProductOptionSchema>;
 export type ProductVariant = z.infer<typeof ProductVariantSchema>;
+export type ProductVariantRead = z.infer<typeof ProductVariantReadSchema>; // NEW
 export type CreateVariant = z.infer<typeof CreateVariantSchema>;
 export type CreateProductOption = z.infer<typeof CreateProductOptionSchema>;
 
@@ -162,6 +164,7 @@ export const normalizeProductForCart = (product: ProductLike): Product => {
     is_featured: productData.is_featured || false,
     options: productData.options || [],
     variants: productData.variants || [],
+    variants_read: productData.variants_read || [], // NEW
     created_at: productData.created_at || new Date().toISOString(),
     updated_at: productData.updated_at || new Date().toISOString(),
   };

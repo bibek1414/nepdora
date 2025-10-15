@@ -1,6 +1,7 @@
 import { PublishLayoutWrapper } from "@/components/site-owners/publish/publish-layout-wrapper";
 import { WhatsApp } from "@/components/site-owners/builder/whatsapp/whatsapp";
 import PopupManager from "@/components/site-owners/builder/popup/popup-manager";
+import { DynamicFontProvider } from "@/providers/dynamic-font-provider";
 
 interface PublishLayoutProps {
   children: React.ReactNode;
@@ -15,11 +16,13 @@ export default async function PublishLayout({
 
   return (
     <>
-      <PublishLayoutWrapper siteUser={siteUser}>
-        {children}
-      </PublishLayoutWrapper>
-      <WhatsApp />
-      <PopupManager />
+      <DynamicFontProvider>
+        <PublishLayoutWrapper siteUser={siteUser}>
+          {children}
+        </PublishLayoutWrapper>
+        <WhatsApp />
+        <PopupManager />
+      </DynamicFontProvider>
     </>
   );
 }
