@@ -7,6 +7,7 @@ import { usePages } from "@/hooks/owner-site/use-page";
 import { usePagePublished } from "@/hooks/publish/use-page-publish";
 import { PageComponentRenderer } from "@/components/site-owners/preview/page-component-render";
 import { LoadingSpinner } from "@/components/site-owners/preview/loading-spinner";
+import { useDomains } from "@/hooks/superadmin/use-domain";
 
 interface PreviewPageProps {
   params: Promise<{ siteUser: string }>;
@@ -21,6 +22,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
     pagesData.find(page => page.title?.trim().toLowerCase() === "home") ??
     pagesData[0];
   const homePageSlug = homePage?.slug || "home";
+  const { data: domainsData, isLoading: isDomainsLoading } = useDomains(1, 100);
 
   const {
     pageComponents,
@@ -39,7 +41,32 @@ export default function PreviewPage({ params }: PreviewPageProps) {
   }
 
   const hasContent = pageComponents.length > 0;
+  const domainExists = domainsData?.results?.some(
+    domain => domain.tenant.schema_name === siteUser
+  );
 
+  if (isDomainsLoading || isPagesLoading || isComponentsLoading) {
+    return <LoadingSpinner message="Loading..." />;
+  }
+
+  // Show error if domain doesn't exist
+  if (!domainExists) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-8">
+        <div className="text-center">
+          <h1 className="text-6xl font-bold text-gray-800">404</h1>
+          <h2 className="mt-4 text-2xl font-semibold text-gray-700">
+            Domain Not Found
+          </h2>
+          <p className="mt-2 text-lg text-gray-600">
+            The domain{" "}
+            <span className="font-mono font-semibold">{siteUser}</span>{" "}
+            doesn&apos;t exist.
+          </p>
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       {hasContent && (
