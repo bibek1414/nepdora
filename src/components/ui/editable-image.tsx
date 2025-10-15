@@ -40,6 +40,8 @@ interface EditableImageProps {
     maxSize?: number; // in bytes
     allowedTypes?: string[]; // MIME types
   };
+  disableImageChange?: boolean;
+
   showAltEditor?: boolean;
   placeholder?: {
     width: number;
@@ -67,6 +69,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
     maxSize: 5 * 1024 * 1024, // 5MB
     allowedTypes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
   },
+  disableImageChange,
   showAltEditor = false,
   placeholder,
 }) => {
@@ -95,6 +98,10 @@ export const EditableImage: React.FC<EditableImageProps> = ({
       );
       return;
     }
+    const handleImageClick = () => {
+      if (!isEditable || isUploading || disableImageChange) return;
+      fileInputRef.current?.click();
+    };
 
     // Validate file size
     if (uploadValidation.maxSize && file.size > uploadValidation.maxSize) {
@@ -225,18 +232,21 @@ export const EditableImage: React.FC<EditableImageProps> = ({
         )}
 
         {/* Hover Overlay for Editable Images */}
-        {isEditable && !isUploading && !showPlaceholder && (
-          <div
-            className={cn(
-              "absolute inset-0 z-10 flex items-center justify-center bg-black/50 transition-opacity",
-              isHovered ? "opacity-100" : "opacity-0"
-            )}
-          >
-            <SOButton variant="default" className="gap-2">
-              <ImagePlus className="h-4 w-4" /> Change Image
-            </SOButton>
-          </div>
-        )}
+        {isEditable &&
+          !isUploading &&
+          !showPlaceholder &&
+          !disableImageChange && (
+            <div
+              className={cn(
+                "absolute inset-0 z-10 flex items-center justify-center bg-black/50 transition-opacity",
+                isHovered ? "opacity-100" : "opacity-0"
+              )}
+            >
+              <SOButton variant="default" className="gap-2">
+                <ImagePlus className="h-4 w-4" /> Change Image
+              </SOButton>
+            </div>
+          )}
       </div>
 
       {/* Alt Text Editor */}

@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/site-owners/button";
 import { use } from "react";
 import { usePages } from "@/hooks/owner-site/use-page";
 import { usePagePublished } from "@/hooks/publish/use-page-publish";
-import { PageComponentRenderer } from "@/components/site-owners/preview/page-component-render";
-import { LoadingSpinner } from "@/components/site-owners/preview/loading-spinner";
+import { PageComponentRenderer } from "@/components/site-owners/publish/page-component-render";
+import { LoadingSpinner } from "@/components/site-owners/publish/loading-spinner";
 import { useDomains } from "@/hooks/superadmin/use-domain";
 
 interface PreviewPageProps {

@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { BannerData } from "@/types/owner-site/components/banner";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
-import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { uploadToCloudinary } from "@/utils/cloudinary";
+import { toast } from "sonner";
 
 interface BannerTemplateProps {
   bannerData: BannerData;
@@ -21,6 +23,9 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [data, setData] = useState(bannerData);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const componentId = React.useId();
 
   const handleLinkUpdate = (index: number, href: string) => {
     const updatedImages = [...data.images];
@@ -61,7 +66,7 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
 
   const handleAddImage = () => {
     const newImage = {
-      id: Date.now(), // Changed to number
+      id: Date.now(),
       image:
         "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=1200&h=400&q=80&fit=crop",
       image_alt_description: "New slider image",
@@ -72,6 +77,47 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
     const updatedData = { ...data, images: updatedImages };
     setData(updatedData);
     onUpdate?.({ images: updatedImages });
+  };
+
+  const handleBackgroundFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(
+        `Please select a valid image file (${allowedTypes.join(", ")})`
+      );
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const imageUrl = await uploadToCloudinary(file, {
+        folder: "banner-slider-images",
+        resourceType: "image",
+      });
+
+      handleImageUpdate(currentSlide, imageUrl, `Slider image: ${file.name}`);
+      toast.success("Slider image uploaded successfully!");
+    } catch (error) {
+      console.error("Upload failed:", error);
+      toast.error("Failed to upload slider image. Please try again.");
+    } finally {
+      setIsUploading(false);
+      event.target.value = "";
+    }
   };
 
   // Get all active images
@@ -101,7 +147,7 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
-  //eslint disable-next-line @typescript-eslint/no-explicit-any
+
   const getImageSrc = (img: unknown) => {
     if (typeof img === "string") return img;
     if (img instanceof File || img instanceof Blob)
@@ -122,6 +168,47 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
       <div className="mx-auto max-w-7xl px-4 py-10">
         {allActiveImages.length > 0 ? (
           <Card className="group relative aspect-[3/1] w-full overflow-hidden py-0 md:aspect-[4/1]">
+            {/* Change Image Button - Only visible when editable */}
+            {isEditable && (
+              <div className="absolute top-2 right-2 z-20">
+                <label
+                  htmlFor={`slider-upload-${componentId}`}
+                  className={`cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-3 py-1.5 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white md:px-4 md:py-2 md:text-sm ${
+                    isUploading ? "pointer-events-none opacity-50" : ""
+                  }`}
+                >
+                  {isUploading ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="h-3 w-3 animate-spin md:h-4 md:w-4" />
+                      Uploading...
+                    </span>
+                  ) : (
+                    "Change Current Image"
+                  )}
+                </label>
+                <input
+                  id={`slider-upload-${componentId}`}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleBackgroundFileChange}
+                  className="hidden"
+                  disabled={isUploading}
+                />
+              </div>
+            )}
+
+            {/* Upload Loading Overlay */}
+            {isUploading && (
+              <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
+                <div className="flex flex-col items-center gap-2 text-white">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                  <p className="text-sm font-medium">
+                    Uploading slider image...
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="relative h-full w-full">
               {allActiveImages.map((image, imageIndex) => (
                 <div
@@ -143,6 +230,7 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
                       folder: "banner-slider-images",
                       resourceType: "image",
                     }}
+                    disableImageChange={true}
                     showAltEditor={isEditable && imageIndex === currentSlide}
                   />
 

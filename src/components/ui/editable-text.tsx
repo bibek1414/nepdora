@@ -265,7 +265,6 @@ export const EditableText: React.FC<EditableTextProps> = ({
         "min-h-[1.5em]",
         "empty:before:content-[attr(data-placeholder)] empty:before:text-gray-400",
         "empty:before:pointer-events-none empty:before:absolute",
-        "selection:bg-blue-200 selection:text-blue-900",
       ],
       (showColorPicker || showSelectionToolbar) && "ring-2 ring-blue-400"
     ),
