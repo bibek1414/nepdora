@@ -120,7 +120,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
       : theme.colors.text;
 
   return (
-    <section className="relative w-full px-6 py-16 md:px-12 lg:px-20">
+    <section className="mx-auto max-w-7xl px-5">
       {/* Overlay */}
       {data.backgroundType === "image" && data.showOverlay && (
         <div
