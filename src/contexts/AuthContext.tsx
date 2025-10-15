@@ -397,18 +397,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (typeof window !== "undefined") {
       const hostname = window.location.hostname;
 
-      // Handle local development
       if (hostname.includes("localhost")) {
-        // Always redirect to main localhost:3000 (no subdomain)
-        window.location.href = "http://localhost:3000";
+        // Redirect to localhost logout handler
+        window.location.href = "http://localhost:3000/logout";
         return;
       }
 
-      // Production environment
+      // Production
       const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
       const protocol = process.env.NEXT_PUBLIC_PROTOCOL || "https";
-      const mainDomainUrl = `${protocol}://${baseDomain}`;
-      window.location.href = mainDomainUrl;
+      const logoutUrl = `${protocol}://${baseDomain}/logout`;
+      window.location.href = logoutUrl;
     }
   };
 
