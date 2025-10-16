@@ -28,6 +28,9 @@ import {
   PanelRight,
   PanelLeft,
   ArrowLeftToLine,
+  MessageCircle,
+  Wallet,
+  CreditCard,
 } from "lucide-react";
 
 const navigationGroups = [
@@ -107,7 +110,23 @@ const navigationGroups = [
     name: "System",
     items: [
       { name: "Issues Tracking", href: "/admin/issues", icon: Bug },
-      { name: "Settings", href: "/admin/settings/whatsapp", icon: Edit3 },
+      { name: "Settings", href: "/admin/settings/domains", icon: Edit3 },
+      { name: "Plugins", href: "/admin/plugins", icon: PanelRight },
+    ],
+  },
+  {
+    name: "Plugins",
+    items: [
+      {
+        name: "WhatsApp",
+        href: "/admin/plugins/whatsapp",
+        icon: MessageCircle,
+      },
+      {
+        name: "Payment Gateway",
+        href: "/admin/plugins/payment-gateway/esewa",
+        icon: Wallet,
+      },
     ],
   },
 ];

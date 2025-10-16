@@ -4,37 +4,25 @@ import { useRouter, usePathname } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessageSquare, Globe, CreditCard, Truck } from "lucide-react";
 
-interface SettingItem {
+interface PaymentGateway {
   id: string;
   title: string;
   description: string;
   path: string;
 }
 
-const settingsItems: SettingItem[] = [
+const settingsItems: PaymentGateway[] = [
   {
-    id: "domains",
-    title: "Domains",
+    id: "Esewa",
+    title: "Esewa Setup",
     description: "Manage your domain settings and configurations",
-    path: "/admin/settings/domains",
+    path: "/admin/plugins/payment-gateway/esewa",
   },
   {
-    id: "payment",
-    title: "Payment Setup",
-    description: "Configure payment gateways and billing settings",
-    path: "/admin/settings/payment",
-  },
-  {
-    id: "billing",
-    title: "Billing",
-    description: "Set up billing methods and delivery options",
-    path: "/admin/settings/billing",
-  },
-  {
-    id: "shipping",
-    title: "Shipping Setup",
-    description: "Set up shipping methods and delivery options",
-    path: "/admin/settings/shipping",
+    id: "Khalti",
+    title: "Khalti Setup",
+    description: "Configure Khalti gateways and billing settings",
+    path: "/admin/plugins/payment-gateway/khalti",
   },
 ];
 
@@ -65,7 +53,7 @@ export default function SettingsLayout({
     <div className="mx-auto px-20 py-20">
       <div className="mb-3">
         <h1 className="px-2 text-2xl font-bold tracking-tight text-gray-900">
-          Settings
+          Payment Gateway
         </h1>
       </div>
 
