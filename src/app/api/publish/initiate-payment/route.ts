@@ -149,6 +149,7 @@ async function getPaymentGateway(
 /**
  * Build redirect URLs with subdomain
  */
+
 function buildRedirectUrls(req: Request, subdomain: string | null) {
   const hostHeader = req.headers.get("host") || "";
   const isLocalhost = hostHeader.includes("localhost");
@@ -165,8 +166,9 @@ function buildRedirectUrls(req: Request, subdomain: string | null) {
       baseUrl = `${protocol}://${subdomain}.${process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com"}`;
     }
 
-    const successUrl = `${baseUrl}/publish/${subdomain}/success?method=`;
-    const failureUrl = `${baseUrl}/publish/${subdomain}/failure?method=`;
+    // Remove /publish/[subdomain] from the URLs
+    const successUrl = `${baseUrl}/success?method=`;
+    const failureUrl = `${baseUrl}/failure?method=`;
     return { successUrl, failureUrl };
   } else {
     baseUrl = `${protocol}://${hostHeader}`;
