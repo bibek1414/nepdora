@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -26,12 +26,21 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/customer/use-auth";
 import { checkoutFormSchema, CheckoutFormValues } from "@/schemas/chekout.form";
+import { usePaymentGateways } from "@/hooks/owner-site/admin/use-payment-gateway";
+import { motion, AnimatePresence } from "framer-motion";
+
 const CheckoutPage = () => {
   const router = useRouter();
   const params = useParams();
   const { cartItems, clearCart } = useCart();
   const createOrderMutation = useCreateOrder();
   const { user, isAuthenticated } = useAuth();
+  const { data: paymentGateways, isLoading: isLoadingGateways } =
+    usePaymentGateways();
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    string | null
+  >(null);
+
   const isPreviewMode = !!params?.siteUser;
   const siteUser = params?.siteUser as string;
 
@@ -61,10 +70,52 @@ const CheckoutPage = () => {
     0
   );
 
-  // Modified onSubmit function in CheckoutPage component
+  // Filter enabled payment gateways and get unique ones
+  const enabledPaymentGateways =
+    paymentGateways?.filter(gateway => gateway.is_enabled) || [];
+
+  // Get unique payment types and add COD as default option
+  const gatewayPaymentTypes = Array.from(
+    new Set(enabledPaymentGateways.map(g => g.payment_type))
+  );
+
+  // Always include COD as an option
+  const uniquePaymentTypes = ["cod", ...gatewayPaymentTypes];
+
+  const getPaymentColor = (type: string) => {
+    switch (type.toLowerCase()) {
+      case "esewa":
+        return "bg-green-500";
+      case "khalti":
+        return "bg-purple-500";
+      case "cod":
+        return "bg-orange-500";
+      default:
+        return "bg-blue-500";
+    }
+  };
+
+  const getPaymentLabel = (type: string) => {
+    switch (type.toLowerCase()) {
+      case "cod":
+        return "Cash on Delivery";
+      case "esewa":
+        return "eSewa";
+      case "khalti":
+        return "Khalti";
+      default:
+        return type;
+    }
+  };
+
   const onSubmit = async (data: CheckoutFormValues) => {
     if (cartItems.length === 0) {
       toast.error("Your cart is empty");
+      return;
+    }
+
+    if (uniquePaymentTypes.length > 0 && !selectedPaymentMethod) {
+      toast.error("Please select a payment method");
       return;
     }
 
@@ -87,27 +138,55 @@ const CheckoutPage = () => {
         items: orderItems,
       };
 
-      // Check if user is authenticated and pass the token flag accordingly
       if (isAuthenticated && user) {
         console.log("Order being placed by authenticated user:", user.email);
       } else {
         console.log("Order being placed by guest user");
       }
 
-      // Create order with conditional token inclusion
       const order = await createOrderMutation.mutateAsync({
         orderData,
         includeToken: isAuthenticated && !!user,
       });
 
-      toast.success("Order placed successfully!");
-      clearCart();
-
-      // Navigate based on whether we're in preview mode
-      if (isPreviewMode) {
-        router.push(`/preview/${siteUser}/order-confirmation/${order.id}`);
+      // Handle payment method routing
+      if (selectedPaymentMethod) {
+        switch (selectedPaymentMethod.toLowerCase()) {
+          case "esewa":
+            router.push(
+              `/preview/${siteUser}/esewa-payment?orderId=${order.id}`
+            );
+            break;
+          case "khalti":
+            router.push(
+              `/preview/${siteUser}/khalti-payment?orderId=${order.id}`
+            );
+            break;
+          case "cod":
+            // For COD, go directly to order confirmation
+            toast.success("Order placed successfully! Pay on delivery.");
+            clearCart();
+            if (isPreviewMode) {
+              router.push(
+                `/preview/${siteUser}/order-confirmation/${order.id}`
+              );
+            } else {
+              router.push(`/order-confirmation/${order.id}`);
+            }
+            break;
+          default:
+            break;
+        }
       } else {
-        router.push(`/order-confirmation/${order.id}`);
+        // Direct order confirmation without payment gateway
+        toast.success("Order placed successfully!");
+        clearCart();
+
+        if (isPreviewMode) {
+          router.push(`/preview/${siteUser}/order-confirmation/${order.id}`);
+        } else {
+          router.push(`/order-confirmation/${order.id}`);
+        }
       }
     } catch (error) {
       console.error("Order creation failed:", error);
@@ -222,6 +301,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="customer_address">Billing Address</Label>
                   <Textarea
                     id="customer_address"
                     placeholder="Enter your billing address"
@@ -260,6 +340,7 @@ const CheckoutPage = () => {
 
                 {!sameAsCustomerAddress && (
                   <div className="space-y-2">
+                    <Label htmlFor="shipping_address">Shipping Address</Label>
                     <Textarea
                       id="shipping_address"
                       placeholder="Enter your shipping address"
@@ -280,6 +361,69 @@ const CheckoutPage = () => {
                   </div>
                 )}
 
+                {/* Payment Method Selection */}
+                {uniquePaymentTypes.length > 0 && (
+                  <div className="space-y-4 pt-4">
+                    <Separator />
+                    <div>
+                      <h3 className="mb-3 text-lg font-semibold">
+                        Payment Method
+                      </h3>
+                      <p className="mb-4 text-sm text-gray-600">
+                        Select your preferred payment option
+                      </p>
+
+                      <div className="grid gap-3">
+                        <AnimatePresence mode="wait">
+                          {uniquePaymentTypes.map(type => (
+                            <motion.div
+                              key={type}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.3 }}
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                            >
+                              <Button
+                                type="button"
+                                variant="outline"
+                                className={cn(
+                                  "relative w-full justify-start overflow-hidden text-left font-normal transition-all duration-300",
+                                  selectedPaymentMethod === type &&
+                                    "border-2 border-[#B85450] bg-gray-100"
+                                )}
+                                onClick={() => setSelectedPaymentMethod(type)}
+                                disabled={isSubmitting}
+                              >
+                                <motion.div
+                                  className={`mr-3 h-4 w-4 rounded-full ${getPaymentColor(type)}`}
+                                  whileHover={{ scale: 1.2 }}
+                                  transition={{
+                                    type: "spring",
+                                    stiffness: 400,
+                                    damping: 10,
+                                  }}
+                                />
+                                <span className="capitalize">
+                                  {getPaymentLabel(type)}
+                                </span>
+                                {selectedPaymentMethod === type && (
+                                  <motion.div
+                                    className="absolute inset-0 bg-[#B85450]/5"
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                  />
+                                )}
+                              </Button>
+                            </motion.div>
+                          ))}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="pt-6">
                   <Button
                     type="submit"
@@ -288,8 +432,12 @@ const CheckoutPage = () => {
                     disabled={isSubmitting || createOrderMutation.isPending}
                   >
                     {isSubmitting || createOrderMutation.isPending
-                      ? "Placing Order..."
-                      : "Place Order"}
+                      ? "Processing..."
+                      : selectedPaymentMethod
+                        ? selectedPaymentMethod.toLowerCase() === "cod"
+                          ? "Place Order (Cash on Delivery)"
+                          : `Pay with ${getPaymentLabel(selectedPaymentMethod)}`
+                        : "Place Order"}
                   </Button>
                 </div>
               </form>
