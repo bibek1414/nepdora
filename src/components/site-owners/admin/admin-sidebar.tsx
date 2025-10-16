@@ -111,7 +111,6 @@ const navigationGroups = [
     items: [
       { name: "Issues Tracking", href: "/admin/issues", icon: Bug },
       { name: "Settings", href: "/admin/settings/domains", icon: Edit3 },
-      { name: "Plugins", href: "/admin/plugins", icon: PanelRight },
     ],
   },
   {
