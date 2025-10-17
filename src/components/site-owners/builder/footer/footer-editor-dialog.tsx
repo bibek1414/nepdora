@@ -212,16 +212,6 @@ const PageSelector: React.FC<PageSelectorProps> = ({
         <Separator />
 
         {/* External URL Option */}
-        <div className="p-2">
-          <Button
-            onClick={handleExternalUrl}
-            variant="ghost"
-            className="text-primary hover:text-primary w-full justify-start"
-          >
-            <ExternalLink className="mr-2 h-4 w-4" />
-            <span>External URL</span>
-          </Button>
-        </div>
 
         <Separator />
 
