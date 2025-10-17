@@ -50,7 +50,8 @@ import ReusableQuill from "@/components/ui/tip-tap";
 import InventoryVariants from "./inventory-varient";
 
 interface ProductFormProps {
-  product?: Product | null;
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  product?: any | null;
   onClose?: () => void;
 }
 
@@ -104,7 +105,8 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
       market_price: product?.market_price || "",
       stock: product?.stock ?? 0,
       thumbnail_image: null,
-      image_files: product?.images?.map(img => img.image) || [],
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      image_files: product?.images?.map((img: any) => img.image) || [],
       thumbnail_alt_description: product?.thumbnail_alt_description || "",
       category_id: product?.category?.id?.toString() || "",
       sub_category_id: product?.sub_category?.id?.toString() || "",
@@ -121,30 +123,40 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
     }
   }, [product]);
 
-  // Initialize variants from product if editing
+  // Initialize options and variants from product data
   useEffect(() => {
-    if (product?.options && product.options.length > 0) {
-      const mappedOptions: ProductOption[] = product.options.map(opt => ({
-        id: opt.id.toString(),
-        name: opt.name,
-        values:
-          opt.values?.map(v => ({
-            id: v.id.toString(),
-            value: v.value,
-          })) || [],
-      }));
-      setOptions(mappedOptions);
-    }
+    if (product) {
+      // Map options from product data
+      if (product.options && product.options.length > 0) {
+        const mappedOptions: ProductOption[] = product.options.map(
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (opt: any) => ({
+            id: opt.id.toString(),
+            name: opt.name,
+            //eslint-disable-next-line @typescript-eslint/no-explicit-any
+            values: opt.values.map((val: any) => ({
+              id: val.id.toString(),
+              value: val.value,
+            })),
+          })
+        );
+        setOptions(mappedOptions);
+      }
 
-    if (product?.variants && product.variants.length > 0) {
-      const mappedVariants: Variant[] = product.variants.map(v => ({
-        id: v.id.toString(),
-        options: {},
-        price: v.price || "0.00",
-        stock: v.stock || 0,
-        image: v.image,
-      }));
-      setVariants(mappedVariants);
+      // Map variants from product data
+      if (product.variants_read && product.variants_read.length > 0) {
+        const mappedVariants: Variant[] = product.variants_read.map(
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (variant: any) => ({
+            id: variant.id.toString(),
+            options: variant.option_values || {},
+            price: variant.price || "0.00",
+            stock: variant.stock || 0,
+            image: variant.image,
+          })
+        );
+        setVariants(mappedVariants);
+      }
     }
   }, [product]);
 
@@ -402,6 +414,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                 onVariantsChange={setVariants}
                 options={options}
                 onOptionsChange={setOptions}
+                isEditing={isEditing}
               />
 
               {/* Categories */}

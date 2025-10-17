@@ -45,6 +45,7 @@ interface InventoryVariantsProps {
   onVariantsChange: (variants: Variant[]) => void;
   options: ProductOption[];
   onOptionsChange: (options: ProductOption[]) => void;
+  isEditing?: boolean;
 }
 
 interface OptionFormData {
@@ -61,6 +62,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
   onVariantsChange,
   options,
   onOptionsChange,
+  isEditing = false,
 }) => {
   const [optionForms, setOptionForms] = useState<OptionFormData[]>([]);
   const [groupBy, setGroupBy] = useState<string>("");
@@ -70,13 +72,10 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
 
   // Generate variants when options change
   useEffect(() => {
-    if (options.length > 0) {
+    if (options.length > 0 && !isEditing) {
       generateVariants();
-    } else {
-      // Clear variants if no options exist
-      onVariantsChange([]);
     }
-  }, [options]);
+  }, [options, isEditing]);
 
   const generateVariants = () => {
     if (options.length === 0) {
@@ -561,7 +560,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
         <h3 className="text-lg font-semibold">Inventory & Variants</h3>
       </div>
 
-      {/* Track Stock Toggle - Independent of variant options */}
+      {/* Track Stock Toggle */}
       <div className="flex items-center justify-between rounded-lg border p-4">
         <div>
           <Label className="text-sm font-medium">Track Inventory</Label>
@@ -572,7 +571,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
         <Switch checked={trackStock} onCheckedChange={onTrackStockChange} />
       </div>
 
-      {/* Variants Section - Always available, independent of track stock */}
+      {/* Variants Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
@@ -617,7 +616,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
           </div>
         )}
 
-        {/* Add Another Option Button - Show when there are active forms */}
+        {/* Add Another Option Button */}
         {optionForms.length > 0 && (
           <div
             onClick={handleAddOptionForm}

@@ -21,7 +21,7 @@ export const useBulkUpload = () => {
 
       if (data.success) {
         toast.success(
-          `Bulk upload completed! ${data.successful || 0} products imported successfully.`
+          `Bulk upload completed!  products imported successfully.`
         );
 
         if (data.failed && data.failed > 0) {

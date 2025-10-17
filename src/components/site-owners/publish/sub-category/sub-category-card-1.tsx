@@ -31,7 +31,7 @@ export const SubCategoryCard1: React.FC<SubCategoryCard1Props> = ({
 
   const getSubCategoryUrl = (): string => {
     if (siteUser) {
-      return `/publish/${siteUser}/products?sub_category=${subcategory.slug}`;
+      return `/products?sub_category=${subcategory.slug}`;
     } else {
       return `/publish/products?sub_category=${subcategory.slug}`;
     }
