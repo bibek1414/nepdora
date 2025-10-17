@@ -58,23 +58,14 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
   };
 
   return (
-    <Card className="border-primary/20 mx-auto max-w-2xl border-2 bg-white shadow-xl">
-      <CardContent className="p-10">
-        <div className="mb-8 text-center">
-          <h3 className="text-foreground mb-2 text-2xl font-bold">
-            Send us a Message
-          </h3>
-          <p className="text-muted-foreground">
-            {data.description || "We'll get back to you as soon as possible."}
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
+    <Card className="mx-auto max-w-xl border-0 bg-transparent shadow-none">
+      <CardContent>
+        <form onSubmit={handleSubmit} className="mx-auto max-w-md space-y-5">
+          <div className="space-y-3">
             <div>
               <Label
                 htmlFor="name"
-                className="text-foreground text-sm font-medium"
+                className="mb-1 text-sm font-medium text-neutral-500"
               >
                 Name{" "}
                 {data.required_fields.name && (
@@ -88,17 +79,17 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
                 value={formData.name}
                 onChange={handleInputChange}
                 required={data.required_fields.name}
-                className="mt-1"
-                placeholder="Your full name"
+                className="h-12 rounded-md border border-neutral-300 bg-white px-4 text-base focus:border-neutral-900 focus:ring-0 focus:outline-none"
+                placeholder="Your name"
               />
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               {data.showEmail && (
                 <div>
                   <Label
                     htmlFor="email"
-                    className="text-foreground text-sm font-medium"
+                    className="mb-1 text-sm font-medium text-neutral-500"
                   >
                     Email{" "}
                     {data.required_fields.email && (
@@ -112,8 +103,8 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
                     value={formData.email}
                     onChange={handleInputChange}
                     required={data.required_fields.email}
-                    className="mt-1"
-                    placeholder="your.email@example.com"
+                    className="h-12 rounded-md border border-neutral-300 bg-white px-4 text-base focus:border-neutral-900 focus:ring-0 focus:outline-none"
+                    placeholder="you@example.com"
                   />
                 </div>
               )}
@@ -122,7 +113,7 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
                 <div>
                   <Label
                     htmlFor="phone_number"
-                    className="text-foreground text-sm font-medium"
+                    className="mb-1 text-sm font-medium text-neutral-500"
                   >
                     Phone{" "}
                     {data.required_fields.phone && (
@@ -136,7 +127,7 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
                     value={formData.phone_number}
                     onChange={handleInputChange}
                     required={data.required_fields.phone}
-                    className="mt-1"
+                    className="h-12 rounded-md border border-neutral-300 bg-white px-4 text-base focus:border-neutral-900 focus:ring-0 focus:outline-none"
                     placeholder="+1 (555) 123-4567"
                   />
                 </div>
@@ -146,7 +137,7 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
             <div>
               <Label
                 htmlFor="message"
-                className="text-foreground text-sm font-medium"
+                className="mb-1 text-sm font-medium text-neutral-500"
               >
                 Message{" "}
                 {data.required_fields.message && (
@@ -159,7 +150,7 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
                 value={formData.message}
                 onChange={handleInputChange}
                 required={data.required_fields.message}
-                className="mt-1 min-h-[140px]"
+                className="min-h-[160px] rounded-md border border-neutral-300 bg-white px-4 py-3 text-base focus:border-neutral-900 focus:ring-0 focus:outline-none"
                 placeholder="Tell us how we can help you..."
               />
             </div>
@@ -169,8 +160,8 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
             type="submit"
             variant="default"
             disabled={submitContactForm.isPending || isPreview}
-            className="w-full"
-            size="lg"
+            className="mx-auto block h-12 w-full max-w-md rounded-md text-base"
+            size="default"
           >
             {submitContactForm.isPending ? (
               <>
@@ -178,10 +169,9 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
                 Sending...
               </>
             ) : (
-              <>
-                <Send className="mr-2 h-4 w-4" />
-                Send Message
-              </>
+              <div className="flex items-center justify-center gap-2">
+                Submit Message
+              </div>
             )}
           </Button>
         </form>

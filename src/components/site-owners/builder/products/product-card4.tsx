@@ -148,8 +148,8 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
     addToWishlistMutation.isPending || removeFromWishlistMutation.isPending;
 
   return (
-    <Link href={detailsUrl} className="">
-      <Card className="group relative gap-0 overflow-hidden border bg-white py-0 transition-all duration-300">
+    <Link href={detailsUrl} className="block">
+      <Card className="group relative overflow-hidden border border-gray-200 bg-white py-0 transition-all duration-300 hover:-translate-y-1">
         <CardContent className="p-0">
           {/* Image Section */}
           <div className="relative overflow-hidden">
@@ -158,19 +158,19 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
                 src={productImage}
                 alt={product.thumbnail_alt_description || product.name}
                 fill
-                className="object-cover transition-transform duration-500"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
                 onError={e => {
                   e.currentTarget.src =
                     "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop";
                 }}
               />
-              <div className="absolute inset-0 bg-black/0 transition-all duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent transition-all duration-300" />
             </div>
 
             {/* Floating Badges */}
-            <div className="absolute top-3 left-3 flex flex-col gap-1">
+            <div className="absolute top-2 left-2 flex flex-col gap-1">
               {discountPercentage > 0 && (
-                <Badge className="bg-red-500 text-xs font-bold text-white">
+                <Badge className="bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
                   -{discountPercentage}%
                 </Badge>
               )}
@@ -178,27 +178,30 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
 
             {/* Stock Status */}
             {product.stock === 0 && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-                <Badge variant="destructive" className="text-sm font-bold">
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                <Badge
+                  variant="destructive"
+                  className="px-2 py-1 text-[11px] font-semibold"
+                >
                   Out of Stock
                 </Badge>
               </div>
             )}
 
             {/* Quick Actions Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <div className="absolute inset-0 flex items-center justify-center gap-2 opacity-0 transition-all duration-300 group-hover:opacity-100">
               <Button
                 size="sm"
                 variant="secondary"
-                className={`rounded-full bg-gray-600 backdrop-blur-sm hover:bg-gray-700 ${
-                  isWishlisted ? "text-red-500" : ""
+                className={`h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm transition-all hover:bg-white ${
+                  isWishlisted ? "text-red-500" : "text-gray-600"
                 }`}
                 onClick={handleFavorite}
                 disabled={isWishlistLoading}
                 data-wishlist="true"
               >
                 <Heart
-                  className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""} ${
+                  className={`h-3.5 w-3.5 ${isWishlisted ? "fill-current" : ""} ${
                     isWishlistLoading ? "animate-pulse" : ""
                   }`}
                 />
@@ -207,12 +210,12 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
           </div>
 
           {/* Content Section */}
-          <div className="space-y-3 p-4">
+          <div className="space-y-2 p-3">
             {/* Category & Rating */}
             <div className="flex items-center justify-between">
               {product.category && (
                 <span
-                  className="text-xs font-medium tracking-wide uppercase"
+                  className="text-[10px] font-medium tracking-wider uppercase opacity-70"
                   style={{
                     color: theme.colors.primary,
                     fontFamily: theme.fonts.heading,
@@ -223,15 +226,15 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
               )}
               {reviewsCount > 0 ? (
                 <div className="flex items-center gap-1">
-                  <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                  <span className="text-xs font-medium text-gray-600">
+                  <Star className="h-2.5 w-2.5 fill-yellow-400 text-yellow-400" />
+                  <span className="text-[10px] font-medium text-gray-500">
                     {rating.toFixed(1)}
                   </span>
                 </div>
               ) : (
                 <div className="flex items-center gap-1">
-                  <Star className="h-3 w-3 text-gray-300" />
-                  <span className="text-xs font-medium text-gray-400">
+                  <Star className="h-2.5 w-2.5 text-gray-300" />
+                  <span className="text-[10px] font-medium text-gray-400">
                     No reviews
                   </span>
                 </div>
@@ -239,20 +242,20 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
             </div>
 
             {/* Product Name */}
-            <h3 className="line-clamp-2 text-sm leading-tight font-semibold">
+            <h3 className="line-clamp-2 text-xs leading-tight font-medium text-gray-900">
               {product.name}
             </h3>
 
             {/* Subcategory */}
             {product.sub_category && (
-              <p className="text-xs text-gray-500">
+              <p className="text-[10px] font-normal text-gray-400">
                 {product.sub_category.name}
               </p>
             )}
 
             {/* Description */}
             {showDescription && product.description && (
-              <p className="line-clamp-2 text-xs text-gray-600">
+              <p className="line-clamp-2 text-[10px] leading-relaxed text-gray-500">
                 {product.description}
               </p>
             )}
@@ -261,7 +264,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
             {showStock && product.stock > 0 && (
               <div className="flex items-center gap-1">
                 <div
-                  className={`h-2 w-2 rounded-full ${
+                  className={`h-1.5 w-1.5 rounded-full ${
                     product.stock > 10
                       ? "bg-green-500"
                       : product.stock > 5
@@ -269,7 +272,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
                         : "bg-red-500"
                   }`}
                 />
-                <span className="text-xs text-gray-500">
+                <span className="text-[10px] font-normal text-gray-400">
                   {product.stock > 10 ? "In Stock" : `${product.stock} left`}
                 </span>
               </div>
@@ -278,19 +281,19 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
             {/* Price Section */}
             {showPrice && (
               <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-3xl font-bold">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-base font-bold text-gray-900">
                     Rs.{Number(discountedPrice).toLocaleString("en-IN")}
                   </span>
 
                   {marketPrice && discountPercentage > 0 && (
-                    <span className="text-xl text-gray-400 line-through">
+                    <span className="text-xs text-gray-400 line-through">
                       Rs.{Number(marketPrice).toLocaleString("en-IN")}
                     </span>
                   )}
                 </div>
                 {discountPercentage > 0 && marketPrice !== null && (
-                  <p className="text-xs font-medium text-green-600">
+                  <p className="text-[10px] font-medium text-green-600">
                     Save Rs.
                     {Number(marketPrice - price).toLocaleString("en-IN", {
                       minimumFractionDigits: 2,
@@ -303,13 +306,13 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
 
             {/* Add to Cart Button */}
             <SOButton
-              className="w-full py-2 text-sm font-medium text-white transition-colors"
+              className="w-full py-2 text-[11px] font-medium text-white transition-all duration-200"
               disabled={product.stock === 0}
               variant="default"
               onClick={handleAddToCart}
               data-cart-action="true"
             >
-              <ShoppingCart className="mr-2 h-4 w-4" />
+              <ShoppingCart className="mr-1.5 h-3 w-3" />
               {product.stock > 0 ? "Add to Cart" : "Notify Me"}
             </SOButton>
           </div>

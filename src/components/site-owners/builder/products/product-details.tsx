@@ -39,6 +39,7 @@ import {
 import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface ProductDetailProps {
   slug: string;
@@ -53,6 +54,36 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const [selectedImage, setSelectedImage] = React.useState<string>("");
   const { addToCart } = useCart();
   const [quantity, setQuantity] = React.useState(1);
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with fallback to defaults (consistent with product-card4)
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
+  // Common themed styles for buttons and selected states
+  const primaryButtonStyle: React.CSSProperties = {
+    backgroundColor: theme.colors.primary,
+    color: theme.colors.primaryForeground,
+    borderColor: theme.colors.primary,
+  };
+  const outlineButtonStyle: React.CSSProperties = {
+    borderColor: theme.colors.primary,
+    color: theme.colors.primary,
+  };
+  const subtlePrimaryBg = `${theme.colors.primary}1A`; // ~10% opacity overlay
+  const subtleSecondaryBg = `${theme.colors.secondary}1A`;
 
   // Variant selection state
   const [selectedOptions, setSelectedOptions] = React.useState<
@@ -296,7 +327,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   }
 
   return (
-    <div className="bg-background">
+    <div className="bg-background pt-5 pb-80">
       <div className="container mx-auto max-w-7xl px-4 py-8 md:py-8">
         <Breadcrumb className="mb-8">
           <BreadcrumbList>
@@ -359,9 +390,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <Button
                   key={idx}
                   variant="outline"
-                  className={`relative aspect-square overflow-hidden p-0 ${
-                    selectedImage === img ? "ring-primary ring-2" : ""
-                  }`}
+                  className="relative aspect-square overflow-hidden p-0"
+                  style={
+                    selectedImage === img
+                      ? { outline: `2px solid ${theme.colors.primary}` }
+                      : undefined
+                  }
                   onClick={() => setSelectedImage(img)}
                 >
                   <Image
@@ -382,23 +416,64 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
           <div className="flex flex-col">
             <div className="mb-2 flex items-center gap-2">
               {product.category && (
-                <Badge variant="secondary" className="w-fit capitalize">
+                <Badge
+                  variant="secondary"
+                  className="w-fit capitalize"
+                  style={{
+                    backgroundColor: `${theme.colors.primary}1A`, // subtle tint of primary
+                    color: theme.colors.primary,
+                    borderColor: `${theme.colors.primary}33`,
+                    fontFamily: theme.fonts.heading,
+                  }}
+                >
                   {product.category.name}
                 </Badge>
               )}
               {product.sub_category && (
-                <Badge variant="outline" className="w-fit capitalize">
+                <Badge
+                  variant="outline"
+                  className="w-fit capitalize"
+                  style={{
+                    backgroundColor: `${theme.colors.primary}0D`, // even lighter tint
+                    color: theme.colors.primary,
+                    borderColor: `${theme.colors.primary}26`,
+                    fontFamily: theme.fonts.heading,
+                  }}
+                >
                   {product.sub_category.name}
                 </Badge>
               )}
               {product.is_featured && (
-                <Badge className="bg-yellow-500 text-black">Featured</Badge>
+                <Badge
+                  className="text-xs"
+                  style={{
+                    backgroundColor: theme.colors.secondary,
+                    color: theme.colors.secondaryForeground,
+                  }}
+                >
+                  Featured
+                </Badge>
               )}
               {product.is_popular && (
-                <Badge className="bg-red-500">Popular</Badge>
+                <Badge
+                  className="text-xs"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                  }}
+                >
+                  Popular
+                </Badge>
               )}
               {discountPercentage > 0 && (
-                <Badge variant="destructive" className="text-xs font-bold">
+                <Badge
+                  className="text-xs font-bold"
+                  style={{
+                    backgroundColor: "#FEE2E2", // subtle red background
+                    color: "#B91C1C", // readable red text
+                    borderColor: "#FCA5A5",
+                  }}
+                >
                   -{discountPercentage}%
                 </Badge>
               )}
@@ -420,11 +495,15 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               <Button
                 variant="ghost"
                 size="icon"
-                className={`mt-2 h-10 w-10 transition-colors ${
+                className="mt-2 h-10 w-10 transition-colors"
+                style={
                   isWishlisted
-                    ? "bg-red-50 text-red-500 hover:bg-red-100"
-                    : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-                }`}
+                    ? {
+                        backgroundColor: subtleSecondaryBg,
+                        color: theme.colors.secondary,
+                      }
+                    : { backgroundColor: "#F9FAFB", color: theme.colors.text }
+                }
                 onClick={handleFavorite}
                 disabled={isWishlistLoading}
                 data-wishlist="true"
@@ -443,11 +522,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-5 w-5 ${
+                      className="h-5 w-5 fill-current"
+                      style={
                         i < Math.round(rating)
-                          ? "fill-yellow-500 text-yellow-500"
-                          : "text-muted-foreground/30"
-                      }`}
+                          ? { color: theme.colors.secondary }
+                          : { color: "#9CA3AF4D" }
+                      }
                     />
                   ))}
                 </div>
@@ -462,7 +542,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className="text-muted-foreground/30 h-5 w-5"
+                      className="h-5 w-5"
+                      style={{ color: "#9CA3AF4D" }}
                     />
                   ))}
                 </div>
@@ -473,7 +554,10 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             )}
 
             <div className="my-6">
-              <span className="text-primary text-4xl font-extrabold">
+              <span
+                className="text-4xl font-extrabold"
+                style={{ color: theme.colors.primary }}
+              >
                 ${discountedPrice}
               </span>
               {marketPrice && discountPercentage > 0 && (
@@ -519,6 +603,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                             className={`relative min-w-[80px] capitalize ${
                               !isAvailable ? "opacity-50" : ""
                             }`}
+                            style={
+                              isSelected
+                                ? primaryButtonStyle
+                                : outlineButtonStyle
+                            }
                             onClick={() =>
                               handleOptionChange(option.name, value.value)
                             }
@@ -545,6 +634,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   <Button
                     variant="outline"
                     size="icon"
+                    style={outlineButtonStyle}
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
                   >
                     -
@@ -562,6 +652,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   <Button
                     variant="outline"
                     size="icon"
+                    style={outlineButtonStyle}
                     onClick={() =>
                       setQuantity(q => Math.min(currentStock, q + 1))
                     }
@@ -584,6 +675,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   size="lg"
                   className="flex-1"
                   disabled={currentStock === 0}
+                  style={primaryButtonStyle}
                   onClick={handleAddToCart}
                 >
                   {currentStock > 0 ? "Add to Cart" : "Out of Stock"}
@@ -593,20 +685,36 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
             <div className="mt-8 grid grid-cols-1 gap-4 text-center text-sm sm:grid-cols-3">
               <div className="bg-muted/50 flex flex-col items-center gap-2 rounded-lg p-4">
-                <Truck className="text-primary h-6 w-6" />
+                <Truck
+                  className="h-6 w-6"
+                  style={{ color: theme.colors.primary }}
+                />
                 <span className="text-foreground font-medium">
                   Fast Shipping
                 </span>
               </div>
               <div className="bg-muted/50 flex flex-col items-center gap-2 rounded-lg p-4">
-                <ShieldCheck className="text-primary h-6 w-6" />
+                <ShieldCheck
+                  className="h-6 w-6"
+                  style={{ color: theme.colors.primary }}
+                />
                 <span className="text-foreground font-medium">
                   1 Year Warranty
                 </span>
               </div>
               <div className="bg-muted/50 flex flex-col items-center gap-2 rounded-lg p-4">
-                <PackageCheck className="text-primary h-6 w-6" />
-                <span className="font-medium text-green-600">
+                <PackageCheck
+                  className="h-6 w-6"
+                  style={{ color: theme.colors.primary }}
+                />
+                <span
+                  className="font-medium"
+                  style={
+                    currentStock > 0
+                      ? { color: theme.colors.secondary }
+                      : undefined
+                  }
+                >
                   {currentStock > 0 ? "In Stock" : "Out of Stock"}
                 </span>
               </div>
@@ -708,18 +816,22 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                         <div className="border-border border-b pb-4">
                           <div className="flex items-center gap-4">
                             <div className="text-center">
-                              <div className="text-primary text-3xl font-bold">
+                              <div
+                                className="text-3xl font-bold"
+                                style={{ color: theme.colors.primary }}
+                              >
                                 {rating.toFixed(1)}
                               </div>
                               <div className="flex items-center justify-center">
                                 {[...Array(5)].map((_, i) => (
                                   <Star
                                     key={i}
-                                    className={`h-4 w-4 ${
+                                    className="h-4 w-4 fill-current"
+                                    style={
                                       i < Math.round(rating)
-                                        ? "fill-yellow-500 text-yellow-500"
-                                        : "text-muted-foreground/30"
-                                    }`}
+                                        ? { color: theme.colors.secondary }
+                                        : { color: "#9CA3AF4D" }
+                                    }
                                   />
                                 ))}
                               </div>
@@ -741,11 +853,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                                 {[...Array(5)].map((_, i) => (
                                   <Star
                                     key={i}
-                                    className={`h-4 w-4 ${
+                                    className="h-4 w-4 fill-current"
+                                    style={
                                       i < Math.round(rating)
-                                        ? "fill-yellow-500 text-yellow-500"
-                                        : "text-muted-foreground/30"
-                                    }`}
+                                        ? { color: theme.colors.secondary }
+                                        : { color: "#9CA3AF4D" }
+                                    }
                                   />
                                 ))}
                               </div>

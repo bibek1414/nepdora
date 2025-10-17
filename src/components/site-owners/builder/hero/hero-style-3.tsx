@@ -236,11 +236,11 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
         </div>
 
         {/* Right Side Image/Illustration */}
-        <div className="relative flex justify-center">
+        <div className="relative flex justify-end">
           {data.showImage && data.imageUrl ? (
             <div className="relative w-full max-w-md">
               <div
-                className="rounded-2xl border p-6 shadow-xl backdrop-blur-sm"
+                className="rounded-2xl border shadow-xl backdrop-blur-sm"
                 style={{
                   backgroundColor: `${theme.colors.background}1a`,
                   borderColor: `${theme.colors.primary}33`,

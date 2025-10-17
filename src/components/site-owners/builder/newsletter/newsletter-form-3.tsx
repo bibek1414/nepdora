@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { Input } from "@/components/ui/input";
-import {
-  Mail,
-  Send,
-  Loader2,
-  CheckCircle,
-  TrendingUp,
-  Users,
-  BookOpen,
-} from "lucide-react";
+import { Mail, Send, Loader2, CheckCircle } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { toast } from "sonner";
 import {
@@ -81,123 +73,76 @@ export const NewsletterForm3: React.FC<NewsletterForm3Props> = ({
   // Success state
   if (isSubscribed && !isEditable) {
     return (
-      <div className="rounded-3xl bg-gradient-to-r from-blue-50 to-indigo-100 p-12">
-        <div className="mx-auto max-w-4xl">
-          <div className="flex flex-col items-center gap-8 lg:flex-row">
-            <div className="flex-1 text-center lg:text-left">
-              <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-600 lg:mx-0" />
-              <h3 className="mb-4 text-3xl font-bold text-gray-900">
-                You&apos;re all set!
-              </h3>
-              <p className="text-lg text-gray-600">
-                Welcome to our community of professionals. You&apos;ll receive
-                valuable insights directly to your inbox.
-              </p>
-            </div>
-            <div className="flex-1">
-              <div className="grid grid-cols-3 gap-6 text-center">
-                <div>
-                  <Users className="mx-auto mb-2 h-8 w-8 text-blue-600" />
-                  <div className="text-2xl font-bold text-gray-900">10K+</div>
-                  <div className="text-sm text-gray-600">Subscribers</div>
-                </div>
-                <div>
-                  <BookOpen className="mx-auto mb-2 h-8 w-8 text-blue-600" />
-                  <div className="text-2xl font-bold text-gray-900">Weekly</div>
-                  <div className="text-sm text-gray-600">Insights</div>
-                </div>
-                <div>
-                  <TrendingUp className="mx-auto mb-2 h-8 w-8 text-blue-600" />
-                  <div className="text-2xl font-bold text-gray-900">Expert</div>
-                  <div className="text-sm text-gray-600">Tips</div>
-                </div>
-              </div>
-            </div>
+      <div className="rounded-3xl border border-neutral-200 bg-white p-12 shadow-sm">
+        <div className="mx-auto max-w-2xl text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-50">
+            <CheckCircle className="h-10 w-10 text-green-600" />
           </div>
+          <h3 className="mb-3 text-3xl font-semibold tracking-tight text-neutral-900">
+            You’re subscribed
+          </h3>
+          <p className="text-base leading-relaxed text-neutral-600">
+            Thanks for joining. We’ll send occasional, thoughtful updates — no
+            spam, ever.
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="rounded-3xl bg-gradient-to-r from-blue-50 to-indigo-100 p-12">
-      <div className="mx-auto max-w-4xl">
-        <div className="flex flex-col items-center gap-12 lg:flex-row">
-          {/* Left Content */}
-          <div className="flex-1">
-            <div className="mb-8">
-              {isEditable ? (
-                <EditableText
-                  value={data.title}
-                  onChange={value => updateData("title", value)}
-                  as="h2"
-                  className="mb-4 text-4xl font-bold text-gray-900"
-                  isEditable={true}
-                  placeholder="Enter title..."
-                />
-              ) : (
-                <h2 className="mb-4 text-4xl font-bold text-gray-900">
-                  {data.title}
-                </h2>
-              )}
+    <div className="rounded-3xl bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50 p-10 sm:p-12">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid items-center gap-8 md:grid-cols-2">
+          <div>
+            {isEditable ? (
+              <EditableText
+                value={data.title}
+                onChange={value => updateData("title", value)}
+                as="h2"
+                className="mb-2 text-5xl font-black tracking-tight text-neutral-900 sm:text-6xl"
+                isEditable={true}
+                placeholder="Enter title..."
+              />
+            ) : (
+              <h2 className="mb-2 text-5xl font-black tracking-tight text-neutral-900 sm:text-6xl">
+                {data.title}
+              </h2>
+            )}
+          </div>
 
-              {data.subtitle &&
-                (isEditable ? (
-                  <EditableText
-                    value={data.subtitle}
-                    onChange={value => updateData("subtitle", value)}
-                    as="p"
-                    className="mb-6 text-xl text-gray-600"
-                    isEditable={true}
-                    placeholder="Enter subtitle..."
+          <div>
+            <form
+              onSubmit={handleSubmit}
+              className="w-full space-y-3"
+              aria-label="Newsletter subscription form"
+            >
+              <div className="flex w-full overflow-hidden rounded-full bg-white shadow-sm ring-1 ring-neutral-200 ring-inset">
+                <div className="relative flex-1">
+                  <Mail className="pointer-events-none absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+                  <Input
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder={data.placeholder_text || "Your email address"}
+                    aria-label="Email address"
+                    required
+                    className="h-14 w-full rounded-l-full rounded-r-none border-0 bg-transparent pr-4 pl-12 text-base placeholder:text-neutral-400 focus:ring-2 focus:ring-blue-500 focus:ring-inset"
+                    disabled={createNewsletter.isPending || isPreview}
                   />
-                ) : (
-                  <p className="mb-6 text-xl text-gray-600">{data.subtitle}</p>
-                ))}
-
-              {data.description &&
-                (isEditable ? (
-                  <EditableText
-                    value={data.description}
-                    onChange={value => updateData("description", value)}
-                    as="p"
-                    className="mb-8 text-lg text-gray-600"
-                    isEditable={true}
-                    placeholder="Enter description..."
-                    multiline={true}
-                  />
-                ) : (
-                  <p className="mb-8 text-lg text-gray-600">
-                    {data.description}
-                  </p>
-                ))}
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Input
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder={
-                    data.placeholder_text || "Enter your email address"
-                  }
-                  required
-                  className="h-12 flex-1 border-gray-200 bg-white text-base shadow-sm"
-                  disabled={createNewsletter.isPending || isPreview}
-                />
+                </div>
                 <Button
                   type="submit"
                   disabled={
                     createNewsletter.isPending || isPreview || !formData.email
                   }
                   variant="default"
-                  className="h-12 bg-blue-600 px-8 text-base font-semibold hover:bg-blue-700"
+                  className="bg-primary h-14 shrink-0 rounded-l-none rounded-r-full px-6 text-base font-medium text-white transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {createNewsletter.isPending ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Subscribing...
+                      Subscribing
                     </>
                   ) : (
                     <>
@@ -207,10 +152,6 @@ export const NewsletterForm3: React.FC<NewsletterForm3Props> = ({
                   )}
                 </Button>
               </div>
-
-              {data.show_privacy_note && data.privacy_note && (
-                <p className="text-sm text-gray-500">{data.privacy_note}</p>
-              )}
             </form>
           </div>
         </div>

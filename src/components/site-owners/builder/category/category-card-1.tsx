@@ -1,8 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
 import { Category } from "@/types/owner-site/admin/product";
 
 interface CategoryCard1Props {
@@ -20,13 +18,6 @@ export const CategoryCard1: React.FC<CategoryCard1Props> = ({
   const categoryImage =
     category.image ||
     "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop";
-
-  const handleViewCategory = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const categoryUrl = getCategoryUrl();
-    window.location.href = categoryUrl;
-  };
 
   const getCategoryUrl = (): string => {
     if (siteUser) {
@@ -60,13 +51,13 @@ export const CategoryCard1: React.FC<CategoryCard1Props> = ({
   return (
     <CardWrapper>
       <div className="bg-background-light dark:bg-background-dark">
-        <div className="bg-card-light dark:bg-card-dark mb-4 flex h-64 items-center justify-center rounded-lg p-6 transition-transform hover:scale-105">
+        <div className="bg-card-light dark:bg-card-dark relative mb-4 aspect-square overflow-hidden rounded-lg transition-transform hover:scale-105">
           <Image
             src={categoryImage}
             alt={category.name}
-            width={400}
-            height={400}
-            className="max-h-full max-w-full object-contain"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
         <h3 className="text-text-light dark:text-text-dark text-center text-lg font-semibold">
