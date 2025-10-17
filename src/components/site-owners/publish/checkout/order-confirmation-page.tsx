@@ -16,6 +16,7 @@ import { useOrder } from "@/hooks/owner-site/admin/use-orders";
 import { CheckCircle, Package, Truck, Mail } from "lucide-react";
 import { use } from "react";
 import Image from "next/image";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface PublishOrderConfirmationPageProps {
   params: { siteUser: string; orderId: string };
@@ -27,6 +28,33 @@ const PublishOrderConfirmationPage: React.FC<
   const router = useRouter();
   const { siteUser, orderId } = params;
   const { data: order, isLoading, error } = useOrder(parseInt(orderId));
+  const { data: themeResponse } = useThemeQuery();
+
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
+  const primaryButtonStyle: React.CSSProperties = {
+    backgroundColor: theme.colors.primary,
+    color: theme.colors.primaryForeground,
+    borderColor: theme.colors.primary,
+  };
+  const outlineButtonStyle: React.CSSProperties = {
+    borderColor: theme.colors.primary,
+    color: theme.colors.primary,
+  };
+  const subtlePrimaryBg = `${theme.colors.primary}0D`;
 
   if (isLoading) {
     return (
@@ -76,11 +104,14 @@ const PublishOrderConfirmationPage: React.FC<
   const orderItems = order.order_items || order.items || [];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mx-auto max-w-3xl">
+    <div className="container mx-auto max-w-5xl px-4 py-8">
+      <div className="mx-auto max-w-5xl">
         {/* Success Header */}
         <div className="mb-8 text-center">
-          <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
+          <CheckCircle
+            className="mx-auto mb-4 h-16 w-16"
+            style={{ color: theme.colors.primary }}
+          />
           <h1 className="mb-2 text-3xl font-bold text-gray-900">
             Order Confirmed!
           </h1>
@@ -219,8 +250,16 @@ const PublishOrderConfirmationPage: React.FC<
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-start space-x-3">
-              <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
-                <span className="text-sm font-semibold text-blue-600">1</span>
+              <div
+                className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full"
+                style={{ backgroundColor: subtlePrimaryBg }}
+              >
+                <span
+                  className="text-sm font-semibold"
+                  style={{ color: theme.colors.primary }}
+                >
+                  1
+                </span>
               </div>
               <div>
                 <h4 className="font-semibold">Order Confirmation</h4>
@@ -232,8 +271,16 @@ const PublishOrderConfirmationPage: React.FC<
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
-                <span className="text-sm font-semibold text-blue-600">2</span>
+              <div
+                className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full"
+                style={{ backgroundColor: subtlePrimaryBg }}
+              >
+                <span
+                  className="text-sm font-semibold"
+                  style={{ color: theme.colors.primary }}
+                >
+                  2
+                </span>
               </div>
               <div>
                 <h4 className="font-semibold">Processing</h4>
@@ -245,8 +292,16 @@ const PublishOrderConfirmationPage: React.FC<
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
-                <span className="text-sm font-semibold text-blue-600">3</span>
+              <div
+                className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full"
+                style={{ backgroundColor: subtlePrimaryBg }}
+              >
+                <span
+                  className="text-sm font-semibold"
+                  style={{ color: theme.colors.primary }}
+                >
+                  3
+                </span>
               </div>
               <div>
                 <h4 className="font-semibold">Shipping Updates</h4>
@@ -265,12 +320,14 @@ const PublishOrderConfirmationPage: React.FC<
             onClick={() => router.push(`/publish/${siteUser}`)}
             variant="outline"
             className="px-8"
+            style={outlineButtonStyle}
           >
             Continue Shopping
           </Button>
           <Button
             onClick={() => router.push(`/admin/orders`)}
-            className="bg-[#B85450] px-8 hover:bg-[#A04A46]"
+            className="px-8"
+            style={primaryButtonStyle}
           >
             View All Orders
           </Button>

@@ -7,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
@@ -40,6 +39,7 @@ import {
 import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface ProductDetailProps {
   slug: string;
@@ -54,6 +54,43 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const [selectedImage, setSelectedImage] = React.useState<string>("");
   const { addToCart } = useCart();
   const [quantity, setQuantity] = React.useState(1);
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with fallback to defaults (consistent with product-card4)
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
+  // Common themed styles for buttons and selected states
+  const primaryButtonStyle: React.CSSProperties = {
+    backgroundColor: theme.colors.primary,
+    color: theme.colors.primaryForeground,
+    borderColor: theme.colors.primary,
+  };
+  const outlineButtonStyle: React.CSSProperties = {
+    borderColor: theme.colors.primary,
+    color: theme.colors.primary,
+  };
+  const subtlePrimaryBg = `${theme.colors.primary}1A`; // ~10% opacity overlay
+  const subtleSecondaryBg = `${theme.colors.secondary}1A`;
+
+  // Variant selection state
+  const [selectedOptions, setSelectedOptions] = React.useState<
+    Record<string, string>
+  >({});
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [selectedVariant, setSelectedVariant] = React.useState<any>(null);
 
   // Wishlist hooks
   const { isAuthenticated } = useAuth();
@@ -67,10 +104,43 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
   React.useEffect(() => {
     if (product && !selectedImage) {
-      // Use actual product image from API or fallback to default
       setSelectedImage(product.thumbnail_image || defaultImage);
     }
   }, [product, selectedImage]);
+
+  // Initialize selected options when product loads
+  React.useEffect(() => {
+    if (product?.options && product.options.length > 0) {
+      const initialOptions: Record<string, string> = {};
+      product.options.forEach(option => {
+        if (option.values && option.values.length > 0) {
+          initialOptions[option.name] = option.values[0].value;
+        }
+      });
+      setSelectedOptions(initialOptions);
+    }
+  }, [product]);
+
+  // Find matching variant when options change
+  React.useEffect(() => {
+    if (product?.variants_read && Object.keys(selectedOptions).length > 0) {
+      const matchingVariant = product.variants_read.find(variant => {
+        return Object.entries(selectedOptions).every(
+          ([optionName, optionValue]) =>
+            variant.option_values[optionName] === optionValue
+        );
+      });
+
+      setSelectedVariant(matchingVariant || null);
+
+      // Update selected image if variant has an image
+      if (matchingVariant?.image) {
+        setSelectedImage(matchingVariant.image);
+      } else if (product.thumbnail_image) {
+        setSelectedImage(product.thumbnail_image);
+      }
+    }
+  }, [selectedOptions, product]);
 
   // Check if product is in wishlist
   const wishlistItem = wishlistItems?.find(
@@ -78,7 +148,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   );
   const isWishlisted = !!wishlistItem;
 
-  // Check if wishlist operations are loading
   const isWishlistLoading =
     addToWishlistMutation.isPending || removeFromWishlistMutation.isPending;
 
@@ -92,29 +161,63 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
     try {
       if (isWishlisted && wishlistItem) {
-        // Remove from wishlist
         await removeFromWishlistMutation.mutateAsync(wishlistItem.id);
         toast.success(`${product.name} removed from wishlist!`);
       } else {
-        // Add to wishlist
         await addToWishlistMutation.mutateAsync(product.id);
         toast.success(`${product.name} added to wishlist!`);
       }
     } catch (error) {
-      // Error handling is already done in the mutation hooks
       console.error("Wishlist operation failed:", error);
     }
+  };
+
+  const handleOptionChange = (optionName: string, value: string) => {
+    setSelectedOptions(prev => ({
+      ...prev,
+      [optionName]: value,
+    }));
+  };
+
+  // Get current price and stock based on selected variant or product default
+  const getCurrentPrice = () => {
+    if (selectedVariant?.price) {
+      return parseFloat(selectedVariant.price);
+    }
+    return parseFloat(product?.price || "0");
+  };
+
+  const getCurrentStock = () => {
+    if (
+      selectedVariant?.stock !== null &&
+      selectedVariant?.stock !== undefined
+    ) {
+      return selectedVariant.stock;
+    }
+    return product?.stock || 0;
+  };
+
+  // Check if a specific option value combination is available
+  const isOptionValueAvailable = (optionName: string, value: string) => {
+    if (!product?.variants_read) return true;
+
+    const testOptions = { ...selectedOptions, [optionName]: value };
+
+    return product.variants_read.some(variant => {
+      const matches = Object.entries(testOptions).every(
+        ([name, val]) => variant.option_values[name] === val
+      );
+      return matches && variant.stock > 0;
+    });
   };
 
   if (isLoading) {
     return (
       <div className="bg-background">
         <div className="container mx-auto px-4 py-8">
-          {/* Breadcrumb skeleton */}
           <div className="mb-6">
             <Skeleton className="h-5 w-64" />
           </div>
-
           <div className="grid gap-8 md:grid-cols-2">
             <div>
               <Skeleton className="aspect-square w-full rounded-lg" />
@@ -178,44 +281,54 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
   const handleAddToCart = () => {
     if (product) {
+      const currentStock = getCurrentStock();
+      if (currentStock === 0) {
+        toast.error("This item is out of stock");
+        return;
+      }
+
       addToCart(product, quantity);
-      toast.success(`${quantity} x ${product.name} added to cart!`);
+
+      const variantInfo = selectedVariant
+        ? ` (${Object.entries(selectedOptions)
+            .map(([k, v]) => `${k}: ${v}`)
+            .join(", ")})`
+        : "";
+
+      toast.success(
+        `${quantity} x ${product.name}${variantInfo} added to cart!`
+      );
     }
   };
 
-  // Parse price to float for calculations
-  const price = parseFloat(product.price);
+  const price = getCurrentPrice();
   const marketPrice = product.market_price
     ? parseFloat(product.market_price)
     : null;
 
-  // Calculate discount if market price exists and is higher than current price
   const discountPercentage =
     marketPrice && marketPrice > price
       ? Math.round(((marketPrice - price) / marketPrice) * 100)
       : 0;
 
   const discountedPrice = price.toFixed(2);
+  const currentStock = getCurrentStock();
 
-  // Use real rating data from API
   const rating = product.average_rating || 0;
   const reviewsCount = product.reviews_count || 0;
 
-  // Create image gallery from product data - filter out null/undefined values
   const productImages = [
     product.thumbnail_image,
     ...(product.images || []).map(img => img.image),
   ].filter((img): img is string => Boolean(img));
 
-  // Ensure we always have at least one image (fallback)
   if (productImages.length === 0) {
     productImages.push(defaultImage);
   }
 
   return (
-    <div className="bg-background">
+    <div className="bg-background pt-5 pb-80">
       <div className="container mx-auto max-w-7xl px-4 py-8 md:py-8">
-        {/* Breadcrumb Navigation */}
         <Breadcrumb className="mb-8">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -277,9 +390,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <Button
                   key={idx}
                   variant="outline"
-                  className={`relative aspect-square overflow-hidden p-0 ${
-                    selectedImage === img ? "ring-primary ring-2" : ""
-                  }`}
+                  className="relative aspect-square overflow-hidden p-0"
+                  style={
+                    selectedImage === img
+                      ? { outline: `2px solid ${theme.colors.primary}` }
+                      : undefined
+                  }
                   onClick={() => setSelectedImage(img)}
                 >
                   <Image
@@ -300,33 +416,74 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
           <div className="flex flex-col">
             <div className="mb-2 flex items-center gap-2">
               {product.category && (
-                <Badge variant="secondary" className="w-fit capitalize">
+                <Badge
+                  variant="secondary"
+                  className="w-fit capitalize"
+                  style={{
+                    backgroundColor: `${theme.colors.primary}1A`, // subtle tint of primary
+                    color: theme.colors.primary,
+                    borderColor: `${theme.colors.primary}33`,
+                    fontFamily: theme.fonts.heading,
+                  }}
+                >
                   {product.category.name}
                 </Badge>
               )}
               {product.sub_category && (
-                <Badge variant="outline" className="w-fit capitalize">
+                <Badge
+                  variant="outline"
+                  className="w-fit capitalize"
+                  style={{
+                    backgroundColor: `${theme.colors.primary}0D`, // even lighter tint
+                    color: theme.colors.primary,
+                    borderColor: `${theme.colors.primary}26`,
+                    fontFamily: theme.fonts.heading,
+                  }}
+                >
                   {product.sub_category.name}
                 </Badge>
               )}
               {product.is_featured && (
-                <Badge className="bg-yellow-500 text-black">Featured</Badge>
+                <Badge
+                  className="text-xs"
+                  style={{
+                    backgroundColor: theme.colors.secondary,
+                    color: theme.colors.secondaryForeground,
+                  }}
+                >
+                  Featured
+                </Badge>
               )}
               {product.is_popular && (
-                <Badge className="bg-red-500">Popular</Badge>
+                <Badge
+                  className="text-xs"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                  }}
+                >
+                  Popular
+                </Badge>
               )}
               {discountPercentage > 0 && (
-                <Badge variant="destructive" className="text-xs font-bold">
+                <Badge
+                  className="text-xs font-bold"
+                  style={{
+                    backgroundColor: "#FEE2E2", // subtle red background
+                    color: "#B91C1C", // readable red text
+                    borderColor: "#FCA5A5",
+                  }}
+                >
                   -{discountPercentage}%
                 </Badge>
               )}
-              {product.stock === 0 && (
+              {currentStock === 0 && (
                 <Badge variant="secondary" className="text-xs">
                   Sold Out
                 </Badge>
               )}
-              {product.stock > 0 && product.stock <= 5 && (
-                <Badge className="text-xs">Only {product.stock} left</Badge>
+              {currentStock > 0 && currentStock <= 5 && (
+                <Badge className="text-xs">Only {currentStock} left</Badge>
               )}
             </div>
 
@@ -335,15 +492,18 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 {product.name}
               </h1>
 
-              {/* Wishlist Button */}
               <Button
                 variant="ghost"
                 size="icon"
-                className={`mt-2 h-10 w-10 transition-colors ${
+                className="mt-2 h-10 w-10 transition-colors"
+                style={
                   isWishlisted
-                    ? "bg-red-50 text-red-500 hover:bg-red-100"
-                    : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-                }`}
+                    ? {
+                        backgroundColor: subtleSecondaryBg,
+                        color: theme.colors.secondary,
+                      }
+                    : { backgroundColor: "#F9FAFB", color: theme.colors.text }
+                }
                 onClick={handleFavorite}
                 disabled={isWishlistLoading}
                 data-wishlist="true"
@@ -356,18 +516,18 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               </Button>
             </div>
 
-            {/* Rating Section - Show actual rating data */}
             {reviewsCount > 0 ? (
               <div className="mt-2 flex items-center gap-2">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-5 w-5 ${
+                      className="h-5 w-5 fill-current"
+                      style={
                         i < Math.round(rating)
-                          ? "fill-yellow-500 text-yellow-500"
-                          : "text-muted-foreground/30"
-                      }`}
+                          ? { color: theme.colors.secondary }
+                          : { color: "#9CA3AF4D" }
+                      }
                     />
                   ))}
                 </div>
@@ -382,7 +542,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className="text-muted-foreground/30 h-5 w-5"
+                      className="h-5 w-5"
+                      style={{ color: "#9CA3AF4D" }}
                     />
                   ))}
                 </div>
@@ -393,7 +554,10 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             )}
 
             <div className="my-6">
-              <span className="text-primary text-4xl font-extrabold">
+              <span
+                className="text-4xl font-extrabold"
+                style={{ color: theme.colors.primary }}
+              >
                 ${discountedPrice}
               </span>
               {marketPrice && discountPercentage > 0 && (
@@ -409,9 +573,59 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             </div>
 
             {product.description && (
-              <p className="text-foreground/80 leading-relaxed">
-                {product.description}
-              </p>
+              <div
+                className="text-foreground/80 prose prose-sm max-w-none leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: product.description }}
+              />
+            )}
+
+            {/* Variant Selection */}
+            {product.options && product.options.length > 0 && (
+              <div className="mt-6 space-y-4">
+                {product.options.map(option => (
+                  <div key={option.id}>
+                    <label className="text-foreground mb-2 block text-sm font-medium capitalize">
+                      {option.name}
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {option.values?.map(value => {
+                        const isSelected =
+                          selectedOptions[option.name] === value.value;
+                        const isAvailable = isOptionValueAvailable(
+                          option.name,
+                          value.value
+                        );
+
+                        return (
+                          <Button
+                            key={value.id}
+                            variant={isSelected ? "default" : "outline"}
+                            className={`relative min-w-[80px] capitalize ${
+                              !isAvailable ? "opacity-50" : ""
+                            }`}
+                            style={
+                              isSelected
+                                ? primaryButtonStyle
+                                : outlineButtonStyle
+                            }
+                            onClick={() =>
+                              handleOptionChange(option.name, value.value)
+                            }
+                            disabled={!isAvailable}
+                          >
+                            {value.value}
+                            {!isAvailable && (
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="bg-foreground h-px w-full rotate-[-20deg]" />
+                              </div>
+                            )}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
 
             <div className="mt-6">
@@ -420,6 +634,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   <Button
                     variant="outline"
                     size="icon"
+                    style={outlineButtonStyle}
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
                   >
                     -
@@ -432,13 +647,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                     }
                     className="w-16 text-center"
                     min="1"
-                    max={product.stock}
+                    max={currentStock}
                   />
                   <Button
                     variant="outline"
                     size="icon"
+                    style={outlineButtonStyle}
                     onClick={() =>
-                      setQuantity(q => Math.min(product.stock, q + 1))
+                      setQuantity(q => Math.min(currentStock, q + 1))
                     }
                   >
                     +
@@ -446,11 +662,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-muted-foreground text-sm">Stock:</span>
-                  <Badge
-                    variant={product.stock > 0 ? "default" : "destructive"}
-                  >
-                    {product.stock > 0
-                      ? `${product.stock} available`
+                  <Badge variant={currentStock > 0 ? "default" : "destructive"}>
+                    {currentStock > 0
+                      ? `${currentStock} available`
                       : "Out of stock"}
                   </Badge>
                 </div>
@@ -460,31 +674,48 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <Button
                   size="lg"
                   className="flex-1"
-                  disabled={product.stock === 0}
+                  disabled={currentStock === 0}
+                  style={primaryButtonStyle}
                   onClick={handleAddToCart}
                 >
-                  {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                  {currentStock > 0 ? "Add to Cart" : "Out of Stock"}
                 </Button>
               </div>
             </div>
 
             <div className="mt-8 grid grid-cols-1 gap-4 text-center text-sm sm:grid-cols-3">
               <div className="bg-muted/50 flex flex-col items-center gap-2 rounded-lg p-4">
-                <Truck className="text-primary h-6 w-6" />
+                <Truck
+                  className="h-6 w-6"
+                  style={{ color: theme.colors.primary }}
+                />
                 <span className="text-foreground font-medium">
                   Fast Shipping
                 </span>
               </div>
               <div className="bg-muted/50 flex flex-col items-center gap-2 rounded-lg p-4">
-                <ShieldCheck className="text-primary h-6 w-6" />
+                <ShieldCheck
+                  className="h-6 w-6"
+                  style={{ color: theme.colors.primary }}
+                />
                 <span className="text-foreground font-medium">
                   1 Year Warranty
                 </span>
               </div>
               <div className="bg-muted/50 flex flex-col items-center gap-2 rounded-lg p-4">
-                <PackageCheck className="text-primary h-6 w-6" />
-                <span className="font-medium text-green-600">
-                  {product.stock > 0 ? "In Stock" : "Out of Stock"}
+                <PackageCheck
+                  className="h-6 w-6"
+                  style={{ color: theme.colors.primary }}
+                />
+                <span
+                  className="font-medium"
+                  style={
+                    currentStock > 0
+                      ? { color: theme.colors.secondary }
+                      : undefined
+                  }
+                >
+                  {currentStock > 0 ? "In Stock" : "Out of Stock"}
                 </span>
               </div>
             </div>
@@ -509,7 +740,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                     <div className="flex justify-between">
                       <span className="font-medium">Price:</span>
                       <span className="text-muted-foreground">
-                        ${product.price}
+                        ${discountedPrice}
                       </span>
                     </div>
                     {product.market_price && (
@@ -523,7 +754,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                     <div className="flex justify-between">
                       <span className="font-medium">Stock:</span>
                       <span className="text-muted-foreground">
-                        {product.stock} units
+                        {currentStock} units
                       </span>
                     </div>
                     {product.category && (
@@ -542,6 +773,21 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                         </span>
                       </div>
                     )}
+                    {selectedVariant && (
+                      <div className="mt-2 border-t pt-2">
+                        <p className="mb-2 font-medium">Selected Variant:</p>
+                        {Object.entries(selectedOptions).map(([key, value]) => (
+                          <div key={key} className="flex justify-between">
+                            <span className="font-medium capitalize">
+                              {key}:
+                            </span>
+                            <span className="text-muted-foreground capitalize">
+                              {value}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span className="font-medium">Average Rating:</span>
                       <span className="text-muted-foreground">
@@ -556,18 +802,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                         {reviewsCount}
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium">Created:</span>
-                      <span className="text-muted-foreground">
-                        {new Date(product.created_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium">Last Updated:</span>
-                      <span className="text-muted-foreground">
-                        {new Date(product.updated_at).toLocaleDateString()}
-                      </span>
-                    </div>
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -579,22 +813,25 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   <div className="space-y-4">
                     {reviewsCount > 0 ? (
                       <>
-                        {/* Overall Rating Summary */}
                         <div className="border-border border-b pb-4">
                           <div className="flex items-center gap-4">
                             <div className="text-center">
-                              <div className="text-primary text-3xl font-bold">
+                              <div
+                                className="text-3xl font-bold"
+                                style={{ color: theme.colors.primary }}
+                              >
                                 {rating.toFixed(1)}
                               </div>
                               <div className="flex items-center justify-center">
                                 {[...Array(5)].map((_, i) => (
                                   <Star
                                     key={i}
-                                    className={`h-4 w-4 ${
+                                    className="h-4 w-4 fill-current"
+                                    style={
                                       i < Math.round(rating)
-                                        ? "fill-yellow-500 text-yellow-500"
-                                        : "text-muted-foreground/30"
-                                    }`}
+                                        ? { color: theme.colors.secondary }
+                                        : { color: "#9CA3AF4D" }
+                                    }
                                   />
                                 ))}
                               </div>
@@ -606,7 +843,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                           </div>
                         </div>
 
-                        {/* Placeholder reviews - Replace with actual review data when available */}
                         <div className="space-y-3">
                           <div className="border-border border-b pb-3 last:border-b-0">
                             <div className="flex items-center justify-between">
@@ -617,11 +853,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                                 {[...Array(5)].map((_, i) => (
                                   <Star
                                     key={i}
-                                    className={`h-4 w-4 ${
+                                    className="h-4 w-4 fill-current"
+                                    style={
                                       i < Math.round(rating)
-                                        ? "fill-yellow-500 text-yellow-500"
-                                        : "text-muted-foreground/30"
-                                    }`}
+                                        ? { color: theme.colors.secondary }
+                                        : { color: "#9CA3AF4D" }
+                                    }
                                   />
                                 ))}
                               </div>

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -28,21 +27,19 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { checkoutFormSchema, CheckoutFormValues } from "@/schemas/chekout.form";
 import { usePaymentGateways } from "@/hooks/owner-site/admin/use-payment-gateway";
 import { motion, AnimatePresence } from "framer-motion";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 const CheckoutPage = () => {
   const router = useRouter();
-  const params = useParams();
   const { cartItems, clearCart } = useCart();
   const createOrderMutation = useCreateOrder();
   const { user, isAuthenticated } = useAuth();
   const { data: paymentGateways, isLoading: isLoadingGateways } =
     usePaymentGateways();
+  const { data: themeResponse } = useThemeQuery();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(null);
-
-  const isPreviewMode = !!params?.siteUser;
-  const siteUser = params?.siteUser as string;
 
   const {
     register,
@@ -82,6 +79,33 @@ const CheckoutPage = () => {
   // Always include COD as an option
   const uniquePaymentTypes = ["cod", ...gatewayPaymentTypes];
 
+  // Theme setup
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
+  const primaryButtonStyle: React.CSSProperties = {
+    backgroundColor: theme.colors.primary,
+    color: theme.colors.primaryForeground,
+    borderColor: theme.colors.primary,
+  };
+  const outlineButtonStyle: React.CSSProperties = {
+    borderColor: theme.colors.primary,
+    color: theme.colors.primary,
+  };
+  const subtlePrimaryBg = `${theme.colors.primary}0D`;
+
   const getPaymentColor = (type: string) => {
     switch (type.toLowerCase()) {
       case "esewa":
@@ -106,32 +130,6 @@ const CheckoutPage = () => {
       default:
         return type;
     }
-  };
-
-  // Helper function to construct subdomain URL
-  const getSubdomainUrl = (path: string) => {
-    if (typeof window === "undefined") return path;
-
-    const currentHost = window.location.host;
-    const protocol = window.location.protocol;
-
-    // Check if we're in preview mode or already on a subdomain
-    if (isPreviewMode && siteUser) {
-      // Convert preview URL to subdomain URL
-      if (currentHost.includes("localhost")) {
-        const port = currentHost.includes(":")
-          ? `:${currentHost.split(":")[1]}`
-          : ":3000";
-        return `${protocol}//${siteUser}.localhost${port}${path}`;
-      } else {
-        // Production - extract root domain
-        const rootDomain = currentHost.replace(/^[^.]+\./, "");
-        return `${protocol}//${siteUser}.${rootDomain}${path}`;
-      }
-    }
-
-    // Already on subdomain, just use the path
-    return path;
   };
 
   const onSubmit = async (data: CheckoutFormValues) => {
@@ -175,26 +173,20 @@ const CheckoutPage = () => {
         includeToken: isAuthenticated && !!user,
       });
 
-      // Handle payment method routing with subdomain URLs
+      // Handle payment method routing
       if (selectedPaymentMethod) {
         switch (selectedPaymentMethod.toLowerCase()) {
           case "esewa":
-            window.location.href = getSubdomainUrl(
-              `/esewa-payment?orderId=${order.id}`
-            );
+            router.push(`/esewa-payment?orderId=${order.id}`);
             break;
           case "khalti":
-            window.location.href = getSubdomainUrl(
-              `/khalti-payment?orderId=${order.id}`
-            );
+            router.push(`/khalti-payment?orderId=${order.id}`);
             break;
           case "cod":
             // For COD, go directly to order confirmation
             toast.success("Order placed successfully! Pay on delivery.");
             clearCart();
-            window.location.href = getSubdomainUrl(
-              `/order-confirmation/${order.id}`
-            );
+            router.push(`/order-confirmation/${order.id}`);
             break;
           default:
             break;
@@ -203,9 +195,7 @@ const CheckoutPage = () => {
         // Direct order confirmation without payment gateway
         toast.success("Order placed successfully!");
         clearCart();
-        window.location.href = getSubdomainUrl(
-          `/order-confirmation/${order.id}`
-        );
+        router.push(`/order-confirmation/${order.id}`);
       }
     } catch (error) {
       console.error("Order creation failed:", error);
@@ -214,30 +204,27 @@ const CheckoutPage = () => {
   };
 
   const handleContinueShopping = () => {
-    if (isPreviewMode && siteUser) {
-      // Redirect to subdomain home page
-      window.location.href = getSubdomainUrl("/");
-    } else {
-      router.push("/");
-    }
+    router.push("/");
   };
 
   if (cartItems.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto max-w-5xl px-4 py-8">
         <div className="text-center">
           <h1 className="mb-4 text-2xl font-bold">Your cart is empty</h1>
           <p className="mb-8 text-gray-600">
             Add some items to your cart before checkout
           </p>
-          <Button onClick={handleContinueShopping}>Continue Shopping</Button>
+          <Button onClick={handleContinueShopping} style={primaryButtonStyle}>
+            Continue Shopping
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
+    <div className="mx-auto max-w-5xl px-4 py-8">
       <h1 className="mb-8 text-3xl font-bold">Checkout</h1>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -409,9 +396,16 @@ const CheckoutPage = () => {
                                 variant="outline"
                                 className={cn(
                                   "relative w-full justify-start overflow-hidden text-left font-normal transition-all duration-300",
-                                  selectedPaymentMethod === type &&
-                                    "border-2 border-[#B85450] bg-gray-100"
+                                  selectedPaymentMethod === type && "border-2"
                                 )}
+                                style={{
+                                  ...(selectedPaymentMethod === type
+                                    ? {
+                                        borderColor: theme.colors.primary,
+                                        backgroundColor: subtlePrimaryBg,
+                                      }
+                                    : outlineButtonStyle),
+                                }}
                                 onClick={() => setSelectedPaymentMethod(type)}
                                 disabled={isSubmitting}
                               >
@@ -429,7 +423,8 @@ const CheckoutPage = () => {
                                 </span>
                                 {selectedPaymentMethod === type && (
                                   <motion.div
-                                    className="absolute inset-0 bg-[#B85450]/5"
+                                    className="absolute inset-0"
+                                    style={{ backgroundColor: subtlePrimaryBg }}
                                     initial={{ scale: 0 }}
                                     animate={{ scale: 1 }}
                                     transition={{ duration: 0.3 }}
@@ -447,8 +442,9 @@ const CheckoutPage = () => {
                 <div className="pt-6">
                   <Button
                     type="submit"
-                    className="w-full bg-[#B85450] py-3 font-semibold text-white hover:bg-[#A04A46]"
+                    className="w-full py-3 font-semibold"
                     size="lg"
+                    style={primaryButtonStyle}
                     disabled={isSubmitting || createOrderMutation.isPending}
                   >
                     {isSubmitting || createOrderMutation.isPending
