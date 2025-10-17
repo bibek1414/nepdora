@@ -30,12 +30,18 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
   const bulkUploadMutation = useBulkUpload();
   const downloadTemplateMutation = useDownloadTemplate();
 
+  // Validate file type (CSV or Excel)
+  const isValidFileType = (fileName: string): boolean => {
+    const validExtensions = [".csv", ".xlsx", ".xls"];
+    return validExtensions.some(ext => fileName.toLowerCase().endsWith(ext));
+  };
+
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       // Validate file type
-      if (!file.name.endsWith(".csv")) {
-        toast.error("Please select a CSV file");
+      if (!isValidFileType(file.name)) {
+        toast.error("Please select a CSV or Excel file (.csv, .xlsx, .xls)");
         return;
       }
       setSelectedFile(file);
@@ -50,8 +56,8 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
     event.preventDefault();
     const file = event.dataTransfer.files?.[0];
     if (file) {
-      if (!file.name.endsWith(".csv")) {
-        toast.error("Please select a CSV file");
+      if (!isValidFileType(file.name)) {
+        toast.error("Please select a CSV or Excel file (.csv, .xlsx, .xls)");
         return;
       }
       setSelectedFile(file);
@@ -110,7 +116,7 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
-            Import products by CSV
+            Import products by CSV or Excel
           </DialogTitle>
         </DialogHeader>
 
@@ -124,7 +130,7 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
             <input
               ref={fileInputRef}
               type="file"
-              accept=".csv"
+              accept=".csv,.xlsx,.xls"
               onChange={handleFileSelect}
               className="hidden"
             />
@@ -160,7 +166,10 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
                   + Add file
                 </Button>
                 <p className="mt-3 text-sm text-gray-500">
-                  or drag and drop your CSV file here
+                  or drag and drop your CSV or Excel file here
+                </p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Supported formats: .csv, .xlsx, .xls
                 </p>
               </div>
             )}

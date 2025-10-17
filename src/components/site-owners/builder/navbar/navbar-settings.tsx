@@ -31,6 +31,8 @@ import {
   ShoppingCart,
   Type,
   ImageIcon,
+  ChevronDown,
+  ExternalLink,
 } from "lucide-react";
 import {
   NavbarData,
@@ -38,24 +40,219 @@ import {
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
 import { uploadToCloudinary } from "@/utils/cloudinary";
+import { usePages, useCreatePage } from "@/hooks/owner-site/use-page";
+import { Page } from "@/types/owner-site/components/page";
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 interface NavbarEditorDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (navbarData: NavbarData) => void;
   initialData: NavbarData;
+  siteUser?: string;
 }
+
+// Page Selector Component for Links and Buttons
+interface PageSelectorProps {
+  onSelect: (href: string, text?: string) => void;
+  onCancel: () => void;
+  currentHref: string;
+  currentText?: string;
+}
+
+const PageSelector: React.FC<PageSelectorProps> = ({
+  onSelect,
+  onCancel,
+  currentHref,
+  currentText,
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newPageTitle, setNewPageTitle] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+
+  const { data: pages = [], isLoading } = usePages();
+  const createPageMutation = useCreatePage();
+
+  // Filter pages based on search term
+  const filteredPages = pages.filter(
+    (page: Page) =>
+      page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      page.slug.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Handle page selection
+  const handlePageSelect = (page: Page) => {
+    onSelect(`/${page.slug}`, page.title);
+  };
+
+  // Handle external URL selection
+  const handleExternalUrl = () => {
+    const url = prompt("Enter external URL (including https://):");
+    if (url) {
+      onSelect(url, url);
+    }
+  };
+
+  // Handle new page creation
+  const handleCreatePage = async () => {
+    if (!newPageTitle.trim()) return;
+
+    setIsCreating(true);
+    try {
+      const pageData = {
+        title: newPageTitle.trim(),
+      };
+
+      const newPage = await createPageMutation.mutateAsync(pageData);
+      onSelect(`/${newPage.slug}`, `${newPage.title}-draft`);
+
+      // Reset form
+      setNewPageTitle("");
+      setShowCreateForm(false);
+    } catch (error) {
+      console.error("Failed to create page:", error);
+      alert("Failed to create page. Please try again.");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  return (
+    <Card className="absolute top-full right-0 z-50 mt-1 w-80 gap-0 bg-white py-0 shadow-xl">
+      <CardContent className="p-0">
+        {/* Search Input */}
+
+        {/* Existing Pages - Scrollable Area */}
+        <ScrollArea className="max-h-60">
+          {isLoading ? (
+            <div className="text-muted-foreground p-4 text-center">
+              Loading pages...
+            </div>
+          ) : filteredPages.length > 0 ? (
+            <div className="p-1">
+              {filteredPages.map((page: Page) => (
+                <Button
+                  key={page.id}
+                  onClick={() => handlePageSelect(page)}
+                  variant={
+                    currentHref === `/${page.slug}` ? "secondary" : "ghost"
+                  }
+                  className="h-auto w-full justify-start p-2 text-left"
+                >
+                  <div className="flex-1">
+                    <div className="font-medium capitalize">{page.title}</div>
+                    <div className="text-muted-foreground text-xs">
+                      /{page.slug}
+                    </div>
+                  </div>
+                </Button>
+              ))}
+            </div>
+          ) : searchTerm && !isLoading ? (
+            <div className="text-muted-foreground p-4 text-center">
+              No pages found matching &quot;{searchTerm}&quot;
+            </div>
+          ) : null}
+        </ScrollArea>
+
+        <Separator />
+
+        {/* Create New Page Section */}
+        <div className="bg-white p-2">
+          {!showCreateForm ? (
+            <Button
+              onClick={() => setShowCreateForm(true)}
+              variant="ghost"
+              className="w-full justify-start text-green-700 hover:bg-green-50 hover:text-green-700"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              <span>Create New Page</span>
+            </Button>
+          ) : (
+            <div className="space-y-2 rounded bg-white p-2">
+              <div className="text-sm font-medium">Create New Page</div>
+              <Input
+                type="text"
+                placeholder="Page title..."
+                value={newPageTitle}
+                onChange={e => setNewPageTitle(e.target.value)}
+                className="bg-white"
+              />
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleCreatePage}
+                  variant="default"
+                  disabled={!newPageTitle.trim() || isCreating}
+                  className="flex-1"
+                  size="sm"
+                >
+                  {isCreating ? "Creating..." : "Create & Link"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowCreateForm(false);
+                    setNewPageTitle("");
+                  }}
+                  variant="outline"
+                  size="sm"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Separator />
+
+        {/* External URL Option */}
+        <div className="p-2">
+          <Button
+            onClick={handleExternalUrl}
+            variant="ghost"
+            className="w-full justify-start text-blue-700 hover:bg-blue-50 hover:text-blue-700"
+          >
+            <ExternalLink className="mr-2 h-4 w-4" />
+            <span>External URL</span>
+          </Button>
+        </div>
+
+        <Separator />
+
+        {/* Footer */}
+        <div className="bg-muted/30 p-2">
+          <Button
+            onClick={onCancel}
+            variant="ghost"
+            className="w-full"
+            size="sm"
+          >
+            Cancel
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
   isOpen,
   onClose,
   onSave,
   initialData,
+  siteUser,
 }) => {
   const [navbarData, setNavbarData] = useState<NavbarData>(initialData);
   const [activeTab, setActiveTab] = useState("logo");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [showPageSelectorFor, setShowPageSelectorFor] = useState<{
+    type: "link" | "button";
+    id: string;
+  } | null>(null);
 
   // Handle input changes
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -163,6 +360,27 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
       ...prev,
       buttons: prev.buttons.filter(button => button.id !== id),
     }));
+  };
+
+  // Handle page selection for links and buttons
+  const handlePageSelect = (href: string, text?: string) => {
+    if (showPageSelectorFor) {
+      const { type, id } = showPageSelectorFor;
+
+      if (type === "link") {
+        handleUpdateLink(id, "href", href);
+        if (text) {
+          handleUpdateLink(id, "text", text);
+        }
+      } else if (type === "button") {
+        handleUpdateButton(id, "href", href);
+        if (text) {
+          handleUpdateButton(id, "text", text);
+        }
+      }
+
+      setShowPageSelectorFor(null);
+    }
   };
 
   // Handle save
@@ -376,7 +594,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                   {navbarData.links.map(link => (
                     <div
                       key={link.id}
-                      className="flex items-center gap-3 rounded-md border p-3"
+                      className="relative flex items-center gap-3 rounded-md border p-3"
                     >
                       <div className="grid flex-1 grid-cols-2 gap-3">
                         <div className="space-y-1">
@@ -392,14 +610,35 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                         </div>
                         <div className="space-y-1">
                           <Label htmlFor={`link-url-${link.id}`}>URL</Label>
-                          <Input
-                            id={`link-url-${link.id}`}
-                            value={link.href}
-                            onChange={e =>
-                              handleUpdateLink(link.id, "href", e.target.value)
-                            }
-                            placeholder="Link URL"
-                          />
+                          <div className="relative">
+                            <Input
+                              id={`link-url-${link.id}`}
+                              value={link.href}
+                              onChange={e =>
+                                handleUpdateLink(
+                                  link.id,
+                                  "href",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Select or enter URL"
+                              className="pr-8"
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="absolute top-0 right-0 h-full px-2"
+                              onClick={() =>
+                                setShowPageSelectorFor({
+                                  type: "link",
+                                  id: link.id,
+                                })
+                              }
+                            >
+                              <ChevronDown className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                       <Button
@@ -410,6 +649,17 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
+
+                      {/* Page Selector Dropdown */}
+                      {showPageSelectorFor?.type === "link" &&
+                        showPageSelectorFor?.id === link.id && (
+                          <PageSelector
+                            onSelect={handlePageSelect}
+                            onCancel={() => setShowPageSelectorFor(null)}
+                            currentHref={link.href}
+                            currentText={link.text}
+                          />
+                        )}
                     </div>
                   ))}
 
@@ -437,7 +687,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                   {navbarData.buttons.map(button => (
                     <div
                       key={button.id}
-                      className="flex items-center gap-3 rounded-md border p-3"
+                      className="relative flex items-center gap-3 rounded-md border p-3"
                     >
                       <div className="grid flex-1 grid-cols-3 gap-3">
                         <div className="space-y-1">
@@ -459,18 +709,35 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                         </div>
                         <div className="space-y-1">
                           <Label htmlFor={`button-url-${button.id}`}>URL</Label>
-                          <Input
-                            id={`button-url-${button.id}`}
-                            value={button.href}
-                            onChange={e =>
-                              handleUpdateButton(
-                                button.id,
-                                "href",
-                                e.target.value
-                              )
-                            }
-                            placeholder="Button URL"
-                          />
+                          <div className="relative">
+                            <Input
+                              id={`button-url-${button.id}`}
+                              value={button.href}
+                              onChange={e =>
+                                handleUpdateButton(
+                                  button.id,
+                                  "href",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Select or enter URL"
+                              className="pr-8"
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="absolute top-0 right-0 h-full px-2"
+                              onClick={() =>
+                                setShowPageSelectorFor({
+                                  type: "button",
+                                  id: button.id,
+                                })
+                              }
+                            >
+                              <ChevronDown className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div className="space-y-1">
                           <Label htmlFor={`button-variant-${button.id}`}>
@@ -505,6 +772,17 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
+
+                      {/* Page Selector Dropdown */}
+                      {showPageSelectorFor?.type === "button" &&
+                        showPageSelectorFor?.id === button.id && (
+                          <PageSelector
+                            onSelect={handlePageSelect}
+                            onCancel={() => setShowPageSelectorFor(null)}
+                            currentHref={button.href}
+                            currentText={button.text}
+                          />
+                        )}
                     </div>
                   ))}
 

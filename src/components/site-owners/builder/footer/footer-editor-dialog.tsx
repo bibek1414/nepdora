@@ -25,6 +25,9 @@ import {
   Mail,
   Link,
   Share2,
+  ChevronDown,
+  Search,
+  ExternalLink,
 } from "lucide-react";
 import {
   FooterData,
@@ -32,6 +35,10 @@ import {
   FooterLink,
   SocialLink,
 } from "@/types/owner-site/components/footer";
+import { usePages, useCreatePage } from "@/hooks/owner-site/use-page";
+import { Page } from "@/types/owner-site/components/page";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 interface FooterEditorDialogProps {
   open: boolean;
@@ -39,7 +46,8 @@ interface FooterEditorDialogProps {
   footerData: FooterData;
   onSave: (data: FooterData) => void;
   isLoading?: boolean;
-  footerStyle?: string; // Add this to determine which style is being used
+  footerStyle?: string;
+  siteUser?: string;
 }
 
 const socialPlatforms = [
@@ -49,6 +57,190 @@ const socialPlatforms = [
   { name: "LinkedIn", icon: Linkedin },
 ];
 
+// Page Selector Component for Footer Links
+interface PageSelectorProps {
+  onSelect: (href: string, text?: string) => void;
+  onCancel: () => void;
+  currentHref: string;
+  currentText?: string;
+}
+
+const PageSelector: React.FC<PageSelectorProps> = ({
+  onSelect,
+  onCancel,
+  currentHref,
+  currentText,
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newPageTitle, setNewPageTitle] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+
+  const { data: pages = [], isLoading } = usePages();
+  const createPageMutation = useCreatePage();
+
+  // Filter pages based on search term
+  const filteredPages = pages.filter(
+    (page: Page) =>
+      page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      page.slug.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Handle page selection
+  const handlePageSelect = (page: Page) => {
+    onSelect(`/${page.slug}`, page.title);
+  };
+
+  // Handle external URL selection
+  const handleExternalUrl = () => {
+    const url = prompt("Enter external URL (including https://):");
+    if (url) {
+      onSelect(url, url);
+    }
+  };
+
+  // Handle new page creation
+  const handleCreatePage = async () => {
+    if (!newPageTitle.trim()) return;
+
+    setIsCreating(true);
+    try {
+      const pageData = {
+        title: newPageTitle.trim(),
+      };
+
+      const newPage = await createPageMutation.mutateAsync(pageData);
+      onSelect(`/${newPage.slug}`, `${newPage.title}-draft`);
+
+      // Reset form
+      setNewPageTitle("");
+      setShowCreateForm(false);
+    } catch (error) {
+      console.error("Failed to create page:", error);
+      alert("Failed to create page. Please try again.");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  return (
+    <Card className="absolute top-full right-0 z-50 mt-1 w-80 bg-white py-0 shadow-xl">
+      <CardContent className="p-0">
+        {/* Search Input */}
+
+        {/* Existing Pages - Scrollable Area */}
+        <ScrollArea className="max-h-60">
+          {isLoading ? (
+            <div className="text-muted-foreground p-4 text-center">
+              Loading pages...
+            </div>
+          ) : filteredPages.length > 0 ? (
+            <div className="p-1">
+              {filteredPages.map((page: Page) => (
+                <Button
+                  key={page.id}
+                  onClick={() => handlePageSelect(page)}
+                  variant={
+                    currentHref === `/${page.slug}` ? "secondary" : "ghost"
+                  }
+                  className="h-auto w-full justify-start p-2 text-left"
+                >
+                  <div className="flex-1">
+                    <div className="font-medium capitalize">{page.title}</div>
+                    <div className="text-muted-foreground text-xs">
+                      /{page.slug}
+                    </div>
+                  </div>
+                </Button>
+              ))}
+            </div>
+          ) : searchTerm && !isLoading ? (
+            <div className="text-muted-foreground p-4 text-center">
+              No pages found matching &quot;{searchTerm}&quot;
+            </div>
+          ) : null}
+        </ScrollArea>
+
+        <Separator />
+
+        {/* Create New Page Section */}
+        <div className="bg-white p-2">
+          {!showCreateForm ? (
+            <Button
+              onClick={() => setShowCreateForm(true)}
+              variant="ghost"
+              className="w-full justify-start text-green-700 hover:bg-green-50 hover:text-green-700"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              <span>Create New Page</span>
+            </Button>
+          ) : (
+            <div className="space-y-2 rounded bg-white p-2">
+              <div className="text-sm font-medium">Create New Page</div>
+              <Input
+                type="text"
+                placeholder="Page title..."
+                value={newPageTitle}
+                onChange={e => setNewPageTitle(e.target.value)}
+                className="bg-white"
+              />
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleCreatePage}
+                  variant="default"
+                  disabled={!newPageTitle.trim() || isCreating}
+                  className="flex-1"
+                  size="sm"
+                >
+                  {isCreating ? "Creating..." : "Create & Link"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowCreateForm(false);
+                    setNewPageTitle("");
+                  }}
+                  variant="outline"
+                  size="sm"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Separator />
+
+        {/* External URL Option */}
+        <div className="p-2">
+          <Button
+            onClick={handleExternalUrl}
+            variant="ghost"
+            className="text-primary hover:text-primary w-full justify-start"
+          >
+            <ExternalLink className="mr-2 h-4 w-4" />
+            <span>External URL</span>
+          </Button>
+        </div>
+
+        <Separator />
+
+        {/* Footer */}
+        <div className="bg-muted/30 p-2">
+          <Button
+            onClick={onCancel}
+            variant="ghost"
+            className="w-full"
+            size="sm"
+          >
+            Cancel
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 export function FooterEditorDialog({
   open,
   onOpenChange,
@@ -56,8 +248,13 @@ export function FooterEditorDialog({
   onSave,
   isLoading = false,
   footerStyle,
+  siteUser,
 }: FooterEditorDialogProps) {
   const [editingData, setEditingData] = useState<FooterData>(footerData);
+  const [showPageSelectorFor, setShowPageSelectorFor] = useState<{
+    sectionId: string;
+    linkId: string;
+  } | null>(null);
 
   // Check if newsletter should be shown (not for FooterStyle5)
   const showNewsletter = footerStyle !== "FooterStyle5";
@@ -217,6 +414,20 @@ export function FooterEditorDialog({
       ...prev,
       socialLinks: prev.socialLinks.filter(link => link.id !== linkId),
     }));
+  };
+
+  // Handle page selection for footer links
+  const handlePageSelect = (href: string, text?: string) => {
+    if (showPageSelectorFor) {
+      const { sectionId, linkId } = showPageSelectorFor;
+
+      updateLink(sectionId, linkId, "href", href);
+      if (text) {
+        updateLink(sectionId, linkId, "text", text);
+      }
+
+      setShowPageSelectorFor(null);
+    }
   };
 
   return (
@@ -466,7 +677,7 @@ export function FooterEditorDialog({
                       </div>
                       <div className="space-y-2">
                         {section.links.map(link => (
-                          <div key={link.id} className="flex gap-2">
+                          <div key={link.id} className="relative flex gap-2">
                             <Input
                               value={link.text}
                               onChange={e =>
@@ -481,20 +692,37 @@ export function FooterEditorDialog({
                               className="flex-1"
                               disabled={isLoading}
                             />
-                            <Input
-                              value={link.href || ""}
-                              onChange={e =>
-                                updateLink(
-                                  section.id,
-                                  link.id,
-                                  "href",
-                                  e.target.value
-                                )
-                              }
-                              placeholder="URL"
-                              className="flex-1"
-                              disabled={isLoading}
-                            />
+                            <div className="relative flex-1">
+                              <Input
+                                value={link.href || ""}
+                                onChange={e =>
+                                  updateLink(
+                                    section.id,
+                                    link.id,
+                                    "href",
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Select or enter URL"
+                                className="pr-8"
+                                disabled={isLoading}
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="absolute top-0 right-0 h-full px-2"
+                                onClick={() =>
+                                  setShowPageSelectorFor({
+                                    sectionId: section.id,
+                                    linkId: link.id,
+                                  })
+                                }
+                                disabled={isLoading}
+                              >
+                                <ChevronDown className="h-4 w-4" />
+                              </Button>
+                            </div>
                             <Button
                               variant="ghost"
                               size="sm"
@@ -504,6 +732,17 @@ export function FooterEditorDialog({
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
+
+                            {/* Page Selector Dropdown */}
+                            {showPageSelectorFor?.sectionId === section.id &&
+                              showPageSelectorFor?.linkId === link.id && (
+                                <PageSelector
+                                  onSelect={handlePageSelect}
+                                  onCancel={() => setShowPageSelectorFor(null)}
+                                  currentHref={link.href || ""}
+                                  currentText={link.text}
+                                />
+                              )}
                           </div>
                         ))}
                         <Button
