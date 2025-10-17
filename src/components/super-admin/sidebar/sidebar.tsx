@@ -9,6 +9,7 @@ import { LayoutDashboard, X, Edit3 } from "lucide-react";
 const navigation = [
   { name: "Dashboard", href: "/superadmin/dashboard", icon: LayoutDashboard },
   { name: "Domain", href: "/superadmin/domains", icon: Edit3 },
+  { name: "FAQ", href: "/superadmin/faq", icon: Edit3 },
 ];
 
 export default function Sidebar() {

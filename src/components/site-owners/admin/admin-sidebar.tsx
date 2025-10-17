@@ -23,16 +23,12 @@ import {
   Mail,
   Youtube,
   ChevronDown,
-  Menu,
-  X,
   PanelRight,
   PanelLeft,
-  ArrowLeftToLine,
   MessageCircle,
   Wallet,
-  CreditCard,
 } from "lucide-react";
-
+import Image from "next/image";
 const navigationGroups = [
   {
     items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
@@ -171,131 +167,148 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
   return (
     <div
       className={cn(
-        "sticky top-0 mt-15 h-screen border-r border-gray-200 bg-white transition-all duration-300 ease-in-out",
+        "bg-background sticky top-0 z-[9999] flex h-screen flex-col border-r transition-all duration-300 ease-in-out",
         collapsed ? "w-16" : "w-64"
       )}
     >
-      <div className="flex h-full flex-col">
-        {/* Header with Toggle Button */}
-        <div className="sticky top-13 z-10 border-b border-gray-200 bg-white px-4 py-4">
-          <div className="flex items-center justify-between">
-            {!collapsed && (
-              <h2 className="text-lg font-semibold text-gray-900">
-                Admin Panel
-              </h2>
-            )}
-            <button
-              onClick={() => setCollapsed(!collapsed)}
-              className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-gray-100",
-                collapsed && "mx-auto"
-              )}
-              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {collapsed ? (
-                <PanelLeft className="h-5 w-5 text-gray-600" />
-              ) : (
-                <PanelRight className="h-5 w-5 text-gray-600" />
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <nav className="scrollbar-hide flex-1 overflow-y-auto px-2 py-4">
-          <div className="space-y-2">
-            {navigationGroups.map((group, groupIndex) => (
-              <div key={group.name || groupIndex}>
-                {/* Group Header */}
-                {group.name && !collapsed && (
-                  <button
-                    onClick={() => toggleGroup(group.name!)}
-                    className="mb-2 flex w-full items-center justify-between rounded-md px-3 py-1.5 text-xs font-semibold tracking-wider text-gray-500 uppercase transition-colors hover:bg-gray-50"
-                  >
-                    <span>{group.name}</span>
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 transition-transform duration-200",
-                        openGroups[group.name] ? "rotate-0" : "-rotate-90"
-                      )}
+      {/* Logo Section */}
+      <div className="flex h-16 items-center border-b px-4">
+        <div
+          className={cn(
+            "flex items-center gap-2 transition-all duration-300",
+            collapsed ? "w-full justify-center" : "w-full"
+          )}
+        >
+          {collapsed ? (
+            <div className=""></div>
+          ) : (
+            <>
+              <div className="flex flex-col">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center">
+                    <Image
+                      src="/fulllogo.svg"
+                      alt="Logo"
+                      width={150}
+                      height={40}
                     />
-                  </button>
-                )}
-
-                {/* Divider for collapsed state */}
-                {collapsed && groupIndex > 0 && (
-                  <div className="my-2 border-t border-gray-200" />
-                )}
-
-                {/* Group Items */}
-                <div
-                  className={cn(
-                    "space-y-1 transition-all duration-200",
-                    !collapsed && group.name && !openGroups[group.name]
-                      ? "hidden"
-                      : "block"
-                  )}
-                >
-                  {group.items.map(item => {
-                    const isActive = pathname === item.href;
-                    return (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        title={collapsed ? item.name : undefined}
-                        className={cn(
-                          "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out",
-                          collapsed ? "justify-center" : "",
-                          isActive
-                            ? "bg-gray-100 text-gray-900"
-                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                        )}
-                      >
-                        <item.icon
-                          className={cn(
-                            "h-5 w-5 flex-shrink-0 transition-colors",
-                            collapsed ? "mr-0" : "mr-3",
-                            isActive
-                              ? "text-gray-900"
-                              : "text-gray-400 group-hover:text-gray-600"
-                          )}
-                        />
-                        {!collapsed && (
-                          <span className="truncate">{item.name}</span>
-                        )}
-                      </Link>
-                    );
-                  })}
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </nav>
+            </>
+          )}
+        </div>
 
-        {/* Footer */}
-        <div className="flex-shrink-0 border-t border-gray-200 bg-gray-50 px-3 py-4">
-          <div
-            className={cn(
-              "flex items-center",
-              collapsed ? "justify-center" : "space-x-3"
-            )}
-          >
-            <div className="flex-shrink-0">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
-                <span className="text-sm font-medium text-gray-600 capitalize">
-                  {user.name?.charAt(0) || user.email.charAt(0)}
-                </span>
+        {/* Toggle Button */}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className={cn(
+            "flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-gray-100"
+          )}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {collapsed ? (
+            <PanelLeft className="mr-1 h-4 w-4 text-gray-600" />
+          ) : (
+            <PanelRight className="h-5 w-5 text-gray-600" />
+          )}
+        </button>
+      </div>
+
+      {/* Navigation */}
+      <div className="scrollbar-hide flex-1 overflow-y-auto py-4">
+        <nav className="grid gap-1 px-2">
+          {navigationGroups.map((group, groupIndex) => (
+            <div key={group.name || groupIndex}>
+              {/* Group Header */}
+              {group.name && !collapsed && (
+                <button
+                  onClick={() => toggleGroup(group.name!)}
+                  className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex w-full items-center justify-between rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
+                >
+                  <span className="truncate">{group.name}</span>
+                  <ChevronDown
+                    className={cn(
+                      "h-3 w-3 transition-transform duration-200",
+                      openGroups[group.name] ? "rotate-0" : "-rotate-90"
+                    )}
+                  />
+                </button>
+              )}
+
+              {/* Group Items */}
+              <div
+                className={cn(
+                  "grid gap-1 transition-all duration-200",
+                  !collapsed && group.name && !openGroups[group.name]
+                    ? "hidden"
+                    : "grid"
+                )}
+              >
+                {group.items.map(item => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={cn(
+                        "group flex items-center rounded-md px-2 py-2 text-sm font-medium transition-colors",
+                        collapsed ? "justify-center" : "justify-start",
+                        isActive
+                          ? "bg-accent text-accent-foreground"
+                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                      )}
+                      title={collapsed ? item.name : undefined}
+                    >
+                      <item.icon
+                        className={cn(
+                          "h-4 w-4 flex-shrink-0",
+                          collapsed ? "mr-0" : "mr-2"
+                        )}
+                      />
+                      {!collapsed && (
+                        <span className="truncate">{item.name}</span>
+                      )}
+                    </Link>
+                  );
+                })}
               </div>
+
+              {/* Divider for collapsed state */}
+              {collapsed &&
+                groupIndex > 0 &&
+                groupIndex < navigationGroups.length - 1 && (
+                  <div className="border-border my-2 border-t" />
+                )}
             </div>
-            {!collapsed && (
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-gray-600 capitalize">
-                  {user.name || "Admin"}
-                </p>
-                <p className="truncate text-xs text-gray-500">{user.email}</p>
-              </div>
-            )}
+          ))}
+        </nav>
+      </div>
+
+      {/* User Profile Section */}
+      <div className="border-t p-4">
+        <div
+          className={cn(
+            "flex items-center gap-2",
+            collapsed ? "justify-center" : "justify-start"
+          )}
+        >
+          <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-full">
+            <span className="text-primary-foreground text-xs font-medium">
+              {user.name?.charAt(0)?.toUpperCase() ||
+                user.email.charAt(0).toUpperCase()}
+            </span>
           </div>
+          {!collapsed && (
+            <div className="flex flex-1 flex-col overflow-hidden">
+              <p className="truncate text-sm font-medium capitalize">
+                {user.name || "Admin"}
+              </p>
+              <p className="text-muted-foreground truncate text-xs">
+                {user.email}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

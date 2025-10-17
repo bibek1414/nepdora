@@ -63,7 +63,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
   };
 
   const handleFeedback = () => {
-    router.push("/admin/support");
+    router.push("/support");
   };
 
   const getUserInitials = (name: string) => {
@@ -78,11 +78,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
     <header className="fixed top-0 right-0 left-0 z-50 h-16 border-b bg-white">
       <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left side - Logo */}
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center">
-            <Image src="/fulllogo.svg" alt="Logo" width={150} height={40} />
-          </div>
-        </div>
+        <div className="flex items-center space-x-4"></div>
 
         <div className="flex items-center space-x-2">
           <Link
@@ -137,12 +133,12 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             </Button>
           </a>
 
-          <Link href="/admin/support">
+          <Link href="/support">
             <Button variant="ghost" size="sm">
               Help
             </Button>
           </Link>
-          <Link href="/admin/support">
+          <Link href="/support">
             <Button variant="ghost" size="sm" onClick={handleFeedback}>
               Share Feedback
             </Button>
