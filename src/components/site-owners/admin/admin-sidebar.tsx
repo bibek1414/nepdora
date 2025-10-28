@@ -54,6 +54,11 @@ const navigationGroups = [
         href: "/admin/service-bookings",
         icon: Calendar,
       },
+      {
+        name: "Manual Order",
+        href: "/admin/manual-orders",
+        icon: Calendar,
+      },
     ],
   },
   {
