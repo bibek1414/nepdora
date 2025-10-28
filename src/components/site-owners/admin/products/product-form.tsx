@@ -184,6 +184,8 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
     form.setValue("sub_category_id", "");
   };
 
+  // Replace the onSubmit function in ProductForm with this:
+
   const onSubmit = async (data: z.infer<typeof CreateProductSchema>) => {
     try {
       const transformedOptions = options.map(opt => ({
@@ -195,12 +197,30 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
       const stockValue = trackStock ? undefined : productStock;
       const transformedVariants = variants.map(v => {
         const variantStock = trackStock ? v.stock : stockValue;
-        return {
+
+        // Build variant data object conditionally
+        const variantData: {
+          price?: string;
+          stock: number;
+          image?: File | string; // Can be File (new) or string (existing URL)
+          options: Record<string, string>;
+        } = {
           price: v.price || undefined,
           stock: variantStock ?? 0,
-          image: v.image instanceof File ? v.image : undefined,
           options: v.options,
         };
+
+        // Only include image field if there's actually an image
+        if (v.image instanceof File) {
+          // New image file uploaded
+          variantData.image = v.image;
+        } else if (typeof v.image === "string" && v.image.trim()) {
+          // Existing image URL - keep it
+          variantData.image = v.image;
+        }
+        // If image is null or empty string, omit the field entirely
+
+        return variantData;
       });
 
       const productData: CreateProductRequest = {
@@ -218,7 +238,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
         options: transformedOptions.length > 0 ? transformedOptions : undefined,
         variants:
           transformedVariants.length > 0 ? transformedVariants : undefined,
-        // NEW FIELDS
         fast_shipping: data.fast_shipping,
         warranty: data.warranty || undefined,
         weight: data.weight || undefined,

@@ -251,7 +251,19 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
 
   const handleVariantImageChange = (variantId: string, file: File | null) => {
     onVariantsChange(
-      variants.map(v => (v.id === variantId ? { ...v, image: file } : v))
+      variants.map(v => {
+        if (v.id === variantId) {
+          // If file is null, check if there was an existing URL
+          // If so, keep it; otherwise set to null
+          if (file === null) {
+            // User clicked "Remove" - set to null
+            return { ...v, image: null };
+          }
+          // New file selected
+          return { ...v, image: file };
+        }
+        return v;
+      })
     );
   };
 
@@ -368,9 +380,12 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
       .join(" / ");
 
     const isAvailable = trackStock ? variant.stock > 0 : productStock > 0;
-
-    // Check if this variant's group has a group image
     const groupImage = groupBy ? groupImages[variant.options[groupBy]] : null;
+
+    // Check what type of image we have
+    const hasFileImage = variant.image instanceof File;
+    const hasUrlImage = typeof variant.image === "string" && variant.image;
+    const hasGroupImage = !hasFileImage && !hasUrlImage && groupImage;
 
     return (
       <div
@@ -381,17 +396,24 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
       >
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            {variant.image ? (
+            {hasFileImage ? (
+              <div className="relative">
+                <img
+                  src={URL.createObjectURL(variant.image as File)}
+                  alt={variantLabel}
+                  className="h-10 w-10 rounded object-cover"
+                />
+                <div className="absolute -top-1 -right-1 rounded-full bg-green-500 px-1 text-xs text-white">
+                  NEW
+                </div>
+              </div>
+            ) : hasUrlImage ? (
               <img
-                src={
-                  typeof variant.image === "string"
-                    ? variant.image
-                    : URL.createObjectURL(variant.image)
-                }
+                src={variant.image as string}
                 alt={variantLabel}
                 className="h-10 w-10 rounded object-cover"
               />
-            ) : groupImage ? (
+            ) : hasGroupImage ? (
               <div className="relative">
                 <img
                   src={
@@ -456,13 +478,15 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
               htmlFor={`image-${variant.id}`}
               className="cursor-pointer text-xs text-blue-600 hover:text-blue-700"
             >
-              {variant.image
-                ? "Change image"
-                : groupImage
-                  ? "Override image"
-                  : "Add image"}
+              {hasFileImage
+                ? "Change new image"
+                : hasUrlImage
+                  ? "Change image"
+                  : hasGroupImage
+                    ? "Override group"
+                    : "Add image"}
             </label>
-            {variant.image && (
+            {(hasFileImage || hasUrlImage) && (
               <Button
                 type="button"
                 variant="ghost"

@@ -55,23 +55,27 @@ const buildProductFormData = (
           options: variant.options,
         };
 
-        // If variant has an image File, append it with consistent key name
+        // Handle variant image properly:
+        // - If it's a File, append to FormData and reference it
+        // - If it's a string URL, keep the URL (existing image)
+        // - If it's null/undefined, OMIT the field entirely (keep existing image)
         if (variant.image instanceof File) {
           const variantImageKey = `variant_image_${index}`;
           formData.append(variantImageKey, variant.image);
-          variantData.image = variantImageKey; // <-- SAME NAME as the FormData key
+          variantData.image = variantImageKey;
         } else if (typeof variant.image === "string") {
-          variantData.image = variant.image; // Existing URL
-        } else {
-          variantData.image = null;
+          // Existing image URL - include it so backend knows to keep it
+          variantData.image = variant.image;
         }
+        // ✅ If image is null/undefined, DON'T include the image field at all
+        // The backend should interpret missing field as "don't change"
 
         return variantData;
       });
 
       // Send variants as JSON string
       formData.append("variants", JSON.stringify(variantsData));
-      console.log("Variants data:", JSON.stringify(variantsData));
+      console.log("Variants data:", JSON.stringify(variantsData, null, 2));
     } else if (key === "image_files") {
       return; // Already handled above
     } else if (typeof value === "boolean") {
