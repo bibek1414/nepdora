@@ -26,11 +26,8 @@ export interface CreateOrderRequest {
   items: OrderItem[];
   payment_type?: string;
   transaction_id?: string;
-  is_manual?: boolean;
-  notes?: string;
+  is_paid?: boolean;
 }
-
-export type OrderStatus = "pending" | "processing" | "completed" | "cancelled";
 
 export interface Order {
   id: number;
@@ -41,7 +38,7 @@ export interface Order {
   customer_address: string;
   shipping_address: string;
   total_amount: string;
-  status: OrderStatus;
+  status: string;
   created_at: string;
   updated_at: string;
   items?: OrderItem[];
