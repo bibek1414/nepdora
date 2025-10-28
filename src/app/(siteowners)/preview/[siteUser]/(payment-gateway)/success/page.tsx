@@ -73,6 +73,41 @@ function PaymentSuccessContent() {
     }
   };
 
+  // Add this function to update the order with transaction ID in PaymentSuccessContent:
+
+  const updateOrderWithTransaction = async (
+    orderId: number,
+    transactionId: string,
+    paymentMethod: string,
+    paymentStatus: string
+  ) => {
+    try {
+      const response = await fetch(`/api/order/${orderId}/payment`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          transaction_id: transactionId,
+          payment_method: paymentMethod,
+          payment_status: paymentStatus,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update order with transaction ID");
+      }
+
+      const updatedOrder = await response.json();
+      console.log("Order updated with transaction ID:", updatedOrder);
+      return updatedOrder;
+    } catch (error) {
+      console.error("Error updating order with transaction:", error);
+      // Don't throw error - this is a secondary operation
+    }
+  };
+
+  // Update the verifyKhaltiPayment function:
   const verifyKhaltiPayment = async (paymentId: string) => {
     setIsVerifying(true);
     setError(null);
@@ -100,6 +135,19 @@ function PaymentSuccessContent() {
 
       if (apiResponse.data.is_success) {
         toast.success("Payment verified successfully!");
+
+        // Get order ID from session storage
+        const orderId = sessionStorage.getItem(`order_id_${paymentId}`);
+
+        if (orderId) {
+          // Update order with transaction details
+          await updateOrderWithTransaction(
+            parseInt(orderId),
+            apiResponse.data.transaction_id || paymentId,
+            "khalti",
+            "completed"
+          );
+        }
       } else {
         toast.warning("Payment verification completed with issues");
       }
@@ -113,6 +161,7 @@ function PaymentSuccessContent() {
     }
   };
 
+  // Update the verifyEsewaPayment function:
   const verifyEsewaPayment = async (encodedData: string) => {
     setIsVerifying(true);
     setError(null);
@@ -146,6 +195,22 @@ function PaymentSuccessContent() {
 
       if (apiResponse.data.is_success) {
         toast.success("eSewa payment verified successfully!");
+
+        // Get order ID from session storage using transaction UUID
+        const transactionUuid = apiResponse.data.transaction_uuid;
+        const orderId = transactionUuid
+          ? sessionStorage.getItem(`order_id_${transactionUuid}`)
+          : null;
+
+        if (orderId) {
+          // Update order with transaction details
+          await updateOrderWithTransaction(
+            parseInt(orderId),
+            apiResponse.data.transaction_code || transactionUuid || "",
+            "esewa",
+            "completed"
+          );
+        }
       } else {
         toast.warning("eSewa payment verification completed with issues");
       }

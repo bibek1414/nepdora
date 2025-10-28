@@ -1,4 +1,3 @@
-// Modified orderApi in your services file
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders, createHeadersCustomer } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -8,6 +7,7 @@ import {
   OrdersResponse,
   OrderPaginationParams,
   UpdateOrderStatusRequest,
+  UpdateOrderPaymentRequest,
 } from "@/types/owner-site/admin/orders";
 
 export const orderApi = {
@@ -17,7 +17,6 @@ export const orderApi = {
   ): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    // Create headers conditionally based on login status
     const headers = includeToken
       ? createHeadersCustomer()
       : {
@@ -76,6 +75,21 @@ export const orderApi = {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(statusData),
+    });
+    await handleApiError(response);
+    return response.json();
+  },
+
+  // New method to update order payment information
+  updateOrderPayment: async (
+    id: number,
+    paymentData: UpdateOrderPaymentRequest
+  ): Promise<Order> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/order/${id}/`, {
+      method: "PATCH",
+      headers: createHeaders(),
+      body: JSON.stringify(paymentData),
     });
     await handleApiError(response);
     return response.json();

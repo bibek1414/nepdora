@@ -23,6 +23,8 @@ export interface CreateOrderRequest {
   order_status?: string;
   total_amount: string;
   items: OrderItem[];
+  payment_method?: string;
+  transaction_id?: string;
 }
 
 export interface Order {
@@ -39,6 +41,9 @@ export interface Order {
   updated_at: string;
   items?: OrderItem[];
   order_items?: OrderItem[];
+  payment_method?: string;
+  transaction_id?: string;
+  payment_status?: string;
 }
 
 export interface OrdersResponse {
@@ -60,4 +65,10 @@ export interface OrderPaginationParams {
 
 export interface UpdateOrderStatusRequest {
   status: string;
+}
+
+export interface UpdateOrderPaymentRequest {
+  transaction_id: string;
+  payment_method: string;
+  payment_status: string;
 }

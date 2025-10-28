@@ -95,6 +95,10 @@ export default function KhaltiPayment() {
         transactionId: pidx,
       });
 
+      // Store transaction ID in session storage for later use
+      sessionStorage.setItem(`khalti_transaction_${order.id}`, pidx);
+      sessionStorage.setItem(`order_id_${pidx}`, order.id.toString());
+
       toast.success("Payment session created! Redirecting to Khalti...");
 
       const expiryTime = new Date(expires_at).toLocaleString();

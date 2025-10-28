@@ -50,7 +50,7 @@ const faqSchema = z.object({
     .min(1, "Answer is required")
     .min(10, "Answer must be at least 10 characters")
     .max(2000, "Answer must be less than 2000 characters"),
-  category: z.number("Category is required").min(1, "Category is required"),
+  category_id: z.number("Category is required").min(1, "Category is required"),
 });
 
 type FAQFormData = z.infer<typeof faqSchema>;
@@ -77,7 +77,7 @@ export function FAQForm({ open, onOpenChange, faq, mode }: FAQFormProps) {
     defaultValues: {
       question: "",
       answer: "",
-      category: undefined,
+      category_id: undefined,
     },
   });
 
@@ -91,13 +91,14 @@ export function FAQForm({ open, onOpenChange, faq, mode }: FAQFormProps) {
         form.reset({
           question: faq.question,
           answer: faq.answer,
-          category: faq.category,
+          // FIX: Extract the ID from the nested category object
+          category_id: faq.category?.id || faq.category_id,
         });
       } else {
         form.reset({
           question: "",
           answer: "",
-          category: undefined,
+          category_id: undefined,
         });
       }
     }
@@ -113,7 +114,7 @@ export function FAQForm({ open, onOpenChange, faq, mode }: FAQFormProps) {
       setIsCategoryDialogOpen(false);
       setNewCategoryName("");
       // Set the newly created category as selected
-      form.setValue("category", newCategory.id);
+      form.setValue("category_id", newCategory.id);
     } catch (error) {
       // Error handling is done in the hook
     }
@@ -136,7 +137,7 @@ export function FAQForm({ open, onOpenChange, faq, mode }: FAQFormProps) {
   const isLoading = createFAQ.isPending || updateFAQ.isPending;
 
   // Get the select value, ensuring it's a string for the Select component
-  const selectValue = form.watch("category")?.toString() || "";
+  const selectValue = form.watch("category_id")?.toString() || "";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -166,7 +167,7 @@ export function FAQForm({ open, onOpenChange, faq, mode }: FAQFormProps) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="category"
+              name="category_id"
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center justify-between">
