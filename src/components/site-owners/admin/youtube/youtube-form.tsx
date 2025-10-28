@@ -98,6 +98,11 @@ export function YouTubeForm({
     }
   }, [open, mode, video, form]);
 
+  const handleClose = () => {
+    form.reset();
+    onOpenChange(false);
+  };
+
   const onSubmit = async (data: YouTubeFormData) => {
     try {
       if (mode === "create") {
@@ -105,8 +110,7 @@ export function YouTubeForm({
       } else if (mode === "edit" && video) {
         await updateVideo.mutateAsync({ id: video.id, data });
       }
-      onOpenChange(false);
-      form.reset();
+      handleClose();
     } catch (error) {
       // Error handling is done in the hooks
     }

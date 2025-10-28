@@ -1,6 +1,7 @@
 export interface OrderItem {
   id?: number;
-  product_id: number;
+  product_id?: number;
+  variant_id?: number | null;
   quantity: number;
   price: string;
   product?: {
@@ -23,8 +24,9 @@ export interface CreateOrderRequest {
   order_status?: string;
   total_amount: string;
   items: OrderItem[];
-  payment_method?: string;
+  payment_type?: string;
   transaction_id?: string;
+  is_paid?: boolean;
 }
 
 export interface Order {
@@ -41,9 +43,9 @@ export interface Order {
   updated_at: string;
   items?: OrderItem[];
   order_items?: OrderItem[];
-  payment_method?: string;
+  payment_type?: string;
   transaction_id?: string;
-  payment_status?: string;
+  is_paid?: boolean;
 }
 
 export interface OrdersResponse {
@@ -69,6 +71,6 @@ export interface UpdateOrderStatusRequest {
 
 export interface UpdateOrderPaymentRequest {
   transaction_id: string;
-  payment_method: string;
-  payment_status: string;
+  payment_type: string;
+  is_paid: boolean;
 }

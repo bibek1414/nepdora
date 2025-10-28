@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,10 +42,8 @@ const CheckoutPage = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(null);
-
   const isPreviewMode = !!params?.siteUser;
   const siteUser = params?.siteUser as string;
-
   const {
     register,
     handleSubmit,
@@ -67,10 +65,10 @@ const CheckoutPage = () => {
 
   const sameAsCustomerAddress = watch("same_as_customer_address");
 
-  const totalAmount = cartItems.reduce(
-    (total, item) => total + Number(item.product.price) * item.quantity,
-    0
-  );
+  const totalAmount = cartItems.reduce((total, item) => {
+    const itemPrice = item.selectedVariant?.price || item.product.price;
+    return total + Number(itemPrice) * item.quantity;
+  }, 0);
 
   // Filter enabled payment gateways and get unique ones
   const enabledPaymentGateways =
@@ -84,7 +82,7 @@ const CheckoutPage = () => {
   // Always include COD as an option
   const uniquePaymentTypes = ["cod", ...gatewayPaymentTypes];
 
-  // Theme setup similar to product components
+  // Theme setup
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
       text: "#0F172A",
@@ -137,8 +135,6 @@ const CheckoutPage = () => {
     }
   };
 
-  // In your CheckoutPage component, update the onSubmit function:
-
   const onSubmit = async (data: CheckoutFormValues) => {
     if (cartItems.length === 0) {
       toast.error("Your cart is empty");
@@ -151,11 +147,24 @@ const CheckoutPage = () => {
     }
 
     try {
-      const orderItems: OrderItem[] = cartItems.map(item => ({
-        product_id: item.product.id,
-        quantity: item.quantity,
-        price: item.product.price.toString(),
-      }));
+      const orderItems: OrderItem[] = cartItems.map(item => {
+        // If variant is selected, send only variant_id, otherwise send only product_id
+        if (item.selectedVariant?.id) {
+          return {
+            variant_id: item.selectedVariant.id,
+            quantity: item.quantity,
+            price: (
+              item.selectedVariant.price || item.product.price
+            ).toString(),
+          };
+        } else {
+          return {
+            product_id: item.product.id,
+            quantity: item.quantity,
+            price: item.product.price.toString(),
+          };
+        }
+      });
 
       const orderData: CreateOrderRequest = {
         customer_name: data.customer_name,
@@ -197,13 +206,7 @@ const CheckoutPage = () => {
             // For COD, go directly to order confirmation
             toast.success("Order placed successfully! Pay on delivery.");
             clearCart();
-            if (isPreviewMode) {
-              router.push(
-                `/preview/${siteUser}/order-confirmation/${order.id}`
-              );
-            } else {
-              router.push(`/order-confirmation/${order.id}`);
-            }
+            router.push(`/preview/${siteUser}/order-confirmation/${order.id}`);
             break;
           default:
             break;
@@ -212,12 +215,7 @@ const CheckoutPage = () => {
         // Direct order confirmation without payment gateway
         toast.success("Order placed successfully!");
         clearCart();
-
-        if (isPreviewMode) {
-          router.push(`/preview/${siteUser}/order-confirmation/${order.id}`);
-        } else {
-          router.push(`/order-confirmation/${order.id}`);
-        }
+        router.push(`/preview/${siteUser}/order-confirmation/${order.id}`);
       }
     } catch (error) {
       console.error("Order creation failed:", error);
@@ -226,11 +224,7 @@ const CheckoutPage = () => {
   };
 
   const handleContinueShopping = () => {
-    if (isPreviewMode) {
-      router.push(`/preview/${siteUser}`);
-    } else {
-      router.push("/");
-    }
+    router.push(`/preview/${siteUser}`);
   };
 
   if (cartItems.length === 0) {
@@ -497,7 +491,7 @@ const CheckoutPage = () => {
               <CardContent className="space-y-4">
                 {cartItems.map(item => (
                   <div
-                    key={item.product.id}
+                    key={`${item.product.id}-${item.selectedVariant?.id || "no-variant"}`}
                     className="flex items-center space-x-4"
                   >
                     <Image

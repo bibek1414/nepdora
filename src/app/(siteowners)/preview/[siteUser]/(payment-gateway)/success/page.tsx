@@ -17,7 +17,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Suspense } from "react";
 import { toast } from "sonner";
 import { ApiResponse, PaymentVerification } from "@/types/payment";
-
+import { orderApi } from "@/services/api/owner-sites/admin/orders";
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const [isVerifying, setIsVerifying] = useState(false);
@@ -75,6 +75,7 @@ function PaymentSuccessContent() {
 
   // Add this function to update the order with transaction ID in PaymentSuccessContent:
 
+  // In your PaymentSuccessContent component
   const updateOrderWithTransaction = async (
     orderId: number,
     transactionId: string,
@@ -82,23 +83,13 @@ function PaymentSuccessContent() {
     paymentStatus: string
   ) => {
     try {
-      const response = await fetch(`/api/order/${orderId}/payment`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          transaction_id: transactionId,
-          payment_method: paymentMethod,
-          payment_status: paymentStatus,
-        }),
+      // Call the orderApi service directly - it will hit Django backend
+      const updatedOrder = await orderApi.updateOrderPayment(orderId, {
+        transaction_id: transactionId,
+        payment_type: paymentMethod,
+        is_paid: true,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to update order with transaction ID");
-      }
-
-      const updatedOrder = await response.json();
       console.log("Order updated with transaction ID:", updatedOrder);
       return updatedOrder;
     } catch (error) {

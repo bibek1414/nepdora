@@ -124,7 +124,7 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
                       {/* Price & Quantity Controls */}
                       <div className="flex items-center justify-between pt-2">
                         <p className="text-base font-semibold text-gray-900 sm:text-lg">
-                          ${Number(item.product.price).toFixed(2)}
+                          Rs.{Number(item.product.price).toFixed(2)}
                         </p>
 
                         <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
                   SUBTOTAL:
                 </span>
                 <span className="text-lg font-bold text-gray-900 sm:text-xl">
-                  ${totalPrice.toFixed(2)}
+                  Rs.{totalPrice.toFixed(2)}
                 </span>
               </div>
 

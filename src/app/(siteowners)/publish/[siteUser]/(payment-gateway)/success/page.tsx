@@ -1,3 +1,5 @@
+// Updated payment success page with proper order update handling
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -17,17 +19,23 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Suspense } from "react";
 import { toast } from "sonner";
 import { ApiResponse, PaymentVerification } from "@/types/payment";
+import { orderApi } from "@/services/api/owner-sites/admin/orders";
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isUpdatingOrder, setIsUpdatingOrder] = useState(false); // New state
   const [verificationResult, setVerificationResult] =
     useState<PaymentVerification | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [orderUpdateStatus, setOrderUpdateStatus] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
 
-  // Extract URL parameters for both Khalti and eSewa
+  // Extract URL parameters
   const method = searchParams.get("method");
-  const pidx = searchParams.get("pidx"); // Khalti
+  const pidx = searchParams.get("pidx");
   const status = searchParams.get("status");
   const transactionId =
     searchParams.get("transaction_id") || searchParams.get("txnId");
@@ -37,39 +45,70 @@ function PaymentSuccessContent() {
   const purchaseOrderName = searchParams.get("purchase_order_name");
   const mobile = searchParams.get("mobile");
 
-  // eSewa specific parameters - handle the URL parsing issue with &?data
-  let esewaData = searchParams.get("data"); // Base64 encoded response from eSewa
+  let esewaData = searchParams.get("data");
 
-  // If data is not found normally, try to extract it from the URL manually
   if (!esewaData && method === "esewa") {
     const currentUrl = window.location.href;
     const dataMatch = currentUrl.match(/[&?]data=([^&]+)/);
     if (dataMatch) {
       esewaData = dataMatch[1];
-      console.log("Extracted eSewa data from URL manually:", esewaData);
     }
   }
 
-  // Function to decode and display eSewa data for debugging
   const decodeEsewaData = (encodedData: string) => {
     try {
-      // Handle both browser and Node.js environments
       let decodedString: string;
-
       if (typeof window !== "undefined") {
-        // Browser environment - use atob
         decodedString = atob(encodedData);
       } else {
-        // Node.js environment - use Buffer
         decodedString = Buffer.from(encodedData, "base64").toString("utf-8");
       }
-
       const decoded = JSON.parse(decodedString);
-      console.log("Decoded eSewa data:", decoded);
       return decoded;
     } catch (error) {
       console.error("Failed to decode eSewa data:", error);
       return null;
+    }
+  };
+
+  // Updated function with better error handling and status updates
+  const updateOrderWithTransaction = async (
+    orderId: number,
+    transactionId: string,
+    paymentMethod: string,
+    paymentStatus: string
+  ) => {
+    setIsUpdatingOrder(true);
+    try {
+      const updatedOrder = await orderApi.updateOrderPayment(orderId, {
+        transaction_id: transactionId,
+        payment_type: paymentMethod,
+        is_paid: true,
+      });
+
+      setOrderUpdateStatus({
+        success: true,
+        message: "Order updated successfully",
+      });
+
+      // Clear the session storage after successful update
+      sessionStorage.removeItem(`order_id_${pidx || transactionId}`);
+
+      return updatedOrder;
+    } catch (error) {
+      console.error("Error updating order with transaction:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to update order";
+      setOrderUpdateStatus({
+        success: false,
+        message: errorMessage,
+      });
+      // Don't throw - we still want to show payment success even if order update fails
+      toast.error(
+        `Warning: ${errorMessage}. Please contact support with your transaction ID.`
+      );
+    } finally {
+      setIsUpdatingOrder(false);
     }
   };
 
@@ -100,10 +139,30 @@ function PaymentSuccessContent() {
 
       if (apiResponse.data.is_success) {
         toast.success("Payment verified successfully!");
+
+        // Get order ID from session storage or purchase_order_id
+        const storedOrderId = sessionStorage.getItem(`order_id_${paymentId}`);
+        const orderIdFromUrl = purchaseOrderId?.replace(/\D/g, ""); // Extract numbers from ORD-000113
+        const orderId = storedOrderId || orderIdFromUrl;
+
+        if (orderId) {
+          await updateOrderWithTransaction(
+            parseInt(orderId),
+            apiResponse.data.transaction_id || paymentId,
+            "khalti",
+            "completed"
+          );
+        } else {
+          console.warn("No order ID found for payment:", paymentId);
+          toast.warning(
+            "Payment successful but order ID not found. Please contact support."
+          );
+        }
       } else {
         toast.warning("Payment verification completed with issues");
       }
     } catch (error) {
+      console.error("Khalti verification error:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Verification failed";
       setError(errorMessage);
@@ -118,7 +177,7 @@ function PaymentSuccessContent() {
     setError(null);
 
     try {
-      console.log("Sending verification request to API...");
+      console.log("Starting eSewa verification...");
 
       const response = await fetch("/api/verify-payment", {
         method: "POST",
@@ -131,12 +190,12 @@ function PaymentSuccessContent() {
         }),
       });
 
-      console.log("Verification response status:", response.status);
+      console.log("eSewa verification response status:", response.status);
 
       const apiResponse: ApiResponse<PaymentVerification> =
         await response.json();
 
-      console.log("Verification API response:", apiResponse);
+      console.log("eSewa verification API response:", apiResponse);
 
       if (!apiResponse.success) {
         throw new Error(apiResponse.error || "Payment verification failed");
@@ -146,6 +205,38 @@ function PaymentSuccessContent() {
 
       if (apiResponse.data.is_success) {
         toast.success("eSewa payment verified successfully!");
+
+        // Get order ID from session storage using transaction UUID
+        const transactionUuid = apiResponse.data.transaction_uuid;
+        const storedOrderId = transactionUuid
+          ? sessionStorage.getItem(`order_id_${transactionUuid}`)
+          : null;
+
+        // Also try to get from purchase_order_id in URL
+        const orderIdFromUrl = purchaseOrderId?.replace(/\D/g, "");
+        const orderId = storedOrderId || orderIdFromUrl;
+
+        console.log("eSewa Order ID resolution:", {
+          transactionUuid,
+          storedOrderId,
+          orderIdFromUrl,
+          finalOrderId: orderId,
+        });
+
+        if (orderId) {
+          console.log("Attempting to update eSewa order:", orderId);
+          await updateOrderWithTransaction(
+            parseInt(orderId),
+            apiResponse.data.transaction_code || transactionUuid || "",
+            "esewa",
+            "completed"
+          );
+        } else {
+          console.warn("No order ID found for eSewa payment");
+          toast.warning(
+            "Payment successful but order ID not found. Please contact support."
+          );
+        }
       } else {
         toast.warning("eSewa payment verification completed with issues");
       }
@@ -191,29 +282,24 @@ function PaymentSuccessContent() {
   };
 
   useEffect(() => {
-    // Log all search params for debugging
     const allParams = Object.fromEntries(searchParams.entries());
     console.log("All URL parameters:", allParams);
 
-    // Handle eSewa success callback
     if (method === "esewa") {
       console.log("Processing eSewa payment callback");
       console.log("eSewa data parameter:", esewaData);
 
       if (esewaData) {
-        // Try to decode and show the data first
         const decodedData = decodeEsewaData(esewaData);
         if (decodedData) {
           console.log("Decoded eSewa response:", decodedData);
 
-          // Validate required fields
           if (!decodedData.transaction_code || !decodedData.status) {
             setError("Invalid eSewa response - missing required fields");
             toast.error("Invalid eSewa response format");
             return;
           }
 
-          // Set initial data from decoded response
           setVerificationResult({
             transaction_code: decodedData.transaction_code,
             transaction_uuid: decodedData.transaction_uuid,
@@ -221,10 +307,9 @@ function PaymentSuccessContent() {
             total_amount: decodedData.total_amount?.toString(),
             is_success: decodedData.status === "COMPLETE",
             should_provide_service: decodedData.status === "COMPLETE",
-            ref_id: decodedData.transaction_code, // Use transaction_code as ref_id
+            ref_id: decodedData.transaction_code,
           });
 
-          // Show appropriate message based on status
           if (decodedData.status === "COMPLETE") {
             toast.success("eSewa payment completed successfully!");
           } else if (decodedData.status === "PENDING") {
@@ -233,7 +318,6 @@ function PaymentSuccessContent() {
             toast.warning(`Payment status: ${decodedData.status}`);
           }
 
-          // Always verify the payment to ensure integrity
           console.log("Starting eSewa payment verification...");
           verifyEsewaPayment(esewaData);
         } else {
@@ -241,14 +325,11 @@ function PaymentSuccessContent() {
           toast.error("Invalid eSewa response format");
         }
       } else {
-        // No data parameter, this might be an error case
         setError("No payment data received from eSewa");
         toast.error("eSewa payment data missing");
       }
-    }
-
-    // Handle Khalti success callback
-    else if (method === "khalti" && pidx && status === "Completed") {
+    } else if (method === "khalti" && pidx && status === "Completed") {
+      console.log("Processing Khalti payment callback");
       verifyKhaltiPayment(pidx);
     }
   }, [method, pidx, status, esewaData]);
@@ -276,7 +357,7 @@ function PaymentSuccessContent() {
   };
 
   const getStatusIcon = () => {
-    if (isVerifying) {
+    if (isVerifying || isUpdatingOrder) {
       return <Loader2 className="h-16 w-16 animate-spin text-blue-500" />;
     }
 
@@ -284,7 +365,6 @@ function PaymentSuccessContent() {
       return <AlertCircle className="h-16 w-16 text-red-500" />;
     }
 
-    // Check for success statuses
     if (
       verificationResult?.is_success ||
       verificationResult?.status === "COMPLETE" ||
@@ -293,12 +373,10 @@ function PaymentSuccessContent() {
       return <CheckCircle className="h-16 w-16 text-green-500" />;
     }
 
-    // Check for pending statuses
     if (verificationResult?.status === "PENDING" || status === "Pending") {
       return <Loader2 className="h-16 w-16 animate-spin text-yellow-500" />;
     }
 
-    // Check for failure/error statuses
     if (
       verificationResult?.status === "FULL_REFUND" ||
       verificationResult?.status === "PARTIAL_REFUND" ||
@@ -316,9 +394,9 @@ function PaymentSuccessContent() {
 
   const getTitle = () => {
     if (isVerifying) return "Verifying Payment...";
+    if (isUpdatingOrder) return "Updating Order...";
     if (error) return "Verification Failed";
 
-    // Check for success statuses
     if (
       verificationResult?.is_success ||
       verificationResult?.status === "COMPLETE" ||
@@ -326,11 +404,9 @@ function PaymentSuccessContent() {
     )
       return "Payment Successful!";
 
-    // Check for pending statuses
     if (verificationResult?.status === "PENDING" || status === "Pending")
       return "Payment Pending";
 
-    // Check for failure/error statuses
     if (
       verificationResult?.status === "FULL_REFUND" ||
       verificationResult?.status === "PARTIAL_REFUND" ||
@@ -346,10 +422,9 @@ function PaymentSuccessContent() {
   };
 
   const getTitleColor = () => {
-    if (isVerifying) return "text-blue-700";
+    if (isVerifying || isUpdatingOrder) return "text-blue-700";
     if (error) return "text-red-700";
 
-    // Check for success statuses
     if (
       verificationResult?.is_success ||
       verificationResult?.status === "COMPLETE" ||
@@ -357,11 +432,9 @@ function PaymentSuccessContent() {
     )
       return "text-green-700";
 
-    // Check for pending statuses
     if (verificationResult?.status === "PENDING" || status === "Pending")
       return "text-yellow-700";
 
-    // Check for failure/error statuses
     if (
       verificationResult?.status === "FULL_REFUND" ||
       verificationResult?.status === "PARTIAL_REFUND" ||
@@ -416,7 +489,29 @@ function PaymentSuccessContent() {
             </Alert>
           )}
 
-          {!isVerifying && (
+          {/* Order Update Status */}
+          {orderUpdateStatus && (
+            <Alert
+              variant={orderUpdateStatus.success ? "default" : "destructive"}
+            >
+              <AlertDescription>{orderUpdateStatus.message}</AlertDescription>
+            </Alert>
+          )}
+
+          {(isVerifying || isUpdatingOrder) && (
+            <div className="py-4 text-center text-gray-600">
+              <p className="mb-2">
+                {isVerifying
+                  ? "Please wait while we verify your payment..."
+                  : "Updating your order..."}
+              </p>
+              <p className="text-sm text-gray-500">
+                This may take a few seconds.
+              </p>
+            </div>
+          )}
+
+          {!isVerifying && !isUpdatingOrder && (
             <div className="space-y-3">
               {method && (
                 <div className="flex items-center justify-between border-b py-2">
@@ -424,37 +519,6 @@ function PaymentSuccessContent() {
                   <span className="font-semibold capitalize">{method}</span>
                 </div>
               )}
-
-              {/* Test eSewa success callback for debugging
-              {method === "esewa" && !esewaData && (
-                <div className="bg-blue-100 p-3 rounded text-xs">
-                  <div className="font-semibold mb-2">Test eSewa Response:</div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      // Simulate a test eSewa response
-                      const testResponse = {
-                        transaction_code: "000TEST",
-                        status: "COMPLETE",
-                        total_amount: "100.0",
-                        transaction_uuid: "test-123",
-                        product_code: "EPAYTEST",
-                        signed_field_names:
-                          "transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names",
-                        signature: "test-signature",
-                      };
-
-                      const encodedData = btoa(JSON.stringify(testResponse));
-                      const testUrl = `${window.location.origin}/success?method=esewa&data=${encodedData}`;
-                      window.location.href = testUrl;
-                    }}
-                    className="w-full"
-                  >
-                    Test eSewa Success Response
-                  </Button>
-                </div>
-              )} */}
 
               {(verificationResult?.total_amount || totalAmount || amount) && (
                 <div className="flex items-center justify-between border-b py-2">
@@ -479,7 +543,6 @@ function PaymentSuccessContent() {
                 </div>
               )}
 
-              {/* Display transaction ID based on method */}
               {method === "khalti" &&
                 (verificationResult?.transaction_id || transactionId) && (
                   <div className="flex items-center justify-between border-b py-2">
@@ -550,61 +613,31 @@ function PaymentSuccessContent() {
             </div>
           )}
 
-          {isVerifying && (
-            <div className="py-4 text-center text-gray-600">
-              <p className="mb-2">
-                Please wait while we verify your payment...
-              </p>
-              <p className="text-sm text-gray-500">
-                This may take a few seconds.
-              </p>
-            </div>
-          )}
-
-          {/* Show success message for eSewa COMPLETE status */}
           {method === "esewa" &&
             verificationResult?.status === "COMPLETE" &&
             !isVerifying &&
+            !isUpdatingOrder &&
             !error && (
               <Alert>
                 <CheckCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Your eSewa payment has been completed successfully! You can
-                  now enjoy your purchase.
+                  Your eSewa payment has been completed successfully!
+                  {orderUpdateStatus?.success &&
+                    " Your order has been updated."}
                 </AlertDescription>
               </Alert>
             )}
 
-          {/* Show pending message for eSewa PENDING status */}
           {method === "esewa" &&
             verificationResult?.status === "PENDING" &&
             !isVerifying &&
+            !isUpdatingOrder &&
             !error && (
               <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
                   Your payment is currently pending. Please wait for
-                  confirmation or use the Check Payment Status button below to
-                  verify the current status.
-                </AlertDescription>
-              </Alert>
-            )}
-
-          {/* Show failure message for eSewa failure statuses */}
-          {method === "esewa" &&
-            (verificationResult?.status === "FULL_REFUND" ||
-              verificationResult?.status === "PARTIAL_REFUND" ||
-              verificationResult?.status === "AMBIGUOUS" ||
-              verificationResult?.status === "NOT_FOUND" ||
-              verificationResult?.status === "CANCELED") &&
-            !isVerifying &&
-            !error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  Payment{" "}
-                  {verificationResult.status.toLowerCase().replace(/_/g, " ")}.
-                  Please contact support if you believe this is an error.
+                  confirmation or use the Check Payment Status button below.
                 </AlertDescription>
               </Alert>
             )}
@@ -613,23 +646,24 @@ function PaymentSuccessContent() {
         <CardFooter className="flex flex-col gap-4">
           {((pidx && method === "khalti") ||
             (esewaData && method === "esewa")) &&
-            !isVerifying && (
+            !isVerifying &&
+            !isUpdatingOrder && (
               <Button
                 variant="outline"
                 onClick={retryVerification}
                 className="w-full"
-                disabled={isVerifying}
+                disabled={isVerifying || isUpdatingOrder}
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Verify Payment Again
               </Button>
             )}
 
-          {/* Show status check button for pending eSewa payments */}
           {method === "esewa" &&
             verificationResult?.status === "PENDING" &&
             verificationResult?.transaction_uuid &&
-            !isVerifying && (
+            !isVerifying &&
+            !isUpdatingOrder && (
               <Button
                 variant="outline"
                 onClick={() => {
@@ -637,7 +671,6 @@ function PaymentSuccessContent() {
                     verificationResult.transaction_uuid &&
                     verificationResult.total_amount
                   ) {
-                    // Extract product_code from the decoded data
                     const decodedData = decodeEsewaData(esewaData || "");
                     if (decodedData?.product_code) {
                       checkEsewaStatus(
@@ -649,7 +682,7 @@ function PaymentSuccessContent() {
                   }
                 }}
                 className="w-full"
-                disabled={isVerifying}
+                disabled={isVerifying || isUpdatingOrder}
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Check Payment Status

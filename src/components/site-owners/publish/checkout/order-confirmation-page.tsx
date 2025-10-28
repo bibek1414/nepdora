@@ -324,13 +324,6 @@ const PublishOrderConfirmationPage: React.FC<
           >
             Continue Shopping
           </Button>
-          <Button
-            onClick={() => router.push(`/admin/orders`)}
-            className="px-8"
-            style={primaryButtonStyle}
-          >
-            View All Orders
-          </Button>
         </div>
       </div>
     </div>

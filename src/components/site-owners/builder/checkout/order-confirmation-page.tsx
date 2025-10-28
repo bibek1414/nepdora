@@ -14,7 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useOrder } from "@/hooks/owner-site/admin/use-orders";
 import { CheckCircle, Package, Truck, Mail } from "lucide-react";
-import { use } from "react";
 import Image from "next/image";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
@@ -221,10 +220,10 @@ const PreviewOrderConfirmationPage: React.FC<
 
                     <div className="text-right">
                       <p className="font-medium">
-                        ${Number(item.price).toFixed(2)}
+                        Rs.{Number(item.price).toFixed(2)}
                       </p>
                       <p className="text-sm text-gray-600">
-                        Total: $
+                        Total: Rs.
                         {(Number(item.price) * item.quantity).toFixed(2)}
                       </p>
                     </div>
@@ -238,7 +237,7 @@ const PreviewOrderConfirmationPage: React.FC<
             {/* Order Total */}
             <div className="flex items-center justify-between text-lg font-semibold">
               <span>Total Amount:</span>
-              <span>${Number(order.total_amount).toFixed(2)}</span>
+              <span>Rs.{Number(order.total_amount).toFixed(2)}</span>
             </div>
           </CardContent>
         </Card>
@@ -323,13 +322,6 @@ const PreviewOrderConfirmationPage: React.FC<
             style={outlineButtonStyle}
           >
             Continue Shopping
-          </Button>
-          <Button
-            onClick={() => router.push(`/admin/orders`)}
-            className="px-8"
-            style={primaryButtonStyle}
-          >
-            View All Orders
           </Button>
         </div>
       </div>

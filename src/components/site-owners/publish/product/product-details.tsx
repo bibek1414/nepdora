@@ -279,6 +279,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     );
   }
 
+  // Replace your handleAddToCart function with this:
+
   const handleAddToCart = () => {
     if (product) {
       const currentStock = getCurrentStock();
@@ -287,8 +289,29 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
         return;
       }
 
-      addToCart(product, quantity);
+      // Check if product has variants but none is selected
+      if (
+        product.variants_read &&
+        product.variants_read.length > 0 &&
+        !selectedVariant
+      ) {
+        toast.error("Please select all product options");
+        return;
+      }
 
+      // Prepare variant data if a variant is selected
+      const variantData = selectedVariant
+        ? {
+            id: selectedVariant.id,
+            price: selectedVariant.price,
+            option_values: selectedVariant.option_values,
+          }
+        : null;
+
+      // Add to cart with variant information
+      addToCart(product, quantity, variantData);
+
+      // Show success message with variant info
       const variantInfo = selectedVariant
         ? ` (${Object.entries(selectedOptions)
             .map(([k, v]) => `${k}: ${v}`)

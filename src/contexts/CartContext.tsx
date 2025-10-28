@@ -19,14 +19,26 @@ type CartableProduct =
       description?: string;
       price: string | number;
       stock?: number;
-      [key: string]: unknown; // For any additional properties
+      [key: string]: unknown;
     };
 
 interface CartContextType {
   cartItems: CartItem[];
-  addToCart: (product: CartableProduct, quantity: number) => void;
-  removeFromCart: (productId: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
+  addToCart: (
+    product: CartableProduct,
+    quantity: number,
+    selectedVariant?: {
+      id: number;
+      price: string;
+      option_values: Record<string, string>;
+    } | null
+  ) => void;
+  removeFromCart: (productId: number, variantId?: number | null) => void;
+  updateQuantity: (
+    productId: number,
+    quantity: number,
+    variantId?: number | null
+  ) => void;
   clearCart: () => void;
   itemCount: number;
   totalPrice: number;
@@ -65,40 +77,74 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     }
   }, [cartItems]);
 
-  const addToCart = (product: CartableProduct, quantity: number) => {
+  const addToCart = (
+    product: CartableProduct,
+    quantity: number,
+    selectedVariant?: {
+      id: number;
+      price: string;
+      option_values: Record<string, string>;
+    } | null
+  ) => {
     // Normalize the product to ensure it matches our Product type
     const normalizedProduct: Product = normalizeProductForCart(product);
 
     setCartItems(prevItems => {
+      // Find existing item with same product AND variant
       const existingItem = prevItems.find(
-        item => item.product.id === normalizedProduct.id
+        item =>
+          item.product.id === normalizedProduct.id &&
+          item.selectedVariant?.id === selectedVariant?.id
       );
 
       if (existingItem) {
+        // Update quantity for existing item
         return prevItems.map(item =>
-          item.product.id === normalizedProduct.id
+          item.product.id === normalizedProduct.id &&
+          item.selectedVariant?.id === selectedVariant?.id
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
 
-      return [...prevItems, { product: normalizedProduct, quantity }];
+      // Add new item with variant
+      return [
+        ...prevItems,
+        {
+          product: normalizedProduct,
+          quantity,
+          selectedVariant: selectedVariant || null,
+        },
+      ];
     });
   };
 
-  const removeFromCart = (productId: number) => {
+  const removeFromCart = (productId: number, variantId?: number | null) => {
     setCartItems(prevItems =>
-      prevItems.filter(item => item.product.id !== productId)
+      prevItems.filter(
+        item =>
+          !(
+            item.product.id === productId &&
+            item.selectedVariant?.id === variantId
+          )
+      )
     );
   };
 
-  const updateQuantity = (productId: number, quantity: number) => {
+  const updateQuantity = (
+    productId: number,
+    quantity: number,
+    variantId?: number | null
+  ) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(productId, variantId);
     } else {
       setCartItems(prevItems =>
         prevItems.map(item =>
-          item.product.id === productId ? { ...item, quantity } : item
+          item.product.id === productId &&
+          item.selectedVariant?.id === variantId
+            ? { ...item, quantity }
+            : item
         )
       );
     }
@@ -111,7 +157,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const totalPrice = cartItems.reduce((total, item) => {
-    const price = parseFloat(item.product.price);
+    // Use variant price if available, otherwise use product price
+    const price = item.selectedVariant
+      ? parseFloat(item.selectedVariant.price)
+      : parseFloat(item.product.price);
     return total + price * item.quantity;
   }, 0);
 

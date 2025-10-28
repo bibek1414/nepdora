@@ -3,6 +3,11 @@ import { Product } from "./product";
 export interface CartItem {
   product: Product;
   quantity: number;
+  selectedVariant?: {
+    id: number;
+    price: string;
+    option_values: Record<string, string>;
+  } | null;
 }
 
 export interface OrderItem {

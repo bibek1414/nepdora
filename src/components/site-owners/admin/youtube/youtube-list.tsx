@@ -79,9 +79,13 @@ export function YouTubeList() {
   };
 
   const handleRowClick = (video: YouTubeVideo, e: React.MouseEvent) => {
-    // Don't open edit dialog if clicking on action buttons
+    // Don't open edit dialog if clicking on action buttons or dialog elements
     const target = e.target as HTMLElement;
-    if (target.closest("[data-action-button]")) {
+    if (
+      target.closest("[data-action-button]") ||
+      target.closest("[role='dialog']") ||
+      target.closest("button")
+    ) {
       return;
     }
 

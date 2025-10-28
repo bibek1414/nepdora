@@ -7,6 +7,19 @@ import {
   PaginationParams,
 } from "@/types/owner-site/admin/product";
 
+interface ApiError extends Error {
+  status: number;
+  data: {
+    error?: {
+      params?: {
+        constraint_type?: string;
+        constraint?: string;
+      };
+    };
+    [key: string]: unknown;
+  };
+}
+
 export const useSubCategories = (params: PaginationParams = {}) => {
   return useQuery({
     queryKey: ["subcategories", params],
@@ -41,8 +54,19 @@ export const useCreateSubCategory = () => {
       toast.success(response.message);
     },
     onError: (error: unknown) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
+      const apiError = error as ApiError;
+
+      // Check for unique constraint error
+      if (apiError.status === 409) {
+        const constraint = apiError.data?.error?.params?.constraint;
+
+        if (constraint === "unique_together") {
+          toast.error("Subcategory name already exists in this category");
+        } else {
+          toast.error(apiError.message || "This subcategory already exists");
+        }
+      } else if (apiError instanceof Error) {
+        toast.error(apiError.message);
       } else {
         toast.error("Failed to create subcategory");
       }
@@ -70,8 +94,19 @@ export const useUpdateSubCategory = () => {
       toast.success(response.message);
     },
     onError: (error: unknown) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
+      const apiError = error as ApiError;
+
+      // Check for unique constraint error
+      if (apiError.status === 409) {
+        const constraint = apiError.data?.error?.params?.constraint;
+
+        if (constraint === "unique_together") {
+          toast.error("Subcategory name already exists in this category");
+        } else {
+          toast.error(apiError.message || "This subcategory already exists");
+        }
+      } else if (apiError instanceof Error) {
+        toast.error(apiError.message);
       } else {
         toast.error("Failed to update subcategory");
       }

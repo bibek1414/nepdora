@@ -123,24 +123,14 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       icon: Info,
       keywords: ["questions", "answers", "help"],
     },
-    {
-      id: "pricing-sections",
-      label: "Pricing",
-      icon: DollarSign,
-      keywords: ["plans", "packages", "subscription"],
-    },
+
     {
       id: "blog-sections",
       label: "Blog",
       icon: FileText,
       keywords: ["articles", "posts", "news"],
     },
-    {
-      id: "gallery-sections",
-      label: "Gallery",
-      icon: ImageIcon,
-      keywords: ["images", "photos", "portfolio"],
-    },
+
     {
       id: "portfolio-sections",
       label: "Portfolio",

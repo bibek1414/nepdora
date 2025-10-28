@@ -62,10 +62,10 @@ const CheckoutPage = () => {
 
   const sameAsCustomerAddress = watch("same_as_customer_address");
 
-  const totalAmount = cartItems.reduce(
-    (total, item) => total + Number(item.product.price) * item.quantity,
-    0
-  );
+  const totalAmount = cartItems.reduce((total, item) => {
+    const itemPrice = item.selectedVariant?.price || item.product.price;
+    return total + Number(itemPrice) * item.quantity;
+  }, 0);
 
   // Filter enabled payment gateways and get unique ones
   const enabledPaymentGateways =
@@ -144,11 +144,24 @@ const CheckoutPage = () => {
     }
 
     try {
-      const orderItems: OrderItem[] = cartItems.map(item => ({
-        product_id: item.product.id,
-        quantity: item.quantity,
-        price: item.product.price.toString(),
-      }));
+      const orderItems: OrderItem[] = cartItems.map(item => {
+        // If variant is selected, send only variant_id, otherwise send only product_id
+        if (item.selectedVariant?.id) {
+          return {
+            variant_id: item.selectedVariant.id,
+            quantity: item.quantity,
+            price: (
+              item.selectedVariant.price || item.product.price
+            ).toString(),
+          };
+        } else {
+          return {
+            product_id: item.product.id,
+            quantity: item.quantity,
+            price: item.product.price.toString(),
+          };
+        }
+      });
 
       const orderData: CreateOrderRequest = {
         customer_name: data.customer_name,
@@ -471,7 +484,7 @@ const CheckoutPage = () => {
               <CardContent className="space-y-4">
                 {cartItems.map(item => (
                   <div
-                    key={item.product.id}
+                    key={`${item.product.id}-${item.selectedVariant?.id || "no-variant"}`}
                     className="flex items-center space-x-4"
                   >
                     <Image

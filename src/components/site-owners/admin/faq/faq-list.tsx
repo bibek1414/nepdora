@@ -136,13 +136,15 @@ export function FAQList() {
                     className="col-span-2 flex gap-2"
                     onClick={e => e.stopPropagation()} // Prevent row click when clicking on buttons
                   >
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                    >
-                      <Edit className="h-3 w-3" />
-                    </Button>
+                    <FAQFormTrigger key={faq.id} mode="edit" faq={faq}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                    </FAQFormTrigger>
                     <Button
                       variant="ghost"
                       size="sm"
