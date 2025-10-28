@@ -1,5 +1,3 @@
-// Updated payment success page with proper order update handling
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -20,11 +18,12 @@ import { Suspense } from "react";
 import { toast } from "sonner";
 import { ApiResponse, PaymentVerification } from "@/types/payment";
 import { orderApi } from "@/services/api/owner-sites/admin/orders";
+import { useCart } from "@/hooks/owner-site/admin/use-cart"; // Import the cart context
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const [isVerifying, setIsVerifying] = useState(false);
-  const [isUpdatingOrder, setIsUpdatingOrder] = useState(false); // New state
+  const [isUpdatingOrder, setIsUpdatingOrder] = useState(false);
   const [verificationResult, setVerificationResult] =
     useState<PaymentVerification | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +31,9 @@ function PaymentSuccessContent() {
     success: boolean;
     message: string;
   } | null>(null);
+
+  // Get clearCart function from cart context
+  const { clearCart } = useCart();
 
   // Extract URL parameters
   const method = searchParams.get("method");
@@ -71,7 +73,18 @@ function PaymentSuccessContent() {
     }
   };
 
-  // Updated function with better error handling and status updates
+  // Function to clear the cart
+  const clearUserCart = () => {
+    try {
+      clearCart();
+
+      localStorage.removeItem("nepdora_cart");
+    } catch (error) {
+      console.error("Failed to clear cart:", error);
+    }
+  };
+
+  // Updated function with cart clearing
   const updateOrderWithTransaction = async (
     orderId: number,
     transactionId: string,
@@ -93,6 +106,9 @@ function PaymentSuccessContent() {
 
       // Clear the session storage after successful update
       sessionStorage.removeItem(`order_id_${pidx || transactionId}`);
+
+      // Clear the cart after successful order update
+      clearUserCart();
 
       return updatedOrder;
     } catch (error) {
@@ -157,6 +173,9 @@ function PaymentSuccessContent() {
           toast.warning(
             "Payment successful but order ID not found. Please contact support."
           );
+
+          // Still clear cart even if order ID not found, since payment was successful
+          clearUserCart();
         }
       } else {
         toast.warning("Payment verification completed with issues");
@@ -236,6 +255,9 @@ function PaymentSuccessContent() {
           toast.warning(
             "Payment successful but order ID not found. Please contact support."
           );
+
+          // Still clear cart even if order ID not found, since payment was successful
+          clearUserCart();
         }
       } else {
         toast.warning("eSewa payment verification completed with issues");
@@ -273,6 +295,14 @@ function PaymentSuccessContent() {
 
       setVerificationResult(apiResponse.data);
       toast.success("eSewa payment status updated!");
+
+      // If status becomes COMPLETE, clear the cart
+      if (
+        apiResponse.data.status === "COMPLETE" &&
+        apiResponse.data.is_success
+      ) {
+        clearUserCart();
+      }
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Status check failed";
@@ -312,6 +342,8 @@ function PaymentSuccessContent() {
 
           if (decodedData.status === "COMPLETE") {
             toast.success("eSewa payment completed successfully!");
+            // Clear cart immediately for COMPLETE status
+            clearUserCart();
           } else if (decodedData.status === "PENDING") {
             toast.info("Payment is pending. Please wait for confirmation.");
           } else {

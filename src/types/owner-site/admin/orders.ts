@@ -13,6 +13,27 @@ export interface OrderItem {
     thumbnail_image: string;
     thumbnail_alt_description: string;
   };
+  variant?: {
+    id: number;
+    product: {
+      id: number;
+      name: string;
+      slug: string;
+      price: string;
+      market_price: string;
+      thumbnail_image: string;
+      thumbnail_alt_description: string | null;
+    };
+    price: string;
+    stock: number;
+    image: string | null;
+    option_values: Array<{
+      id: number;
+      value: string;
+    }>;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 export interface CreateOrderRequest {
@@ -46,6 +67,11 @@ export interface Order {
   payment_type?: string;
   transaction_id?: string;
   is_paid?: boolean;
+  is_manual?: boolean;
+  latitude?: number | null;
+  longitude?: number | null;
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  customer_details?: any;
 }
 
 export interface OrdersResponse {

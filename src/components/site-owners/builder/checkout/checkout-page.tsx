@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
 import { useCreateOrder } from "@/hooks/owner-site/admin/use-orders";
 import { CreateOrderRequest, OrderItem } from "@/types/owner-site/admin/orders";
@@ -516,52 +517,101 @@ const CheckoutPage = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Order Summary</CardTitle>
+                <CardDescription>
+                  {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {cartItems.map(item => {
+                {cartItems.map((item, index) => {
                   const displayPrice =
                     item.selectedVariant?.price || item.product.price;
+                  const cartItemKey = `${item.product.id}-${item.selectedVariant?.id || "no-variant"}-${index}`;
+
                   return (
                     <div
-                      key={`${item.product.id}-${item.selectedVariant?.id || "no-variant"}`}
-                      className="flex items-center space-x-4"
+                      key={cartItemKey}
+                      className="flex gap-4 border-b border-gray-100 pb-4 last:border-b-0"
                     >
-                      <Image
-                        src={item.product.thumbnail_image || ""}
-                        alt={item.product.name}
-                        width={60}
-                        height={60}
-                        className="h-15 w-15 rounded object-cover"
-                      />
-                      <div className="flex-1">
-                        <h4 className="font-medium">{item.product.name}</h4>
-                        {item.selectedVariant && (
-                          <p className="text-xs text-gray-500">
-                            Variant:{" "}
-                            {JSON.stringify(
-                              item.selectedVariant.option_values || {}
-                            )}
-                          </p>
-                        )}
-                        <p className="text-sm text-gray-600">
-                          Qty: {item.quantity}
-                        </p>
+                      <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border">
+                        <Image
+                          src={item.product.thumbnail_image || ""}
+                          alt={item.product.name}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
-                      <div className="text-right">
-                        <p className="font-medium">
-                          ${(Number(displayPrice) * item.quantity).toFixed(2)}
-                        </p>
+
+                      <div className="flex flex-1 flex-col justify-between">
+                        <div>
+                          <h4 className="text-sm leading-tight font-medium">
+                            {item.product.name}
+                          </h4>
+
+                          {/* Display variant options as badges */}
+                          {item.selectedVariant &&
+                            item.selectedVariant.option_values && (
+                              <div className="mt-2 flex flex-wrap gap-1">
+                                {Object.entries(
+                                  item.selectedVariant.option_values
+                                ).map(([optionName, optionValue]) => (
+                                  <Badge
+                                    key={optionName}
+                                    variant="secondary"
+                                    className="text-xs capitalize"
+                                    style={{
+                                      backgroundColor: subtlePrimaryBg,
+                                      color: theme.colors.primary,
+                                    }}
+                                  >
+                                    {optionName}: {optionValue}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
+
+                          <p className="mt-1 text-xs text-gray-500">
+                            Qty: {item.quantity}
+                          </p>
+                        </div>
+
+                        <div className="mt-2 flex items-end justify-between">
+                          <div className="text-xs text-gray-500">
+                            Rs.{Number(displayPrice).toFixed(2)} each
+                          </div>
+                          <div className="text-sm font-semibold">
+                            Rs.
+                            {(Number(displayPrice) * item.quantity).toFixed(2)}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   );
                 })}
 
-                <Separator />
+                <Separator className="my-4" />
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Subtotal:</span>
+                    <span className="font-medium">
+                      Rs.{totalAmount.toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Shipping:</span>
+                    <span className="font-medium text-green-600">Free</span>
+                  </div>
+                </div>
+
+                <Separator className="my-4" />
 
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold">Total:</span>
-                  <span className="text-xl font-bold">
-                    ${totalAmount.toFixed(2)}
+                  <span className="text-lg font-semibold">Total:</span>
+                  <span
+                    className="text-2xl font-bold"
+                    style={{ color: theme.colors.primary }}
+                  >
+                    Rs.{totalAmount.toFixed(2)}
                   </span>
                 </div>
               </CardContent>

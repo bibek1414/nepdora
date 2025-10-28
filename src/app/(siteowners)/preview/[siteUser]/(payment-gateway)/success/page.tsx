@@ -18,12 +18,17 @@ import { Suspense } from "react";
 import { toast } from "sonner";
 import { ApiResponse, PaymentVerification } from "@/types/payment";
 import { orderApi } from "@/services/api/owner-sites/admin/orders";
+import { useCart } from "@/hooks/owner-site/admin/use-cart";
+
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationResult, setVerificationResult] =
     useState<PaymentVerification | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Get clearCart function from cart context
+  const { clearCart } = useCart();
 
   // Extract URL parameters for both Khalti and eSewa
   const method = searchParams.get("method");
@@ -73,9 +78,22 @@ function PaymentSuccessContent() {
     }
   };
 
-  // Add this function to update the order with transaction ID in PaymentSuccessContent:
+  // Function to clear the cart
+  const clearUserCart = () => {
+    try {
+      clearCart();
 
-  // In your PaymentSuccessContent component
+      // Also clear from localStorage directly to ensure it's removed
+      localStorage.removeItem("nepdora_cart");
+
+      toast.success("Cart cleared successfully");
+    } catch (error) {
+      console.error("Failed to clear cart:", error);
+      // Don't show error toast as this shouldn't affect the payment success
+    }
+  };
+
+  // Add this function to update the order with transaction ID in PaymentSuccessContent:
   const updateOrderWithTransaction = async (
     orderId: number,
     transactionId: string,
@@ -91,10 +109,16 @@ function PaymentSuccessContent() {
       });
 
       console.log("Order updated with transaction ID:", updatedOrder);
+
+      // Clear cart after successful order update
+      clearUserCart();
+
       return updatedOrder;
     } catch (error) {
       console.error("Error updating order with transaction:", error);
       // Don't throw error - this is a secondary operation
+      // Still clear cart even if order update fails, since payment was successful
+      clearUserCart();
     }
   };
 
@@ -138,6 +162,9 @@ function PaymentSuccessContent() {
             "khalti",
             "completed"
           );
+        } else {
+          // Still clear cart even if order ID not found, since payment was successful
+          clearUserCart();
         }
       } else {
         toast.warning("Payment verification completed with issues");
@@ -201,6 +228,9 @@ function PaymentSuccessContent() {
             "esewa",
             "completed"
           );
+        } else {
+          // Still clear cart even if order ID not found, since payment was successful
+          clearUserCart();
         }
       } else {
         toast.warning("eSewa payment verification completed with issues");
@@ -238,6 +268,14 @@ function PaymentSuccessContent() {
 
       setVerificationResult(apiResponse.data);
       toast.success("eSewa payment status updated!");
+
+      // If status becomes COMPLETE, clear the cart
+      if (
+        apiResponse.data.status === "COMPLETE" &&
+        apiResponse.data.is_success
+      ) {
+        clearUserCart();
+      }
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Status check failed";
@@ -283,6 +321,8 @@ function PaymentSuccessContent() {
           // Show appropriate message based on status
           if (decodedData.status === "COMPLETE") {
             toast.success("eSewa payment completed successfully!");
+            // Clear cart immediately for COMPLETE status
+            clearUserCart();
           } else if (decodedData.status === "PENDING") {
             toast.info("Payment is pending. Please wait for confirmation.");
           } else {
@@ -481,37 +521,6 @@ function PaymentSuccessContent() {
                 </div>
               )}
 
-              {/* Test eSewa success callback for debugging
-              {method === "esewa" && !esewaData && (
-                <div className="bg-blue-100 p-3 rounded text-xs">
-                  <div className="font-semibold mb-2">Test eSewa Response:</div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      // Simulate a test eSewa response
-                      const testResponse = {
-                        transaction_code: "000TEST",
-                        status: "COMPLETE",
-                        total_amount: "100.0",
-                        transaction_uuid: "test-123",
-                        product_code: "EPAYTEST",
-                        signed_field_names:
-                          "transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names",
-                        signature: "test-signature",
-                      };
-
-                      const encodedData = btoa(JSON.stringify(testResponse));
-                      const testUrl = `${window.location.origin}/success?method=esewa&data=${encodedData}`;
-                      window.location.href = testUrl;
-                    }}
-                    className="w-full"
-                  >
-                    Test eSewa Success Response
-                  </Button>
-                </div>
-              )} */}
-
               {(verificationResult?.total_amount || totalAmount || amount) && (
                 <div className="flex items-center justify-between border-b py-2">
                   <span className="text-gray-600">Amount:</span>
@@ -625,8 +634,8 @@ function PaymentSuccessContent() {
               <Alert>
                 <CheckCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Your eSewa payment has been completed successfully! You can
-                  now enjoy your purchase.
+                  Your eSewa payment has been completed successfully! Your cart
+                  has been cleared and you can now enjoy your purchase.
                 </AlertDescription>
               </Alert>
             )}

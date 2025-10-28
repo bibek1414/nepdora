@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
 import { useCreateOrder } from "@/hooks/owner-site/admin/use-orders";
 import { CreateOrderRequest, OrderItem } from "@/types/owner-site/admin/orders";
@@ -29,8 +31,9 @@ import { usePaymentGateways } from "@/hooks/owner-site/admin/use-payment-gateway
 import { motion, AnimatePresence } from "framer-motion";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
-const CheckoutPage = () => {
+const PublishCheckoutPage = () => {
   const router = useRouter();
+  const params = useParams();
   const { cartItems, clearCart } = useCart();
   const createOrderMutation = useCreateOrder();
   const { user, isAuthenticated } = useAuth();
@@ -40,6 +43,7 @@ const CheckoutPage = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(null);
+  const siteUser = params?.siteUser as string;
 
   const {
     register,
@@ -61,6 +65,19 @@ const CheckoutPage = () => {
   });
 
   const sameAsCustomerAddress = watch("same_as_customer_address");
+
+  // Debug cart items on mount
+  useEffect(() => {
+    console.log("Publish Checkout - Cart Items:", cartItems);
+    cartItems.forEach((item, index) => {
+      console.log(`Item ${index}:`, {
+        productId: item.product.id,
+        productName: item.product.name,
+        selectedVariant: item.selectedVariant,
+        quantity: item.quantity,
+      });
+    });
+  }, [cartItems]);
 
   const totalAmount = cartItems.reduce((total, item) => {
     const itemPrice = item.selectedVariant?.price || item.product.price;
@@ -145,23 +162,36 @@ const CheckoutPage = () => {
 
     try {
       const orderItems: OrderItem[] = cartItems.map(item => {
-        // If variant is selected, send only variant_id, otherwise send only product_id
+        console.log("Processing cart item:", {
+          productId: item.product.id,
+          selectedVariant: item.selectedVariant,
+          hasVariantId: !!item.selectedVariant?.id,
+        });
+
+        // CRITICAL FIX: Only send variant_id if variant is actually selected
+        // Do NOT send product_id when variant is selected
         if (item.selectedVariant?.id) {
-          return {
+          const orderItem = {
             variant_id: item.selectedVariant.id,
             quantity: item.quantity,
             price: (
               item.selectedVariant.price || item.product.price
             ).toString(),
           };
+          console.log("Creating variant order item:", orderItem);
+          return orderItem;
         } else {
-          return {
+          const orderItem = {
             product_id: item.product.id,
             quantity: item.quantity,
             price: item.product.price.toString(),
           };
+          console.log("Creating product order item:", orderItem);
+          return orderItem;
         }
       });
+
+      console.log("Final order items:", orderItems);
 
       const orderData: CreateOrderRequest = {
         customer_name: data.customer_name,
@@ -175,6 +205,8 @@ const CheckoutPage = () => {
         items: orderItems,
       };
 
+      console.log("Submitting order data:", orderData);
+
       if (isAuthenticated && user) {
         console.log("Order being placed by authenticated user:", user.email);
       } else {
@@ -186,17 +218,22 @@ const CheckoutPage = () => {
         includeToken: isAuthenticated && !!user,
       });
 
-      // Handle payment method routing
+      console.log("Order created successfully:", order);
+
+      // Handle payment method routing for publish site
       if (selectedPaymentMethod) {
         switch (selectedPaymentMethod.toLowerCase()) {
           case "esewa":
-            router.push(`/esewa-payment?orderId=${order.id}`);
+            router.push(
+              `/esewa-payment?orderId=${order.id}&orderNumber=${order.order_number}`
+            );
             break;
           case "khalti":
-            router.push(`/khalti-payment?orderId=${order.id}`);
+            router.push(
+              `/khalti-payment?orderId=${order.id}&orderNumber=${order.order_number}`
+            );
             break;
           case "cod":
-            // For COD, go directly to order confirmation
             toast.success("Order placed successfully! Pay on delivery.");
             clearCart();
             router.push(`/order-confirmation/${order.id}`);
@@ -205,7 +242,6 @@ const CheckoutPage = () => {
             break;
         }
       } else {
-        // Direct order confirmation without payment gateway
         toast.success("Order placed successfully!");
         clearCart();
         router.push(`/order-confirmation/${order.id}`);
@@ -217,7 +253,7 @@ const CheckoutPage = () => {
   };
 
   const handleContinueShopping = () => {
-    router.push("/");
+    router.push(`/publish/${siteUser}`);
   };
 
   if (cartItems.length === 0) {
@@ -480,43 +516,101 @@ const CheckoutPage = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Order Summary</CardTitle>
+                <CardDescription>
+                  {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {cartItems.map(item => (
-                  <div
-                    key={`${item.product.id}-${item.selectedVariant?.id || "no-variant"}`}
-                    className="flex items-center space-x-4"
-                  >
-                    <Image
-                      src={item.product.thumbnail_image || ""}
-                      alt={item.product.name}
-                      width={60}
-                      height={60}
-                      className="h-15 w-15 rounded object-cover"
-                    />
-                    <div className="flex-1">
-                      <h4 className="font-medium">{item.product.name}</h4>
-                      <p className="text-sm text-gray-600">
-                        Qty: {item.quantity}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium">
-                        $
-                        {(Number(item.product.price) * item.quantity).toFixed(
-                          2
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                {cartItems.map((item, index) => {
+                  const displayPrice =
+                    item.selectedVariant?.price || item.product.price;
+                  const cartItemKey = `${item.product.id}-${item.selectedVariant?.id || "no-variant"}-${index}`;
 
-                <Separator />
+                  return (
+                    <div
+                      key={cartItemKey}
+                      className="flex gap-4 border-b border-gray-100 pb-4 last:border-b-0"
+                    >
+                      <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border">
+                        <Image
+                          src={item.product.thumbnail_image || ""}
+                          alt={item.product.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+
+                      <div className="flex flex-1 flex-col justify-between">
+                        <div>
+                          <h4 className="text-sm leading-tight font-medium">
+                            {item.product.name}
+                          </h4>
+
+                          {/* Display variant options as badges */}
+                          {item.selectedVariant &&
+                            item.selectedVariant.option_values && (
+                              <div className="mt-2 flex flex-wrap gap-1">
+                                {Object.entries(
+                                  item.selectedVariant.option_values
+                                ).map(([optionName, optionValue]) => (
+                                  <Badge
+                                    key={optionName}
+                                    variant="secondary"
+                                    className="text-xs capitalize"
+                                    style={{
+                                      backgroundColor: subtlePrimaryBg,
+                                      color: theme.colors.primary,
+                                    }}
+                                  >
+                                    {optionName}: {optionValue}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
+
+                          <p className="mt-1 text-xs text-gray-500">
+                            Qty: {item.quantity}
+                          </p>
+                        </div>
+
+                        <div className="mt-2 flex items-end justify-between">
+                          <div className="text-xs text-gray-500">
+                            Rs.{Number(displayPrice).toFixed(2)} each
+                          </div>
+                          <div className="text-sm font-semibold">
+                            Rs.
+                            {(Number(displayPrice) * item.quantity).toFixed(2)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                <Separator className="my-4" />
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Subtotal:</span>
+                    <span className="font-medium">
+                      Rs.{totalAmount.toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Shipping:</span>
+                    <span className="font-medium text-green-600">Free</span>
+                  </div>
+                </div>
+
+                <Separator className="my-4" />
 
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold">Total:</span>
-                  <span className="text-xl font-bold">
-                    ${totalAmount.toFixed(2)}
+                  <span className="text-lg font-semibold">Total:</span>
+                  <span
+                    className="text-2xl font-bold"
+                    style={{ color: theme.colors.primary }}
+                  >
+                    Rs.{totalAmount.toFixed(2)}
                   </span>
                 </div>
               </CardContent>
@@ -528,4 +622,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default CheckoutPage;
+export default PublishCheckoutPage;

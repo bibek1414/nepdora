@@ -47,6 +47,7 @@ const RecentOrdersSkeleton = () => {
           <TableHead>Date</TableHead>
           <TableHead>Customer</TableHead>
           <TableHead>Payment</TableHead>
+          <TableHead>Payment Type</TableHead>
           <TableHead>Total</TableHead>
           <TableHead>Status</TableHead>
         </TableRow>
@@ -65,6 +66,9 @@ const RecentOrdersSkeleton = () => {
             </TableCell>
             <TableCell>
               <Skeleton className="h-4 w-16" />
+            </TableCell>
+            <TableCell>
+              <Skeleton className="h-4 w-20" />
             </TableCell>
             <TableCell>
               <Skeleton className="h-4 w-16" />
@@ -114,6 +118,37 @@ const getStatusBadge = (status: string) => {
   return (
     <Badge variant={config.variant} className={config.className}>
       {status?.charAt(0).toUpperCase() + status?.slice(1)}
+    </Badge>
+  );
+};
+
+const getPaymentBadge = (isPaid: boolean | undefined) => {
+  return isPaid ? (
+    <Badge variant="secondary" className="bg-green-100 text-green-800">
+      Paid
+    </Badge>
+  ) : (
+    <Badge variant="secondary" className="bg-red-100 text-red-800">
+      Unpaid
+    </Badge>
+  );
+};
+
+const getPaymentTypeBadge = (paymentType: string | undefined) => {
+  const paymentTypeConfig = {
+    cod: { label: "COD", color: "bg-blue-100 text-blue-800" },
+    esewa: { label: "eSewa", color: "bg-purple-100 text-purple-800" },
+    khalti: { label: "Khalti", color: "bg-purple-100 text-purple-800" },
+    card: { label: "Card", color: "bg-gray-100 text-gray-800" },
+  };
+
+  const config = paymentTypeConfig[
+    paymentType as keyof typeof paymentTypeConfig
+  ] || { label: paymentType || "Unknown", color: "bg-gray-100 text-gray-800" };
+
+  return (
+    <Badge variant="secondary" className={config.color}>
+      {config.label}
     </Badge>
   );
 };
@@ -249,6 +284,7 @@ export const RecentOrders = () => {
                     <TableHead>Date</TableHead>
                     <TableHead>Customer</TableHead>
                     <TableHead>Payment</TableHead>
+                    <TableHead>Payment Type</TableHead>
                     <TableHead>Total</TableHead>
                     <TableHead>Status</TableHead>
                   </TableRow>
@@ -271,13 +307,9 @@ export const RecentOrders = () => {
                           {order.customer_name}
                         </div>
                       </TableCell>
+                      <TableCell>{getPaymentBadge(order.is_paid)}</TableCell>
                       <TableCell>
-                        <Badge
-                          variant="secondary"
-                          className="bg-green-100 text-green-800"
-                        >
-                          Paid
-                        </Badge>
+                        {getPaymentTypeBadge(order.payment_type)}
                       </TableCell>
                       <TableCell className="font-medium">
                         Rs.{parseFloat(order.total_amount).toFixed(2)}

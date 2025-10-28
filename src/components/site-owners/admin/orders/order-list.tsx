@@ -61,7 +61,7 @@ const OrderTableSkeleton = () => {
             <TableHead>Date</TableHead>
             <TableHead>Customer</TableHead>
             <TableHead>Payment</TableHead>
-            <TableHead>Fulfillment</TableHead>
+            <TableHead>Payment Type</TableHead>
             <TableHead>Total</TableHead>
             <TableHead>Status</TableHead>
           </TableRow>
@@ -178,6 +178,40 @@ export default function OrdersPage() {
     );
   };
 
+  const getPaymentBadge = (isPaid: boolean | undefined) => {
+    return isPaid ? (
+      <Badge variant="secondary" className="bg-green-100 text-green-800">
+        Paid
+      </Badge>
+    ) : (
+      <Badge variant="secondary" className="bg-red-100 text-red-800">
+        Unpaid
+      </Badge>
+    );
+  };
+
+  const getPaymentTypeBadge = (paymentType: string | undefined) => {
+    const paymentTypeConfig = {
+      cod: { label: "COD", color: "bg-blue-100 text-blue-800" },
+      esewa: { label: "eSewa", color: "bg-purple-100 text-purple-800" },
+      khalti: { label: "Khalti", color: "bg-purple-100 text-purple-800" },
+      card: { label: "Card", color: "bg-gray-100 text-gray-800" },
+    };
+
+    const config = paymentTypeConfig[
+      paymentType as keyof typeof paymentTypeConfig
+    ] || {
+      label: paymentType || "Unknown",
+      color: "bg-gray-100 text-gray-800",
+    };
+
+    return (
+      <Badge variant="secondary" className={config.color}>
+        {config.label}
+      </Badge>
+    );
+  };
+
   const handleStatusChange = async (orderId: number, newStatus: string) => {
     try {
       await updateOrderStatus.mutateAsync({
@@ -287,6 +321,13 @@ export default function OrdersPage() {
             All
           </Button>
           <Button
+            variant={statusFilter === "pending" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("pending")}
+          >
+            Pending
+          </Button>
+          <Button
             variant={statusFilter === "processing" ? "default" : "outline"}
             size="sm"
             onClick={() => setStatusFilter("processing")}
@@ -294,11 +335,18 @@ export default function OrdersPage() {
             Processing
           </Button>
           <Button
-            variant={statusFilter === "Shipped" ? "default" : "outline"}
+            variant={statusFilter === "shipped" ? "default" : "outline"}
             size="sm"
-            onClick={() => setStatusFilter("Shipped")}
+            onClick={() => setStatusFilter("shipped")}
           >
             Shipped
+          </Button>
+          <Button
+            variant={statusFilter === "delivered" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("delivered")}
+          >
+            Delivered
           </Button>
           <Button
             variant={statusFilter === "cancelled" ? "default" : "outline"}
@@ -348,7 +396,7 @@ export default function OrdersPage() {
                     <TableHead>Date</TableHead>
                     <TableHead>Customer</TableHead>
                     <TableHead>Payment</TableHead>
-                    <TableHead>Fulfillment</TableHead>
+                    <TableHead>Payment Type</TableHead>
                     <TableHead>Total</TableHead>
                     <TableHead>Status</TableHead>
                   </TableRow>
@@ -371,34 +419,12 @@ export default function OrdersPage() {
                           {order.customer_name}
                         </div>
                       </TableCell>
+                      <TableCell>{getPaymentBadge(order.is_paid)}</TableCell>
                       <TableCell>
-                        <Badge
-                          variant="secondary"
-                          className="bg-green-100 text-green-800"
-                        >
-                          Paid
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {order.status === "Shipped" ||
-                        order.status === "Delivered" ? (
-                          <Badge
-                            variant="secondary"
-                            className="bg-green-100 text-green-800"
-                          >
-                            Shipped
-                          </Badge>
-                        ) : (
-                          <Badge
-                            variant="secondary"
-                            className="bg-gray-100 text-gray-800"
-                          >
-                            Pending
-                          </Badge>
-                        )}
+                        {getPaymentTypeBadge(order.payment_type)}
                       </TableCell>
                       <TableCell className="font-medium">
-                        ${order.total_amount}
+                        Rs.{order.total_amount}
                       </TableCell>
                       <TableCell>
                         <div ref={dropdownRef}>

@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { AlertCircle, Info, Loader2 } from "lucide-react";
 import { ApiResponse, PaymentState } from "@/types/payment";
 import { useOrder } from "@/hooks/owner-site/admin/use-orders";
+import { OrderItem } from "@/types/owner-site/admin/orders";
 
 interface KhaltiPaymentData {
   khaltiPaymentUrl: string;
@@ -95,10 +96,6 @@ export default function KhaltiPayment() {
         transactionId: pidx,
       });
 
-      // Store transaction ID in session storage for later use
-      sessionStorage.setItem(`khalti_transaction_${order.id}`, pidx);
-      sessionStorage.setItem(`order_id_${pidx}`, order.id.toString());
-
       toast.success("Payment session created! Redirecting to Khalti...");
 
       const expiryTime = new Date(expires_at).toLocaleString();
@@ -120,6 +117,46 @@ export default function KhaltiPayment() {
 
       toast.error(`Payment initiation failed: ${errorMessage}`);
     }
+  };
+
+  // Helper function to render order items with variants
+  const renderOrderItem = (item: OrderItem, index: number) => {
+    const productName = item.product?.name || `Product ${item.product_id}`;
+    const itemPrice = parseFloat(item.price);
+    const itemTotal = itemPrice * item.quantity;
+    const hasVariant = item.variant && item.variant.option_values.length > 0;
+
+    return (
+      <div key={item.id || index} className="flex justify-between text-sm">
+        <div className="flex-1">
+          <div className="font-medium text-gray-900">
+            {productName} x {item.quantity}
+          </div>
+          {hasVariant && (
+            <div className="mt-1 text-xs text-gray-500">
+              <span className="font-medium">Variant:</span>{" "}
+              {item.variant!.option_values.map(opt => opt.value).join(", ")}
+            </div>
+          )}
+          {item.variant && (
+            <div className="text-xs text-gray-500">
+              <span className="font-medium">Price:</span> NPR{" "}
+              {itemPrice.toFixed(2)} each
+            </div>
+          )}
+        </div>
+        <div className="text-right">
+          <div className="font-medium text-gray-900">
+            NPR {itemTotal.toFixed(2)}
+          </div>
+          {item.variant && (
+            <div className="text-xs text-gray-500">
+              {itemPrice.toFixed(2)} × {item.quantity}
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
 
   if (!orderId) {
@@ -253,17 +290,6 @@ export default function KhaltiPayment() {
                   {order.shipping_address}
                 </span>
               </div>
-
-              <div className="mt-2 border-t pt-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-gray-700">
-                    Total Amount:
-                  </span>
-                  <span className="text-lg font-bold text-purple-600">
-                    NPR {parseFloat(order.total_amount).toFixed(2)}
-                  </span>
-                </div>
-              </div>
             </div>
 
             {orderItems.length > 0 && (
@@ -271,25 +297,23 @@ export default function KhaltiPayment() {
                 <h4 className="mb-2 text-sm font-semibold text-gray-700">
                   Items ({orderItems.length})
                 </h4>
-                <div className="max-h-40 space-y-2 overflow-y-auto">
-                  {orderItems.map((item, index) => (
-                    <div
-                      key={item.id || index}
-                      className="flex justify-between text-sm"
-                    >
-                      <span className="text-gray-600">
-                        {item.product?.name || `Product ${item.product_id}`} x{" "}
-                        {item.quantity}
-                      </span>
-                      <span className="font-medium">
-                        NPR{" "}
-                        {(parseFloat(item.price) * item.quantity).toFixed(2)}
-                      </span>
-                    </div>
-                  ))}
+                <div className="max-h-48 space-y-3 overflow-y-auto">
+                  {orderItems.map((item, index) =>
+                    renderOrderItem(item, index)
+                  )}
                 </div>
               </div>
             )}
+            <div className="mt-2 border-t pt-2">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-gray-700">
+                  Total Amount:
+                </span>
+                <span className="text-lg font-bold text-purple-600">
+                  NPR {parseFloat(order.total_amount).toFixed(2)}
+                </span>
+              </div>
+            </div>
           </div>
 
           <div className="rounded bg-blue-50 p-3 text-sm text-gray-500">

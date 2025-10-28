@@ -79,6 +79,37 @@ const getStatusBadge = (status: string) => {
   );
 };
 
+const getPaymentBadge = (isPaid: boolean | undefined) => {
+  return isPaid ? (
+    <Badge variant="secondary" className="bg-green-100 text-green-800">
+      Paid
+    </Badge>
+  ) : (
+    <Badge variant="secondary" className="bg-red-100 text-red-800">
+      Unpaid
+    </Badge>
+  );
+};
+
+const getPaymentTypeBadge = (paymentType: string | undefined) => {
+  const paymentTypeConfig = {
+    cod: { label: "COD", color: "bg-blue-100 text-blue-800" },
+    esewa: { label: "eSewa", color: "bg-purple-100 text-purple-800" },
+    khalti: { label: "Khalti", color: "bg-purple-100 text-purple-800" },
+    card: { label: "Card", color: "bg-gray-100 text-gray-800" },
+  };
+
+  const config = paymentTypeConfig[
+    paymentType as keyof typeof paymentTypeConfig
+  ] || { label: paymentType || "Unknown", color: "bg-gray-100 text-gray-800" };
+
+  return (
+    <Badge variant="secondary" className={config.color}>
+      {config.label}
+    </Badge>
+  );
+};
+
 const getStatusPipeline = (currentStatus: string) => {
   const statuses = ["pending", "processing", "shipped", "delivered"];
   const currentIndex = statuses.indexOf(currentStatus.toLowerCase());
@@ -328,15 +359,24 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
               </div>
               <div>
                 <p className="text-gray-500">Payment status</p>
-                <p className="font-medium">Paid</p>
+                {getPaymentBadge(currentOrder.is_paid)}
               </div>
               <div>
+                <p className="text-gray-500">Payment type</p>
+                {getPaymentTypeBadge(currentOrder.payment_type)}
+              </div>
+              <div className="md:col-span-2">
                 <p className="text-gray-500">Shipping address</p>
                 <p className="font-medium capitalize">
-                  {" "}
                   {currentOrder.shipping_address}
                 </p>
               </div>
+              {currentOrder.transaction_id && (
+                <div className="md:col-span-2">
+                  <p className="text-gray-500">Transaction ID</p>
+                  <p className="font-medium">{currentOrder.transaction_id}</p>
+                </div>
+              )}
             </div>
 
             {/* Items Ordered */}
@@ -346,7 +386,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                 <ul className="divide-y text-sm">
                   {orderItems.map(item => (
                     <li key={item.id} className="flex justify-between py-2">
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-1 items-center gap-3">
                         {item.product?.thumbnail_image && (
                           <Image
                             src={item.product.thumbnail_image}
@@ -359,13 +399,26 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                             className="rounded border object-cover"
                           />
                         )}
-                        <span className="text-xs">
-                          {item.product?.name || `Product #${item.product_id}`}
-                        </span>
+                        <div className="flex-1">
+                          <div className="text-xs font-medium">
+                            {item.product?.name ||
+                              `Product #${item.product_id}`}
+                          </div>
+                          {item.variant && item.variant.option_values && (
+                            <div className="mt-1 text-xs text-gray-500">
+                              Variant:{" "}
+                              {item.variant.option_values
+                                .map(option => option.value)
+                                .join(", ")}
+                            </div>
+                          )}
+                          <div className="mt-1 text-xs text-gray-500">
+                            Quantity: {item.quantity}
+                          </div>
+                        </div>
                       </div>
-                      <span className="text-xs text-gray-600">
-                        x{item.quantity} — Rs.
-                        {(parseFloat(item.price) * item.quantity).toFixed(2)}
+                      <span className="text-xs font-medium text-gray-600">
+                        Rs.{(parseFloat(item.price) * item.quantity).toFixed(2)}
                       </span>
                     </li>
                   ))}

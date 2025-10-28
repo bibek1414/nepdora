@@ -90,21 +90,25 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const normalizedProduct: Product = normalizeProductForCart(product);
 
     setCartItems(prevItems => {
-      // Find existing item with same product AND variant
-      const existingItem = prevItems.find(
-        item =>
-          item.product.id === normalizedProduct.id &&
-          item.selectedVariant?.id === selectedVariant?.id
-      );
+      // Find existing item with same product AND variant (or both null)
+      const existingItem = prevItems.find(item => {
+        const productMatch = item.product.id === normalizedProduct.id;
+        const variantMatch =
+          (item.selectedVariant?.id || null) === (selectedVariant?.id || null);
+        return productMatch && variantMatch;
+      });
 
       if (existingItem) {
         // Update quantity for existing item
-        return prevItems.map(item =>
-          item.product.id === normalizedProduct.id &&
-          item.selectedVariant?.id === selectedVariant?.id
+        return prevItems.map(item => {
+          const productMatch = item.product.id === normalizedProduct.id;
+          const variantMatch =
+            (item.selectedVariant?.id || null) ===
+            (selectedVariant?.id || null);
+          return productMatch && variantMatch
             ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
+            : item;
+        });
       }
 
       // Add new item with variant
@@ -121,13 +125,13 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   const removeFromCart = (productId: number, variantId?: number | null) => {
     setCartItems(prevItems =>
-      prevItems.filter(
-        item =>
-          !(
-            item.product.id === productId &&
-            item.selectedVariant?.id === variantId
-          )
-      )
+      prevItems.filter(item => {
+        const productMatch = item.product.id === productId;
+        const variantMatch =
+          (item.selectedVariant?.id || null) === (variantId || null);
+        // Keep item if either product doesn't match OR variant doesn't match
+        return !(productMatch && variantMatch);
+      })
     );
   };
 
@@ -140,12 +144,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       removeFromCart(productId, variantId);
     } else {
       setCartItems(prevItems =>
-        prevItems.map(item =>
-          item.product.id === productId &&
-          item.selectedVariant?.id === variantId
-            ? { ...item, quantity }
-            : item
-        )
+        prevItems.map(item => {
+          const productMatch = item.product.id === productId;
+          const variantMatch =
+            (item.selectedVariant?.id || null) === (variantId || null);
+          return productMatch && variantMatch ? { ...item, quantity } : item;
+        })
       );
     }
   };
