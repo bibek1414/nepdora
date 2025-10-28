@@ -32,7 +32,7 @@ export type UpdateSubCategoryRequest = z.infer<typeof UpdateSubCategorySchema>;
 // Variant types
 export type ProductOption = z.infer<typeof ProductOptionSchema>;
 export type ProductVariant = z.infer<typeof ProductVariantSchema>;
-export type ProductVariantRead = z.infer<typeof ProductVariantReadSchema>; // NEW
+export type ProductVariantRead = z.infer<typeof ProductVariantReadSchema>;
 export type CreateVariant = z.infer<typeof CreateVariantSchema>;
 export type CreateProductOption = z.infer<typeof CreateProductOptionSchema>;
 
@@ -48,6 +48,13 @@ export interface ProductLike {
   description?: string | null;
   price: string | number;
   stock?: number | null;
+  // NEW FIELDS
+  fast_shipping?: boolean;
+  warranty?: string | null;
+  weight?: string | null;
+  status?: "active" | "draft" | "archived";
+  meta_title?: string | null;
+  meta_description?: string | null;
   [key: string]: unknown;
 }
 
@@ -155,6 +162,7 @@ export const normalizeProductForCart = (product: ProductLike): Product => {
       typeof product.stock === "number"
         ? product.stock
         : productData.stock || 0,
+    weight: productData.weight || null,
     thumbnail_image: productData.thumbnail_image || null,
     images: productData.images || [],
     thumbnail_alt_description: productData.thumbnail_alt_description || null,
@@ -162,9 +170,15 @@ export const normalizeProductForCart = (product: ProductLike): Product => {
     sub_category: productData.sub_category || null,
     is_popular: productData.is_popular || false,
     is_featured: productData.is_featured || false,
+    // NEW FIELDS
+    fast_shipping: productData.fast_shipping ?? false,
+    warranty: productData.warranty || null,
+    status: productData.status || "active",
+    meta_title: productData.meta_title || null,
+    meta_description: productData.meta_description || null,
     options: productData.options || [],
     variants: productData.variants || [],
-    variants_read: productData.variants_read || [], // NEW
+    variants_read: productData.variants_read || [],
     created_at: productData.created_at || new Date().toISOString(),
     updated_at: productData.updated_at || new Date().toISOString(),
   };

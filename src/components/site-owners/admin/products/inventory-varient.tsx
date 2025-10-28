@@ -46,6 +46,8 @@ interface InventoryVariantsProps {
   options: ProductOption[];
   onOptionsChange: (options: ProductOption[]) => void;
   isEditing?: boolean;
+  productStock?: number; // Single stock value when trackStock is false
+  onProductStockChange?: (stock: number) => void; // Callback for single stock value
 }
 
 interface OptionFormData {
@@ -63,6 +65,8 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
   options,
   onOptionsChange,
   isEditing = false,
+  productStock = 0,
+  onProductStockChange,
 }) => {
   const [optionForms, setOptionForms] = useState<OptionFormData[]>([]);
   const [groupBy, setGroupBy] = useState<string>("");
@@ -76,6 +80,17 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
       generateVariants();
     }
   }, [options, isEditing]);
+
+  // Update all variants stock when productStock changes and trackStock is false
+  useEffect(() => {
+    if (!trackStock && variants.length > 0) {
+      const updatedVariants = variants.map(variant => ({
+        ...variant,
+        stock: productStock,
+      }));
+      onVariantsChange(updatedVariants);
+    }
+  }, [productStock, trackStock]);
 
   const generateVariants = () => {
     if (options.length === 0) {
@@ -109,7 +124,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
           id: `variant-${Date.now()}-${index}`,
           options: variantOptions,
           price: "0.00",
-          stock: 0,
+          stock: trackStock ? 0 : productStock, // Use productStock if trackStock is false
           image: null,
         }
       );
@@ -352,7 +367,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
       .map(([, value]) => value)
       .join(" / ");
 
-    const isAvailable = trackStock ? variant.stock > 0 : true;
+    const isAvailable = trackStock ? variant.stock > 0 : productStock > 0;
 
     // Check if this variant's group has a group image
     const groupImage = groupBy ? groupImages[variant.options[groupBy]] : null;
@@ -400,11 +415,21 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
               <span className="truncate text-sm font-medium">
                 {variantLabel}
               </span>
-              {trackStock && (
+              {trackStock ? (
                 <p className="text-xs text-gray-500">
                   {isAvailable ? (
                     <span className="text-green-600">
                       Available ({variant.stock})
+                    </span>
+                  ) : (
+                    <span className="text-red-600">Out of stock</span>
+                  )}
+                </p>
+              ) : (
+                <p className="text-xs text-gray-500">
+                  {isAvailable ? (
+                    <span className="text-green-600">
+                      Available ({productStock})
                     </span>
                   ) : (
                     <span className="text-red-600">Out of stock</span>
@@ -565,10 +590,35 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
         <div>
           <Label className="text-sm font-medium">Track Inventory</Label>
           <p className="mt-1 text-xs text-gray-500">
-            Enable stock tracking to show availability status
+            {trackStock
+              ? "Track stock for each variant individually"
+              : "Use single stock quantity for all variants"}
           </p>
         </div>
         <Switch checked={trackStock} onCheckedChange={onTrackStockChange} />
+      </div>
+
+      {/* Product Stock Input - ALWAYS SHOWN */}
+      <div className="rounded-lg border p-4">
+        <Label className="text-sm font-medium">Product Stock</Label>
+        <p className="mt-1 mb-3 text-xs text-gray-500">
+          {trackStock
+            ? "Total stock across all variants"
+            : "This stock quantity will be applied to all variants"}
+        </p>
+        <Input
+          type="number"
+          min="0"
+          placeholder="0"
+          className="h-11 max-w-xs"
+          value={productStock}
+          onChange={e => onProductStockChange?.(parseInt(e.target.value) || 0)}
+        />
+        {trackStock && variants.length > 0 && (
+          <p className="mt-2 text-xs text-gray-600">
+            Current total: {variants.reduce((sum, v) => sum + v.stock, 0)} units
+          </p>
+        )}
       </div>
 
       {/* Variants Section */}

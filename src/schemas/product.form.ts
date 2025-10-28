@@ -49,13 +49,12 @@ export const ProductVariantSchema = z.object({
   updated_at: z.string(),
 });
 
-// NEW: Variant Read Schema (from API response with option_values as object)
 export const ProductVariantReadSchema = z.object({
   id: z.number(),
   price: z.string(),
   stock: z.number(),
   image: z.string().nullable(),
-  option_values: z.record(z.string(), z.string()), // { "size": "large", "color": "red" }
+  option_values: z.record(z.string(), z.string()),
 });
 
 // Category Reference Schema
@@ -82,7 +81,10 @@ export const ProductImageSchema = z.object({
   image: z.string(),
 });
 
-// Base Product Schema with variants
+// Status choices
+export const STATUS_CHOICES = ["active", "draft", "archived"] as const;
+
+// Base Product Schema with NEW FIELDS
 export const ProductSchema = z.object({
   id: z.number(),
   name: z.string().min(1, "Name is required"),
@@ -101,14 +103,17 @@ export const ProductSchema = z.object({
   is_popular: z.boolean().optional(),
   is_featured: z.boolean().optional(),
   is_wishlist: z.boolean().optional(),
-  status: z.string().optional(),
+  status: z.enum(STATUS_CHOICES).default("active"),
   meta_title: z.string().nullable().optional(),
   meta_description: z.string().nullable().optional(),
+  // NEW FIELDS
+  fast_shipping: z.boolean().default(false),
+  warranty: z.string().max(20).nullable().optional(),
   average_rating: z.number().min(0).max(5).optional(),
   reviews_count: z.number().min(0).optional(),
   options: z.array(ProductOptionSchema).optional(),
   variants: z.array(ProductVariantSchema).optional(),
-  variants_read: z.array(ProductVariantReadSchema).optional(), // NEW: API response format
+  variants_read: z.array(ProductVariantReadSchema).optional(),
   created_at: z.string(),
   updated_at: z.string(),
 });
@@ -150,7 +155,7 @@ export const CreateProductOptionSchema = z.object({
   values: z.array(z.string()).min(1, "At least one value is required"),
 });
 
-// Create Product Schema with variants
+// Create Product Schema with NEW FIELDS
 export const CreateProductSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
@@ -165,6 +170,22 @@ export const CreateProductSchema = z.object({
   track_stock: z.boolean(),
   is_popular: z.boolean(),
   is_featured: z.boolean(),
+  // NEW FIELDS - make them optional in the schema but provide defaults in the form
+  fast_shipping: z.boolean(),
+  warranty: z
+    .string()
+    .max(20, "Warranty must be 20 characters or less")
+    .optional(),
+  weight: z
+    .string()
+    .max(100, "Weight must be 100 characters or less")
+    .optional(),
+  status: z.enum(STATUS_CHOICES),
+  meta_title: z
+    .string()
+    .max(255, "Meta title must be 255 characters or less")
+    .optional(),
+  meta_description: z.string().optional(),
   // Variant-related fields
   options: z.array(CreateProductOptionSchema).optional(),
   variants: z.array(CreateVariantSchema).optional(),

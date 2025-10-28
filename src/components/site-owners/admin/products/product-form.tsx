@@ -12,6 +12,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import {
   Select,
@@ -21,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -29,7 +31,7 @@ import {
 } from "@/hooks/owner-site/admin/use-product";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
-import { CreateProductSchema } from "@/schemas/product.form";
+import { CreateProductSchema, STATUS_CHOICES } from "@/schemas/product.form";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import type {
   Product,
@@ -45,6 +47,8 @@ import {
   Image,
   Settings,
   Tag,
+  FileText,
+  Truck,
 } from "lucide-react";
 import ReusableQuill from "@/components/ui/tip-tap";
 import InventoryVariants from "./inventory-varient";
@@ -82,12 +86,12 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
   );
   const [options, setOptions] = useState<ProductOption[]>([]);
   const [variants, setVariants] = useState<Variant[]>([]);
+  const [productStock, setProductStock] = useState<number>(product?.stock ?? 0);
 
   const isEditing = !!product;
   const createProductMutation = useCreateProduct();
   const updateProductMutation = useUpdateProduct();
 
-  // Fetch categories and subcategories
   const { data: categoriesData } = useCategories();
   const { data: subCategoriesData } = useSubCategories({
     category: selectedCategory ? parseInt(selectedCategory) : undefined,
@@ -113,20 +117,23 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
       track_stock: product?.track_stock ?? false,
       is_popular: product?.is_popular ?? false,
       is_featured: product?.is_featured ?? false,
+      fast_shipping: product?.fast_shipping ?? false,
+      warranty: product?.warranty || "",
+      weight: product?.weight || "",
+      status: product?.status || "active",
+      meta_title: product?.meta_title || "",
+      meta_description: product?.meta_description || "",
     },
   });
 
-  // Set initial category selection
   useEffect(() => {
     if (product?.category?.id) {
       setSelectedCategory(product.category.id.toString());
     }
   }, [product]);
 
-  // Initialize options and variants from product data
   useEffect(() => {
     if (product) {
-      // Map options from product data
       if (product.options && product.options.length > 0) {
         const mappedOptions: ProductOption[] = product.options.map(
           //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -143,7 +150,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
         setOptions(mappedOptions);
       }
 
-      // Map variants from product data
       if (product.variants_read && product.variants_read.length > 0) {
         const mappedVariants: Variant[] = product.variants_read.map(
           //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -160,19 +166,19 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
     }
   }, [product]);
 
-  // Sync stock value to all variants when track stock is disabled
-  useEffect(() => {
-    if (!trackStock && variants.length > 0) {
-      const stockValue = form.watch("stock");
+  const handleTrackStockChange = (value: boolean) => {
+    setTrackStock(value);
+
+    if (!value && variants.length > 0) {
+      // When turning off track stock, set all variants to use the product stock
       const updatedVariants = variants.map(v => ({
         ...v,
-        stock: stockValue,
+        stock: productStock,
       }));
       setVariants(updatedVariants);
     }
-  }, [trackStock, form.watch("stock")]);
+  };
 
-  // Handle category change
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId);
     form.setValue("sub_category_id", "");
@@ -180,15 +186,13 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
 
   const onSubmit = async (data: z.infer<typeof CreateProductSchema>) => {
     try {
-      // Transform options and variants for API
       const transformedOptions = options.map(opt => ({
         name: opt.name,
         values: opt.values.map(v => v.value),
       }));
 
-      // When track stock is disabled, use the main stock value for all variants
-      const stockValue = trackStock ? undefined : data.stock;
-
+      // Determine stock values based on trackStock setting
+      const stockValue = trackStock ? undefined : productStock;
       const transformedVariants = variants.map(v => {
         const variantStock = trackStock ? v.stock : stockValue;
         return {
@@ -214,6 +218,13 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
         options: transformedOptions.length > 0 ? transformedOptions : undefined,
         variants:
           transformedVariants.length > 0 ? transformedVariants : undefined,
+        // NEW FIELDS
+        fast_shipping: data.fast_shipping,
+        warranty: data.warranty || undefined,
+        weight: data.weight || undefined,
+        status: data.status,
+        meta_title: data.meta_title || undefined,
+        meta_description: data.meta_description || undefined,
       };
 
       if (isEditing && product) {
@@ -307,17 +318,48 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                       </FormItem>
                     )}
                   />
+
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium">
+                          Product Status
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="h-11">
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {STATUS_CHOICES.map(status => (
+                              <SelectItem key={status} value={status}>
+                                {status.charAt(0).toUpperCase() +
+                                  status.slice(1)}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </div>
 
-              {/* Pricing & Stock */}
+              {/* Pricing */}
               <div className="space-y-6">
                 <div className="flex items-center gap-3 border-b pb-2">
                   <DollarSign className="text-muted-foreground h-5 w-5" />
-                  <h3 className="text-lg font-semibold">Pricing & Stock</h3>
+                  <h3 className="text-lg font-semibold">Pricing</h3>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="price"
@@ -363,55 +405,101 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                       </FormItem>
                     )}
                   />
+                </div>
+              </div>
 
+              {/* Shipping & Product Details */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 border-b pb-2">
+                  <Truck className="text-muted-foreground h-5 w-5" />
+                  <h3 className="text-lg font-semibold">Shipping & Details</h3>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
-                    name="stock"
+                    name="weight"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium">
-                          Stock Quantity *
+                          Weight
                         </FormLabel>
                         <FormControl>
                           <Input
-                            type="number"
-                            min="0"
-                            placeholder="0"
+                            placeholder="e.g., 500g, 1.2kg"
                             className="h-11"
                             {...field}
-                            onChange={e =>
-                              field.onChange(parseInt(e.target.value) || 0)
-                            }
-                            value={field.value}
-                            disabled={trackStock && variants.length > 0}
                           />
                         </FormControl>
+                        <FormDescription>
+                          Product weight for shipping calculation
+                        </FormDescription>
                         <FormMessage />
-                        {trackStock && variants.length > 0 && (
-                          <p className="text-xs text-gray-500">
-                            Stock is managed per variant
-                          </p>
-                        )}
-                        {!trackStock && variants.length > 0 && (
-                          <p className="text-xs text-blue-600">
-                            This stock value will apply to all variants
-                          </p>
-                        )}
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="warranty"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium">
+                          Warranty
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="e.g., 1 year, 6 months"
+                            maxLength={20}
+                            className="h-11"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Warranty information (max 20 chars)
+                        </FormDescription>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
+
+                <FormField
+                  control={form.control}
+                  name="fast_shipping"
+                  render={({ field }) => (
+                    <FormItem className="bg-card flex flex-row items-start space-y-0 space-x-3 rounded-lg border p-4">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          className="mt-1 rounded-full"
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel className="text-sm font-medium">
+                          Fast Shipping Available
+                        </FormLabel>
+                        <FormDescription>
+                          This product qualifies for fast shipping
+                        </FormDescription>
+                      </div>
+                    </FormItem>
+                  )}
+                />
               </div>
 
               {/* Inventory & Variants */}
               <InventoryVariants
                 trackStock={trackStock}
-                onTrackStockChange={setTrackStock}
+                onTrackStockChange={handleTrackStockChange}
                 variants={variants}
                 onVariantsChange={setVariants}
                 options={options}
                 onOptionsChange={setOptions}
                 isEditing={isEditing}
+                productStock={productStock}
+                onProductStockChange={setProductStock}
               />
 
               {/* Categories */}
@@ -561,6 +649,64 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                             {...field}
                           />
                         </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* SEO Settings */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 border-b pb-2">
+                  <FileText className="text-muted-foreground h-5 w-5" />
+                  <h3 className="text-lg font-semibold">SEO Settings</h3>
+                </div>
+
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="meta_title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium">
+                          Meta Title
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="SEO optimized title for search engines"
+                            maxLength={255}
+                            className="h-11"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Recommended: 50-60 characters
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="meta_description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium">
+                          Meta Description
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="SEO optimized description for search engines"
+                            rows={4}
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Recommended: 150-160 characters
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
