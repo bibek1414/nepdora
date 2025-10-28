@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useParams } from "next/navigation";
@@ -44,6 +44,7 @@ const CheckoutPage = () => {
   >(null);
   const isPreviewMode = !!params?.siteUser;
   const siteUser = params?.siteUser as string;
+
   const {
     register,
     handleSubmit,
@@ -64,6 +65,19 @@ const CheckoutPage = () => {
   });
 
   const sameAsCustomerAddress = watch("same_as_customer_address");
+
+  // Debug cart items on mount
+  useEffect(() => {
+    console.log("Preview Checkout - Cart Items:", cartItems);
+    cartItems.forEach((item, index) => {
+      console.log(`Item ${index}:`, {
+        productId: item.product.id,
+        productName: item.product.name,
+        selectedVariant: item.selectedVariant,
+        quantity: item.quantity,
+      });
+    });
+  }, [cartItems]);
 
   const totalAmount = cartItems.reduce((total, item) => {
     const itemPrice = item.selectedVariant?.price || item.product.price;
@@ -148,23 +162,36 @@ const CheckoutPage = () => {
 
     try {
       const orderItems: OrderItem[] = cartItems.map(item => {
-        // If variant is selected, send only variant_id, otherwise send only product_id
+        console.log("Processing cart item:", {
+          productId: item.product.id,
+          selectedVariant: item.selectedVariant,
+          hasVariantId: !!item.selectedVariant?.id,
+        });
+
+        // CRITICAL FIX: Only send variant_id if variant is actually selected
+        // Do NOT send product_id when variant is selected
         if (item.selectedVariant?.id) {
-          return {
+          const orderItem = {
             variant_id: item.selectedVariant.id,
             quantity: item.quantity,
             price: (
               item.selectedVariant.price || item.product.price
             ).toString(),
           };
+          console.log("Creating variant order item:", orderItem);
+          return orderItem;
         } else {
-          return {
+          const orderItem = {
             product_id: item.product.id,
             quantity: item.quantity,
             price: item.product.price.toString(),
           };
+          console.log("Creating product order item:", orderItem);
+          return orderItem;
         }
       });
+
+      console.log("Final order items:", orderItems);
 
       const orderData: CreateOrderRequest = {
         customer_name: data.customer_name,
@@ -178,6 +205,8 @@ const CheckoutPage = () => {
         items: orderItems,
       };
 
+      console.log("Submitting order data:", orderData);
+
       if (isAuthenticated && user) {
         console.log("Order being placed by authenticated user:", user.email);
       } else {
@@ -188,6 +217,8 @@ const CheckoutPage = () => {
         orderData,
         includeToken: isAuthenticated && !!user,
       });
+
+      console.log("Order created successfully:", order);
 
       // Handle payment method routing
       if (selectedPaymentMethod) {
@@ -203,7 +234,6 @@ const CheckoutPage = () => {
             );
             break;
           case "cod":
-            // For COD, go directly to order confirmation
             toast.success("Order placed successfully! Pay on delivery.");
             clearCart();
             router.push(`/preview/${siteUser}/order-confirmation/${order.id}`);
@@ -212,7 +242,6 @@ const CheckoutPage = () => {
             break;
         }
       } else {
-        // Direct order confirmation without payment gateway
         toast.success("Order placed successfully!");
         clearCart();
         router.push(`/preview/${siteUser}/order-confirmation/${order.id}`);
@@ -489,34 +518,43 @@ const CheckoutPage = () => {
                 <CardTitle>Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {cartItems.map(item => (
-                  <div
-                    key={`${item.product.id}-${item.selectedVariant?.id || "no-variant"}`}
-                    className="flex items-center space-x-4"
-                  >
-                    <Image
-                      src={item.product.thumbnail_image || ""}
-                      alt={item.product.name}
-                      width={60}
-                      height={60}
-                      className="h-15 w-15 rounded object-cover"
-                    />
-                    <div className="flex-1">
-                      <h4 className="font-medium">{item.product.name}</h4>
-                      <p className="text-sm text-gray-600">
-                        Qty: {item.quantity}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium">
-                        $
-                        {(Number(item.product.price) * item.quantity).toFixed(
-                          2
+                {cartItems.map(item => {
+                  const displayPrice =
+                    item.selectedVariant?.price || item.product.price;
+                  return (
+                    <div
+                      key={`${item.product.id}-${item.selectedVariant?.id || "no-variant"}`}
+                      className="flex items-center space-x-4"
+                    >
+                      <Image
+                        src={item.product.thumbnail_image || ""}
+                        alt={item.product.name}
+                        width={60}
+                        height={60}
+                        className="h-15 w-15 rounded object-cover"
+                      />
+                      <div className="flex-1">
+                        <h4 className="font-medium">{item.product.name}</h4>
+                        {item.selectedVariant && (
+                          <p className="text-xs text-gray-500">
+                            Variant:{" "}
+                            {JSON.stringify(
+                              item.selectedVariant.option_values || {}
+                            )}
+                          </p>
                         )}
-                      </p>
+                        <p className="text-sm text-gray-600">
+                          Qty: {item.quantity}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium">
+                          ${(Number(displayPrice) * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
 
                 <Separator />
 

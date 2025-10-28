@@ -279,6 +279,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     );
   }
 
+  // Replace your handleAddToCart function with this:
+
   const handleAddToCart = () => {
     if (product) {
       const currentStock = getCurrentStock();
@@ -287,8 +289,29 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
         return;
       }
 
-      addToCart(product, quantity);
+      // Check if product has variants but none is selected
+      if (
+        product.variants_read &&
+        product.variants_read.length > 0 &&
+        !selectedVariant
+      ) {
+        toast.error("Please select all product options");
+        return;
+      }
 
+      // Prepare variant data if a variant is selected
+      const variantData = selectedVariant
+        ? {
+            id: selectedVariant.id,
+            price: selectedVariant.price,
+            option_values: selectedVariant.option_values,
+          }
+        : null;
+
+      // Add to cart with variant information
+      addToCart(product, quantity, variantData);
+
+      // Show success message with variant info
       const variantInfo = selectedVariant
         ? ` (${Object.entries(selectedOptions)
             .map(([k, v]) => `${k}: ${v}`)
@@ -334,7 +357,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={`/publish/${siteUser}`}
+                  href={`/preview/${siteUser}`}
                   className="flex items-center gap-2"
                 >
                   <Home className="h-4 w-4" />
@@ -345,7 +368,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/publish/${siteUser}/products`}>Products</Link>
+                <Link href={`/preview/${siteUser}/products-draft`}>
+                  Products
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             {product.category && (
@@ -354,7 +379,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
                     <Link
-                      href={`/publish/${siteUser}/products?category=${product.category.slug}`}
+                      href={`/preview/${siteUser}/products-draft?category=${product.category.slug}`}
                     >
                       {product.category.name}
                     </Link>

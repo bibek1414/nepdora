@@ -241,9 +241,9 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
 
   const getCategoryUrl = (category: Category): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/products?category=${category.slug}`;
+      return `/preview/${siteUser}/products-draft?category=${category.slug}`;
     } else {
-      return `/products?category=${category.slug}`;
+      return `/products-draft?category=${category.slug}`;
     }
   };
 
@@ -252,9 +252,9 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
     category: Category
   ): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/products?category=${category.slug}&sub_category=${subcategory.slug}`;
+      return `/preview/${siteUser}/products-draft?category=${category.slug}&sub_category=${subcategory.slug}`;
     } else {
-      return `/products?category=${category.slug}&sub_category=${subcategory.slug}`;
+      return `/products-draft?category=${category.slug}&sub_category=${subcategory.slug}`;
     }
   };
 

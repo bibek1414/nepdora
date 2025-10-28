@@ -167,7 +167,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
   return (
     <div
       className={cn(
-        "bg-background sticky top-0 z-[9999] flex h-screen flex-col border-r transition-all duration-300 ease-in-out",
+        "bg-background sticky top-0 z-5 flex h-screen flex-col border-r transition-all duration-300 ease-in-out",
         collapsed ? "w-16" : "w-64"
       )}
     >

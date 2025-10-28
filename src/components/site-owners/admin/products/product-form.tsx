@@ -238,9 +238,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
       }
     } catch (error) {
       console.error("Error submitting product:", error);
-      toast.error(
-        isEditing ? "Failed to update product" : "Failed to create product"
-      );
     }
   };
 
