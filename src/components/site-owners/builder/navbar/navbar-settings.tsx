@@ -123,16 +123,14 @@ const PageSelector: React.FC<PageSelectorProps> = ({
   return (
     <Card className="absolute top-full right-0 z-50 mt-1 w-80 gap-0 bg-white py-0 shadow-xl">
       <CardContent className="p-0">
-        {/* Search Input */}
-
         {/* Existing Pages - Scrollable Area */}
-        <ScrollArea className="max-h-60">
+        <ScrollArea className="h-60">
           {isLoading ? (
             <div className="text-muted-foreground p-4 text-center">
               Loading pages...
             </div>
           ) : filteredPages.length > 0 ? (
-            <div className="p-1">
+            <div className="overflow-y-auto p-1">
               {filteredPages.map((page: Page) => (
                 <Button
                   key={page.id}
@@ -301,10 +299,20 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
     field: keyof NavbarLink,
     value: string
   ) => {
+    // If updating href field and user manually typed it, append -draft
+    let finalValue = value;
+    if (
+      field === "href" &&
+      value.startsWith("/") &&
+      !value.endsWith("-draft")
+    ) {
+      finalValue = `${value}-draft`;
+    }
+
     setNavbarData(prev => ({
       ...prev,
       links: prev.links.map(link =>
-        link.id === id ? { ...link, [field]: value } : link
+        link.id === id ? { ...link, [field]: finalValue } : link
       ),
     }));
   };
@@ -335,10 +343,20 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
     field: keyof NavbarButton,
     value: string
   ) => {
+    // If updating href field and user manually typed it, append -draft
+    let finalValue = value;
+    if (
+      field === "href" &&
+      value.startsWith("/") &&
+      !value.endsWith("-draft")
+    ) {
+      finalValue = `${value}-draft`;
+    }
+
     setNavbarData(prev => ({
       ...prev,
       buttons: prev.buttons.map(button =>
-        button.id === id ? { ...button, [field]: value } : button
+        button.id === id ? { ...button, [field]: finalValue } : button
       ),
     }));
   };
@@ -354,18 +372,6 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
   const handlePageSelect = (href: string, text?: string) => {
     if (showPageSelectorFor) {
       const { type, id } = showPageSelectorFor;
-
-      if (type === "link") {
-        handleUpdateLink(id, "href", href);
-        if (text) {
-          handleUpdateLink(id, "text", text);
-        }
-      } else if (type === "button") {
-        handleUpdateButton(id, "href", href);
-        if (text) {
-          handleUpdateButton(id, "text", text);
-        }
-      }
 
       setShowPageSelectorFor(null);
     }

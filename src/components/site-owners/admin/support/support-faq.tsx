@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { ChevronDown, Mail, MessageCircle, Phone } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { Mail, MessageCircle, Phone, Plus, Minus } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -8,92 +8,72 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-import { Plus, Minus } from "lucide-react";
-interface FAQItem {
-  id: string;
-  question: string;
-  answer: string;
-  category: string;
-}
-
-const faqData: FAQItem[] = [
-  {
-    id: "1",
-    category: "Getting Started",
-    question: "What is Nepdora?",
-    answer:
-      "Nepdora is an online website builder platform that allows you to create professional websites through an intuitive drag-and-drop interface. No coding knowledge required - simply select components, customize them, and build your dream website in minutes.",
-  },
-  {
-    id: "2",
-    category: "Features",
-    question: "How does the drag-and-drop feature work?",
-    answer:
-      "Our drag-and-drop builder makes website creation simple. Choose from our library of pre-designed components (headers, footers, galleries, forms, etc.), drag them to your canvas, and drop them where you want. You can then customize colors, text, images, and layouts with just a few clicks.",
-  },
-  {
-    id: "3",
-    category: "Account",
-    question: "How do I create an account?",
-    answer:
-      "Click on the 'Sign Up' button in the top right corner of our homepage. Enter your email, create a password, and verify your email address. Once verified, you can start building your website immediately.",
-  },
-  {
-    id: "4",
-    category: "Templates",
-    question: "Are there pre-built templates available?",
-    answer:
-      "Yes! Nepdora offers a wide variety of professionally designed templates for different industries including e-commerce, portfolios, blogs, business websites, and more. You can start with a template and customize it to match your brand.",
-  },
-  {
-    id: "5",
-    category: "Pricing",
-    question: "What are the pricing plans?",
-    answer:
-      "We offer flexible pricing plans to suit different needs: Free plan for personal projects, Pro plan for professionals, and Business plan for enterprises. Each plan includes different features, storage limits, and custom domain options. Visit our pricing page for detailed information.",
-  },
-  {
-    id: "6",
-    category: "Publishing",
-    question: "How do I publish my website?",
-    answer:
-      "Once you're happy with your design, click the 'Publish' button in the top right corner. You can publish to a free Nepdora subdomain or connect your own custom domain. Your website will be live within seconds.",
-  },
-  {
-    id: "7",
-    category: "Support",
-    question: "Can I get help if I'm stuck?",
-    answer:
-      "Absolutely! We offer 24/7 customer support through email, live chat, and phone. Our support team is always ready to help you with any questions or issues you encounter while building your website.",
-  },
-];
-
-const categories = [
-  { id: "all", name: "All", icon: "📚" },
-  { id: "account", name: "Account", icon: "👤" },
-  { id: "features", name: "Features", icon: "⚡" },
-  { id: "templates", name: "Templates", icon: "🎨" },
-  { id: "pricing", name: "Pricing", icon: "💳" },
-  { id: "support", name: "Support", icon: "🛟" },
-];
+import { Card, CardContent } from "@/components/ui/card";
+import { useFAQs, useFAQCategories } from "@/hooks/superadmin/use-faq-category";
 
 const SupportFAQ: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const filteredFAQs =
-    selectedCategory === "all"
-      ? faqData
-      : faqData.filter(
-          faq => faq.category.toLowerCase() === selectedCategory.toLowerCase()
-        );
+  // Fetch FAQs and Categories from API
+  const {
+    data: faqsData,
+    isLoading: faqsLoading,
+    error: faqsError,
+  } = useFAQs();
+  const { data: categoriesData, isLoading: categoriesLoading } =
+    useFAQCategories();
+
+  // Process categories for sidebar
+  const categories = useMemo(() => {
+    const allCategory = { id: "all", name: "All", icon: "📚" };
+
+    if (!categoriesData) return [allCategory];
+
+    const apiCategories = categoriesData.map(cat => ({
+      id: cat.id.toString(),
+      name: cat.name,
+    }));
+
+    return [allCategory, ...apiCategories];
+  }, [categoriesData]);
+
+  // Filter FAQs based on selected category
+  const filteredFAQs = useMemo(() => {
+    if (!faqsData) return [];
+
+    if (selectedCategory === "all") {
+      return faqsData;
+    }
+
+    return faqsData.filter(
+      faq => faq.category?.id.toString() === selectedCategory
+    );
+  }, [faqsData, selectedCategory]);
+
+  // Loading state
+  if (faqsLoading || categoriesLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="text-center">
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
+          <p className="mt-4 text-gray-600">Loading FAQs...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (faqsError) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="text-center">
+          <p className="text-red-600">
+            Failed to load FAQs. Please try again later.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -110,16 +90,15 @@ const SupportFAQ: React.FC = () => {
                       onClick={() => setSelectedCategory(category.id)}
                       className={`relative flex w-full cursor-pointer items-center gap-3 py-1 pr-6 pl-4 text-left transition-all ${
                         selectedCategory === category.id
-                          ? "bg-white font-medium text-gray-900"
-                          : "text-gray-500 hover:text-gray-900"
+                          ? "bg-primary font-medium text-white capitalize"
+                          : "text-gray-500 capitalize hover:text-gray-900"
                       }`}
                     >
-                      <span className="text-xl">{category.icon}</span>
                       <span>{category.name}</span>
                     </button>
                   ))}
                 </CardContent>
-                <div className="px-10 py-6">
+                <div className="px-5 py-6">
                   <div className="text-lg font-semibold text-gray-900">
                     Do you still need help?
                   </div>
@@ -127,7 +106,7 @@ const SupportFAQ: React.FC = () => {
                     Always support whenever you need (24/7).
                   </span>
                 </div>
-                <div className="space-y-3 px-10">
+                <div className="space-y-3 px-5 pb-6">
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-3"
@@ -176,7 +155,7 @@ const SupportFAQ: React.FC = () => {
                 {filteredFAQs.map(faq => (
                   <AccordionItem
                     key={faq.id}
-                    value={faq.id}
+                    value={faq.id.toString()}
                     className="rounded-lg border-b bg-white px-6"
                   >
                     <AccordionTrigger className="group flex items-center justify-between hover:no-underline">
@@ -185,7 +164,6 @@ const SupportFAQ: React.FC = () => {
                           {faq.question}
                         </h3>
                       </div>
-                      {/* Icon changes based on open/closed state */}
                       <span className="ml-2 shrink-0">
                         <Plus className="h-5 w-5 transition-transform group-data-[state=open]:hidden group-data-[state=open]:rotate-0" />
                         <Minus className="hidden h-5 w-5 group-data-[state=open]:block" />

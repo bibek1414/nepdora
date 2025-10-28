@@ -137,6 +137,8 @@ const CheckoutPage = () => {
     }
   };
 
+  // In your CheckoutPage component, update the onSubmit function:
+
   const onSubmit = async (data: CheckoutFormValues) => {
     if (cartItems.length === 0) {
       toast.error("Your cart is empty");
@@ -183,12 +185,12 @@ const CheckoutPage = () => {
         switch (selectedPaymentMethod.toLowerCase()) {
           case "esewa":
             router.push(
-              `/preview/${siteUser}/esewa-payment?orderId=${order.id}`
+              `/preview/${siteUser}/esewa-payment?orderId=${order.id}&orderNumber=${order.order_number}`
             );
             break;
           case "khalti":
             router.push(
-              `/preview/${siteUser}/khalti-payment?orderId=${order.id}`
+              `/preview/${siteUser}/khalti-payment?orderId=${order.id}&orderNumber=${order.order_number}`
             );
             break;
           case "cod":

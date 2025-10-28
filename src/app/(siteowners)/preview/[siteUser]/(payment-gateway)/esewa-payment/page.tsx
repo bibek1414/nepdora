@@ -76,13 +76,23 @@ export default function EsewaPayment() {
         throw new Error(apiResponse.error || "Payment initiation failed");
       }
 
-      const { esewaConfig } = apiResponse.data;
+      const { esewaConfig, transactionId } = apiResponse.data;
 
       setPaymentState({
         isLoading: false,
         error: null,
         success: true,
       });
+
+      // Store transaction UUID in session storage for later use
+      sessionStorage.setItem(
+        `esewa_transaction_${order.id}`,
+        esewaConfig.transaction_uuid
+      );
+      sessionStorage.setItem(
+        `order_id_${esewaConfig.transaction_uuid}`,
+        order.id.toString()
+      );
 
       toast.success("eSewa payment session created! Redirecting...");
 

@@ -26,7 +26,13 @@ export interface FAQ {
   id: number;
   question: string;
   answer: string;
-  category: number;
+  category_id?: number;
+  category?: {
+    id: number;
+    name: string;
+    created_at: string;
+    updated_at: string;
+  };
   created_at: string;
   updated_at: string;
 }
@@ -34,13 +40,13 @@ export interface FAQ {
 export interface CreateFAQRequest {
   question: string;
   answer: string;
-  category: number;
+  category_id: number;
 }
 
 export interface UpdateFAQRequest {
   question?: string;
   answer?: string;
-  category?: number;
+  category_id?: number;
 }
 
 export type CreateFAQResponse = FAQ;
