@@ -3,7 +3,7 @@ import axios from "axios";
 
 const WIT_API_URL = "https://api.wit.ai/message";
 const WIT_API_VERSION = "20251028";
-const WIT_TOKEN = "V5XVUPS6ZLHHOKXKC62IROZEZEXMG7Y5"; // ⚠️ You can store this in .env later
+const WIT_TOKEN = process.env.NEXT_PUBLIC_WIT_API_KEY;
 
 interface WitEntity {
   value?: string;
