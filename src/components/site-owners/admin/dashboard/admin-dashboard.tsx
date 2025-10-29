@@ -15,7 +15,9 @@ export default function AdminDashboard() {
         error={error}
         refetch={refetch}
       />
-      <RecentOrders />
+      <div className="mb-40">
+        <RecentOrders />
+      </div>
     </div>
   );
 }
