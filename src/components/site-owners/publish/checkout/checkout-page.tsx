@@ -30,6 +30,8 @@ import { checkoutFormSchema, CheckoutFormValues } from "@/schemas/chekout.form";
 import { usePaymentGateways } from "@/hooks/owner-site/admin/use-payment-gateway";
 import { motion, AnimatePresence } from "framer-motion";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { PromoCodeInput } from "@/components/site-owners/builder/checkout/promo-code-input";
+import { PromoCode } from "@/types/owner-site/admin/promo-code-validate";
 
 const PublishCheckoutPage = () => {
   const router = useRouter();
@@ -43,6 +45,9 @@ const PublishCheckoutPage = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(null);
+  const [appliedPromoCode, setAppliedPromoCode] = useState<PromoCode | null>(
+    null
+  );
   const siteUser = params?.siteUser as string;
 
   const {
@@ -79,10 +84,19 @@ const PublishCheckoutPage = () => {
     });
   }, [cartItems]);
 
-  const totalAmount = cartItems.reduce((total, item) => {
+  // Calculate subtotal
+  const subtotalAmount = cartItems.reduce((total, item) => {
     const itemPrice = item.selectedVariant?.price || item.product.price;
     return total + Number(itemPrice) * item.quantity;
   }, 0);
+
+  // Calculate discount
+  const discountAmount = appliedPromoCode
+    ? (subtotalAmount * Number(appliedPromoCode.discount_percentage)) / 100
+    : 0;
+
+  // Calculate total after discount
+  const totalAmount = subtotalAmount - discountAmount;
 
   // Filter enabled payment gateways and get unique ones
   const enabledPaymentGateways =
@@ -150,6 +164,10 @@ const PublishCheckoutPage = () => {
     }
   };
 
+  const handlePromoCodeApplied = (promoCode: PromoCode | null) => {
+    setAppliedPromoCode(promoCode);
+  };
+
   const onSubmit = async (data: CheckoutFormValues) => {
     if (cartItems.length === 0) {
       toast.error("Your cart is empty");
@@ -204,6 +222,11 @@ const PublishCheckoutPage = () => {
           : data.shipping_address || "",
         total_amount: totalAmount.toFixed(2),
         items: orderItems,
+        // Add promo code info if applied
+        ...(appliedPromoCode && {
+          promo_code: appliedPromoCode.code,
+          discount_amount: discountAmount.toFixed(2),
+        }),
       };
 
       console.log("Submitting order data:", orderData);
@@ -500,13 +523,36 @@ const PublishCheckoutPage = () => {
 
                       <Separator className="my-4" />
 
+                      {/* Promo Code Input - Mobile */}
+                      <PromoCodeInput
+                        onPromoCodeApplied={handlePromoCodeApplied}
+                        appliedPromoCode={appliedPromoCode}
+                        primaryColor={theme.colors.primary}
+                        subtlePrimaryBg={subtlePrimaryBg}
+                      />
+
+                      <Separator className="my-4" />
+
                       <div className="space-y-2">
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-gray-600">Subtotal:</span>
                           <span className="font-medium">
-                            Rs.{totalAmount.toFixed(2)}
+                            Rs.{subtotalAmount.toFixed(2)}
                           </span>
                         </div>
+
+                        {appliedPromoCode && (
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-gray-600">
+                              Discount ({appliedPromoCode.discount_percentage}
+                              %):
+                            </span>
+                            <span className="font-medium text-green-600">
+                              -Rs.{discountAmount.toFixed(2)}
+                            </span>
+                          </div>
+                        )}
+
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-gray-600">Shipping:</span>
                           <span className="font-medium text-green-600">
@@ -519,12 +565,19 @@ const PublishCheckoutPage = () => {
 
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-semibold">Total:</span>
-                        <span
-                          className="text-2xl font-bold"
-                          style={{ color: theme.colors.primary }}
-                        >
-                          Rs.{totalAmount.toFixed(2)}
-                        </span>
+                        <div className="text-right">
+                          {appliedPromoCode && (
+                            <div className="text-sm text-gray-500 line-through">
+                              Rs.{subtotalAmount.toFixed(2)}
+                            </div>
+                          )}
+                          <span
+                            className="text-2xl font-bold"
+                            style={{ color: theme.colors.primary }}
+                          >
+                            Rs.{totalAmount.toFixed(2)}
+                          </span>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -711,13 +764,35 @@ const PublishCheckoutPage = () => {
 
                 <Separator className="my-4" />
 
+                {/* Promo Code Input - Desktop */}
+                <PromoCodeInput
+                  onPromoCodeApplied={handlePromoCodeApplied}
+                  appliedPromoCode={appliedPromoCode}
+                  primaryColor={theme.colors.primary}
+                  subtlePrimaryBg={subtlePrimaryBg}
+                />
+
+                <Separator className="my-4" />
+
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">Subtotal:</span>
                     <span className="font-medium">
-                      Rs.{totalAmount.toFixed(2)}
+                      Rs.{subtotalAmount.toFixed(2)}
                     </span>
                   </div>
+
+                  {appliedPromoCode && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">
+                        Discount ({appliedPromoCode.discount_percentage}%):
+                      </span>
+                      <span className="font-medium text-green-600">
+                        -Rs.{discountAmount.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">Shipping:</span>
                     <span className="font-medium text-green-600">Free</span>
@@ -728,12 +803,19 @@ const PublishCheckoutPage = () => {
 
                 <div className="flex items-center justify-between">
                   <span className="text-lg font-semibold">Total:</span>
-                  <span
-                    className="text-2xl font-bold"
-                    style={{ color: theme.colors.primary }}
-                  >
-                    Rs.{totalAmount.toFixed(2)}
-                  </span>
+                  <div className="text-right">
+                    {appliedPromoCode && (
+                      <div className="text-sm text-gray-500 line-through">
+                        Rs.{subtotalAmount.toFixed(2)}
+                      </div>
+                    )}
+                    <span
+                      className="text-2xl font-bold"
+                      style={{ color: theme.colors.primary }}
+                    >
+                      Rs.{totalAmount.toFixed(2)}
+                    </span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
