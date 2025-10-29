@@ -16,7 +16,7 @@ export const checkoutFormSchema = z
       .regex(/^[\+]?[1-9][\d]{0,15}$/, "Please enter a valid phone number."),
     customer_address: z
       .string()
-      .min(10, "Billing address must be at least 10 characters long.")
+      .min(5, "Billing address must be at least 5 characters long.")
       .max(500, "Billing address must be less than 500 characters."),
     same_as_customer_address: z.boolean(),
     shipping_address: z.string().optional(),
