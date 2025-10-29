@@ -154,7 +154,6 @@ interface User {
 interface AdminSidebarProps {
   user: User;
 }
-
 export default function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
