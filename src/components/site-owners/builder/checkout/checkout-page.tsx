@@ -124,16 +124,17 @@ const CheckoutPage = () => {
   };
   const subtlePrimaryBg = `${theme.colors.primary}0D`;
 
-  const getPaymentColor = (type: string) => {
+  // Get payment gateway image
+  const getPaymentImage = (type: string) => {
     switch (type.toLowerCase()) {
       case "esewa":
-        return "bg-green-500";
+        return "/images/payment-gateway/esewa.png";
       case "khalti":
-        return "bg-purple-500";
+        return "/images/payment-gateway/khalti.png";
       case "cod":
-        return "bg-orange-500";
+        return "/images/payment-gateway/cod.png";
       default:
-        return "bg-blue-500";
+        return "/images/payment-gateway/cod.png"; // fallback
     }
   };
 
@@ -277,8 +278,8 @@ const CheckoutPage = () => {
     <div className="mx-auto max-w-5xl px-4 py-8">
       <h1 className="mb-8 text-3xl font-bold">Checkout</h1>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {/* Checkout Form - Left Side */}
+      <div className="flex flex-col gap-8 lg:grid lg:grid-cols-3">
+        {/* Mobile & Desktop: Shipping Information First */}
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
@@ -418,6 +419,118 @@ const CheckoutPage = () => {
                   </div>
                 )}
 
+                {/* Mobile: Order Summary - Only show on mobile between form and payment */}
+                <div className="block lg:hidden">
+                  <Separator className="my-6" />
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Order Summary</CardTitle>
+                      <CardDescription>
+                        {cartItems.length}{" "}
+                        {cartItems.length === 1 ? "item" : "items"}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {cartItems.map((item, index) => {
+                        const displayPrice =
+                          item.selectedVariant?.price || item.product.price;
+                        const cartItemKey = `${item.product.id}-${item.selectedVariant?.id || "no-variant"}-${index}`;
+
+                        return (
+                          <div
+                            key={cartItemKey}
+                            className="flex gap-4 border-b border-gray-100 pb-4 last:border-b-0"
+                          >
+                            <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border">
+                              <Image
+                                src={item.product.thumbnail_image || ""}
+                                alt={item.product.name}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+
+                            <div className="flex flex-1 flex-col justify-between">
+                              <div>
+                                <h4 className="text-sm leading-tight font-medium">
+                                  {item.product.name}
+                                </h4>
+
+                                {/* Display variant options as badges */}
+                                {item.selectedVariant &&
+                                  item.selectedVariant.option_values && (
+                                    <div className="mt-2 flex flex-wrap gap-1">
+                                      {Object.entries(
+                                        item.selectedVariant.option_values
+                                      ).map(([optionName, optionValue]) => (
+                                        <Badge
+                                          key={optionName}
+                                          variant="secondary"
+                                          className="text-xs capitalize"
+                                          style={{
+                                            backgroundColor: subtlePrimaryBg,
+                                            color: theme.colors.primary,
+                                          }}
+                                        >
+                                          {optionName}: {optionValue}
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                  )}
+
+                                <p className="mt-1 text-xs text-gray-500">
+                                  Qty: {item.quantity}
+                                </p>
+                              </div>
+
+                              <div className="mt-2 flex items-end justify-between">
+                                <div className="text-xs text-gray-500">
+                                  Rs.{Number(displayPrice).toFixed(2)} each
+                                </div>
+                                <div className="text-sm font-semibold">
+                                  Rs.
+                                  {(
+                                    Number(displayPrice) * item.quantity
+                                  ).toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      <Separator className="my-4" />
+
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-gray-600">Subtotal:</span>
+                          <span className="font-medium">
+                            Rs.{totalAmount.toFixed(2)}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-gray-600">Shipping:</span>
+                          <span className="font-medium text-green-600">
+                            Free
+                          </span>
+                        </div>
+                      </div>
+
+                      <Separator className="my-4" />
+
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-semibold">Total:</span>
+                        <span
+                          className="text-2xl font-bold"
+                          style={{ color: theme.colors.primary }}
+                        >
+                          Rs.{totalAmount.toFixed(2)}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
                 {/* Payment Method Selection */}
                 {uniquePaymentTypes.length > 0 && (
                   <div className="space-y-4 pt-4">
@@ -443,40 +556,49 @@ const CheckoutPage = () => {
                             >
                               <Button
                                 type="button"
-                                variant="outline"
+                                variant="ghost"
                                 className={cn(
-                                  "relative w-full justify-start overflow-hidden text-left font-normal transition-all duration-300",
-                                  selectedPaymentMethod === type && "border-2"
+                                  "relative h-16 w-full justify-start overflow-hidden border text-left font-normal transition-all duration-300",
+                                  selectedPaymentMethod === type
+                                    ? "border-2" // thicker when active
+                                    : "border border-gray-300" // light gray when inactive
                                 )}
                                 style={{
-                                  ...(selectedPaymentMethod === type
-                                    ? {
-                                        borderColor: theme.colors.primary,
-                                        backgroundColor: subtlePrimaryBg,
-                                      }
-                                    : outlineButtonStyle),
+                                  borderColor:
+                                    selectedPaymentMethod === type
+                                      ? theme.colors.primary
+                                      : "#D1D5DB",
+                                  backgroundColor:
+                                    selectedPaymentMethod === type
+                                      ? subtlePrimaryBg
+                                      : "transparent",
                                 }}
                                 onClick={() => setSelectedPaymentMethod(type)}
                                 disabled={isSubmitting}
                               >
-                                <motion.div
-                                  className={`mr-3 h-4 w-4 rounded-full ${getPaymentColor(type)}`}
-                                  whileHover={{ scale: 1.2 }}
-                                  transition={{
-                                    type: "spring",
-                                    stiffness: 400,
-                                    damping: 10,
-                                  }}
-                                />
-                                <span className="capitalize">
-                                  {getPaymentLabel(type)}
-                                </span>
+                                {/* Content */}
+                                <div className="relative z-10 flex items-center gap-3">
+                                  <div className="relative h-8 w-8 flex-shrink-0">
+                                    <Image
+                                      src={getPaymentImage(type)}
+                                      alt={getPaymentLabel(type)}
+                                      fill
+                                      className="object-contain"
+                                      sizes="32px"
+                                    />
+                                  </div>
+                                  <span className="text-base font-medium capitalize">
+                                    {getPaymentLabel(type)}
+                                  </span>
+                                </div>
+
+                                {/* Animated overlay (behind content) */}
                                 {selectedPaymentMethod === type && (
                                   <motion.div
-                                    className="absolute inset-0"
+                                    className="absolute inset-0 z-0"
                                     style={{ backgroundColor: subtlePrimaryBg }}
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
                                     transition={{ duration: 0.3 }}
                                   />
                                 )}
@@ -511,8 +633,8 @@ const CheckoutPage = () => {
           </Card>
         </div>
 
-        {/* Order Summary - Right Side (Sticky) */}
-        <div className="lg:col-span-1">
+        {/* Desktop: Order Summary - Right Side (Sticky) - Hidden on mobile */}
+        <div className="hidden lg:col-span-1 lg:block">
           <div className="sticky top-8">
             <Card>
               <CardHeader>
