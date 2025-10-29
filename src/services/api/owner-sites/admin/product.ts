@@ -67,8 +67,6 @@ const buildProductFormData = (
           // Existing image URL - include it so backend knows to keep it
           variantData.image = variant.image;
         }
-        // ✅ If image is null/undefined, DON'T include the image field at all
-        // The backend should interpret missing field as "don't change"
 
         return variantData;
       });

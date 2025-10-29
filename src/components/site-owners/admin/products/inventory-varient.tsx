@@ -74,23 +74,11 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
     Record<string, File | string | null>
   >({});
 
-  // Generate variants when options change
   useEffect(() => {
-    if (options.length > 0 && !isEditing) {
+    if (options.length > 0) {
       generateVariants();
     }
-  }, [options, isEditing]);
-
-  // Update all variants stock when productStock changes and trackStock is false
-  useEffect(() => {
-    if (!trackStock && variants.length > 0) {
-      const updatedVariants = variants.map(variant => ({
-        ...variant,
-        stock: productStock,
-      }));
-      onVariantsChange(updatedVariants);
-    }
-  }, [productStock, trackStock]);
+  }, [options]);
 
   const generateVariants = () => {
     if (options.length === 0) {
@@ -114,20 +102,29 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
         variantOptions[opt.name] = combo[i];
       });
 
-      // Check if variant already exists
-      const existing = variants.find(
-        v => JSON.stringify(v.options) === JSON.stringify(variantOptions)
-      );
+      // Find existing variant with the exact same options
+      const existingVariant = variants.find(v => {
+        const existingOptions = Object.entries(v.options).sort();
+        const newOptions = Object.entries(variantOptions).sort();
+        return JSON.stringify(existingOptions) === JSON.stringify(newOptions);
+      });
 
-      return (
-        existing || {
-          id: `variant-${Date.now()}-${index}`,
-          options: variantOptions,
-          price: "0.00",
-          stock: trackStock ? 0 : productStock, // Use productStock if trackStock is false
-          image: null,
-        }
-      );
+      if (existingVariant) {
+        // Preserve ALL existing variant data including price, stock, and image
+        return {
+          ...existingVariant,
+          options: variantOptions, // Use the new options structure but keep all other data
+        };
+      }
+
+      // Create new variant only if it doesn't exist
+      return {
+        id: `variant-${Date.now()}-${index}`,
+        options: variantOptions,
+        price: variants.length > 0 ? variants[0].price : "0.00", // Use existing price if available
+        stock: trackStock ? 0 : productStock,
+        image: null,
+      };
     });
 
     onVariantsChange(newVariants);
