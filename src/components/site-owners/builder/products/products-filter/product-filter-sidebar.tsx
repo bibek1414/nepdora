@@ -98,7 +98,7 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
     });
 
     const productsUrl = siteUser
-      ? `/preview/${siteUser}/products?${searchParams.toString()}`
+      ? `/preview/${siteUser}/products-draft?${searchParams.toString()}`
       : `/products?${searchParams.toString()}`;
 
     router.push(productsUrl);

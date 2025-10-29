@@ -27,6 +27,7 @@ import {
   PanelLeft,
   MessageCircle,
   Wallet,
+  Truck,
 } from "lucide-react";
 import Image from "next/image";
 const navigationGroups = [
@@ -126,6 +127,11 @@ const navigationGroups = [
         name: "Payment Gateway",
         href: "/admin/plugins/payment-gateway/esewa",
         icon: Wallet,
+      },
+      {
+        name: "Logistics",
+        href: "/admin/plugins/logistics/dash",
+        icon: Truck,
       },
     ],
   },

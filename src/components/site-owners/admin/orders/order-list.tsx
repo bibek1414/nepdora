@@ -98,7 +98,7 @@ const OrderTableSkeleton = () => {
   );
 };
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 25;
 
 export default function OrdersPage() {
   const [searchTerm, setSearchTerm] = useState("");
