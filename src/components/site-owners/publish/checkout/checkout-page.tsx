@@ -224,7 +224,7 @@ const PublishCheckoutPage = () => {
         items: orderItems,
         // Add promo code info if applied
         ...(appliedPromoCode && {
-          promo_code: appliedPromoCode.code,
+          promo_code: appliedPromoCode.id,
           discount_amount: discountAmount.toFixed(2),
         }),
       };

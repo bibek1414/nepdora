@@ -1,4 +1,5 @@
 export interface PromoCode {
+  id: number;
   code: string;
   discount_percentage: string;
   valid_from: string;

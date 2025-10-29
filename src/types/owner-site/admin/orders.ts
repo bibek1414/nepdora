@@ -47,6 +47,8 @@ export interface CreateOrderRequest {
   items: OrderItem[];
   payment_type?: string;
   transaction_id?: string;
+  promo_code?: number;
+  discount_amount?: string;
   is_paid?: boolean;
 }
 

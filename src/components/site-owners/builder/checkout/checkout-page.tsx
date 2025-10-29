@@ -223,9 +223,8 @@ const CheckoutPage = () => {
           : data.shipping_address || "",
         total_amount: totalAmount.toFixed(2),
         items: orderItems,
-        // Add promo code info if applied
         ...(appliedPromoCode && {
-          promo_code: appliedPromoCode.code,
+          promo_code: appliedPromoCode.id,
           discount_amount: discountAmount.toFixed(2),
         }),
       };
