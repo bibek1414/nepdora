@@ -424,7 +424,7 @@ export default function OrdersPage() {
                         {getPaymentTypeBadge(order.payment_type)}
                       </TableCell>
                       <TableCell className="font-medium">
-                        Rs.{order.total_amount}
+                        Rs.{Number(order.total_amount).toLocaleString("en-IN")}
                       </TableCell>
                       <TableCell>
                         <div ref={dropdownRef}>

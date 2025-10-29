@@ -75,7 +75,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
   };
 
   return (
-    <header className="fixed top-0 right-0 left-0 h-16 border-b bg-white">
+    <header className="fixed top-0 right-0 left-0 z-45 h-16 border-b bg-white">
       <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left side - Logo */}
         <div className="flex items-center space-x-4"></div>

@@ -437,7 +437,10 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span>Rs.{currentOrder.total_amount}</span>
+                  <span>
+                    Rs.
+                    {Number(currentOrder.total_amount).toLocaleString("en-IN")}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
@@ -445,7 +448,11 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                 </div>
                 <div className="flex justify-between text-base font-semibold">
                   <span>Total</span>
-                  <span>Rs.{currentOrder.total_amount}</span>
+                  <span>
+                    {" "}
+                    Rs.{" "}
+                    {Number(currentOrder.total_amount).toLocaleString("en-IN")}
+                  </span>
                 </div>
               </div>
             </div>
