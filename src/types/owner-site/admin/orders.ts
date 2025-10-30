@@ -42,8 +42,12 @@ export interface CreateOrderRequest {
   shipping_address: string;
   customer_address: string;
   customer_phone: string;
+  city: string;
+  shipping_city?: string;
+  note?: string;
   order_status?: string;
   total_amount: string;
+  delivery_charge: string;
   items: OrderItem[];
   payment_type?: string;
   transaction_id?: string;
@@ -74,6 +78,11 @@ export interface Order {
   longitude?: number | null;
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   customer_details?: any;
+  // New fields
+  city?: string;
+  note?: string;
+  delivery_charge?: string;
+  cart_weight?: string;
 }
 
 export interface OrdersResponse {
@@ -83,7 +92,6 @@ export interface OrdersResponse {
   results: Order[];
 }
 
-// New interfaces for pagination and filtering
 export interface OrderPaginationParams {
   page?: number;
   page_size?: number;

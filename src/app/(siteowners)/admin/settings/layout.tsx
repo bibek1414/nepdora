@@ -19,10 +19,10 @@ const settingsItems: SettingItem[] = [
     path: "/admin/settings/domains",
   },
   {
-    id: "payment",
-    title: "Payment Setup",
-    description: "Configure payment gateways and billing settings",
-    path: "/admin/settings/payment",
+    id: "Delivery Charge",
+    title: "delivery-charge ",
+    description: "Configure delivery-charge gateways and billing settings",
+    path: "/admin/settings/delivery-charge",
   },
   {
     id: "billing",

@@ -31,6 +31,23 @@ import {
   Unplug,
 } from "lucide-react";
 import Image from "next/image";
+interface User {
+  id: number;
+  email: string;
+  name: string;
+  storeName: string;
+  role: string;
+  phoneNumber: string;
+  domain: string;
+  subDomain: string;
+  hasProfile: boolean;
+  hasProfileCompleted: boolean;
+  avatar: string;
+}
+
+interface AdminSidebarProps {
+  user: User;
+}
 const navigationGroups = [
   {
     items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
@@ -117,36 +134,18 @@ const navigationGroups = [
     ],
   },
   {
+    name: "Integrations & Plugins",
     items: [
       {
         name: "Payment Gateway",
         href: "/admin/plugins/payment-gateway/esewa",
         icon: Wallet,
       },
+      { name: "Plugins", href: "/admin/plugins", icon: Unplug },
     ],
-  },
-  {
-    items: [{ name: "Plugins", href: "/admin/plugins", icon: Unplug }],
   },
 ];
 
-interface User {
-  id: number;
-  email: string;
-  name: string;
-  storeName: string;
-  role: string;
-  phoneNumber: string;
-  domain: string;
-  subDomain: string;
-  hasProfile: boolean;
-  hasProfileCompleted: boolean;
-  avatar: string;
-}
-
-interface AdminSidebarProps {
-  user: User;
-}
 export default function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -259,7 +258,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
                         collapsed ? "justify-center" : "justify-start",
                         isActive
                           ? "bg-accent text-accent-foreground"
-                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground leading-tight"
                       )}
                       title={collapsed ? item.name : undefined}
                     >

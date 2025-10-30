@@ -19,6 +19,26 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronsUpDown, Search } from "lucide-react";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
 import { useCreateOrder } from "@/hooks/owner-site/admin/use-orders";
 import { CreateOrderRequest, OrderItem } from "@/types/owner-site/admin/orders";
@@ -32,6 +52,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { PromoCodeInput } from "@/components/site-owners/builder/checkout/promo-code-input";
 import { PromoCode } from "@/types/owner-site/admin/promo-code-validate";
+import { useDeliveryChargeCalculator } from "@/hooks/owner-site/admin/use-delivery-charge-calculator";
 
 const PublishCheckoutPage = () => {
   const router = useRouter();
@@ -48,6 +69,8 @@ const PublishCheckoutPage = () => {
   const [appliedPromoCode, setAppliedPromoCode] = useState<PromoCode | null>(
     null
   );
+  const [openBillingCity, setOpenBillingCity] = useState(false);
+  const [openShippingCity, setOpenShippingCity] = useState(false);
   const siteUser = params?.siteUser as string;
 
   const {
@@ -63,26 +86,38 @@ const PublishCheckoutPage = () => {
       customer_email: "",
       customer_phone: "",
       customer_address: "",
+      city: "",
       shipping_address: "",
+      shipping_city: "",
       same_as_customer_address: true,
+      note: "",
     },
     mode: "onChange",
   });
 
   const sameAsCustomerAddress = watch("same_as_customer_address");
+  const cityDistrict = watch("city");
+  const shippingCityDistrict = watch("shipping_city");
 
-  // Debug cart items on mount
-  useEffect(() => {
-    console.log("Publish Checkout - Cart Items:", cartItems);
-    cartItems.forEach((item, index) => {
-      console.log(`Item ${index}:`, {
-        productId: item.product.id,
-        productName: item.product.name,
-        selectedVariant: item.selectedVariant,
-        quantity: item.quantity,
-      });
-    });
-  }, [cartItems]);
+  // Calculate total weight from cart items
+  const totalWeight = cartItems.reduce((total, item) => {
+    const itemWeight = item.product.weight || 0;
+    return total + Number(itemWeight) * item.quantity;
+  }, 0);
+
+  // Use delivery charge calculator with search
+  const {
+    deliveryCharge,
+    citiesDistricts,
+    isLoading: isLoadingDeliveryCharges,
+    searchQuery,
+    setSearchQuery,
+  } = useDeliveryChargeCalculator({
+    selectedCityDistrict: sameAsCustomerAddress
+      ? cityDistrict
+      : shippingCityDistrict || cityDistrict,
+    totalWeight,
+  });
 
   // Calculate subtotal
   const subtotalAmount = cartItems.reduce((total, item) => {
@@ -95,8 +130,8 @@ const PublishCheckoutPage = () => {
     ? (subtotalAmount * Number(appliedPromoCode.discount_percentage)) / 100
     : 0;
 
-  // Calculate total after discount
-  const totalAmount = subtotalAmount - discountAmount;
+  // Calculate total after discount and delivery charge
+  const totalAmount = subtotalAmount - discountAmount + deliveryCharge;
 
   // Filter enabled payment gateways and get unique ones
   const enabledPaymentGateways =
@@ -131,10 +166,6 @@ const PublishCheckoutPage = () => {
     color: theme.colors.primaryForeground,
     borderColor: theme.colors.primary,
   };
-  const outlineButtonStyle: React.CSSProperties = {
-    borderColor: theme.colors.primary,
-    color: theme.colors.primary,
-  };
   const subtlePrimaryBg = `${theme.colors.primary}0D`;
 
   // Get payment gateway image
@@ -147,7 +178,7 @@ const PublishCheckoutPage = () => {
       case "cod":
         return "/images/payment-gateway/cod.png";
       default:
-        return "/images/payment-gateway/cod.png"; // fallback
+        return "/images/payment-gateway/cod.png";
     }
   };
 
@@ -188,7 +219,6 @@ const PublishCheckoutPage = () => {
         });
 
         // CRITICAL FIX: Only send variant_id if variant is actually selected
-        // Do NOT send product_id when variant is selected
         if (item.selectedVariant?.id) {
           const orderItem = {
             variant_id: item.selectedVariant.id,
@@ -217,12 +247,17 @@ const PublishCheckoutPage = () => {
         customer_email: data.customer_email,
         customer_phone: data.customer_phone,
         customer_address: data.customer_address,
+        city: data.city,
         shipping_address: data.same_as_customer_address
           ? data.customer_address
           : data.shipping_address || "",
+        shipping_city: data.same_as_customer_address
+          ? data.city
+          : data.shipping_city || "",
         total_amount: totalAmount.toFixed(2),
+        delivery_charge: deliveryCharge.toFixed(2),
         items: orderItems,
-        // Add promo code info if applied
+        ...(data.note && { note: data.note }),
         ...(appliedPromoCode && {
           promo_code: appliedPromoCode.id,
           discount_amount: discountAmount.toFixed(2),
@@ -280,6 +315,159 @@ const PublishCheckoutPage = () => {
     router.push(`/publish/${siteUser}`);
   };
 
+  // Order Summary Component (shared between mobile and desktop)
+  const OrderSummaryContent = () => (
+    <>
+      {cartItems.map((item, index) => {
+        const displayPrice = item.selectedVariant?.price || item.product.price;
+        const cartItemKey = `${item.product.id}-${item.selectedVariant?.id || "no-variant"}-${index}`;
+
+        return (
+          <div
+            key={cartItemKey}
+            className="flex gap-4 border-b border-gray-100 pb-4 last:border-b-0"
+          >
+            <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border">
+              <Image
+                src={item.product.thumbnail_image || ""}
+                alt={item.product.name}
+                fill
+                className="object-cover"
+              />
+            </div>
+
+            <div className="flex flex-1 flex-col justify-between">
+              <div>
+                <h4 className="text-sm leading-tight font-medium">
+                  {item.product.name}
+                </h4>
+
+                {/* Display variant options as badges */}
+                {item.selectedVariant && item.selectedVariant.option_values && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {Object.entries(item.selectedVariant.option_values).map(
+                      ([optionName, optionValue]) => (
+                        <Badge
+                          key={optionName}
+                          variant="secondary"
+                          className="text-xs capitalize"
+                          style={{
+                            backgroundColor: subtlePrimaryBg,
+                            color: theme.colors.primary,
+                          }}
+                        >
+                          {optionName}: {optionValue}
+                        </Badge>
+                      )
+                    )}
+                  </div>
+                )}
+
+                <p className="mt-1 text-xs text-gray-500">
+                  Qty: {item.quantity}
+                </p>
+                {item.product.weight && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    Weight: {item.product.weight} kg each
+                  </p>
+                )}
+              </div>
+
+              <div className="mt-2 flex items-end justify-between">
+                <div className="text-xs text-gray-500">
+                  Rs.{Number(displayPrice).toLocaleString("en-IN")} each
+                </div>
+                <div className="text-sm font-semibold">
+                  Rs.
+                  {(Number(displayPrice) * item.quantity).toLocaleString(
+                    "en-IN"
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
+      <Separator className="my-4" />
+
+      {/* Promo Code Input */}
+      <PromoCodeInput
+        onPromoCodeApplied={handlePromoCodeApplied}
+        appliedPromoCode={appliedPromoCode}
+        primaryColor={theme.colors.primary}
+        subtlePrimaryBg={subtlePrimaryBg}
+      />
+
+      <Separator className="my-4" />
+
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-gray-600">Subtotal:</span>
+          <span className="font-medium">
+            Rs.{Number(subtotalAmount).toLocaleString("en-IN")}
+          </span>
+        </div>
+
+        {appliedPromoCode && (
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-600">
+              Discount ({appliedPromoCode.discount_percentage}%):
+            </span>
+            <span className="font-medium text-green-600">
+              -Rs.{Number(discountAmount).toLocaleString("en-IN")}
+            </span>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-gray-600">Delivery:</span>
+          <span className="font-medium">
+            Rs.{Number(deliveryCharge).toLocaleString("en-IN")}
+          </span>
+        </div>
+      </div>
+
+      <Separator className="my-4" />
+
+      <div className="flex items-center justify-between">
+        <span className="text-lg font-semibold">Total:</span>
+        <div className="text-right">
+          {appliedPromoCode && (
+            <div className="text-sm text-gray-500 line-through">
+              Rs.
+              {Number(subtotalAmount + deliveryCharge).toLocaleString("en-IN")}
+            </div>
+          )}
+          <span
+            className="text-2xl font-bold"
+            style={{ color: theme.colors.primary }}
+          >
+            Rs.{Number(totalAmount).toLocaleString("en-IN")}
+          </span>
+        </div>
+      </div>
+
+      {/* Delivery Information */}
+      <div className="mt-4 rounded-lg bg-blue-50 p-3">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-blue-700">Total Weight:</span>
+          <span className="font-medium text-blue-700">
+            {totalWeight.toFixed(2)} kg
+          </span>
+        </div>
+        <div className="mt-1 flex items-center justify-between text-sm">
+          <span className="text-blue-700">Delivery To:</span>
+          <span className="font-medium text-blue-700">
+            {sameAsCustomerAddress
+              ? cityDistrict || "Not selected"
+              : shippingCityDistrict || "Not selected"}
+          </span>
+        </div>
+      </div>
+    </>
+  );
+
   if (cartItems.length === 0) {
     return (
       <div className="container mx-auto max-w-5xl px-4 py-8">
@@ -301,7 +489,7 @@ const PublishCheckoutPage = () => {
       <h1 className="mb-8 text-3xl font-bold">Checkout</h1>
 
       <div className="flex flex-col gap-8 lg:grid lg:grid-cols-3">
-        {/* Mobile & Desktop: Shipping Information First */}
+        {/* Shipping Information */}
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
@@ -380,6 +568,72 @@ const PublishCheckoutPage = () => {
                   )}
                 </div>
 
+                {/* Billing City/District with Search */}
+                <div className="space-y-2">
+                  <Label htmlFor="city">Billing City/District *</Label>
+                  <Popover
+                    open={openBillingCity}
+                    onOpenChange={setOpenBillingCity}
+                  >
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={openBillingCity}
+                        className={cn(
+                          "w-full justify-between",
+                          !cityDistrict && "text-muted-foreground",
+                          errors.city && "border-red-300"
+                        )}
+                        disabled={isSubmitting || isLoadingDeliveryCharges}
+                      >
+                        {cityDistrict
+                          ? citiesDistricts.find(city => city === cityDistrict)
+                          : "Select city/district"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput
+                          placeholder="Search city/district..."
+                          value={searchQuery}
+                          onValueChange={setSearchQuery}
+                        />
+                        <CommandEmpty>No city found.</CommandEmpty>
+                        <CommandGroup className="max-h-64 overflow-auto">
+                          {citiesDistricts.map(city => (
+                            <CommandItem
+                              key={city}
+                              value={city}
+                              onSelect={() => {
+                                setValue("city", city);
+                                setOpenBillingCity(false);
+                                setSearchQuery("");
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  cityDistrict === city
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {city}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  {errors.city && (
+                    <p className="text-sm text-red-600">
+                      {errors.city.message}
+                    </p>
+                  )}
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="customer_address">Billing Address</Label>
                   <Textarea
@@ -419,29 +673,126 @@ const PublishCheckoutPage = () => {
                 </div>
 
                 {!sameAsCustomerAddress && (
-                  <div className="space-y-2">
-                    <Label htmlFor="shipping_address">Shipping Address</Label>
-                    <Textarea
-                      id="shipping_address"
-                      placeholder="Enter your shipping address"
-                      rows={3}
-                      disabled={isSubmitting}
-                      className={cn(
-                        errors.shipping_address
-                          ? "border-red-300 focus:ring-red-500"
-                          : "focus:ring-primary border-gray-300"
+                  <>
+                    {/* Shipping City/District with Search */}
+                    <div className="space-y-2">
+                      <Label htmlFor="shipping_city">
+                        Shipping City/District *
+                      </Label>
+                      <Popover
+                        open={openShippingCity}
+                        onOpenChange={setOpenShippingCity}
+                      >
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={openShippingCity}
+                            className={cn(
+                              "w-full justify-between",
+                              !shippingCityDistrict && "text-muted-foreground",
+                              errors.shipping_city && "border-red-300"
+                            )}
+                            disabled={isSubmitting || isLoadingDeliveryCharges}
+                          >
+                            {shippingCityDistrict
+                              ? citiesDistricts.find(
+                                  city => city === shippingCityDistrict
+                                )
+                              : "Select city/district"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                          <Command>
+                            <CommandInput
+                              placeholder="Search city/district..."
+                              value={searchQuery}
+                              onValueChange={setSearchQuery}
+                            />
+                            <CommandEmpty>No city found.</CommandEmpty>
+                            <CommandGroup className="max-h-64 overflow-auto">
+                              {citiesDistricts.map(city => (
+                                <CommandItem
+                                  key={city}
+                                  value={city}
+                                  onSelect={() => {
+                                    setValue("shipping_city", city);
+                                    setOpenShippingCity(false);
+                                    setSearchQuery("");
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      shippingCityDistrict === city
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {city}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      {errors.shipping_city && (
+                        <p className="text-sm text-red-600">
+                          {errors.shipping_city.message}
+                        </p>
                       )}
-                      {...register("shipping_address")}
-                    />
-                    {errors.shipping_address && (
-                      <p className="text-sm text-red-600">
-                        {errors.shipping_address.message}
-                      </p>
-                    )}
-                  </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="shipping_address">Shipping Address</Label>
+                      <Textarea
+                        id="shipping_address"
+                        placeholder="Enter your shipping address"
+                        rows={3}
+                        disabled={isSubmitting}
+                        className={cn(
+                          errors.shipping_address
+                            ? "border-red-300 focus:ring-red-500"
+                            : "focus:ring-primary border-gray-300"
+                        )}
+                        {...register("shipping_address")}
+                      />
+                      {errors.shipping_address && (
+                        <p className="text-sm text-red-600">
+                          {errors.shipping_address.message}
+                        </p>
+                      )}
+                    </div>
+                  </>
                 )}
 
-                {/* Mobile: Order Summary - Only show on mobile between form and payment */}
+                {/* Order Notes */}
+                <div className="space-y-2">
+                  <Label htmlFor="note">Order Notes (Optional)</Label>
+                  <Textarea
+                    id="note"
+                    placeholder="Any special instructions for your order..."
+                    rows={3}
+                    disabled={isSubmitting}
+                    className={cn(
+                      errors.note
+                        ? "border-red-300 focus:ring-red-500"
+                        : "focus:ring-primary border-gray-300"
+                    )}
+                    {...register("note")}
+                  />
+                  {errors.note && (
+                    <p className="text-sm text-red-600">
+                      {errors.note.message}
+                    </p>
+                  )}
+                  <p className="text-xs text-gray-500">
+                    {watch("note")?.length || 0}/500 characters
+                  </p>
+                </div>
+
+                {/* Mobile Order Summary */}
                 <div className="block lg:hidden">
                   <Separator className="my-6" />
                   <Card>
@@ -453,136 +804,10 @@ const PublishCheckoutPage = () => {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {cartItems.map((item, index) => {
-                        const displayPrice =
-                          item.selectedVariant?.price || item.product.price;
-                        const cartItemKey = `${item.product.id}-${item.selectedVariant?.id || "no-variant"}-${index}`;
-
-                        return (
-                          <div
-                            key={cartItemKey}
-                            className="flex gap-4 border-b border-gray-100 pb-4 last:border-b-0"
-                          >
-                            <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border">
-                              <Image
-                                src={item.product.thumbnail_image || ""}
-                                alt={item.product.name}
-                                fill
-                                className="object-cover"
-                              />
-                            </div>
-
-                            <div className="flex flex-1 flex-col justify-between">
-                              <div>
-                                <h4 className="text-sm leading-tight font-medium">
-                                  {item.product.name}
-                                </h4>
-
-                                {/* Display variant options as badges */}
-                                {item.selectedVariant &&
-                                  item.selectedVariant.option_values && (
-                                    <div className="mt-2 flex flex-wrap gap-1">
-                                      {Object.entries(
-                                        item.selectedVariant.option_values
-                                      ).map(([optionName, optionValue]) => (
-                                        <Badge
-                                          key={optionName}
-                                          variant="secondary"
-                                          className="text-xs capitalize"
-                                          style={{
-                                            backgroundColor: subtlePrimaryBg,
-                                            color: theme.colors.primary,
-                                          }}
-                                        >
-                                          {optionName}: {optionValue}
-                                        </Badge>
-                                      ))}
-                                    </div>
-                                  )}
-
-                                <p className="mt-1 text-xs text-gray-500">
-                                  Qty: {item.quantity}
-                                </p>
-                              </div>
-
-                              <div className="mt-2 flex items-end justify-between">
-                                <div className="text-xs text-gray-500">
-                                  Rs.{Number(displayPrice).toFixed(2)} each
-                                </div>
-                                <div className="text-sm font-semibold">
-                                  Rs.
-                                  {(
-                                    Number(displayPrice) * item.quantity
-                                  ).toFixed(2)}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-
-                      <Separator className="my-4" />
-
-                      {/* Promo Code Input - Mobile */}
-                      <PromoCodeInput
-                        onPromoCodeApplied={handlePromoCodeApplied}
-                        appliedPromoCode={appliedPromoCode}
-                        primaryColor={theme.colors.primary}
-                        subtlePrimaryBg={subtlePrimaryBg}
-                      />
-
-                      <Separator className="my-4" />
-
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">Subtotal:</span>
-                          <span className="font-medium">
-                            Rs.{Number(subtotalAmount).toLocaleString("en-IN")}
-                          </span>
-                        </div>
-
-                        {appliedPromoCode && (
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">
-                              Discount ({appliedPromoCode.discount_percentage}
-                              %):
-                            </span>
-                            <span className="font-medium text-green-600">
-                              -Rs.
-                              {Number(discountAmount).toLocaleString("en-IN")}
-                            </span>
-                          </div>
-                        )}
-
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">Shipping:</span>
-                          <span className="font-medium text-green-600">
-                            Free
-                          </span>
-                        </div>
-                      </div>
-
-                      <Separator className="my-4" />
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-lg font-semibold">Total:</span>
-                        <div className="text-right">
-                          {appliedPromoCode && (
-                            <div className="text-sm text-gray-500 line-through">
-                              Rs.
-                              {Number(subtotalAmount).toLocaleString("en-IN")}
-                            </div>
-                          )}
-                          <span
-                            className="text-2xl font-bold"
-                            style={{ color: theme.colors.primary }}
-                          >
-                            Rs.{Number(totalAmount).toLocaleString("en-IN")}
-                          </span>
-                        </div>
-                      </div>
+                      <OrderSummaryContent />
                     </CardContent>
                   </Card>
+                  <Separator className="my-6" />
                 </div>
 
                 {/* Payment Method Selection */}
@@ -614,8 +839,8 @@ const PublishCheckoutPage = () => {
                                 className={cn(
                                   "relative h-16 w-full justify-start overflow-hidden border text-left font-normal transition-all duration-300",
                                   selectedPaymentMethod === type
-                                    ? "border-2" // thicker when active
-                                    : "border border-gray-300" // light gray when inactive
+                                    ? "border-2"
+                                    : "border border-gray-300"
                                 )}
                                 style={{
                                   borderColor:
@@ -630,7 +855,6 @@ const PublishCheckoutPage = () => {
                                 onClick={() => setSelectedPaymentMethod(type)}
                                 disabled={isSubmitting}
                               >
-                                {/* Content */}
                                 <div className="relative z-10 flex items-center gap-3">
                                   <div className="relative h-8 w-8 flex-shrink-0">
                                     <Image
@@ -646,7 +870,6 @@ const PublishCheckoutPage = () => {
                                   </span>
                                 </div>
 
-                                {/* Animated overlay (behind content) */}
                                 {selectedPaymentMethod === type && (
                                   <motion.div
                                     className="absolute inset-0 z-0"
@@ -698,130 +921,7 @@ const PublishCheckoutPage = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {cartItems.map((item, index) => {
-                  const displayPrice =
-                    item.selectedVariant?.price || item.product.price;
-                  const cartItemKey = `${item.product.id}-${item.selectedVariant?.id || "no-variant"}-${index}`;
-
-                  return (
-                    <div
-                      key={cartItemKey}
-                      className="flex gap-4 border-b border-gray-100 pb-4 last:border-b-0"
-                    >
-                      <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border">
-                        <Image
-                          src={item.product.thumbnail_image || ""}
-                          alt={item.product.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-
-                      <div className="flex flex-1 flex-col justify-between">
-                        <div>
-                          <h4 className="text-sm leading-tight font-medium">
-                            {item.product.name}
-                          </h4>
-
-                          {/* Display variant options as badges */}
-                          {item.selectedVariant &&
-                            item.selectedVariant.option_values && (
-                              <div className="mt-2 flex flex-wrap gap-1">
-                                {Object.entries(
-                                  item.selectedVariant.option_values
-                                ).map(([optionName, optionValue]) => (
-                                  <Badge
-                                    key={optionName}
-                                    variant="secondary"
-                                    className="text-xs capitalize"
-                                    style={{
-                                      backgroundColor: subtlePrimaryBg,
-                                      color: theme.colors.primary,
-                                    }}
-                                  >
-                                    {optionName}: {optionValue}
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
-
-                          <p className="mt-1 text-xs text-gray-500">
-                            Qty: {item.quantity}
-                          </p>
-                        </div>
-
-                        <div className="mt-2 flex items-end justify-between">
-                          <div className="text-xs text-gray-500">
-                            Rs.{Number(displayPrice).toLocaleString("en-IN")}{" "}
-                            each
-                          </div>
-                          <div className="text-sm font-semibold">
-                            Rs.
-                            {(
-                              Number(displayPrice) * item.quantity
-                            ).toLocaleString("en-IN")}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-
-                <Separator className="my-4" />
-
-                {/* Promo Code Input - Desktop */}
-                <PromoCodeInput
-                  onPromoCodeApplied={handlePromoCodeApplied}
-                  appliedPromoCode={appliedPromoCode}
-                  primaryColor={theme.colors.primary}
-                  subtlePrimaryBg={subtlePrimaryBg}
-                />
-
-                <Separator className="my-4" />
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Subtotal:</span>
-                    <span className="font-medium">
-                      {Number(subtotalAmount).toLocaleString("en-IN")}
-                    </span>
-                  </div>
-
-                  {appliedPromoCode && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">
-                        Discount ({appliedPromoCode.discount_percentage}%):
-                      </span>
-                      <span className="font-medium text-green-600">
-                        -Rs.{discountAmount.toFixed(2)}
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Shipping:</span>
-                    <span className="font-medium text-green-600">Free</span>
-                  </div>
-                </div>
-
-                <Separator className="my-4" />
-
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-semibold">Total:</span>
-                  <div className="text-right">
-                    {appliedPromoCode && (
-                      <div className="text-sm text-gray-500 line-through">
-                        {Number(subtotalAmount).toLocaleString("en-IN")}
-                      </div>
-                    )}
-                    <span
-                      className="text-2xl font-bold"
-                      style={{ color: theme.colors.primary }}
-                    >
-                      {Number(totalAmount).toLocaleString("en-IN")}
-                    </span>
-                  </div>
-                </div>
+                <OrderSummaryContent />
               </CardContent>
             </Card>
           </div>

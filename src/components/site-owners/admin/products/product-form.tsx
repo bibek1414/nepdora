@@ -441,7 +441,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium">
-                          Weight
+                          Weight ( in KG)
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -470,7 +470,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                           <Input
                             placeholder="e.g., 1 year, 6 months"
                             maxLength={20}
-                            className="h-11"
+                            className="h-11 placeholder:text-gray-400"
                             {...field}
                           />
                         </FormControl>
