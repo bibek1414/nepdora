@@ -63,6 +63,8 @@ export function CreateManualOrderDialog() {
     customer_phone: "",
     customer_address: "",
     shipping_address: "",
+    city: "",
+    delivery_charge: "0.00",
     notes: "",
   });
 
@@ -168,12 +170,34 @@ export function CreateManualOrderDialog() {
         return null;
       };
 
-      const extracted = {
+      const extracted: {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        name: any;
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        email: any;
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        phone: any;
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        address: any;
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        city?: string; // Add city as optional property
+      } = {
         name: extractValue("name"),
         email: extractValue("email"),
         phone: extractValue("phone_number"),
         address: extractValue("location") || extractValue("address"),
       };
+
+      // Simple city extraction from address
+      if (extracted.address) {
+        const addressParts = extracted.address.split(",");
+        if (addressParts.length > 1) {
+          extracted.city = addressParts[addressParts.length - 1].trim();
+        } else {
+          const words = extracted.address.split(" ");
+          extracted.city = words[words.length - 1];
+        }
+      }
 
       setExtractedData(extracted);
       toast.success("Data extracted successfully!");
@@ -206,9 +230,10 @@ export function CreateManualOrderDialog() {
 
     setFormData(prev => ({
       ...prev,
-      customer_name: extractedData.name || "",
-      customer_email: extractedData.email || "",
-      customer_phone: extractedData.phone || "",
+      customer_name: extractedData.name || prev.customer_name,
+      customer_email: extractedData.email || prev.customer_email,
+      customer_phone: extractedData.phone || prev.customer_phone,
+      city: extractedData.city || prev.city,
     }));
 
     toast.success("Extracted data imported!");
@@ -288,7 +313,8 @@ export function CreateManualOrderDialog() {
       !formData.customer_name ||
       !formData.customer_email ||
       !formData.customer_phone ||
-      !formData.customer_address
+      !formData.customer_address ||
+      !formData.city
     ) {
       toast.error("Please fill in all required customer information");
       return;
@@ -300,14 +326,18 @@ export function CreateManualOrderDialog() {
         ...formData,
         shipping_address:
           formData.shipping_address || formData.customer_address,
+        shipping_city: formData.city,
         total_amount: calculateTotal().toFixed(2),
+        delivery_charge: formData.delivery_charge || "0.00",
         items: orderItems.map(item => ({
           product_id: parseInt(item.product_id, 10),
           quantity: item.quantity,
           price: item.price.toString(),
         })),
         status: "pending",
+        order_status: "pending",
         is_manual: true,
+        note: formData.notes,
       };
 
       await orderApi.createOrder(orderPayload);
@@ -319,6 +349,8 @@ export function CreateManualOrderDialog() {
         customer_phone: "",
         customer_address: "",
         shipping_address: "",
+        city: "",
+        delivery_charge: "0.00",
         notes: "",
       });
       setOrderItems([]);
@@ -402,6 +434,18 @@ export function CreateManualOrderDialog() {
                     />
                   </div>
                   <div>
+                    <Label>City *</Label>
+                    <Input
+                      name="city"
+                      value={formData.city}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
                     <Label>Billing Address *</Label>
                     <Textarea
                       name="customer_address"
@@ -409,6 +453,31 @@ export function CreateManualOrderDialog() {
                       onChange={handleChange}
                       rows={2}
                       required
+                    />
+                  </div>
+                  <div>
+                    <Label>Shipping Address</Label>
+                    <Textarea
+                      name="shipping_address"
+                      value={formData.shipping_address}
+                      onChange={handleChange}
+                      rows={2}
+                      placeholder="Same as billing address if left empty"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Delivery Charge</Label>
+                    <Input
+                      name="delivery_charge"
+                      type="number"
+                      value={formData.delivery_charge}
+                      onChange={handleChange}
+                      placeholder="0.00"
+                      step="0.01"
+                      min="0"
                     />
                   </div>
                 </div>
@@ -618,7 +687,8 @@ export function CreateManualOrderDialog() {
           <DialogHeader>
             <DialogTitle>Extract Contact Info</DialogTitle>
             <DialogDescription>
-              Paste or type a message (e.g., “Hi, I’m Sam from Tokha, 9812…”)
+              Paste or type a message (e.g., &aquot;Hi, I&apos;m Sam from Tokha,
+              9812…&aquot;)
             </DialogDescription>
           </DialogHeader>
 
@@ -647,6 +717,9 @@ export function CreateManualOrderDialog() {
                 </p>
                 <p>
                   <strong>Address:</strong> {extractedData.address || "-"}
+                </p>
+                <p>
+                  <strong>City:</strong> {extractedData.city || "-"}
                 </p>
               </div>
             )
@@ -707,6 +780,7 @@ export function CreateManualOrderDialog() {
                     customer_email: extractedData.email || prev.customer_email,
                     customer_phone: extractedData.phone || prev.customer_phone,
                     customer_address: pendingAddress || prev.customer_address,
+                    city: extractedData.city || prev.city,
                   }));
                   toast.success("All extracted data imported successfully!");
                 }

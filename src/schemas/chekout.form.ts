@@ -1,3 +1,4 @@
+// schemas/checkout.form.ts
 import * as z from "zod";
 
 export const checkoutFormSchema = z
@@ -18,21 +19,30 @@ export const checkoutFormSchema = z
       .string()
       .min(5, "Billing address must be at least 5 characters long.")
       .max(500, "Billing address must be less than 500 characters."),
+    city: z.string().min(1, "Please select your city/district."),
     same_as_customer_address: z.boolean(),
     shipping_address: z.string().optional(),
+    shipping_city: z.string().optional(),
+    note: z
+      .string()
+      .max(500, "Order notes must be less than 500 characters.")
+      .optional(),
   })
   .refine(
     data => {
-      // If same_as_customer_address is false, shipping_address is required
       if (!data.same_as_customer_address) {
         return (
-          data.shipping_address && data.shipping_address.trim().length >= 10
+          data.shipping_address &&
+          data.shipping_address.trim().length >= 10 &&
+          data.shipping_city &&
+          data.shipping_city.trim().length > 0
         );
       }
       return true;
     },
     {
-      message: "Shipping address must be at least 10 characters long.",
+      message:
+        "Shipping address must be at least 10 characters long and city/district is required.",
       path: ["shipping_address"],
     }
   );
