@@ -223,6 +223,7 @@ const CheckoutPage = () => {
           : data.shipping_address || "",
         total_amount: totalAmount.toFixed(2),
         items: orderItems,
+        // Add promo code info if applied
         ...(appliedPromoCode && {
           promo_code: appliedPromoCode.id,
           discount_amount: discountAmount.toFixed(2),
@@ -507,13 +508,17 @@ const CheckoutPage = () => {
 
                               <div className="mt-2 flex items-end justify-between">
                                 <div className="text-xs text-gray-500">
-                                  Rs.{Number(displayPrice).toFixed(2)} each
+                                  Rs.
+                                  {Number(displayPrice).toLocaleString(
+                                    "en-IN"
+                                  )}{" "}
+                                  each
                                 </div>
                                 <div className="text-sm font-semibold">
                                   Rs.
                                   {(
                                     Number(displayPrice) * item.quantity
-                                  ).toFixed(2)}
+                                  ).toLocaleString("en-IN")}
                                 </div>
                               </div>
                             </div>
@@ -537,7 +542,7 @@ const CheckoutPage = () => {
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-gray-600">Subtotal:</span>
                           <span className="font-medium">
-                            Rs.{subtotalAmount.toFixed(2)}
+                            Rs.{Number(subtotalAmount).toLocaleString("en-IN")}
                           </span>
                         </div>
 
@@ -548,7 +553,8 @@ const CheckoutPage = () => {
                               %):
                             </span>
                             <span className="font-medium text-green-600">
-                              -Rs.{discountAmount.toFixed(2)}
+                              -Rs.
+                              {Number(discountAmount).toLocaleString("en-IN")}
                             </span>
                           </div>
                         )}
@@ -568,14 +574,15 @@ const CheckoutPage = () => {
                         <div className="text-right">
                           {appliedPromoCode && (
                             <div className="text-sm text-gray-500 line-through">
-                              Rs.{subtotalAmount.toFixed(2)}
+                              Rs.
+                              {Number(subtotalAmount).toLocaleString("en-IN")}
                             </div>
                           )}
                           <span
                             className="text-2xl font-bold"
                             style={{ color: theme.colors.primary }}
                           >
-                            Rs.{totalAmount.toFixed(2)}
+                            Rs.{Number(totalAmount).toLocaleString("en-IN")}
                           </span>
                         </div>
                       </div>
@@ -750,11 +757,14 @@ const CheckoutPage = () => {
 
                         <div className="mt-2 flex items-end justify-between">
                           <div className="text-xs text-gray-500">
-                            Rs.{Number(displayPrice).toFixed(2)} each
+                            Rs.{Number(displayPrice).toLocaleString("en-IN")}{" "}
+                            each
                           </div>
                           <div className="text-sm font-semibold">
                             Rs.
-                            {(Number(displayPrice) * item.quantity).toFixed(2)}
+                            {(
+                              Number(displayPrice) * item.quantity
+                            ).toLocaleString("en-IN")}
                           </div>
                         </div>
                       </div>
@@ -778,7 +788,7 @@ const CheckoutPage = () => {
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">Subtotal:</span>
                     <span className="font-medium">
-                      Rs.{subtotalAmount.toFixed(2)}
+                      Rs.{Number(subtotalAmount).toLocaleString("en-IN")}
                     </span>
                   </div>
 
@@ -788,7 +798,7 @@ const CheckoutPage = () => {
                         Discount ({appliedPromoCode.discount_percentage}%):
                       </span>
                       <span className="font-medium text-green-600">
-                        -Rs.{discountAmount.toFixed(2)}
+                        -Rs.{Number(discountAmount).toLocaleString("en-IN")}
                       </span>
                     </div>
                   )}
@@ -806,14 +816,14 @@ const CheckoutPage = () => {
                   <div className="text-right">
                     {appliedPromoCode && (
                       <div className="text-sm text-gray-500 line-through">
-                        Rs.{subtotalAmount.toFixed(2)}
+                        Rs.{Number(subtotalAmount).toLocaleString("en-IN")}
                       </div>
                     )}
                     <span
                       className="text-2xl font-bold"
                       style={{ color: theme.colors.primary }}
                     >
-                      Rs.{totalAmount.toFixed(2)}
+                      Rs.{Number(totalAmount).toLocaleString("en-IN")}
                     </span>
                   </div>
                 </div>

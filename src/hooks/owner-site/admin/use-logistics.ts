@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { logisticsApi } from "@/services/api/owner-sites/admin/logistics";
 import {
-  Logistics,
   CreateLogisticsRequest,
   UpdateLogisticsRequest,
 } from "@/types/owner-site/admin/logistics";
@@ -11,6 +10,8 @@ export const logisticsKeys = {
   all: ["logistics"] as const,
   lists: () => [...logisticsKeys.all, "list"] as const,
   list: (filters: string) => [...logisticsKeys.lists(), { filters }] as const,
+  dash: () => [...logisticsKeys.all, "dash"] as const,
+  ydm: () => [...logisticsKeys.all, "ydm"] as const,
   details: () => [...logisticsKeys.all, "detail"] as const,
   detail: (id: string) => [...logisticsKeys.details(), id] as const,
 };
@@ -26,7 +27,7 @@ export const useLogistics = () => {
 // Get Dash logistics
 export const useLogisticsDash = () => {
   return useQuery({
-    queryKey: logisticsKeys.lists(),
+    queryKey: logisticsKeys.dash(),
     queryFn: logisticsApi.getLogisticsDash,
   });
 };
@@ -34,7 +35,7 @@ export const useLogisticsDash = () => {
 // Get YDM logistics
 export const useLogisticsYDM = () => {
   return useQuery({
-    queryKey: logisticsKeys.lists(),
+    queryKey: logisticsKeys.ydm(),
     queryFn: logisticsApi.getLogisticsYDM,
   });
 };
@@ -57,6 +58,8 @@ export const useCreateLogistics = () => {
       logisticsApi.createLogistics(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: logisticsKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: logisticsKeys.dash() }); // ← Invalidate both
+      queryClient.invalidateQueries({ queryKey: logisticsKeys.ydm() });
     },
   });
 };
@@ -70,6 +73,8 @@ export const useUpdateLogistics = () => {
       logisticsApi.updateLogistics(id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: logisticsKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: logisticsKeys.dash() }); // ← Invalidate both
+      queryClient.invalidateQueries({ queryKey: logisticsKeys.ydm() });
       queryClient.invalidateQueries({
         queryKey: logisticsKeys.detail(variables.id),
       });
@@ -85,6 +90,8 @@ export const useDeleteLogistics = () => {
     mutationFn: (id: string) => logisticsApi.deleteLogistics(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: logisticsKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: logisticsKeys.dash() });
+      queryClient.invalidateQueries({ queryKey: logisticsKeys.ydm() });
     },
   });
 };

@@ -28,6 +28,7 @@ import {
   MessageCircle,
   Wallet,
   Truck,
+  Unplug,
 } from "lucide-react";
 import Image from "next/image";
 const navigationGroups = [
@@ -116,24 +117,16 @@ const navigationGroups = [
     ],
   },
   {
-    name: "Plugins",
     items: [
-      {
-        name: "WhatsApp",
-        href: "/admin/plugins/whatsapp",
-        icon: MessageCircle,
-      },
       {
         name: "Payment Gateway",
         href: "/admin/plugins/payment-gateway/esewa",
         icon: Wallet,
       },
-      {
-        name: "Logistics",
-        href: "/admin/plugins/logistics/dash",
-        icon: Truck,
-      },
     ],
+  },
+  {
+    items: [{ name: "Plugins", href: "/admin/plugins", icon: Unplug }],
   },
 ];
 
