@@ -68,6 +68,7 @@ export const useCalculatedMyOrderStatusCounts = (
     const counts: StatusCounts = {
       all: orders.length,
       pending: 0,
+      confirmed: 0,
       processing: 0,
       shipped: 0,
       delivered: 0,
@@ -80,9 +81,13 @@ export const useCalculatedMyOrderStatusCounts = (
         case "pending":
           counts.pending++;
           break;
+        case "confirmed":
+          counts.processing++;
+          break;
         case "processing":
           counts.processing++;
           break;
+
         case "shipped":
           counts.shipped++;
           break;

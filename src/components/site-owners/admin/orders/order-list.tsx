@@ -36,6 +36,7 @@ import { OrderDialog } from "./order-dialog";
 const STATUS_CONFIG = {
   all: { label: "All", color: "default" },
   pending: { label: "Pending", color: "warning" },
+  confirmed: { label: "Confirmed", color: "warning" },
   processing: { label: "Processing", color: "info" },
   shipped: { label: "Shipped", color: "success" },
   delivered: { label: "Delivered", color: "success" },
@@ -45,6 +46,7 @@ const STATUS_CONFIG = {
 
 const STATUS_OPTIONS = [
   { value: "pending", label: "Pending" },
+  { value: "confirmed", label: "Confirmed" },
   { value: "processing", label: "Processing" },
   { value: "shipped", label: "Shipped" },
   { value: "delivered", label: "Delivered" },
@@ -326,6 +328,13 @@ export default function OrdersPage() {
             onClick={() => setStatusFilter("pending")}
           >
             Pending
+          </Button>
+          <Button
+            variant={statusFilter === "confirmed" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("confirmed")}
+          >
+            Confirmed
           </Button>
           <Button
             variant={statusFilter === "processing" ? "default" : "outline"}

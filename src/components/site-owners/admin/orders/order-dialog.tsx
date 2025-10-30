@@ -35,6 +35,7 @@ interface OrderDialogProps {
 
 const STATUS_OPTIONS = [
   { value: "pending", label: "Pending" },
+  { value: "confirmed", label: "Confirmed" },
   { value: "processing", label: "Processing" },
   { value: "shipped", label: "Shipped" },
   { value: "delivered", label: "Delivered" },
@@ -46,6 +47,10 @@ const getStatusBadge = (status: string) => {
     pending: {
       variant: "secondary" as const,
       className: "bg-yellow-100 text-yellow-800",
+    },
+    confirmed: {
+      variant: "secondary" as const,
+      className: "bg-green-100 text-green-800",
     },
     processing: {
       variant: "secondary" as const,
@@ -111,18 +116,26 @@ const getPaymentTypeBadge = (paymentType: string | undefined) => {
 };
 
 const getStatusPipeline = (currentStatus: string) => {
-  const statuses = ["pending", "processing", "shipped", "delivered"];
+  const statuses = [
+    "pending",
+    "confirmed",
+    "processing",
+    "shipped",
+    "delivered",
+  ];
   const currentIndex = statuses.indexOf(currentStatus.toLowerCase());
 
   return statuses.map((status, index) => ({
     label:
       status === "pending"
         ? "Ordered"
-        : status === "shipped"
-          ? "Shipped"
-          : status === "delivered"
-            ? "Delivered"
-            : "Processing",
+        : status === "confirmed"
+          ? "Confirmed"
+          : status === "shipped"
+            ? "Shipped"
+            : status === "delivered"
+              ? "Delivered"
+              : "Processing",
     number: index + 1,
     active: index <= currentIndex,
     isLast: index === statuses.length - 1,

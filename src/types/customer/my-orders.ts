@@ -51,6 +51,7 @@ export interface OrderFilters {
 export interface StatusCounts {
   all: number;
   pending: number;
+  confirmed: number;
   processing: number;
   shipped: number;
   delivered: number;

@@ -27,7 +27,13 @@ export interface CreateOrderRequest {
 
 export interface Order extends CreateOrderRequest {
   id: number;
-  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+  status:
+    | "pending"
+    | "confirmed"
+    | "processing"
+    | "shipped"
+    | "delivered"
+    | "cancelled";
   created_at: string;
   updated_at: string;
 }

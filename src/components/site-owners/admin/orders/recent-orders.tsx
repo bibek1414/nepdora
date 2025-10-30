@@ -33,6 +33,7 @@ import { toast } from "sonner";
 const STATUS_OPTIONS = [
   { value: "pending", label: "Pending" },
   { value: "processing", label: "Processing" },
+  { value: "confirmed", label: "Confirmed" },
   { value: "shipped", label: "Shipped" },
   { value: "delivered", label: "Delivered" },
   { value: "cancelled", label: "Cancelled" },
@@ -88,6 +89,10 @@ const getStatusBadge = (status: string) => {
     pending: {
       variant: "secondary" as const,
       className: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
+    },
+    confirmed: {
+      variant: "secondary" as const,
+      className: "bg-green-100 text-green-800 hover:bg-green-200",
     },
     processing: {
       variant: "secondary" as const,

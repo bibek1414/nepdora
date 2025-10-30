@@ -16,6 +16,12 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
         icon: "⏳",
         label: "Pending",
       },
+      confirmed: {
+        color: "bg-green-100 text-green-800 border-green-200",
+        icon: "✅",
+        label: "Confirmed",
+      },
+
       processing: {
         color: "bg-orange-100 text-orange-800 border-orange-200",
         icon: "⚙️",

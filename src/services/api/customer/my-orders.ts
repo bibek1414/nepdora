@@ -59,11 +59,13 @@ export const fetchOrderStatusCounts = async (): Promise<StatusCounts> => {
     const statusCounts: StatusCounts = {
       all:
         (data.pending || 0) +
+        (data.confirmed || 0) +
         (data.processing || 0) +
         (data.shipped || 0) +
         (data.delivered || 0) +
         (data.cancelled || 0),
       pending: data.pending || 0,
+      confirmed: data.confirmed || 0,
       processing: data.processing || 0,
       shipped: data.shipped || 0,
       delivered: data.delivered || 0,
