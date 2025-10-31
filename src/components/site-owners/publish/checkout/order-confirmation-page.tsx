@@ -179,6 +179,11 @@ const PublishOrderConfirmationPage: React.FC<
                 <p className="text-sm whitespace-pre-line text-gray-600">
                   {order.shipping_address}
                 </p>
+                {order.city && (
+                  <p className="mt-1 text-sm text-gray-600">
+                    <strong>City:</strong> {order.city}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -191,56 +196,106 @@ const PublishOrderConfirmationPage: React.FC<
                 Order Items
               </h3>
               <div className="space-y-3">
-                {orderItems.map((item, index) => (
-                  <div
-                    key={item.id || index}
-                    className="flex items-center justify-between border-b border-gray-100 py-2 last:border-b-0"
-                  >
-                    <div className="flex flex-1 items-center space-x-4">
-                      {/* Product Image */}
-                      {item.product?.thumbnail_image && (
-                        <Image
-                          src={item.product.thumbnail_image}
-                          alt={
-                            item.product.name || `Product ${item.product_id}`
-                          }
-                          width={60}
-                          height={60}
-                          className="h-15 w-15 rounded object-cover"
-                        />
-                      )}
+                {orderItems.map((item, index) => {
+                  // Use variant data if available, otherwise use product data
+                  const displayImage =
+                    item.variant?.image || item.product?.thumbnail_image;
+                  const displayName =
+                    item.variant?.product?.name ||
+                    item.product?.name ||
+                    `Product ID: ${item.product_id}`;
+                  const itemPrice = item.price;
 
-                      <div className="flex-1">
+                  return (
+                    <div
+                      key={item.id || index}
+                      className="flex items-center justify-between border-b border-gray-100 py-3 last:border-b-0"
+                    >
+                      <div className="flex flex-1 items-center space-x-4">
+                        {/* Product/Variant Image */}
+                        {displayImage && (
+                          <Image
+                            src={displayImage}
+                            alt={displayName}
+                            width={60}
+                            height={60}
+                            className="h-15 w-15 rounded object-cover"
+                          />
+                        )}
+
+                        <div className="flex-1">
+                          <p className="font-medium">{displayName}</p>
+
+                          {/* Display variant options as badges if variant exists */}
+                          {item.variant && item.variant.option_values && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {item.variant.option_values.map(option => (
+                                <Badge
+                                  key={option.id}
+                                  variant="secondary"
+                                  className="text-xs capitalize"
+                                  style={{
+                                    backgroundColor: subtlePrimaryBg,
+                                    color: theme.colors.primary,
+                                  }}
+                                >
+                                  {option.value}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
+
+                          <p className="mt-1 text-sm text-gray-600">
+                            Quantity: {item.quantity}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
                         <p className="font-medium">
-                          {item.product?.name ||
-                            `Product ID: ${item.product_id}`}
+                          Rs.{Number(itemPrice).toFixed(2)}
                         </p>
                         <p className="text-sm text-gray-600">
-                          Quantity: {item.quantity}
+                          Total: Rs.
+                          {(Number(itemPrice) * item.quantity).toFixed(2)}
                         </p>
                       </div>
                     </div>
-
-                    <div className="text-right">
-                      <p className="font-medium">
-                        ${Number(item.price).toFixed(2)}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Total: $
-                        {(Number(item.price) * item.quantity).toFixed(2)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
             <Separator />
 
-            {/* Order Total */}
-            <div className="flex items-center justify-between text-lg font-semibold">
-              <span>Total Amount:</span>
-              <span>${Number(order.total_amount).toFixed(2)}</span>
+            {/* Order Summary */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-600">Subtotal:</span>
+                <span className="font-medium">
+                  Rs.
+                  {(
+                    Number(order.total_amount) -
+                    Number(order.delivery_charge || 0)
+                  ).toFixed(2)}
+                </span>
+              </div>
+
+              {order.delivery_charge && Number(order.delivery_charge) > 0 && (
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600">Delivery Charge:</span>
+                  <span className="font-medium">
+                    Rs.{Number(order.delivery_charge).toFixed(2)}
+                  </span>
+                </div>
+              )}
+
+              <Separator className="my-2" />
+
+              <div className="flex items-center justify-between text-lg font-semibold">
+                <span>Total Amount:</span>
+                <span>Rs.{Number(order.total_amount).toFixed(2)}</span>
+              </div>
             </div>
           </CardContent>
         </Card>

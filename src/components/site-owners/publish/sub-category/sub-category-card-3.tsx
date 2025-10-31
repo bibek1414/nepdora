@@ -50,9 +50,9 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
 
   const getSubCategoryUrl = (): string => {
     if (siteUser) {
-      return `/products?sub_category=${subcategory.slug}`;
+      return `/collections?sub_category=${subcategory.slug}`;
     } else {
-      return `/publish/products?sub_category=${subcategory.slug}`;
+      return `/publish/collections?sub_category=${subcategory.slug}`;
     }
   };
 

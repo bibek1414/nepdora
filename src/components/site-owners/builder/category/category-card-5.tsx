@@ -40,9 +40,9 @@ export const CategoryCard5: React.FC<CategoryCard5Props> = ({
 
   const getCategoryUrl = (): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/products-draft?category=${category.slug}`;
+      return `/preview/${siteUser}/collections?category=${category.slug}`;
     } else {
-      return `/preview/products-draft?category=${category.slug}`;
+      return `/preview/collections?category=${category.slug}`;
     }
   };
 

@@ -397,44 +397,65 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
               <h3 className="mb-3 text-base font-semibold">Items Ordered</h3>
               {orderItems.length > 0 ? (
                 <ul className="divide-y text-sm">
-                  {orderItems.map(item => (
-                    <li key={item.id} className="flex justify-between py-2">
-                      <div className="flex flex-1 items-center gap-3">
-                        {item.product?.thumbnail_image && (
-                          <Image
-                            src={item.product.thumbnail_image}
-                            alt={
-                              item.product.thumbnail_alt_description ||
-                              item.product.name
-                            }
-                            width={40}
-                            height={40}
-                            className="rounded border object-cover"
-                          />
-                        )}
-                        <div className="flex-1">
-                          <div className="text-xs font-medium">
-                            {item.product?.name ||
-                              `Product #${item.product_id}`}
-                          </div>
-                          {item.variant && item.variant.option_values && (
-                            <div className="mt-1 text-xs text-gray-500">
-                              Variant:{" "}
-                              {item.variant.option_values
-                                .map(option => option.value)
-                                .join(", ")}
-                            </div>
+                  {orderItems.map((item, index) => {
+                    // Use variant data if available, otherwise use product data
+                    const displayImage =
+                      item.variant?.image || item.product?.thumbnail_image;
+                    const displayName =
+                      item.variant?.product?.name ||
+                      item.product?.name ||
+                      `Product #${item.product_id}`;
+                    const itemPrice = item.price;
+
+                    return (
+                      <li
+                        key={item.id || index}
+                        className="flex justify-between py-3"
+                      >
+                        <div className="flex flex-1 items-center gap-3">
+                          {displayImage && (
+                            <Image
+                              src={displayImage}
+                              alt={displayName}
+                              width={50}
+                              height={50}
+                              className="rounded border object-cover"
+                            />
                           )}
-                          <div className="mt-1 text-xs text-gray-500">
-                            Quantity: {item.quantity}
+                          <div className="flex-1">
+                            <div className="text-xs font-medium">
+                              {displayName}
+                            </div>
+
+                            {/* Display variant options as badges if variant exists */}
+                            {item.variant && item.variant.option_values && (
+                              <div className="mt-1 flex flex-wrap gap-1">
+                                {item.variant.option_values.map(option => (
+                                  <Badge
+                                    key={option.id}
+                                    variant="secondary"
+                                    className="text-xs capitalize"
+                                  >
+                                    {option.value}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
+
+                            <div className="mt-1 text-xs text-gray-500">
+                              Quantity: {item.quantity}
+                            </div>
+                            <div className="mt-0.5 text-xs text-gray-500">
+                              Rs.{Number(itemPrice).toFixed(2)} each
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <span className="text-xs font-medium text-gray-600">
-                        Rs.{(parseFloat(item.price) * item.quantity).toFixed(2)}
-                      </span>
-                    </li>
-                  ))}
+                        <span className="text-xs font-medium text-gray-600">
+                          Rs.{(Number(itemPrice) * item.quantity).toFixed(2)}
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
               ) : (
                 <div className="py-8 text-center text-gray-500">
@@ -451,19 +472,31 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
                   <span>
-                    Rs.
-                    {Number(currentOrder.total_amount).toLocaleString("en-IN")}
+                    Rs. Rs.
+                    {(
+                      Number(currentOrder.total_amount) -
+                      Number(currentOrder.delivery_charge || 0)
+                    ).toLocaleString("en-IN")}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Shipping</span>
-                  <span>Rs.0.00</span>
-                </div>
+
+                {currentOrder.delivery_charge &&
+                  Number(currentOrder.delivery_charge) > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Delivery Charge</span>
+                      <span>
+                        Rs.
+                        {Number(currentOrder.delivery_charge).toLocaleString(
+                          "en-IN"
+                        )}
+                      </span>
+                    </div>
+                  )}
+
                 <div className="flex justify-between text-base font-semibold">
                   <span>Total</span>
                   <span>
-                    {" "}
-                    Rs.{" "}
+                    Rs.
                     {Number(currentOrder.total_amount).toLocaleString("en-IN")}
                   </span>
                 </div>
