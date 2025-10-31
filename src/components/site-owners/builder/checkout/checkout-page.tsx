@@ -548,7 +548,7 @@ const CheckoutPage = () => {
 
                 {/* Billing City/District with Search */}
                 <div className="space-y-2">
-                  <Label htmlFor="city">Billing City/District *</Label>
+                  <Label htmlFor="city">City/District *</Label>
                   <Popover
                     open={openBillingCity}
                     onOpenChange={setOpenBillingCity}
@@ -652,76 +652,6 @@ const CheckoutPage = () => {
 
                 {!sameAsCustomerAddress && (
                   <>
-                    {/* Shipping City/District with Search */}
-                    <div className="space-y-2">
-                      <Label htmlFor="shipping_city">
-                        Shipping City/District *
-                      </Label>
-                      <Popover
-                        open={openShippingCity}
-                        onOpenChange={setOpenShippingCity}
-                      >
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={openShippingCity}
-                            className={cn(
-                              "w-full justify-between",
-                              !shippingCityDistrict && "text-muted-foreground",
-                              errors.shipping_city && "border-red-300"
-                            )}
-                            disabled={isSubmitting || isLoadingDeliveryCharges}
-                          >
-                            {shippingCityDistrict
-                              ? citiesDistricts.find(
-                                  city => city === shippingCityDistrict
-                                )
-                              : "Select city/district"}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-full p-0">
-                          <Command>
-                            <CommandInput
-                              placeholder="Search city/district..."
-                              value={searchQuery}
-                              onValueChange={setSearchQuery}
-                            />
-                            <CommandEmpty>No city found.</CommandEmpty>
-                            <CommandGroup className="max-h-64 overflow-auto">
-                              {citiesDistricts.map(city => (
-                                <CommandItem
-                                  key={city}
-                                  value={city}
-                                  onSelect={() => {
-                                    setValue("shipping_city", city);
-                                    setOpenShippingCity(false);
-                                    setSearchQuery("");
-                                  }}
-                                >
-                                  <Check
-                                    className={cn(
-                                      "mr-2 h-4 w-4",
-                                      shippingCityDistrict === city
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    )}
-                                  />
-                                  {city}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                      {errors.shipping_city && (
-                        <p className="text-sm text-red-600">
-                          {errors.shipping_city.message}
-                        </p>
-                      )}
-                    </div>
-
                     <div className="space-y-2">
                       <Label htmlFor="shipping_address">Shipping Address</Label>
                       <Textarea

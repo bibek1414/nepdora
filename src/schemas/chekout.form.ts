@@ -36,17 +36,13 @@ export const checkoutFormSchema = z
     data => {
       if (!data.same_as_customer_address) {
         return (
-          data.shipping_address &&
-          data.shipping_address.trim().length >= 10 &&
-          data.shipping_city &&
-          data.shipping_city.trim().length > 0
+          data.shipping_address && data.shipping_address.trim().length >= 5
         );
       }
       return true;
     },
     {
-      message:
-        "Shipping address must be at least 10 characters long and city/district is required.",
+      message: "Shipping address must be at least 5 characters long ",
       path: ["shipping_address"],
     }
   );

@@ -377,11 +377,15 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                 <p className="text-gray-500">Payment type</p>
                 {getPaymentTypeBadge(currentOrder.payment_type)}
               </div>
-              <div className="md:col-span-2">
-                <p className="text-gray-500">Shipping address</p>
+              <div className="md:col-span-1">
+                <p className="text-gray-500">Shipping Address</p>
                 <p className="font-medium capitalize">
                   {currentOrder.shipping_address}
                 </p>
+              </div>
+              <div className="md:col-span-1">
+                <p className="text-gray-500">City</p>
+                <p className="font-medium capitalize">{currentOrder.city}</p>
               </div>
               {currentOrder.transaction_id && (
                 <div className="md:col-span-2">

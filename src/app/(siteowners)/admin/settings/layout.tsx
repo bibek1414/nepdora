@@ -20,21 +20,9 @@ const settingsItems: SettingItem[] = [
   },
   {
     id: "Delivery Charge",
-    title: "delivery-charge ",
+    title: "Delivery Charge",
     description: "Configure delivery-charge gateways and billing settings",
     path: "/admin/settings/delivery-charge",
-  },
-  {
-    id: "billing",
-    title: "Billing",
-    description: "Set up billing methods and delivery options",
-    path: "/admin/settings/billing",
-  },
-  {
-    id: "shipping",
-    title: "Shipping Setup",
-    description: "Set up shipping methods and delivery options",
-    path: "/admin/settings/shipping",
   },
 ];
 

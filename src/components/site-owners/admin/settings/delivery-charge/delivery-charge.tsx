@@ -214,6 +214,48 @@ export default function DeliveryChargesList() {
     }
   };
 
+  const handleCancelChanges = () => {
+    // Reset default charges to original values
+    if (defaultData?.default_price?.[0]) {
+      const defaultPrice = defaultData.default_price[0];
+      setDefaultCharges({
+        id: defaultPrice.id,
+        default_cost: defaultPrice.default_cost || "0",
+        cost_0_1kg: defaultPrice.cost_0_1kg || "0",
+        cost_1_2kg: defaultPrice.cost_1_2kg || "0",
+        cost_2_3kg: defaultPrice.cost_2_3kg || "0",
+        cost_3_5kg: defaultPrice.cost_3_5kg || "0",
+        cost_5_10kg: defaultPrice.cost_5_10kg || "0",
+        cost_above_10kg: defaultPrice.cost_above_10kg || "0",
+      });
+    }
+
+    // Reset location charges to original values
+    if (locationsData?.results) {
+      const charges: Record<number, Partial<DeliveryCharge>> = {};
+      locationsData.results.forEach(location => {
+        charges[location.id] = {
+          default_cost: location.default_cost,
+          cost_0_1kg: location.cost_0_1kg,
+          cost_1_2kg: location.cost_1_2kg,
+          cost_2_3kg: location.cost_2_3kg,
+          cost_3_5kg: location.cost_3_5kg,
+          cost_5_10kg: location.cost_5_10kg,
+          cost_above_10kg: location.cost_above_10kg,
+        };
+      });
+      setLocationCharges(charges);
+    }
+
+    // Clear all modified states
+    setIsDefaultModified(false);
+    setModifiedLocations(new Set());
+    setNewLocations([]);
+    setShowAddForm(false);
+
+    toast.info("All changes have been cancelled");
+  };
+
   const handleDefaultChargeChange = (field: string, value: string) => {
     setDefaultCharges(prev => ({
       ...prev,
@@ -323,7 +365,7 @@ export default function DeliveryChargesList() {
               updateDefaultMutation.isPending ||
               createMutation.isPending
             }
-            className="bg-purple-600 text-white hover:bg-purple-700"
+            className="bg-primary hover:bg-primary text-white"
           >
             {updateMutation.isPending ||
             updateDefaultMutation.isPending ||
@@ -336,7 +378,7 @@ export default function DeliveryChargesList() {
               <>
                 SAVE CHANGES
                 {hasChanges && (
-                  <span className="ml-2 rounded-full bg-purple-800 px-2 py-0.5 text-xs">
+                  <span className="bg-primary ml-2 rounded-full px-2 py-0.5 text-[10px]">
                     {totalChanges}
                   </span>
                 )}
@@ -347,8 +389,8 @@ export default function DeliveryChargesList() {
       </div>
 
       {/* Default Cost Section */}
-      <div className="rounded-lg border border-gray-200 bg-white shadow">
-        <div className="p-6">
+      <div className="bg-white">
+        <div className="">
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold">
@@ -372,32 +414,32 @@ export default function DeliveryChargesList() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Default Cost
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Default Cost 0-1KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Default Cost 1-2KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Default Cost 2-3KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Default Cost 3-5KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Default Cost 5-10KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Default Cost &gt;10KG
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">
+                <tr className="text-[10px]">
+                  <td className="border border-gray-300 px-2 py-2">
                     <Input
                       type="number"
                       value={defaultCharges.default_cost}
@@ -407,72 +449,72 @@ export default function DeliveryChargesList() {
                           e.target.value
                         )
                       }
-                      className="w-full"
+                      className="w-full md:text-[10px]"
                       min="0"
                       step="0.01"
                     />
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-2 py-2">
                     <Input
                       type="number"
                       value={defaultCharges.cost_0_1kg}
                       onChange={e =>
                         handleDefaultChargeChange("cost_0_1kg", e.target.value)
                       }
-                      className="w-full"
+                      className="w-full md:text-[10px]"
                       min="0"
                       step="0.01"
                     />
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-2 py-2">
                     <Input
                       type="number"
                       value={defaultCharges.cost_1_2kg}
                       onChange={e =>
                         handleDefaultChargeChange("cost_1_2kg", e.target.value)
                       }
-                      className="w-full"
+                      className="w-full md:text-[10px]"
                       min="0"
                       step="0.01"
                     />
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-2 py-2">
                     <Input
                       type="number"
                       value={defaultCharges.cost_2_3kg}
                       onChange={e =>
                         handleDefaultChargeChange("cost_2_3kg", e.target.value)
                       }
-                      className="w-full"
+                      className="w-full md:text-[10px]"
                       min="0"
                       step="0.01"
                     />
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-2 py-2">
                     <Input
                       type="number"
                       value={defaultCharges.cost_3_5kg}
                       onChange={e =>
                         handleDefaultChargeChange("cost_3_5kg", e.target.value)
                       }
-                      className="w-full"
+                      className="w-full md:text-[10px]"
                       min="0"
                       step="0.01"
                     />
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-2 py-2">
                     <Input
                       type="number"
                       value={defaultCharges.cost_5_10kg}
                       onChange={e =>
                         handleDefaultChargeChange("cost_5_10kg", e.target.value)
                       }
-                      className="w-full"
+                      className="w-full md:text-[10px]"
                       min="0"
                       step="0.01"
                     />
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-2 py-2">
                     <Input
                       type="number"
                       value={defaultCharges.cost_above_10kg}
@@ -482,7 +524,7 @@ export default function DeliveryChargesList() {
                           e.target.value
                         )
                       }
-                      className="w-full"
+                      className="w-full md:text-[10px]"
                       min="0"
                       step="0.01"
                     />
@@ -495,8 +537,8 @@ export default function DeliveryChargesList() {
       </div>
 
       {/* Custom Delivery Charge Section */}
-      <div className="rounded-lg border border-gray-200 bg-white shadow">
-        <div className="p-6">
+      <div className="bg-white">
+        <div className="">
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h2 className="mb-1 text-xl font-semibold">
@@ -519,7 +561,7 @@ export default function DeliveryChargesList() {
               {/* Add More Rows Button */}
               <Button
                 onClick={handleAddNewRow}
-                className="bg-green-600 text-white hover:bg-green-700"
+                className="bg-primary hover:bg-primary text-white"
                 size="sm"
               >
                 <Plus className="mr-1 h-4 w-4" />
@@ -545,34 +587,34 @@ export default function DeliveryChargesList() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="w-12 border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="w-12 border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     #
                   </th>
-                  <th className="min-w-[200px] border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="min-w-[200px] border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Place Name
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Default Cost
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Cost 0-1KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Cost 1-2KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Cost 2-3KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Cost 3-5KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Cost 5-10KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Cost &gt;10KG
                   </th>
-                  <th className="w-12 border border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="w-12 border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
                     Action
                   </th>
                 </tr>
@@ -586,12 +628,12 @@ export default function DeliveryChargesList() {
                   >
                     <td className="border border-gray-300 px-4 py-2 text-sm text-gray-600">
                       <div className="flex items-center justify-center">
-                        <span className="rounded-full bg-green-600 px-2 py-1 text-xs text-white">
+                        <span className="rounded-full bg-green-600 px-2 py-1 text-[10px] text-white">
                           New
                         </span>
                       </div>
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-2 py-2">
                       <Input
                         type="text"
                         value={newLocation.location_name}
@@ -602,11 +644,11 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white"
+                        className="w-full border-green-300 bg-white md:text-[10px]"
                         placeholder="Enter location name"
                       />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-2 py-2">
                       <Input
                         type="number"
                         value={newLocation.default_cost}
@@ -617,13 +659,13 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white"
+                        className="w-full border-green-300 bg-white md:text-[10px]"
                         placeholder={defaultCharges.default_cost}
                         min="0"
                         step="0.01"
                       />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-2 py-2">
                       <Input
                         type="number"
                         value={newLocation.cost_0_1kg}
@@ -634,13 +676,13 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white"
+                        className="w-full border-green-300 bg-white md:text-[10px]"
                         placeholder={defaultCharges.cost_0_1kg}
                         min="0"
                         step="0.01"
                       />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-2 py-2">
                       <Input
                         type="number"
                         value={newLocation.cost_1_2kg}
@@ -651,13 +693,13 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white"
+                        className="w-full border-green-300 bg-white md:text-[10px]"
                         placeholder={defaultCharges.cost_1_2kg}
                         min="0"
                         step="0.01"
                       />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-2 py-2">
                       <Input
                         type="number"
                         value={newLocation.cost_2_3kg}
@@ -668,13 +710,13 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white"
+                        className="w-full border-green-300 bg-white md:text-[10px]"
                         placeholder={defaultCharges.cost_2_3kg}
                         min="0"
                         step="0.01"
                       />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-2 py-2">
                       <Input
                         type="number"
                         value={newLocation.cost_3_5kg}
@@ -685,13 +727,13 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white"
+                        className="w-full border-green-300 bg-white md:text-[10px]"
                         placeholder={defaultCharges.cost_3_5kg}
                         min="0"
                         step="0.01"
                       />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-2 py-2">
                       <Input
                         type="number"
                         value={newLocation.cost_5_10kg}
@@ -702,13 +744,13 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white"
+                        className="w-full border-green-300 bg-white md:text-[10px]"
                         placeholder={defaultCharges.cost_5_10kg}
                         min="0"
                         step="0.01"
                       />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-2 py-2">
                       <Input
                         type="number"
                         value={newLocation.cost_above_10kg}
@@ -719,13 +761,13 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white"
+                        className="w-full border-green-300 bg-white md:text-[10px]"
                         placeholder={defaultCharges.cost_above_10kg}
                         min="0"
                         step="0.01"
                       />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-2 py-2">
                       <Button
                         onClick={() => handleRemoveNewLocation(index)}
                         variant="outline"
@@ -749,10 +791,10 @@ export default function DeliveryChargesList() {
                         isModified ? "bg-amber-50" : ""
                       }`}
                     >
-                      <td className="border border-gray-300 px-4 py-2 text-sm text-gray-600">
+                      <td className="border border-gray-300 px-4 py-2 text-[10px] text-gray-600">
                         {globalIndex}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-sm font-medium">
+                      <td className="border border-gray-300 px-4 py-2 text-[10px] font-medium">
                         <div className="flex items-center">
                           {location.location_name}
                           {isModified && (
@@ -760,7 +802,7 @@ export default function DeliveryChargesList() {
                           )}
                         </div>
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border border-gray-300 px-2 py-2">
                         <Input
                           type="number"
                           value={
@@ -773,13 +815,13 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full"
+                          className="w-full md:text-[10px]"
                           placeholder={defaultCharges.default_cost}
                           min="0"
                           step="0.01"
                         />
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border border-gray-300 px-2 py-2">
                         <Input
                           type="number"
                           value={locationCharges[location.id]?.cost_0_1kg ?? ""}
@@ -790,13 +832,13 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full"
+                          className="w-full md:text-[10px]"
                           placeholder={defaultCharges.cost_0_1kg}
                           min="0"
                           step="0.01"
                         />
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border border-gray-300 px-2 py-2">
                         <Input
                           type="number"
                           value={locationCharges[location.id]?.cost_1_2kg ?? ""}
@@ -807,13 +849,13 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full"
+                          className="w-full md:text-[10px]"
                           placeholder={defaultCharges.cost_1_2kg}
                           min="0"
                           step="0.01"
                         />
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border border-gray-300 px-2 py-2">
                         <Input
                           type="number"
                           value={locationCharges[location.id]?.cost_2_3kg ?? ""}
@@ -824,13 +866,13 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full"
+                          className="w-full md:text-[10px]"
                           placeholder={defaultCharges.cost_2_3kg}
                           min="0"
                           step="0.01"
                         />
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border border-gray-300 px-2 py-2">
                         <Input
                           type="number"
                           value={locationCharges[location.id]?.cost_3_5kg ?? ""}
@@ -841,13 +883,13 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full"
+                          className="w-full md:text-[10px]"
                           placeholder={defaultCharges.cost_3_5kg}
                           min="0"
                           step="0.01"
                         />
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border border-gray-300 px-2 py-2">
                         <Input
                           type="number"
                           value={
@@ -860,13 +902,13 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full"
+                          className="w-full md:text-[10px]"
                           placeholder={defaultCharges.cost_5_10kg}
                           min="0"
                           step="0.01"
                         />
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border border-gray-300 px-2 py-2">
                         <Input
                           type="number"
                           value={
@@ -879,13 +921,13 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full"
+                          className="w-full md:text-[10px]"
                           placeholder={defaultCharges.cost_above_10kg}
                           min="0"
                           step="0.01"
                         />
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="border border-gray-300 px-2 py-2">
                         {/* Empty action cell for existing rows to maintain table structure */}
                       </td>
                     </tr>
@@ -919,32 +961,47 @@ export default function DeliveryChargesList() {
       {/* Sticky Save Changes Button */}
       {hasChanges && (
         <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 transform">
-          <div className="flex min-w-[300px] items-center justify-center gap-4 rounded-lg border border-gray-200 bg-white px-6 py-4 shadow-lg">
+          <div className="flex min-w-[350px] items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white px-6 py-4 shadow-lg">
             <div className="flex items-center text-sm text-gray-700">
               <span className="mr-2 inline-block h-2 w-2 rounded-full bg-amber-600"></span>
               {totalChanges} change{totalChanges !== 1 ? "s" : ""} pending
             </div>
-            <Button
-              onClick={handleSaveChanges}
-              disabled={
-                updateMutation.isPending ||
+            <div className="flex gap-2">
+              <Button
+                onClick={handleCancelChanges}
+                variant="outline"
+                size="sm"
+                className="border-gray-300 whitespace-nowrap text-gray-700 hover:bg-gray-50"
+                disabled={
+                  updateMutation.isPending ||
+                  updateDefaultMutation.isPending ||
+                  createMutation.isPending
+                }
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSaveChanges}
+                disabled={
+                  updateMutation.isPending ||
+                  updateDefaultMutation.isPending ||
+                  createMutation.isPending
+                }
+                className="bg-primary hover:bg-primary whitespace-nowrap text-white"
+                size="sm"
+              >
+                {updateMutation.isPending ||
                 updateDefaultMutation.isPending ||
-                createMutation.isPending
-              }
-              className="bg-purple-600 whitespace-nowrap text-white hover:bg-purple-700"
-              size="sm"
-            >
-              {updateMutation.isPending ||
-              updateDefaultMutation.isPending ||
-              createMutation.isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                "Save Changes"
-              )}
-            </Button>
+                createMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       )}

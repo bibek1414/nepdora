@@ -49,7 +49,7 @@ export default function Dashboard({
       value: stats.totalOrdersThisMonth.toLocaleString(),
       change: getPercentageChange(
         stats.totalOrdersThisMonth,
-        stats.totalOrdersThisMonth * 1.01
+        stats.totalOrdersThisMonth * 1.1
       ),
       icon: "/images/site-owners/dashboard/dashboard2.svg",
       bgColor: "bg-purple-50",

@@ -126,7 +126,7 @@ const usePlugins = () => {
     pluginId: string,
     pluginType: string,
     enabled: boolean
-  ) => {
+  ): Promise<{ success: boolean; needsConfig: boolean }> => {
     try {
       if (pluginType === "whatsapp") {
         const whatsappConfig = whatsapps.length > 0 ? whatsapps[0] : null;
@@ -142,10 +142,12 @@ const usePlugins = () => {
           toast.success(
             `WhatsApp plugin ${enabled ? "enabled" : "disabled"} successfully`
           );
+          return { success: true, needsConfig: false };
         } else {
           toast.error(
             "WhatsApp configuration not found. Please configure first."
           );
+          return { success: false, needsConfig: true };
         }
       } else if (pluginType === "dash") {
         const dashConfig = dashLogistics.length > 0 ? dashLogistics[0] : null;
@@ -161,10 +163,12 @@ const usePlugins = () => {
           toast.success(
             `Dash Logistics plugin ${enabled ? "enabled" : "disabled"} successfully`
           );
+          return { success: true, needsConfig: false };
         } else {
           toast.error(
             "Dash Logistics configuration not found. Please configure first."
           );
+          return { success: false, needsConfig: true };
         }
       } else if (pluginType === "ydm") {
         const ydmConfig = ydmLogistics.length > 0 ? ydmLogistics[0] : null;
@@ -180,15 +184,19 @@ const usePlugins = () => {
           toast.success(
             `YDM Logistics plugin ${enabled ? "enabled" : "disabled"} successfully`
           );
+          return { success: true, needsConfig: false };
         } else {
           toast.error(
             "YDM Logistics configuration not found. Please configure first."
           );
+          return { success: false, needsConfig: true };
         }
       }
+      return { success: false, needsConfig: false };
     } catch (error) {
       toast.error(`Failed to ${enabled ? "enable" : "disable"} plugin`);
       console.error("Toggle plugin error:", error);
+      return { success: false, needsConfig: false };
     }
   };
 
@@ -214,6 +222,7 @@ export default function PluginManager() {
     setSelectedPlugin(plugin);
     setIsModalOpen(true);
   };
+
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSave = (data: any) => {
     console.log("Saving plugin configuration:", data);
@@ -225,7 +234,16 @@ export default function PluginManager() {
     pluginType: string,
     enabled: boolean
   ) => {
-    await togglePlugin(pluginId, pluginType, enabled);
+    const result = await togglePlugin(pluginId, pluginType, enabled);
+
+    // If enabling failed due to missing config, open the config modal
+    if (enabled && result.needsConfig) {
+      const plugin = plugins.find(p => p.id === pluginId);
+      if (plugin) {
+        setSelectedPlugin(plugin);
+        setIsModalOpen(true);
+      }
+    }
   };
 
   const getCategoryColor = (category: string) => {
@@ -275,11 +293,7 @@ export default function PluginManager() {
       {/* Plugin Grid */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredPlugins.map(plugin => (
-          <Card
-            key={plugin.id}
-            className="cursor-pointer"
-            onClick={() => handlePluginClick(plugin)}
-          >
+          <Card key={plugin.id} className="cursor-pointer">
             <CardContent className="p-6">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
@@ -308,7 +322,11 @@ export default function PluginManager() {
                       isEnabled={plugin.is_enabled}
                       onToggle={handleTogglePlugin}
                     />
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePluginClick(plugin)}
+                    >
                       Configure
                     </Button>
                   </div>

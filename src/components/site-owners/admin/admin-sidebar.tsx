@@ -106,10 +106,7 @@ const navigationGroups = [
   },
   {
     name: "Team & Users",
-    items: [
-      { name: "Team Members", href: "/admin/team-member", icon: Users },
-      { name: "Profile", href: "/admin/profile", icon: User },
-    ],
+    items: [{ name: "Team Members", href: "/admin/team-member", icon: Users }],
   },
   {
     name: "Marketing & Engagement",
