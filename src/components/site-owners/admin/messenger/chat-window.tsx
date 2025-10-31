@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { CreateManualOrderDialog } from "@/components/site-owners/admin/manual-order/create-manual-order-dialog";
 
 interface Message {
   id: string;
@@ -21,6 +24,11 @@ interface ChatWindowProps {
 export function ChatWindow({ messages, conversationName }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const prevMessageCountRef = useRef<number>(0);
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
+    null
+  );
+  const [showCreateOrder, setShowCreateOrder] = useState(false);
+  const [orderMessage, setOrderMessage] = useState("");
 
   // ✅ Sort oldest → newest
   const sortedMessages = [...messages].sort(
@@ -40,6 +48,11 @@ export function ChatWindow({ messages, conversationName }: ChatWindowProps) {
     messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
   }, []);
 
+  const handleCreateOrder = (message: string) => {
+    setOrderMessage(message);
+    setShowCreateOrder(true);
+  };
+
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
@@ -56,6 +69,10 @@ export function ChatWindow({ messages, conversationName }: ChatWindowProps) {
             <div
               key={message.id}
               className={cn("flex gap-3", message.isOwn && "flex-row-reverse")}
+              onMouseEnter={() =>
+                !message.isOwn && setSelectedMessageId(message.id)
+              }
+              onMouseLeave={() => setSelectedMessageId(null)}
             >
               {!message.isOwn && (
                 <Avatar className="h-8 w-8 flex-shrink-0">
@@ -65,19 +82,34 @@ export function ChatWindow({ messages, conversationName }: ChatWindowProps) {
 
               <div
                 className={cn(
-                  "flex flex-col gap-1",
+                  "relative flex max-w-md flex-col gap-1",
                   message.isOwn && "items-end"
                 )}
               >
                 <div
                   className={cn(
-                    "max-w-xs rounded-lg px-4 py-2 break-words",
+                    "rounded-lg px-4 py-2 break-words",
                     message.isOwn
                       ? "bg-primary text-primary-foreground rounded-br-none"
                       : "bg-muted text-foreground rounded-bl-none"
                   )}
                 >
                   <p className="text-sm">{message.content}</p>
+
+                  {/* Show create order button only for selected customer messages */}
+                  {!message.isOwn && selectedMessageId === message.id && (
+                    <div className="mt-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleCreateOrder(message.content)}
+                        className="flex items-center gap-1"
+                      >
+                        <Plus className="h-3 w-3" />
+                        Create Order
+                      </Button>
+                    </div>
+                  )}
                 </div>
 
                 <span className="text-muted-foreground text-xs">
@@ -93,6 +125,15 @@ export function ChatWindow({ messages, conversationName }: ChatWindowProps) {
           <div ref={messagesEndRef} />
         </div>
       </div>
+
+      {/* Manual Order Dialog */}
+      {showCreateOrder && (
+        <CreateManualOrderDialog
+          open={showCreateOrder}
+          onOpenChange={setShowCreateOrder}
+          initialMessage={orderMessage}
+        />
+      )}
     </div>
   );
 }
