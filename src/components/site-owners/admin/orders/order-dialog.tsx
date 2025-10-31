@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Order } from "@/types/owner-site/admin/orders";
@@ -472,7 +471,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
                   <span>
-                    Rs. Rs.
+                    Rs.
                     {(
                       Number(currentOrder.total_amount) -
                       Number(currentOrder.delivery_charge || 0)

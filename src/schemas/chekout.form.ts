@@ -1,4 +1,3 @@
-// schemas/checkout.form.ts
 import * as z from "zod";
 
 export const checkoutFormSchema = z
@@ -14,7 +13,12 @@ export const checkoutFormSchema = z
     customer_phone: z
       .string()
       .min(10, "Phone number must be at least 10 characters long.")
-      .regex(/^[\+]?[1-9][\d]{0,15}$/, "Please enter a valid phone number."),
+      .regex(/^[0-9]{7,15}$/, "Please enter a valid phone number.")
+      .refine(
+        val => !/[+_]/.test(val),
+        "Phone number must not contain '+' or '_' symbols."
+      ),
+
     customer_address: z
       .string()
       .min(5, "Billing address must be at least 5 characters long.")
