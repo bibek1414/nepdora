@@ -127,7 +127,11 @@ const navigationGroups = [
     name: "System",
     items: [
       { name: "Issues Tracking", href: "/admin/issues", icon: Bug },
-      { name: "Settings", href: "/admin/settings/domains", icon: Edit3 },
+      {
+        name: "Settings",
+        href: "/admin/settings/delivery-charge",
+        icon: Edit3,
+      },
     ],
   },
   {

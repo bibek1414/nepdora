@@ -350,7 +350,7 @@ export default function DeliveryChargesList() {
           <h1 className="text-2xl font-bold text-gray-900">
             Delivery Charges Management
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-xs text-gray-500">
             Configure delivery charges for different locations and cart weights
           </p>
         </div>
@@ -378,7 +378,7 @@ export default function DeliveryChargesList() {
               <>
                 SAVE CHANGES
                 {hasChanges && (
-                  <span className="bg-primary ml-2 rounded-full px-2 py-0.5 text-[10px]">
+                  <span className="bg-primary ml-2 rounded-full px-2 py-0.5 text-xs">
                     {totalChanges}
                   </span>
                 )}
@@ -396,14 +396,14 @@ export default function DeliveryChargesList() {
               <h2 className="text-xl font-semibold">
                 Default Cost For Various Cart Weight
               </h2>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-xs text-gray-500">
                 Note: All fields are (cost in Rs.)
               </p>
             </div>
 
             {/* Default Section Save Indicator */}
             {isDefaultModified && (
-              <div className="flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-sm text-amber-600">
+              <div className="flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs text-amber-600">
                 <span className="mr-2 inline-block h-2 w-2 rounded-full bg-amber-600"></span>
                 Default costs modified
               </div>
@@ -414,31 +414,31 @@ export default function DeliveryChargesList() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Default Cost
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Default Cost 0-1KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Default Cost 1-2KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Default Cost 2-3KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Default Cost 3-5KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Default Cost 5-10KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Default Cost &gt;10KG
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="text-[10px]">
+                <tr className="text-xs">
                   <td className="border border-gray-300 px-2 py-2">
                     <Input
                       type="number"
@@ -449,7 +449,7 @@ export default function DeliveryChargesList() {
                           e.target.value
                         )
                       }
-                      className="w-full md:text-[10px]"
+                      className="w-full md:text-xs"
                       min="0"
                       step="0.01"
                     />
@@ -461,7 +461,7 @@ export default function DeliveryChargesList() {
                       onChange={e =>
                         handleDefaultChargeChange("cost_0_1kg", e.target.value)
                       }
-                      className="w-full md:text-[10px]"
+                      className="w-full md:text-xs"
                       min="0"
                       step="0.01"
                     />
@@ -473,7 +473,7 @@ export default function DeliveryChargesList() {
                       onChange={e =>
                         handleDefaultChargeChange("cost_1_2kg", e.target.value)
                       }
-                      className="w-full md:text-[10px]"
+                      className="w-full md:text-xs"
                       min="0"
                       step="0.01"
                     />
@@ -485,7 +485,7 @@ export default function DeliveryChargesList() {
                       onChange={e =>
                         handleDefaultChargeChange("cost_2_3kg", e.target.value)
                       }
-                      className="w-full md:text-[10px]"
+                      className="w-full md:text-xs"
                       min="0"
                       step="0.01"
                     />
@@ -497,7 +497,7 @@ export default function DeliveryChargesList() {
                       onChange={e =>
                         handleDefaultChargeChange("cost_3_5kg", e.target.value)
                       }
-                      className="w-full md:text-[10px]"
+                      className="w-full md:text-xs"
                       min="0"
                       step="0.01"
                     />
@@ -509,7 +509,7 @@ export default function DeliveryChargesList() {
                       onChange={e =>
                         handleDefaultChargeChange("cost_5_10kg", e.target.value)
                       }
-                      className="w-full md:text-[10px]"
+                      className="w-full md:text-xs"
                       min="0"
                       step="0.01"
                     />
@@ -524,7 +524,7 @@ export default function DeliveryChargesList() {
                           e.target.value
                         )
                       }
-                      className="w-full md:text-[10px]"
+                      className="w-full md:text-xs"
                       min="0"
                       step="0.01"
                     />
@@ -544,7 +544,7 @@ export default function DeliveryChargesList() {
               <h2 className="mb-1 text-xl font-semibold">
                 Custom Delivery Charge Place & Cost
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-xs text-gray-500">
                 Note: All empty cost fields are replaced by default cost
               </p>
             </div>
@@ -552,7 +552,7 @@ export default function DeliveryChargesList() {
             <div className="flex items-center gap-3">
               {/* Custom Section Save Indicator */}
               {(modifiedLocations.size > 0 || newLocations.length > 0) && (
-                <div className="flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-sm text-amber-600">
+                <div className="flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs text-amber-600">
                   <span className="mr-2 inline-block h-2 w-2 rounded-full bg-amber-600"></span>
                   {modifiedLocations.size} modified, {newLocations.length} new
                 </div>
@@ -587,34 +587,34 @@ export default function DeliveryChargesList() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="w-12 border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="w-12 border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     #
                   </th>
-                  <th className="min-w-[200px] border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="min-w-[200px] border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Place Name
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Default Cost
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Cost 0-1KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Cost 1-2KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Cost 2-3KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Cost 3-5KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Cost 5-10KG
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Cost &gt;10KG
                   </th>
-                  <th className="w-12 border border-gray-300 px-4 py-3 text-left text-[10px] font-medium text-gray-700">
+                  <th className="w-12 border border-gray-300 px-4 py-3 text-left text-xs font-medium text-gray-700">
                     Action
                   </th>
                 </tr>
@@ -626,9 +626,9 @@ export default function DeliveryChargesList() {
                     key={`new-${index}`}
                     className="bg-green-50 hover:bg-green-100"
                   >
-                    <td className="border border-gray-300 px-4 py-2 text-sm text-gray-600">
+                    <td className="border border-gray-300 px-4 py-2 text-xs text-gray-600">
                       <div className="flex items-center justify-center">
-                        <span className="rounded-full bg-green-600 px-2 py-1 text-[10px] text-white">
+                        <span className="rounded-full bg-green-600 px-2 py-1 text-xs text-white">
                           New
                         </span>
                       </div>
@@ -644,7 +644,7 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white md:text-[10px]"
+                        className="w-full border-green-300 bg-white md:text-xs"
                         placeholder="Enter location name"
                       />
                     </td>
@@ -659,7 +659,7 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white md:text-[10px]"
+                        className="w-full border-green-300 bg-white md:text-xs"
                         placeholder={defaultCharges.default_cost}
                         min="0"
                         step="0.01"
@@ -676,7 +676,7 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white md:text-[10px]"
+                        className="w-full border-green-300 bg-white md:text-xs"
                         placeholder={defaultCharges.cost_0_1kg}
                         min="0"
                         step="0.01"
@@ -693,7 +693,7 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white md:text-[10px]"
+                        className="w-full border-green-300 bg-white md:text-xs"
                         placeholder={defaultCharges.cost_1_2kg}
                         min="0"
                         step="0.01"
@@ -710,7 +710,7 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white md:text-[10px]"
+                        className="w-full border-green-300 bg-white md:text-xs"
                         placeholder={defaultCharges.cost_2_3kg}
                         min="0"
                         step="0.01"
@@ -727,7 +727,7 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white md:text-[10px]"
+                        className="w-full border-green-300 bg-white md:text-xs"
                         placeholder={defaultCharges.cost_3_5kg}
                         min="0"
                         step="0.01"
@@ -744,7 +744,7 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white md:text-[10px]"
+                        className="w-full border-green-300 bg-white md:text-xs"
                         placeholder={defaultCharges.cost_5_10kg}
                         min="0"
                         step="0.01"
@@ -761,7 +761,7 @@ export default function DeliveryChargesList() {
                             e.target.value
                           )
                         }
-                        className="w-full border-green-300 bg-white md:text-[10px]"
+                        className="w-full border-green-300 bg-white md:text-xs"
                         placeholder={defaultCharges.cost_above_10kg}
                         min="0"
                         step="0.01"
@@ -791,10 +791,10 @@ export default function DeliveryChargesList() {
                         isModified ? "bg-amber-50" : ""
                       }`}
                     >
-                      <td className="border border-gray-300 px-4 py-2 text-[10px] text-gray-600">
+                      <td className="border border-gray-300 px-4 py-2 text-xs text-gray-600">
                         {globalIndex}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-[10px] font-medium">
+                      <td className="border border-gray-300 px-4 py-2 text-xs font-medium">
                         <div className="flex items-center">
                           {location.location_name}
                           {isModified && (
@@ -815,7 +815,7 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full md:text-[10px]"
+                          className="w-full md:text-xs"
                           placeholder={defaultCharges.default_cost}
                           min="0"
                           step="0.01"
@@ -832,7 +832,7 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full md:text-[10px]"
+                          className="w-full md:text-xs"
                           placeholder={defaultCharges.cost_0_1kg}
                           min="0"
                           step="0.01"
@@ -849,7 +849,7 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full md:text-[10px]"
+                          className="w-full md:text-xs"
                           placeholder={defaultCharges.cost_1_2kg}
                           min="0"
                           step="0.01"
@@ -866,7 +866,7 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full md:text-[10px]"
+                          className="w-full md:text-xs"
                           placeholder={defaultCharges.cost_2_3kg}
                           min="0"
                           step="0.01"
@@ -883,7 +883,7 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full md:text-[10px]"
+                          className="w-full md:text-xs"
                           placeholder={defaultCharges.cost_3_5kg}
                           min="0"
                           step="0.01"
@@ -902,7 +902,7 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full md:text-[10px]"
+                          className="w-full md:text-xs"
                           placeholder={defaultCharges.cost_5_10kg}
                           min="0"
                           step="0.01"
@@ -921,7 +921,7 @@ export default function DeliveryChargesList() {
                               e.target.value
                             )
                           }
-                          className="w-full md:text-[10px]"
+                          className="w-full md:text-xs"
                           placeholder={defaultCharges.cost_above_10kg}
                           min="0"
                           step="0.01"
@@ -962,7 +962,7 @@ export default function DeliveryChargesList() {
       {hasChanges && (
         <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 transform">
           <div className="flex min-w-[350px] items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white px-6 py-4 shadow-lg">
-            <div className="flex items-center text-sm text-gray-700">
+            <div className="flex items-center text-xs text-gray-700">
               <span className="mr-2 inline-block h-2 w-2 rounded-full bg-amber-600"></span>
               {totalChanges} change{totalChanges !== 1 ? "s" : ""} pending
             </div>
