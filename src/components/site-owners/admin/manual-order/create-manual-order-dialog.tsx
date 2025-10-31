@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { productApi } from "@/services/api/owner-sites/admin/product";
+import { orderApi } from "@/services/api/owner-sites/admin/orders";
 
 interface Product {
   id: string;
@@ -25,7 +27,7 @@ interface Product {
   price: number;
   stock: number;
   image_url?: string;
-  sku?: string; // Make sku optional since it might not exist in the API response
+  sku?: string;
 }
 
 interface OrderItem {
@@ -42,9 +44,6 @@ interface CreateManualOrderDialogProps {
   initialMessage?: string;
   trigger?: React.ReactNode;
 }
-
-import { productApi } from "@/services/api/owner-sites/admin/product";
-import { orderApi } from "@/services/api/owner-sites/admin/orders";
 
 export function CreateManualOrderDialog({
   open: externalOpen,
@@ -66,7 +65,6 @@ export function CreateManualOrderDialog({
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [extracting, setExtracting] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [extractedData, setExtractedData] = useState<any>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -116,10 +114,8 @@ export function CreateManualOrderDialog({
         in_stock: true,
       });
 
-      // Map the API response to the expected Product interface
-      const mappedProducts: Product[] = response.results.map(product => {
-        // Create base product object
-        const productData: Product = {
+      const mappedProducts: Product[] = response.results.map(
+        (product: any) => ({
           id: product.id.toString(),
           name: product.name,
           price:
@@ -128,9 +124,9 @@ export function CreateManualOrderDialog({
               : product.price,
           stock: product.stock || 0,
           image_url: product.thumbnail_image || undefined,
-        };
-        return productData;
-      });
+          sku: product.sku,
+        })
+      );
 
       setProducts(mappedProducts);
     } catch (error) {
@@ -159,6 +155,44 @@ export function CreateManualOrderDialog({
     }));
   };
 
+  const processWitAiResponse = (response: any) => {
+    const extractedData: any = {};
+
+    // Extract address if available
+    if (response.entities?.wit$location?.[0]?.resolved?.values?.[0]?.name) {
+      extractedData.address =
+        response.entities.wit$location[0].resolved.values[0].name;
+    }
+
+    // Extract phone number if available
+    if (response.entities?.wit$phone_number?.[0]?.value) {
+      extractedData.phone = response.entities.wit$phone_number[0].value;
+    }
+
+    // Extract email if available
+    if (response.entities?.wit$email?.[0]?.value) {
+      extractedData.email = response.entities.wit$email[0].value;
+    }
+
+    // Extract person name if available
+    if (response.entities?.wit$contact?.[0]?.value) {
+      extractedData.name = response.entities.wit$contact[0].value;
+    }
+
+    // Simple city extraction from address
+    if (extractedData.address) {
+      const addressParts = extractedData.address.split(",");
+      if (addressParts.length > 1) {
+        extractedData.city = addressParts[addressParts.length - 1].trim();
+      } else {
+        const words = extractedData.address.split(" ");
+        extractedData.city = words[words.length - 1];
+      }
+    }
+
+    return extractedData;
+  };
+
   const handleExtract = async () => {
     if (!messageInput.trim()) {
       toast.error("Please enter a message to extract");
@@ -167,119 +201,37 @@ export function CreateManualOrderDialog({
 
     setExtracting(true);
     try {
-      // Mock extraction for demo - replace with actual Wit.ai API
-      // const response = await fetch(
-      //   `https://api.wit.ai/message?v=20251028&q=${encodeURIComponent(messageInput)}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${process.env.NEXT_PUBLIC_WIT_API_KEY}`,
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
+      const response = await fetch(
+        `https://api.wit.ai/message?v=20231028&q=${encodeURIComponent(messageInput)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_WIT_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (!response.ok) {
+        throw new Error("Failed to extract data from message");
+      }
 
-      // Mock extracted data based on common patterns
-      const mockExtractedData = extractFromMessage(messageInput);
+      const data = await response.json();
+      const extractedData = processWitAiResponse(data);
 
-      setExtractedData(mockExtractedData);
+      setExtractedData(extractedData);
       toast.success("Data extracted successfully!");
 
       // If address found, confirm first
-      if (mockExtractedData.address) {
-        setPendingAddress(mockExtractedData.address);
+      if (extractedData.address) {
+        setPendingAddress(extractedData.address);
         setConfirmLocationOpen(true);
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Extraction error:", err);
       toast.error(err.message || "Failed to extract data");
     } finally {
       setExtracting(false);
     }
-  };
-
-  // Helper function to extract data from message
-  const extractFromMessage = (message: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const extracted: any = {
-      name: null,
-      email: null,
-      phone: null,
-      address: null,
-      city: null,
-    };
-
-    // Extract phone number (Nepali format)
-    const phoneMatch = message.match(/(?:\+?977)?9[78]\d{8}/);
-    if (phoneMatch) {
-      extracted.phone = phoneMatch[0];
-    }
-
-    // Extract name (simple pattern - word after "I'm", "this is", "name is")
-    const nameMatch = message.match(
-      /(?:I'm|I am|this is|name is|myself)\s+([A-Za-z]+)/i
-    );
-    if (nameMatch) {
-      extracted.name = nameMatch[1];
-    }
-
-    // Extract email
-    const emailMatch = message.match(
-      /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/
-    );
-    if (emailMatch) {
-      extracted.email = emailMatch[0];
-    }
-
-    // Extract common Nepali locations/addresses
-    const locations = [
-      "Patan",
-      "Kathmandu",
-      "Bhaktapur",
-      "Lalitpur",
-      "Pokhara",
-      "Biratnagar",
-    ];
-    const addressMatch = locations.find(location =>
-      message.toLowerCase().includes(location.toLowerCase())
-    );
-
-    if (addressMatch) {
-      extracted.address = addressMatch;
-      extracted.city = addressMatch;
-    }
-
-    // Extract quantities and items
-    const quantityMatch = message.match(
-      /(\d+)\s*(chicken momos|veg momos|buff momos|momos|chowmein)/i
-    );
-    if (quantityMatch && !orderItems.length) {
-      // Auto-add items to order if detected
-      const quantity = parseInt(quantityMatch[1]);
-      const itemName = quantityMatch[2].toLowerCase();
-
-      const product = products.find(p =>
-        p.name.toLowerCase().includes(itemName)
-      );
-
-      if (product) {
-        setOrderItems(prev => [
-          ...prev,
-          {
-            product_id: product.id,
-            product_name: product.name,
-            quantity: quantity,
-            price: product.price,
-            image_url: product.image_url,
-          },
-        ]);
-      }
-    }
-
-    return extracted;
   };
 
   const handleImport = () => {
@@ -390,64 +342,35 @@ export function CreateManualOrderDialog({
 
     setIsLoading(true);
     try {
-      const orderPayload = {
+      const orderItemsPayload = orderItems.map(item => ({
+        product_id: parseInt(item.product_id, 10),
+        quantity: item.quantity,
+        price: item.price.toString(),
+      }));
+
+      const orderData = {
         ...formData,
         shipping_address:
           formData.shipping_address || formData.customer_address,
         shipping_city: formData.city,
         total_amount: calculateTotal().toFixed(2),
         delivery_charge: formData.delivery_charge || "0.00",
-        items: orderItems.map(item => ({
-          product_id: parseInt(item.product_id, 10),
-          quantity: item.quantity,
-          price: item.price.toString(),
-        })),
+        items: orderItemsPayload,
         status: "pending",
         order_status: "pending",
         is_manual: true,
         note: formData.notes,
       };
 
-      // Convert order items to the format expected by the API
-      const orderItemsPayload = orderItems.map(item => ({
-        product_id: parseInt(item.product_id, 10),
-        quantity: item.quantity,
-        price: item.price,
-      }));
-
-      const orderData = {
-        ...orderPayload,
-        order_items: orderItemsPayload,
-        // Ensure required fields are included
-        status: "pending",
-        payment_status: "pending",
-        // Convert total_amount to string to match the API type
-        total_amount: orderItems
-          .reduce((total, item) => total + item.price * item.quantity, 0)
-          .toString(),
-      };
-
-      await orderApi.createOrder(orderData, false);
+      await orderApi.createOrder(orderData);
       toast.success("Order created successfully");
 
-      // Reset form
-      setFormData({
-        customer_name: "",
-        customer_email: "",
-        customer_phone: "",
-        customer_address: "",
-        shipping_address: "",
-        city: "",
-        delivery_charge: "0.00",
-        notes: "",
-      });
-      setOrderItems([]);
-      setExtractedData(null);
-      setMessageInput("");
+      resetForm();
       setOpen(false);
       router.refresh();
-    } catch {
-      toast.error("Failed to create manual order");
+    } catch (error: any) {
+      console.error("Error creating order:", error);
+      toast.error(error.message || "Failed to create manual order");
     } finally {
       setIsLoading(false);
     }
