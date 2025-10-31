@@ -2,6 +2,7 @@ import { PublishLayoutWrapper } from "@/components/site-owners/publish/publish-l
 import { WhatsApp } from "@/components/site-owners/builder/whatsapp/whatsapp";
 import PopupManager from "@/components/site-owners/builder/popup/popup-manager";
 import { DynamicFontProvider } from "@/providers/dynamic-font-provider";
+import { DynamicFavicon } from "@/components/site-owners/admin/favicon/dynamic-favicon";
 
 interface PublishLayoutProps {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ export default async function PublishLayout({
 
   return (
     <>
+      <DynamicFavicon />
       <DynamicFontProvider>
         <PublishLayoutWrapper siteUser={siteUser}>
           {children}

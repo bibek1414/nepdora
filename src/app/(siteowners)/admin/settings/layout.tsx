@@ -13,16 +13,22 @@ interface SettingItem {
 
 const settingsItems: SettingItem[] = [
   {
+    id: "delivery-charge",
+    title: "Delivery Charge",
+    description: "Configure delivery-charge gateways and billing settings",
+    path: "/admin/settings/delivery-charge",
+  },
+  {
+    id: "site-config",
+    title: "Site Configuration",
+    description: "Configure site-config gateways and billing settings",
+    path: "/admin/settings/site-config",
+  },
+  {
     id: "domains",
     title: "Domains",
     description: "Manage your domain settings and configurations",
     path: "/admin/settings/domains",
-  },
-  {
-    id: "Delivery Charge",
-    title: "Delivery Charge",
-    description: "Configure delivery-charge gateways and billing settings",
-    path: "/admin/settings/delivery-charge",
   },
 ];
 
