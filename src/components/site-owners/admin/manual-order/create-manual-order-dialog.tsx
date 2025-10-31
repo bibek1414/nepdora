@@ -18,8 +18,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { orderApi } from "@/services/api/owner-sites/admin/orders";
-import { productApi } from "@/services/api/owner-sites/admin/product";
 
 interface Product {
   id: string;
@@ -27,7 +25,7 @@ interface Product {
   price: number;
   stock: number;
   image_url?: string;
-  sku?: string;
+  sku?: string; // Make sku optional since it might not exist in the API response
 }
 
 interface OrderItem {
@@ -38,9 +36,24 @@ interface OrderItem {
   image_url?: string;
 }
 
-export function CreateManualOrderDialog() {
+interface CreateManualOrderDialogProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  initialMessage?: string;
+  trigger?: React.ReactNode;
+}
+
+import { productApi } from "@/services/api/owner-sites/admin/product";
+import { orderApi } from "@/services/api/owner-sites/admin/orders";
+
+export function CreateManualOrderDialog({
+  open: externalOpen,
+  onOpenChange: externalOnOpenChange,
+  initialMessage,
+  trigger,
+}: CreateManualOrderDialogProps) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [confirmLocationOpen, setConfirmLocationOpen] = useState(false);
   const [pendingAddress, setPendingAddress] = useState<string | null>(null);
@@ -57,6 +70,9 @@ export function CreateManualOrderDialog() {
   const [extractedData, setExtractedData] = useState<any>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
+  const open = externalOpen ?? internalOpen;
+  const setOpen = externalOnOpenChange ?? setInternalOpen;
+
   const [formData, setFormData] = useState({
     customer_name: "",
     customer_email: "",
@@ -69,8 +85,13 @@ export function CreateManualOrderDialog() {
   });
 
   useEffect(() => {
-    if (open) loadProducts();
-  }, [open]);
+    if (open) {
+      loadProducts();
+      if (initialMessage) {
+        setMessageInput(initialMessage);
+      }
+    }
+  }, [open, initialMessage]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -94,18 +115,27 @@ export function CreateManualOrderDialog() {
         page_size: 100,
         in_stock: true,
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mappedProducts: Product[] = response.results.map((p: any) => ({
-        id: p.id.toString(),
-        name: p.name,
-        price: parseFloat(p.price),
-        stock: p.stock || 0,
-        image_url: p.thumbnail_image || undefined,
-        sku: p.sku,
-      }));
+
+      // Map the API response to the expected Product interface
+      const mappedProducts: Product[] = response.results.map(product => {
+        // Create base product object
+        const productData: Product = {
+          id: product.id.toString(),
+          name: product.name,
+          price:
+            typeof product.price === "string"
+              ? parseFloat(product.price)
+              : product.price,
+          stock: product.stock || 0,
+          image_url: product.thumbnail_image || undefined,
+        };
+        return productData;
+      });
+
       setProducts(mappedProducts);
-    } catch {
-      toast.error("Failed to load products");
+    } catch (error) {
+      console.error("Error loading products:", error);
+      toast.error("Failed to load products. Please try again later.");
     } finally {
       setIsLoadingProducts(false);
     }
@@ -114,7 +144,8 @@ export function CreateManualOrderDialog() {
   const filteredProducts = products.filter(
     product =>
       (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.sku?.toLowerCase().includes(searchQuery.toLowerCase())) &&
+        (product.sku &&
+          product.sku.toLowerCase().includes(searchQuery.toLowerCase()))) &&
       !orderItems.find(item => item.product_id === product.id)
   );
 
@@ -136,84 +167,119 @@ export function CreateManualOrderDialog() {
 
     setExtracting(true);
     try {
-      const response = await fetch(
-        `https://api.wit.ai/message?v=20251028&q=${encodeURIComponent(
-          messageInput
-        )}`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_WIT_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      // Mock extraction for demo - replace with actual Wit.ai API
+      // const response = await fetch(
+      //   `https://api.wit.ai/message?v=20251028&q=${encodeURIComponent(messageInput)}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${process.env.NEXT_PUBLIC_WIT_API_KEY}`,
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
 
-      if (!response.ok) throw new Error("Failed to fetch from Wit.ai");
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      const data = await response.json();
-      const extractValue = (key: string) => {
-        const possibleKeys = [
-          key,
-          `wit$${key}:${key}`,
-          `name:${key}`,
-          `wit$${key}`,
-        ];
-        for (const k of possibleKeys) {
-          const entity = data.entities?.[k]?.[0];
-          if (entity) {
-            if (key === "phone_number" && entity.value) {
-              return entity.value.replace(/[^0-9+]/g, "");
-            }
-            return entity.value || entity.body || null;
-          }
-        }
-        return null;
-      };
+      // Mock extracted data based on common patterns
+      const mockExtractedData = extractFromMessage(messageInput);
 
-      const extracted: {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        name: any;
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        email: any;
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        phone: any;
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        address: any;
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        city?: string; // Add city as optional property
-      } = {
-        name: extractValue("name"),
-        email: extractValue("email"),
-        phone: extractValue("phone_number"),
-        address: extractValue("location") || extractValue("address"),
-      };
-
-      // Simple city extraction from address
-      if (extracted.address) {
-        const addressParts = extracted.address.split(",");
-        if (addressParts.length > 1) {
-          extracted.city = addressParts[addressParts.length - 1].trim();
-        } else {
-          const words = extracted.address.split(" ");
-          extracted.city = words[words.length - 1];
-        }
-      }
-
-      setExtractedData(extracted);
+      setExtractedData(mockExtractedData);
       toast.success("Data extracted successfully!");
 
       // If address found, confirm first
-      if (extracted.address) {
-        setPendingAddress(extracted.address);
+      if (mockExtractedData.address) {
+        setPendingAddress(mockExtractedData.address);
         setConfirmLocationOpen(true);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.error("Wit.ai extraction error:", err);
+      console.error("Extraction error:", err);
       toast.error(err.message || "Failed to extract data");
     } finally {
       setExtracting(false);
     }
+  };
+
+  // Helper function to extract data from message
+  const extractFromMessage = (message: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const extracted: any = {
+      name: null,
+      email: null,
+      phone: null,
+      address: null,
+      city: null,
+    };
+
+    // Extract phone number (Nepali format)
+    const phoneMatch = message.match(/(?:\+?977)?9[78]\d{8}/);
+    if (phoneMatch) {
+      extracted.phone = phoneMatch[0];
+    }
+
+    // Extract name (simple pattern - word after "I'm", "this is", "name is")
+    const nameMatch = message.match(
+      /(?:I'm|I am|this is|name is|myself)\s+([A-Za-z]+)/i
+    );
+    if (nameMatch) {
+      extracted.name = nameMatch[1];
+    }
+
+    // Extract email
+    const emailMatch = message.match(
+      /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/
+    );
+    if (emailMatch) {
+      extracted.email = emailMatch[0];
+    }
+
+    // Extract common Nepali locations/addresses
+    const locations = [
+      "Patan",
+      "Kathmandu",
+      "Bhaktapur",
+      "Lalitpur",
+      "Pokhara",
+      "Biratnagar",
+    ];
+    const addressMatch = locations.find(location =>
+      message.toLowerCase().includes(location.toLowerCase())
+    );
+
+    if (addressMatch) {
+      extracted.address = addressMatch;
+      extracted.city = addressMatch;
+    }
+
+    // Extract quantities and items
+    const quantityMatch = message.match(
+      /(\d+)\s*(chicken momos|veg momos|buff momos|momos|chowmein)/i
+    );
+    if (quantityMatch && !orderItems.length) {
+      // Auto-add items to order if detected
+      const quantity = parseInt(quantityMatch[1]);
+      const itemName = quantityMatch[2].toLowerCase();
+
+      const product = products.find(p =>
+        p.name.toLowerCase().includes(itemName)
+      );
+
+      if (product) {
+        setOrderItems(prev => [
+          ...prev,
+          {
+            product_id: product.id,
+            product_name: product.name,
+            quantity: quantity,
+            price: product.price,
+            image_url: product.image_url,
+          },
+        ]);
+      }
+    }
+
+    return extracted;
   };
 
   const handleImport = () => {
@@ -254,7 +320,9 @@ export function CreateManualOrderDialog() {
               : item
           )
         );
-      } else toast.error("Cannot add more than available stock");
+      } else {
+        toast.error("Cannot add more than available stock");
+      }
     } else {
       setOrderItems([
         ...orderItems,
@@ -340,9 +408,29 @@ export function CreateManualOrderDialog() {
         note: formData.notes,
       };
 
-      await orderApi.createOrder(orderPayload);
-      toast.success("Manual order created successfully");
+      // Convert order items to the format expected by the API
+      const orderItemsPayload = orderItems.map(item => ({
+        product_id: parseInt(item.product_id, 10),
+        quantity: item.quantity,
+        price: item.price,
+      }));
 
+      const orderData = {
+        ...orderPayload,
+        order_items: orderItemsPayload,
+        // Ensure required fields are included
+        status: "pending",
+        payment_status: "pending",
+        // Convert total_amount to string to match the API type
+        total_amount: orderItems
+          .reduce((total, item) => total + item.price * item.quantity, 0)
+          .toString(),
+      };
+
+      await orderApi.createOrder(orderData, false);
+      toast.success("Order created successfully");
+
+      // Reset form
       setFormData({
         customer_name: "",
         customer_email: "",
@@ -354,6 +442,8 @@ export function CreateManualOrderDialog() {
         notes: "",
       });
       setOrderItems([]);
+      setExtractedData(null);
+      setMessageInput("");
       setOpen(false);
       router.refresh();
     } catch {
@@ -363,15 +453,33 @@ export function CreateManualOrderDialog() {
     }
   };
 
+  const resetForm = () => {
+    setFormData({
+      customer_name: "",
+      customer_email: "",
+      customer_phone: "",
+      customer_address: "",
+      shipping_address: "",
+      city: "",
+      delivery_charge: "0.00",
+      notes: "",
+    });
+    setOrderItems([]);
+    setExtractedData(null);
+    setMessageInput("");
+  };
+
   return (
     <>
-      {/* MAIN DIALOG */}
+      {/* MAIN DIALOG TRIGGER */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Create Manual Order
-          </Button>
+          {trigger || (
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Create Manual Order
+            </Button>
+          )}
         </DialogTrigger>
 
         <DialogContent className="max-h-[90vh] max-w-4xl">
@@ -403,8 +511,9 @@ export function CreateManualOrderDialog() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Name *</Label>
+                    <Label htmlFor="customer_name">Name *</Label>
                     <Input
+                      id="customer_name"
                       name="customer_name"
                       value={formData.customer_name}
                       onChange={handleChange}
@@ -412,8 +521,9 @@ export function CreateManualOrderDialog() {
                     />
                   </div>
                   <div>
-                    <Label>Email *</Label>
+                    <Label htmlFor="customer_email">Email *</Label>
                     <Input
+                      id="customer_email"
                       name="customer_email"
                       type="email"
                       value={formData.customer_email}
@@ -425,8 +535,9 @@ export function CreateManualOrderDialog() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Phone *</Label>
+                    <Label htmlFor="customer_phone">Phone *</Label>
                     <Input
+                      id="customer_phone"
                       name="customer_phone"
                       value={formData.customer_phone}
                       onChange={handleChange}
@@ -434,8 +545,9 @@ export function CreateManualOrderDialog() {
                     />
                   </div>
                   <div>
-                    <Label>City *</Label>
+                    <Label htmlFor="city">City *</Label>
                     <Input
+                      id="city"
                       name="city"
                       value={formData.city}
                       onChange={handleChange}
@@ -446,8 +558,9 @@ export function CreateManualOrderDialog() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Billing Address *</Label>
+                    <Label htmlFor="customer_address">Billing Address *</Label>
                     <Textarea
+                      id="customer_address"
                       name="customer_address"
                       value={formData.customer_address}
                       onChange={handleChange}
@@ -456,8 +569,9 @@ export function CreateManualOrderDialog() {
                     />
                   </div>
                   <div>
-                    <Label>Shipping Address</Label>
+                    <Label htmlFor="shipping_address">Shipping Address</Label>
                     <Textarea
+                      id="shipping_address"
                       name="shipping_address"
                       value={formData.shipping_address}
                       onChange={handleChange}
@@ -469,8 +583,9 @@ export function CreateManualOrderDialog() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Delivery Charge</Label>
+                    <Label htmlFor="delivery_charge">Delivery Charge</Label>
                     <Input
+                      id="delivery_charge"
                       name="delivery_charge"
                       type="number"
                       value={formData.delivery_charge}
@@ -504,14 +619,19 @@ export function CreateManualOrderDialog() {
 
                   {showDropdown && (
                     <>
-                      {filteredProducts.length > 0 ? (
+                      {isLoadingProducts ? (
+                        <div className="absolute z-50 mt-1 w-full rounded-md border bg-white p-4 text-center text-sm text-gray-500 shadow-lg">
+                          <Loader2 className="mx-auto h-4 w-4 animate-spin" />
+                          Loading products...
+                        </div>
+                      ) : filteredProducts.length > 0 ? (
                         <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-white shadow-lg">
                           {filteredProducts.map(product => (
                             <button
                               key={product.id}
                               type="button"
                               onClick={() => handleProductSelect(product)}
-                              className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-gray-50"
+                              className="flex w-full items-center gap-3 border-b px-4 py-3 text-left last:border-b-0 hover:bg-gray-50"
                             >
                               {product.image_url && (
                                 <img
@@ -652,8 +772,9 @@ export function CreateManualOrderDialog() {
 
               {/* NOTES */}
               <div className="space-y-2">
-                <Label>Order Notes</Label>
+                <Label htmlFor="notes">Order Notes</Label>
                 <Textarea
+                  id="notes"
                   name="notes"
                   value={formData.notes}
                   onChange={handleChange}
@@ -665,7 +786,14 @@ export function CreateManualOrderDialog() {
           </ScrollArea>
 
           <DialogFooter className="mt-4">
-            <Button variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setOpen(false);
+                resetForm();
+              }}
+            >
               Cancel
             </Button>
             <Button
@@ -687,8 +815,8 @@ export function CreateManualOrderDialog() {
           <DialogHeader>
             <DialogTitle>Extract Contact Info</DialogTitle>
             <DialogDescription>
-              Paste or type a message (e.g., &aquot;Hi, I&apos;m Sam from Tokha,
-              9812…&aquot;)
+              Paste or type a message (e.g., &quot;Hi, I&apos;m Sam from Tokha,
+              9812…&quot;)
             </DialogDescription>
           </DialogHeader>
 
@@ -702,6 +830,9 @@ export function CreateManualOrderDialog() {
           {extracting ? (
             <div className="flex items-center justify-center py-2">
               <Loader2 className="h-5 w-5 animate-spin text-gray-500" />
+              <span className="ml-2 text-sm text-gray-500">
+                Extracting data...
+              </span>
             </div>
           ) : (
             extractedData && (
@@ -725,11 +856,14 @@ export function CreateManualOrderDialog() {
             )
           )}
 
-          <DialogFooter className="mt-4">
+          <DialogFooter className="mt-4 flex gap-2">
             <Button variant="outline" onClick={() => setOpenImport(false)}>
               Close
             </Button>
-            <Button onClick={handleExtract} disabled={extracting}>
+            <Button
+              onClick={handleExtract}
+              disabled={extracting || !messageInput.trim()}
+            >
               {extracting ? "Extracting..." : "Extract"}
             </Button>
             <Button

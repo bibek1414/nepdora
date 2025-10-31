@@ -16,11 +16,10 @@ export interface FacebookMessage {
 
 export async function GET(
   request: Request,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  { params }: any
+  context: { params: Promise<{ conversationId: string }> } // ✅ params is a Promise
 ) {
   try {
-    const conversationId = params.conversationId;
+    const { conversationId } = await context.params; // ✅ await params
 
     if (!PAGE_ACCESS_TOKEN) {
       throw new Error("Facebook Page Access Token is not configured");
