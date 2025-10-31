@@ -48,9 +48,9 @@ export const CategoryCard3: React.FC<CategoryCard3Props> = ({
 
   const getCategoryUrl = (): string => {
     if (siteUser) {
-      return `/products?category=${category.slug}`;
+      return `/collections?category=${category.slug}`;
     } else {
-      return `/publish/products?category=${category.slug}`;
+      return `/publish/collections?category=${category.slug}`;
     }
   };
 

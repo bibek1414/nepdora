@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AuthContext } from "@/contexts/customer/publish/AuthContext";
+import { AuthContext } from "@/contexts/publish/AuthContext";
 export const useAuth = () => {
   const context = React.useContext(AuthContext);
   if (context === undefined) {

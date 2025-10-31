@@ -98,8 +98,8 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
     });
 
     const productsUrl = siteUser
-      ? `/publish/${siteUser}/products?${searchParams.toString()}`
-      : `/products?${searchParams.toString()}`;
+      ? `/collections?${searchParams.toString()}`
+      : `/collections?${searchParams.toString()}`;
 
     router.push(productsUrl);
   };
@@ -236,8 +236,8 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
 
     if (!isEditable) {
       const productsUrl = siteUser
-        ? `/publish/${siteUser}/products`
-        : `/products`;
+        ? `/publish/${siteUser}/collections`
+        : `/collections`;
       router.push(productsUrl);
     }
   };

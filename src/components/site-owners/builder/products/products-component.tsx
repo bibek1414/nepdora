@@ -28,7 +28,7 @@ import { AlertCircle, Trash2, ShoppingBag, Filter } from "lucide-react";
 import { Product } from "@/types/owner-site/admin/product";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
-import Pagination from "@/components/ui/pagination";
+import Pagination from "@/components/ui/site-owners/pagination";
 import { useProductFilters } from "@/hooks/owner-site/admin/use-product";
 import Link from "next/link";
 

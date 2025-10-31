@@ -21,6 +21,8 @@ import {
 } from "@/types/payment";
 import { useOrder } from "@/hooks/owner-site/admin/use-orders";
 import { OrderItem } from "@/types/owner-site/admin/orders";
+import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 export default function EsewaPayment() {
   const router = useRouter();
@@ -136,39 +138,64 @@ export default function EsewaPayment() {
 
   // Helper function to render order items with variants
   const renderOrderItem = (item: OrderItem, index: number) => {
-    const productName = item.product?.name || `Product ${item.product_id}`;
+    // Use variant data if available, otherwise use product data
+    const displayImage = item.variant?.image || item.product?.thumbnail_image;
+    const displayName =
+      item.variant?.product?.name ||
+      item.product?.name ||
+      `Product ${item.product_id}`;
     const itemPrice = parseFloat(item.price);
     const itemTotal = itemPrice * item.quantity;
-    const hasVariant = item.variant && item.variant.option_values.length > 0;
 
     return (
-      <div key={item.id || index} className="flex justify-between text-sm">
-        <div className="flex-1">
-          <div className="font-medium text-gray-900">
-            {productName} x {item.quantity}
+      <div
+        key={item.id || index}
+        className="flex gap-3 border-b border-gray-200 py-3 last:border-b-0"
+      >
+        {/* Product/Variant Image */}
+        {displayImage && (
+          <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border">
+            <Image
+              src={displayImage}
+              alt={displayName}
+              fill
+              className="object-cover"
+              sizes="64px"
+            />
           </div>
-          {hasVariant && (
+        )}
+
+        <div className="flex flex-1 flex-col justify-between">
+          <div>
+            <div className="text-sm font-medium text-gray-900">
+              {displayName}
+            </div>
+
+            {/* Display variant options as badges if variant exists */}
+            {item.variant && item.variant.option_values && (
+              <div className="mt-1 flex flex-wrap gap-1">
+                {item.variant.option_values.map(option => (
+                  <Badge
+                    key={option.id}
+                    variant="secondary"
+                    className="bg-green-50 text-xs text-green-700 capitalize"
+                  >
+                    {option.value}
+                  </Badge>
+                ))}
+              </div>
+            )}
+
             <div className="mt-1 text-xs text-gray-500">
-              <span className="font-medium">Variant:</span>{" "}
-              {item.variant!.option_values.map(opt => opt.value).join(", ")}
+              NPR {itemPrice.toFixed(2)} × {item.quantity}
             </div>
-          )}
-          {item.variant && (
-            <div className="text-xs text-gray-500">
-              <span className="font-medium">Price:</span> NPR{" "}
-              {itemPrice.toFixed(2)} each
-            </div>
-          )}
-        </div>
-        <div className="text-right">
-          <div className="font-medium text-gray-900">
-            NPR {itemTotal.toFixed(2)}
           </div>
-          {item.variant && (
-            <div className="text-xs text-gray-500">
-              {itemPrice.toFixed(2)} × {item.quantity}
+
+          <div className="text-right">
+            <div className="text-sm font-semibold text-gray-900">
+              NPR {itemTotal.toFixed(2)}
             </div>
-          )}
+          </div>
         </div>
       </div>
     );
@@ -243,8 +270,8 @@ export default function EsewaPayment() {
   const orderItems = order.items || order.order_items || [];
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <Card className="mx-4 w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+      <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span className="h-4 w-4 rounded-full bg-green-500"></span>
@@ -298,6 +325,15 @@ export default function EsewaPayment() {
                 <span className="text-gray-600">Phone:</span>
                 <span className="font-medium">{order.customer_phone}</span>
               </div>
+
+              {order.shipping_address && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Shipping Address:</span>
+                  <span className="max-w-[200px] text-right font-medium">
+                    {order.shipping_address}
+                  </span>
+                </div>
+              )}
             </div>
 
             {orderItems.length > 0 && (
@@ -305,15 +341,39 @@ export default function EsewaPayment() {
                 <h4 className="mb-2 text-sm font-semibold text-gray-700">
                   Items ({orderItems.length})
                 </h4>
-                <div className="max-h-48 space-y-3 overflow-y-auto">
+                <div className="max-h-64 space-y-2 overflow-y-auto rounded-md bg-white p-2">
                   {orderItems.map((item, index) =>
                     renderOrderItem(item, index)
                   )}
                 </div>
               </div>
             )}
-            <div className="mt-2 border-t pt-2">
-              <div className="flex items-center justify-between">
+
+            <div className="mt-4 space-y-2 border-t pt-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Subtotal:</span>
+                <span className="font-medium">
+                  NPR{" "}
+                  {(
+                    parseFloat(order.total_amount) -
+                    (order.delivery_charge
+                      ? parseFloat(order.delivery_charge)
+                      : 0)
+                  ).toFixed(2)}
+                </span>
+              </div>
+
+              {order.delivery_charge &&
+                parseFloat(order.delivery_charge) > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Delivery Charge:</span>
+                    <span className="font-medium">
+                      NPR {parseFloat(order.delivery_charge).toFixed(2)}
+                    </span>
+                  </div>
+                )}
+
+              <div className="flex items-center justify-between border-t pt-2">
                 <span className="font-semibold text-gray-700">
                   Total Amount:
                 </span>
@@ -324,7 +384,7 @@ export default function EsewaPayment() {
             </div>
           </div>
 
-          <div className="rounded bg-blue-50 p-3 text-sm text-gray-500">
+          <div className="rounded bg-blue-50 p-3 text-sm text-gray-600">
             <Info className="mr-2 inline h-4 w-4" />
             You will be redirected to eSewa&apos;s secure payment gateway to
             complete the transaction.

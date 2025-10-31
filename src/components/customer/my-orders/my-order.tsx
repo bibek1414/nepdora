@@ -9,7 +9,7 @@ import {
 import { useAuth } from "@/hooks/customer/use-auth";
 import OrderFilters from "./order-filters";
 import OrdersList from "./order-list";
-import Pagination from "@/components/ui/pagination";
+import Pagination from "@/components/ui/site-owners/pagination";
 import LoadingSpinner from "./loading-spinner";
 import EmptyState from "./empty-state";
 import ErrorState from "./error-state";
