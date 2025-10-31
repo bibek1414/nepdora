@@ -1,0 +1,359 @@
+const FACEBOOK_API_VERSION =
+  process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0";
+const PAGE_ACCESS_TOKEN = process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ACCESS_TOKEN;
+const PAGE_ID = process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID;
+
+if (!PAGE_ACCESS_TOKEN || !PAGE_ID) {
+  console.warn("Facebook Page Access Token or Page ID is not configured");
+}
+
+export interface FacebookUser {
+  id: string;
+  name: string;
+  profile_pic?: string;
+}
+
+export interface FacebookMessage {
+  id: string;
+  from: FacebookUser;
+  message: string;
+  created_time: string;
+}
+
+export interface FacebookConversation {
+  id: string;
+  participants: {
+    data: FacebookUser[];
+  };
+  updated_time: string;
+  unread_count?: number;
+  messages: {
+    data: FacebookMessage[];
+    paging: {
+      previous?: string;
+      next?: string;
+    };
+  };
+}
+
+interface FacebookApiResponse<T> {
+  data: T;
+  paging?: {
+    previous?: string;
+    next?: string;
+    cursors?: {
+      before?: string;
+      after?: string;
+    };
+  };
+  error?: {
+    message: string;
+    type: string;
+    code: number;
+    error_subcode?: number;
+    fbtrace_id: string;
+  };
+}
+
+/**
+ * Verify the Page Access Token has required permissions
+ */
+export async function verifyTokenPermissions(): Promise<{
+  valid: boolean;
+  permissions: string[];
+  error?: string;
+}> {
+  if (!PAGE_ACCESS_TOKEN) {
+    return {
+      valid: false,
+      permissions: [],
+      error: "No access token configured",
+    };
+  }
+
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/me/permissions?access_token=${PAGE_ACCESS_TOKEN}`
+    );
+    const data = await response.json();
+
+    if (data.error) {
+      return { valid: false, permissions: [], error: data.error.message };
+    }
+
+    interface Permission {
+      permission: string;
+      status: "granted" | "declined";
+    }
+
+    const grantedPermissions = (data.data as Permission[])
+      .filter(p => p.status === "granted")
+      .map(p => p.permission);
+
+    const requiredPermissions = [
+      "pages_messaging",
+      "pages_manage_metadata",
+      "pages_read_engagement",
+    ];
+
+    const missingPermissions = requiredPermissions.filter(
+      (p: string) => !grantedPermissions.includes(p)
+    );
+
+    return {
+      valid: missingPermissions.length === 0,
+      permissions: grantedPermissions,
+      error:
+        missingPermissions.length > 0
+          ? `Missing permissions: ${missingPermissions.join(", ")}`
+          : undefined,
+    };
+  } catch (error) {
+    console.error("Error verifying token permissions:", error);
+    return { valid: false, permissions: [], error: String(error) };
+  }
+}
+
+/**
+ * Get page information to verify the Page ID and token
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getPageInfo(): Promise<any> {
+  if (!PAGE_ACCESS_TOKEN || !PAGE_ID) {
+    throw new Error("Facebook credentials not configured");
+  }
+
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${PAGE_ID}?fields=id,name,access_token,category,tasks&access_token=${PAGE_ACCESS_TOKEN}`
+    );
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error.message);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error getting page info:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get conversations for the Facebook Page
+ */
+export async function getConversations(): Promise<FacebookConversation[]> {
+  if (!PAGE_ACCESS_TOKEN || !PAGE_ID) {
+    throw new Error("Facebook Page Access Token or Page ID is not configured");
+  }
+
+  try {
+    // Build the URL with proper fields
+    const fields = [
+      "id",
+      "participants",
+      "updated_time",
+      "unread_count",
+      "link",
+      "message_count",
+      "messages.limit(10){id,message,from,created_time,attachments}",
+    ].join(",");
+
+    const conversationsUrl = `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${PAGE_ID}/conversations?fields=${encodeURIComponent(
+      fields
+    )}&platform=messenger&access_token=${PAGE_ACCESS_TOKEN}`;
+
+    console.log("Fetching conversations from:", `${PAGE_ID}/conversations`);
+
+    const response = await fetch(conversationsUrl);
+    const data: FacebookApiResponse<FacebookConversation[]> =
+      await response.json();
+
+    if (!response.ok) {
+      console.error("Facebook API error response:", data);
+
+      // Handle specific error codes
+      if (data.error) {
+        switch (data.error.code) {
+          case 100:
+            throw new Error(
+              `Invalid field or permissions error: ${data.error.message}. Make sure your Page Access Token has 'pages_messaging' and 'pages_read_engagement' permissions.`
+            );
+          case 190:
+            throw new Error(
+              `Invalid access token: ${data.error.message}. Please regenerate your Page Access Token.`
+            );
+          case 200:
+            throw new Error(
+              `Missing permissions: ${data.error.message}. Required: pages_messaging, pages_read_engagement, pages_manage_metadata`
+            );
+          default:
+            throw new Error(
+              data.error.message ||
+                `Facebook API error: ${response.status} ${response.statusText}`
+            );
+        }
+      }
+
+      throw new Error(
+        `Facebook API error: ${response.status} ${response.statusText}`
+      );
+    }
+
+    if (!data.data) {
+      console.warn("No conversations data returned from Facebook API");
+      return [];
+    }
+
+    console.log("Successfully fetched conversations:", data.data.length);
+    return data.data;
+  } catch (error) {
+    console.error("Error in getConversations:", error);
+    throw error; // Re-throw instead of returning empty array to see the actual error
+  }
+}
+
+/**
+ * Get messages for a specific conversation
+ */
+export async function getConversationMessages(
+  conversationId: string,
+  limit: number = 50
+): Promise<FacebookMessage[]> {
+  if (!PAGE_ACCESS_TOKEN) {
+    throw new Error("Facebook Page Access Token is not configured");
+  }
+
+  try {
+    const fields = "id,message,from,created_time,attachments";
+    const url = `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${conversationId}/messages?fields=${fields}&limit=${limit}&access_token=${PAGE_ACCESS_TOKEN}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Error fetching messages:", data);
+      throw new Error(data.error?.message || "Failed to fetch messages");
+    }
+
+    return data.data || [];
+  } catch (error) {
+    console.error("Error in getConversationMessages:", error);
+    throw error;
+  }
+}
+
+/**
+ * Send a message to a user
+ */
+export async function sendMessage(
+  recipientId: string,
+  message: string
+): Promise<void> {
+  if (!PAGE_ACCESS_TOKEN) {
+    throw new Error("Facebook Page Access Token is not configured");
+  }
+
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/me/messages?access_token=${PAGE_ACCESS_TOKEN}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          recipient: { id: recipientId },
+          message: { text: message },
+          messaging_type: "RESPONSE",
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Error sending message:", data);
+      throw new Error(
+        data.error?.message || `Failed to send message: ${JSON.stringify(data)}`
+      );
+    }
+
+    console.log("Message sent successfully:", data);
+  } catch (error) {
+    console.error("Error in sendMessage:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get user profile information
+ */
+export async function getUserProfile(userId: string): Promise<FacebookUser> {
+  if (!PAGE_ACCESS_TOKEN) {
+    throw new Error("Facebook Page Access Token is not configured");
+  }
+
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${userId}?fields=id,name,profile_pic&access_token=${PAGE_ACCESS_TOKEN}`
+    );
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error?.message || "Failed to get user profile");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error in getUserProfile:", error);
+    throw error;
+  }
+}
+
+/**
+ * Format timestamp to readable date and time
+ */
+export function formatTimestamp(timestamp: string): string {
+  if (!timestamp) return "";
+
+  const date = new Date(timestamp);
+
+  // Check if date is valid
+  if (isNaN(date.getTime())) {
+    console.error("Invalid date:", timestamp);
+    return "";
+  }
+
+  return date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
+/**
+ * Format date to readable format
+ */
+export function formatDate(timestamp: string): string {
+  const date = new Date(timestamp);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  if (date.toDateString() === today.toDateString()) {
+    return "Today";
+  } else if (date.toDateString() === yesterday.toDateString()) {
+    return "Yesterday";
+  } else {
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: date.getFullYear() !== today.getFullYear() ? "numeric" : undefined,
+    });
+  }
+}

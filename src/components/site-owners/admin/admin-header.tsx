@@ -2,6 +2,8 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { FacebookLoginButton } from "@/components/facebook/FacebookLoginButton";
+import { useFacebook } from "@/contexts/FacebookContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -81,6 +83,22 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
         <div className="flex items-center space-x-4"></div>
 
         <div className="flex items-center space-x-2">
+          <FacebookLoginButton
+            variant="outline"
+            size="sm"
+            className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+            text="Connect Facebook"
+          />
+          <Link href="/admin/messenger" className="flex items-center">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+            >
+              <MessageCircle className="mr-2 h-4 w-4" />
+              Messenger
+            </Button>
+          </Link>
           <Link
             href={`/publish/${user.subDomain}`}
             target="_blank"
