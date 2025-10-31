@@ -181,7 +181,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       setShowDropdown(false);
       setIsSearchFocused(false);
       // Navigate to products page with search
-      window.location.href = `/publish/${siteUser}/collections?search=${encodeURIComponent(searchQuery.trim())}`;
+      window.location.href = `/collections?search=${encodeURIComponent(searchQuery.trim())}`;
     }
   };
 
@@ -228,7 +228,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleViewAllResults = (): void => {
     closeSearchResults();
-    window.location.href = `/publish/${siteUser}/collections?search=${encodeURIComponent(searchQuery.trim())}`;
+    window.location.href = `/collections?search=${encodeURIComponent(searchQuery.trim())}`;
   };
 
   const page_sizeedProducts = sortedProducts.slice(0, 5);
