@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -45,6 +45,10 @@ import { Page } from "@/types/owner-site/components/page";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import {
+  useSiteConfig,
+  usePatchSiteConfig,
+} from "@/hooks/owner-site/admin/use-site-config";
 
 interface NavbarEditorDialogProps {
   isOpen: boolean;
@@ -240,13 +244,27 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
     id: string;
   } | null>(null);
 
+  // Use site config hooks
+  const { data: siteConfig, isLoading: isSiteConfigLoading } = useSiteConfig();
+  const patchSiteConfigMutation = usePatchSiteConfig();
+
+  // Sync logo from site config when component mounts or site config changes
+  useEffect(() => {
+    if (siteConfig?.logo && siteConfig.logo !== navbarData.logoImage) {
+      setNavbarData(prev => ({
+        ...prev,
+        logoImage: siteConfig.logo || "",
+      }));
+    }
+  }, [siteConfig?.logo]);
+
   // Handle input changes
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleInputChange = (field: keyof NavbarData, value: any) => {
     setNavbarData(prev => ({ ...prev, [field]: value }));
   };
 
-  // Handle logo image upload
+  // Handle logo image upload and update site config
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -269,16 +287,72 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
     setUploadError(null);
 
     try {
+      // Upload to Cloudinary
       const imageUrl = await uploadToCloudinary(file, {
         folder: "logos",
         resourceType: "image",
       });
+
+      // Update local state immediately for better UX
       setNavbarData(prev => ({ ...prev, logoImage: imageUrl }));
+
+      // Update site config in database if site config exists
+      if (siteConfig?.id) {
+        const formData = new FormData();
+        formData.append("logo", imageUrl);
+
+        await patchSiteConfigMutation.mutateAsync({
+          id: siteConfig.id,
+          data: formData,
+        });
+      } else {
+        console.warn("No site config found. Logo saved locally only.");
+      }
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed");
+      // Revert local state on error
+      setNavbarData(prev => ({
+        ...prev,
+        logoImage: siteConfig?.logo || "",
+      }));
     } finally {
       setIsUploading(false);
     }
+  };
+
+  // Handle logo removal
+  const handleRemoveLogo = async () => {
+    try {
+      // Update local state immediately
+      setNavbarData(prev => ({ ...prev, logoImage: "" }));
+
+      // Update site config in database if site config exists
+      if (siteConfig?.id) {
+        const formData = new FormData();
+        formData.append("logo", "");
+
+        await patchSiteConfigMutation.mutateAsync({
+          id: siteConfig.id,
+          data: formData,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to remove logo:", error);
+      // Revert local state on error
+      setNavbarData(prev => ({
+        ...prev,
+        logoImage: siteConfig?.logo || "",
+      }));
+      alert("Failed to remove logo. Please try again.");
+    }
+  };
+
+  // Handle logo type change and update site config if needed
+  const handleLogoTypeChange = async (value: "text" | "image" | "both") => {
+    setNavbarData(prev => ({ ...prev, logoType: value }));
+
+    // If switching to image-only or both but no logo exists in site config,
+    // we might want to handle this case, but for now just update local state
   };
 
   // Handle link operations
@@ -407,6 +481,9 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
               >
                 <Type className="mr-2 h-4 w-4" />
                 Logo
+                {siteConfig?.logo && (
+                  <span className="ml-auto h-2 w-2 rounded-full bg-green-500" />
+                )}
               </button>
               <button
                 onClick={() => setActiveTab("links")}
@@ -448,7 +525,9 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
           <div className="flex-1 overflow-y-auto">
             {activeTab === "logo" && (
               <div className="space-y-6">
-                <h3 className="text-lg font-medium">Logo Settings</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium">Logo Settings</h3>
+                </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="logo-text">Logo Text</Label>
@@ -464,6 +543,14 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
 
                 <div className="space-y-3">
                   <Label>Logo Image</Label>
+
+                  {/* Site Config Status */}
+                  {isSiteConfigLoading && (
+                    <div className="text-sm text-blue-600">
+                      Loading site configuration...
+                    </div>
+                  )}
+
                   <div className="flex items-center gap-3">
                     <Button
                       type="button"
@@ -471,7 +558,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                       onClick={() =>
                         document.getElementById("logo-upload")?.click()
                       }
-                      disabled={isUploading}
+                      disabled={isUploading || isSiteConfigLoading}
                       className="flex items-center gap-2"
                     >
                       {isUploading ? (
@@ -492,10 +579,15 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => handleInputChange("logoImage", "")}
+                        onClick={handleRemoveLogo}
+                        disabled={patchSiteConfigMutation.isPending}
                         className="text-destructive hover:text-destructive"
                       >
-                        <X className="h-4 w-4" />
+                        {patchSiteConfigMutation.isPending ? (
+                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                        ) : (
+                          <X className="h-4 w-4" />
+                        )}
                       </Button>
                     )}
                   </div>
@@ -520,10 +612,16 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                       <div className="flex-1">
                         <p className="text-sm font-medium">Logo uploaded</p>
                         <p className="text-muted-foreground text-xs">
-                          Ready to use
+                          {siteConfig?.logo
+                            ? "Saved to site configuration"
+                            : "Ready to use"}
                         </p>
                       </div>
                     </div>
+                  )}
+
+                  {uploadError && (
+                    <p className="text-destructive text-sm">{uploadError}</p>
                   )}
 
                   <p className="text-muted-foreground text-xs">
@@ -535,9 +633,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                   <Label>Logo Display</Label>
                   <RadioGroup
                     value={navbarData.logoType || "text"}
-                    onValueChange={(value: "text" | "image" | "both") =>
-                      handleInputChange("logoType", value)
-                    }
+                    onValueChange={handleLogoTypeChange}
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="text" id="text-only" />

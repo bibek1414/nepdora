@@ -15,10 +15,13 @@ import {
   Youtube,
   Globe,
   Music2,
+  CheckCircle,
+  AlertCircle,
 } from "lucide-react";
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 
 interface FooterStyle5Props {
   footerData: FooterData;
@@ -27,15 +30,18 @@ interface FooterStyle5Props {
   siteUser?: string;
 }
 
-// Icon mapping to resolve serialized icons
+// Complete icon mapping to resolve serialized icons
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Facebook,
   Twitter,
   Instagram,
   Linkedin,
+  LinkedIn: Linkedin, // Alternative spelling
   Youtube,
-  Globe,
+  YouTube: Youtube, // Alternative spelling
   Music2,
+  Tiktok: Music2, // Map Tiktok to Music2 icon
+  Globe,
 };
 
 // Helper function to render social icons with proper fallback
@@ -43,17 +49,66 @@ const renderSocialIcon = (social: SocialLink) => {
   // First, try to get the icon from the mapping based on platform name
   const IconFromMap = iconMap[social.platform];
   if (IconFromMap) {
-    return <IconFromMap className="h-4 w-4" />;
+    return <IconFromMap className="h-5 w-5" />;
   }
 
   // If the icon is a proper React component (function), use it directly
   if (typeof social.icon === "function") {
     const IconComponent = social.icon;
-    return <IconComponent className="h-4 w-4" />;
+    return <IconComponent className="h-5 w-5" />;
   }
 
   // Fallback to a default icon if nothing else works
-  return <Globe className="h-4 w-4" />;
+  return <Globe className="h-5 w-5" />;
+};
+
+// Logo component
+const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
+  const { logoType, logoImage, logoText, companyName } = footerData;
+
+  if (logoType === "text") {
+    return (
+      <div className="flex items-center">
+        <span className="text-heading-light dark:text-heading-dark text-xl font-bold">
+          {logoText || companyName}
+        </span>
+      </div>
+    );
+  }
+
+  if (logoType === "image") {
+    return logoImage ? (
+      <div className="flex items-center">
+        <img
+          src={logoImage}
+          alt={companyName}
+          className="h-8 w-auto object-contain"
+        />
+      </div>
+    ) : (
+      <div className="flex items-center">
+        <span className="text-heading-light dark:text-heading-dark text-xl font-bold">
+          {companyName}
+        </span>
+      </div>
+    );
+  }
+
+  // logoType === "both"
+  return (
+    <div className="flex items-center gap-3">
+      {logoImage && (
+        <img
+          src={logoImage}
+          alt={companyName}
+          className="h-8 w-auto object-contain"
+        />
+      )}
+      <span className="text-heading-light dark:text-heading-dark text-xl font-bold">
+        {logoText || companyName}
+      </span>
+    </div>
+  );
 };
 
 export function FooterStyle5({
@@ -63,7 +118,14 @@ export function FooterStyle5({
   siteUser,
 }: FooterStyle5Props) {
   const [email, setEmail] = useState("");
+  const [subscriptionStatus, setSubscriptionStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const deleteFooterMutation = useDeleteFooterMutation();
+  const createNewsletterMutation = useCreateNewsletter();
+
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -82,16 +144,13 @@ export function FooterStyle5({
 
   // Function to generate the correct href for links
   const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref; // Keep original href for editable mode
+    if (isEditable) return originalHref;
 
-    // For preview mode, generate the correct route
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
       return `/preview/${siteUser}`;
     }
 
-    // Remove leading slash and hash if present
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-
     return `/preview/${siteUser}/${cleanHref}`;
   };
 
@@ -102,23 +161,19 @@ export function FooterStyle5({
     }
 
     if (isEditable) {
-      // In editable mode, prevent navigation
       e.preventDefault();
       return;
     }
 
-    // For external links or special cases
     if (
       href.includes("/preview?") ||
       href.startsWith("http") ||
       href.startsWith("mailto:") ||
       href.startsWith("tel:")
     ) {
-      // Allow these to navigate normally
       return;
     }
 
-    // For internal links, use our generated href
     e.preventDefault();
     const generatedHref = generateLinkHref(href);
     window.location.href = generatedHref;
@@ -128,90 +183,174 @@ export function FooterStyle5({
     deleteFooterMutation.mutate();
   };
 
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email.trim()) {
+      setErrorMessage("Please enter a valid email address");
+      setSubscriptionStatus("error");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMessage("Please enter a valid email address");
+      setSubscriptionStatus("error");
+      return;
+    }
+
+    try {
+      await createNewsletterMutation.mutateAsync({
+        email: email.trim(),
+        is_subscribed: true,
+      });
+
+      setSubscriptionStatus("success");
+      setEmail("");
+      setErrorMessage("");
+
+      setTimeout(() => {
+        setSubscriptionStatus("idle");
+      }, 3000);
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Newsletter subscription error:", error);
+      setErrorMessage(
+        error?.response?.data?.message ||
+          "Failed to subscribe. Please try again."
+      );
+      setSubscriptionStatus("error");
+    }
+  };
+
   // Get available sections, fallback to creating sections if none exist
   const availableSections =
     footerData.sections.length > 0
       ? footerData.sections
       : [{ id: "default", title: "Quick Links", links: [] }];
 
-  const sectionsToShow = availableSections.slice(0, 4);
+  const sectionsToShow = availableSections.slice(0, 3);
+
   return (
     <div className="group relative">
-      <footer className="bg-background-light dark:bg-background-dark font-display px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
-          {/* Render the first 4 sections */}
-          {sectionsToShow
-            .filter(section => section.links.length > 0) // only keep sections that have links
-            .map(section => (
-              <div key={section.id} className="col-span-1">
-                <h3 className="text-heading-light dark:text-heading-dark mb-4 font-bold">
-                  {section.title}
-                </h3>
-
-                <ul className="space-y-3">
-                  {section.links.map(link => (
-                    <li key={link.id}>
-                      {isEditable ? (
-                        <button
-                          className="text-text-light dark:text-text-dark hover:text-primary text-left dark:hover:text-white"
-                          onClick={e => handleLinkClick(link.href, e)}
-                        >
-                          {link.text}
-                        </button>
-                      ) : (
-                        <a
-                          href={generateLinkHref(link.href || "")}
-                          className="text-text-light dark:text-text-dark hover:text-primary block dark:hover:text-white"
-                        >
-                          {link.text}
-                        </a>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+      <footer className="bg-background-light dark:bg-background-dark font-display border-t px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {/* Company Info - Takes 2 columns on large screens */}
+            <div className="lg:col-span-2">
+              {/* Logo */}
+              <div className="mb-4">
+                <FooterLogo footerData={footerData} />
               </div>
-            ))}
 
-          {/* Social Links Section */}
-          <div className="col-span-2 md:col-span-1 lg:col-span-1">
-            <h3 className="text-heading-light dark:text-heading-dark mb-4 font-bold">
-              Social
-            </h3>
-            {footerData.socialLinks.length > 0 ? (
-              <div className="flex flex-col space-y-6">
-                {footerData.socialLinks.map(social => (
-                  <Button
-                    key={social.id}
-                    variant="ghost"
-                    size="icon"
-                    className="text-text-light dark:text-text-dark hover:text-primary h-6 w-6 justify-start p-0 dark:hover:text-white"
-                    onClick={e => handleLinkClick(social.href, e)}
-                    {...(!isEditable &&
-                      social.href && {
-                        as: "a",
-                        href: social.href.startsWith("http")
-                          ? social.href
-                          : generateLinkHref(social.href),
-                      })}
-                  >
-                    {renderSocialIcon(social)}
-                  </Button>
-                ))}
-              </div>
-            ) : (
-              <p className="text-text-light dark:text-text-dark text-sm opacity-60">
-                No social links available
+              <p className="text-text-light dark:text-text-dark mb-6 max-w-md">
+                {footerData.description}
               </p>
-            )}
-          </div>
-        </div>
 
-        {/* Copyright */}
-        <div className="mx-auto mt-12 max-w-7xl border-t border-gray-300 pt-8 text-center dark:border-gray-700">
-          <p className="text-text-light dark:text-text-dark text-sm">
-            {footerData.copyright ||
-              `© ${new Date().getFullYear()} ${footerData.companyName}. All rights reserved.`}
-          </p>
+              {/* Contact Info */}
+              <div className="mb-6 space-y-2">
+                {footerData.contactInfo.email && (
+                  <div className="text-text-light dark:text-text-dark flex items-center">
+                    <Mail className="mr-2 h-4 w-4" />
+                    <span className="text-sm">
+                      {footerData.contactInfo.email}
+                    </span>
+                  </div>
+                )}
+                {footerData.contactInfo.phone && (
+                  <div className="text-text-light dark:text-text-dark flex items-center">
+                    <Phone className="mr-2 h-4 w-4" />
+                    <span className="text-sm">
+                      {footerData.contactInfo.phone}
+                    </span>
+                  </div>
+                )}
+                {footerData.contactInfo.address && (
+                  <div className="text-text-light dark:text-text-dark flex items-center">
+                    <MapPin className="mr-2 h-4 w-4" />
+                    <span className="text-sm">
+                      {footerData.contactInfo.address}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Social Links - Horizontal Layout */}
+              <div>
+                <h4 className="text-heading-light dark:text-heading-dark mb-3 font-semibold">
+                  Follow Us
+                </h4>
+                {footerData.socialLinks.length > 0 ? (
+                  <div className="flex flex-wrap gap-3">
+                    {footerData.socialLinks.map(social => (
+                      <Button
+                        key={social.id}
+                        variant="ghost"
+                        size="sm"
+                        className="text-text-light dark:text-text-dark hover:text-primary h-10 w-10 p-0 dark:hover:text-white"
+                        onClick={e => handleLinkClick(social.href, e)}
+                        {...(!isEditable &&
+                          social.href && {
+                            as: "a",
+                            href: social.href.startsWith("http")
+                              ? social.href
+                              : generateLinkHref(social.href),
+                          })}
+                      >
+                        {renderSocialIcon(social)}
+                      </Button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-text-light dark:text-text-dark text-sm opacity-60">
+                    No social links available
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Render the first 3 sections */}
+            {sectionsToShow
+              .filter(section => section.links.length > 0)
+              .map(section => (
+                <div key={section.id} className="col-span-1">
+                  <h3 className="text-heading-light dark:text-heading-dark mb-4 font-bold">
+                    {section.title}
+                  </h3>
+
+                  <ul className="space-y-3">
+                    {section.links.map(link => (
+                      <li key={link.id}>
+                        {isEditable ? (
+                          <button
+                            className="text-text-light dark:text-text-dark hover:text-primary text-left transition-colors dark:hover:text-white"
+                            onClick={e => handleLinkClick(link.href, e)}
+                          >
+                            {link.text}
+                          </button>
+                        ) : (
+                          <a
+                            href={generateLinkHref(link.href || "")}
+                            className="text-text-light dark:text-text-dark hover:text-primary block text-left transition-colors dark:hover:text-white"
+                          >
+                            {link.text}
+                          </a>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+          </div>
+
+          {/* Copyright */}
+          <div className="mx-auto mt-12 border-t border-gray-300 pt-8 text-center dark:border-gray-700">
+            <p className="text-text-light dark:text-text-dark flex items-center justify-center gap-1 text-sm">
+              {footerData.copyright ||
+                `© ${new Date().getFullYear()} ${footerData.companyName}. All rights reserved.`}
+              <Heart className="inline h-3 w-3 text-red-500" />
+            </p>
+          </div>
         </div>
       </footer>
     </div>

@@ -9,6 +9,9 @@ import {
   Edit,
   Trash2,
   Facebook,
+  Youtube,
+  Globe,
+  Music2,
   Twitter,
   Instagram,
   Linkedin,
@@ -33,24 +36,74 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Twitter,
   Instagram,
   Linkedin,
+  LinkedIn: Linkedin, // Alternative spelling
+  Youtube,
+  YouTube: Youtube, // Alternative spelling
+  Music2,
+  Tiktok: Music2, // Map Tiktok to Music2 icon
+  Globe,
 };
 
 // Helper function to render social icons with proper fallback
 const renderSocialIcon = (social: SocialLink) => {
-  // First, try to get the icon from the mapping based on platform name
   const IconFromMap = iconMap[social.platform];
   if (IconFromMap) {
     return <IconFromMap className="h-4 w-4" />;
   }
 
-  // If the icon is a proper React component (function), use it directly
   if (typeof social.icon === "function") {
     const IconComponent = social.icon;
     return <IconComponent className="h-4 w-4" />;
   }
 
-  // Fallback to a default icon if nothing else works
   return <Facebook className="h-4 w-4" />;
+};
+
+// Logo component
+const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
+  const { logoType, logoImage, logoText, companyName } = footerData;
+
+  if (logoType === "text") {
+    return (
+      <div className="flex items-center">
+        <span className="text-xl font-bold text-white">
+          {logoText || companyName}
+        </span>
+      </div>
+    );
+  }
+
+  if (logoType === "image") {
+    return logoImage ? (
+      <div className="flex items-center">
+        <img
+          src={logoImage}
+          alt={companyName}
+          className="h-8 w-auto object-contain"
+        />
+      </div>
+    ) : (
+      <div className="flex items-center">
+        <span className="text-xl font-bold text-white">{companyName}</span>
+      </div>
+    );
+  }
+
+  // logoType === "both"
+  return (
+    <div className="flex items-center gap-3">
+      {logoImage && (
+        <img
+          src={logoImage}
+          alt={companyName}
+          className="h-8 w-auto object-contain"
+        />
+      )}
+      <span className="text-xl font-bold text-white">
+        {logoText || companyName}
+      </span>
+    </div>
+  );
 };
 
 export function FooterStyle3({
@@ -84,18 +137,14 @@ export function FooterStyle3({
     },
   };
 
-  // Function to generate the correct href for links
   const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref; // Keep original href for editable mode
+    if (isEditable) return originalHref;
 
-    // For preview mode, generate the correct route
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
       return `/publish/${siteUser}`;
     }
 
-    // Remove leading slash and hash if present
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-
     return `/publish/${siteUser}/${cleanHref}`;
   };
 
@@ -106,23 +155,19 @@ export function FooterStyle3({
     }
 
     if (isEditable) {
-      // In editable mode, prevent navigation
       e.preventDefault();
       return;
     }
 
-    // For external links or special cases
     if (
       href.includes("/preview?") ||
       href.startsWith("http") ||
       href.startsWith("mailto:") ||
       href.startsWith("tel:")
     ) {
-      // Allow these to navigate normally
       return;
     }
 
-    // For internal links, use our generated href
     e.preventDefault();
     const generatedHref = generateLinkHref(href);
     window.location.href = generatedHref;
@@ -141,7 +186,6 @@ export function FooterStyle3({
       return;
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setErrorMessage("Please enter a valid email address");
@@ -159,11 +203,10 @@ export function FooterStyle3({
       setEmail("");
       setErrorMessage("");
 
-      // Reset success message after 3 seconds
       setTimeout(() => {
         setSubscriptionStatus("idle");
       }, 3000);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Newsletter subscription error:", error);
       setErrorMessage(
@@ -282,14 +325,7 @@ export function FooterStyle3({
           <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 text-sm text-gray-200 md:flex-row">
             {/* Logo and Company Name */}
             <div className="mb-4 flex items-center md:mb-0">
-              <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-white p-1">
-                <span className="text-lg font-bold text-[#106313]">
-                  {footerData.companyName.charAt(0)}
-                </span>
-              </div>
-              <span className="text-xl font-bold text-white">
-                {footerData.companyName}
-              </span>
+              <FooterLogo footerData={footerData} />
             </div>
 
             {/* Copyright */}

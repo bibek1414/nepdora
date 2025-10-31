@@ -448,6 +448,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       content: "footer content",
       footerData: {
         style: styleId,
+        logoText: "Your Brand",
+        logoType: "text" as "text" | "image" | "both",
+        logoImage: "",
         companyName: "Your Brand",
         description:
           "Innovative solutions for a modern world. We build amazing experiences.",

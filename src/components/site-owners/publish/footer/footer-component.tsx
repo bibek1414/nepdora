@@ -5,9 +5,12 @@ import {
   Twitter,
   Instagram,
   Linkedin,
+  Youtube,
+  Music2,
   Edit,
   Trash2,
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -35,6 +38,41 @@ import {
   useFooterQuery,
   useDeleteFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
+
+// Social platform mapping with icons
+const socialPlatforms = [
+  {
+    name: "Facebook",
+    icon: Facebook,
+    field: "facebook_url" as const,
+  },
+  {
+    name: "Twitter",
+    icon: Twitter,
+    field: "twitter_url" as const,
+  },
+  {
+    name: "Instagram",
+    icon: Instagram,
+    field: "instagram_url" as const,
+  },
+  {
+    name: "LinkedIn",
+    icon: Linkedin,
+    field: "linkedin_url" as const,
+  },
+  {
+    name: "YouTube",
+    icon: Youtube,
+    field: "youtube_url" as const,
+  },
+  {
+    name: "Tiktok",
+    icon: Music2,
+    field: "tiktok_url" as const,
+  },
+];
 
 const defaultFooterData: FooterData = {
   companyName: "Your Company",
@@ -84,6 +122,9 @@ const defaultFooterData: FooterData = {
     phone: "+1 (555) 123-4567",
     address: "123 Business St, City, State 12345",
   },
+  logoImage: "",
+  logoType: "text",
+  logoText: "Your Company",
   newsletter: {
     enabled: true,
     title: "Stay Updated",
@@ -119,6 +160,9 @@ export function Footer({
     footerId || null
   );
 
+  // Use site config for logo and social links
+  const { data: siteConfig, isLoading: isSiteConfigLoading } = useSiteConfig();
+
   const updateFooterMutation = useUpdateFooterMutation();
   const createFooterMutation = useCreateFooterMutation();
   const deleteFooterMutation = useDeleteFooterMutation();
@@ -129,6 +173,49 @@ export function Footer({
     setCurrentFooterData(footerData);
   }, [footerData]);
 
+  // Sync with site config for logo and social links
+  useEffect(() => {
+    if (siteConfig) {
+      const updatedFooterData = { ...currentFooterData };
+
+      // Sync logo from site config
+      if (siteConfig.logo && siteConfig.logo !== updatedFooterData.logoImage) {
+        updatedFooterData.logoImage = siteConfig.logo;
+      }
+
+      // Sync social links from site config
+      const updatedSocialLinks = [];
+
+      for (const platform of socialPlatforms) {
+        const url = siteConfig[platform.field];
+        if (url) {
+          updatedSocialLinks.push({
+            id: platform.field,
+            platform: platform.name,
+            href: url,
+            icon: platform.icon,
+          });
+        }
+      }
+
+      // Only update if there are changes
+      if (
+        updatedSocialLinks.length > 0 &&
+        JSON.stringify(updatedSocialLinks) !==
+          JSON.stringify(updatedFooterData.socialLinks)
+      ) {
+        updatedFooterData.socialLinks = updatedSocialLinks;
+      }
+
+      // Update state if there were changes
+      if (
+        JSON.stringify(updatedFooterData) !== JSON.stringify(currentFooterData)
+      ) {
+        setCurrentFooterData(updatedFooterData);
+      }
+    }
+  }, [siteConfig, currentFooterData]);
+
   // Set existing footer ID from query if available
   useEffect(() => {
     if (existingFooter?.data?.id && !existingFooterId) {
@@ -136,8 +223,30 @@ export function Footer({
     }
   }, [existingFooter, existingFooterId]);
 
+  // Get social icon based on platform name
+  const getSocialIcon = (platformName: string) => {
+    const platform = socialPlatforms.find(p => p.name === platformName);
+    return platform ? platform.icon : Facebook; // Default to Facebook if not found
+  };
+
+  // Process footer data to ensure correct icons are used
+  const getProcessedFooterData = (): FooterData => {
+    const processedData = { ...currentFooterData };
+
+    // Ensure social links have correct icons
+    processedData.socialLinks = processedData.socialLinks.map(link => ({
+      ...link,
+      icon: getSocialIcon(link.platform),
+    }));
+
+    return processedData;
+  };
+
   const handleSaveFooter = async (newData: FooterData) => {
     try {
+      // Process the data to ensure correct icons
+      const processedData = getProcessedFooterData();
+
       // Determine if we should update or create
       const shouldUpdate =
         existingFooterId || footerId || existingFooter?.data?.id;
@@ -149,7 +258,7 @@ export function Footer({
         console.log("Updating existing footer with ID:", footerIdToUse);
         const updateData = {
           id: footerIdToUse,
-          footerData: newData, // Changed from 'data' to 'footerData' to match your API type
+          footerData: processedData,
         };
 
         const result = await updateFooterMutation.mutateAsync(updateData);
@@ -164,7 +273,7 @@ export function Footer({
         const createData = {
           component_id: componentId,
           content: "", // Add empty content if required by API
-          footerData: newData,
+          footerData: processedData,
         };
 
         const result = await createFooterMutation.mutateAsync(createData);
@@ -178,7 +287,7 @@ export function Footer({
       }
 
       // Call parent update if provided
-      onUpdate?.(componentId, { footerData: newData });
+      onUpdate?.(componentId, { footerData: processedData });
 
       // Close dialog
       setShowEditor(false);
@@ -198,6 +307,12 @@ export function Footer({
   };
 
   const handleConfirmDelete = () => {
+    // Check if we have a footer to delete
+    if (!existingFooter?.data?.id && !existingFooterId && !footerId) {
+      console.error("No footer found to delete");
+      return;
+    }
+
     deleteFooterMutation.mutate();
     setIsDeleteDialogOpen(false);
   };
@@ -216,7 +331,11 @@ export function Footer({
   const isLoading =
     updateFooterMutation.isPending ||
     createFooterMutation.isPending ||
-    deleteFooterMutation.isPending;
+    deleteFooterMutation.isPending ||
+    isSiteConfigLoading;
+
+  // Get processed footer data with correct icons
+  const processedFooterData = getProcessedFooterData();
 
   return (
     <div className="group relative">
@@ -247,7 +366,7 @@ export function Footer({
 
       {/* Footer Component - Pass isEditable as false to prevent individual delete buttons */}
       <FooterComponent
-        footerData={currentFooterData}
+        footerData={processedFooterData}
         isEditable={false} // Always false since we handle editing centrally
         onEditClick={handleEditClick}
         siteUser={siteUser}
@@ -258,10 +377,11 @@ export function Footer({
         <FooterEditorDialog
           open={showEditor}
           onOpenChange={setShowEditor}
-          footerData={currentFooterData}
+          footerData={processedFooterData}
           onSave={handleSaveFooter}
           isLoading={isLoading}
-          footerStyle="FooterStyle5"
+          footerStyle={style === "style-5" ? "FooterStyle5" : undefined}
+          siteUser={siteUser}
         />
       )}
 

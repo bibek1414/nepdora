@@ -12,7 +12,9 @@ import {
   Twitter,
   Instagram,
   Linkedin,
-  ArrowRight,
+  Youtube,
+  Globe,
+  Music2,
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
@@ -34,24 +36,74 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Twitter,
   Instagram,
   Linkedin,
+  LinkedIn: Linkedin, // Alternative spelling
+  Youtube,
+  YouTube: Youtube, // Alternative spelling
+  Music2,
+  Tiktok: Music2, // Map Tiktok to Music2 icon
+  Globe,
 };
 
 // Helper function to render social icons with proper fallback
 const renderSocialIcon = (social: SocialLink) => {
-  // First, try to get the icon from the mapping based on platform name
   const IconFromMap = iconMap[social.platform];
   if (IconFromMap) {
     return <IconFromMap className="h-4 w-4" />;
   }
 
-  // If the icon is a proper React component (function), use it directly
   if (typeof social.icon === "function") {
     const IconComponent = social.icon;
     return <IconComponent className="h-4 w-4" />;
   }
 
-  // Fallback to a default icon if nothing else works
   return <Facebook className="h-4 w-4" />;
+};
+
+// Logo component
+const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
+  const { logoType, logoImage, logoText, companyName } = footerData;
+
+  if (logoType === "text") {
+    return (
+      <div className="flex items-center">
+        <span className="text-foreground text-xl font-bold">
+          {logoText || companyName}
+        </span>
+      </div>
+    );
+  }
+
+  if (logoType === "image") {
+    return logoImage ? (
+      <div className="flex items-center">
+        <img
+          src={logoImage}
+          alt={companyName}
+          className="h-8 w-auto object-contain"
+        />
+      </div>
+    ) : (
+      <div className="flex items-center">
+        <span className="text-foreground text-xl font-bold">{companyName}</span>
+      </div>
+    );
+  }
+
+  // logoType === "both"
+  return (
+    <div className="flex items-center gap-3">
+      {logoImage && (
+        <img
+          src={logoImage}
+          alt={companyName}
+          className="h-8 w-auto object-contain"
+        />
+      )}
+      <span className="text-foreground text-xl font-bold">
+        {logoText || companyName}
+      </span>
+    </div>
+  );
 };
 
 export function FooterStyle4({
@@ -85,18 +137,14 @@ export function FooterStyle4({
     },
   };
 
-  // Function to generate the correct href for links
   const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref; // Keep original href for editable mode
+    if (isEditable) return originalHref;
 
-    // For preview mode, generate the correct route
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
       return `/publish/${siteUser}`;
     }
 
-    // Remove leading slash and hash if present
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-
     return `/publish/${siteUser}/${cleanHref}`;
   };
 
@@ -107,23 +155,19 @@ export function FooterStyle4({
     }
 
     if (isEditable) {
-      // In editable mode, prevent navigation
       e.preventDefault();
       return;
     }
 
-    // For external links or special cases
     if (
       href.includes("/preview?") ||
       href.startsWith("http") ||
       href.startsWith("mailto:") ||
       href.startsWith("tel:")
     ) {
-      // Allow these to navigate normally
       return;
     }
 
-    // For internal links, use our generated href
     e.preventDefault();
     const generatedHref = generateLinkHref(href);
     window.location.href = generatedHref;
@@ -142,7 +186,6 @@ export function FooterStyle4({
       return;
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setErrorMessage("Please enter a valid email address");
@@ -160,11 +203,10 @@ export function FooterStyle4({
       setEmail("");
       setErrorMessage("");
 
-      // Reset success message after 3 seconds
       setTimeout(() => {
         setSubscriptionStatus("idle");
       }, 3000);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Newsletter subscription error:", error);
       setErrorMessage(
@@ -175,80 +217,67 @@ export function FooterStyle4({
     }
   };
 
-  // Get the first two sections for the grid layout
-  const linkSections = footerData.sections.slice(0, 2);
-
-  // Get contact info
-  const contactInfo = footerData.contactInfo;
-
   return (
     <div className="group relative">
-      <footer className="bg-[#474A47] px-4 py-16 text-gray-100 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-4">
-          {/* Newsletter */}
-          <div className="md:col-span-1">
-            <h2 className="mb-6 text-2xl font-bold md:text-3xl">
-              {footerData.newsletter.title || "Stay Connected"}
-            </h2>
-
-            {subscriptionStatus === "success" ? (
-              <div className="flex items-center gap-2 text-green-400">
-                <CheckCircle className="h-6 w-6" />
-                <span>Successfully subscribed!</span>
+      <footer
+        style={{
+          background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
+        }}
+        className="text-white"
+      >
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          {/* Main content */}
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+            {/* Company Info */}
+            <div className="lg:col-span-2">
+              {/* Logo */}
+              <div className="mb-6">
+                <FooterLogo footerData={footerData} />
               </div>
-            ) : (
-              <form onSubmit={handleNewsletterSubmit}>
-                <div className="relative">
-                  <Input
-                    type="email"
-                    placeholder="Your Email Address"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    className="w-full rounded-none border-x-0 border-t-0 border-b border-gray-300 bg-transparent py-2 text-gray-100 placeholder-gray-300 focus:border-white focus:outline-none"
-                    disabled={isEditable || createNewsletterMutation.isPending}
-                  />
-                </div>
 
-                <Button
-                  type="submit"
-                  style={{
-                    backgroundColor: theme.colors.primary,
-                    color: theme.colors.primaryForeground,
-                  }}
-                  className="mt-6 flex w-full items-center justify-center space-x-2 rounded-md px-6 py-3 transition-colors hover:opacity-90 sm:w-auto"
-                  disabled={isEditable || createNewsletterMutation.isPending}
-                >
-                  <span>
-                    {createNewsletterMutation.isPending
-                      ? "Subscribing..."
-                      : "Subscribe Now"}
-                  </span>
-                  {!createNewsletterMutation.isPending && (
-                    <ArrowRight size={20} />
-                  )}
-                </Button>
+              <p className="mb-6 text-lg leading-relaxed text-white/90">
+                {footerData.description}
+              </p>
 
-                {subscriptionStatus === "error" && errorMessage && (
-                  <div className="mt-2 flex items-center gap-2 text-red-400">
-                    <AlertCircle className="h-4 w-4" />
-                    <span className="text-sm">{errorMessage}</span>
+              {/* Contact Info */}
+              <div className="space-y-3">
+                {footerData.contactInfo.email && (
+                  <div className="flex items-center">
+                    <Mail className="mr-3 h-5 w-5 text-white/80" />
+                    <span className="text-white/90">
+                      {footerData.contactInfo.email}
+                    </span>
                   </div>
                 )}
-              </form>
-            )}
-          </div>
+                {footerData.contactInfo.phone && (
+                  <div className="flex items-center">
+                    <Phone className="mr-3 h-5 w-5 text-white/80" />
+                    <span className="text-white/90">
+                      {footerData.contactInfo.phone}
+                    </span>
+                  </div>
+                )}
+                {footerData.contactInfo.address && (
+                  <div className="flex items-center">
+                    <MapPin className="mr-3 h-5 w-5 text-white/80" />
+                    <span className="text-white/90">
+                      {footerData.contactInfo.address}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
 
-          {/* Links */}
-          <div className="grid grid-cols-2 gap-8 md:col-span-2 md:grid-cols-2 md:justify-self-center">
-            {linkSections.map(section => (
+            {/* Link Sections */}
+            {footerData.sections.map(section => (
               <div key={section.id}>
-                <h3 className="mb-4 text-lg font-semibold">{section.title}</h3>
+                <h4 className="mb-6 text-xl font-semibold">{section.title}</h4>
                 <ul className="space-y-3">
                   {section.links.map(link => (
                     <li key={link.id}>
                       {isEditable ? (
                         <button
-                          className="text-left hover:text-gray-300"
+                          className="text-left text-white/80 transition-all hover:translate-x-1 hover:text-white"
                           onClick={e => handleLinkClick(link.href, e)}
                         >
                           {link.text}
@@ -256,7 +285,7 @@ export function FooterStyle4({
                       ) : (
                         <a
                           href={generateLinkHref(link.href || "")}
-                          className="block hover:text-gray-300"
+                          className="block text-white/80 transition-all hover:translate-x-1 hover:text-white"
                         >
                           {link.text}
                         </a>
@@ -268,29 +297,85 @@ export function FooterStyle4({
             ))}
           </div>
 
-          {/* Contact Info */}
-          <div className="md:col-span-1 md:justify-self-end">
-            <div className="mb-8">
-              <h3 className="mb-2 text-xl font-semibold">
-                We&apos;re just a call away.
-              </h3>
-              <p className="text-lg">
-                {contactInfo.phone || "+1 (800) 456-7890"}
+          {/* Newsletter Section */}
+          {footerData.newsletter.enabled && (
+            <div className="mt-16 rounded-2xl bg-white/10 p-8 backdrop-blur-sm">
+              <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
+                <div>
+                  <h4 className="mb-3 text-2xl font-bold">
+                    {footerData.newsletter.title}
+                  </h4>
+                  <p className="text-lg text-white/80">
+                    {footerData.newsletter.description}
+                  </p>
+                </div>
+
+                {subscriptionStatus === "success" ? (
+                  <div className="flex items-center justify-center gap-3 text-green-300 md:justify-end">
+                    <CheckCircle className="h-6 w-6" />
+                    <span className="text-lg">Successfully subscribed!</span>
+                  </div>
+                ) : (
+                  <form onSubmit={handleNewsletterSubmit}>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-3 sm:flex-row">
+                        <Input
+                          type="email"
+                          placeholder="Enter your email"
+                          value={email}
+                          onChange={e => setEmail(e.target.value)}
+                          className="flex-1 rounded-full border-none bg-white/20 px-6 py-4 text-white placeholder-white/60 backdrop-blur-sm focus:bg-white/30 focus:text-white focus:ring-2 focus:ring-white/50"
+                          disabled={
+                            isEditable || createNewsletterMutation.isPending
+                          }
+                        />
+                        <Button
+                          type="submit"
+                          style={{
+                            backgroundColor: theme.colors.secondary,
+                          }}
+                          className="rounded-full px-8 py-4 font-semibold text-white transition-all hover:scale-105 hover:shadow-lg"
+                          disabled={
+                            isEditable || createNewsletterMutation.isPending
+                          }
+                        >
+                          {createNewsletterMutation.isPending
+                            ? "Subscribing..."
+                            : "Subscribe Now"}
+                        </Button>
+                      </div>
+
+                      {subscriptionStatus === "error" && errorMessage && (
+                        <div className="flex items-center gap-2 text-red-300">
+                          <AlertCircle className="h-4 w-4" />
+                          <span className="text-sm">{errorMessage}</span>
+                        </div>
+                      )}
+                    </div>
+                  </form>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Bottom Section */}
+          <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 md:flex-row">
+            {/* Copyright */}
+            <div className="mb-4 flex items-center md:mb-0">
+              <p className="text-white/80">
+                {footerData.copyright}
+                <Heart className="ml-1 inline h-4 w-4 text-red-400" />
               </p>
             </div>
-            <div className="mb-8">
-              <h3 className="mb-2 text-xl font-semibold">Got a question?</h3>
-              <p className="text-lg">
-                {contactInfo.email || "contact@company.com"}
-              </p>
-            </div>
-            <div className="flex space-x-4">
+
+            {/* Social Links */}
+            <div className="flex items-center space-x-4">
               {footerData.socialLinks.map(social => (
                 <Button
                   key={social.id}
-                  variant="outline"
-                  size="icon"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-400 text-white transition hover:bg-gray-600"
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-full bg-white/10 p-3 text-white/80 backdrop-blur-sm transition-all hover:bg-white/20 hover:text-white hover:shadow-lg"
                   onClick={e => handleLinkClick(social.href, e)}
                   {...(!isEditable &&
                     social.href && {
@@ -305,14 +390,6 @@ export function FooterStyle4({
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Copyright */}
-        <div className="mx-auto mt-12 max-w-7xl border-t border-gray-400 pt-8 text-center">
-          <p className="text-sm text-gray-300">
-            {footerData.copyright ||
-              `© ${new Date().getFullYear()} ${footerData.companyName}. All rights reserved.`}
-          </p>
         </div>
       </footer>
     </div>

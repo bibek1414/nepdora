@@ -26,6 +26,9 @@ export interface SocialLink {
 export interface FooterData {
   companyName: string;
   description: string;
+  logoText: string;
+  logoImage?: string;
+  logoType: "text" | "image" | "both";
   sections: FooterSection[];
   socialLinks: SocialLink[];
   contactInfo: {

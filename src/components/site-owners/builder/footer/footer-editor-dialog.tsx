@@ -16,6 +16,8 @@ import {
   Twitter,
   Instagram,
   Linkedin,
+  Youtube,
+  Music2,
   Plus,
   Trash2,
   Edit3,
@@ -28,6 +30,10 @@ import {
   ChevronDown,
   Search,
   ExternalLink,
+  Upload,
+  X,
+  Type,
+  ImageIcon,
 } from "lucide-react";
 import {
   FooterData,
@@ -39,6 +45,13 @@ import { usePages, useCreatePage } from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import {
+  useSiteConfig,
+  usePatchSiteConfig,
+} from "@/hooks/owner-site/admin/use-site-config";
+import { uploadToCloudinary } from "@/utils/cloudinary";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface FooterEditorDialogProps {
   open: boolean;
@@ -51,10 +64,36 @@ interface FooterEditorDialogProps {
 }
 
 const socialPlatforms = [
-  { name: "Facebook", icon: Facebook },
-  { name: "Twitter", icon: Twitter },
-  { name: "Instagram", icon: Instagram },
-  { name: "LinkedIn", icon: Linkedin },
+  {
+    name: "Facebook",
+    icon: Facebook,
+    field: "facebook_url" as const,
+  },
+  {
+    name: "Twitter",
+    icon: Twitter,
+    field: "twitter_url" as const,
+  },
+  {
+    name: "Instagram",
+    icon: Instagram,
+    field: "instagram_url" as const,
+  },
+  {
+    name: "LinkedIn",
+    icon: Linkedin,
+    field: "linkedin_url" as const,
+  },
+  {
+    name: "YouTube",
+    icon: Youtube,
+    field: "youtube_url" as const,
+  },
+  {
+    name: "Tiktok",
+    icon: Music2,
+    field: "tiktok_url" as const,
+  },
 ];
 
 // Page Selector Component for Footer Links
@@ -127,6 +166,15 @@ const PageSelector: React.FC<PageSelectorProps> = ({
     <Card className="absolute top-full right-0 z-50 mt-1 w-80 bg-white py-0 shadow-xl">
       <CardContent className="p-0">
         {/* Search Input */}
+        <div className="border-b p-2">
+          <Input
+            type="text"
+            placeholder="Search pages..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="bg-white"
+          />
+        </div>
 
         {/* Existing Pages - Scrollable Area */}
         <ScrollArea className="max-h-60">
@@ -212,6 +260,16 @@ const PageSelector: React.FC<PageSelectorProps> = ({
         <Separator />
 
         {/* External URL Option */}
+        <div className="bg-white p-2">
+          <Button
+            onClick={handleExternalUrl}
+            variant="ghost"
+            className="w-full justify-start text-blue-700 hover:bg-blue-50 hover:text-blue-700"
+          >
+            <ExternalLink className="mr-2 h-4 w-4" />
+            <span>External URL</span>
+          </Button>
+        </div>
 
         <Separator />
 
@@ -245,20 +303,186 @@ export function FooterEditorDialog({
     sectionId: string;
     linkId: string;
   } | null>(null);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const [uploadLogoError, setUploadLogoError] = useState<string | null>(null);
+
+  // Use site config hooks for logo and social links
+  const { data: siteConfig, isLoading: isSiteConfigLoading } = useSiteConfig();
+  const patchSiteConfigMutation = usePatchSiteConfig();
 
   // Check if newsletter should be shown (not for FooterStyle5)
   const showNewsletter = footerStyle !== "FooterStyle5";
 
   // Determine grid columns based on whether newsletter is shown
-  const tabsGridCols = showNewsletter ? "grid-cols-5" : "grid-cols-4";
+  const tabsGridCols = showNewsletter ? "grid-cols-6" : "grid-cols-5";
 
   // Update editing data when footerData prop changes
   useEffect(() => {
     setEditingData(footerData);
   }, [footerData]);
 
+  // Sync logo and social links from site config when component mounts or site config changes
+  useEffect(() => {
+    if (siteConfig) {
+      // Sync logo
+      if (siteConfig.logo && siteConfig.logo !== editingData.logoImage) {
+        setEditingData(prev => ({
+          ...prev,
+          logoImage: siteConfig.logo || "",
+        }));
+      }
+
+      // Sync social links
+      const updatedSocialLinks: SocialLink[] = [];
+
+      socialPlatforms.forEach(platform => {
+        const url = siteConfig[platform.field];
+        if (url) {
+          updatedSocialLinks.push({
+            id: platform.field,
+            platform: platform.name,
+            href: url,
+            icon: platform.icon,
+          });
+        }
+      });
+
+      // Only update if there are changes
+      if (
+        updatedSocialLinks.length > 0 &&
+        JSON.stringify(updatedSocialLinks) !==
+          JSON.stringify(editingData.socialLinks)
+      ) {
+        setEditingData(prev => ({
+          ...prev,
+          socialLinks: updatedSocialLinks,
+        }));
+      }
+    }
+  }, [siteConfig]);
+
   const handleSave = () => {
     onSave(editingData);
+  };
+
+  // Handle logo image upload and update site config
+  const handleLogoUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      setUploadLogoError("Please select a valid image file");
+      return;
+    }
+
+    // Validate file size (2MB max)
+    if (file.size > 2 * 1024 * 1024) {
+      setUploadLogoError("Image size must be less than 2MB");
+      return;
+    }
+
+    setIsUploadingLogo(true);
+    setUploadLogoError(null);
+
+    try {
+      // Upload to Cloudinary
+      const imageUrl = await uploadToCloudinary(file, {
+        folder: "logos",
+        resourceType: "image",
+      });
+
+      // Update local state immediately for better UX
+      setEditingData(prev => ({ ...prev, logoImage: imageUrl }));
+
+      // Update site config in database if site config exists
+      if (siteConfig?.id) {
+        const formData = new FormData();
+        formData.append("logo", imageUrl);
+
+        await patchSiteConfigMutation.mutateAsync({
+          id: siteConfig.id,
+          data: formData,
+        });
+      } else {
+        console.warn("No site config found. Logo saved locally only.");
+      }
+    } catch (error) {
+      setUploadLogoError(
+        error instanceof Error ? error.message : "Upload failed"
+      );
+      // Revert local state on error
+      setEditingData(prev => ({
+        ...prev,
+        logoImage: siteConfig?.logo || "",
+      }));
+    } finally {
+      setIsUploadingLogo(false);
+    }
+  };
+
+  // Handle logo removal
+  const handleRemoveLogo = async () => {
+    try {
+      // Update local state immediately
+      setEditingData(prev => ({ ...prev, logoImage: "" }));
+
+      // Update site config in database if site config exists
+      if (siteConfig?.id) {
+        const formData = new FormData();
+        formData.append("logo", "");
+
+        await patchSiteConfigMutation.mutateAsync({
+          id: siteConfig.id,
+          data: formData,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to remove logo:", error);
+      // Revert local state on error
+      setEditingData(prev => ({
+        ...prev,
+        logoImage: siteConfig?.logo || "",
+      }));
+      alert("Failed to remove logo. Please try again.");
+    }
+  };
+
+  // Handle logo type change
+  const handleLogoTypeChange = (value: "text" | "image" | "both") => {
+    setEditingData(prev => ({ ...prev, logoType: value }));
+  };
+
+  // Update site config when social links change
+  const updateSiteConfigSocialLinks = async (socialLinks: SocialLink[]) => {
+    if (!siteConfig?.id) return;
+
+    try {
+      const formData = new FormData();
+
+      // Reset all social URLs first
+      socialPlatforms.forEach(platform => {
+        formData.append(platform.field, "");
+      });
+
+      // Set URLs from social links
+      socialLinks.forEach(link => {
+        const platform = socialPlatforms.find(p => p.name === link.platform);
+        if (platform && link.href) {
+          formData.append(platform.field, link.href);
+        }
+      });
+
+      await patchSiteConfigMutation.mutateAsync({
+        id: siteConfig.id,
+        data: formData,
+      });
+    } catch (error) {
+      console.error("Failed to update social links in site config:", error);
+      throw error;
+    }
   };
 
   const updateBasicInfo = <K extends keyof FooterData>(
@@ -368,42 +592,82 @@ export function FooterEditorDialog({
   };
 
   const addSocialLink = () => {
+    // Find first available platform that's not already used
+    const availablePlatform = socialPlatforms.find(
+      platform =>
+        !editingData.socialLinks.some(link => link.platform === platform.name)
+    );
+
+    if (!availablePlatform) {
+      alert("All social platforms are already added.");
+      return;
+    }
+
     const newSocialLink: SocialLink = {
       id: Date.now().toString(),
-      platform: "Facebook",
-      href: "#",
-      icon: Facebook,
+      platform: availablePlatform.name,
+      href: "",
+      icon: availablePlatform.icon,
     };
+
     setEditingData(prev => ({
       ...prev,
       socialLinks: [...prev.socialLinks, newSocialLink],
     }));
   };
 
-  const updateSocialLink = (linkId: string, field: string, value: string) => {
+  const updateSocialLink = async (
+    linkId: string,
+    field: string,
+    value: string
+  ) => {
+    const updatedSocialLinks = editingData.socialLinks.map(link => {
+      if (link.id === linkId) {
+        const updatedLink = { ...link, [field]: value };
+        if (field === "platform") {
+          const platform = socialPlatforms.find(p => p.name === value);
+          if (platform) {
+            updatedLink.icon = platform.icon;
+          }
+        }
+        return updatedLink;
+      }
+      return link;
+    });
+
     setEditingData(prev => ({
       ...prev,
-      socialLinks: prev.socialLinks.map(link => {
-        if (link.id === linkId) {
-          const updatedLink = { ...link, [field]: value };
-          if (field === "platform") {
-            const platform = socialPlatforms.find(p => p.name === value);
-            if (platform) {
-              updatedLink.icon = platform.icon;
-            }
-          }
-          return updatedLink;
-        }
-        return link;
-      }),
+      socialLinks: updatedSocialLinks,
     }));
+
+    // Update site config when social links change
+    if (field === "href" || field === "platform") {
+      try {
+        await updateSiteConfigSocialLinks(updatedSocialLinks);
+      } catch (error) {
+        console.error("Failed to update site config:", error);
+        // Optionally show error message to user
+      }
+    }
   };
 
-  const removeSocialLink = (linkId: string) => {
+  const removeSocialLink = async (linkId: string) => {
+    const updatedSocialLinks = editingData.socialLinks.filter(
+      link => link.id !== linkId
+    );
+
     setEditingData(prev => ({
       ...prev,
-      socialLinks: prev.socialLinks.filter(link => link.id !== linkId),
+      socialLinks: updatedSocialLinks,
     }));
+
+    // Update site config when social link is removed
+    try {
+      await updateSiteConfigSocialLinks(updatedSocialLinks);
+    } catch (error) {
+      console.error("Failed to update site config:", error);
+      // Optionally show error message to user
+    }
   };
 
   // Handle page selection for footer links
@@ -420,18 +684,40 @@ export function FooterEditorDialog({
     }
   };
 
+  // Get available platforms for dropdown (platforms not already used)
+  const getAvailablePlatforms = () => {
+    const usedPlatforms = new Set(
+      editingData.socialLinks.map(link => link.platform)
+    );
+    return socialPlatforms.filter(
+      platform => !usedPlatforms.has(platform.name)
+    );
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-4xl">
+      <DialogContent className="max-h-[90vh] max-w-6xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Edit3 className="h-5 w-5" />
             Edit Footer Content
+            {siteConfig && (
+              <Badge variant="secondary" className="ml-2">
+                Consistent Logo & Social Links
+              </Badge>
+            )}
           </DialogTitle>
         </DialogHeader>
 
-        <Tabs defaultValue="company" className="w-full">
+        <Tabs defaultValue="logo" className="w-full">
           <TabsList className={`grid w-full ${tabsGridCols}`}>
+            <TabsTrigger value="logo" className="flex items-center gap-1">
+              <ImageIcon className="h-4 w-4" />
+              Logo
+              {siteConfig?.logo && (
+                <span className="ml-1 h-2 w-2 rounded-full bg-green-500" />
+              )}
+            </TabsTrigger>
             <TabsTrigger value="company" className="flex items-center gap-1">
               <Building className="h-4 w-4" />
               Company
@@ -456,10 +742,172 @@ export function FooterEditorDialog({
             <TabsTrigger value="social" className="flex items-center gap-1">
               <Share2 className="h-4 w-4" />
               Social
+              {siteConfig && (
+                <span className="ml-1 h-2 w-2 rounded-full bg-green-500" />
+              )}
             </TabsTrigger>
           </TabsList>
 
-          <div className="mt-4 h-[60vh] overflow-y-auto">
+          <div className="mt-4 max-h-[60vh] overflow-y-auto">
+            {/* Logo Tab */}
+            <TabsContent value="logo" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between text-lg">
+                    Footer Logo Settings
+                    {siteConfig?.logo && (
+                      <Badge variant="outline" className="text-green-600">
+                        Consistent across all pages
+                      </Badge>
+                    )}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="footer-logo-text">Logo Text</Label>
+                    <Input
+                      id="footer-logo-text"
+                      value={editingData.logoText}
+                      onChange={e =>
+                        updateBasicInfo("logoText", e.target.value)
+                      }
+                      placeholder="Enter your brand name"
+                      disabled={isLoading}
+                    />
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label>Logo Image</Label>
+
+                    {/* Site Config Status */}
+                    {isSiteConfigLoading && (
+                      <div className="text-sm text-blue-600">
+                        Loading site configuration...
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-3">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() =>
+                          document.getElementById("footer-logo-upload")?.click()
+                        }
+                        disabled={isUploadingLogo || isSiteConfigLoading}
+                        className="flex items-center gap-2"
+                      >
+                        {isUploadingLogo ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Uploading...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="h-4 w-4" />
+                            Upload Image
+                          </>
+                        )}
+                      </Button>
+
+                      {editingData.logoImage && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={handleRemoveLogo}
+                          disabled={patchSiteConfigMutation.isPending}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          {patchSiteConfigMutation.isPending ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <X className="h-4 w-4" />
+                          )}
+                        </Button>
+                      )}
+                    </div>
+
+                    <input
+                      id="footer-logo-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleLogoUpload}
+                      className="hidden"
+                    />
+
+                    {editingData.logoImage && (
+                      <div className="flex items-center gap-3 rounded-lg border p-3">
+                        <div className="h-16 w-16 overflow-hidden rounded border">
+                          <img
+                            src={editingData.logoImage}
+                            alt="Logo preview"
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">Logo uploaded</p>
+                          <p className="text-muted-foreground text-xs">
+                            {siteConfig?.logo
+                              ? "Saved to site configuration"
+                              : "Ready to use"}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {uploadLogoError && (
+                      <p className="text-destructive text-sm">
+                        {uploadLogoError}
+                      </p>
+                    )}
+
+                    <p className="text-muted-foreground text-xs">
+                      Recommended: Square image, max 2MB (JPG, PNG, WebP)
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label>Logo Display</Label>
+                    <RadioGroup
+                      value={editingData.logoType || "text"}
+                      onValueChange={handleLogoTypeChange}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="text" id="footer-text-only" />
+                        <Label htmlFor="footer-text-only">Text Only</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="image"
+                          id="footer-image-only"
+                          disabled={!editingData.logoImage}
+                        />
+                        <Label
+                          htmlFor="footer-image-only"
+                          className={!editingData.logoImage ? "opacity-50" : ""}
+                        >
+                          Image Only
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="both"
+                          id="footer-both"
+                          disabled={!editingData.logoImage}
+                        />
+                        <Label
+                          htmlFor="footer-both"
+                          className={!editingData.logoImage ? "opacity-50" : ""}
+                        >
+                          Text & Image
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
             {/* Company Information Tab */}
             <TabsContent value="company" className="space-y-4">
               <Card>
@@ -758,57 +1206,110 @@ export function FooterEditorDialog({
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between text-lg">
                     Social Links
-                    <Button
-                      onClick={addSocialLink}
-                      size="sm"
-                      disabled={isLoading}
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Social Link
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      {siteConfig && (
+                        <Badge variant="outline" className="text-xs">
+                          Site Config
+                        </Badge>
+                      )}
+                      <Button
+                        onClick={addSocialLink}
+                        size="sm"
+                        disabled={
+                          isLoading || getAvailablePlatforms().length === 0
+                        }
+                      >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Social Link
+                      </Button>
+                    </div>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
+                  {isSiteConfigLoading && (
+                    <div className="flex items-center justify-center py-4">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Loading site configuration...
+                    </div>
+                  )}
+
                   {editingData.socialLinks.map(social => (
-                    <div key={social.id} className="flex items-center gap-2">
-                      <select
-                        value={social.platform}
-                        onChange={e =>
-                          updateSocialLink(
-                            social.id,
-                            "platform",
-                            e.target.value
-                          )
-                        }
-                        className="border-border bg-background rounded-md border px-3 py-2"
-                        disabled={isLoading}
-                      >
-                        {socialPlatforms.map(platform => (
-                          <option key={platform.name} value={platform.name}>
-                            {platform.name}
-                          </option>
-                        ))}
-                      </select>
-                      <Input
-                        value={social.href || ""}
-                        onChange={e =>
-                          updateSocialLink(social.id, "href", e.target.value)
-                        }
-                        placeholder="Social media URL"
-                        className="flex-1"
-                        disabled={isLoading}
-                      />
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeSocialLink(social.id)}
-                        className="text-destructive hover:text-destructive"
-                        disabled={isLoading}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                    <div
+                      key={social.id}
+                      className="flex items-center gap-2 rounded-lg border p-2"
+                    >
+                      <div className="flex flex-1 items-center gap-2">
+                        <div className="w-32">
+                          <select
+                            value={social.platform}
+                            onChange={e =>
+                              updateSocialLink(
+                                social.id,
+                                "platform",
+                                e.target.value
+                              )
+                            }
+                            className="border-border bg-background w-full rounded-md border px-3 py-2"
+                            disabled={
+                              isLoading || patchSiteConfigMutation.isPending
+                            }
+                          >
+                            {socialPlatforms.map(platform => (
+                              <option key={platform.name} value={platform.name}>
+                                {platform.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <Input
+                          value={social.href || ""}
+                          onChange={e =>
+                            updateSocialLink(social.id, "href", e.target.value)
+                          }
+                          placeholder={`Enter ${social.platform} URL`}
+                          className="flex-1"
+                          disabled={
+                            isLoading || patchSiteConfigMutation.isPending
+                          }
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeSocialLink(social.id)}
+                          className="text-destructive hover:text-destructive"
+                          disabled={
+                            isLoading || patchSiteConfigMutation.isPending
+                          }
+                        >
+                          {patchSiteConfigMutation.isPending ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
                     </div>
                   ))}
+
+                  {editingData.socialLinks.length === 0 &&
+                    !isSiteConfigLoading && (
+                      <div className="text-muted-foreground py-8 text-center">
+                        <Share2 className="mx-auto mb-2 h-12 w-12 opacity-50" />
+                        <p>No social links added yet</p>
+                        <p className="mt-1 text-sm">
+                          {siteConfig
+                            ? "Add social links to sync with site configuration"
+                            : "Add your social media profiles"}
+                        </p>
+                      </div>
+                    )}
+
+                  {getAvailablePlatforms().length === 0 &&
+                    editingData.socialLinks.length > 0 && (
+                      <div className="text-muted-foreground py-2 text-center text-sm">
+                        All social platforms have been added
+                      </div>
+                    )}
                 </CardContent>
               </Card>
             </TabsContent>
@@ -819,15 +1320,17 @@ export function FooterEditorDialog({
             <Button
               onClick={handleSave}
               className="flex-1"
-              disabled={isLoading}
+              disabled={isLoading || patchSiteConfigMutation.isPending}
             >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {(isLoading || patchSiteConfigMutation.isPending) && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
               Save Changes
             </Button>
             <Button
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={isLoading}
+              disabled={isLoading || patchSiteConfigMutation.isPending}
             >
               Cancel
             </Button>
