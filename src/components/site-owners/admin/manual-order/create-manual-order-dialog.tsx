@@ -1,9 +1,17 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Plus, Upload, Loader2, Search, Trash2, Minus } from "lucide-react";
+import {
+  Plus,
+  Upload,
+  Loader2,
+  Search,
+  Trash2,
+  Minus,
+  Check,
+  ChevronsUpDown,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,14 +26,32 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
 import { productApi } from "@/services/api/owner-sites/admin/product";
 import { orderApi } from "@/services/api/owner-sites/admin/orders";
-
+import { useDeliveryChargeCalculator } from "@/hooks/owner-site/admin/use-delivery-charge-calculator";
+import { VariantSelectionDialog } from "./variant-selection-dialog";
+import { ProductVariantRead } from "@/types/owner-site/admin/product";
 interface Product {
   id: string;
   name: string;
   price: number;
   stock: number;
+  weight?: number;
+  variants_read?: ProductVariantRead[];
   image_url?: string;
   sku?: string;
 }
@@ -36,6 +62,27 @@ interface OrderItem {
   quantity: number;
   price: number;
   image_url?: string;
+  variant_id?: number;
+  variant?: ProductVariantRead;
+  product_data?: Product;
+}
+
+interface CreateManualOrderDialogProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  initialMessage?: string;
+  trigger?: React.ReactNode;
+}
+interface OrderItem {
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  price: number;
+  image_url?: string;
+  variant_id?: number;
+  variant?: ProductVariantRead;
+  product_data?: Product;
+  weight?: number;
 }
 
 interface CreateManualOrderDialogProps {
@@ -51,10 +98,11 @@ export function CreateManualOrderDialog({
   initialMessage,
   trigger,
 }: CreateManualOrderDialogProps) {
-  const router = useRouter();
   const [internalOpen, setInternalOpen] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [confirmLocationOpen, setConfirmLocationOpen] = useState(false);
+  const [openCityDropdown, setOpenCityDropdown] = useState(false);
+  const [variantDialogOpen, setVariantDialogOpen] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
@@ -64,8 +112,14 @@ export function CreateManualOrderDialog({
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [extracting, setExtracting] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [extractedData, setExtractedData] = useState<any>(null);
+  const [useCustomDeliveryCharge, setUseCustomDeliveryCharge] = useState(false);
+  const [customDeliveryCharge, setCustomDeliveryCharge] = useState("");
+  const [selectedProductForVariant, setSelectedProductForVariant] =
+    useState<Product | null>(null);
+  const [pendingProduct, setPendingProduct] = useState<Product | null>(null);
+
   const searchRef = useRef<HTMLDivElement>(null);
 
   const open = externalOpen ?? internalOpen;
@@ -78,9 +132,31 @@ export function CreateManualOrderDialog({
     customer_address: "",
     shipping_address: "",
     city: "",
-    delivery_charge: "0.00",
     notes: "",
   });
+
+  // Calculate total weight from order items
+  const totalWeight = orderItems.reduce((total, item) => {
+    const itemWeight = item.weight || 0;
+    return total + Number(itemWeight) * item.quantity;
+  }, 0);
+
+  // Use delivery charge calculator
+  const {
+    deliveryCharge: calculatedDeliveryCharge,
+    citiesDistricts,
+    isLoading: isLoadingDeliveryCharges,
+    searchQuery: citySearchQuery,
+    setSearchQuery: setCitySearchQuery,
+  } = useDeliveryChargeCalculator({
+    selectedCityDistrict: formData.city,
+    totalWeight,
+  });
+
+  // Determine final delivery charge based on user preference
+  const finalDeliveryCharge = useCustomDeliveryCharge
+    ? parseFloat(customDeliveryCharge) || 0
+    : calculatedDeliveryCharge;
 
   useEffect(() => {
     if (open) {
@@ -115,7 +191,7 @@ export function CreateManualOrderDialog({
       });
 
       const mappedProducts: Product[] = response.results.map(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
         (product: any) => ({
           id: product.id.toString(),
           name: product.name,
@@ -124,8 +200,10 @@ export function CreateManualOrderDialog({
               ? parseFloat(product.price)
               : product.price,
           stock: product.stock || 0,
+          weight: product.weight || 0,
           image_url: product.thumbnail_image || undefined,
           sku: product.sku,
+          variants_read: product.variants_read || [],
         })
       );
 
@@ -143,7 +221,9 @@ export function CreateManualOrderDialog({
       (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (product.sku &&
           product.sku.toLowerCase().includes(searchQuery.toLowerCase()))) &&
-      !orderItems.find(item => item.product_id === product.id)
+      !orderItems.find(
+        item => item.product_id === product.id && !item.variant_id
+      )
   );
 
   const handleChange = (
@@ -155,13 +235,12 @@ export function CreateManualOrderDialog({
       [name]: value,
     }));
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const processWitAiResponse = (response: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     const extractedData: any = {};
     console.log("Wit.ai Response:", JSON.stringify(response, null, 2));
 
-    // Extract phone number if available (new format)
     const phoneNumber =
       response.entities?.["wit$phone_number:phone_number"]?.[0]?.value ||
       response.entities?.wit$phone_number?.[0]?.value;
@@ -169,7 +248,6 @@ export function CreateManualOrderDialog({
       extractedData.phone = phoneNumber;
     }
 
-    // Extract address if available (new format)
     const location =
       response.entities?.["wit$location:location"]?.[0]?.resolved?.values?.[0]
         ?.name ||
@@ -178,7 +256,6 @@ export function CreateManualOrderDialog({
       extractedData.address = location;
     }
 
-    // Extract email if available (new format)
     const email =
       response.entities?.["wit$email:email"]?.[0]?.value ||
       response.entities?.wit$email?.[0]?.value;
@@ -186,12 +263,10 @@ export function CreateManualOrderDialog({
       extractedData.email = email;
     }
 
-    // Extract person name if available
     if (response.entities?.wit$contact?.[0]?.value) {
       extractedData.name = response.entities.wit$contact[0].value;
     }
 
-    // Simple city extraction from address
     if (extractedData.address) {
       const addressParts = extractedData.address.split(",");
       if (addressParts.length > 1) {
@@ -213,14 +288,7 @@ export function CreateManualOrderDialog({
 
     setExtracting(true);
     try {
-      console.log(
-        "Wit.ai API Key:",
-        process.env.NEXT_PUBLIC_WIT_API_KEY ? "Key exists" : "Key is missing"
-      );
-
       const apiUrl = `https://api.wit.ai/message?v=20231028&q=${encodeURIComponent(messageInput)}`;
-      console.log("Making request to:", apiUrl);
-
       const response = await fetch(apiUrl, {
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_WIT_API_KEY}`,
@@ -229,10 +297,8 @@ export function CreateManualOrderDialog({
       });
 
       const data = await response.json();
-      console.log("Wit.ai Response:", JSON.stringify(data, null, 2));
 
       if (!response.ok) {
-        console.error("Wit.ai API Error:", data);
         throw new Error(
           data.error ||
             `Failed to extract data: ${response.status} ${response.statusText}`
@@ -240,13 +306,11 @@ export function CreateManualOrderDialog({
       }
 
       if (!data.entities || Object.keys(data.entities).length === 0) {
-        console.warn("No entities found in Wit.ai response");
         toast.warning("No extractable data found in the message");
         return;
       }
 
       const extractedData = processWitAiResponse(data);
-      console.log("Processed Data:", extractedData);
 
       if (Object.keys(extractedData).length === 0) {
         toast.warning(
@@ -257,7 +321,7 @@ export function CreateManualOrderDialog({
 
       setExtractedData(extractedData);
       toast.success("Data extracted successfully!");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Extraction error:", err);
       toast.error(
@@ -289,68 +353,159 @@ export function CreateManualOrderDialog({
   };
 
   const handleProductSelect = (product: Product) => {
-    const existingItem = orderItems.find(
-      item => item.product_id === product.id
-    );
-
-    if (existingItem) {
-      if (existingItem.quantity < product.stock) {
-        setOrderItems(
-          orderItems.map(item =>
-            item.product_id === product.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          )
-        );
-      } else {
-        toast.error("Cannot add more than available stock");
-      }
+    // Check if product has variants
+    if (product.variants_read && product.variants_read.length > 0) {
+      // Show variant selection dialog
+      setPendingProduct(product);
+      setSelectedProductForVariant(product);
+      setVariantDialogOpen(true);
     } else {
-      setOrderItems([
-        ...orderItems,
-        {
-          product_id: product.id,
-          product_name: product.name,
-          quantity: 1,
-          price: product.price,
-          image_url: product.image_url,
-        },
-      ]);
+      // No variants, add directly to order
+      addProductToOrder(product);
     }
 
     setSearchQuery("");
     setShowDropdown(false);
   };
 
-  const handleQuantityChange = (productId: string, change: number) => {
+  const addProductToOrder = (
+    product: Product,
+    selectedVariant?: ProductVariantRead
+  ) => {
+    const existingItemIndex = orderItems.findIndex(
+      item =>
+        item.product_id === product.id &&
+        item.variant_id === selectedVariant?.id
+    );
+
+    if (existingItemIndex >= 0) {
+      // Update existing item with same product and variant
+      const existingItem = orderItems[existingItemIndex];
+      const availableStock = selectedVariant?.stock || product.stock || 0;
+
+      if (existingItem.quantity < availableStock) {
+        setOrderItems(prev =>
+          prev.map((item, index) =>
+            index === existingItemIndex
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          )
+        );
+      } else {
+        toast.error(`Cannot add more than available stock (${availableStock})`);
+      }
+    } else {
+      // Add new item
+      const variantPrice = selectedVariant
+        ? parseFloat(selectedVariant.price)
+        : product.price;
+      const variantStock = selectedVariant?.stock || product.stock || 0;
+      const variantImage = selectedVariant?.image || product.image_url;
+      const itemWeight = product.weight || 0;
+
+      if (variantStock === 0) {
+        toast.error("Selected variant is out of stock");
+        return;
+      }
+
+      setOrderItems(prev => [
+        ...prev,
+        {
+          product_id: product.id,
+          product_name: product.name,
+          quantity: 1,
+          price: variantPrice,
+          image_url: variantImage,
+          variant_id: selectedVariant?.id,
+          variant: selectedVariant,
+          product_data: product,
+          weight: itemWeight,
+        },
+      ]);
+    }
+  };
+
+  const handleVariantSelect = (variant: ProductVariantRead) => {
+    if (pendingProduct) {
+      addProductToOrder(pendingProduct, variant);
+      setPendingProduct(null);
+    }
+  };
+
+  const handleQuantityChange = (
+    productId: string,
+    variantId: number | undefined,
+    change: number
+  ) => {
     setOrderItems(prevItems => {
       const existingItem = prevItems.find(
-        item => item.product_id === productId
+        item => item.product_id === productId && item.variant_id === variantId
       );
       if (!existingItem) return prevItems;
 
-      const newQuantity = existingItem.quantity + change;
       const product = products.find(p => p.id === productId);
-      if (product && newQuantity > product.stock) {
-        toast.error(`Only ${product.stock} items available in stock`);
+      let availableStock = product?.stock || 0;
+
+      // If it's a variant, use variant stock
+      if (variantId && product?.variants_read) {
+        const variant = product.variants_read.find(v => v.id === variantId);
+        availableStock = variant?.stock || 0;
+      }
+
+      const newQuantity = existingItem.quantity + change;
+
+      if (newQuantity > availableStock) {
+        toast.error(`Only ${availableStock} items available in stock`);
         return prevItems;
       }
 
       if (newQuantity < 1) return prevItems;
+
       return prevItems.map(item =>
-        item.product_id === productId
+        item.product_id === productId && item.variant_id === variantId
           ? { ...item, quantity: newQuantity }
           : item
       );
     });
   };
 
-  const handleRemoveItem = (id: string) => {
-    setOrderItems(orderItems.filter(item => item.product_id !== id));
+  const handleRemoveItem = (productId: string, variantId?: number) => {
+    setOrderItems(prev =>
+      prev.filter(
+        item =>
+          !(item.product_id === productId && item.variant_id === variantId)
+      )
+    );
+  };
+
+  const getProductDisplayName = (item: OrderItem) => {
+    if (item.variant) {
+      const optionValues = Object.values(item.variant.option_values).join(", ");
+      return `${item.product_name} (${optionValues})`;
+    }
+    return item.product_name;
   };
 
   const calculateTotal = () =>
     orderItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
+  const getOrderItemsPayload = () => {
+    return orderItems.map(item => {
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const payload: any = {
+        quantity: item.quantity,
+        price: item.price.toString(),
+      };
+
+      if (item.variant_id) {
+        payload.variant_id = item.variant_id;
+      } else {
+        payload.product_id = parseInt(item.product_id, 10);
+      }
+
+      return payload;
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -378,11 +533,7 @@ export function CreateManualOrderDialog({
     setConfirmLocationOpen(false);
     setIsLoading(true);
     try {
-      const orderItemsPayload = orderItems.map(item => ({
-        product_id: parseInt(item.product_id, 10),
-        quantity: item.quantity,
-        price: item.price.toString(),
-      }));
+      const orderItemsPayload = getOrderItemsPayload();
 
       const orderData = {
         ...formData,
@@ -390,7 +541,7 @@ export function CreateManualOrderDialog({
           formData.shipping_address || formData.customer_address,
         shipping_city: formData.city,
         total_amount: calculateTotal().toFixed(2),
-        delivery_charge: formData.delivery_charge || "0.00",
+        delivery_charge: finalDeliveryCharge.toFixed(2),
         items: orderItemsPayload,
         status: "pending",
         order_status: "pending",
@@ -403,8 +554,7 @@ export function CreateManualOrderDialog({
 
       resetForm();
       setOpen(false);
-      router.refresh();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error creating order:", error);
       toast.error(error.message || "Failed to create manual order");
@@ -421,17 +571,19 @@ export function CreateManualOrderDialog({
       customer_address: "",
       shipping_address: "",
       city: "",
-      delivery_charge: "0.00",
       notes: "",
     });
     setOrderItems([]);
     setExtractedData(null);
     setMessageInput("");
+    setUseCustomDeliveryCharge(false);
+    setCustomDeliveryCharge("");
+    setPendingProduct(null);
+    setSelectedProductForVariant(null);
   };
 
   return (
     <>
-      {/* MAIN DIALOG TRIGGER */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {trigger || (
@@ -505,14 +657,66 @@ export function CreateManualOrderDialog({
                     />
                   </div>
                   <div>
-                    <Label htmlFor="city">City *</Label>
-                    <Input
-                      id="city"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleChange}
-                      required
-                    />
+                    <Label htmlFor="city">City/District *</Label>
+                    <Popover
+                      open={openCityDropdown}
+                      onOpenChange={setOpenCityDropdown}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={openCityDropdown}
+                          className="w-full justify-between"
+                          type="button"
+                        >
+                          {formData.city || "Select city/district"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-[--radix-popover-trigger-width] p-0"
+                        align="start"
+                        onWheel={e => e.stopPropagation()}
+                      >
+                        <Command className="max-h-80">
+                          <CommandInput
+                            placeholder="Search city/district..."
+                            value={citySearchQuery}
+                            onValueChange={setCitySearchQuery}
+                          />
+                          <CommandList className="max-h-64 overflow-auto">
+                            <CommandEmpty>No city found.</CommandEmpty>
+                            <CommandGroup>
+                              {citiesDistricts.map(city => (
+                                <CommandItem
+                                  key={city}
+                                  value={city}
+                                  onSelect={() => {
+                                    setFormData(prev => ({
+                                      ...prev,
+                                      city: city === "None" ? "" : city,
+                                    }));
+                                    setOpenCityDropdown(false);
+                                    setCitySearchQuery("");
+                                  }}
+                                >
+                                  <Check
+                                    className={`mr-2 h-4 w-4 ${
+                                      formData.city === city ||
+                                      (city === "None" && !formData.city)
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    }`}
+                                  />
+                                  {city}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </div>
                 </div>
 
@@ -541,20 +745,59 @@ export function CreateManualOrderDialog({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="delivery_charge">Delivery Charge</Label>
-                    <Input
-                      id="delivery_charge"
-                      name="delivery_charge"
-                      type="number"
-                      value={formData.delivery_charge}
-                      onChange={handleChange}
-                      placeholder="0.00"
-                      step="0.01"
-                      min="0"
-                    />
+                {/* Delivery Charge Section */}
+                <div className="space-y-3 rounded-md border bg-blue-50 p-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-semibold">
+                      Delivery Charge
+                    </Label>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="useCustomDeliveryCharge"
+                        checked={useCustomDeliveryCharge}
+                        onCheckedChange={checked =>
+                          setUseCustomDeliveryCharge(checked === true)
+                        }
+                      />
+                      <Label
+                        htmlFor="useCustomDeliveryCharge"
+                        className="cursor-pointer text-sm font-normal"
+                      >
+                        Use custom charge
+                      </Label>
+                    </div>
                   </div>
+
+                  {useCustomDeliveryCharge ? (
+                    <div>
+                      <Input
+                        type="number"
+                        placeholder="Enter custom delivery charge"
+                        value={customDeliveryCharge}
+                        onChange={e => setCustomDeliveryCharge(e.target.value)}
+                        step="0.01"
+                        min="0"
+                        className="bg-white"
+                      />
+                    </div>
+                  ) : (
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-primary">Location:</span>
+                        <span className="text-primary font-medium">
+                          {formData.city || "Not selected"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between border-t border-blue-200 pt-2">
+                        <span className="text-primary font-semibold">
+                          Delivery Charge:
+                        </span>
+                        <span className="text-primary font-bold">
+                          Rs. {calculatedDeliveryCharge.toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -573,7 +816,7 @@ export function CreateManualOrderDialog({
                       }}
                       onFocus={() => setShowDropdown(true)}
                       placeholder="Search or select products..."
-                      className="pr-10 pl-10"
+                      className="pr-10 pl-10 placeholder:text-gray-400"
                     />
                   </div>
 
@@ -603,10 +846,18 @@ export function CreateManualOrderDialog({
                               <div className="flex-1">
                                 <p className="text-sm font-medium text-gray-900">
                                   {product.name}
+                                  {product.variants_read &&
+                                    product.variants_read.length > 0 && (
+                                      <span className="ml-2 text-xs text-blue-600">
+                                        ({product.variants_read.length}{" "}
+                                        variants)
+                                      </span>
+                                    )}
                                 </p>
                                 <p className="text-xs text-gray-500">
                                   Rs. {product.price.toFixed(2)} •{" "}
                                   {product.stock} in stock
+                                  {product.weight && ` • ${product.weight} kg`}
                                 </p>
                               </div>
                             </button>
@@ -625,28 +876,34 @@ export function CreateManualOrderDialog({
                 {orderItems.length > 0 ? (
                   <div className="space-y-3 rounded-md border p-4">
                     {orderItems.map(item => {
-                      const product = products.find(
-                        p => p.id === item.product_id
-                      );
+                      const displayImage =
+                        item.variant?.image || item.image_url;
+
                       return (
                         <div
-                          key={item.product_id}
+                          key={`${item.product_id}-${item.variant_id || "base"}`}
                           className="flex items-center justify-between gap-4 rounded-md bg-gray-50 p-3"
                         >
                           <div className="flex items-center gap-3">
-                            {item.image_url && (
+                            {displayImage && (
                               <img
-                                src={item.image_url}
-                                alt={item.product_name}
+                                src={displayImage}
+                                alt={getProductDisplayName(item)}
                                 className="h-12 w-12 rounded-md border object-cover"
                               />
                             )}
                             <div>
                               <p className="font-medium text-gray-900">
-                                {item.product_name}
+                                {getProductDisplayName(item)}
                               </p>
                               <p className="text-sm text-gray-500">
                                 Rs. {item.price.toFixed(2)} each
+                                {item.weight && ` • ${item.weight} kg each`}
+                                {item.variant && (
+                                  <span className="ml-2 text-xs text-blue-600">
+                                    Variant
+                                  </span>
+                                )}
                               </p>
                             </div>
                           </div>
@@ -658,7 +915,11 @@ export function CreateManualOrderDialog({
                                 variant="outline"
                                 size="sm"
                                 onClick={() =>
-                                  handleQuantityChange(item.product_id, -1)
+                                  handleQuantityChange(
+                                    item.product_id,
+                                    item.variant_id,
+                                    -1
+                                  )
                                 }
                                 disabled={item.quantity <= 1}
                                 className="h-8 w-8 p-0"
@@ -673,12 +934,17 @@ export function CreateManualOrderDialog({
                                 variant="outline"
                                 size="sm"
                                 onClick={() =>
-                                  handleQuantityChange(item.product_id, 1)
+                                  handleQuantityChange(
+                                    item.product_id,
+                                    item.variant_id,
+                                    1
+                                  )
                                 }
                                 disabled={
-                                  product
-                                    ? item.quantity >= product.stock
-                                    : false
+                                  item.variant
+                                    ? item.quantity >= (item.variant.stock || 0)
+                                    : item.quantity >=
+                                      (item.product_data?.stock || 0)
                                 }
                                 className="h-8 w-8 p-0"
                               >
@@ -692,7 +958,12 @@ export function CreateManualOrderDialog({
                               type="button"
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleRemoveItem(item.product_id)}
+                              onClick={() =>
+                                handleRemoveItem(
+                                  item.product_id,
+                                  item.variant_id
+                                )
+                              }
                               className="h-8 w-8 p-0 text-red-500 hover:bg-red-50 hover:text-red-600"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -711,12 +982,25 @@ export function CreateManualOrderDialog({
                           )}
                         </span>
                       </div>
-                      <div className="mt-2 flex items-center justify-between">
+                      <div className="mt-2 flex items-center justify-between text-sm">
+                        <span className="text-gray-600">Subtotal:</span>
+                        <span className="font-medium">
+                          Rs. {calculateTotal().toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="mt-1 flex items-center justify-between text-sm">
+                        <span className="text-gray-600">Delivery Charge:</span>
+                        <span className="font-medium">
+                          Rs. {finalDeliveryCharge.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="mt-2 flex items-center justify-between border-t pt-2">
                         <span className="text-lg font-semibold text-gray-900">
                           Total Amount:
                         </span>
                         <span className="text-lg font-bold text-gray-900">
-                          Rs. {calculateTotal().toFixed(2)}
+                          Rs.{" "}
+                          {(calculateTotal() + finalDeliveryCharge).toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -768,6 +1052,16 @@ export function CreateManualOrderDialog({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Variant Selection Dialog */}
+      <VariantSelectionDialog
+        open={variantDialogOpen}
+        onOpenChange={setVariantDialogOpen}
+        productName={selectedProductForVariant?.name || ""}
+        variants={selectedProductForVariant?.variants_read || []}
+        onVariantSelect={handleVariantSelect}
+        currentVariant={null}
+      />
 
       {/* EXTRACT CONTACT DIALOG */}
       <Dialog open={openImport} onOpenChange={setOpenImport}>
@@ -837,7 +1131,7 @@ export function CreateManualOrderDialog({
         </DialogContent>
       </Dialog>
 
-      {/* CONFIRM LOCATION DIALOG - Now shown before creating order */}
+      {/* CONFIRM LOCATION DIALOG */}
       <Dialog open={confirmLocationOpen} onOpenChange={setConfirmLocationOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -881,13 +1175,39 @@ export function CreateManualOrderDialog({
             </div>
 
             <div className="rounded-md border bg-blue-50 p-3">
-              <p className="text-sm text-blue-800">
-                <strong>Order Total:</strong> Rs. {calculateTotal().toFixed(2)}
-              </p>
-              <p className="text-sm text-blue-800">
-                <strong>Delivery Charge:</strong> Rs. {formData.delivery_charge}
-              </p>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-blue-800">Subtotal:</span>
+                  <span className="text-primary font-medium">
+                    Rs. {calculateTotal().toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-blue-800">Delivery Charge:</span>
+                  <span className="text-primary font-medium">
+                    Rs. {finalDeliveryCharge.toFixed(2)}
+                    {useCustomDeliveryCharge && (
+                      <span className="ml-1 text-xs">(Custom)</span>
+                    )}
+                  </span>
+                </div>
+                <div className="flex justify-between border-t border-blue-200 pt-2">
+                  <span className="font-bold text-blue-800">Order Total:</span>
+                  <span className="text-primary font-bold">
+                    Rs. {(calculateTotal() + finalDeliveryCharge).toFixed(2)}
+                  </span>
+                </div>
+              </div>
             </div>
+
+            {totalWeight > 0 && (
+              <div className="rounded-md border bg-amber-50 p-3">
+                <p className="text-sm text-amber-800">
+                  <strong>Total Package Weight:</strong>{" "}
+                  {totalWeight.toFixed(2)} kg
+                </p>
+              </div>
+            )}
           </div>
 
           <DialogFooter className="mt-4">

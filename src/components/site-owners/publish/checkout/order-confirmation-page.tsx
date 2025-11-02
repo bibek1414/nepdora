@@ -176,8 +176,8 @@ const PublishOrderConfirmationPage: React.FC<
                   <Truck className="mr-2 h-4 w-4" />
                   Shipping Address
                 </h3>
-                <p className="text-sm whitespace-pre-line text-gray-600">
-                  {order.shipping_address}
+                <p className="text-sm whitespace-pre-line text-gray-600 capitalize">
+                  <strong>Shipping Address:</strong> {order.shipping_address}
                 </p>
                 {order.city && (
                   <p className="mt-1 text-sm text-gray-600">

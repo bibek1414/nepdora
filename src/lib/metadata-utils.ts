@@ -19,7 +19,7 @@ export async function generateAdminPageMetadata({
   const storeName = capitalizeWords(rawStoreName);
   const subDomain = user?.subDomain || "";
 
-  const title = `${storeName} ${pageName} | Admin Dashboard`;
+  const title = `${storeName} | ${pageName} | Admin Dashboard`;
   const description = pageDescription.replace(/\{storeName\}/g, storeName);
 
   return {
@@ -55,7 +55,43 @@ export async function generatePreviewPageMetadata({
   const storeName = capitalizeWords(rawStoreName);
   const subDomain = user?.subDomain || "";
 
-  const title = `${storeName} ${pageName} | Preview`;
+  const title = `${storeName} | ${pageName} | Preview`;
+  const description = pageDescription.replace(/\{storeName\}/g, storeName);
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      siteName: storeName,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    ...(subDomain && {
+      alternates: {
+        canonical: `https://${subDomain}${pageRoute}`,
+      },
+    }),
+  };
+}
+
+export async function generatePublishPageMetadata({
+  pageName,
+  pageDescription,
+  pageRoute,
+}: AdminPageMetadataOptions): Promise<Metadata> {
+  const user = await getServerUser();
+
+  const rawStoreName = user?.storeName || "Nepdora";
+  const storeName = capitalizeWords(rawStoreName);
+  const subDomain = user?.subDomain || "";
+
+  const title = `${storeName} | ${pageName} `;
   const description = pageDescription.replace(/\{storeName\}/g, storeName);
 
   return {

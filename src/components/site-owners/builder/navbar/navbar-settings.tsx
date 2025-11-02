@@ -92,14 +92,6 @@ const PageSelector: React.FC<PageSelectorProps> = ({
     onSelect(`/${page.slug}`, page.title);
   };
 
-  // Handle external URL selection
-  const handleExternalUrl = () => {
-    const url = prompt("Enter external URL (including https://):");
-    if (url) {
-      onSelect(url, url);
-    }
-  };
-
   // Handle new page creation
   const handleCreatePage = async () => {
     if (!newPageTitle.trim()) return;
@@ -447,6 +439,18 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
     if (showPageSelectorFor) {
       const { type, id } = showPageSelectorFor;
 
+      if (type === "link") {
+        handleUpdateLink(id, "href", href);
+        if (text) {
+          handleUpdateLink(id, "text", text);
+        }
+      } else if (type === "button") {
+        handleUpdateButton(id, "href", href);
+        if (text) {
+          handleUpdateButton(id, "text", text);
+        }
+      }
+
       setShowPageSelectorFor(null);
     }
   };
@@ -688,13 +692,19 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                     >
                       <div className="grid flex-1 grid-cols-2 gap-3">
                         <div className="space-y-1">
-                          <Label htmlFor={`link-text-${link.id}`}>Text</Label>
+                          <Label
+                            className="capitalize"
+                            htmlFor={`link-text-${link.id}`}
+                          >
+                            Text
+                          </Label>
                           <Input
                             id={`link-text-${link.id}`}
                             value={link.text}
                             onChange={e =>
                               handleUpdateLink(link.id, "text", e.target.value)
                             }
+                            className="capitalize"
                             placeholder="Link text"
                           />
                         </div>
