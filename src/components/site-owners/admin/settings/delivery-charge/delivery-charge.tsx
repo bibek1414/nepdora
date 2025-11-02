@@ -35,13 +35,13 @@ export default function DeliveryChargesList() {
 
   const [defaultCharges, setDefaultCharges] = useState({
     id: 0,
-    default_cost: "0",
-    cost_0_1kg: "0",
-    cost_1_2kg: "0",
-    cost_2_3kg: "0",
-    cost_3_5kg: "0",
-    cost_5_10kg: "0",
-    cost_above_10kg: "0",
+    default_cost: "",
+    cost_0_1kg: "",
+    cost_1_2kg: "",
+    cost_2_3kg: "",
+    cost_3_5kg: "",
+    cost_5_10kg: "",
+    cost_above_10kg: "",
   });
   const [locationCharges, setLocationCharges] = useState<
     Record<number, Partial<DeliveryCharge>>
@@ -69,6 +69,27 @@ export default function DeliveryChargesList() {
   const updateMutation = useUpdateDeliveryCharge();
   const createMutation = useCreateDeliveryCharge();
 
+  // Helper function to convert value to display format (blank for null/0/0.00)
+  const toDisplayValue = (value: string | null | undefined) => {
+    if (
+      !value ||
+      value === "0" ||
+      value === "0.00" ||
+      parseFloat(value) === 0
+    ) {
+      return "";
+    }
+    return value;
+  };
+
+  // Helper function to convert display value to save format (empty string for blank)
+  const toSaveValue = (value: string): string => {
+    if (!value || value.trim() === "") {
+      return "";
+    }
+    return value;
+  };
+
   // Reset to page 1 when search changes
   useEffect(() => {
     setCurrentPage(1);
@@ -80,13 +101,13 @@ export default function DeliveryChargesList() {
       const defaultPrice = defaultData.default_price[0];
       setDefaultCharges({
         id: defaultPrice.id,
-        default_cost: defaultPrice.default_cost || "0",
-        cost_0_1kg: defaultPrice.cost_0_1kg || "0",
-        cost_1_2kg: defaultPrice.cost_1_2kg || "0",
-        cost_2_3kg: defaultPrice.cost_2_3kg || "0",
-        cost_3_5kg: defaultPrice.cost_3_5kg || "0",
-        cost_5_10kg: defaultPrice.cost_5_10kg || "0",
-        cost_above_10kg: defaultPrice.cost_above_10kg || "0",
+        default_cost: toDisplayValue(defaultPrice.default_cost),
+        cost_0_1kg: toDisplayValue(defaultPrice.cost_0_1kg),
+        cost_1_2kg: toDisplayValue(defaultPrice.cost_1_2kg),
+        cost_2_3kg: toDisplayValue(defaultPrice.cost_2_3kg),
+        cost_3_5kg: toDisplayValue(defaultPrice.cost_3_5kg),
+        cost_5_10kg: toDisplayValue(defaultPrice.cost_5_10kg),
+        cost_above_10kg: toDisplayValue(defaultPrice.cost_above_10kg),
       });
       setIsDefaultModified(false);
     }
@@ -98,13 +119,13 @@ export default function DeliveryChargesList() {
       const charges: Record<number, Partial<DeliveryCharge>> = {};
       locationsData.results.forEach(location => {
         charges[location.id] = {
-          default_cost: location.default_cost,
-          cost_0_1kg: location.cost_0_1kg,
-          cost_1_2kg: location.cost_1_2kg,
-          cost_2_3kg: location.cost_2_3kg,
-          cost_3_5kg: location.cost_3_5kg,
-          cost_5_10kg: location.cost_5_10kg,
-          cost_above_10kg: location.cost_above_10kg,
+          default_cost: toDisplayValue(location.default_cost),
+          cost_0_1kg: toDisplayValue(location.cost_0_1kg),
+          cost_1_2kg: toDisplayValue(location.cost_1_2kg),
+          cost_2_3kg: toDisplayValue(location.cost_2_3kg),
+          cost_3_5kg: toDisplayValue(location.cost_3_5kg),
+          cost_5_10kg: toDisplayValue(location.cost_5_10kg),
+          cost_above_10kg: toDisplayValue(location.cost_above_10kg),
         };
       });
       setLocationCharges(prev => ({ ...prev, ...charges }));
@@ -139,13 +160,13 @@ export default function DeliveryChargesList() {
           updateDefaultMutation.mutateAsync({
             id: defaultCharges.id,
             data: {
-              default_cost: defaultCharges.default_cost,
-              cost_0_1kg: defaultCharges.cost_0_1kg,
-              cost_1_2kg: defaultCharges.cost_1_2kg,
-              cost_2_3kg: defaultCharges.cost_2_3kg,
-              cost_3_5kg: defaultCharges.cost_3_5kg,
-              cost_5_10kg: defaultCharges.cost_5_10kg,
-              cost_above_10kg: defaultCharges.cost_above_10kg,
+              default_cost: toSaveValue(defaultCharges.default_cost),
+              cost_0_1kg: toSaveValue(defaultCharges.cost_0_1kg),
+              cost_1_2kg: toSaveValue(defaultCharges.cost_1_2kg),
+              cost_2_3kg: toSaveValue(defaultCharges.cost_2_3kg),
+              cost_3_5kg: toSaveValue(defaultCharges.cost_3_5kg),
+              cost_5_10kg: toSaveValue(defaultCharges.cost_5_10kg),
+              cost_above_10kg: toSaveValue(defaultCharges.cost_above_10kg),
             },
           })
         );
@@ -158,7 +179,13 @@ export default function DeliveryChargesList() {
           updatePromises.push(
             updateMutation.mutateAsync({
               id: locationId,
-              ...charges,
+              default_cost: toSaveValue(charges.default_cost || ""),
+              cost_0_1kg: toSaveValue(charges.cost_0_1kg || ""),
+              cost_1_2kg: toSaveValue(charges.cost_1_2kg || ""),
+              cost_2_3kg: toSaveValue(charges.cost_2_3kg || ""),
+              cost_3_5kg: toSaveValue(charges.cost_3_5kg || ""),
+              cost_5_10kg: toSaveValue(charges.cost_5_10kg || ""),
+              cost_above_10kg: toSaveValue(charges.cost_above_10kg || ""),
             })
           );
         }
@@ -171,13 +198,13 @@ export default function DeliveryChargesList() {
           updatePromises.push(
             createMutation.mutateAsync({
               location_name: newLocation.location_name.trim(),
-              default_cost: newLocation.default_cost || null,
-              cost_0_1kg: newLocation.cost_0_1kg || null,
-              cost_1_2kg: newLocation.cost_1_2kg || null,
-              cost_2_3kg: newLocation.cost_2_3kg || null,
-              cost_3_5kg: newLocation.cost_3_5kg || null,
-              cost_5_10kg: newLocation.cost_5_10kg || null,
-              cost_above_10kg: newLocation.cost_above_10kg || null,
+              default_cost: toSaveValue(newLocation.default_cost),
+              cost_0_1kg: toSaveValue(newLocation.cost_0_1kg),
+              cost_1_2kg: toSaveValue(newLocation.cost_1_2kg),
+              cost_2_3kg: toSaveValue(newLocation.cost_2_3kg),
+              cost_3_5kg: toSaveValue(newLocation.cost_3_5kg),
+              cost_5_10kg: toSaveValue(newLocation.cost_5_10kg),
+              cost_above_10kg: toSaveValue(newLocation.cost_above_10kg),
             })
           );
         }
@@ -220,13 +247,13 @@ export default function DeliveryChargesList() {
       const defaultPrice = defaultData.default_price[0];
       setDefaultCharges({
         id: defaultPrice.id,
-        default_cost: defaultPrice.default_cost || "0",
-        cost_0_1kg: defaultPrice.cost_0_1kg || "0",
-        cost_1_2kg: defaultPrice.cost_1_2kg || "0",
-        cost_2_3kg: defaultPrice.cost_2_3kg || "0",
-        cost_3_5kg: defaultPrice.cost_3_5kg || "0",
-        cost_5_10kg: defaultPrice.cost_5_10kg || "0",
-        cost_above_10kg: defaultPrice.cost_above_10kg || "0",
+        default_cost: toDisplayValue(defaultPrice.default_cost),
+        cost_0_1kg: toDisplayValue(defaultPrice.cost_0_1kg),
+        cost_1_2kg: toDisplayValue(defaultPrice.cost_1_2kg),
+        cost_2_3kg: toDisplayValue(defaultPrice.cost_2_3kg),
+        cost_3_5kg: toDisplayValue(defaultPrice.cost_3_5kg),
+        cost_5_10kg: toDisplayValue(defaultPrice.cost_5_10kg),
+        cost_above_10kg: toDisplayValue(defaultPrice.cost_above_10kg),
       });
     }
 
@@ -235,13 +262,13 @@ export default function DeliveryChargesList() {
       const charges: Record<number, Partial<DeliveryCharge>> = {};
       locationsData.results.forEach(location => {
         charges[location.id] = {
-          default_cost: location.default_cost,
-          cost_0_1kg: location.cost_0_1kg,
-          cost_1_2kg: location.cost_1_2kg,
-          cost_2_3kg: location.cost_2_3kg,
-          cost_3_5kg: location.cost_3_5kg,
-          cost_5_10kg: location.cost_5_10kg,
-          cost_above_10kg: location.cost_above_10kg,
+          default_cost: toDisplayValue(location.default_cost),
+          cost_0_1kg: toDisplayValue(location.cost_0_1kg),
+          cost_1_2kg: toDisplayValue(location.cost_1_2kg),
+          cost_2_3kg: toDisplayValue(location.cost_2_3kg),
+          cost_3_5kg: toDisplayValue(location.cost_3_5kg),
+          cost_5_10kg: toDisplayValue(location.cost_5_10kg),
+          cost_above_10kg: toDisplayValue(location.cost_above_10kg),
         };
       });
       setLocationCharges(charges);
@@ -273,7 +300,7 @@ export default function DeliveryChargesList() {
       ...prev,
       [locationId]: {
         ...prev[locationId],
-        [field]: value || null,
+        [field]: value,
       },
     }));
     setModifiedLocations(prev => new Set(prev).add(locationId));
@@ -452,6 +479,7 @@ export default function DeliveryChargesList() {
                       className="w-full md:text-xs"
                       min="0"
                       step="0.01"
+                      placeholder="0"
                     />
                   </td>
                   <td className="border border-gray-300 px-2 py-2">
@@ -464,6 +492,7 @@ export default function DeliveryChargesList() {
                       className="w-full md:text-xs"
                       min="0"
                       step="0.01"
+                      placeholder="0"
                     />
                   </td>
                   <td className="border border-gray-300 px-2 py-2">
@@ -476,6 +505,7 @@ export default function DeliveryChargesList() {
                       className="w-full md:text-xs"
                       min="0"
                       step="0.01"
+                      placeholder="0"
                     />
                   </td>
                   <td className="border border-gray-300 px-2 py-2">
@@ -488,6 +518,7 @@ export default function DeliveryChargesList() {
                       className="w-full md:text-xs"
                       min="0"
                       step="0.01"
+                      placeholder="0"
                     />
                   </td>
                   <td className="border border-gray-300 px-2 py-2">
@@ -500,6 +531,7 @@ export default function DeliveryChargesList() {
                       className="w-full md:text-xs"
                       min="0"
                       step="0.01"
+                      placeholder="0"
                     />
                   </td>
                   <td className="border border-gray-300 px-2 py-2">
@@ -512,6 +544,7 @@ export default function DeliveryChargesList() {
                       className="w-full md:text-xs"
                       min="0"
                       step="0.01"
+                      placeholder="0"
                     />
                   </td>
                   <td className="border border-gray-300 px-2 py-2">
@@ -527,6 +560,7 @@ export default function DeliveryChargesList() {
                       className="w-full md:text-xs"
                       min="0"
                       step="0.01"
+                      placeholder="0"
                     />
                   </td>
                 </tr>
@@ -660,7 +694,7 @@ export default function DeliveryChargesList() {
                           )
                         }
                         className="w-full border-green-300 bg-white md:text-xs"
-                        placeholder={defaultCharges.default_cost}
+                        placeholder={defaultCharges.default_cost || "0"}
                         min="0"
                         step="0.01"
                       />
@@ -677,7 +711,7 @@ export default function DeliveryChargesList() {
                           )
                         }
                         className="w-full border-green-300 bg-white md:text-xs"
-                        placeholder={defaultCharges.cost_0_1kg}
+                        placeholder={defaultCharges.cost_0_1kg || "0"}
                         min="0"
                         step="0.01"
                       />
@@ -694,7 +728,7 @@ export default function DeliveryChargesList() {
                           )
                         }
                         className="w-full border-green-300 bg-white md:text-xs"
-                        placeholder={defaultCharges.cost_1_2kg}
+                        placeholder={defaultCharges.cost_1_2kg || "0"}
                         min="0"
                         step="0.01"
                       />
@@ -711,7 +745,7 @@ export default function DeliveryChargesList() {
                           )
                         }
                         className="w-full border-green-300 bg-white md:text-xs"
-                        placeholder={defaultCharges.cost_2_3kg}
+                        placeholder={defaultCharges.cost_2_3kg || "0"}
                         min="0"
                         step="0.01"
                       />
@@ -728,7 +762,7 @@ export default function DeliveryChargesList() {
                           )
                         }
                         className="w-full border-green-300 bg-white md:text-xs"
-                        placeholder={defaultCharges.cost_3_5kg}
+                        placeholder={defaultCharges.cost_3_5kg || "0"}
                         min="0"
                         step="0.01"
                       />
@@ -745,7 +779,7 @@ export default function DeliveryChargesList() {
                           )
                         }
                         className="w-full border-green-300 bg-white md:text-xs"
-                        placeholder={defaultCharges.cost_5_10kg}
+                        placeholder={defaultCharges.cost_5_10kg || "0"}
                         min="0"
                         step="0.01"
                       />
@@ -762,7 +796,7 @@ export default function DeliveryChargesList() {
                           )
                         }
                         className="w-full border-green-300 bg-white md:text-xs"
-                        placeholder={defaultCharges.cost_above_10kg}
+                        placeholder={defaultCharges.cost_above_10kg || "0"}
                         min="0"
                         step="0.01"
                       />
@@ -816,7 +850,7 @@ export default function DeliveryChargesList() {
                             )
                           }
                           className="w-full md:text-xs"
-                          placeholder={defaultCharges.default_cost}
+                          placeholder={defaultCharges.default_cost || "0"}
                           min="0"
                           step="0.01"
                         />
@@ -833,7 +867,7 @@ export default function DeliveryChargesList() {
                             )
                           }
                           className="w-full md:text-xs"
-                          placeholder={defaultCharges.cost_0_1kg}
+                          placeholder={defaultCharges.cost_0_1kg || "0"}
                           min="0"
                           step="0.01"
                         />
@@ -850,7 +884,7 @@ export default function DeliveryChargesList() {
                             )
                           }
                           className="w-full md:text-xs"
-                          placeholder={defaultCharges.cost_1_2kg}
+                          placeholder={defaultCharges.cost_1_2kg || "0"}
                           min="0"
                           step="0.01"
                         />
@@ -867,7 +901,7 @@ export default function DeliveryChargesList() {
                             )
                           }
                           className="w-full md:text-xs"
-                          placeholder={defaultCharges.cost_2_3kg}
+                          placeholder={defaultCharges.cost_2_3kg || "0"}
                           min="0"
                           step="0.01"
                         />
@@ -884,7 +918,7 @@ export default function DeliveryChargesList() {
                             )
                           }
                           className="w-full md:text-xs"
-                          placeholder={defaultCharges.cost_3_5kg}
+                          placeholder={defaultCharges.cost_3_5kg || "0"}
                           min="0"
                           step="0.01"
                         />
@@ -903,7 +937,7 @@ export default function DeliveryChargesList() {
                             )
                           }
                           className="w-full md:text-xs"
-                          placeholder={defaultCharges.cost_5_10kg}
+                          placeholder={defaultCharges.cost_5_10kg || "0"}
                           min="0"
                           step="0.01"
                         />
@@ -922,7 +956,7 @@ export default function DeliveryChargesList() {
                             )
                           }
                           className="w-full md:text-xs"
-                          placeholder={defaultCharges.cost_above_10kg}
+                          placeholder={defaultCharges.cost_above_10kg || "0"}
                           min="0"
                           step="0.01"
                         />

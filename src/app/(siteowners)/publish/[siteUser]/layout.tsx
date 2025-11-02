@@ -3,6 +3,7 @@ import { WhatsApp } from "@/components/site-owners/builder/whatsapp/whatsapp";
 import PopupManager from "@/components/site-owners/builder/popup/popup-manager";
 import { DynamicFontProvider } from "@/providers/dynamic-font-provider";
 import { DynamicFavicon } from "@/components/site-owners/admin/favicon/dynamic-favicon";
+import { GoogleAnalytics } from "@/components/site-owners/admin/google-analytics/google-analytics";
 
 interface PublishLayoutProps {
   children: React.ReactNode;
@@ -18,6 +19,7 @@ export default async function PublishLayout({
   return (
     <>
       <DynamicFavicon />
+      <GoogleAnalytics />
       <DynamicFontProvider>
         <PublishLayoutWrapper siteUser={siteUser}>
           {children}
