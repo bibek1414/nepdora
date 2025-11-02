@@ -10,83 +10,25 @@ import {
   FacebookIntegration,
 } from "@/types/owner-site/admin/facebook";
 
+// src/services/api/owner-sites/admin/facebook.ts
 export const useFacebookApi = {
-  getFacebookIntegrations: async (): Promise<FacebookIntegration[]> => {
-    const API_BASE_URL = getApiBaseUrl();
-
-    const response = await fetch(`${API_BASE_URL}/api/facebook/`, {
+  // Add optional tenant param here
+  getFacebookIntegrations: async (params?: { tenant?: string }) => {
+    const query = params?.tenant ? `?tenant=${params.tenant}` : "";
+    const res = await fetch(`/api/facebook/${query}`, {
       method: "GET",
-      headers: createHeaders(),
+      headers: { "Content-Type": "application/json" },
     });
-
-    await handleApiError(response);
-    const data = await response.json();
-
-    return data;
+    return res.json();
   },
 
-  getFacebookIntegration: async (id: number): Promise<FacebookIntegration> => {
-    const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/facebook/${id}/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
-
-    await handleApiError(response);
-    return response.json();
-  },
-
-  createFacebookIntegration: async (
-    data: CreateFacebookIntegrationRequest
-  ): Promise<CreateFacebookIntegrationResponse> => {
-    const API_BASE_URL = getApiBaseUrl();
-
-    const response = await fetch(`${API_BASE_URL}/api/facebook/`, {
-      method: "POST",
-      headers: createHeaders(),
-      body: JSON.stringify(data),
-    });
-
-    await handleApiError(response);
-    const responseData = await response.json();
-    return {
-      data: responseData,
-      message: "Facebook integration created successfully",
-    };
-  },
-
-  updateFacebookIntegration: async (
-    id: number,
-    data: UpdateFacebookIntegrationRequest
-  ): Promise<UpdateFacebookIntegrationResponse> => {
-    const API_BASE_URL = getApiBaseUrl();
-
-    const response = await fetch(`${API_BASE_URL}/api/facebook/${id}/`, {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  updateFacebookIntegration: async (id: string, data: any) => {
+    const res = await fetch(`/api/facebook/${id}/`, {
       method: "PATCH",
-      headers: createHeaders(),
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-
-    await handleApiError(response);
-    const responseData = await response.json();
-    return {
-      data: responseData,
-      message: "Facebook integration updated successfully",
-    };
-  },
-
-  deleteFacebookIntegration: async (
-    id: number
-  ): Promise<DeleteFacebookIntegrationResponse> => {
-    const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/facebook/${id}/`, {
-      method: "DELETE",
-      headers: createHeaders(),
-    });
-
-    await handleApiError(response);
-    return {
-      message: "Facebook integration deleted successfully",
-    };
+    return res.json();
   },
 };

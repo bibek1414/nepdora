@@ -35,10 +35,18 @@ export const FacebookProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshIntegration = async () => {
     try {
-      const data = await useFacebookApi.getFacebookIntegrations();
+      const tenantSlug = window.location.hostname.split(".")[0]; // get subdomain
+      const data = await useFacebookApi.getFacebookIntegrations({
+        tenant: tenantSlug,
+      });
 
       if (data.length > 0) {
-        const activeIntegration = data.find(i => i.is_enabled);
+        const data: FacebookIntegration[] =
+          await useFacebookApi.getFacebookIntegrations({ tenant: tenantSlug });
+        const activeIntegration = data.find(
+          (i: FacebookIntegration) => i.is_enabled
+        );
+
         setIntegration(activeIntegration || data[0]);
         setIsConnected(!!activeIntegration);
       } else {
@@ -61,55 +69,45 @@ export const FacebookProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const appId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID;
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-      if (!appId) {
-        throw new Error("Facebook App ID is not configured");
-      }
+      // Use current origin to ensure redirect_uri matches exactly with callback route
+      // The callback route constructs redirect_uri from request.origin + request.pathname
+      // So we use window.location.origin to match what the server will receive
+      const redirectUri = `${window.location.origin}/api/facebook/callback`;
 
-      if (!baseUrl) {
-        throw new Error("Base URL is not configured");
-      }
+      console.log("OAuth request redirect_uri:", redirectUri);
 
-      // Construct redirect URI from base URL
-      const redirectUri = `${baseUrl}/api/facebook/callback`;
-
-      console.log("Facebook OAuth Config:", {
-        appId,
-        redirectUri,
-        baseUrl,
+      // Pass tenant slug and redirect_uri in state as JSON to ensure exact match
+      const tenantSlug = window.location.hostname.split(".")[0];
+      const stateData = JSON.stringify({
+        tenant: tenantSlug,
+        redirect_uri: redirectUri,
       });
-
+      const encodedState = encodeURIComponent(stateData);
       const encodedRedirectUri = encodeURIComponent(redirectUri);
       const scope = encodeURIComponent(
         "pages_manage_engagement,pages_messaging,pages_read_engagement,pages_show_list"
       );
 
-      // Use response_type=code for server-side flow (more secure)
       const authUrl = `https://www.facebook.com/${
         process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0"
-      }/dialog/oauth?client_id=${appId}&redirect_uri=${encodedRedirectUri}&scope=${scope}&response_type=code`;
-
-      console.log("Redirecting to Facebook OAuth...");
+      }/dialog/oauth?client_id=${appId}&redirect_uri=${encodedRedirectUri}&scope=${scope}&response_type=code&state=${encodedState}`;
 
       window.location.href = authUrl;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
       console.error("Error connecting to Facebook:", err);
-      setError(errorMessage);
+      setError("Failed to connect to Facebook");
       setIsLoading(false);
-      toast.error(`Failed to connect: ${errorMessage}`);
+      toast.error("Failed to connect to Facebook");
     }
   };
 
   const disconnectFacebook = async () => {
     try {
-      if (!integration?.id) {
-        throw new Error("No integration found");
-      }
+      if (!integration?.id) throw new Error("No integration found");
 
       setIsLoading(true);
-      await useFacebookApi.updateFacebookIntegration(integration.id, {
+      await useFacebookApi.updateFacebookIntegration(String(integration.id), {
         is_enabled: false,
       });
 
@@ -118,9 +116,8 @@ export const FacebookProvider = ({ children }: { children: ReactNode }) => {
       toast.success("Disconnected from Facebook");
     } catch (err) {
       console.error("Error disconnecting from Facebook:", err);
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      setError(errorMessage);
-      toast.error(`Failed to disconnect: ${errorMessage}`);
+      setError("Failed to disconnect from Facebook");
+      toast.error("Failed to disconnect from Facebook");
     } finally {
       setIsLoading(false);
     }
@@ -145,8 +142,7 @@ export const FacebookProvider = ({ children }: { children: ReactNode }) => {
 
 export const useFacebook = (): FacebookContextType => {
   const context = useContext(FacebookContext);
-  if (context === undefined) {
+  if (!context)
     throw new Error("useFacebook must be used within a FacebookProvider");
-  }
   return context;
 };
