@@ -55,6 +55,30 @@ export const orderApi = {
     await handleApiError(response);
     return response.json();
   },
+  getManualOrders: async (
+    params: OrderPaginationParams = {}
+  ): Promise<OrdersResponse> => {
+    const { page = 1, page_size = 10, search, status, sortBy } = params;
+    const API_BASE_URL = getApiBaseUrl();
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      page_size: page_size.toString(),
+      is_manual: "true",
+    });
+
+    if (search) queryParams.append("search", search);
+    if (status && status !== "all") queryParams.append("status", status);
+
+    const response = await fetch(
+      `${API_BASE_URL}/api/order/?${queryParams.toString()}`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
+    await handleApiError(response);
+    return response.json();
+  },
 
   getOrderById: async (id: number): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();

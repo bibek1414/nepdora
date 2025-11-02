@@ -27,7 +27,7 @@ import {
 import { OrderDialog } from "@/components/site-owners/admin/orders/order-dialog";
 import { CreateManualOrderDialog } from "./create-manual-order-dialog";
 import {
-  useOrders,
+  useManualOrders,
   useUpdateOrderStatus,
 } from "@/hooks/owner-site/admin/use-orders";
 import type { OrderPaginationParams } from "@/types/owner-site/admin/orders";
@@ -140,7 +140,11 @@ export function ManualOrderList() {
     [currentPage, debouncedSearch, statusFilter]
   );
 
-  const { data: ordersResponse, isLoading, error } = useOrders(queryParams);
+  const {
+    data: ordersResponse,
+    isLoading,
+    error,
+  } = useManualOrders(queryParams);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
