@@ -9,6 +9,7 @@ import { Loader2, X, Search } from "lucide-react";
 import { Plugin } from "@/types/plugin";
 import { WhatsAppConfig } from "./config/whatsapp-config";
 import { LogisticsConfig } from "./config/logistics-config";
+import { GoogleAnalyticsConfig } from "./config/google-analytics-config";
 import { PluginToggle } from "./plugin-toggle";
 import {
   useWhatsApps,
@@ -19,6 +20,10 @@ import {
   useLogisticsYDM,
   useUpdateLogistics,
 } from "@/hooks/owner-site/admin/use-logistics";
+import {
+  useGoogleAnalytics,
+  useUpdateGoogleAnalytics,
+} from "@/hooks/owner-site/admin/use-google-analytics";
 import { toast } from "sonner";
 
 const Modal = ({
@@ -73,9 +78,15 @@ const usePlugins = () => {
     isLoading: isLoadingYDM,
     refetch: refetchYDM,
   } = useLogisticsYDM();
+  const {
+    data: analyticsConfigs = [],
+    isLoading: isLoadingAnalytics,
+    refetch: refetchAnalytics,
+  } = useGoogleAnalytics();
 
   const updateWhatsAppMutation = useUpdateWhatsApp();
   const updateLogisticsMutation = useUpdateLogistics();
+  const updateAnalyticsMutation = useUpdateGoogleAnalytics();
 
   const [plugins, setPlugins] = useState<Plugin[]>([]);
 
@@ -88,6 +99,10 @@ const usePlugins = () => {
 
     // Get YDM config
     const ydmConfig = ydmLogistics.length > 0 ? ydmLogistics[0] : null;
+
+    // Get Google Analytics config
+    const analyticsConfig =
+      analyticsConfigs.length > 0 ? analyticsConfigs[0] : null;
 
     const pluginsList: Plugin[] = [
       {
@@ -117,10 +132,19 @@ const usePlugins = () => {
         type: "ydm",
         is_enabled: ydmConfig?.is_enabled || false,
       },
+      {
+        id: "google-analytics",
+        name: "Google Analytics",
+        description: "Track website traffic and user behavior",
+        category: "ANALYTICS",
+        icon: "/images/icons/google-analytic.png",
+        type: "google-analytics",
+        is_enabled: analyticsConfig?.is_enabled || false,
+      },
     ];
 
     setPlugins(pluginsList);
-  }, [whatsapps, dashLogistics, ydmLogistics]);
+  }, [whatsapps, dashLogistics, ydmLogistics, analyticsConfigs]);
 
   const togglePlugin = async (
     pluginId: string,
@@ -191,6 +215,28 @@ const usePlugins = () => {
           );
           return { success: false, needsConfig: true };
         }
+      } else if (pluginType === "google-analytics") {
+        const analyticsConfig =
+          analyticsConfigs.length > 0 ? analyticsConfigs[0] : null;
+        if (analyticsConfig) {
+          await updateAnalyticsMutation.mutateAsync({
+            id: analyticsConfig.id,
+            data: {
+              ...analyticsConfig,
+              is_enabled: enabled,
+            },
+          });
+          await refetchAnalytics();
+          toast.success(
+            `Google Analytics plugin ${enabled ? "enabled" : "disabled"} successfully`
+          );
+          return { success: true, needsConfig: false };
+        } else {
+          toast.error(
+            "Google Analytics configuration not found. Please configure first."
+          );
+          return { success: false, needsConfig: true };
+        }
       }
       return { success: false, needsConfig: false };
     } catch (error) {
@@ -200,7 +246,8 @@ const usePlugins = () => {
     }
   };
 
-  const isLoading = isLoadingWhatsApp || isLoadingDash || isLoadingYDM;
+  const isLoading =
+    isLoadingWhatsApp || isLoadingDash || isLoadingYDM || isLoadingAnalytics;
 
   return { plugins, isLoading, togglePlugin };
 };
@@ -293,7 +340,11 @@ export default function PluginManager() {
       {/* Plugin Grid */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredPlugins.map(plugin => (
-          <Card key={plugin.id} className="cursor-pointer">
+          <Card
+            key={plugin.id}
+            className="cursor-pointer transition-all hover:shadow-md"
+            onClick={() => handlePluginClick(plugin)}
+          >
             <CardContent className="p-6">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
@@ -312,20 +363,22 @@ export default function PluginManager() {
                   </div>
                   <p className="text-sm text-gray-600">{plugin.description}</p>
 
-                  <div
-                    className="mt-4 flex items-center justify-between"
-                    onClick={e => e.stopPropagation()}
-                  >
-                    <PluginToggle
-                      pluginId={plugin.id}
-                      pluginType={plugin.type}
-                      isEnabled={plugin.is_enabled}
-                      onToggle={handleTogglePlugin}
-                    />
+                  <div className="mt-4 flex items-center justify-between">
+                    <div onClick={e => e.stopPropagation()}>
+                      <PluginToggle
+                        pluginId={plugin.id}
+                        pluginType={plugin.type}
+                        isEnabled={plugin.is_enabled}
+                        onToggle={handleTogglePlugin}
+                      />
+                    </div>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handlePluginClick(plugin)}
+                      onClick={e => {
+                        e.stopPropagation();
+                        handlePluginClick(plugin);
+                      }}
                     >
                       Configure
                     </Button>
@@ -365,6 +418,14 @@ export default function PluginManager() {
               onSave={handleSave}
             />
           )}
+
+        {selectedPlugin?.type === "google-analytics" && (
+          <GoogleAnalyticsConfig
+            plugin={selectedPlugin}
+            onClose={() => setIsModalOpen(false)}
+            onSave={handleSave}
+          />
+        )}
       </Modal>
     </div>
   );

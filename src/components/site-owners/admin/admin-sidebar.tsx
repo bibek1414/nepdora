@@ -86,7 +86,6 @@ const navigationGroups = [
       { name: "Blogs", href: "/admin/blogs", icon: Globe },
       { name: "YouTube Videos", href: "/admin/youtube", icon: Youtube },
       { name: "Portfolios", href: "/admin/portfolio", icon: Briefcase },
-      { name: "Banner", href: "/admin/banners", icon: Globe },
       { name: "Popup", href: "/admin/popup", icon: Package },
       { name: "Faq", href: "/admin/faq", icon: Tag },
       { name: "Testimonials", href: "/admin/testimonials", icon: Tag },
