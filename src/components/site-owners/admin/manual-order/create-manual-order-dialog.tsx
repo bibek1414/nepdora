@@ -55,7 +55,6 @@ export function CreateManualOrderDialog({
   const [internalOpen, setInternalOpen] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [confirmLocationOpen, setConfirmLocationOpen] = useState(false);
-  const [pendingAddress, setPendingAddress] = useState<string | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
@@ -65,6 +64,7 @@ export function CreateManualOrderDialog({
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [extracting, setExtracting] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [extractedData, setExtractedData] = useState<any>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -115,6 +115,7 @@ export function CreateManualOrderDialog({
       });
 
       const mappedProducts: Product[] = response.results.map(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (product: any) => ({
           id: product.id.toString(),
           name: product.name,
@@ -154,24 +155,35 @@ export function CreateManualOrderDialog({
       [name]: value,
     }));
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const processWitAiResponse = (response: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const extractedData: any = {};
+    console.log("Wit.ai Response:", JSON.stringify(response, null, 2));
 
-    // Extract address if available
-    if (response.entities?.wit$location?.[0]?.resolved?.values?.[0]?.name) {
-      extractedData.address =
-        response.entities.wit$location[0].resolved.values[0].name;
+    // Extract phone number if available (new format)
+    const phoneNumber =
+      response.entities?.["wit$phone_number:phone_number"]?.[0]?.value ||
+      response.entities?.wit$phone_number?.[0]?.value;
+    if (phoneNumber) {
+      extractedData.phone = phoneNumber;
     }
 
-    // Extract phone number if available
-    if (response.entities?.wit$phone_number?.[0]?.value) {
-      extractedData.phone = response.entities.wit$phone_number[0].value;
+    // Extract address if available (new format)
+    const location =
+      response.entities?.["wit$location:location"]?.[0]?.resolved?.values?.[0]
+        ?.name ||
+      response.entities?.wit$location?.[0]?.resolved?.values?.[0]?.name;
+    if (location) {
+      extractedData.address = location;
     }
 
-    // Extract email if available
-    if (response.entities?.wit$email?.[0]?.value) {
-      extractedData.email = response.entities.wit$email[0].value;
+    // Extract email if available (new format)
+    const email =
+      response.entities?.["wit$email:email"]?.[0]?.value ||
+      response.entities?.wit$email?.[0]?.value;
+    if (email) {
+      extractedData.email = email;
     }
 
     // Extract person name if available
@@ -201,34 +213,57 @@ export function CreateManualOrderDialog({
 
     setExtracting(true);
     try {
-      const response = await fetch(
-        `https://api.wit.ai/message?v=20231028&q=${encodeURIComponent(messageInput)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_WIT_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
+      console.log(
+        "Wit.ai API Key:",
+        process.env.NEXT_PUBLIC_WIT_API_KEY ? "Key exists" : "Key is missing"
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to extract data from message");
-      }
+      const apiUrl = `https://api.wit.ai/message?v=20231028&q=${encodeURIComponent(messageInput)}`;
+      console.log("Making request to:", apiUrl);
+
+      const response = await fetch(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_WIT_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await response.json();
+      console.log("Wit.ai Response:", JSON.stringify(data, null, 2));
+
+      if (!response.ok) {
+        console.error("Wit.ai API Error:", data);
+        throw new Error(
+          data.error ||
+            `Failed to extract data: ${response.status} ${response.statusText}`
+        );
+      }
+
+      if (!data.entities || Object.keys(data.entities).length === 0) {
+        console.warn("No entities found in Wit.ai response");
+        toast.warning("No extractable data found in the message");
+        return;
+      }
+
       const extractedData = processWitAiResponse(data);
+      console.log("Processed Data:", extractedData);
+
+      if (Object.keys(extractedData).length === 0) {
+        toast.warning(
+          "Could not extract any relevant information from the message"
+        );
+        return;
+      }
 
       setExtractedData(extractedData);
       toast.success("Data extracted successfully!");
-
-      // If address found, confirm first
-      if (extractedData.address) {
-        setPendingAddress(extractedData.address);
-        setConfirmLocationOpen(true);
-      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Extraction error:", err);
-      toast.error(err.message || "Failed to extract data");
+      toast.error(
+        err.message ||
+          "Failed to extract data. Please check your Wit.ai configuration."
+      );
     } finally {
       setExtracting(false);
     }
@@ -240,17 +275,12 @@ export function CreateManualOrderDialog({
       return;
     }
 
-    if (extractedData.address) {
-      setPendingAddress(extractedData.address);
-      setConfirmLocationOpen(true);
-      return;
-    }
-
     setFormData(prev => ({
       ...prev,
       customer_name: extractedData.name || prev.customer_name,
       customer_email: extractedData.email || prev.customer_email,
       customer_phone: extractedData.phone || prev.customer_phone,
+      customer_address: extractedData.address || prev.customer_address,
       city: extractedData.city || prev.city,
     }));
 
@@ -340,6 +370,12 @@ export function CreateManualOrderDialog({
       return;
     }
 
+    // Show location confirmation dialog before creating order
+    setConfirmLocationOpen(true);
+  };
+
+  const confirmAndCreateOrder = async () => {
+    setConfirmLocationOpen(false);
     setIsLoading(true);
     try {
       const orderItemsPayload = orderItems.map(item => ({
@@ -368,6 +404,7 @@ export function CreateManualOrderDialog({
       resetForm();
       setOpen(false);
       router.refresh();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error creating order:", error);
       toast.error(error.message || "Failed to create manual order");
@@ -800,22 +837,57 @@ export function CreateManualOrderDialog({
         </DialogContent>
       </Dialog>
 
-      {/* CONFIRM LOCATION DIALOG */}
+      {/* CONFIRM LOCATION DIALOG - Now shown before creating order */}
       <Dialog open={confirmLocationOpen} onOpenChange={setConfirmLocationOpen}>
-        <DialogContent className="max-w-sm">
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Confirm Location</DialogTitle>
+            <DialogTitle>Confirm Delivery Location</DialogTitle>
             <DialogDescription>
-              We detected the following address. Please confirm if it&apos;s
-              correct.
+              Please confirm the delivery address and shipping information
+              before creating the order.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="rounded-md border bg-gray-50 p-3 text-sm">
-            <p>
-              <strong>Detected Address:</strong>
-            </p>
-            <p className="mt-1 text-gray-700">{pendingAddress}</p>
+          <div className="space-y-4">
+            <div className="rounded-md border bg-gray-50 p-4">
+              <div className="space-y-3 text-sm">
+                <div>
+                  <p className="font-semibold text-gray-700">Customer:</p>
+                  <p className="text-gray-900">{formData.customer_name}</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-700">Phone:</p>
+                  <p className="text-gray-900">{formData.customer_phone}</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-700">
+                    Billing Address:
+                  </p>
+                  <p className="text-gray-900">{formData.customer_address}</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-700">
+                    Shipping Address:
+                  </p>
+                  <p className="text-gray-900">
+                    {formData.shipping_address || formData.customer_address}
+                  </p>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-700">City:</p>
+                  <p className="text-gray-900">{formData.city}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-md border bg-blue-50 p-3">
+              <p className="text-sm text-blue-800">
+                <strong>Order Total:</strong> Rs. {calculateTotal().toFixed(2)}
+              </p>
+              <p className="text-sm text-blue-800">
+                <strong>Delivery Charge:</strong> Rs. {formData.delivery_charge}
+              </p>
+            </div>
           </div>
 
           <DialogFooter className="mt-4">
@@ -823,29 +895,14 @@ export function CreateManualOrderDialog({
               variant="outline"
               onClick={() => {
                 setConfirmLocationOpen(false);
-                toast.info("Address not confirmed. You can edit it manually.");
+                toast.info("Order cancelled. You can edit the information.");
               }}
             >
-              No, edit manually
+              Cancel, edit info
             </Button>
-            <Button
-              onClick={() => {
-                if (extractedData) {
-                  setFormData(prev => ({
-                    ...prev,
-                    customer_name: extractedData.name || prev.customer_name,
-                    customer_email: extractedData.email || prev.customer_email,
-                    customer_phone: extractedData.phone || prev.customer_phone,
-                    customer_address: pendingAddress || prev.customer_address,
-                    city: extractedData.city || prev.city,
-                  }));
-                  toast.success("All extracted data imported successfully!");
-                }
-                setConfirmLocationOpen(false);
-                setOpenImport(false);
-              }}
-            >
-              Yes, use this address
+            <Button onClick={confirmAndCreateOrder} disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Confirm & Create Order
             </Button>
           </DialogFooter>
         </DialogContent>
