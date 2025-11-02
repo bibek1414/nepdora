@@ -61,19 +61,23 @@ export const FacebookProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const appId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID;
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-      // Support both NEXT_PUBLIC_FACEBOOK_REDIRECT_URI and NEXT_PUBLIC_BASE_URL
-      let redirectUri = process.env.NEXT_PUBLIC_FACEBOOK_REDIRECT_URI;
-
-      if (!redirectUri) {
-        const baseUrl =
-          process.env.NEXT_PUBLIC_BASE_URL || window.location.origin;
-        redirectUri = `${baseUrl}/api/facebook/callback`;
+      if (!appId) {
+        throw new Error("Facebook App ID is not configured");
       }
+
+      if (!baseUrl) {
+        throw new Error("Base URL is not configured");
+      }
+
+      // Construct redirect URI from base URL
+      const redirectUri = `${baseUrl}/api/facebook/callback`;
 
       console.log("Facebook OAuth Config:", {
         appId,
         redirectUri,
+        baseUrl,
       });
 
       const encodedRedirectUri = encodeURIComponent(redirectUri);
@@ -86,14 +90,15 @@ export const FacebookProvider = ({ children }: { children: ReactNode }) => {
         process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0"
       }/dialog/oauth?client_id=${appId}&redirect_uri=${encodedRedirectUri}&scope=${scope}&response_type=code`;
 
-      console.log("Redirecting to:", authUrl);
+      console.log("Redirecting to Facebook OAuth...");
 
       window.location.href = authUrl;
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
       console.error("Error connecting to Facebook:", err);
-      setError("Failed to connect to Facebook");
+      setError(errorMessage);
       setIsLoading(false);
-      toast.error("Failed to connect to Facebook");
+      toast.error(`Failed to connect: ${errorMessage}`);
     }
   };
 
@@ -113,8 +118,9 @@ export const FacebookProvider = ({ children }: { children: ReactNode }) => {
       toast.success("Disconnected from Facebook");
     } catch (err) {
       console.error("Error disconnecting from Facebook:", err);
-      setError("Failed to disconnect from Facebook");
-      toast.error("Failed to disconnect from Facebook");
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      setError(errorMessage);
+      toast.error(`Failed to disconnect: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
