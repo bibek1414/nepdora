@@ -15,9 +15,10 @@ export function FacebookLoginButton({
   className = "",
   variant = "default",
   size = "default",
-  text = "Continue with Facebook",
+  text = "Connect to Facebook",
 }: FacebookLoginButtonProps) {
-  const { connectFacebook, isLoading } = useFacebook();
+  const { connectFacebook, disconnectFacebook, isLoading, isConnected } =
+    useFacebook();
 
   return (
     <Button
@@ -25,11 +26,11 @@ export function FacebookLoginButton({
       variant={variant}
       size={size}
       className={`flex items-center gap-2 ${className}`}
-      onClick={connectFacebook}
+      onClick={isConnected ? disconnectFacebook : connectFacebook}
       disabled={isLoading}
     >
       <Facebook className="h-4 w-4" />
-      {text}
+      {isLoading ? "Processing..." : isConnected ? "Disconnect Facebook" : text}
     </Button>
   );
 }
