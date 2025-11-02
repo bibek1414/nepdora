@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 const FACEBOOK_API_VERSION =
   process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0";
-const PAGE_ACCESS_TOKEN = process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ACCESS_TOKEN;
 
 export interface FacebookMessage {
   id: string;
@@ -16,19 +15,26 @@ export interface FacebookMessage {
 
 export async function GET(
   request: Request,
-  context: { params: Promise<{ conversationId: string }> } // ✅ params is a Promise
+  context: { params: Promise<{ conversationId: string }> }
 ) {
   try {
-    const { conversationId } = await context.params; // ✅ await params
+    const { conversationId } = await context.params;
+    const { searchParams } = new URL(request.url);
+    const pageAccessToken = searchParams.get("pageAccessToken");
 
-    if (!PAGE_ACCESS_TOKEN) {
-      throw new Error("Facebook Page Access Token is not configured");
+    if (!pageAccessToken) {
+      return NextResponse.json(
+        { error: "Page access token is required" },
+        { status: 400 }
+      );
     }
+
+    console.log("Fetching messages for conversation:", conversationId);
 
     const response = await fetch(
       `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${conversationId}/messages` +
         `?fields=id,message,created_time,from` +
-        `&access_token=${PAGE_ACCESS_TOKEN}`
+        `&access_token=${pageAccessToken}`
     );
 
     if (!response.ok) {
@@ -38,11 +44,17 @@ export async function GET(
     }
 
     const data = await response.json();
-    return NextResponse.json({ messages: data.data });
+
+    console.log(`Successfully fetched ${data.data?.length || 0} messages`);
+
+    return NextResponse.json({ messages: data.data || [] });
   } catch (error) {
     console.error("Error in messages API route:", error);
     return NextResponse.json(
-      { error: "Failed to fetch messages" },
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to fetch messages",
+      },
       { status: 500 }
     );
   }

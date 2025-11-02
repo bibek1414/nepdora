@@ -17,8 +17,56 @@ export function FacebookLoginButton({
   size = "default",
   text = "Connect to Facebook",
 }: FacebookLoginButtonProps) {
-  const { connectFacebook, disconnectFacebook, isLoading, isConnected } =
-    useFacebook();
+  const {
+    connectFacebook,
+    disconnectFacebook,
+    isLoading,
+    isConnected,
+    integration,
+  } = useFacebook();
+
+  console.log("🎨 [FacebookLoginButton] Render state:", {
+    isConnected,
+    isLoading,
+    hasIntegration: !!integration,
+    integrationId: integration?.id,
+    integrationPageName: integration?.page_name,
+    integrationEnabled: integration?.is_enabled,
+  });
+
+  const handleClick = async () => {
+    console.log("🖱️ [FacebookLoginButton] Button clicked:", {
+      currentState: isConnected ? "connected" : "disconnected",
+      action: isConnected ? "disconnect" : "connect",
+    });
+
+    try {
+      if (isConnected) {
+        console.log("🔴 [FacebookLoginButton] Initiating disconnect...");
+        await disconnectFacebook();
+        console.log("✅ [FacebookLoginButton] Disconnect completed");
+      } else {
+        console.log("🔵 [FacebookLoginButton] Initiating connect...");
+        await connectFacebook();
+        console.log(
+          "✅ [FacebookLoginButton] Connect initiated (redirecting to Facebook)"
+        );
+      }
+    } catch (error) {
+      console.error("❌ [FacebookLoginButton] Error during action:", {
+        error,
+        message: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  };
+
+  const buttonText = isLoading
+    ? "Processing..."
+    : isConnected
+      ? "Disconnect Facebook"
+      : text;
+
+  console.log("📝 [FacebookLoginButton] Button text:", buttonText);
 
   return (
     <Button
@@ -26,11 +74,11 @@ export function FacebookLoginButton({
       variant={variant}
       size={size}
       className={`flex items-center gap-2 ${className}`}
-      onClick={isConnected ? disconnectFacebook : connectFacebook}
+      onClick={handleClick}
       disabled={isLoading}
     >
       <Facebook className="h-4 w-4" />
-      {isLoading ? "Processing..." : isConnected ? "Disconnect Facebook" : text}
+      {buttonText}
     </Button>
   );
 }

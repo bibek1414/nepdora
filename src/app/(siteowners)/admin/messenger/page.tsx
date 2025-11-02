@@ -4,16 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import { ConversationList } from "@/components/site-owners/admin/messenger/conversation-list";
 import { ChatWindow } from "@/components/site-owners/admin/messenger/chat-window";
 import { MessageInput } from "@/components/site-owners/admin/messenger/message-input";
+import { useFacebookApi } from "@/services/api/owner-sites/admin/facebook";
 import {
   getConversations,
   sendMessage as sendFacebookMessage,
   formatTimestamp,
-  FacebookConversation,
   FacebookMessage as FbMessage,
-  FacebookUser,
 } from "@/lib/facebook";
-
-const PAGE_ID = process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID || "";
 
 interface Message {
   id: string;
@@ -42,14 +39,62 @@ export default function MessagingPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pageId, setPageId] = useState<string>("");
+  const [pageAccessToken, setPageAccessToken] = useState<string>("");
+  const [isIntegrationReady, setIsIntegrationReady] = useState(false);
+
+  // Fetch Facebook integration on mount
+  useEffect(() => {
+    const loadIntegration = async () => {
+      try {
+        const integrations = await useFacebookApi.getFacebookIntegrations();
+
+        if (integrations.length === 0) {
+          setError(
+            "No Facebook integration found. Please connect your Facebook page first."
+          );
+          setIsLoading(false);
+          return;
+        }
+
+        const activeIntegration =
+          integrations.find(i => i.is_enabled) || integrations[0];
+
+        if (!activeIntegration) {
+          setError("No active Facebook integration found.");
+          setIsLoading(false);
+          return;
+        }
+
+        setPageId(activeIntegration.page_id);
+        setPageAccessToken(activeIntegration.page_access_token);
+        setIsIntegrationReady(true);
+
+        console.log("✅ Facebook integration loaded:", {
+          pageId: activeIntegration.page_id,
+          pageName: activeIntegration.page_name,
+        });
+      } catch (err) {
+        console.error("Error loading Facebook integration:", err);
+        setError("Failed to load Facebook integration. Please try again.");
+        setIsLoading(false);
+      }
+    };
+
+    loadIntegration();
+  }, []);
 
   const fetchConversations = useCallback(async () => {
+    if (!isIntegrationReady || !pageId || !pageAccessToken) {
+      return;
+    }
+
     try {
       setIsLoading(true);
-      const fbConversations = await getConversations();
+      const fbConversations = await getConversations(pageId, pageAccessToken);
 
       const formattedConversations = fbConversations.map(conv => {
-        const participant = conv.participants.data.find(p => p.id !== PAGE_ID);
+        const participant = conv.participants.data.find(p => p.id !== pageId);
         const lastMessage = conv.messages?.data[0];
 
         return {
@@ -74,65 +119,71 @@ export default function MessagingPage() {
       setError(null);
     } catch (err) {
       console.error("Error fetching conversations:", err);
-      setError("Failed to load conversations. Please try again later.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [selectedConversation]);
-
-  const fetchMessages = useCallback(async (conversationId: string) => {
-    if (!conversationId) return;
-
-    try {
-      setIsLoading(true);
-      const response = await fetch(
-        `/api/facebook/conversations/${conversationId}/messages`
+      setError(
+        "Failed to load conversations. Please check your Facebook integration."
       );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch messages");
-      }
-
-      const data = await response.json();
-
-      const formattedMessages = data.messages.map((msg: FbMessage) => ({
-        id: msg.id,
-        conversationId,
-        sender: msg.from.id === PAGE_ID ? "You" : msg.from.name,
-        content: msg.message,
-        timestamp: formatTimestamp(msg.created_time),
-        isOwn: msg.from.id === PAGE_ID,
-      }));
-
-      // Reverse to show oldest messages first (Facebook returns newest first by default)
-      setMessages(formattedMessages.reverse());
-    } catch (err) {
-      console.error("Error fetching messages:", err);
-      setError("Failed to load messages. Please try again.");
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [isIntegrationReady, pageId, pageAccessToken, selectedConversation]);
+
+  const fetchMessages = useCallback(
+    async (conversationId: string) => {
+      if (!conversationId || !pageId || !pageAccessToken) return;
+
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          `/api/facebook/conversations/${conversationId}/messages?pageAccessToken=${pageAccessToken}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch messages");
+        }
+
+        const data = await response.json();
+
+        const formattedMessages = data.messages.map((msg: FbMessage) => ({
+          id: msg.id,
+          conversationId,
+          sender: msg.from.id === pageId ? "You" : msg.from.name,
+          content: msg.message,
+          timestamp: formatTimestamp(msg.created_time),
+          isOwn: msg.from.id === pageId,
+        }));
+
+        // Reverse to show oldest messages first
+        setMessages(formattedMessages.reverse());
+      } catch (err) {
+        console.error("Error fetching messages:", err);
+        setError("Failed to load messages. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [pageId, pageAccessToken]
+  );
 
   useEffect(() => {
-    fetchConversations();
+    if (isIntegrationReady) {
+      fetchConversations();
 
-    // Set up polling for new messages
-    const interval = setInterval(fetchConversations, 30000); // Poll every 30 seconds
+      // Set up polling for new messages
+      const interval = setInterval(fetchConversations, 30000); // Poll every 30 seconds
 
-    return () => clearInterval(interval);
-  }, [fetchConversations]);
+      return () => clearInterval(interval);
+    }
+  }, [isIntegrationReady, fetchConversations]);
 
   useEffect(() => {
-    if (selectedConversation) {
+    if (selectedConversation && pageAccessToken) {
       fetchMessages(selectedConversation);
     }
-  }, [selectedConversation, fetchMessages]);
+  }, [selectedConversation, pageAccessToken, fetchMessages]);
 
   const handleSendMessage = async (content: string) => {
-    if (!selectedConversation) return;
+    if (!selectedConversation || !pageAccessToken) return;
 
-    // Define tempId at the function level
     const tempId = `temp-${Date.now()}`;
 
     try {
@@ -140,6 +191,7 @@ export default function MessagingPage() {
         c => c.id === selectedConversation
       );
       if (!conversation) return;
+
       const newMessage: Message = {
         id: tempId,
         conversationId: selectedConversation,
@@ -151,8 +203,12 @@ export default function MessagingPage() {
 
       setMessages(prev => [...prev, newMessage]);
 
-      // Send to Facebook
-      await sendFacebookMessage(conversation.participantId, content);
+      // Send to Facebook using page access token
+      await sendFacebookMessage(
+        conversation.participantId,
+        content,
+        pageAccessToken
+      );
 
       // Refresh messages to get the real message ID from Facebook
       fetchMessages(selectedConversation);
@@ -181,19 +237,25 @@ export default function MessagingPage() {
       <div className="flex h-screen items-center justify-center">
         <div className="text-center text-red-500">
           <p>{error}</p>
-          <button
-            onClick={fetchConversations}
-            className="mt-2 text-sm text-blue-500 hover:underline"
-          >
-            Retry
-          </button>
+          {isIntegrationReady ? (
+            <button
+              onClick={fetchConversations}
+              className="mt-2 text-sm text-blue-500 hover:underline"
+            >
+              Retry
+            </button>
+          ) : (
+            <a
+              href="/admin/settings/integrations"
+              className="mt-2 inline-block text-sm text-blue-500 hover:underline"
+            >
+              Go to Integrations
+            </a>
+          )}
         </div>
       </div>
     );
   }
-
-  // In page.tsx
-  // ... (existing imports and code)
 
   return (
     <div className="flex h-screen flex-col">

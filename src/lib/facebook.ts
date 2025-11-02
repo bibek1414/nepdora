@@ -1,11 +1,5 @@
 const FACEBOOK_API_VERSION =
   process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0";
-const PAGE_ACCESS_TOKEN = process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ACCESS_TOKEN;
-const PAGE_ID = process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID;
-
-if (!PAGE_ACCESS_TOKEN || !PAGE_ID) {
-  console.warn("Facebook Page Access Token or Page ID is not configured");
-}
 
 export interface FacebookUser {
   id: string;
@@ -58,22 +52,22 @@ interface FacebookApiResponse<T> {
 /**
  * Verify the Page Access Token has required permissions
  */
-export async function verifyTokenPermissions(): Promise<{
+export async function verifyTokenPermissions(pageAccessToken: string): Promise<{
   valid: boolean;
   permissions: string[];
   error?: string;
 }> {
-  if (!PAGE_ACCESS_TOKEN) {
+  if (!pageAccessToken) {
     return {
       valid: false,
       permissions: [],
-      error: "No access token configured",
+      error: "No access token provided",
     };
   }
 
   try {
     const response = await fetch(
-      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/me/permissions?access_token=${PAGE_ACCESS_TOKEN}`
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/me/permissions?access_token=${pageAccessToken}`
     );
     const data = await response.json();
 
@@ -117,15 +111,18 @@ export async function verifyTokenPermissions(): Promise<{
 /**
  * Get page information to verify the Page ID and token
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function getPageInfo(): Promise<any> {
-  if (!PAGE_ACCESS_TOKEN || !PAGE_ID) {
-    throw new Error("Facebook credentials not configured");
+export async function getPageInfo(
+  pageId: string,
+  pageAccessToken: string
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<any> {
+  if (!pageAccessToken || !pageId) {
+    throw new Error("Facebook credentials not provided");
   }
 
   try {
     const response = await fetch(
-      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${PAGE_ID}?fields=id,name,access_token,category,tasks&access_token=${PAGE_ACCESS_TOKEN}`
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${pageId}?fields=id,name,access_token,category,tasks&access_token=${pageAccessToken}`
     );
     const data = await response.json();
 
@@ -143,8 +140,11 @@ export async function getPageInfo(): Promise<any> {
 /**
  * Get conversations for the Facebook Page
  */
-export async function getConversations(): Promise<FacebookConversation[]> {
-  if (!PAGE_ACCESS_TOKEN || !PAGE_ID) {
+export async function getConversations(
+  pageId: string,
+  pageAccessToken: string
+): Promise<FacebookConversation[]> {
+  if (!pageAccessToken || !pageId) {
     throw new Error("Facebook Page Access Token or Page ID is not configured");
   }
 
@@ -160,11 +160,11 @@ export async function getConversations(): Promise<FacebookConversation[]> {
       "messages.limit(10){id,message,from,created_time,attachments}",
     ].join(",");
 
-    const conversationsUrl = `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${PAGE_ID}/conversations?fields=${encodeURIComponent(
+    const conversationsUrl = `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${pageId}/conversations?fields=${encodeURIComponent(
       fields
-    )}&platform=messenger&access_token=${PAGE_ACCESS_TOKEN}`;
+    )}&platform=messenger&access_token=${pageAccessToken}`;
 
-    console.log("Fetching conversations from:", `${PAGE_ID}/conversations`);
+    console.log("Fetching conversations from:", `${pageId}/conversations`);
 
     const response = await fetch(conversationsUrl);
     const data: FacebookApiResponse<FacebookConversation[]> =
@@ -210,7 +210,7 @@ export async function getConversations(): Promise<FacebookConversation[]> {
     return data.data;
   } catch (error) {
     console.error("Error in getConversations:", error);
-    throw error; // Re-throw instead of returning empty array to see the actual error
+    throw error;
   }
 }
 
@@ -219,15 +219,16 @@ export async function getConversations(): Promise<FacebookConversation[]> {
  */
 export async function getConversationMessages(
   conversationId: string,
+  pageAccessToken: string,
   limit: number = 50
 ): Promise<FacebookMessage[]> {
-  if (!PAGE_ACCESS_TOKEN) {
+  if (!pageAccessToken) {
     throw new Error("Facebook Page Access Token is not configured");
   }
 
   try {
     const fields = "id,message,from,created_time,attachments";
-    const url = `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${conversationId}/messages?fields=${fields}&limit=${limit}&access_token=${PAGE_ACCESS_TOKEN}`;
+    const url = `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${conversationId}/messages?fields=${fields}&limit=${limit}&access_token=${pageAccessToken}`;
 
     const response = await fetch(url);
     const data = await response.json();
@@ -249,15 +250,16 @@ export async function getConversationMessages(
  */
 export async function sendMessage(
   recipientId: string,
-  message: string
+  message: string,
+  pageAccessToken: string
 ): Promise<void> {
-  if (!PAGE_ACCESS_TOKEN) {
+  if (!pageAccessToken) {
     throw new Error("Facebook Page Access Token is not configured");
   }
 
   try {
     const response = await fetch(
-      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/me/messages?access_token=${PAGE_ACCESS_TOKEN}`,
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/me/messages?access_token=${pageAccessToken}`,
       {
         method: "POST",
         headers: {
@@ -290,14 +292,17 @@ export async function sendMessage(
 /**
  * Get user profile information
  */
-export async function getUserProfile(userId: string): Promise<FacebookUser> {
-  if (!PAGE_ACCESS_TOKEN) {
+export async function getUserProfile(
+  userId: string,
+  pageAccessToken: string
+): Promise<FacebookUser> {
+  if (!pageAccessToken) {
     throw new Error("Facebook Page Access Token is not configured");
   }
 
   try {
     const response = await fetch(
-      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${userId}?fields=id,name,profile_pic&access_token=${PAGE_ACCESS_TOKEN}`
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${userId}?fields=id,name,profile_pic&access_token=${pageAccessToken}`
     );
     const data = await response.json();
 
