@@ -1,25 +1,33 @@
+// src/app/api/facebook/send-message/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { facebookService } from "@/services/facebook/facebook.service";
 import { AxiosError } from "axios";
 
 export async function POST(request: NextRequest) {
   try {
-    const { recipientId, message, accessToken } = await request.json();
+    const { recipientId, message, pageAccessToken } = await request.json();
 
-    if (!recipientId || !message || !accessToken) {
+    if (!recipientId || !message || !pageAccessToken) {
       return NextResponse.json(
-        { error: "Missing required parameters" },
+        {
+          error: "Missing required parameters",
+          details: "recipientId, message, and pageAccessToken are required",
+        },
         { status: 400 }
       );
     }
 
-    // Send the message
+    console.log("Sending message to recipient:", recipientId);
+
+    // Send the message using the provided pageAccessToken
     const result = await facebookService.sendMessage(
       recipientId,
       message,
-      accessToken,
+      pageAccessToken,
       "RESPONSE"
     );
+
+    console.log("Message sent successfully:", result);
 
     return NextResponse.json({
       success: true,
@@ -32,7 +40,7 @@ export async function POST(request: NextRequest) {
     console.error("Error sending message:", error);
 
     // Check if it's an Axios error
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isAxiosError = (error: any): error is AxiosError => {
       return error.isAxiosError === true;
     };
@@ -48,7 +56,7 @@ export async function POST(request: NextRequest) {
         };
 
     return NextResponse.json(errorResponse, {
-      status: isAxiosError(error) ? error.response?.status : 500,
+      status: isAxiosError(error) ? error.response?.status || 500 : 500,
     });
   }
 }
