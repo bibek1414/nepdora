@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Plus, Phone, Video, Info } from "lucide-react";
-import { CreateManualOrderDialog } from "@/components/site-owners/admin/manual-order/create-manual-order-dialog";
+import { ManualOrderDialog } from "@/components/site-owners/admin/orders/manual-order-dialog";
 
 interface Message {
   id: string;
@@ -245,7 +245,7 @@ export function ChatWindow({
 
       {/* Manual Order Dialog */}
       {showCreateOrder && (
-        <CreateManualOrderDialog
+        <ManualOrderDialog
           open={showCreateOrder}
           onOpenChange={setShowCreateOrder}
           initialMessage={orderMessage}

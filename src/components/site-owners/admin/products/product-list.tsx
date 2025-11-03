@@ -28,6 +28,7 @@ import {
   Search,
   ImageIcon,
   X,
+  Gift,
   Folder,
   FolderTree,
   Upload,
@@ -139,6 +140,15 @@ const ProductList = () => {
       <div className="mx-auto">
         {/* Header */}
         <div className="mb-8 flex items-center justify-end gap-3">
+          <Link href="/admin/promo-code">
+            <Button
+              variant="outline"
+              className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+            >
+              <Gift className="mr-2 h-4 w-4" />
+              Manage Promo Code
+            </Button>
+          </Link>
           <Link href="/admin/categories">
             <Button
               variant="outline"

@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import { ManualOrderDialog } from "./manual-order-dialog";
 import { Package, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Order, OrderPaginationParams } from "@/types/owner-site/admin/orders";
 import { toast } from "sonner";
@@ -109,6 +109,7 @@ export default function OrdersPage() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const [showManualOnly, setShowManualOnly] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const updateOrderStatus = useUpdateOrderStatus();
@@ -126,7 +127,7 @@ export default function OrdersPage() {
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [statusFilter]);
+  }, [statusFilter, showManualOnly]);
 
   // Prepare query parameters
   const queryParams = useMemo<OrderPaginationParams>(
@@ -137,8 +138,9 @@ export default function OrdersPage() {
       status: statusFilter !== "all" ? statusFilter : undefined,
       sortBy: "created_at",
       sortOrder: "desc",
+      is_manual: showManualOnly ? true : undefined,
     }),
-    [currentPage, debouncedSearch, statusFilter]
+    [currentPage, debouncedSearch, statusFilter, showManualOnly]
   );
 
   const { data: ordersResponse, isLoading, error } = useOrders(queryParams);
@@ -252,6 +254,16 @@ export default function OrdersPage() {
     handleOpenDialog(orderId);
   };
 
+  const handleManualOrdersToggle = () => {
+    setShowManualOnly(!showManualOnly);
+  };
+
+  const handleClearFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("all");
+    setShowManualOnly(false);
+  };
+
   const totalPages = ordersResponse
     ? Math.ceil(ordersResponse.count / ITEMS_PER_PAGE)
     : 0;
@@ -302,14 +314,22 @@ export default function OrdersPage() {
       {/* Search and Filters */}
       <div className="mb-6 space-y-4">
         {/* Search Bar */}
-        <div className="relative max-w-md">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            placeholder="Search orders..."
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-            className="pl-10 placeholder:text-gray-400"
-          />
+        <div className="flex flex-col justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
+          <div className="flex items-center space-x-2">
+            <div className="relative w-full max-w-sm">
+              <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+              <Input
+                type="search"
+                placeholder="Search orders..."
+                className="pl-9 placeholder:text-gray-400"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <ManualOrderDialog />
+          </div>
         </div>
 
         {/* Status Filter Tabs */}
@@ -364,6 +384,14 @@ export default function OrdersPage() {
           >
             Cancelled
           </Button>
+          <Button
+            variant={showManualOnly ? "default" : "outline"}
+            size="sm"
+            onClick={handleManualOrdersToggle}
+            disabled={isLoading}
+          >
+            {showManualOnly ? "Show All Orders" : "Manual Orders"}
+          </Button>
         </div>
       </div>
 
@@ -374,23 +402,22 @@ export default function OrdersPage() {
             <div className="py-12 text-center">
               <Package className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
               <h3 className="mb-2 text-lg font-semibold">
-                {debouncedSearch || statusFilter !== "all"
+                {debouncedSearch || statusFilter !== "all" || showManualOnly
                   ? "No orders found"
                   : "No orders yet"}
               </h3>
               <p className="text-muted-foreground">
-                {debouncedSearch || statusFilter !== "all"
+                {debouncedSearch || statusFilter !== "all" || showManualOnly
                   ? "Try adjusting your search or filter criteria."
                   : "You haven't received any orders yet."}
               </p>
-              {(debouncedSearch || statusFilter !== "all") && (
+              {(debouncedSearch ||
+                statusFilter !== "all" ||
+                showManualOnly) && (
                 <Button
                   variant="outline"
                   className="mt-4"
-                  onClick={() => {
-                    setSearchTerm("");
-                    setStatusFilter("all");
-                  }}
+                  onClick={handleClearFilters}
                 >
                   Clear filters
                 </Button>

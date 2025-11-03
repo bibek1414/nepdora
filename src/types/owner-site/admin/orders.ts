@@ -97,8 +97,8 @@ export interface OrderPaginationParams {
   page_size?: number;
   search?: string;
   status?: string;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
+
+  is_manual?: boolean;
 }
 
 export interface UpdateOrderStatusRequest {

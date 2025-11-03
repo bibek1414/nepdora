@@ -178,8 +178,6 @@ export const RecentOrders = () => {
   } = useOrders({
     page: 1,
     page_size: 10,
-    sortBy: "created_at",
-    sortOrder: "desc",
   });
 
   const updateOrderStatus = useUpdateOrderStatus();

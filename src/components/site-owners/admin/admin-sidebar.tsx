@@ -31,6 +31,7 @@ import {
   Unplug,
 } from "lucide-react";
 import Image from "next/image";
+
 interface User {
   id: number;
   email: string;
@@ -48,84 +49,36 @@ interface User {
 interface AdminSidebarProps {
   user: User;
 }
+
 const navigationGroups = [
   {
     items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
   },
   {
-    name: "Products & Services",
-    items: [
-      { name: "Products", href: "/admin/products", icon: Package },
-      { name: "Services", href: "/admin/services", icon: Briefcase },
-      {
-        name: "Promo Codes",
-        href: "/admin/promo-code",
-        icon: Gift,
-      },
-    ],
+    items: [{ name: "Products", href: "/admin/products", icon: Package }],
   },
   {
-    name: "Orders & Bookings",
     items: [
       { name: "Order Management", href: "/admin/orders", icon: FileText },
+    ],
+  },
+  {
+    items: [
       {
-        name: "Service Bookings",
-        href: "/admin/service-bookings",
-        icon: Calendar,
-      },
-      {
-        name: "Manual Order",
-        href: "/admin/manual-orders",
-        icon: Calendar,
+        name: "Content Management",
+        href: "/admin/content-management",
+        icon: MessageCircle,
       },
     ],
   },
   {
-    name: "Content Management",
-    items: [
-      { name: "Blogs", href: "/admin/blogs", icon: Globe },
-      { name: "YouTube Videos", href: "/admin/youtube", icon: Youtube },
-      { name: "Portfolios", href: "/admin/portfolio", icon: Briefcase },
-      { name: "Popup", href: "/admin/popup", icon: Package },
-      { name: "Faq", href: "/admin/faq", icon: Tag },
-      { name: "Testimonials", href: "/admin/testimonials", icon: Tag },
-    ],
+    items: [{ name: "Inquiries", href: "/admin/inquiries", icon: Mail }],
   },
   {
-    name: "Submissions & Inquiries",
-    items: [
-      { name: "Inquiries", href: "/admin/contacts", icon: MessageSquare },
-      {
-        name: "Popup Inquiries",
-        href: "/admin/popup-inquiries",
-        icon: MessageSquare,
-      },
-      { name: "Newsletter", href: "/admin/newsletter", icon: Mail },
-    ],
+    items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
   },
   {
-    name: "Team & Users",
-    items: [{ name: "Team Members", href: "/admin/team-member", icon: Users }],
-  },
-  {
-    name: "Marketing & Engagement",
     items: [
-      {
-        name: "Lucky Draw / Sales Fest",
-        href: "/admin/lucky-draw",
-        icon: Trophy,
-      },
-      {
-        name: "AI Chatbot Settings",
-        href: "/admin/chatbot-settings",
-        icon: Bot,
-      },
-    ],
-  },
-  {
-    name: "System",
-    items: [
-      { name: "Issues Tracking", href: "/admin/issues", icon: Bug },
       {
         name: "Settings",
         href: "/admin/settings/delivery-charge",
@@ -134,37 +87,22 @@ const navigationGroups = [
     ],
   },
   {
-    name: "Integrations & Plugins",
     items: [
       {
         name: "Payment Gateway",
         href: "/admin/plugins/payment-gateway/esewa",
         icon: Wallet,
       },
-      { name: "Plugins", href: "/admin/plugins", icon: Unplug },
     ],
+  },
+  {
+    items: [{ name: "Plugins", href: "/admin/plugins", icon: Unplug }],
   },
 ];
 
 export default function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
-    const initial: Record<string, boolean> = {};
-    navigationGroups.forEach(group => {
-      if (group.name) {
-        initial[group.name] = true;
-      }
-    });
-    return initial;
-  });
-
-  const toggleGroup = (groupName: string) => {
-    setOpenGroups(prev => ({
-      ...prev,
-      [groupName]: !prev[groupName],
-    }));
-  };
 
   return (
     <div
@@ -181,23 +119,19 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
             collapsed ? "w-full justify-center" : "w-full"
           )}
         >
-          {collapsed ? (
-            <div className=""></div>
-          ) : (
-            <>
-              <div className="flex flex-col">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center">
-                    <Image
-                      src="/fulllogo.svg"
-                      alt="Logo"
-                      width={150}
-                      height={40}
-                    />
-                  </div>
+          {!collapsed && (
+            <div className="flex flex-col">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center">
+                  <Image
+                    src="/fulllogo.svg"
+                    alt="Logo"
+                    width={150}
+                    height={40}
+                  />
                 </div>
               </div>
-            </>
+            </div>
           )}
         </div>
 
@@ -221,32 +155,9 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       <div className="scrollbar-hide flex-1 overflow-y-auto py-4">
         <nav className="grid gap-1 px-2">
           {navigationGroups.map((group, groupIndex) => (
-            <div key={group.name || groupIndex}>
-              {/* Group Header */}
-              {group.name && !collapsed && (
-                <button
-                  onClick={() => toggleGroup(group.name!)}
-                  className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex w-full items-center justify-between rounded-md px-2 py-1.5 text-xs font-medium transition-colors"
-                >
-                  <span className="truncate">{group.name}</span>
-                  <ChevronDown
-                    className={cn(
-                      "h-3 w-3 transition-transform duration-200",
-                      openGroups[group.name] ? "rotate-0" : "-rotate-90"
-                    )}
-                  />
-                </button>
-              )}
-
+            <div key={groupIndex}>
               {/* Group Items */}
-              <div
-                className={cn(
-                  "grid gap-1 transition-all duration-200",
-                  !collapsed && group.name && !openGroups[group.name]
-                    ? "hidden"
-                    : "grid"
-                )}
-              >
+              <div className="grid gap-1">
                 {group.items.map(item => {
                   const isActive = pathname === item.href;
                   return (

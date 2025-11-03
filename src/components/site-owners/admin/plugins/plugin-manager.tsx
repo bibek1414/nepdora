@@ -42,10 +42,10 @@ const Modal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="bg-opacity-50 absolute inset-0 bg-white"
+        className="bg-opacity-50 absolute inset-0 bg-black/80"
         onClick={onClose}
       />
-      <div className="relative mx-4 max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-lg bg-white">
+      <div className="relative mx-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white">
         <div className="sticky top-0 flex items-center justify-between border-b bg-white px-6 py-4">
           <h2 className="text-2xl font-semibold">{title}</h2>
           <button

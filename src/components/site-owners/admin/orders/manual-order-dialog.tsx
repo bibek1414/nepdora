@@ -67,7 +67,7 @@ interface OrderItem {
   product_data?: Product;
 }
 
-interface CreateManualOrderDialogProps {
+interface ManualOrderDialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   initialMessage?: string;
@@ -85,19 +85,19 @@ interface OrderItem {
   weight?: number;
 }
 
-interface CreateManualOrderDialogProps {
+interface ManualOrderDialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   initialMessage?: string;
   trigger?: React.ReactNode;
 }
 
-export function CreateManualOrderDialog({
+export function ManualOrderDialog({
   open: externalOpen,
   onOpenChange: externalOnOpenChange,
   initialMessage,
   trigger,
-}: CreateManualOrderDialogProps) {
+}: ManualOrderDialogProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [confirmLocationOpen, setConfirmLocationOpen] = useState(false);
