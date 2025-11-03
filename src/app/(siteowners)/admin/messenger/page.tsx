@@ -9,8 +9,19 @@ import {
   getConversations,
   sendMessage as sendFacebookMessage,
   formatTimestamp,
-  FacebookMessage as FbMessage,
 } from "@/lib/facebook";
+
+// Updated interface to include profile_pic
+interface FacebookMessageFromAPI {
+  id: string;
+  message: string;
+  created_time: string;
+  from: {
+    id: string;
+    name: string;
+    profile_pic?: string; // Added this field
+  };
+}
 
 interface Message {
   id: string;
@@ -19,6 +30,7 @@ interface Message {
   content: string;
   timestamp: string;
   isOwn: boolean;
+  senderProfilePic?: string;
 }
 
 interface Conversation {
@@ -43,7 +55,13 @@ export default function MessagingPage() {
   const [pageAccessToken, setPageAccessToken] = useState<string>("");
   const [isIntegrationReady, setIsIntegrationReady] = useState(false);
 
-  // Fetch Facebook integration on mount
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   useEffect(() => {
     const loadIntegration = async () => {
       try {
@@ -69,11 +87,6 @@ export default function MessagingPage() {
         setPageId(activeIntegration.page_id);
         setPageAccessToken(activeIntegration.page_access_token);
         setIsIntegrationReady(true);
-
-        console.log("✅ Facebook integration loaded:", {
-          pageId: activeIntegration.page_id,
-          pageName: activeIntegration.page_name,
-        });
       } catch (err) {
         console.error("Error loading Facebook integration:", err);
         setError("Failed to load Facebook integration. Please try again.");
@@ -90,7 +103,6 @@ export default function MessagingPage() {
     }
 
     try {
-      setIsLoading(true);
       const fbConversations = await getConversations(pageId, pageAccessToken);
 
       const formattedConversations = fbConversations.map(conv => {
@@ -132,7 +144,6 @@ export default function MessagingPage() {
       if (!conversationId || !pageId || !pageAccessToken) return;
 
       try {
-        setIsLoading(true);
         const response = await fetch(
           `/api/facebook/conversations/${conversationId}/messages?pageAccessToken=${pageAccessToken}`
         );
@@ -143,22 +154,35 @@ export default function MessagingPage() {
 
         const data = await response.json();
 
-        const formattedMessages = data.messages.map((msg: FbMessage) => ({
-          id: msg.id,
-          conversationId,
-          sender: msg.from.id === pageId ? "You" : msg.from.name,
-          content: msg.message,
-          timestamp: formatTimestamp(msg.created_time),
-          isOwn: msg.from.id === pageId,
-        }));
+        // Debug: Log the raw data
+        console.log("Raw messages data:", data.messages);
 
-        // Reverse to show oldest messages first
+        // Map the messages with the profile_pic field
+        const formattedMessages = data.messages.map(
+          (msg: FacebookMessageFromAPI) => {
+            console.log("Processing message:", {
+              id: msg.id,
+              from: msg.from,
+              profile_pic: msg.from.profile_pic,
+            });
+
+            return {
+              id: msg.id,
+              conversationId,
+              sender: msg.from.id === pageId ? "You" : msg.from.name,
+              content: msg.message,
+              timestamp: formatTimestamp(msg.created_time),
+              isOwn: msg.from.id === pageId,
+              senderProfilePic: msg.from.profile_pic, // This now comes from the API
+            };
+          }
+        );
+
+        console.log("Formatted messages with profile pics:", formattedMessages);
         setMessages(formattedMessages.reverse());
       } catch (err) {
         console.error("Error fetching messages:", err);
         setError("Failed to load messages. Please try again.");
-      } finally {
-        setIsLoading(false);
       }
     },
     [pageId, pageAccessToken]
@@ -167,10 +191,7 @@ export default function MessagingPage() {
   useEffect(() => {
     if (isIntegrationReady) {
       fetchConversations();
-
-      // Set up polling for new messages
-      const interval = setInterval(fetchConversations, 30000); // Poll every 30 seconds
-
+      const interval = setInterval(fetchConversations, 30000);
       return () => clearInterval(interval);
     }
   }, [isIntegrationReady, fetchConversations]);
@@ -178,6 +199,12 @@ export default function MessagingPage() {
   useEffect(() => {
     if (selectedConversation && pageAccessToken) {
       fetchMessages(selectedConversation);
+
+      const interval = setInterval(() => {
+        fetchMessages(selectedConversation);
+      }, 5000);
+
+      return () => clearInterval(interval);
     }
   }, [selectedConversation, pageAccessToken, fetchMessages]);
 
@@ -197,97 +224,92 @@ export default function MessagingPage() {
         conversationId: selectedConversation,
         sender: "You",
         content,
-        timestamp: formatTimestamp(new Date().toISOString()),
+        timestamp: new Date().toISOString(),
         isOwn: true,
       };
 
       setMessages(prev => [...prev, newMessage]);
 
-      // Send to Facebook using page access token
       await sendFacebookMessage(
         conversation.participantId,
         content,
         pageAccessToken
       );
 
-      // Refresh messages to get the real message ID from Facebook
-      fetchMessages(selectedConversation);
+      await fetchMessages(selectedConversation);
+      fetchConversations();
     } catch (err) {
       console.error("Error sending message:", err);
       setError("Failed to send message. Please try again.");
 
-      // Remove the optimistic message on error
       setMessages(prev => prev.filter(m => m.id !== tempId));
     }
   };
 
   if (isLoading && conversations.length === 0) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-white">
         <div className="text-center">
-          <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2"></div>
-          <p>Loading conversations...</p>
+          <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
+          <p className="text-gray-600">Loading conversations...</p>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  if (error && !isIntegrationReady) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-center text-red-500">
-          <p>{error}</p>
-          {isIntegrationReady ? (
-            <button
-              onClick={fetchConversations}
-              className="mt-2 text-sm text-blue-500 hover:underline"
-            >
-              Retry
-            </button>
-          ) : (
-            <a
-              href="/admin/settings/integrations"
-              className="mt-2 inline-block text-sm text-blue-500 hover:underline"
-            >
-              Go to Integrations
-            </a>
-          )}
+      <div className="flex h-screen items-center justify-center bg-white">
+        <div className="text-center">
+          <div className="mb-4 text-4xl">⚠️</div>
+          <p className="mb-4 text-red-500">{error}</p>
+          <a
+            href="/admin/settings/integrations"
+            className="inline-block rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+          >
+            Go to Integrations
+          </a>
         </div>
       </div>
     );
   }
+
+  const selectedConversationData = conversations.find(
+    c => c.id === selectedConversation
+  );
 
   return (
-    <div className="flex h-screen flex-col">
-      <div className="flex flex-1 overflow-hidden">
-        <div className="border-border flex h-full w-80 flex-col border-r">
-          <ConversationList
-            conversations={conversations}
-            selectedId={selectedConversation}
-            onSelectConversation={setSelectedConversation}
-          />
-        </div>
-        <div className="flex flex-1 flex-col overflow-hidden">
-          {selectedConversation ? (
-            <div className="flex h-full flex-col">
-              <ChatWindow
-                messages={messages}
-                conversationName={
-                  conversations.find(c => c.id === selectedConversation)
-                    ?.name || "Conversation"
-                }
-              />
-              <MessageInput
-                onSendMessage={handleSendMessage}
-                disabled={isLoading}
-              />
+    <div className="flex h-screen overflow-hidden bg-white">
+      <ConversationList
+        conversations={conversations}
+        selectedId={selectedConversation}
+        onSelectConversation={setSelectedConversation}
+      />
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {selectedConversation ? (
+          <>
+            <ChatWindow
+              messages={messages}
+              conversationName={
+                selectedConversationData?.name || "Conversation"
+              }
+              conversationAvatar={selectedConversationData?.avatar}
+            />
+            <MessageInput
+              onSendMessage={handleSendMessage}
+              disabled={isLoading}
+            />
+          </>
+        ) : (
+          <div className="flex flex-1 items-center justify-center">
+            <div className="text-center">
+              <div className="mb-4 text-5xl">💬</div>
+              <p className="text-lg text-gray-500">
+                Select a conversation to start messaging
+              </p>
             </div>
-          ) : (
-            <div className="text-muted-foreground flex flex-1 items-center justify-center">
-              <p>Select a conversation to start messaging</p>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

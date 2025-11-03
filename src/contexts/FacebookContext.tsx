@@ -178,12 +178,9 @@ export const FacebookProvider = ({ children }: { children: ReactNode }) => {
 
       setIsLoading(true);
 
-      console.log("📡 [FacebookContext] Calling API to disable integration...");
-      const response = await useFacebookApi.updateFacebookIntegration(
-        integration.id,
-        {
-          is_enabled: false,
-        }
+      console.log("📡 [FacebookContext] Calling API to delete integration...");
+      const response = await useFacebookApi.deleteFacebookIntegration(
+        integration.id
       );
 
       console.log("✅ [FacebookContext] API Response:", {

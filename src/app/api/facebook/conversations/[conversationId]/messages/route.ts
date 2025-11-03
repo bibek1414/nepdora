@@ -10,7 +10,34 @@ export interface FacebookMessage {
   from: {
     id: string;
     name: string;
+    picture?: {
+      data: {
+        height: number;
+        width: number;
+        is_silhouette: boolean;
+        url: string;
+      };
+    };
   };
+}
+
+async function getUserProfilePicture(
+  userId: string,
+  pageAccessToken: string
+): Promise<string | undefined> {
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${userId}/picture?redirect=false&type=normal&access_token=${pageAccessToken}`
+    );
+    const data = await response.json();
+
+    if (data.data && data.data.url) {
+      return data.data.url;
+    }
+  } catch (error) {
+    console.error(`Error fetching profile picture for ${userId}:`, error);
+  }
+  return undefined;
 }
 
 export async function GET(
@@ -29,11 +56,10 @@ export async function GET(
       );
     }
 
-    console.log("Fetching messages for conversation:", conversationId);
-
+    // First, get the messages without pictures
     const response = await fetch(
       `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${conversationId}/messages` +
-        `?fields=id,message,created_time,from` +
+        `?fields=id,message,created_time,from{id,name}` +
         `&access_token=${pageAccessToken}`
     );
 
@@ -45,9 +71,43 @@ export async function GET(
 
     const data = await response.json();
 
-    console.log(`Successfully fetched ${data.data?.length || 0} messages`);
+    // Get unique user IDs (excluding pages)
+    const userIds = [
+      ...new Set(
+        (data.data || [])
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .map((msg: any) => msg.from?.id)
+          .filter((id: string) => id && !id.startsWith("1049"))
+      ),
+    ] as string[];
 
-    return NextResponse.json({ messages: data.data || [] });
+    // Fetch profile pictures for all unique users
+    const profilePics = new Map<string, string>();
+    await Promise.all(
+      userIds.map(async (userId: string) => {
+        const pic = await getUserProfilePicture(userId, pageAccessToken);
+        if (pic) {
+          profilePics.set(userId, pic);
+        }
+      })
+    );
+
+    // Transform the data to include profile pictures
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const messages = (data.data || []).map((msg: any) => {
+      const profilePic = profilePics.get(msg.from?.id);
+
+      return {
+        ...msg,
+        from: {
+          id: msg.from?.id,
+          name: msg.from?.name,
+          profile_pic: profilePic,
+        },
+      };
+    });
+
+    return NextResponse.json({ messages });
   } catch (error) {
     console.error("Error in messages API route:", error);
     return NextResponse.json(

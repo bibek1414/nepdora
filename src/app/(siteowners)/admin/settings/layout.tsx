@@ -30,6 +30,12 @@ const settingsItems: SettingItem[] = [
     description: "Manage your domain settings and configurations",
     path: "/admin/settings/domains",
   },
+  {
+    id: "integrations",
+    title: "Integrations",
+    description: "Manage your domain settings and configurations",
+    path: "/admin/settings/integrations",
+  },
 ];
 
 export default function SettingsLayout({

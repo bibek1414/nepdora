@@ -149,7 +149,7 @@ export async function getConversations(
   }
 
   try {
-    // Build the URL with proper fields
+    // Build the URL with proper fields - ADD picture() to get profile pics
     const fields = [
       "id",
       "participants",
@@ -157,7 +157,7 @@ export async function getConversations(
       "unread_count",
       "link",
       "message_count",
-      "messages.limit(10){id,message,from,created_time,attachments}",
+      "messages.limit(10){id,message,from{id,name,email,picture},created_time,attachments}",
     ].join(",");
 
     const conversationsUrl = `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${pageId}/conversations?fields=${encodeURIComponent(
@@ -206,12 +206,68 @@ export async function getConversations(
       return [];
     }
 
-    console.log("Successfully fetched conversations:", data.data.length);
-    return data.data;
+    // Fetch profile pictures for participants
+    const conversationsWithPics = await Promise.all(
+      data.data.map(async conv => {
+        const participantsWithPics = await Promise.all(
+          conv.participants.data.map(async participant => {
+            if (participant.id === pageId) {
+              return participant; // Skip page itself
+            }
+            try {
+              const profilePic = await getUserProfilePicture(
+                participant.id,
+                pageAccessToken
+              );
+              return { ...participant, profile_pic: profilePic };
+            } catch (error) {
+              console.error(
+                `Error fetching profile pic for ${participant.id}:`,
+                error
+              );
+              return participant;
+            }
+          })
+        );
+
+        return {
+          ...conv,
+          participants: { data: participantsWithPics },
+        };
+      })
+    );
+
+    console.log(
+      "Successfully fetched conversations:",
+      conversationsWithPics.length
+    );
+    return conversationsWithPics;
   } catch (error) {
     console.error("Error in getConversations:", error);
     throw error;
   }
+}
+
+/**
+ * Get user profile picture
+ */
+async function getUserProfilePicture(
+  userId: string,
+  pageAccessToken: string
+): Promise<string | undefined> {
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${userId}/picture?redirect=false&type=normal&access_token=${pageAccessToken}`
+    );
+    const data = await response.json();
+
+    if (data.data && data.data.url) {
+      return data.data.url;
+    }
+  } catch (error) {
+    console.error("Error fetching profile picture:", error);
+  }
+  return undefined;
 }
 
 /**
@@ -227,7 +283,9 @@ export async function getConversationMessages(
   }
 
   try {
-    const fields = "id,message,from,created_time,attachments";
+    // ADD from{id,name,email,picture} to get profile pics in messages
+    const fields =
+      "id,message,from{id,name,email,picture},created_time,attachments";
     const url = `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${conversationId}/messages?fields=${fields}&limit=${limit}&access_token=${pageAccessToken}`;
 
     const response = await fetch(url);
@@ -238,7 +296,32 @@ export async function getConversationMessages(
       throw new Error(data.error?.message || "Failed to fetch messages");
     }
 
-    return data.data || [];
+    // Fetch profile pictures for message senders
+    const messagesWithPics = await Promise.all(
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (data.data || []).map(async (msg: any) => {
+        if (!msg.from) return msg;
+
+        try {
+          const profilePic = await getUserProfilePicture(
+            msg.from.id,
+            pageAccessToken
+          );
+          return {
+            ...msg,
+            from: { ...msg.from, profile_pic: profilePic },
+          };
+        } catch (error) {
+          console.error(
+            `Error fetching profile pic for ${msg.from.id}:`,
+            error
+          );
+          return msg;
+        }
+      })
+    );
+
+    return messagesWithPics;
   } catch (error) {
     console.error("Error in getConversationMessages:", error);
     throw error;
@@ -301,8 +384,10 @@ export async function getUserProfile(
   }
 
   try {
+    const profilePic = await getUserProfilePicture(userId, pageAccessToken);
+
     const response = await fetch(
-      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${userId}?fields=id,name,profile_pic&access_token=${pageAccessToken}`
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${userId}?fields=id,name&access_token=${pageAccessToken}`
     );
     const data = await response.json();
 
@@ -310,7 +395,7 @@ export async function getUserProfile(
       throw new Error(data.error?.message || "Failed to get user profile");
     }
 
-    return data;
+    return { ...data, profile_pic: profilePic };
   } catch (error) {
     console.error("Error in getUserProfile:", error);
     throw error;
