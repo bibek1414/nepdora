@@ -66,6 +66,11 @@ export async function GET(request: Request) {
         throw new Error("User not authenticated");
       }
 
+      console.log("👤 [CALLBACK] User info:", {
+        id: user.id,
+        subdomain: user.subDomain || "none",
+      });
+
       // Get JWT token from cookies
       const cookieStore = await cookies();
       const authToken = cookieStore.get("authToken")?.value;
@@ -73,6 +78,11 @@ export async function GET(request: Request) {
       if (!authToken) {
         throw new Error("Authentication token not found");
       }
+
+      console.log(
+        "🔑 [CALLBACK] Auth token found:",
+        authToken.substring(0, 20) + "..."
+      );
 
       const appId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID;
       const appSecret = process.env.FACEBOOK_APP_SECRET;
@@ -150,6 +160,8 @@ export async function GET(request: Request) {
       console.log(
         "✅ [CALLBACK] Facebook Login for Business completed successfully"
       );
+      console.log("🔗 [CALLBACK] Redirecting to:", successUrl);
+
       return NextResponse.redirect(successUrl);
     } catch (error: unknown) {
       console.error(
@@ -221,6 +233,7 @@ async function handleBusinessIntegrationToken(
     }
 
     // Get business pages and assets
+    console.log("📡 [CALLBACK] Fetching owned pages...");
     const businessResponse = await axios.get(
       `https://graph.facebook.com/${process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0"}/${clientBusinessId}/owned_pages`,
       {
@@ -232,7 +245,11 @@ async function handleBusinessIntegrationToken(
     );
 
     const pages = businessResponse.data.data;
-    console.log(`📄 [CALLBACK] Found ${pages.length} business pages`);
+    console.log(
+      `📄 [CALLBACK] Found ${pages.length} business pages:`,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      pages.map((p: any) => ({ id: p.id, name: p.name }))
+    );
 
     // Save integration to your backend
     await saveBusinessIntegration({
@@ -264,6 +281,7 @@ async function handleUserAccessToken(
 
   try {
     // Get user's pages
+    console.log("📡 [CALLBACK] Fetching user pages...");
     const pagesResponse = await axios.get(
       `https://graph.facebook.com/${process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0"}/me/accounts`,
       {
@@ -275,7 +293,11 @@ async function handleUserAccessToken(
     );
 
     const pages = pagesResponse.data.data;
-    console.log(`📄 [CALLBACK] Found ${pages.length} user pages`);
+    console.log(
+      `📄 [CALLBACK] Found ${pages.length} user pages:`,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      pages.map((p: any) => ({ id: p.id, name: p.name }))
+    );
 
     // Save integration to your backend
     await saveUserIntegration({
@@ -318,7 +340,16 @@ async function saveBusinessIntegration({
 
   const authenticatedHeaders = createServerHeaders(authToken);
 
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log("💾 [CALLBACK] Saving business integration to backend");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("📍 [CALLBACK] Backend URL:", backendUrl);
+  console.log("👤 [CALLBACK] User:", {
+    id: user.id,
+    subdomain: user.subDomain,
+  });
+
+  const results = [];
 
   for (const page of pages) {
     try {
@@ -334,15 +365,31 @@ async function saveBusinessIntegration({
         token_type: "business_integration",
       };
 
+      console.log(`🔍 [CALLBACK] Processing page: ${page.name} (${page.id})`);
+
       // Check if integration exists
+      console.log(`📡 [CALLBACK] Checking for existing integrations...`);
       const existingResponse = await fetch(`${backendUrl}/api/facebook/`, {
         method: "GET",
         headers: authenticatedHeaders,
       });
 
+      console.log(
+        `📊 [CALLBACK] Existing integrations response status: ${existingResponse.status}`
+      );
+
       let existingIntegrations = [];
       if (existingResponse.ok) {
         existingIntegrations = await existingResponse.json();
+        console.log(
+          `📋 [CALLBACK] Found ${existingIntegrations.length} existing integrations`
+        );
+      } else {
+        const errorText = await existingResponse.text();
+        console.error(
+          `❌ [CALLBACK] Failed to fetch existing integrations:`,
+          errorText
+        );
       }
 
       const existingIntegration = existingIntegrations.find(
@@ -353,6 +400,9 @@ async function saveBusinessIntegration({
       let saveResponse;
       if (existingIntegration) {
         // Update existing
+        console.log(
+          `🔄 [CALLBACK] Updating existing integration ID: ${existingIntegration.id}`
+        );
         saveResponse = await fetch(
           `${backendUrl}/api/facebook/${existingIntegration.id}/`,
           {
@@ -361,35 +411,93 @@ async function saveBusinessIntegration({
             body: JSON.stringify(integrationData),
           }
         );
-        console.log(
-          `🔄 [CALLBACK] Updated business integration for: ${page.name}`
-        );
       } else {
         // Create new
+        console.log(`🆕 [CALLBACK] Creating new integration`);
         saveResponse = await fetch(`${backendUrl}/api/facebook/`, {
           method: "POST",
           headers: authenticatedHeaders,
           body: JSON.stringify(integrationData),
         });
-        console.log(
-          `🆕 [CALLBACK] Created business integration for: ${page.name}`
-        );
       }
 
-      if (!saveResponse?.ok) {
+      console.log(`📡 [CALLBACK] Save response status: ${saveResponse.status}`);
+
+      if (saveResponse.ok) {
+        const savedData = await saveResponse.json();
+        console.log(`✅ [CALLBACK] Successfully saved "${page.name}":`, {
+          id: savedData.id,
+          page_id: savedData.page_id,
+          page_name: savedData.page_name,
+          is_enabled: savedData.is_enabled,
+        });
+        results.push({ success: true, page: page.name, data: savedData });
+      } else {
         const errorText = await saveResponse.text();
-        console.error(
-          `❌ [CALLBACK] Failed to save "${page.name}":`,
-          errorText
-        );
+        console.error(`❌ [CALLBACK] Failed to save "${page.name}":`, {
+          status: saveResponse.status,
+          statusText: saveResponse.statusText,
+          error: errorText,
+        });
+        results.push({ success: false, page: page.name, error: errorText });
       }
     } catch (pageError) {
       console.error(
-        `❌ [CALLBACK] Error saving page "${page.name}":`,
+        `❌ [CALLBACK] Exception saving page "${page.name}":`,
         pageError
       );
+      results.push({
+        success: false,
+        page: page.name,
+        error:
+          pageError instanceof Error ? pageError.message : String(pageError),
+      });
     }
   }
+
+  // Summary log
+  const successful = results.filter(r => r.success).length;
+  const failed = results.filter(r => !r.success).length;
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log(
+    `📊 [CALLBACK] Save summary: ${successful} successful, ${failed} failed`
+  );
+
+  // Verify the integration was actually saved
+  console.log("🔍 [CALLBACK] Verifying saved integrations...");
+  try {
+    const verifyResponse = await fetch(`${backendUrl}/api/facebook/`, {
+      method: "GET",
+      headers: authenticatedHeaders,
+    });
+
+    if (verifyResponse.ok) {
+      const finalIntegrations = await verifyResponse.json();
+      console.log(
+        `✅ [CALLBACK] Verification: Found ${finalIntegrations.length} total integrations after save`
+      );
+      console.log(
+        `📋 [CALLBACK] Integration details:`,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        finalIntegrations.map((i: any) => ({
+          id: i.id,
+          page: i.page_name,
+          page_id: i.page_id,
+          enabled: i.is_enabled,
+        }))
+      );
+    } else {
+      console.error(
+        `❌ [CALLBACK] Verification failed: ${verifyResponse.status}`
+      );
+    }
+  } catch (verifyError) {
+    console.error(`❌ [CALLBACK] Verification error:`, verifyError);
+  }
+
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+
+  return results;
 }
 
 /**
@@ -418,7 +526,16 @@ async function saveUserIntegration({
 
   const authenticatedHeaders = createServerHeaders(authToken);
 
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log("💾 [CALLBACK] Saving user integration to backend");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("📍 [CALLBACK] Backend URL:", backendUrl);
+  console.log("👤 [CALLBACK] User:", {
+    id: user.id,
+    subdomain: user.subDomain,
+  });
+
+  const results = [];
 
   for (const page of pages) {
     try {
@@ -433,15 +550,31 @@ async function saveUserIntegration({
         token_type: "user",
       };
 
+      console.log(`🔍 [CALLBACK] Processing page: ${page.name} (${page.id})`);
+
       // Check if integration exists
+      console.log(`📡 [CALLBACK] Checking for existing integrations...`);
       const existingResponse = await fetch(`${backendUrl}/api/facebook/`, {
         method: "GET",
         headers: authenticatedHeaders,
       });
 
+      console.log(
+        `📊 [CALLBACK] Existing integrations response status: ${existingResponse.status}`
+      );
+
       let existingIntegrations = [];
       if (existingResponse.ok) {
         existingIntegrations = await existingResponse.json();
+        console.log(
+          `📋 [CALLBACK] Found ${existingIntegrations.length} existing integrations`
+        );
+      } else {
+        const errorText = await existingResponse.text();
+        console.error(
+          `❌ [CALLBACK] Failed to fetch existing integrations:`,
+          errorText
+        );
       }
 
       const existingIntegration = existingIntegrations.find(
@@ -452,6 +585,9 @@ async function saveUserIntegration({
       let saveResponse;
       if (existingIntegration) {
         // Update existing
+        console.log(
+          `🔄 [CALLBACK] Updating existing integration ID: ${existingIntegration.id}`
+        );
         saveResponse = await fetch(
           `${backendUrl}/api/facebook/${existingIntegration.id}/`,
           {
@@ -460,29 +596,91 @@ async function saveUserIntegration({
             body: JSON.stringify(integrationData),
           }
         );
-        console.log(`🔄 [CALLBACK] Updated user integration for: ${page.name}`);
       } else {
         // Create new
+        console.log(`🆕 [CALLBACK] Creating new integration`);
         saveResponse = await fetch(`${backendUrl}/api/facebook/`, {
           method: "POST",
           headers: authenticatedHeaders,
           body: JSON.stringify(integrationData),
         });
-        console.log(`🆕 [CALLBACK] Created user integration for: ${page.name}`);
       }
 
-      if (!saveResponse?.ok) {
+      console.log(`📡 [CALLBACK] Save response status: ${saveResponse.status}`);
+
+      if (saveResponse.ok) {
+        const savedData = await saveResponse.json();
+        console.log(`✅ [CALLBACK] Successfully saved "${page.name}":`, {
+          id: savedData.id,
+          page_id: savedData.page_id,
+          page_name: savedData.page_name,
+          is_enabled: savedData.is_enabled,
+        });
+        results.push({ success: true, page: page.name, data: savedData });
+      } else {
         const errorText = await saveResponse.text();
-        console.error(
-          `❌ [CALLBACK] Failed to save "${page.name}":`,
-          errorText
-        );
+        console.error(`❌ [CALLBACK] Failed to save "${page.name}":`, {
+          status: saveResponse.status,
+          statusText: saveResponse.statusText,
+          error: errorText,
+        });
+        results.push({ success: false, page: page.name, error: errorText });
       }
     } catch (pageError) {
       console.error(
-        `❌ [CALLBACK] Error saving page "${page.name}":`,
+        `❌ [CALLBACK] Exception saving page "${page.name}":`,
         pageError
       );
+      results.push({
+        success: false,
+        page: page.name,
+        error:
+          pageError instanceof Error ? pageError.message : String(pageError),
+      });
     }
   }
+
+  // Summary log
+  const successful = results.filter(r => r.success).length;
+  const failed = results.filter(r => !r.success).length;
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log(
+    `📊 [CALLBACK] Save summary: ${successful} successful, ${failed} failed`
+  );
+
+  // Verify the integration was actually saved
+  console.log("🔍 [CALLBACK] Verifying saved integrations...");
+  try {
+    const verifyResponse = await fetch(`${backendUrl}/api/facebook/`, {
+      method: "GET",
+      headers: authenticatedHeaders,
+    });
+
+    if (verifyResponse.ok) {
+      const finalIntegrations = await verifyResponse.json();
+      console.log(
+        `✅ [CALLBACK] Verification: Found ${finalIntegrations.length} total integrations after save`
+      );
+      console.log(
+        `📋 [CALLBACK] Integration details:`,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        finalIntegrations.map((i: any) => ({
+          id: i.id,
+          page: i.page_name,
+          page_id: i.page_id,
+          enabled: i.is_enabled,
+        }))
+      );
+    } else {
+      console.error(
+        `❌ [CALLBACK] Verification failed: ${verifyResponse.status}`
+      );
+    }
+  } catch (verifyError) {
+    console.error(`❌ [CALLBACK] Verification error:`, verifyError);
+  }
+
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+
+  return results;
 }

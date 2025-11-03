@@ -30,17 +30,43 @@ export function FacebookAuthHandler() {
             "✅ [FacebookAuthHandler] Facebook Business connection successful"
           );
 
-          // Wait a bit for the backend to process
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          // CRITICAL FIX: Wait longer and retry multiple times
+          // Backend might still be processing the save
+          let retryCount = 0;
+          const maxRetries = 5;
+          const retryDelay = 1500; // 1.5 seconds between retries
 
-          // Refresh the integration data
-          await refreshIntegration();
+          const attemptRefresh = async (): Promise<boolean> => {
+            console.log(
+              `🔄 [FacebookAuthHandler] Refresh attempt ${retryCount + 1}/${maxRetries}`
+            );
+            await refreshIntegration();
+
+            // Check if integration was found (you'll need to expose this from context)
+            // For now, we'll just retry multiple times
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
+            retryCount++;
+
+            return retryCount >= maxRetries;
+          };
+
+          // Initial delay before first attempt
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          // Retry loop
+          while (retryCount < maxRetries) {
+            const shouldStop = await attemptRefresh();
+            if (shouldStop) break;
+          }
 
           toast.success("Successfully connected to Facebook!");
 
           // Clean URL without reloading the page
           const cleanUrl = window.location.pathname;
           window.history.replaceState(null, "", cleanUrl);
+
+          // Force a page reload to ensure fresh data
+          router.refresh();
           return;
         }
 
@@ -65,5 +91,5 @@ export function FacebookAuthHandler() {
     handleAuth();
   }, [router, searchParams, refreshIntegration]);
 
-  return null; // This component doesn't render anything
+  return null;
 }
