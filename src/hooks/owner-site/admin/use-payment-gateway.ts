@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { paymentGatewayApi } from "@/services/api/owner-sites/admin/payment-gateway";
 import {
-  PaymentGateway,
   CreatePaymentGatewayRequest,
   UpdatePaymentGatewayRequest,
 } from "@/types/owner-site/admin/payment-gateway";

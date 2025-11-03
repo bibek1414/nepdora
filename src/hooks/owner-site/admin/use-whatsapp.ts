@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { whatsappApi } from "@/services/api/owner-sites/admin/whatsapp";
 import {
-  WhatsApp,
   CreateWhatsAppRequest,
   UpdateWhatsAppRequest,
 } from "@/types/owner-site/admin/whatsapp";

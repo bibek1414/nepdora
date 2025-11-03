@@ -3,7 +3,6 @@ import { toast } from "sonner";
 import { youtubeAPI } from "@/services/api/owner-sites/admin/youtube";
 import {
   YouTubeVideos,
-  YouTubeVideo,
   CreateYouTubeVideoData,
   UpdateYouTubeVideoData,
 } from "@/types/owner-site/admin/youtube";

@@ -29,6 +29,7 @@ import {
   Wallet,
   Truck,
   Unplug,
+  Facebook,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -76,6 +77,12 @@ const navigationGroups = [
   },
   {
     items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
+  },
+  {
+    items: [
+      { name: "Facebook", href: "/admin/facebook", icon: Facebook },
+      { name: "Messenger", href: "/admin/messenger", icon: MessageSquare },
+    ],
   },
   {
     items: [

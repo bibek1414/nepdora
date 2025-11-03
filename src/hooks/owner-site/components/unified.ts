@@ -5,10 +5,7 @@ import {
   componentOrdersApi,
   BulkOrderUpdateRequest,
 } from "@/services/api/owner-sites/components/unified";
-import {
-  ComponentTypeMap,
-  ComponentResponse,
-} from "@/types/owner-site/components/components";
+import { ComponentTypeMap } from "@/types/owner-site/components/components";
 
 // Generic hook for fetching page components
 export const usePageComponentsQuery = <

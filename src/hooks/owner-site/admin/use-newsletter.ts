@@ -1,9 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { newsletterApi } from "@/services/api/owner-sites/admin/newsletter";
-import {
-  Newsletter,
-  CreateNewsletterRequest,
-} from "@/types/owner-site/admin/newsletter";
+import { CreateNewsletterRequest } from "@/types/owner-site/admin/newsletter";
 
 // Query Keys
 export const newsletterKeys = {
