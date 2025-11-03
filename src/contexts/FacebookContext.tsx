@@ -123,27 +123,35 @@ export const FacebookProvider = ({ children }: { children: ReactNode }) => {
         throw new Error("Base URL is not configured");
       }
 
+      // Use Facebook Login for Business with config_id
+      const configId = process.env.NEXT_PUBLIC_FACEBOOK_CONFIG_ID;
+
+      if (!configId) {
+        throw new Error("Facebook Configuration ID is not configured");
+      }
+
       const redirectUri = `${baseUrl}/api/facebook/callback`;
       const encodedRedirectUri = encodeURIComponent(redirectUri);
-      const scope = encodeURIComponent(
-        "pages_manage_engagement,pages_messaging,pages_read_engagement,pages_show_list"
-      );
 
+      // For Business Integration System User tokens (recommended for automation)
       const authUrl = `https://www.facebook.com/${
         process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0"
-      }/dialog/oauth?client_id=${appId}&redirect_uri=${encodedRedirectUri}&scope=${scope}&response_type=code`;
+      }/dialog/oauth?client_id=${appId}&redirect_uri=${encodedRedirectUri}&config_id=${configId}&response_type=code&override_default_response_type=true`;
 
-      console.log("🌐 [FacebookContext] OAuth Configuration:", {
-        appId,
-        redirectUri,
-        baseUrl,
-        scope:
-          "pages_manage_engagement,pages_messaging,pages_read_engagement,pages_show_list",
-        authUrlLength: authUrl.length,
-        authUrlPreview: authUrl.substring(0, 100) + "...",
-      });
+      console.log(
+        "🌐 [FacebookContext] Facebook Login for Business Configuration:",
+        {
+          appId,
+          configId,
+          redirectUri,
+          authUrlLength: authUrl.length,
+          authUrlPreview: authUrl.substring(0, 100) + "...",
+        }
+      );
 
-      console.log("↗️ [FacebookContext] Redirecting to Facebook OAuth...");
+      console.log(
+        "↗️ [FacebookContext] Redirecting to Facebook Login for Business..."
+      );
       window.location.href = authUrl;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
