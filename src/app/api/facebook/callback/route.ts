@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 import { getApiBaseUrl } from "@/config/site";
-import { createHeaders } from "@/utils/headers";
 import { getServerUser } from "@/hooks/use-jwt-server";
+import { cookies } from "next/headers";
+
+// Helper to create authenticated headers for server-side requests
+function createServerHeaders(token: string) {
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+}
 
 export async function GET(request: Request) {
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
@@ -35,22 +43,10 @@ export async function GET(request: Request) {
       errorDescription,
     });
 
-    // Get user to redirect to correct subdomain
-    console.log("👤 [CALLBACK] Fetching user for redirect...");
     const user = await getServerUser();
-    console.log("👤 [CALLBACK] User info:", {
-      hasUser: !!user,
-      subDomain: user?.subDomain || "None",
-    });
-
     const baseUrl = user?.subDomain
       ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.subDomain}.localhost:3000`)}`
       : process.env.NEXT_PUBLIC_BASE_URL;
-
-    console.log("↗️ [CALLBACK] Redirecting to error page:", {
-      baseUrl,
-      fullUrl: `${baseUrl}/admin/settings/integrations?error=...`,
-    });
 
     return NextResponse.redirect(
       `${baseUrl}/admin/settings/integrations?error=${encodeURIComponent(
@@ -67,8 +63,6 @@ export async function GET(request: Request) {
       console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
       console.log("🔄 [CALLBACK] Starting OAuth flow...");
 
-      // Get user from JWT to get subdomain
-      console.log("👤 [CALLBACK] Fetching authenticated user...");
       const user = await getServerUser();
 
       if (!user) {
@@ -82,7 +76,32 @@ export async function GET(request: Request) {
         userId: user.id || "Unknown",
       });
 
-      // Log the configuration for debugging
+      // Get JWT token from cookies - matching AuthContext cookie names
+      const cookieStore = await cookies();
+      const authToken = cookieStore.get("authToken")?.value;
+
+      console.log("🔍 [CALLBACK] Cookie inspection:", {
+        hasAuthToken: !!authToken,
+        authTokenLength: authToken?.length || 0,
+        allCookies: Array.from(cookieStore.getAll()).map(c => c.name),
+      });
+
+      if (!authToken) {
+        console.error("❌ [CALLBACK] No JWT token found in cookies");
+        console.error(
+          "💡 [CALLBACK] Available cookies:",
+          Array.from(cookieStore.getAll())
+            .map(c => c.name)
+            .join(", ")
+        );
+        throw new Error("Authentication token not found. Please login again.");
+      }
+
+      console.log("✅ [CALLBACK] JWT token retrieved from authToken cookie:", {
+        tokenLength: authToken.length,
+        tokenPreview: authToken.substring(0, 20) + "...",
+      });
+
       const appId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID;
       const appSecret = process.env.FACEBOOK_APP_SECRET;
       const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/api/facebook/callback`;
@@ -96,7 +115,6 @@ export async function GET(request: Request) {
           process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0 (default)",
       });
 
-      // Validate required environment variables
       if (!appId || !appSecret) {
         console.error("❌ [CALLBACK] Missing required environment variables");
         throw new Error("Facebook App ID or App Secret is not configured");
@@ -110,16 +128,6 @@ export async function GET(request: Request) {
         process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0"
       }/oauth/access_token`;
 
-      console.log("🌐 [CALLBACK] Token exchange request:", {
-        url: tokenUrl,
-        params: {
-          client_id: appId.substring(0, 10) + "...",
-          redirect_uri: redirectUri,
-          code: code.substring(0, 10) + "...",
-        },
-      });
-
-      // Exchange code for access token
       const tokenResponse = await axios.get(tokenUrl, {
         params: {
           client_id: appId,
@@ -156,12 +164,6 @@ export async function GET(request: Request) {
         process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0"
       }/me/accounts`;
 
-      console.log("🌐 [CALLBACK] Pages request:", {
-        url: pagesUrl,
-        fields: "id,name,access_token,tasks",
-      });
-
-      // Get user's pages
       const pagesResponse = await axios.get(pagesUrl, {
         params: {
           access_token: userAccessToken,
@@ -201,47 +203,6 @@ export async function GET(request: Request) {
         });
       });
 
-      const firstPage = pages[0];
-      console.log("✅ [CALLBACK] Using first page:", {
-        id: firstPage.id,
-        name: firstPage.name,
-      });
-
-      // Verify page has necessary permissions
-      if (firstPage.tasks && !firstPage.tasks.includes("MANAGE")) {
-        console.warn(
-          "⚠️ [CALLBACK] WARNING: Page may not have MANAGE permission"
-        );
-        console.warn("⚠️ [CALLBACK] Available tasks:", firstPage.tasks);
-      } else if (firstPage.tasks?.includes("MANAGE")) {
-        console.log("✅ [CALLBACK] Page has MANAGE permission");
-      }
-
-      const integrationData = {
-        user_token: userAccessToken,
-        app_id: appId,
-        app_secret: appSecret,
-        page_id: firstPage.id,
-        page_access_token: firstPage.access_token,
-        page_name: firstPage.name,
-        is_enabled: true,
-      };
-
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("📦 [CALLBACK] Integration data prepared");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("📦 [CALLBACK] Data to save:", {
-        page_id: firstPage.id,
-        page_name: firstPage.name,
-        app_id: appId.substring(0, 10) + "...",
-        is_enabled: true,
-        hasUserToken: !!userAccessToken,
-        hasAppSecret: !!appSecret,
-        hasPageAccessToken: !!firstPage.access_token,
-        userTokenLength: userAccessToken.length,
-        pageTokenLength: firstPage.access_token.length,
-      });
-
       // Build the correct API URL with subdomain
       const API_BASE_URL = getApiBaseUrl();
       const backendUrl = user.subDomain
@@ -252,7 +213,7 @@ export async function GET(request: Request) {
         : API_BASE_URL;
 
       console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("🔄 [CALLBACK] Step 3: Saving to backend");
+      console.log("🔄 [CALLBACK] Step 3: Saving integrations to backend");
       console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
       console.log("🔍 [CALLBACK] Backend URLs:", {
         API_BASE_URL,
@@ -262,116 +223,189 @@ export async function GET(request: Request) {
         subdomain: user.subDomain || "None",
       });
 
+      // Create headers with JWT token from authToken cookie
+      const authenticatedHeaders = createServerHeaders(authToken);
+
+      console.log("🔍 [CALLBACK] Request headers prepared:", {
+        hasContentType: !!authenticatedHeaders["Content-Type"],
+        hasAuthorization: !!authenticatedHeaders["Authorization"],
+        authPreview:
+          authenticatedHeaders["Authorization"].substring(0, 30) + "...",
+      });
+
       console.log("🔍 [CALLBACK] Checking for existing integrations...");
 
       const existingResponse = await fetch(`${backendUrl}/api/facebook/`, {
         method: "GET",
-        headers: createHeaders(),
+        headers: authenticatedHeaders,
       });
 
-      console.log("📊 [CALLBACK] Existing integrations check:", {
-        status: existingResponse.status,
-        statusText: existingResponse.statusText,
-        ok: existingResponse.ok,
-        contentType: existingResponse.headers.get("content-type"),
-      });
-
-      let integrations = [];
+      let existingIntegrations = [];
 
       if (existingResponse.ok) {
-        integrations = await existingResponse.json();
+        existingIntegrations = await existingResponse.json();
         console.log("✅ [CALLBACK] Existing integrations found:", {
-          count: integrations.length,
-          //eslint-disable-next-line @typescript-eslint/no-explicit-any
-          integrations: integrations.map((i: any) => ({
-            id: i.id,
-            page_id: i.page_id,
-            page_name: i.page_name,
-            is_enabled: i.is_enabled,
-            created_at: i.created_at,
-            updated_at: i.updated_at,
-          })),
+          count: existingIntegrations.length,
         });
       } else {
         const errorText = await existingResponse.text();
-        console.warn("⚠️ [CALLBACK] Could not fetch existing integrations:", {
+        console.error("❌ [CALLBACK] Failed to fetch existing integrations:", {
           status: existingResponse.status,
           statusText: existingResponse.statusText,
-          body: errorText.substring(0, 200),
+          error: errorText,
         });
-        console.warn("⚠️ [CALLBACK] Proceeding to create new integration...");
       }
 
-      // Create or update integration
-      let saveResponse;
-      if (integrations.length > 0) {
-        const existingId = integrations[0].id;
-        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        console.log(
-          `🔄 [CALLBACK] Updating existing integration ID: ${existingId}`
-        );
-        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        console.log("🌐 [CALLBACK] PATCH request:", {
-          url: `${backendUrl}/api/facebook/${existingId}/`,
-          method: "PATCH",
-          dataKeys: Object.keys(integrationData),
-        });
+      // Track results for all pages
+      const results = {
+        created: [] as string[],
+        updated: [] as string[],
+        failed: [] as { page: string; error: string }[],
+      };
 
-        saveResponse = await fetch(
-          `${backendUrl}/api/facebook/${existingId}/`,
-          {
-            method: "PATCH",
-            headers: createHeaders(),
-            body: JSON.stringify(integrationData),
+      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      console.log(`🔄 [CALLBACK] Processing ${pages.length} page(s)...`);
+      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+
+      // Process each page
+      for (const page of pages) {
+        try {
+          console.log(
+            `\n📄 [CALLBACK] Processing page: ${page.name} (${page.id})`
+          );
+
+          // Check if page has MANAGE permission
+          if (page.tasks && !page.tasks.includes("MANAGE")) {
+            console.warn(
+              `⚠️ [CALLBACK] WARNING: Page "${page.name}" may not have MANAGE permission`
+            );
+            console.warn("⚠️ [CALLBACK] Available tasks:", page.tasks);
+          } else if (page.tasks?.includes("MANAGE")) {
+            console.log(
+              `✅ [CALLBACK] Page "${page.name}" has MANAGE permission`
+            );
           }
-        );
-      } else {
-        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        console.log("🔄 [CALLBACK] Creating new integration");
-        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        console.log("🌐 [CALLBACK] POST request:", {
-          url: `${backendUrl}/api/facebook/`,
-          method: "POST",
-          dataKeys: Object.keys(integrationData),
-        });
 
-        saveResponse = await fetch(`${backendUrl}/api/facebook/`, {
-          method: "POST",
-          headers: createHeaders(),
-          body: JSON.stringify(integrationData),
-        });
+          const integrationData = {
+            user_token: userAccessToken,
+            app_id: appId,
+            app_secret: appSecret,
+            page_id: page.id,
+            page_access_token: page.access_token,
+            page_name: page.name,
+            is_enabled: true,
+          };
+
+          console.log("📦 [CALLBACK] Integration data prepared:", {
+            page_id: page.id,
+            page_name: page.name,
+            app_id: appId.substring(0, 10) + "...",
+            is_enabled: true,
+            hasUserToken: !!userAccessToken,
+            hasAppSecret: !!appSecret,
+            hasPageAccessToken: !!page.access_token,
+          });
+
+          // Check if integration already exists for this page
+          const existingIntegration = existingIntegrations.find(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (i: any) => i.page_id === page.id
+          );
+
+          let saveResponse;
+
+          if (existingIntegration) {
+            console.log(
+              `🔄 [CALLBACK] Updating existing integration ID: ${existingIntegration.id} for page: ${page.name}`
+            );
+
+            saveResponse = await fetch(
+              `${backendUrl}/api/facebook/${existingIntegration.id}/`,
+              {
+                method: "PATCH",
+                headers: authenticatedHeaders,
+                body: JSON.stringify(integrationData),
+              }
+            );
+
+            if (saveResponse.ok) {
+              results.updated.push(page.name);
+              console.log(
+                `✅ [CALLBACK] Updated integration for: ${page.name}`
+              );
+            } else {
+              const errorText = await saveResponse.text();
+              results.failed.push({
+                page: page.name,
+                error: `Update failed (${saveResponse.status}): ${errorText}`,
+              });
+              console.error(`❌ [CALLBACK] Failed to update "${page.name}":`, {
+                status: saveResponse.status,
+                statusText: saveResponse.statusText,
+                error: errorText,
+              });
+            }
+          } else {
+            console.log(
+              `🆕 [CALLBACK] Creating new integration for page: ${page.name}`
+            );
+
+            saveResponse = await fetch(`${backendUrl}/api/facebook/`, {
+              method: "POST",
+              headers: authenticatedHeaders,
+              body: JSON.stringify(integrationData),
+            });
+
+            if (saveResponse.ok) {
+              results.created.push(page.name);
+              console.log(
+                `✅ [CALLBACK] Created integration for: ${page.name}`
+              );
+            } else {
+              const errorText = await saveResponse.text();
+              results.failed.push({
+                page: page.name,
+                error: `Creation failed (${saveResponse.status}): ${errorText}`,
+              });
+              console.error(`❌ [CALLBACK] Failed to create "${page.name}":`, {
+                status: saveResponse.status,
+                statusText: saveResponse.statusText,
+                error: errorText,
+              });
+            }
+          }
+
+          if (saveResponse?.ok) {
+            const savedData = await saveResponse.json();
+            console.log(`📦 [CALLBACK] Saved data for "${page.name}":`, {
+              id: savedData.data?.id || savedData.id,
+              page_id: savedData.data?.page_id || savedData.page_id,
+              page_name: savedData.data?.page_name || savedData.page_name,
+            });
+          }
+        } catch (pageError) {
+          const errorMessage =
+            pageError instanceof Error ? pageError.message : "Unknown error";
+          results.failed.push({ page: page.name, error: errorMessage });
+          console.error(
+            `❌ [CALLBACK] Error processing page "${page.name}":`,
+            errorMessage
+          );
+        }
       }
 
-      console.log("📊 [CALLBACK] Save operation response:", {
-        status: saveResponse.status,
-        statusText: saveResponse.statusText,
-        ok: saveResponse.ok,
-        contentType: saveResponse.headers.get("content-type"),
-      });
-
-      if (!saveResponse.ok) {
-        const errorText = await saveResponse.text();
-        console.error("❌ [CALLBACK] Failed to save integration:");
-        console.error("🔴 [CALLBACK] Error details:", {
-          status: saveResponse.status,
-          statusText: saveResponse.statusText,
-          body: errorText,
-        });
-        throw new Error(`Failed to save integration: ${errorText}`);
-      }
-
-      const savedData = await saveResponse.json();
       console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("✅ [CALLBACK] Integration saved successfully!");
+      console.log("🎉 [CALLBACK] Batch processing completed!");
       console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("📦 [CALLBACK] Saved integration data:", {
-        id: savedData.data?.id || savedData.id,
-        page_id: savedData.data?.page_id || savedData.page_id,
-        page_name: savedData.data?.page_name || savedData.page_name,
-        is_enabled: savedData.data?.is_enabled || savedData.is_enabled,
-        created_at: savedData.data?.created_at || savedData.created_at,
-        updated_at: savedData.data?.updated_at || savedData.updated_at,
-        fullResponse: JSON.stringify(savedData, null, 2),
+      console.log("📊 [CALLBACK] Summary:", {
+        created: results.created.length,
+        updated: results.updated.length,
+        failed: results.failed.length,
+        details: {
+          created: results.created,
+          updated: results.updated,
+          failed: results.failed,
+        },
       });
 
       // Build redirect URL with subdomain
@@ -379,11 +413,22 @@ export async function GET(request: Request) {
         ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.subDomain}.localhost:3000`)}`
         : process.env.NEXT_PUBLIC_BASE_URL;
 
-      const successUrl = `${redirectBaseUrl}/admin/settings/integrations?success=facebook_connected`;
+      // Build success message with details
+      const totalProcessed = results.created.length + results.updated.length;
+      let successMessage = `facebook_connected&total=${totalProcessed}`;
 
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("🎉 [CALLBACK] OAuth flow completed successfully!");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      if (results.created.length > 0) {
+        successMessage += `&created=${results.created.length}`;
+      }
+      if (results.updated.length > 0) {
+        successMessage += `&updated=${results.updated.length}`;
+      }
+      if (results.failed.length > 0) {
+        successMessage += `&failed=${results.failed.length}`;
+      }
+
+      const successUrl = `${redirectBaseUrl}/admin/settings/integrations?success=${successMessage}`;
+
       console.log("↗️ [CALLBACK] Redirecting to success page:", {
         redirectBaseUrl,
         fullUrl: successUrl,
@@ -395,13 +440,11 @@ export async function GET(request: Request) {
       console.error("❌❌❌ [CALLBACK] Error during OAuth callback");
       console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
-      // Get user for redirect
       const user = await getServerUser();
       const redirectBaseUrl = user?.subDomain
         ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.subDomain}.localhost:3000`)}`
         : process.env.NEXT_PUBLIC_BASE_URL;
 
-      // Enhanced error logging
       if (axios.isAxiosError(error)) {
         console.error("🔴 [CALLBACK] Axios error detected:");
         console.error("🔴 [CALLBACK] Error details:", {
@@ -409,20 +452,10 @@ export async function GET(request: Request) {
           status: error.response?.status,
           statusText: error.response?.statusText,
           data: JSON.stringify(error.response?.data, null, 2),
-          config: {
-            url: error.config?.url,
-            method: error.config?.method,
-            params: error.config?.params,
-          },
         });
 
         const fbError = error.response?.data?.error;
         const errorMessage = fbError?.message || error.message;
-
-        console.error(
-          "↗️ [CALLBACK] Redirecting to error page with message:",
-          errorMessage
-        );
 
         return NextResponse.redirect(
           `${redirectBaseUrl}/admin/settings/integrations?error=${encodeURIComponent(
@@ -437,11 +470,8 @@ export async function GET(request: Request) {
       console.error("🔴 [CALLBACK] General error:", {
         message: errorMessage,
         type: error?.constructor?.name || "Unknown",
-        error: error,
         stack: error instanceof Error ? error.stack : undefined,
       });
-
-      console.error("↗️ [CALLBACK] Redirecting to error page");
 
       return NextResponse.redirect(
         `${redirectBaseUrl}/admin/settings/integrations?error=${encodeURIComponent(
@@ -455,14 +485,11 @@ export async function GET(request: Request) {
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log("❌ [CALLBACK] Invalid callback - no code or error");
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log("🔴 [CALLBACK] Missing required parameters in URL");
 
   const user = await getServerUser();
   const redirectBaseUrl = user?.subDomain
     ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.subDomain}.localhost:3000`)}`
     : process.env.NEXT_PUBLIC_BASE_URL;
-
-  console.log("↗️ [CALLBACK] Redirecting to error page");
 
   return NextResponse.redirect(
     `${redirectBaseUrl}/admin/settings/integrations?error=${encodeURIComponent(

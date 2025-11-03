@@ -42,15 +42,9 @@ export function FacebookLoginButton({
 
     try {
       if (isConnected) {
-        console.log("🔴 [FacebookLoginButton] Initiating disconnect...");
         await disconnectFacebook();
-        console.log("✅ [FacebookLoginButton] Disconnect completed");
       } else {
-        console.log("🔵 [FacebookLoginButton] Initiating connect...");
         await connectFacebook();
-        console.log(
-          "✅ [FacebookLoginButton] Connect initiated (redirecting to Facebook)"
-        );
       }
     } catch (error) {
       console.error("❌ [FacebookLoginButton] Error during action:", {
@@ -65,8 +59,6 @@ export function FacebookLoginButton({
     : isConnected
       ? "Disconnect Facebook"
       : text;
-
-  console.log("📝 [FacebookLoginButton] Button text:", buttonText);
 
   return (
     <Button
