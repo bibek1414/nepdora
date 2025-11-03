@@ -171,7 +171,8 @@ export default function MessagingPage() {
               conversationId,
               sender: msg.from.id === pageId ? "You" : msg.from.name,
               content: msg.message,
-              timestamp: formatTimestamp(msg.created_time),
+              // Keep raw ISO so sorting works in ChatWindow
+              timestamp: msg.created_time,
               isOwn: msg.from.id === pageId,
               senderProfilePic: msg.from.profile_pic, // This now comes from the API
             };
@@ -191,22 +192,107 @@ export default function MessagingPage() {
   useEffect(() => {
     if (isIntegrationReady) {
       fetchConversations();
-      const interval = setInterval(fetchConversations, 30000);
+      // Reduce polling frequency since we have SSE for real-time updates
+      const interval = setInterval(fetchConversations, 60000); // Every minute
       return () => clearInterval(interval);
     }
   }, [isIntegrationReady, fetchConversations]);
 
   useEffect(() => {
-    if (selectedConversation && pageAccessToken) {
+    if (selectedConversation && pageAccessToken && pageId) {
+      // Fetch initial messages
       fetchMessages(selectedConversation);
 
-      const interval = setInterval(() => {
-        fetchMessages(selectedConversation);
-      }, 5000);
+      // Get participant ID for better message matching
+      const selectedConv = conversations.find(
+        c => c.id === selectedConversation
+      );
+      const participantId = selectedConv?.participantId || "";
 
-      return () => clearInterval(interval);
+      // Set up SSE connection for real-time updates
+      const streamUrl = `/api/facebook/messages/stream?conversationId=${selectedConversation}&pageId=${pageId}${participantId ? `&senderId=${participantId}` : ""}`;
+      const eventSource = new EventSource(streamUrl);
+
+      eventSource.onopen = () => {
+        console.log("SSE connected");
+      };
+
+      eventSource.onmessage = event => {
+        try {
+          const data = JSON.parse(event.data);
+
+          if (data.type === "heartbeat") {
+            // keep-alive
+            return;
+          }
+
+          if (data.type === "connected") {
+            console.log("SSE connected event received");
+            return;
+          }
+
+          if (data.type === "message" && data.data) {
+            const webhookMessage = data.data;
+
+            // Convert webhook message format to our Message format
+            const newMessage: Message = {
+              id: webhookMessage.id,
+              conversationId: webhookMessage.conversationId,
+              sender:
+                webhookMessage.from.id === pageId
+                  ? "You"
+                  : webhookMessage.from.name,
+              content: webhookMessage.message,
+              timestamp: webhookMessage.created_time,
+              isOwn: webhookMessage.from.id === pageId,
+              senderProfilePic: webhookMessage.from.profile_pic,
+            };
+
+            // Add message if it doesn't already exist
+            setMessages(prev => {
+              const exists = prev.some(m => m.id === newMessage.id);
+              if (exists) {
+                return prev;
+              }
+              return [...prev, newMessage];
+            });
+
+            // Update conversation list to show new message
+            setConversations(prev =>
+              prev.map(conv => {
+                if (conv.id === selectedConversation) {
+                  return {
+                    ...conv,
+                    lastMessage: webhookMessage.message,
+                    timestamp: formatTimestamp(webhookMessage.created_time),
+                    unread: true,
+                  };
+                }
+                return conv;
+              })
+            );
+          }
+        } catch (error) {
+          console.error("Error parsing SSE message:", error);
+        }
+      };
+
+      eventSource.onerror = error => {
+        console.error("SSE connection error (will auto-retry):", error);
+        // Do not manually close; EventSource will auto-reconnect
+      };
+
+      return () => {
+        eventSource.close();
+      };
     }
-  }, [selectedConversation, pageAccessToken, fetchMessages]);
+  }, [
+    selectedConversation,
+    pageAccessToken,
+    pageId,
+    fetchMessages,
+    conversations,
+  ]);
 
   const handleSendMessage = async (content: string) => {
     if (!selectedConversation || !pageAccessToken) return;
