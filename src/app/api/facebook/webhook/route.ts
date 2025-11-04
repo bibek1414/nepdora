@@ -92,79 +92,132 @@ export async function GET(request: NextRequest) {
   return new NextResponse("Verification token mismatch", { status: 403 });
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
-    console.log("Received webhook event:", JSON.stringify(body, null, 2));
+    const body = await req.json();
 
-    // Handle different types of updates
+    console.log("🎯 WEBHOOK CALLED - Checking if message is being processed");
+    console.log("📦 Raw webhook body:", JSON.stringify(body, null, 2));
+
     if (body.object === "page") {
+      console.log("✅ Valid page object detected");
+
       for (const entry of body.entry) {
-        const pageId = entry.id; // Page ID from webhook
+        console.log(`📄 Processing entry: ${entry.id}`);
 
-        // Handle messages
-        if (entry.messaging) {
-          for (const event of entry.messaging) {
-            console.log("Received message event:", event);
+        for (const event of entry.messaging || []) {
+          console.log(
+            "💬 Processing messaging event:",
+            JSON.stringify(event, null, 2)
+          );
 
-            // Only process messages (not postbacks, deliveries, etc.)
-            if (event.message && event.message.text) {
-              const senderId = event.sender?.id;
-              const recipientId = event.recipient?.id; // This should be the page ID
-              const messageText = event.message.text;
-              const messageId = event.message.mid;
-              const timestamp = event.timestamp
-                ? new Date(event.timestamp).toISOString()
-                : new Date().toISOString();
+          const senderId = event.sender?.id;
+          const recipientId = event.recipient?.id;
+          const message = event.message?.text;
+          const messageId = event.message?.mid;
+          const timestamp = event.timestamp;
 
-              if (!senderId || !recipientId || !messageId) {
-                console.warn(
-                  "Missing required fields in message event:",
-                  event
-                );
-                continue;
-              }
+          console.log("🔍 Extracted values:");
+          console.log(`   senderId: ${senderId}`);
+          console.log(`   recipientId: ${recipientId}`);
+          console.log(`   message: "${message}"`);
+          console.log(`   messageId: ${messageId}`);
+          console.log(`   timestamp: ${timestamp}`);
 
-              // Skip if message is from the page itself
-              if (senderId === recipientId || senderId === pageId) {
-                continue;
-              }
+          if (!message) {
+            console.log("⏩ SKIPPING - No text message found in event");
+            continue;
+          }
 
-              // Get conversation ID and sender name asynchronously
-              // We'll need the page access token - but webhook doesn't provide it
-              // For now, we'll use a fallback approach
-              const conversationId = `t_${recipientId}_${senderId}`;
+          if (!senderId || !recipientId) {
+            console.log("⏩ SKIPPING - Missing senderId or recipientId");
+            continue;
+          }
 
-              // Try to get sender name (this might fail without access token)
-              // In production, you'd want to store page access tokens per page ID
-              const senderName = "Unknown User";
+          // 🎯 CRITICAL: Check conversation ID construction
+          const conversationId = `t_${recipientId}_${senderId}`;
+          const alternativeConversationId = `t_${recipientId}_${senderId}`;
 
-              // Store the message in the message store
-              messageStore.addMessage({
-                id: messageId,
-                conversationId,
-                message: messageText,
-                from: {
-                  id: senderId,
-                  name: senderName,
-                },
-                created_time: timestamp,
-                pageId: recipientId,
-                senderId: senderId, // Store for mapping
-              });
+          console.log("🏷️ Conversation IDs:");
+          console.log(`   Primary: ${conversationId}`);
+          console.log(`   Alternative: ${alternativeConversationId}`);
+          console.log(
+            `   From your logs: t_122170001792604595 (expected: t_775429945664166_32173745775573579)`
+          );
 
+          // Format timestamp properly
+          const formattedTimestamp = timestamp
+            ? new Date(timestamp * 1000).toISOString()
+            : new Date().toISOString();
+
+          // Note: Sender name will be fetched when conversations are loaded
+          // For webhook, we use a placeholder - the conversation list will have proper names
+          const messageData = {
+            id:
+              messageId ||
+              `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            conversationId: conversationId,
+            message: message,
+            from: {
+              id: senderId,
+              name: "Facebook User", // Will be updated when conversation is loaded
+              profile_pic: undefined,
+            },
+            created_time: formattedTimestamp,
+            pageId: recipientId,
+            senderId: senderId,
+          };
+
+          console.log("💾 Attempting to store message:");
+          console.log(JSON.stringify(messageData, null, 2));
+
+          try {
+            // Store the message
+            messageStore.addMessage(messageData);
+            console.log("✅ SUCCESS: Message stored in messageStore");
+
+            // Verify storage
+            const storedMessages = messageStore.getMessages(conversationId);
+            console.log(
+              `📋 Verification: Found ${storedMessages.length} messages for conversation ${conversationId}`
+            );
+
+            if (storedMessages.length > 0) {
               console.log(
-                `Stored new message: ${messageId} for conversation: ${conversationId}`
+                "📝 Latest stored message:",
+                storedMessages[storedMessages.length - 1]
               );
             }
+          } catch (storeError) {
+            console.error("❌ FAILED to store message:", storeError);
           }
+
+          // Also try the alternative conversation ID format
+          const alternativeData = {
+            ...messageData,
+            conversationId: alternativeConversationId,
+          };
+
+          console.log("🔄 Also storing with alternative conversation ID:");
+          messageStore.addMessage(alternativeData);
+
+          const altStoredMessages = messageStore.getMessages(
+            alternativeConversationId
+          );
+          console.log(
+            `📋 Alternative verification: Found ${altStoredMessages.length} messages for ${alternativeConversationId}`
+          );
+
+          console.log("📊 Final message store stats:", messageStore.getStats());
         }
       }
+    } else {
+      console.log("❌ Not a page object - webhook structure may be different");
     }
 
     return new NextResponse("EVENT_RECEIVED", { status: 200 });
-  } catch (error) {
-    console.error("Error handling webhook:", error);
-    return new NextResponse("Error processing webhook", { status: 500 });
+  } catch (err) {
+    console.error("💥 CRITICAL ERROR in webhook:", err);
+    return new NextResponse("Error", { status: 500 });
   }
 }

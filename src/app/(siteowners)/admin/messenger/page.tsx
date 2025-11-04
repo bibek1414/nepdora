@@ -8,7 +8,6 @@ import { useFacebookApi } from "@/services/api/owner-sites/admin/facebook";
 import {
   getConversations,
   sendMessage as sendFacebookMessage,
-  formatTimestamp,
 } from "@/lib/facebook";
 
 // Updated interface to include profile_pic
@@ -108,25 +107,35 @@ export default function MessagingPage() {
       const formattedConversations = fbConversations.map(conv => {
         const participant = conv.participants.data.find(p => p.id !== pageId);
         const lastMessage = conv.messages?.data[0];
+        // Store raw ISO timestamp for sorting (most recent first)
+        const rawTimestamp = lastMessage?.created_time || conv.updated_time;
 
         return {
           id: conv.id,
           name: participant?.name || "Unknown User",
           avatar: participant?.profile_pic,
           lastMessage: lastMessage?.message || "No messages",
-          timestamp: formatTimestamp(
-            lastMessage?.created_time || conv.updated_time
-          ),
+          timestamp: rawTimestamp, // Store raw ISO timestamp for sorting
           unread: (conv.unread_count || 0) > 0,
           participantId: participant?.id || "",
         };
       });
 
-      setConversations(formattedConversations);
+      setConversations(prev => {
+        // Only update if we have new conversations or if list is empty
+        if (prev.length === 0 || formattedConversations.length > 0) {
+          return formattedConversations;
+        }
+        return prev;
+      });
 
-      if (formattedConversations.length > 0 && !selectedConversation) {
-        setSelectedConversation(formattedConversations[0].id);
-      }
+      // Only set selected conversation if none is selected
+      setSelectedConversation(current => {
+        if (!current && formattedConversations.length > 0) {
+          return formattedConversations[0].id;
+        }
+        return current;
+      });
 
       setError(null);
     } catch (err) {
@@ -137,7 +146,7 @@ export default function MessagingPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [isIntegrationReady, pageId, pageAccessToken, selectedConversation]);
+  }, [isIntegrationReady, pageId, pageAccessToken]);
 
   const fetchMessages = useCallback(
     async (conversationId: string) => {
@@ -190,13 +199,102 @@ export default function MessagingPage() {
   );
 
   useEffect(() => {
-    if (isIntegrationReady) {
+    if (isIntegrationReady && pageId) {
       fetchConversations();
-      // Reduce polling frequency since we have SSE for real-time updates
-      const interval = setInterval(fetchConversations, 60000); // Every minute
-      return () => clearInterval(interval);
     }
-  }, [isIntegrationReady, fetchConversations]);
+  }, [isIntegrationReady, pageId, pageAccessToken]);
+
+  // Real-time conversation list updates via page-level webhook stream
+  useEffect(() => {
+    if (!isIntegrationReady || !pageId) return;
+
+    console.log("🔌 Setting up page-level conversation stream");
+    const pageStream = new EventSource(
+      `/api/facebook/conversations/page-stream?pageId=${pageId}`
+    );
+
+    pageStream.onopen = () => {
+      console.log("✅ Page-level conversation stream connected");
+    };
+
+    pageStream.onmessage = event => {
+      try {
+        const data = JSON.parse(event.data);
+
+        if (data.type === "heartbeat" || data.type === "connected") {
+          return;
+        }
+
+        if (data.type === "conversation_update" && data.data) {
+          const update = data.data as {
+            conversationId: string;
+            pageId: string;
+            lastMessage: string;
+            created_time: string;
+            from: { id: string; name: string; profile_pic?: string };
+            senderId: string;
+          };
+
+          console.log(
+            "📨 Conversation update received:",
+            update.conversationId
+          );
+
+          // Update conversation list - timestamp update will move to top via sorting
+          setConversations(prev => {
+            // Try to find conversation by exact ID or by matching participant ID
+            const existing = prev.find(
+              c =>
+                c.id === update.conversationId ||
+                c.participantId === update.senderId
+            );
+
+            if (existing) {
+              // Update existing conversation - sorting will handle moving to top
+              return prev.map(conv => {
+                if (conv.id === existing.id) {
+                  return {
+                    ...conv,
+                    id: update.conversationId, // Update to normalized ID if different
+                    lastMessage: update.lastMessage,
+                    timestamp: update.created_time, // Update timestamp - sorting will move to top
+                    unread: true,
+                    participantId: update.senderId,
+                  };
+                }
+                return conv;
+              });
+            } else {
+              // New conversation - add to top
+              const newConversation: Conversation = {
+                id: update.conversationId,
+                name: update.from.name || "Unknown User",
+                avatar: update.from.profile_pic,
+                lastMessage: update.lastMessage,
+                timestamp: update.created_time,
+                unread: true,
+                participantId: update.senderId,
+              };
+
+              // Add to beginning - sorting will ensure proper order
+              return [newConversation, ...prev];
+            }
+          });
+        }
+      } catch (e) {
+        console.error("Error parsing page-level SSE message:", e);
+      }
+    };
+
+    pageStream.onerror = err => {
+      console.error("Page-level conversation SSE error (auto-retry):", err);
+    };
+
+    return () => {
+      console.log("🔌 Closing page-level conversation stream");
+      pageStream.close();
+    };
+  }, [isIntegrationReady, pageId]);
 
   useEffect(() => {
     if (selectedConversation && pageAccessToken && pageId) {
@@ -210,7 +308,7 @@ export default function MessagingPage() {
       const participantId = selectedConv?.participantId || "";
 
       // Set up SSE connection for real-time updates
-      const streamUrl = `/api/facebook/messages/stream?conversationId=${selectedConversation}&pageId=${pageId}${participantId ? `&senderId=${participantId}` : ""}`;
+      const streamUrl = `/api/facebook/conversations/stream?conversationId=${selectedConversation}&pageId=${pageId}${participantId ? `&senderId=${participantId}` : ""}`;
       const eventSource = new EventSource(streamUrl);
 
       eventSource.onopen = () => {
@@ -231,7 +329,10 @@ export default function MessagingPage() {
             return;
           }
 
-          if (data.type === "message" && data.data) {
+          if (
+            (data.type === "new_message" || data.type === "existing_message") &&
+            data.data
+          ) {
             const webhookMessage = data.data;
 
             // Convert webhook message format to our Message format
@@ -257,20 +358,27 @@ export default function MessagingPage() {
               return [...prev, newMessage];
             });
 
-            // Update conversation list to show new message
-            setConversations(prev =>
-              prev.map(conv => {
+            // Update conversation list to show new message and move to top
+            setConversations(prev => {
+              const updated = prev.map(conv => {
                 if (conv.id === selectedConversation) {
                   return {
                     ...conv,
                     lastMessage: webhookMessage.message,
-                    timestamp: formatTimestamp(webhookMessage.created_time),
+                    timestamp: webhookMessage.created_time, // Store raw ISO timestamp
                     unread: true,
                   };
                 }
                 return conv;
-              })
-            );
+              });
+
+              // Move updated conversation to top (sorting will be handled by conversation-list)
+              const updatedConv = updated.find(
+                c => c.id === selectedConversation
+              );
+              const others = updated.filter(c => c.id !== selectedConversation);
+              return updatedConv ? [updatedConv, ...others] : updated;
+            });
           }
         } catch (error) {
           console.error("Error parsing SSE message:", error);
@@ -286,13 +394,7 @@ export default function MessagingPage() {
         eventSource.close();
       };
     }
-  }, [
-    selectedConversation,
-    pageAccessToken,
-    pageId,
-    fetchMessages,
-    conversations,
-  ]);
+  }, [selectedConversation, pageAccessToken, pageId]);
 
   const handleSendMessage = async (content: string) => {
     if (!selectedConversation || !pageAccessToken) return;
@@ -322,7 +424,28 @@ export default function MessagingPage() {
         pageAccessToken
       );
 
+      // Update conversation timestamp to move it to top
+      const now = new Date().toISOString();
+      setConversations(prev => {
+        const updated = prev.map(conv => {
+          if (conv.id === selectedConversation) {
+            return {
+              ...conv,
+              lastMessage: content,
+              timestamp: now, // Update timestamp to move to top
+            };
+          }
+          return conv;
+        });
+
+        // Move updated conversation to top (sorting will be handled by conversation-list)
+        const updatedConv = updated.find(c => c.id === selectedConversation);
+        const others = updated.filter(c => c.id !== selectedConversation);
+        return updatedConv ? [updatedConv, ...others] : updated;
+      });
+
       await fetchMessages(selectedConversation);
+      // Optionally refresh conversations list (but sorting will handle positioning)
       fetchConversations();
     } catch (err) {
       console.error("Error sending message:", err);
