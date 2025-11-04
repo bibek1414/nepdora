@@ -11,7 +11,7 @@ interface Conversation {
   name: string;
   avatar?: string;
   lastMessage: string;
-  timestamp: string;
+  timestamp: string; // ISO timestamp string for sorting
   unread: boolean;
   participantId?: string;
 }
@@ -29,7 +29,15 @@ export function ConversationList({
 }: ConversationListProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredConversations = conversations.filter(
+  // Sort conversations by timestamp (most recent first) - like Messenger
+  const sortedConversations = [...conversations].sort((a, b) => {
+    const timeA = new Date(a.timestamp).getTime();
+    const timeB = new Date(b.timestamp).getTime();
+    // Most recent first (descending order)
+    return timeB - timeA;
+  });
+
+  const filteredConversations = sortedConversations.filter(
     conv =>
       conv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       conv.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios, { AxiosError } from "axios";
 import { orderApi } from "@/services/api/owner-sites/admin/orders";
+import { messageStore } from "@/lib/message-store";
 
 // Types for Wit.ai response
 interface WitEntity {
@@ -44,29 +45,90 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// ✅ 2. Facebook sends messages here
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    console.log("📩 Received webhook event:", JSON.stringify(body, null, 2));
+
+    // 🎯 ENHANCED LOGGING - This will show in your terminal
+    console.log("=".repeat(80));
+    console.log("📩 REAL-TIME WEBHOOK EVENT RECEIVED");
+    console.log("=".repeat(80));
+    console.log("📦 Full Webhook Payload:");
+    console.log(JSON.stringify(body, null, 2));
+    console.log("-".repeat(80));
 
     if (body.object === "page") {
       for (const entry of body.entry) {
+        console.log(`🏢 Page ID: ${entry.id}`);
+        console.log(`⏰ Time: ${entry.time}`);
+
         for (const event of entry.messaging || []) {
           const senderId = event.sender.id;
           const message = event.message?.text;
+          const recipientId = event.recipient?.id;
+          const messageId = event.message?.mid;
+          const timestamp = event.timestamp;
 
-          if (!message) continue;
-          console.log(`💬 Message from ${senderId}: ${message}`);
+          console.log("💬 Message Details:");
+          console.log(`   Sender ID: ${senderId}`);
+          console.log(`   Recipient ID: ${recipientId}`);
+          console.log(`   Message ID: ${messageId}`);
+          console.log(`   Timestamp: ${timestamp}`);
+          console.log(`   Message: "${message}"`);
+          console.log(
+            `   Message Type: ${event.message?.attachments ? "With Attachments" : "Text"}`
+          );
 
-          // 🧠 Step 1: Validate message and token
-          if (!message.trim()) {
-            console.log("Empty message received, skipping");
+          if (event.message?.attachments) {
+            console.log(
+              `   Attachments: ${JSON.stringify(event.message.attachments)}`
+            );
+          }
+
+          if (!message) {
+            console.log("⏩ Skipping - No text message");
             continue;
           }
 
+          // 🎯 REAL-TIME MESSAGE STORAGE
+          try {
+            if (recipientId && messageId) {
+              const formattedTimestamp = timestamp
+                ? new Date(timestamp * 1000).toISOString()
+                : new Date().toISOString();
+
+              const conversationId = `t_${recipientId}_${senderId}`;
+
+              const messageData = {
+                id: messageId,
+                conversationId,
+                message,
+                from: {
+                  id: senderId,
+                  name: "Facebook User",
+                  profile_pic: undefined,
+                },
+                created_time: formattedTimestamp,
+                pageId: recipientId,
+                senderId,
+              };
+
+              console.log("💾 Storing message in real-time store:");
+              console.log(JSON.stringify(messageData, null, 2));
+
+              messageStore.addMessage(messageData);
+
+              console.log("✅ Message successfully stored in real-time store");
+            }
+          } catch (storeError) {
+            console.error("❌ Failed to add message to store:", storeError);
+          }
+
+          // 🧠 Process with Wit.ai (your existing logic)
+          console.log("🤖 Processing with Wit.ai...");
+
           if (!WIT_TOKEN) {
-            console.error("WIT_TOKEN is not configured");
+            console.error("❌ WIT_TOKEN is not configured");
             await sendFBMessage(
               senderId,
               "Sorry, there was an error processing your message. Please try again later."
@@ -76,27 +138,21 @@ export async function POST(req: NextRequest) {
 
           let entities: WitEntities = {};
           try {
-            // Send message to Wit.ai
             const witRes = await axios.get("https://api.wit.ai/message", {
-              params: {
-                q: message,
-                v: "20231030", // Using the latest stable API version
-              },
+              params: { q: message, v: "20231030" },
               headers: {
                 Authorization: `Bearer ${WIT_TOKEN}`,
                 "Content-Type": "application/json",
               },
-              timeout: 5000, // 5 second timeout
+              timeout: 5000,
             });
 
             if (witRes.data && witRes.data.entities) {
               entities = witRes.data.entities;
-              console.log(
-                "🧠 Wit Entities:",
-                JSON.stringify(entities, null, 2)
-              );
+              console.log("🧠 Wit.ai Entities Detected:");
+              console.log(JSON.stringify(entities, null, 2));
             } else {
-              console.log("No entities found in Wit.ai response");
+              console.log("ℹ️ No entities found in Wit.ai response");
             }
           } catch (error: unknown) {
             const errorMessage =
@@ -105,41 +161,42 @@ export async function POST(req: NextRequest) {
                 : error instanceof Error
                   ? error.message
                   : "Unknown error";
-
-            console.error("Error calling Wit.ai:", errorMessage);
-            // Continue with empty entities to allow manual order creation
+            console.error("❌ Error calling Wit.ai:", errorMessage);
             entities = {};
           }
 
-          // 🧩 Step 2: Extract entity values with fallbacks
+          // Extract entities and create order (your existing logic)
           const name = entities["name:name"]?.[0]?.value || "Facebook User";
           const phone = entities["phone_number:phone_number"]?.[0]?.value || "";
           const address = entities["address:address"]?.[0]?.value || "";
-
-          // Try different entity names that might contain the order item
           const item =
             entities["order_item:order_item"]?.[0]?.value ||
             entities["product:product"]?.[0]?.value ||
             entities["item:item"]?.[0]?.value ||
             "";
-
-          // Ensure quantity is a number
           const quantity = Number(
             entities["quantity:quantity"]?.[0]?.value ||
               entities["number:number"]?.[0]?.value ||
               1
           );
 
+          console.log("📋 Extracted Order Details:");
+          console.log(`   Name: ${name}`);
+          console.log(`   Phone: ${phone}`);
+          console.log(`   Address: ${address}`);
+          console.log(`   Item: ${item}`);
+          console.log(`   Quantity: ${quantity}`);
+
           if (!item) {
-            // Ask user again if Wit couldn’t detect order item
+            console.log("❓ No item detected - asking user for clarification");
             await sendFBMessage(
               senderId,
-              "Sorry 😔, I couldn’t detect what you want to order. Could you please specify the item?"
+              "Sorry 😔, I couldn't detect what you want to order. Could you please specify the item?"
             );
             continue;
           }
 
-          // 🛒 Step 3: Create manual order via your Django API
+          // Create order (your existing logic)
           const orderData = {
             customer_name: name || "Facebook User",
             customer_email: `${senderId}@facebook.com`,
@@ -151,11 +208,11 @@ export async function POST(req: NextRequest) {
             delivery_charge: "0.00",
             items: [
               {
-                product_id: 0, // Will need to be mapped to an actual product ID
+                product_id: 0,
                 quantity: quantity,
                 price: "0.00",
                 product: {
-                  id: 0, // Map to actual product ID
+                  id: 0,
                   name: item || "Product",
                   slug: item
                     ? item.toLowerCase().replace(/\s+/g, "-")
@@ -176,14 +233,15 @@ export async function POST(req: NextRequest) {
           };
 
           try {
+            console.log("🛒 Creating order in database...");
             const newOrder = await orderApi.createOrder(orderData);
-            console.log("✅ Order created:", newOrder);
+            console.log("✅ Order created successfully:", newOrder);
 
-            // 💬 Step 4: Send confirmation back
             await sendFBMessage(
               senderId,
               `✅ Order received for ${quantity} ${item} to ${address || "your address"}.\nThank you, ${name || "there"}!`
             );
+            console.log("📤 Confirmation message sent to user");
           } catch (err) {
             console.error("❌ Error creating order:", err);
             await sendFBMessage(
@@ -191,20 +249,29 @@ export async function POST(req: NextRequest) {
               "Sorry, something went wrong while placing your order."
             );
           }
+
+          console.log("-".repeat(80));
         }
       }
+    } else {
+      console.log("⚠️ Not a page event - skipping");
     }
+
+    console.log("=".repeat(80));
+    console.log("✅ Webhook processing completed");
+    console.log("=".repeat(80));
 
     return new NextResponse("EVENT_RECEIVED", { status: 200 });
   } catch (err) {
-    console.error("❌ Error in webhook:", err);
+    console.error("❌ CRITICAL ERROR in webhook:", err);
     return new NextResponse("Error", { status: 500 });
   }
 }
 
-// Helper function to send messages back to Facebook
+// Helper function remains the same
 async function sendFBMessage(recipientId: string, text: string) {
   try {
+    console.log(`📤 Sending message to ${recipientId}: "${text}"`);
     await fetch(
       `https://graph.facebook.com/v19.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`,
       {
@@ -216,6 +283,7 @@ async function sendFBMessage(recipientId: string, text: string) {
         }),
       }
     );
+    console.log("✅ Message sent successfully");
   } catch (err) {
     console.error("❌ Failed to send FB message:", err);
   }
