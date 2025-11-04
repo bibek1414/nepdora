@@ -2,13 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import axios, { AxiosError } from "axios";
 import { orderApi } from "@/services/api/owner-sites/admin/orders";
 import { messageStore } from "@/lib/message-store";
+import { getApiBaseUrl } from "@/config/site";
+import { cookies } from "next/headers";
+import { decodeJWT, isTokenExpired, JWTPayload } from "@/lib/jwt-utils";
 
 // Types for Wit.ai response
 interface WitEntity {
   value: string;
   confidence: number;
   type?: string;
-  // Add other Wit.ai entity properties as needed
 }
 
 interface WitEntities {
@@ -22,13 +24,78 @@ interface WitResponse {
   entities: WitEntities;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   traits: any;
-  // Add other Wit.ai response properties as needed
 }
 
 const VERIFY_TOKEN =
   process.env.FACEBOOK_VERIFY_TOKEN || "nepdora_verify_token";
 const WIT_TOKEN = process.env.NEXT_PUBLIC_WIT_API_KEY;
 const PAGE_ACCESS_TOKEN = process.env.NEXT_PUBLIC_PAGE_ACCESS_TOKEN;
+
+// ✅ Helper function to get subdomain from JWT
+async function getSubdomainFromJWT(): Promise<string | null> {
+  try {
+    const cookieStore = await cookies();
+    const authToken = cookieStore.get("authToken")?.value;
+
+    if (!authToken) {
+      console.warn("⚠️ No authToken found in cookies");
+      return null;
+    }
+
+    const payload = decodeJWT(authToken) as JWTPayload;
+
+    if (!payload || isTokenExpired(payload.exp)) {
+      console.warn("⚠️ JWT token is invalid or expired");
+      return null;
+    }
+
+    console.log("🔑 Subdomain from JWT:", payload.sub_domain);
+    return payload.sub_domain;
+  } catch (error) {
+    console.error("❌ Error extracting subdomain from JWT:", error);
+    return null;
+  }
+}
+
+// ✅ Helper function to post transformed webhook data to dynamic API
+async function postWebhookDataToApi(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  messageData: any,
+  subdomain?: string | null
+) {
+  try {
+    // Use subdomain from JWT if available, otherwise fallback to default
+    const actualSubdomain = subdomain || "vapebox";
+
+    const webhookApiEndpoint = `https://${actualSubdomain}.nepdora.baliyoventures.com/api/webhook/`;
+
+    console.log("🌐 Posting transformed message data to:", webhookApiEndpoint);
+    console.log(`   Using subdomain: ${actualSubdomain}`);
+    console.log("📦 Message data being sent:");
+    console.log(JSON.stringify(messageData, null, 2));
+
+    const response = await axios.post(webhookApiEndpoint, messageData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      timeout: 10000,
+    });
+
+    console.log("✅ Successfully posted to API:", response.status);
+    console.log("📥 API Response:", JSON.stringify(response.data, null, 2));
+
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error instanceof AxiosError
+        ? error.response?.data || error.message
+        : error instanceof Error
+          ? error.message
+          : "Unknown error";
+    console.error("❌ Failed to post webhook data to API:", errorMessage);
+    throw error;
+  }
+}
 
 // ✅ 1. Facebook verifies your webhook
 export async function GET(req: NextRequest) {
@@ -49,7 +116,14 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    // 🎯 ENHANCED LOGGING - This will show in your terminal
+    // 🔑 Extract subdomain from JWT at the start of processing
+    const subdomain = await getSubdomainFromJWT();
+    console.log(
+      "🏪 Processing webhook for subdomain:",
+      subdomain || "default (vapebox)"
+    );
+
+    // 🎯 ENHANCED LOGGING
     console.log("=".repeat(80));
     console.log("📩 REAL-TIME WEBHOOK EVENT RECEIVED");
     console.log("=".repeat(80));
@@ -90,41 +164,48 @@ export async function POST(req: NextRequest) {
             continue;
           }
 
-          // 🎯 REAL-TIME MESSAGE STORAGE
+          // 🎯 PREPARE MESSAGE DATA FOR API
+          const formattedTimestamp = timestamp
+            ? new Date(timestamp).toISOString()
+            : new Date().toISOString();
+
+          const conversationId = `t_${senderId}`;
+
+          const messageData = {
+            id: messageId,
+            conversationId,
+            message,
+            from: {
+              id: senderId,
+              name: "Facebook User",
+            },
+            created_time: formattedTimestamp,
+            pageId: recipientId,
+            senderId,
+            subdomain: subdomain || "vapebox", // Include subdomain in message data
+          };
+
+          console.log("💾 Prepared message data:");
+          console.log(JSON.stringify(messageData, null, 2));
+
+          // 🌐 POST TO DYNAMIC API FIRST (with subdomain)
           try {
-            if (recipientId && messageId) {
-              const formattedTimestamp = timestamp
-                ? new Date(timestamp * 1000).toISOString()
-                : new Date().toISOString();
+            await postWebhookDataToApi(messageData, subdomain);
+          } catch (apiError) {
+            console.error(
+              "⚠️ Warning: Failed to post to API, continuing webhook processing..."
+            );
+          }
 
-              const conversationId = `t_${recipientId}_${senderId}`;
-
-              const messageData = {
-                id: messageId,
-                conversationId,
-                message,
-                from: {
-                  id: senderId,
-                  name: "Facebook User",
-                  profile_pic: undefined,
-                },
-                created_time: formattedTimestamp,
-                pageId: recipientId,
-                senderId,
-              };
-
-              console.log("💾 Storing message in real-time store:");
-              console.log(JSON.stringify(messageData, null, 2));
-
-              messageStore.addMessage(messageData);
-
-              console.log("✅ Message successfully stored in real-time store");
-            }
+          // 🎯 STORE IN LOCAL MESSAGE STORE
+          try {
+            messageStore.addMessage(messageData);
+            console.log("✅ Message successfully stored in real-time store");
           } catch (storeError) {
             console.error("❌ Failed to add message to store:", storeError);
           }
 
-          // 🧠 Process with Wit.ai (your existing logic)
+          // 🧠 Process with Wit.ai
           console.log("🤖 Processing with Wit.ai...");
 
           if (!WIT_TOKEN) {
@@ -165,7 +246,7 @@ export async function POST(req: NextRequest) {
             entities = {};
           }
 
-          // Extract entities and create order (your existing logic)
+          // Extract entities and create order
           const name = entities["name:name"]?.[0]?.value || "Facebook User";
           const phone = entities["phone_number:phone_number"]?.[0]?.value || "";
           const address = entities["address:address"]?.[0]?.value || "";
@@ -186,6 +267,7 @@ export async function POST(req: NextRequest) {
           console.log(`   Address: ${address}`);
           console.log(`   Item: ${item}`);
           console.log(`   Quantity: ${quantity}`);
+          console.log(`   Subdomain: ${subdomain || "vapebox"}`);
 
           if (!item) {
             console.log("❓ No item detected - asking user for clarification");
@@ -196,7 +278,7 @@ export async function POST(req: NextRequest) {
             continue;
           }
 
-          // Create order (your existing logic)
+          // Create order with subdomain context
           const orderData = {
             customer_name: name || "Facebook User",
             customer_email: `${senderId}@facebook.com`,
@@ -224,12 +306,13 @@ export async function POST(req: NextRequest) {
                 },
               },
             ],
-            note: `Order from Facebook Messenger (ID: ${senderId})`,
+            note: `Order from Facebook Messenger (ID: ${senderId}) - Store: ${subdomain || "vapebox"}`,
             order_status: "pending_verification",
             status: "pending_verification",
             is_manual: true,
             source: "facebook",
             facebook_id: senderId,
+            store_subdomain: subdomain || "vapebox", // Include subdomain in order
           };
 
           try {
@@ -268,7 +351,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Helper function remains the same
+// Helper function to send Facebook messages
 async function sendFBMessage(recipientId: string, text: string) {
   try {
     console.log(`📤 Sending message to ${recipientId}: "${text}"`);
