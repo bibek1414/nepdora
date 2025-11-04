@@ -16,7 +16,7 @@ export default function AddProductPage() {
     <div className="mx-auto p-5 py-10">
       <div className="mb-6">
         {/* Breadcrumb */}
-        <Breadcrumb>
+        <Breadcrumb className="mx-auto max-w-6xl px-7">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
@@ -37,7 +37,7 @@ export default function AddProductPage() {
         </Breadcrumb>
       </div>
 
-      <div className="mx-auto">
+      <div className="mx-auto max-w-6xl">
         <ProductForm />
       </div>
     </div>

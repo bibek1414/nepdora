@@ -52,7 +52,7 @@ import {
 } from "lucide-react";
 import ReusableQuill from "@/components/ui/tip-tap";
 import InventoryVariants from "./inventory-varient";
-
+import { Switch } from "@/components/ui/switch";
 interface ProductFormProps {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   product?: any | null;
@@ -170,7 +170,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
     setTrackStock(value);
 
     if (!value && variants.length > 0) {
-      // When turning off track stock, set all variants to use the product stock
       const updatedVariants = variants.map(v => ({
         ...v,
         stock: productStock,
@@ -184,8 +183,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
     form.setValue("sub_category_id", "");
   };
 
-  // Replace the onSubmit function in ProductForm with this:
-
   const onSubmit = async (data: z.infer<typeof CreateProductSchema>) => {
     try {
       const transformedOptions = options.map(opt => ({
@@ -193,16 +190,14 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
         values: opt.values.map(v => v.value),
       }));
 
-      // Determine stock values based on trackStock setting
       const stockValue = trackStock ? undefined : productStock;
       const transformedVariants = variants.map(v => {
         const variantStock = trackStock ? v.stock : stockValue;
 
-        // Build variant data object conditionally
         const variantData: {
           price?: string;
           stock: number;
-          image?: File | string; // Can be File (new) or string (existing URL)
+          image?: File | string;
           options: Record<string, string>;
         } = {
           price: v.price || undefined,
@@ -210,15 +205,11 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
           options: v.options,
         };
 
-        // Only include image field if there's actually an image
         if (v.image instanceof File) {
-          // New image file uploaded
           variantData.image = v.image;
         } else if (typeof v.image === "string" && v.image.trim()) {
-          // Existing image URL - keep it
           variantData.image = v.image;
         }
-        // If image is null or empty string, omit the field entirely
 
         return variantData;
       });
@@ -283,31 +274,29 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
     createProductMutation.isPending || updateProductMutation.isPending;
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="mx-auto max-w-7xl">
       <Card className="border-0">
         <CardContent className="space-y-8">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              {/* Basic Information */}
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 border-b pb-2">
-                  <Package className="text-muted-foreground h-5 w-5" />
-                  <h3 className="text-lg font-semibold">Basic Information</h3>
-                </div>
+              {/* Two Column Layout - Basic Information */}
+              <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
+                {/* Left Column - 2/3 width */}
+                <div className="space-y-6 lg:col-span-2">
+                  <div className="flex items-center gap-3 border-b pb-2">
+                    <Package className="text-muted-foreground h-5 w-5" />
+                    <h3 className="text-lg font-semibold">Basic Information</h3>
+                  </div>
 
-                <div className="space-y-4">
                   <FormField
                     control={form.control}
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium">
-                          Product Name *
-                        </FormLabel>
                         <FormControl>
                           <Input
+                            label="Product Name *"
                             placeholder="Enter product name"
-                            className="h-11"
                             {...field}
                           />
                         </FormControl>
@@ -337,22 +326,29 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                       </FormItem>
                     )}
                   />
+                </div>
 
+                {/* Right Column - 1/3 width */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3 border-b pb-2">
+                    <Settings className="text-muted-foreground h-5 w-5" />
+                    <h3 className="text-lg font-semibold">Settings</h3>
+                  </div>
                   <FormField
                     control={form.control}
                     name="status"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium">
-                          Product Status
-                        </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
                         >
+                          <FormLabel className="text-sm font-medium">
+                            Product Status
+                          </FormLabel>
                           <FormControl>
-                            <SelectTrigger className="h-11">
-                              <SelectValue placeholder="Select status" />
+                            <SelectTrigger className="h-12">
+                              <SelectValue placeholder="Product Status" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -368,6 +364,138 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                       </FormItem>
                     )}
                   />
+
+                  <div className="grid grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="category_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Category
+                          </FormLabel>
+                          <Select
+                            onValueChange={value => {
+                              field.onChange(value);
+                              handleCategoryChange(value);
+                            }}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="h-12">
+                                <SelectValue placeholder="Category" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {categories.map(category => (
+                                <SelectItem
+                                  key={category.id}
+                                  value={category.id.toString()}
+                                >
+                                  {category.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="sub_category_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Sub Category
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="h-12">
+                                <SelectValue placeholder="Subcategory" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {subCategories.map(subCategory => (
+                                <SelectItem
+                                  key={subCategory.id}
+                                  value={subCategory.id.toString()}
+                                >
+                                  {subCategory.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    {/* Fast Shipping */}
+                    <FormField
+                      control={form.control}
+                      name="fast_shipping"
+                      render={({ field }) => (
+                        <FormItem className="bg-card flex items-center justify-between rounded-lg border p-4">
+                          <FormLabel className="text-sm font-medium">
+                            Fast Shipping
+                          </FormLabel>
+                          <FormControl>
+                            <Switch
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Featured Product */}
+                    <FormField
+                      control={form.control}
+                      name="is_featured"
+                      render={({ field }) => (
+                        <FormItem className="bg-card flex items-center justify-between rounded-lg border p-4">
+                          <FormLabel className="text-sm font-medium">
+                            Featured Product
+                          </FormLabel>
+                          <FormControl>
+                            <Switch
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Popular Product */}
+                    <FormField
+                      control={form.control}
+                      name="is_popular"
+                      render={({ field }) => (
+                        <FormItem className="bg-card flex items-center justify-between rounded-lg border p-4">
+                          <FormLabel className="text-sm font-medium">
+                            Popular Product
+                          </FormLabel>
+                          <FormControl>
+                            <Switch
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -384,16 +512,13 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                     name="price"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium">
-                          Price (NPR) *
-                        </FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             step="0.01"
                             min="0"
+                            label="Price (NPR) *"
                             placeholder="0.00"
-                            className="h-11"
                             {...field}
                           />
                         </FormControl>
@@ -407,16 +532,13 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                     name="market_price"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium">
-                          Market Price (NPR)
-                        </FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             step="0.01"
                             min="0"
+                            label="Market Price (NPR)"
                             placeholder="0.00"
-                            className="h-11"
                             {...field}
                           />
                         </FormControl>
@@ -427,87 +549,55 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                 </div>
               </div>
 
-              {/* Shipping & Product Details */}
-              <div className="space-y-6">
+              {/* Shipping Details */}
+              <div>
                 <div className="flex items-center gap-3 border-b pb-2">
                   <Truck className="text-muted-foreground h-5 w-5" />
-                  <h3 className="text-lg font-semibold">Shipping & Details</h3>
+                  <h3 className="text-lg font-semibold">Shipping Details</h3>
                 </div>
-
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="weight"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium">
-                          Weight ( in KG)
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="e.g., 500g, 1.2kg"
-                            className="h-11"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Product weight for shipping calculation
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="warranty"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium">
-                          Warranty
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="e.g., 1 year, 6 months"
-                            maxLength={20}
-                            className="h-11 placeholder:text-gray-400"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Warranty information (max 20 chars)
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              </div>
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="weight"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          label="Weight (in KG)"
+                          placeholder="e.g., 0.5, 1.2"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Product weight for shipping calculation
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}
-                  name="fast_shipping"
+                  name="warranty"
                   render={({ field }) => (
-                    <FormItem className="bg-card flex flex-row items-start space-y-0 space-x-3 rounded-lg border p-4">
+                    <FormItem>
                       <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="mt-1 rounded-full"
+                        <Input
+                          label="Warranty"
+                          placeholder="e.g., 1 year, 6 months"
+                          maxLength={20}
+                          {...field}
                         />
                       </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel className="text-sm font-medium">
-                          Fast Shipping Available
-                        </FormLabel>
-                        <FormDescription>
-                          This product qualifies for fast shipping
-                        </FormDescription>
-                      </div>
+                      <FormDescription>
+                        Warranty information (max 20 chars)
+                      </FormDescription>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-
               {/* Inventory & Variants */}
               <InventoryVariants
                 trackStock={trackStock}
@@ -520,85 +610,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                 productStock={productStock}
                 onProductStockChange={setProductStock}
               />
-
-              {/* Categories */}
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 border-b pb-2">
-                  <Tag className="text-muted-foreground h-5 w-5" />
-                  <h3 className="text-lg font-semibold">Categories</h3>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="category_id"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium">
-                          Category
-                        </FormLabel>
-                        <Select
-                          onValueChange={value => {
-                            field.onChange(value);
-                            handleCategoryChange(value);
-                          }}
-                          value={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="h-11">
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {categories.map(category => (
-                              <SelectItem
-                                key={category.id}
-                                value={category.id.toString()}
-                              >
-                                {category.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="sub_category_id"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium">
-                          Subcategory
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="h-11">
-                              <SelectValue placeholder="Select subcategory" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {subCategories.map(subCategory => (
-                              <SelectItem
-                                key={subCategory.id}
-                                value={subCategory.id.toString()}
-                              >
-                                {subCategory.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
 
               {/* Images */}
               <div className="space-y-6">
@@ -652,27 +663,23 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                       </FormItem>
                     )}
                   />
-
-                  <FormField
-                    control={form.control}
-                    name="thumbnail_alt_description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium">
-                          Image Alt Description
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Describe the image for accessibility"
-                            className="h-11"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </div>
+                <FormField
+                  control={form.control}
+                  name="thumbnail_alt_description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          label="Image Alt Description"
+                          placeholder="Describe the image for accessibility"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               {/* SEO Settings */}
@@ -688,14 +695,11 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                     name="meta_title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium">
-                          Meta Title
-                        </FormLabel>
                         <FormControl>
                           <Input
+                            label="Meta Title"
                             placeholder="SEO optimized title for search engines"
                             maxLength={255}
-                            className="h-11"
                             {...field}
                           />
                         </FormControl>
@@ -727,64 +731,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps) => {
                           Recommended: 150-160 characters
                         </FormDescription>
                         <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-
-              {/* Product Settings */}
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 border-b pb-2">
-                  <Settings className="text-muted-foreground h-5 w-5" />
-                  <h3 className="text-lg font-semibold">Product Settings</h3>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="is_featured"
-                    render={({ field }) => (
-                      <FormItem className="bg-card flex flex-row items-start space-y-0 space-x-3 rounded-lg border p-4">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            className="mt-1 rounded-full"
-                          />
-                        </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel className="text-sm font-medium">
-                            Featured Product
-                          </FormLabel>
-                          <p className="text-muted-foreground text-xs">
-                            Display this product in featured sections
-                          </p>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="is_popular"
-                    render={({ field }) => (
-                      <FormItem className="bg-card flex flex-row items-start space-y-0 space-x-3 rounded-lg border p-4">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            className="mt-1 rounded-full"
-                          />
-                        </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel className="text-sm font-medium">
-                            Popular Product
-                          </FormLabel>
-                          <p className="text-muted-foreground text-xs">
-                            Mark this product as popular
-                          </p>
-                        </div>
                       </FormItem>
                     )}
                   />

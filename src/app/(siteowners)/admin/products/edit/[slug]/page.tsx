@@ -29,7 +29,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
     return (
       <div className="mx-auto p-5 py-10">
         {/* Breadcrumb */}
-        <Breadcrumb>
+        <Breadcrumb className="mx-auto max-w-6xl">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
@@ -49,12 +49,12 @@ export default function EditProductPage({ params }: EditProductPageProps) {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="mt-4 mb-6">
+        <div className="mx-auto mt-4 mb-6 max-w-6xl">
           <Skeleton className="mb-2 h-9 w-64" />
           <Skeleton className="h-5 w-96" />
         </div>
 
-        <div className="max-w-4xl">
+        <div className="mx-auto max-w-6xl">
           <Card>
             <CardContent className="p-6">
               <div className="space-y-6">
@@ -78,7 +78,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
     return (
       <div className="mx-auto p-5 py-10">
         {/* Breadcrumb */}
-        <Breadcrumb>
+        <Breadcrumb className="mx-auto max-w-6xl px-7">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
@@ -124,9 +124,9 @@ export default function EditProductPage({ params }: EditProductPageProps) {
   }
 
   return (
-    <div className="mx-auto p-5 py-10">
+    <div className="mx-auto px-10 py-10">
       {/* Breadcrumb */}
-      <Breadcrumb>
+      <Breadcrumb className="mx-auto max-w-6xl px-7">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
@@ -146,7 +146,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         <ProductForm product={product} />
       </div>
     </div>
