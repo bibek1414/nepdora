@@ -1,4 +1,3 @@
-// services/api/super-admin/domain.ts
 import { siteConfig } from "@/config/site";
 import { Domain, PaginatedResponse } from "@/types/super-admin/domain";
 
