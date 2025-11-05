@@ -13,7 +13,6 @@ const API_BASE_URL = siteConfig.apiBaseUrl;
 export const useFooterApi = {
   // Get footer with preview status
   getFooter: async (): Promise<GetFooterResponse> => {
-    
     const response = await fetch(`${API_BASE_URL}/api/footer/`, {
       method: "GET",
       headers: createHeaders(),
@@ -30,7 +29,6 @@ export const useFooterApi = {
 
   // Get published footer
   getFooterPublished: async (): Promise<GetFooterResponse> => {
-    
     const response = await fetch(`${API_BASE_URL}/api/footer/`, {
       method: "GET",
       headers: createHeaders(),
@@ -49,7 +47,6 @@ export const useFooterApi = {
   createFooter: async (
     data: CreateFooterRequest
   ): Promise<CreateFooterResponse> => {
-    
     const response = await fetch(`${API_BASE_URL}/api/footer/`, {
       method: "POST",
       headers: createHeaders(),
@@ -73,7 +70,6 @@ export const useFooterApi = {
   updateFooter: async (
     data: UpdateFooterRequest
   ): Promise<UpdateFooterResponse> => {
-    
     console.log(
       "Making PATCH request to:",
       `${API_BASE_URL}/api/footer/${data.id}/`
@@ -103,7 +99,6 @@ export const useFooterApi = {
 
   // Delete footer - ID in URL
   deleteFooter: async (id: string): Promise<DeleteFooterResponse> => {
-    
     const response = await fetch(`${API_BASE_URL}/api/footer/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),

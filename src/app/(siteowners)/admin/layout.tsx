@@ -4,6 +4,8 @@ import AdminHeader from "@/components/site-owners/admin/admin-header";
 import { getServerUser } from "@/hooks/use-jwt-server";
 import { FacebookProvider } from "@/contexts/FacebookContext";
 import { DynamicFavicon } from "@/components/site-owners/admin/favicon/dynamic-favicon";
+import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
+import { SubscriptionBlocker } from "@/components/site-owners/admin/subscription/subscription-blocker";
 
 export default async function AdminLayout({
   children,
@@ -18,14 +20,18 @@ export default async function AdminLayout({
 
   return (
     <FacebookProvider>
-      <DynamicFavicon />
-      <div className="flex min-h-screen bg-white">
-        <AdminSidebar user={user} />
-        <div className="mt-15 flex flex-1 flex-col">
-          <AdminHeader user={user} />
-          <main className="flex-1 overflow-auto">{children}</main>
+      <SubscriptionProvider>
+        <DynamicFavicon />
+        <div className="flex min-h-screen bg-white">
+          <AdminSidebar user={user} />
+          <div className="mt-15 flex flex-1 flex-col">
+            <AdminHeader user={user} />
+            <main className="flex-1 overflow-auto">{children}</main>
+          </div>
         </div>
-      </div>
+
+        <SubscriptionBlocker />
+      </SubscriptionProvider>
     </FacebookProvider>
   );
 }

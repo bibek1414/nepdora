@@ -1,5 +1,3 @@
-// types/super-admin/domain.ts
-
 export interface Owner {
   id: number;
   email: string;
