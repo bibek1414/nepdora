@@ -4,7 +4,7 @@ import { useServices } from "@/hooks/owner-site/admin/use-services";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { ServicesCard1 } from "./services-card1";
 import { ServicesCard2 } from "./services-card2";
 import { ServicesCard3 } from "./services-card3";

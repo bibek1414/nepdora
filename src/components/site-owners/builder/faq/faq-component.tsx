@@ -4,7 +4,7 @@ import { useFAQs } from "@/hooks/owner-site/admin/use-faq";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { FAQCard1 } from "./faq-card-1";
 import { FAQCard2 } from "./faq-card-2";
 import { FAQCard3 } from "./faq-card-3";

@@ -4,7 +4,6 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2 } from "lucide-react";
-import Image from "next/image";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 

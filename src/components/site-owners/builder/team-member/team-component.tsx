@@ -4,7 +4,7 @@ import { useTeamMembers } from "@/hooks/owner-site/admin/use-team-member";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { TeamCard1 } from "./team-card-1";
 import { TeamCard2 } from "./team-card-2";
 import { TeamCard3 } from "./team-card-3";

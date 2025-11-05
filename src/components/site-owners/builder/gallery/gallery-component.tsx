@@ -14,25 +14,25 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import {
-  BannerData,
-  BannerComponentData,
-} from "@/types/owner-site/components/banner";
-import { BannerTemplate1 } from "./banner-template-1";
-import { BannerTemplate2 } from "./banner-template-2";
+  GalleryData,
+  GalleryComponentData,
+} from "@/types/owner-site/components/gallery";
+import { GalleryTemplate1 } from "./gallery-template-1";
+import { GalleryTemplate2 } from "./gallery-template-2";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
 
-interface BannerComponentProps {
-  component: BannerComponentData;
+interface GalleryComponentProps {
+  component: GalleryComponentData;
   isEditable?: boolean;
   pageSlug: string;
   siteUser: string;
-  onUpdate?: (componentId: string, updatedData: BannerComponentData) => void;
+  onUpdate?: (componentId: string, updatedData: GalleryComponentData) => void;
 }
 
-export const BannerComponent: React.FC<BannerComponentProps> = ({
+export const GalleryComponent: React.FC<GalleryComponentProps> = ({
   component,
   isEditable = false,
   pageSlug,
@@ -40,15 +40,14 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
   onUpdate,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const deleteBannerMutation = useDeleteComponentMutation(pageSlug, "banner");
-  const updateBannerMutation = useUpdateComponentMutation(pageSlug, "banner");
+  const deleteGalleryMutation = useDeleteComponentMutation(pageSlug, "gallery");
+  const updateGalleryMutation = useUpdateComponentMutation(pageSlug, "gallery");
 
-  const handleUpdate = (updatedData: Partial<BannerData>) => {
+  const handleUpdate = (updatedData: Partial<GalleryData>) => {
     const componentId = component.component_id || component.id.toString();
 
-    // If parent onUpdate is provided, use it (for optimistic updates or custom handling)
     if (onUpdate) {
-      const updatedComponent: BannerComponentData = {
+      const updatedComponent: GalleryComponentData = {
         ...component,
         data: {
           ...component.data,
@@ -58,15 +57,14 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
       onUpdate(componentId, updatedComponent);
     }
 
-    // Also trigger the mutation for server sync
-    updateBannerMutation.mutate(
+    updateGalleryMutation.mutate(
       {
         componentId,
         data: updatedData,
       },
       {
         onError: error => {
-          toast.error("Failed to update banner", {
+          toast.error("Failed to update gallery", {
             description:
               error instanceof Error ? error.message : "Please try again",
           });
@@ -77,19 +75,17 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
+    const loadingToast = toast.loading("Deleting gallery...");
 
-    // Show loading toast
-    const loadingToast = toast.loading("Deleting banner...");
-
-    deleteBannerMutation.mutate(componentId, {
+    deleteGalleryMutation.mutate(componentId, {
       onSuccess: () => {
         toast.dismiss(loadingToast);
-        toast.success("Banner deleted successfully");
+        toast.success("Gallery deleted successfully");
         setIsDeleteDialogOpen(false);
       },
       onError: error => {
         toast.dismiss(loadingToast);
-        toast.error("Failed to delete banner", {
+        toast.error("Failed to delete gallery", {
           description:
             error instanceof Error ? error.message : "Please try again",
         });
@@ -97,15 +93,13 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
     });
   };
 
-  const renderBannerTemplate = () => {
-    // Check if component data exists
+  const renderGalleryTemplate = () => {
     if (!component.data) {
-      console.error("Banner component data is missing:", component);
       return (
         <div className="flex min-h-[200px] items-center justify-center border border-red-200 bg-red-50 px-4 py-8">
           <div className="text-center">
             <h2 className="text-xl font-bold text-red-600">
-              Error: Missing Banner Data
+              Error: Missing Gallery Data
             </h2>
             <p className="mt-2 text-red-500">Component ID: {component.id}</p>
           </div>
@@ -114,29 +108,25 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
     }
 
     const props = {
-      bannerData: component.data,
+      galleryData: component.data,
       isEditable,
       siteUser,
       onUpdate: handleUpdate,
     };
 
-    // Get template from data, default to banner-1 if not specified
-    const template = component.data.template || "banner-1";
-
-    console.log("Rendering banner template:", template);
+    const template = component.data.template || "gallery-1";
 
     switch (template) {
-      case "banner-1":
-        return <BannerTemplate1 {...props} />;
-      case "banner-2":
-        return <BannerTemplate2 {...props} />;
-
+      case "gallery-1":
+        return <GalleryTemplate1 {...props} />;
+      case "gallery-2":
+        return <GalleryTemplate2 {...props} />;
       default:
         return (
           <div className="flex min-h-[200px] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-8">
             <div className="text-center">
               <h2 className="text-xl font-bold text-yellow-700">
-                Unknown Banner Template: {template}
+                Unknown Gallery Template: {template}
               </h2>
               <p className="mt-2 text-yellow-600">
                 Please select a valid template in settings.
@@ -149,7 +139,6 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
 
   return (
     <div className="group relative">
-      {/* Edit Controls - Only show when editable */}
       {isEditable && (
         <>
           <div className="bg-background/80 absolute top-4 right-4 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
@@ -157,23 +146,22 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
               size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
-              disabled={deleteBannerMutation.isPending}
+              disabled={deleteGalleryMutation.isPending}
               className="h-8 w-8"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
 
-          {/* Delete Confirmation Dialog */}
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete Banner</AlertDialogTitle>
+                <AlertDialogTitle>Delete Gallery</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete this banner? This action
+                  Are you sure you want to delete this gallery? This action
                   cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
@@ -182,9 +170,9 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
                 <AlertDialogAction
                   onClick={handleDelete}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  disabled={deleteBannerMutation.isPending}
+                  disabled={deleteGalleryMutation.isPending}
                 >
-                  {deleteBannerMutation.isPending ? "Deleting..." : "Delete"}
+                  {deleteGalleryMutation.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -192,8 +180,7 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
         </>
       )}
 
-      {/* Banner Template Render */}
-      {renderBannerTemplate()}
+      {renderGalleryTemplate()}
     </div>
   );
 };

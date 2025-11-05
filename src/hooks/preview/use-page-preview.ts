@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { usePageComponentsQuery } from "@/hooks/owner-site/components/unified";
+import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-unified";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
@@ -23,6 +23,8 @@ import { PortfolioComponentData } from "@/types/owner-site/components/portfolio"
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
+import { GalleryComponentData } from "@/types/owner-site/components/gallery";
+
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -39,6 +41,7 @@ interface PageComponent {
     | "category"
     | "portfolio"
     | "banner"
+    | "gallery"
     | "newsletter"
     | "youtube"
     | "subcategory";
@@ -51,6 +54,7 @@ interface PageComponent {
     | ContactComponentData["data"]
     | FAQComponentData["data"]
     | TeamComponentData["data"]
+    | GalleryComponentData["data"]
     | TestimonialsComponentData["data"]
     | PortfolioComponentData["data"]
     | NewsletterComponentData["data"]
@@ -102,6 +106,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
           "portfolio",
           "youtube",
           "banner",
+          "gallery",
         ].includes(component.component_type) &&
         !!component.data
     );
@@ -154,6 +159,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | PortfolioComponentData
       | BannerComponentData
       | YouTubeComponentData
+      | GalleryComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
       componentId,

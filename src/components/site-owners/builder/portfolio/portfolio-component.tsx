@@ -29,7 +29,7 @@ import { PortfolioCard4 } from "./portfolio-card-4";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { usePortfolios } from "@/hooks/owner-site/admin/use-portfolio";
 import { EditableText } from "@/components/ui/editable-text";
 

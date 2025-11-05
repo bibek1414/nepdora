@@ -4,7 +4,7 @@ import { useBlogs } from "@/hooks/owner-site/admin/use-blogs";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { BlogCard1 } from "./blog-card1";
 import { BlogCard2 } from "./blog-card2";
 import { BlogCard3 } from "./blog-card3";

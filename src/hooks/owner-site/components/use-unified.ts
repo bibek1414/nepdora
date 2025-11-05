@@ -926,3 +926,72 @@ export const useDeleteYouTubeComponentMutation = () => {
     },
   });
 };
+
+export const useGalleryComponents = (pageSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "gallery"),
+  create: useCreateComponentMutation(pageSlug, "gallery"),
+  update: useUpdateComponentMutation(pageSlug, "gallery"),
+  delete: useDeleteComponentMutation(pageSlug, "gallery"),
+});
+
+export const useCreateGalleryComponentMutation = (pageSlug: string) =>
+  useCreateComponentMutation(pageSlug, "gallery");
+
+export const useUpdateGalleryComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+      data,
+    }: {
+      pageSlug: string;
+      componentId: string;
+      data: Partial<ComponentTypeMap["gallery"]>;
+    }) =>
+      componentsApi.updateComponent(pageSlug, componentId, { data }, "gallery"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Gallery section updated successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update gallery section";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeleteGalleryComponentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      pageSlug,
+      componentId,
+    }: {
+      pageSlug: string;
+      componentId: string;
+    }) => componentsApi.deleteComponent(pageSlug, componentId, "gallery"),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", variables.pageSlug],
+      });
+      toast.success("Gallery section removed successfully!");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to remove gallery section";
+      toast.error(errorMessage);
+    },
+  });
+};

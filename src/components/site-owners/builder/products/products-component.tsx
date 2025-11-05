@@ -4,7 +4,7 @@ import { useProducts } from "@/hooks/owner-site/admin/use-product";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { ProductCard1 } from "./product-card1";
 import { ProductCard2 } from "./product-card2";
 import { ProductCard3 } from "./product-card3";

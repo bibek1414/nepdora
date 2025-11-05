@@ -4,7 +4,7 @@ import { useYouTubeVideos } from "@/hooks/owner-site/admin/use-youtube";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { YouTubeCard1 } from "./youtube-card-1";
 import { YouTubeCard2 } from "./youtube-card-2";
 import { YouTubeCard3 } from "./youtube-card-3";

@@ -26,7 +26,7 @@ import { defaultHeroData } from "@/types/owner-site/components/hero";
 import {
   useCreateComponentMutation,
   usePageComponentsQuery,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { AboutUsStylesDialog } from "@/components/site-owners/builder/about/about-styles-dialog";
 import {
   defaultAboutUs1Data,
@@ -70,6 +70,8 @@ import { defaultYouTubeData } from "@/types/owner-site/components/youtube";
 import { heroTemplateConfigs } from "@/types/owner-site/components/hero";
 import { PageTemplateDialog } from "@/components/site-owners/builder/templates/page-template-dialog";
 import { PageTemplate } from "@/types/owner-site/components/page-template";
+import { GalleryStylesDialog } from "@/components/site-owners/builder/gallery/gallery-styles-dialog";
+import { defaultGalleryData } from "@/types/owner-site/components/gallery";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 interface BuilderLayoutProps {
@@ -82,6 +84,9 @@ interface BuilderLayoutProps {
 export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const router = useRouter();
   const { siteUser, pageSlug } = params;
+  // Add state:
+  const [isGalleryStylesDialogOpen, setIsGalleryStylesDialogOpen] =
+    useState(false);
 
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const createNavbarMutation = useCreateNavbarMutation();
@@ -160,6 +165,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     currentPage,
     "blog"
   );
+  const createGalleryComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "gallery"
+  );
+
   const createServicesComponentMutation = useCreateComponentMutation(
     currentPage,
     "services"
@@ -236,6 +246,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "banner",
             "newsletter",
             "youtube",
+            "gallery",
           ].includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
@@ -346,6 +357,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsProductsStylesDialogOpen(true);
     } else if (componentId === "categories-sections") {
       setIsCategoriesStylesDialogOpen(true);
+    } else if (componentId === "gallery-sections") {
+      setIsGalleryStylesDialogOpen(true);
     } else if (componentId === "subcategories-sections") {
       setIsSubCategoriesStylesDialogOpen(true);
     } else if (componentId === "blog-sections") {
@@ -726,7 +739,23 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+  const handleGalleryTemplateSelect = (
+    template: "gallery-1" | "gallery-2" | "gallery-3" | "gallery-4"
+  ) => {
+    const galleryData = {
+      ...defaultGalleryData,
+      template: template,
+    };
 
+    createGalleryComponentMutation.mutate(galleryData, {
+      onSuccess: () => {
+        setIsGalleryStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create gallery component:", error);
+      },
+    });
+  };
   const handleSubCategoryTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1"
   ) => {
@@ -906,7 +935,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAddTestimonials = () => {
     setIsTestimonialsStylesDialogOpen(true);
   };
-
+  const handleAddGallery = () => {
+    setIsGalleryStylesDialogOpen(true);
+  };
   const handleAddFAQ = () => {
     setIsFAQStylesDialogOpen(true);
   };
@@ -958,6 +989,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         case "banner-sections":
           componentType = "banner";
           break;
+        case "gallery-sections":
+          componentType = "gallery";
+          break;
         case "newsletter-sections":
           componentType = "newsletter";
           break;
@@ -982,6 +1016,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               "banner",
               "newsletter",
               "youtube",
+              "gallery",
             ].includes(item.type)
           ) {
             componentType = item.type as keyof ComponentTypeMap;
@@ -1052,7 +1087,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsAboutUsStylesDialogOpen}
         onStyleSelect={handleAboutUsTemplateSelect}
       />
-
+      <GalleryStylesDialog
+        open={isGalleryStylesDialogOpen}
+        onOpenChange={setIsGalleryStylesDialogOpen}
+        onStyleSelect={handleGalleryTemplateSelect}
+      />
       <ProductsStylesDialog
         open={isProductsStylesDialogOpen}
         onOpenChange={setIsProductsStylesDialogOpen}
@@ -1183,6 +1222,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddFAQ={handleAddFAQ}
                   onAddPortfolio={handleAddPortfolio}
                   onAddBanner={handleAddBanner}
+                  onAddGallery={handleAddGallery}
                   onAddNewsletter={handleAddNewsletter}
                 />
               </div>

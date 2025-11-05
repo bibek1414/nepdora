@@ -455,6 +455,23 @@ export const newsletterComponentsApi = {
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "newsletter"),
 };
+export const galleryComponentsApi = {
+  getAll: (pageSlug: string) =>
+    componentsApi.getComponentsByType(pageSlug, "gallery"),
+  create: (pageSlug: string, data: ComponentTypeMap["gallery"]) =>
+    componentsApi.createComponent(pageSlug, {
+      component_type: "gallery",
+      data,
+    }),
+  update: (
+    pageSlug: string,
+    componentId: string,
+    data: Partial<ComponentTypeMap["gallery"]>
+  ) =>
+    componentsApi.updateComponent(pageSlug, componentId, { data }, "gallery"),
+  delete: (pageSlug: string, componentId: string) =>
+    componentsApi.deleteComponent(pageSlug, componentId, "gallery"),
+};
 
 export const youtubeComponentApi = {
   getAll: (pageSlug: string) =>

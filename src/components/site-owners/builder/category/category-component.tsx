@@ -7,7 +7,7 @@ import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { CategoryCard1 } from "./category-card-1";
 import { CategoryCard2 } from "./category-card-2";
 import { CategoryCard3 } from "./category-card-3";

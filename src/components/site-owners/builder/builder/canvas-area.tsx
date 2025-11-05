@@ -39,11 +39,13 @@ import { TestimonialsComponentData } from "@/types/owner-site/components/testimo
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
-import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/unified";
+import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/use-unified";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
 import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
+import { GalleryComponent } from "@/components/site-owners/builder/gallery/gallery-component";
+import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import {
   Plus,
   Navigation,
@@ -80,6 +82,7 @@ interface CanvasAreaProps {
   onAddBanner?: () => void;
   onAddNewsletter?: () => void;
   onAddYouTube?: () => void;
+  onAddGallery?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -98,7 +101,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddCategories,
   onAddSubCategories,
   onAddBlog,
-  onAddServices,
   onAddContact,
   onAddTeam,
   onAddTestimonials,
@@ -226,6 +228,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <AboutUsComponent
             key={`about-${component.id}`}
             component={component as AboutUsComponentData}
+            {...commonProps}
+          />
+        );
+        break;
+      case "gallery":
+        componentElement = (
+          <GalleryComponent
+            key={`gallery-${component.id}`}
+            component={component as GalleryComponentData}
+            siteUser=""
             {...commonProps}
           />
         );
