@@ -19,6 +19,7 @@ import {
 } from "@/types/owner-site/components/gallery";
 import { GalleryTemplate1 } from "./gallery-template-1";
 import { GalleryTemplate2 } from "./gallery-template-2";
+import { GalleryTemplate3 } from "./gallery-template-3";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -121,6 +122,8 @@ export const GalleryComponent: React.FC<GalleryComponentProps> = ({
         return <GalleryTemplate1 {...props} />;
       case "gallery-2":
         return <GalleryTemplate2 {...props} />;
+      case "gallery-3":
+        return <GalleryTemplate3 {...props} />;
       default:
         return (
           <div className="flex min-h-[200px] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-8">

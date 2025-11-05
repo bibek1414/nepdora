@@ -35,6 +35,11 @@ export const GalleryStylesDialog: React.FC<GalleryStylesDialogProps> = ({
       name: "Masonry Layout",
       description: "Pinterest-style masonry grid with varied heights",
     },
+    {
+      id: "gallery-3" as const,
+      name: "3D Gallery",
+      description: "3D gallery layout with hover effects",
+    },
   ];
 
   const handleSelect = (template: {
