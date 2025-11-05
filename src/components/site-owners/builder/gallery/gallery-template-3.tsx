@@ -248,6 +248,9 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
               <div className="relative h-[220px] w-[220px]">
                 {[...displayed].reverse().map((image, idx) => {
                   const pos = positions[idx] ?? positions[positions.length - 1];
+                  const actualIndex = data.images.findIndex(
+                    img => img.id === image.id
+                  );
                   return (
                     <motion.div
                       key={image.id}
@@ -265,22 +268,24 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
                         {isEditable && (
                           <div className="absolute top-2 right-2 z-10 flex gap-2">
                             <label
-                              htmlFor={`gallery-upload-${componentId}-${idx}`}
+                              htmlFor={`gallery-upload-${componentId}-${actualIndex}`}
                               className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg hover:bg-white"
                             >
                               Change
                             </label>
                             <input
-                              id={`gallery-upload-${componentId}-${idx}`}
+                              id={`gallery-upload-${componentId}-${actualIndex}`}
                               type="file"
                               accept="image/*"
-                              onChange={e => handleImageFileChange(e, idx)}
+                              onChange={e =>
+                                handleImageFileChange(e, actualIndex)
+                              }
                               className="hidden"
                             />
                             <Button
                               size="sm"
                               variant="destructive"
-                              onClick={() => handleRemoveImage(idx)}
+                              onClick={() => handleRemoveImage(actualIndex)}
                               className="h-6 px-2"
                             >
                               <X className="h-3 w-3" />
