@@ -2,7 +2,8 @@ import { DynamicFontProvider } from "@/providers/dynamic-font-provider";
 import { DynamicFavicon } from "@/components/site-owners/admin/favicon/dynamic-favicon";
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
-
+import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
+import { SubscriptionBlocker } from "@/components/site-owners/admin/subscription/subscription-blocker";
 export async function generateMetadata(): Promise<Metadata> {
   return generateAdminPageMetadata({
     pageName: "Website Builder",
@@ -19,10 +20,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <DynamicFavicon />
-      <DynamicFontProvider>
-        <body>{children}</body>
-      </DynamicFontProvider>
+      <SubscriptionProvider>
+        <DynamicFavicon />
+        <DynamicFontProvider>
+          <body>{children}</body>
+        </DynamicFontProvider>
+        <SubscriptionBlocker />
+      </SubscriptionProvider>
     </html>
   );
 }

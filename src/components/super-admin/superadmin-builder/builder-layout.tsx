@@ -335,9 +335,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         page => page.slug !== deletedSlug
       );
       if (remainingPages.length > 0) {
-        router.push(
-          `/${siteUser}/template/builder/${remainingPages[0].slug}`
-        );
+        router.push(`/${siteUser}/template/builder/${remainingPages[0].slug}`);
       }
     }
   };

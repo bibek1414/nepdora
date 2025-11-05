@@ -10,9 +10,14 @@ import {
   Zap,
   Star,
   Crown,
+  Loader2,
 } from "lucide-react";
+import { usePricingPlans } from "@/hooks/use-subscription";
+import { Plan } from "@/types/subscription";
 
-const PricingSection = () => {
+const DynamicPricingSection = () => {
+  const { data: plans, isLoading, error } = usePricingPlans();
+
   const topFeatures = [
     {
       icon: Headphones,
@@ -28,83 +33,87 @@ const PricingSection = () => {
     },
   ];
 
-  const plans = [
-    {
-      name: "Starter Nepdora",
-      subtitle: "Perfect for small businesses getting started",
-      price: "24,000",
-      originalPrice: null,
-      discount: "FOR STARTERS",
-      period: "/yr",
-      freeMonths: "Best for beginners",
-      isPopular: false,
-      icon: Zap,
-      websites: "1 website",
-      mailboxes: "1 mailbox",
-      features: [
-        "Custom domain",
-        "Basic Nepdora AI",
-        "50 templates",
-        "Basic analytics",
-        "Mobile editing",
-        "SSL Certificate",
-        "Email support",
-      ],
-    },
-    {
-      name: "Premium Nepdora",
-      subtitle: "Get the essentials to create a website",
-      price: "28,000",
-      originalPrice: "35,000",
-      discount: "FOR GROWING BUSINESS",
-      period: "/yr",
-      freeMonths: "Save NPR 7,000",
-      isPopular: true,
-      icon: Star,
-      websites: "25 websites",
-      mailboxes: "2 mailboxes per website",
-      features: [
-        "Everything in Starter",
-        "AI Nepdora",
-        "150 templates",
-        "Email marketing",
-        "Marketing integrations",
-        "Advanced analytics",
-        "Mobile editing",
-        "Priority support",
-      ],
-    },
-    {
-      name: "Business Nepdora",
-      subtitle: "Grow with AI tools and ecommerce features",
-      price: "48,000",
-      originalPrice: null,
-      discount: "FOR BIG D2C BRANDS",
-      period: "/yr",
-      freeMonths: "Enterprise features",
-      isPopular: false,
-      icon: Crown,
-      websites: "Unlimited websites",
-      mailboxes: "Unlimited mailboxes",
-      features: [
-        "Everything in Premium",
-        "Sell products and services",
-        "0% transaction fees",
-        "100+ payment methods",
-        "AI text editor",
-        "AI image generator",
-        "AI blog post generator",
-        "AI product generator",
-        "AI logo maker",
-        "AI SEO assistant",
-        "24/7 phone support",
-        "White-label options",
-      ],
-    },
-  ];
+  // Map plan types to icons
+  const getPlanIcon = (planType: string) => {
+    switch (planType.toLowerCase()) {
+      case "free":
+        return Zap;
+      case "premium":
+        return Star;
+      case "pro":
+        return Crown;
+      default:
+        return Zap;
+    }
+  };
+
+  // Map plan types to discount badges
+  const getDiscountBadge = (planType: string) => {
+    switch (planType.toLowerCase()) {
+      case "free":
+        return "FOR STARTERS";
+      case "premium":
+        return "FOR GROWING BUSINESS";
+      case "pro":
+        return "FOR BIG D2C BRANDS";
+      default:
+        return "SPECIAL OFFER";
+    }
+  };
+
+  // Format price with commas
+  const formatPrice = (price: string) => {
+    const num = parseFloat(price);
+    return num.toLocaleString("en-NP");
+  };
+
+  // Get period display
+  const getPeriodDisplay = (unit: string) => {
+    return unit === "year" ? "/yr" : "/mo";
+  };
+
+  // Sort plans by a custom order
+  const sortPlans = (plans: Plan[]) => {
+    const order = { free: 1, premium: 2, pro: 3 };
+    return [...plans].sort((a, b) => {
+      const orderA =
+        order[a.plan_type.toLowerCase() as keyof typeof order] || 999;
+      const orderB =
+        order[b.plan_type.toLowerCase() as keyof typeof order] || 999;
+      return orderA - orderB;
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <section className="py-16">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="text-primary h-8 w-8 animate-spin" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-16">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="py-20 text-center">
+            <p className="text-destructive">
+              Failed to load pricing plans. Please try again later.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const sortedPlans = plans ? sortPlans(plans) : [];
 
   return (
-    <section className="bg-muted/50 py-16">
+    <section className="py-16">
       <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <div className="mb-12 text-center">
@@ -128,133 +137,112 @@ const PricingSection = () => {
 
         {/* Pricing Cards */}
         <div className="grid gap-8 md:grid-cols-3 lg:gap-12">
-          {plans.map((plan, index) => (
-            <Link
-              key={index}
-              href="/admin/signup"
-              className={`bg-background hover: relative block rounded-lg border transition-all duration-300 ${
-                plan.isPopular
-                  ? "border-primary scale-105 transform border-2"
-                  : "border-border hover:border-muted-foreground/50"
-              }`}
-            >
-              {plan.isPopular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <div className="bg-primary text-primary-foreground rounded-full px-4 py-1 text-sm font-medium">
-                    MOST POPULAR
-                  </div>
-                </div>
-              )}
+          {sortedPlans.map(plan => {
+            const PlanIcon = getPlanIcon(plan.plan_type);
+            const availableFeatures = plan.features
+              .filter(f => f.is_available)
+              .sort((a, b) => a.order - b.order);
 
-              <div className="p-6">
-                {/* Icon */}
-                <div
-                  className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${
-                    plan.isPopular
-                      ? "bg-primary/10 text-primary"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  <plan.icon className="h-6 w-6" />
-                </div>
-
-                {/* Discount Badge */}
-                <div className="mb-4 text-center">
-                  <span className="bg-secondary text-secondary-foreground rounded px-3 py-1 text-xs font-bold tracking-wide uppercase">
-                    {plan.discount}
-                  </span>
-                </div>
-
-                <h3 className="text-foreground mb-2 text-center text-xl font-bold">
-                  {plan.name}
-                </h3>
-                <p className="text-muted-foreground mb-6 text-center text-sm">
-                  {plan.subtitle}
-                </p>
-
-                {/* Pricing */}
-                <div className="mb-6 text-center">
-                  <div className="flex items-baseline justify-center gap-2">
-                    <span className="text-muted-foreground text-sm">NPR</span>
-                    <span className="text-foreground text-4xl font-bold">
-                      {plan.price}
-                    </span>
-                    <span className="text-muted-foreground text-sm">
-                      {plan.period}
-                    </span>
-                  </div>
-                  {plan.originalPrice && (
-                    <div className="text-muted-foreground mt-1 text-sm line-through">
-                      NPR {plan.originalPrice}
+            return (
+              <Link
+                key={plan.id}
+                href="/admin/signup"
+                className={`bg-background hover: relative block rounded-lg border transition-all duration-300 ${
+                  plan.is_popular
+                    ? "border-primary scale-105 transform border-2"
+                    : "border-border hover:border-muted-foreground/50"
+                }`}
+              >
+                {plan.is_popular && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <div className="bg-primary text-primary-foreground rounded-full px-4 py-1 text-sm font-medium">
+                      MOST POPULAR
                     </div>
-                  )}
-                  <div className="text-primary mt-2 text-sm font-medium">
-                    {plan.freeMonths}
                   </div>
-                </div>
+                )}
 
-                {/* Choose Plan Button */}
-                <div
-                  className={`mb-4 w-full rounded-md py-3 text-center font-medium transition-colors ${
-                    plan.isPopular
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                  }`}
-                >
-                  {index === 2 ? "Contact Sales" : "Choose Plan"}
-                </div>
+                <div className="p-6">
+                  {/* Icon */}
+                  <div
+                    className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${
+                      plan.is_popular
+                        ? "bg-primary/10 text-primary"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    <PlanIcon className="h-6 w-6" />
+                  </div>
 
-                {/* Website & Mailbox Info */}
-                <div className="space-y-3 pt-6">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-muted flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full">
-                      <div className="bg-muted-foreground h-2 w-2 rounded-full"></div>
-                    </div>
-                    <span className="text-foreground text-sm font-medium">
-                      {plan.websites}
+                  {/* Discount Badge */}
+                  <div className="mb-4 text-center">
+                    <span className="bg-secondary text-secondary-foreground rounded px-3 py-1 text-xs font-bold tracking-wide uppercase">
+                      {getDiscountBadge(plan.plan_type)}
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="bg-muted flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full">
-                      <div className="bg-muted-foreground h-2 w-2 rounded-full"></div>
-                    </div>
-                    <span className="text-muted-foreground text-sm">
-                      {plan.mailboxes}
-                    </span>
-                  </div>
-                </div>
 
-                {/* Features */}
-                <div className="pt-6">
-                  <h4 className="text-foreground mb-4 font-medium">
-                    {index === 0
-                      ? "Starter benefits:"
-                      : index === 1
-                        ? "Premium benefits:"
-                        : "Everything in Premium, plus:"}
-                  </h4>
-                  <ul className="space-y-3">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li
-                        key={featureIndex}
-                        className="flex items-center gap-3"
-                      >
-                        <Check className="text-primary h-4 w-4 flex-shrink-0" />
-                        <span className="text-foreground flex items-center gap-2 text-sm">
-                          {feature}
-                          {feature === "Email marketing" && (
-                            <span className="bg-secondary text-secondary-foreground rounded px-2 py-0.5 text-xs">
-                              NEW
+                  <h3 className="text-foreground mb-2 text-center text-xl font-bold">
+                    {plan.name}
+                  </h3>
+                  <p className="text-muted-foreground mb-6 text-center text-sm">
+                    {plan.tagline}
+                  </p>
+
+                  {/* Pricing */}
+                  <div className="mb-6 text-center">
+                    <div className="flex items-baseline justify-center gap-2">
+                      <span className="text-muted-foreground text-sm">NPR</span>
+                      <span className="text-foreground text-4xl font-bold">
+                        {formatPrice(plan.price)}
+                      </span>
+                      <span className="text-muted-foreground text-sm">
+                        {getPeriodDisplay(plan.unit)}
+                      </span>
+                    </div>
+                    {plan.is_popular && (
+                      <div className="text-primary mt-2 text-sm font-medium">
+                        Best value
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Choose Plan Button */}
+                  <div
+                    className={`mb-4 w-full rounded-md py-3 text-center font-medium transition-colors ${
+                      plan.is_popular
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                    }`}
+                  >
+                    Choose Plan
+                  </div>
+
+                  {/* Features */}
+                  <div className="pt-6">
+                    <h4 className="text-foreground mb-4 font-medium">
+                      {plan.name} benefits:
+                    </h4>
+                    <ul className="space-y-3">
+                      {availableFeatures.map(feature => (
+                        <li key={feature.id} className="flex items-start gap-3">
+                          <Check className="text-primary mt-0.5 h-4 w-4 flex-shrink-0" />
+                          <div className="flex-1">
+                            <span className="text-foreground text-sm">
+                              {feature.feature}
                             </span>
-                          )}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
+                            {feature.description && (
+                              <p className="text-muted-foreground mt-1 text-xs">
+                                {feature.description}
+                              </p>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Footer Note */}
@@ -267,4 +255,4 @@ const PricingSection = () => {
   );
 };
 
-export default PricingSection;
+export default DynamicPricingSection;
