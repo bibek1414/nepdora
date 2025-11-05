@@ -4,7 +4,7 @@ import { useTestimonials } from "@/hooks/owner-site/admin/use-testimonials";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { TestimonialCard1 } from "./testimonial-card-1";
 import { TestimonialCard2 } from "./testimonial-card-2";
 import { TestimonialCard3 } from "./testimonial-card-3";

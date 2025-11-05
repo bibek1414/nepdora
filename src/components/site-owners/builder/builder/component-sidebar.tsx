@@ -112,6 +112,12 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       keywords: ["employees", "staff", "team"],
     },
     {
+      id: "gallery-sections",
+      label: "Image Gallery",
+      icon: ImageIcon,
+      keywords: ["gallery", "images", "photos", "pictures", "grid", "masonry"],
+    },
+    {
       id: "testimonials-sections",
       label: "Testimonials",
       icon: Quote,

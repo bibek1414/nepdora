@@ -32,7 +32,7 @@ import { AboutUsTemplate5 } from "./about-style-5";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { toast } from "sonner";
 import { AboutUsTemplate6 } from "./about-style-6";
 import { AboutUsTemplate7 } from "./about-style-7";

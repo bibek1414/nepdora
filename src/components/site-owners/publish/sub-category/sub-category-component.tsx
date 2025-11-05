@@ -4,7 +4,7 @@ import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { SubCategoryCard1 } from "./sub-category-card-1";
 import { SubCategoryCard2 } from "./sub-category-card-2";
 import { SubCategoryCard3 } from "./sub-category-card-3";

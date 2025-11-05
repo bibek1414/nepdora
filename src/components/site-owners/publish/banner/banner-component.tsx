@@ -22,7 +22,7 @@ import { BannerTemplate2 } from "./banner-template-2";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 
 interface BannerComponentProps {
   component: BannerComponentData;

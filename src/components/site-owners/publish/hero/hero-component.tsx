@@ -27,7 +27,7 @@ import { HeroTemplate7 } from "./hero-style-7";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { HeroTemplate8 } from "./hero-style-8";
 import { HeroTemplate9 } from "./hero-style-9";
 

@@ -13,6 +13,7 @@ import { BannerData } from "./banner";
 import { NewsletterData } from "./newsletter";
 import { YouTubeData } from "./youtube";
 import { ServicesData } from "./services";
+import { GalleryData } from "./gallery";
 // Union type for all component data types
 export type ComponentData =
   | HeroData
@@ -29,6 +30,7 @@ export type ComponentData =
   | NewsletterData
   | YouTubeData
   | ServicesData
+  | GalleryData
   | TestimonialsData;
 
 // Component type mapping for better type safety
@@ -44,6 +46,7 @@ export interface ComponentTypeMap {
   testimonials: TestimonialsData;
   portfolio: PortfolioData;
   faq: FAQData;
+  gallery: GalleryData;
   newsletter: NewsletterData;
   banner: BannerData;
   services: ServicesData;
@@ -70,6 +73,10 @@ export interface ComponentResponse<
   order: number;
   page?: number;
 }
+export const isGalleryComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"gallery"> =>
+  component.component_type === "gallery";
 
 export interface CreateComponentRequest<
   T extends keyof ComponentTypeMap = keyof ComponentTypeMap,

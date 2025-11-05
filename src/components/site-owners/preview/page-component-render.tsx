@@ -31,6 +31,8 @@ import { NewsletterComponent } from "@/components/site-owners/builder/newsletter
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
 import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
+import { GalleryComponent } from "../builder/gallery/gallery-component";
+import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -43,6 +45,7 @@ interface PageComponent {
     | "contact"
     | "team"
     | "faq"
+    | "gallery"
     | "testimonials"
     | "category"
     | "portfolio"
@@ -62,6 +65,7 @@ interface PageComponent {
     | TeamComponentData["data"]
     | CategoryComponentData["data"]
     | PortfolioComponentData["data"]
+    | GalleryComponentData["data"]
     | NewsletterComponentData["data"]
     | YouTubeComponentData["data"]
     | BannerComponentData["data"]
@@ -91,6 +95,7 @@ interface PageComponentRendererProps {
       | AboutUsComponentData
       | TestimonialsComponentData
       | CategoryComponentData
+      | GalleryComponentData
       | SubCategoryComponentData
       | PortfolioComponentData
       | BannerComponentData
@@ -156,6 +161,19 @@ export function PageComponentRenderer({
               onComponentUpdate(componentId, newData as BlogComponentData)
             }
             onBlogClick={onBlogClick}
+          />
+        );
+      case "gallery":
+        return (
+          <GalleryComponent
+            key={component.id}
+            component={component as GalleryComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as GalleryComponentData)
+            }
           />
         );
       case "services":

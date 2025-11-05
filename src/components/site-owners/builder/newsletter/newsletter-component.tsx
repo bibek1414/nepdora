@@ -6,7 +6,7 @@ import {
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/unified";
+} from "@/hooks/owner-site/components/use-unified";
 import { NewsletterForm1 } from "./newsletter-form-1";
 import { NewsletterForm2 } from "./newsletter-form-2";
 import { NewsletterForm3 } from "./newsletter-form-3";
