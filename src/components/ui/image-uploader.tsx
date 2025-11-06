@@ -14,6 +14,7 @@ interface ImageUploaderProps {
   multiple?: boolean;
   maxFileSize?: number; // in bytes
   maxFiles?: number;
+  hidePreview?: boolean;
 }
 
 export const ImageUploader: React.FC<ImageUploaderProps> = ({
@@ -23,6 +24,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   multiple = false,
   maxFileSize = 5 * 1024 * 1024, // 5MB default
   maxFiles = multiple ? 10 : 1,
+  hidePreview = false,
 }) => {
   const [previews, setPreviews] = useState<{ url: string; isFile: boolean }[]>(
     []
@@ -254,7 +256,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       </div>
 
       {/* Preview Grid */}
-      {previews.length > 0 && (
+      {previews.length > 0 && !hidePreview && (
         <div className="space-y-3">
           <p className="text-foreground text-sm font-medium">
             {multiple ? "Uploaded Images" : "Uploaded Image"} ({previews.length}

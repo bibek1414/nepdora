@@ -1,23 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  Plus,
-  Trash2,
-  Image as ImageIcon,
-  Package,
-  PlusCircle,
-} from "lucide-react";
+import { Plus, Trash2, Image as ImageIcon, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface OptionValue {
   id: string;
@@ -301,227 +288,115 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
   };
 
   const renderVariantsList = () => {
-    if (groupBy && options.length > 0) {
-      const grouped = getGroupedVariants() as Record<string, Variant[]>;
-      return Object.entries(grouped).map(([groupName, groupVariants]) => (
-        <div key={groupName} className="space-y-2">
-          <div className="rounded-lg bg-gray-50 p-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="text-sm font-medium">{groupName}</h4>
-                <p className="text-xs text-gray-500">
-                  {groupVariants.length} variants
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={e => {
-                    const file = e.target.files?.[0];
-                    handleGroupImageChange(groupName, file || null);
-                  }}
-                  className="hidden"
-                  id={`group-image-${groupName}`}
-                />
-                <label
-                  htmlFor={`group-image-${groupName}`}
-                  className="cursor-pointer text-xs text-blue-600 hover:text-blue-700"
-                >
-                  {groupImages[groupName]
-                    ? "Change group image"
-                    : "Add group image"}
-                </label>
-                {groupImages[groupName] && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleGroupImageChange(groupName, null)}
-                    className="h-6 text-xs text-red-600"
-                  >
-                    Remove
-                  </Button>
-                )}
-              </div>
-            </div>
-            {groupImages[groupName] && (
-              <div className="mt-2 flex items-center gap-2">
-                <img
-                  src={
-                    typeof groupImages[groupName] === "string"
-                      ? groupImages[groupName]
-                      : URL.createObjectURL(groupImages[groupName] as File)
-                  }
-                  alt={`${groupName} group`}
-                  className="h-8 w-8 rounded object-cover"
-                />
-                <span className="text-xs text-gray-600">
-                  Group image applied to all variants
-                </span>
-              </div>
-            )}
-          </div>
-          {groupVariants.map(variant => renderVariantRow(variant, true))}
-        </div>
-      ));
-    }
-
     return variants.map(variant => renderVariantRow(variant, false));
   };
 
   const renderVariantRow = (variant: Variant, isGrouped: boolean) => {
-    const variantLabel = Object.entries(variant.options)
-      .filter(([key]) => !groupBy || key !== groupBy)
-      .map(([, value]) => value)
-      .join(" / ");
-
-    const isAvailable = trackStock ? variant.stock > 0 : productStock > 0;
-    const groupImage = groupBy ? groupImages[variant.options[groupBy]] : null;
-
-    // Check what type of image we have
-    const hasFileImage = variant.image instanceof File;
-    const hasUrlImage = typeof variant.image === "string" && variant.image;
-    const hasGroupImage = !hasFileImage && !hasUrlImage && groupImage;
+    const optionNames = Object.keys(variant.options);
+    const optionValues = Object.values(variant.options);
 
     return (
       <div
         key={variant.id}
-        className={`flex items-center gap-4 rounded-lg border p-3 ${
-          isGrouped ? "ml-4 bg-white" : "bg-gray-50"
+        className={`flex items-center gap-4 px-4 py-3 ${
+          isGrouped ? "bg-white" : ""
         }`}
       >
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            {hasFileImage ? (
-              <div className="relative">
-                <img
-                  src={URL.createObjectURL(variant.image as File)}
-                  alt={variantLabel}
-                  className="h-10 w-10 rounded object-cover"
-                />
-                <div className="absolute -top-1 -right-1 rounded-full bg-green-500 px-1 text-xs text-white">
-                  NEW
-                </div>
-              </div>
-            ) : hasUrlImage ? (
-              <img
-                src={variant.image as string}
-                alt={variantLabel}
-                className="h-10 w-10 rounded object-cover"
-              />
-            ) : hasGroupImage ? (
-              <div className="relative">
-                <img
-                  src={
-                    typeof groupImage === "string"
-                      ? groupImage
-                      : URL.createObjectURL(groupImage)
-                  }
-                  alt={variantLabel}
-                  className="h-10 w-10 rounded object-cover"
-                />
-                <div className="absolute -top-1 -right-1 rounded-full bg-blue-500 px-1 text-xs text-white">
-                  G
-                </div>
-              </div>
-            ) : (
-              <div className="flex h-10 w-10 items-center justify-center rounded bg-gray-200">
-                <ImageIcon className="h-5 w-5 text-gray-400" />
-              </div>
-            )}
-            <div>
-              <span className="truncate text-sm font-medium">
-                {variantLabel}
-              </span>
-              {trackStock ? (
-                <p className="text-xs text-gray-500">
-                  {isAvailable ? (
-                    <span className="text-green-600">
-                      Available ({variant.stock})
-                    </span>
-                  ) : (
-                    <span className="text-red-600">Out of stock</span>
-                  )}
-                </p>
-              ) : (
-                <p className="text-xs text-gray-500">
-                  {isAvailable ? (
-                    <span className="text-green-600">
-                      Available ({productStock})
-                    </span>
-                  ) : (
-                    <span className="text-red-600">Out of stock</span>
-                  )}
-                </p>
-              )}
-            </div>
-          </div>
+        <div className="w-12 text-sm text-gray-600">
+          {optionNames.length > 0 ? optionNames[0] : ""}
         </div>
-
-        <div className="flex items-center gap-3">
-          <div className="w-32">
+        <div className="flex-1">
+          <Input
+            type="text"
+            value={optionValues.length > 0 ? optionValues[0] : ""}
+            onChange={e => {
+              const newOptions = { ...variant.options };
+              if (optionNames.length > 0) {
+                newOptions[optionNames[0]] = e.target.value;
+              }
+              onVariantsChange(
+                variants.map(v =>
+                  v.id === variant.id ? { ...v, options: newOptions } : v
+                )
+              );
+            }}
+            className="h-9"
+            placeholder="Value"
+          />
+        </div>
+        {/* Image upload (optional) - minimal UI, no header change */}
+        <div className="flex w-28 items-center gap-2">
+          {variant.image ? (
+            typeof variant.image === "string" ? (
+              <img
+                src={variant.image}
+                alt="variant"
+                className="h-8 w-8 rounded object-cover"
+              />
+            ) : (
+              <img
+                src={URL.createObjectURL(variant.image)}
+                alt="variant"
+                className="h-8 w-8 rounded object-cover"
+              />
+            )
+          ) : (
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-gray-200">
+              <ImageIcon className="h-4 w-4 text-gray-400" />
+            </div>
+          )}
+          <div>
             <Input
               type="file"
               accept="image/*"
-              onChange={e => {
-                const file = e.target.files?.[0];
-                handleVariantImageChange(variant.id, file || null);
-              }}
               className="hidden"
-              id={`image-${variant.id}`}
+              id={`variant-image-${variant.id}`}
+              onChange={e => {
+                const file = e.target.files?.[0] || null;
+                handleVariantImageChange(variant.id, file);
+              }}
             />
             <label
-              htmlFor={`image-${variant.id}`}
+              htmlFor={`variant-image-${variant.id}`}
               className="cursor-pointer text-xs text-blue-600 hover:text-blue-700"
             >
-              {hasFileImage
-                ? "Change new image"
-                : hasUrlImage
-                  ? "Change image"
-                  : hasGroupImage
-                    ? "Override group"
-                    : "Add image"}
+              {variant.image ? "Change" : "Add"}
             </label>
-            {(hasFileImage || hasUrlImage) && (
+            {variant.image && (
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
                 onClick={() => handleVariantImageChange(variant.id, null)}
-                className="mt-1 h-6 text-xs text-red-600"
+                className="h-6 p-0 text-xs text-red-600"
               >
                 Remove
               </Button>
             )}
           </div>
-
-          <div className="w-32">
-            <Input
-              type="number"
-              step="0.01"
-              placeholder="Price"
-              value={variant.price}
-              onChange={e =>
-                handleVariantChange(variant.id, "price", e.target.value)
-              }
-              className="h-9"
-            />
-          </div>
-
-          {trackStock && (
-            <div className="w-24">
-              <Input
-                type="number"
-                placeholder="Stock"
-                value={variant.stock}
-                onChange={e =>
-                  handleVariantChange(variant.id, "stock", e.target.value)
-                }
-                className="h-9"
-              />
-            </div>
-          )}
+        </div>
+        <div className="w-32">
+          <Input
+            type="number"
+            placeholder="Stock"
+            value={variant.stock}
+            onChange={e =>
+              handleVariantChange(variant.id, "stock", e.target.value)
+            }
+            className="h-9"
+          />
+        </div>
+        <div className="w-32">
+          <Input
+            type="number"
+            step="0.01"
+            placeholder="Price"
+            value={variant.price}
+            onChange={e =>
+              handleVariantChange(variant.id, "price", e.target.value)
+            }
+            className="h-9"
+          />
         </div>
       </div>
     );
@@ -600,60 +475,81 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3 border-b pb-2">
-        <Package className="text-muted-foreground h-5 w-5" />
-        <h3 className="text-lg font-semibold">Inventory & Variants</h3>
+    <div className="space-y-5 rounded-2xl border bg-white p-4">
+      <div className="flex items-center gap-3">
+        <h3 className="text-base font-semibold">Inventory</h3>
       </div>
 
-      {/* Track Stock Toggle */}
-      <div className="flex items-center justify-between rounded-lg border p-4">
-        <div>
-          <Label className="text-sm font-medium">Track Inventory</Label>
-          <p className="mt-1 text-xs text-gray-500">
-            {trackStock
-              ? "Track stock for each variant individually"
-              : "Use single stock quantity for all variants"}
-          </p>
+      {/* Inventory Section */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Label className="text-sm font-semibold">Stock Quantity</Label>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-700">Track Inventory</span>
+            <Switch checked={trackStock} onCheckedChange={onTrackStockChange} />
+          </div>
         </div>
-        <Switch checked={trackStock} onCheckedChange={onTrackStockChange} />
-      </div>
-
-      {/* Product Stock Input - ALWAYS SHOWN */}
-      <div className="rounded-lg border p-4">
-        <Label className="text-sm font-medium">Product Stock</Label>
-        <p className="mt-1 mb-3 text-xs text-gray-500">
-          {trackStock
-            ? "Total stock across all variants"
-            : "This stock quantity will be applied to all variants"}
-        </p>
         <Input
           type="number"
           min="0"
-          placeholder="0"
-          className="h-11 max-w-xs"
+          placeholder=""
+          className="h-10 rounded-xl"
           value={productStock}
           onChange={e => onProductStockChange?.(parseInt(e.target.value) || 0)}
         />
-        {trackStock && variants.length > 0 && (
-          <p className="mt-2 text-xs text-gray-600">
-            Current total: {variants.reduce((sum, v) => sum + v.stock, 0)} units
-          </p>
-        )}
       </div>
 
       {/* Variants Section */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <Label className="text-sm font-medium">Product Variants</Label>
-            <div
-              onClick={handleAddOptionForm}
-              className="mt-3 flex cursor-pointer items-center gap-1 text-xs text-gray-500 hover:underline"
+      <div className="space-y-3">
+        <div>
+          <Label className="text-sm font-semibold">Variants</Label>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const newForm: OptionFormData = {
+                  id: Date.now().toString(),
+                  name: "Size",
+                  values: [{ id: Date.now().toString(), value: "" }],
+                  editingOption: null,
+                };
+                setOptionForms([...optionForms, newForm]);
+              }}
+              className="rounded-full border-blue-200 bg-blue-50 px-4 text-blue-600 hover:bg-blue-100"
             >
-              <PlusCircle className="h-3 w-4" />
-              <span>Add options like size, color, or material</span>
-            </div>
+              <Plus className="mr-1 h-4 w-4" />
+              Add Size Variants
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const newForm: OptionFormData = {
+                  id: Date.now().toString(),
+                  name: "Color",
+                  values: [{ id: Date.now().toString(), value: "" }],
+                  editingOption: null,
+                };
+                setOptionForms([...optionForms, newForm]);
+              }}
+              className="rounded-full border-blue-200 bg-blue-50 px-4 text-blue-600 hover:bg-blue-100"
+            >
+              <Plus className="mr-1 h-4 w-4" />
+              Add Color Variants
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleAddOptionForm}
+              className="rounded-full border-blue-200 bg-blue-50 px-4 text-blue-600 hover:bg-blue-100"
+            >
+              <Plus className="mr-1 h-4 w-4" />
+              Add Custom Variants
+            </Button>
           </div>
         </div>
 
@@ -701,48 +597,15 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
         {/* Variants List */}
         {variants.length > 0 && (
           <div className="mt-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">
-                Variants ({variants.length})
-              </Label>
-              {options.length > 0 && (
-                <Select value={groupBy} onValueChange={setGroupBy}>
-                  <SelectTrigger className="h-9 w-40">
-                    <SelectValue placeholder="Group by" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">No grouping</SelectItem>
-                    {options.map(opt => (
-                      <SelectItem key={opt.id} value={opt.name}>
-                        {opt.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
-
-            <div className="space-y-2 rounded-lg border p-4">
-              <div className="flex items-center gap-4 border-b px-3 pb-2 text-xs font-medium text-gray-500">
-                <div className="w-6"></div>
-                <div className="flex-1">Variant</div>
-                <div className="w-32">Image</div>
-                <div className="w-32">Price</div>
-                {trackStock && <div className="w-24">Stock</div>}
+            <div className="rounded-xl border">
+              <div className="flex items-center gap-3 border-b bg-gray-50 px-3 py-2 text-xs font-semibold text-gray-900">
+                <div className="w-20">Option</div>
+                <div className="flex-1">Value</div>
+                <div className="w-32">Stock (Optional)</div>
+                <div className="w-32">Price (Optional)</div>
               </div>
 
-              <div className="space-y-2">{renderVariantsList()}</div>
-
-              {trackStock && (
-                <div className="border-t pt-4">
-                  <p className="text-sm text-gray-600">
-                    Total inventory:{" "}
-                    <span className="font-medium">
-                      {variants.reduce((sum, v) => sum + v.stock, 0)} available
-                    </span>
-                  </p>
-                </div>
-              )}
+              <div className="divide-y">{renderVariantsList()}</div>
             </div>
           </div>
         )}
