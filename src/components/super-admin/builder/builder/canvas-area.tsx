@@ -39,7 +39,7 @@ import { TestimonialsComponentData } from "@/types/owner-site/components/testimo
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
-import { useUpdateComponentOrderMutation } from "@/hooks/superadmin/components/unified";
+import { useUpdateComponentOrderMutation } from "@/hooks/super-admin/components/unified";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
 import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
@@ -62,6 +62,7 @@ interface CanvasAreaProps {
   footer?: Footer | null;
   onAddFooter: () => void;
   currentPageSlug: string;
+  templateSlug: string;
   pageComponents: ComponentResponse[];
   isLoading: boolean;
   error: Error | null;
@@ -88,6 +89,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddNavbar,
   footer,
   onAddFooter,
+  templateSlug,
   currentPageSlug,
   pageComponents: initialPageComponents,
   isLoading,
@@ -131,7 +133,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   }, [initialPageComponents]);
 
   // Hook for updating component order
-  const updateOrderMutation = useUpdateComponentOrderMutation(currentPageSlug);
+  const updateOrderMutation = useUpdateComponentOrderMutation(
+    currentPageSlug,
+    templateSlug
+  );
 
   // Handle component reordering (used by both drag-drop and arrows)
   const handleReorder = useCallback(

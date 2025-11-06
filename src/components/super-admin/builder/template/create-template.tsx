@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,72 +10,69 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useTemplateApi } from "@/services/api/super-admin/template";
 import { useRouter } from "next/navigation";
+import {
+  useTemplates,
+  useCreateTemplate,
+  useUpdateTemplate,
+  useDeleteTemplate,
+} from "@/hooks/super-admin/components/use-templates";
 
 type TemplateItem = {
   id: number | string;
   name: string;
+  slug: string;
   created_at?: string;
   updated_at?: string;
 };
 
 export default function CreateTemplateDialog() {
   const router = useRouter();
+
+  // State
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [templates, setTemplates] = useState<TemplateItem[]>([]);
   const [editOpen, setEditOpen] = useState(false);
   const [editName, setEditName] = useState("");
   const [editTarget, setEditTarget] = useState<TemplateItem | null>(null);
-  const [deletingId, setDeletingId] = useState<number | string | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<TemplateItem | null>(null);
 
-  const fetchTemplates = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const items = await useTemplateApi.getTemplates();
-      setTemplates(items);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load templates");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // TanStack Query hooks
+  const {
+    data: templates = [],
+    isLoading: loading,
+    error,
+    refetch: fetchTemplates,
+  } = useTemplates();
 
-  useEffect(() => {
-    fetchTemplates();
-  }, []);
+  const createTemplateMutation = useCreateTemplate();
+  const updateTemplateMutation = useUpdateTemplate();
+  const deleteTemplateMutation = useDeleteTemplate();
+
+  // Derived states
+  const submitting =
+    createTemplateMutation.isPending || updateTemplateMutation.isPending;
+
+  const deletingId = deleteTemplateMutation.variables;
 
   const handleCreate = async () => {
     if (!name.trim()) return;
+
     try {
-      setSubmitting(true);
-      setError(null);
-      const created = await useTemplateApi.createTemplate({
+      const result = await createTemplateMutation.mutateAsync({
         name: name.trim(),
       });
-      const payload = created.data;
-      const newItem: TemplateItem = {
-        id: payload.id ?? Date.now(),
-        name: payload.name ?? name.trim(),
-      };
-      setTemplates(prev => [newItem, ...prev]);
+
+      const payload = result.data;
       setName("");
       setOpen(false);
-      // Refresh list from server to ensure consistency
-      fetchTemplates();
-      // Navigate to builder with the newly created template ID
-      if (payload.id) {
-        router.push(`/superadmin/template/builder?templateId=${payload.id}`);
-      }
-    } finally {
-      setSubmitting(false);
+
+      // ✅ Navigate to the correct builder route with templateSlug and default 'home' page
+      const templateSlug = payload.slug || payload.id;
+      router.push(`/superadmin/template/builder/${templateSlug}/home`);
+    } catch (error) {
+      console.error("Failed to create template:", error);
     }
   };
 
@@ -87,23 +84,21 @@ export default function CreateTemplateDialog() {
 
   const handleEditSave = async () => {
     if (!editTarget || !editName.trim()) return;
+
     try {
-      setSubmitting(true);
-      setError(null);
-      const res = await useTemplateApi.updateTemplate(editTarget.id, {
-        name: editName.trim(),
+      const slug = editTarget.slug || editTarget.id;
+      await updateTemplateMutation.mutateAsync({
+        slug,
+        payload: {
+          name: editName.trim(),
+        },
       });
-      const updated = res.data;
-      setTemplates(prev =>
-        prev.map(item =>
-          item.id === editTarget.id ? { ...item, name: updated.name } : item
-        )
-      );
+
       setEditOpen(false);
       setEditTarget(null);
       setEditName("");
-    } finally {
-      setSubmitting(false);
+    } catch (error) {
+      console.error("Failed to update template:", error);
     }
   };
 
@@ -114,16 +109,19 @@ export default function CreateTemplateDialog() {
 
   const handleDeleteConfirm = async () => {
     if (!deleteTarget) return;
+
     try {
-      setDeletingId(deleteTarget.id);
-      setError(null);
-      await useTemplateApi.deleteTemplate(deleteTarget.id);
-      setTemplates(prev => prev.filter(t => t.id !== deleteTarget.id));
+      const slug = deleteTarget.slug || deleteTarget.id;
+      await deleteTemplateMutation.mutateAsync(slug);
       setDeleteOpen(false);
       setDeleteTarget(null);
-    } finally {
-      setDeletingId(null);
+    } catch (error) {
+      console.error("Failed to delete template:", error);
     }
+  };
+
+  const getTemplateSlug = (template: TemplateItem) => {
+    return template.slug || template.id;
   };
 
   return (
@@ -142,14 +140,16 @@ export default function CreateTemplateDialog() {
           <Button
             variant="outline"
             size="sm"
-            onClick={fetchTemplates}
+            onClick={() => fetchTemplates()}
             disabled={loading}
           >
             {loading ? "Refreshing..." : "Refresh"}
           </Button>
         </div>
         {error ? (
-          <div className="px-4 py-6 text-sm text-red-600">{error}</div>
+          <div className="px-4 py-6 text-sm text-red-600">
+            Error: {(error as Error).message}
+          </div>
         ) : templates.length === 0 && !loading ? (
           <div className="px-4 py-6 text-sm text-gray-500">
             No templates found
@@ -165,6 +165,9 @@ export default function CreateTemplateDialog() {
                   <div className="truncate text-sm font-medium text-gray-900">
                     {t.name}
                   </div>
+                  {t.slug && (
+                    <div className="text-xs text-gray-500">Slug: {t.slug}</div>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
@@ -172,7 +175,7 @@ export default function CreateTemplateDialog() {
                     size="sm"
                     onClick={() =>
                       router.push(
-                        `/superadmin/template/builder?templateId=${t.id}`
+                        `/superadmin/template/builder/${getTemplateSlug(t)}/home`
                       )
                     }
                   >
@@ -189,9 +192,15 @@ export default function CreateTemplateDialog() {
                     variant="destructive"
                     size="sm"
                     onClick={() => openDelete(t)}
-                    disabled={deletingId === t.id}
+                    disabled={
+                      deleteTemplateMutation.isPending &&
+                      deletingId === getTemplateSlug(t)
+                    }
                   >
-                    {deletingId === t.id ? "Deleting..." : "Delete"}
+                    {deleteTemplateMutation.isPending &&
+                    deletingId === getTemplateSlug(t)
+                      ? "Deleting..."
+                      : "Delete"}
                   </Button>
                 </div>
               </li>
@@ -303,16 +312,16 @@ export default function CreateTemplateDialog() {
             <Button
               variant="outline"
               onClick={() => setDeleteOpen(false)}
-              disabled={deletingId !== null}
+              disabled={deleteTemplateMutation.isPending}
             >
               Cancel
             </Button>
             <Button
               variant="destructive"
               onClick={handleDeleteConfirm}
-              disabled={deletingId !== null}
+              disabled={deleteTemplateMutation.isPending}
             >
-              {deletingId !== null ? "Deleting..." : "Delete"}
+              {deleteTemplateMutation.isPending ? "Deleting..." : "Delete"}
             </Button>
           </div>
         </DialogContent>

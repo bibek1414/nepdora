@@ -1,5 +1,6 @@
 export interface Template {
   id: number | string;
+  slug: string;
   name: string;
 }
 

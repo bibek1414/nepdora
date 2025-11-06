@@ -3,7 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { usePagePublished } from "@/hooks/publish/use-page-publish";
-import { useDomains } from "@/hooks/superadmin/use-domain";
+import { useDomains } from "@/hooks/super-admin/use-domain";
 import { PageComponentRenderer } from "@/components/site-owners/publish/page-component-render";
 import { LoadingSpinner } from "@/components/site-owners/publish/loading-spinner";
 

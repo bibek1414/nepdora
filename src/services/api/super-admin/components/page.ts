@@ -8,16 +8,19 @@ import {
   UpdatePageResponse,
   DeletePageResponse,
   GetPageResponse,
-} from "@/types/super-admin/page";
+} from "@/types/super-admin/components/page";
 import { siteConfig } from "@/config/site";
 const API_BASE_URL = siteConfig.apiBaseUrl;
 export const pageApi = {
   // Get all pages
-  getPages: async (): Promise<Page[]> => {
-    const response = await fetch(`${API_BASE_URL}/api/template-pages/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+  getPages: async (templateSlug: string): Promise<Page[]> => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-pages/?template_slug=${templateSlug}`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     return response.json();

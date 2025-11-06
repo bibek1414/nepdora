@@ -22,7 +22,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface ComponentSidebarProps {
-  siteUser: string;
   onComponentClick?: (componentId: string) => void;
 }
 
@@ -34,7 +33,6 @@ type Item = {
 };
 
 export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
-  siteUser,
   onComponentClick,
 }) => {
   const router = useRouter();

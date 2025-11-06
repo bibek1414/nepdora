@@ -4,7 +4,7 @@ import { useState } from "react";
 import DomainTable from "@/components/super-admin/domain/domaintable";
 import DomainForm from "@/components/super-admin/domain/domainform";
 import Pagination from "@/components/ui/pagination";
-import { useDomains } from "@/hooks/superadmin/use-domain";
+import { useDomains } from "@/hooks/super-admin/use-domain";
 import { Domain, Tenant } from "@/types/super-admin/domain";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";

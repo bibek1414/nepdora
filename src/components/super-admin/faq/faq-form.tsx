@@ -36,7 +36,7 @@ import {
   useUpdateFAQ,
   useFAQCategories,
   useCreateFAQCategory,
-} from "@/hooks/superadmin/use-faq-category";
+} from "@/hooks/super-admin/use-faq-category";
 import { FAQ } from "@/types/super-admin/faq-category";
 
 const faqSchema = z.object({
