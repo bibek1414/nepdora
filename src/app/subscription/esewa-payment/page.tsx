@@ -287,23 +287,6 @@ export default function EsewaPayment() {
                 Total subscription amount
               </div>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="transactionId">Transaction ID</Label>
-              <Input
-                id="transactionId"
-                value={transactionId}
-                onChange={e => setTransactionId(e.target.value)}
-                required
-                placeholder="Enter unique transaction identifier"
-                maxLength={50}
-                disabled={paymentState.isLoading}
-                readOnly
-              />
-              <div className="text-sm text-gray-500">
-                Unique transaction reference
-              </div>
-            </div>
           </CardContent>
 
           <CardFooter>

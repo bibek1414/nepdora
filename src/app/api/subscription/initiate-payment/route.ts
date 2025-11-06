@@ -8,20 +8,67 @@ import {
   KhaltiInitiateRequest,
   EsewaInitiateRequest,
 } from "@/types/payment";
-import { buildPreviewApi } from "@/config/site";
 
-interface PaymentGatewayBackend {
-  id: number;
+interface PaymentGatewayConfig {
   payment_type: "esewa" | "khalti";
   secret_key: string;
   merchant_code: string | null;
   is_enabled: boolean;
 }
 
-// Cache for payment gateways
-const cachedGateways: Map<string, PaymentGatewayBackend[]> = new Map();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-const lastCacheTime: Map<string, number> = new Map();
+function validateEnvironmentVariables(): {
+  isValid: boolean;
+  errors: string[];
+  gateways?: {
+    esewa: PaymentGatewayConfig;
+    khalti: PaymentGatewayConfig;
+  };
+} {
+  const errors: string[] = [];
+
+  // Check required environment variables
+  if (!process.env.NEXT_PUBLIC_BASE_URL) {
+    errors.push("Secret key is required");
+  }
+
+  if (!process.env.NEXT_PUBLIC_ESEWA_MERCHANT_CODE) {
+    errors.push("Secret key is required");
+  }
+
+  if (!process.env.NEXT_PUBLIC_ESEWA_SECRET_KEY) {
+    errors.push("Secret key is required");
+  }
+
+  if (!process.env.NEXT_PUBLIC_KHALTI_SECRET_KEY) {
+    errors.push("Secret key is required");
+  }
+
+  if (errors.length > 0) {
+    return { isValid: false, errors };
+  }
+
+  // Create gateway configurations from environment variables
+  const gateways = {
+    esewa: {
+      payment_type: "esewa" as const,
+      secret_key: process.env.NEXT_PUBLIC_ESEWA_SECRET_KEY!,
+      merchant_code: process.env.NEXT_PUBLIC_ESEWA_MERCHANT_CODE!,
+      is_enabled: true,
+    },
+    khalti: {
+      payment_type: "khalti" as const,
+      secret_key: process.env.NEXT_PUBLIC_KHALTI_SECRET_KEY!,
+      merchant_code: null,
+      is_enabled: true,
+    },
+  };
+
+  return {
+    isValid: true,
+    errors: [],
+    gateways,
+  };
+}
 
 function validatePaymentRequest(data: any): {
   isValid: boolean;
@@ -71,76 +118,21 @@ function validatePaymentRequest(data: any): {
 }
 
 /**
- * Fetch payment gateways from backend API
+ * Get payment gateway by type from environment variables
  */
-async function fetchPaymentGatewaysFromBackend(
-  subdomain: string
-): Promise<PaymentGatewayBackend[]> {
-  try {
-    // Check cache first
-    const now = Date.now();
-    const lastTime = lastCacheTime.get(subdomain) || 0;
-
-    if (cachedGateways.has(subdomain) && now - lastTime < CACHE_DURATION) {
-      console.log(`Using cached payment gateways for subdomain: ${subdomain}`);
-      return cachedGateways.get(subdomain)!;
-    }
-
-    const apiUrl = buildPreviewApi(subdomain);
-    console.log(
-      `Fetching payment gateways from: ${apiUrl}/api/payment-gateway/`
-    );
-
-    const response = await fetch(`${apiUrl}/api/payment-gateway/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch payment gateways: ${response.statusText}`
-      );
-    }
-
-    const data = await response.json();
-    const gateways = data.data || data;
-
-    // Cache the gateways
-    cachedGateways.set(subdomain, gateways);
-    lastCacheTime.set(subdomain, now);
-
-    console.log(`Payment gateways cached for subdomain: ${subdomain}`);
-    return gateways;
-  } catch (error) {
-    console.error("Error fetching payment gateways:", error);
-    throw new Error(
-      `Failed to fetch payment gateways: ${error instanceof Error ? error.message : "Unknown error"}`
-    );
-  }
-}
-
-/**
- * Get payment gateway by type
- */
-async function getPaymentGateway(
-  subdomain: string | null,
+function getPaymentGateway(
   paymentType: "esewa" | "khalti"
-): Promise<PaymentGatewayBackend> {
-  if (!subdomain) {
-    throw new Error("Subdomain is required to fetch payment gateway");
+): PaymentGatewayConfig {
+  const envValidation = validateEnvironmentVariables();
+
+  if (!envValidation.isValid) {
+    throw new Error(`Payment gateway configuration error`);
   }
 
-  const gateways = await fetchPaymentGatewaysFromBackend(subdomain);
-  const gateway = gateways.find(
-    g => g.payment_type === paymentType && g.is_enabled
-  );
+  const gateway = envValidation.gateways![paymentType];
 
-  if (!gateway) {
-    throw new Error(
-      `${paymentType} payment gateway is not enabled for this store`
-    );
+  if (!gateway.is_enabled) {
+    throw new Error(`${paymentType} payment gateway is not enabled`);
   }
 
   return gateway;
@@ -165,7 +157,6 @@ function buildRedirectUrls(req: Request, subdomain: string | null) {
       baseUrl = `${protocol}://${subdomain}.${process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com"}`;
     }
 
-    // Redirect to /subscription/success and /subscription/failure on the subdomain
     const successUrl = `${baseUrl}/subscription/success?method=`;
     const failureUrl = `${baseUrl}/subscription/failure?method=`;
     return { successUrl, failureUrl };
@@ -202,9 +193,37 @@ function extractSubdomainFromRequest(req: Request): string | null {
   return null;
 }
 
+/**
+ * Check if we're in development environment
+ */
+function isDevelopment(): boolean {
+  return process.env.NODE_ENV === "development";
+}
+
 export async function POST(req: Request) {
   console.log("Received POST request to /api/initiate-payment");
+
   try {
+    // Validate environment variables first
+    const envValidation = validateEnvironmentVariables();
+    if (!envValidation.isValid) {
+      console.error("Environment configuration error:", envValidation.errors);
+
+      // Don't expose specific environment variable names in production
+      const errorMessage = isDevelopment()
+        ? `Environment configuration error: ${envValidation.errors.join(", ")}`
+        : "Payment service is currently unavailable. Please try again later.";
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Service configuration error",
+          details: isDevelopment() ? envValidation.errors : undefined,
+        },
+        { status: 500 }
+      );
+    }
+
     // Extract subdomain from request headers
     const subdomain = extractSubdomainFromRequest(req);
     console.log("Extracted subdomain:", subdomain);
@@ -234,10 +253,10 @@ export async function POST(req: Request) {
 
     switch (method as PaymentMethod) {
       case "esewa": {
-        // Fetch eSewa gateway config from backend
-        const esewaGateway = await getPaymentGateway(subdomain, "esewa");
+        // Get eSewa gateway config from environment variables
+        const esewaGateway = getPaymentGateway("esewa");
 
-        // Initialize eSewa API with credentials from backend
+        // Initialize eSewa API with credentials from environment
         const esewaAPI_instance = esewaAPI.initialize({
           merchantCode: esewaGateway.merchant_code!,
           secretKey: esewaGateway.secret_key,
@@ -261,7 +280,7 @@ export async function POST(req: Request) {
             {
               success: false,
               error: response.error,
-              details: response.details,
+              details: isDevelopment() ? response.details : undefined,
             },
             { status: response.status_code || 500 }
           );
@@ -281,10 +300,10 @@ export async function POST(req: Request) {
       }
 
       case "khalti": {
-        // Fetch Khalti gateway config from backend
-        const khaltiGateway = await getPaymentGateway(subdomain, "khalti");
+        // Get Khalti gateway config from environment variables
+        const khaltiGateway = getPaymentGateway("khalti");
 
-        // Initialize Khalti API with credentials from backend
+        // Initialize Khalti API with credentials from environment
         const khaltiAPI_instance = khaltiAPI.initialize({
           secretKey: khaltiGateway.secret_key,
         });
@@ -326,7 +345,7 @@ export async function POST(req: Request) {
             {
               success: false,
               error: response.error,
-              details: response.details,
+              details: isDevelopment() ? response.details : undefined,
             },
             { status: response.status_code || 500 }
           );
@@ -361,11 +380,16 @@ export async function POST(req: Request) {
     const errorMessage =
       err instanceof Error ? err.message : "Unknown error occurred";
 
+    // Don't expose internal error details in production
+    const userFriendlyError = isDevelopment()
+      ? errorMessage
+      : "Failed to create payment session. Please try again later.";
+
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to create payment session",
-        details: errorMessage,
+        error: "Payment initiation failed",
+        details: isDevelopment() ? errorMessage : undefined,
       },
       { status: 500 }
     );

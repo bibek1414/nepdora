@@ -210,7 +210,7 @@ export default function SuccessPage() {
   };
 
   const handleRetry = () => {
-    router.push("/subscription");
+    router.push("/admin");
   };
 
   const handleGoToAdmin = () => {
