@@ -7,21 +7,21 @@ import {
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { NavbarComponent } from "@/components/site-owners/builder/navbar/navbar-component";
-import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer-component";
-import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
-import { AboutUsComponent } from "@/components/site-owners/builder/about/about-component";
-import { ProductsComponent } from "@/components/site-owners/builder/products/products-component";
-import { CategoryComponent } from "@/components/site-owners/builder/category/category-component";
-import { SubCategoryComponent } from "@/components/site-owners/builder/sub-category/sub-category-component";
-import { BlogComponent } from "@/components/site-owners/builder/blog/blog-components";
-import { ServicesComponent } from "@/components/site-owners/builder/services/services-component";
-import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
-import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
-import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
-import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
-import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
-import { NewsletterComponent } from "@/components/site-owners/builder/newsletter/newsletter-component";
+import { NavbarComponent } from "@/components/super-admin/builder/navbar/navbar-component";
+import { Footer as FooterComponent } from "@/components/super-admin/builder/footer/footer-component";
+import { HeroComponent } from "@/components/super-admin/builder/hero/hero-component";
+import { AboutUsComponent } from "@/components/super-admin/builder/about/about-component";
+import { ProductsComponent } from "@/components/super-admin/builder/products/products-component";
+import { CategoryComponent } from "@/components/super-admin/builder/category/category-component";
+import { SubCategoryComponent } from "@/components/super-admin/builder/sub-category/sub-category-component";
+import { BlogComponent } from "@/components/super-admin/builder/blog/blog-components";
+import { ServicesComponent } from "@/components/super-admin/builder/services/services-component";
+import { TeamComponent } from "@/components/super-admin/builder/team-member/team-component";
+import { ContactComponent } from "@/components/super-admin/builder/contact/contact-component";
+import { TestimonialsComponent } from "@/components/super-admin/builder/testimonials/testimonial-component";
+import { FAQComponent } from "@/components/super-admin/builder/faq/faq-component";
+import { PortfolioComponent } from "@/components/super-admin/builder/portfolio/portfolio-component";
+import { NewsletterComponent } from "@/components/super-admin/builder/newsletter/newsletter-component";
 import { PlaceholderManager } from "@/components/ui/content-placeholder";
 import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
@@ -39,10 +39,10 @@ import { TestimonialsComponentData } from "@/types/owner-site/components/testimo
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
-import { useUpdateComponentOrderMutation } from "@/hooks/super-admin/components/unified";
+import { useUpdateComponentOrderMutation } from "@/hooks/super-admin/components/use-unified";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
-import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
-import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
+import { BannerComponent } from "@/components/super-admin/builder/banner/banner-component";
+import { YouTubeComponent } from "@/components/super-admin/builder/youtube/youtube-component";
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 import {
   Plus,
@@ -52,7 +52,7 @@ import {
   ChevronUp,
   ChevronDown,
 } from "lucide-react";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useThemeQuery } from "@/hooks/super-admin/components/use-theme";
 import { Button } from "@/components/ui/site-owners/button";
 
 interface CanvasAreaProps {
@@ -110,7 +110,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const [pageComponents, setPageComponents] = useState<ComponentResponse[]>(
     initialPageComponents.sort((a, b) => (a.order || 0) - (b.order || 0))
   );
-  const { data: themeResponse } = useThemeQuery();
+  const { data: themeResponse } = useThemeQuery(templateSlug);
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -221,7 +221,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <HeroComponent
             key={`hero-${component.id}`}
             component={component as HeroComponentData}
-            siteUser=""
+            templateSlug={templateSlug}
             {...commonProps}
           />
         );
@@ -231,6 +231,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <AboutUsComponent
             key={`about-${component.id}`}
             component={component as AboutUsComponentData}
+            templateSlug={templateSlug}
             {...commonProps}
           />
         );
@@ -242,6 +243,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             component={component as ProductsComponentData}
             onUpdate={() => {}}
             onProductClick={() => {}}
+            templateSlug={templateSlug}
             {...commonProps}
           />
         );
@@ -253,6 +255,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             component={component as CategoryComponentData}
             onUpdate={() => {}}
             onCategoryClick={() => {}}
+            templateSlug={templateSlug}
             {...commonProps}
           />
         );
@@ -265,6 +268,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             onUpdate={() => {}}
             onSubCategoryClick={() => {}}
             {...commonProps}
+            templateSlug={templateSlug}
           />
         );
         break;
@@ -275,6 +279,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             component={component as BlogComponentData}
             onUpdate={() => {}}
             onBlogClick={() => {}}
+            templateSlug={templateSlug}
             {...commonProps}
           />
         );
@@ -286,6 +291,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             component={component as ServicesComponentData}
             onUpdate={() => {}}
             onServiceClick={() => {}}
+            templateSlug={templateSlug}
             {...commonProps}
           />
         );
@@ -296,6 +302,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`contact-${component.id}`}
             component={component as ContactComponentData}
             onUpdate={() => {}}
+            templateSlug={templateSlug}
             {...commonProps}
           />
         );
@@ -307,6 +314,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             component={component as TeamComponentData}
             onUpdate={() => {}}
             onMemberClick={() => {}}
+            templateSlug={templateSlug}
             {...commonProps}
           />
         );
@@ -317,6 +325,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`youtube-${component.id}`}
             component={component as YouTubeComponentData}
             onUpdate={() => {}}
+            templateSlug={templateSlug}
             {...commonProps}
           />
         );
@@ -328,6 +337,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             component={component as TestimonialsComponentData}
             onUpdate={() => {}}
             onTestimonialClick={() => {}}
+            templateSlug={templateSlug}
             {...commonProps}
           />
         );
@@ -337,6 +347,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <FAQComponent
             key={`faq-${component.id}`}
             component={component as FAQComponentData}
+            templateSlug={templateSlug}
             onUpdate={() => {}}
             {...commonProps}
           />
@@ -347,6 +358,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <PortfolioComponent
             key={`portfolio-${component.id}`}
             component={component as PortfolioComponentData}
+            templateSlug={templateSlug}
             siteUser=""
             {...commonProps}
           />
@@ -357,6 +369,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <NewsletterComponent
             key={`newsletter-${component.id}`}
             component={component as NewsletterComponentData}
+            templateSlug={templateSlug}
             siteUser=""
             {...commonProps}
           />
@@ -367,6 +380,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <BannerComponent
             key={`banner-${component.id}`}
             component={component as BannerComponentData}
+            templateSlug={templateSlug}
             siteUser=""
             {...commonProps}
           />
@@ -476,7 +490,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       {/* Navbar Section */}
       {navbar ? (
         <div className="group relative mb-4 border-b">
-          <NavbarComponent navbar={navbar} siteUser="" />
+          <NavbarComponent
+            navbar={navbar}
+            siteUser=""
+            templateSlug={templateSlug}
+          />
         </div>
       ) : (
         <div className="border-b border-dashed border-gray-300 bg-gray-50/50">
@@ -602,6 +620,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             footerData={footer.data}
             style={footer.data.style}
             isEditable={true}
+            templateSlug={templateSlug}
           />
         </div>
       ) : (

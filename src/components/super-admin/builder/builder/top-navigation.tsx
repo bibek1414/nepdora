@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NewPageDialog } from "@/components/super-admin/builder/new-page/new-page-dialog";
 import { DeletePageDialog } from "@/components/super-admin/builder/new-page/delete-page-dialog";
-import { ThemeDialog } from "@/components/site-owners/builder/theme/theme-dialog";
+import { ThemeDialog } from "@/components/super-admin/builder/theme/theme-dialog";
 import { Button } from "@/components/ui/button";
 import { Page } from "@/types/owner-site/components/page";
 import {
@@ -130,6 +130,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       <ThemeDialog
         open={isThemeDialogOpen}
         onOpenChange={setIsThemeDialogOpen}
+        templateSlug={templateSlug}
       />
     </div>
   );

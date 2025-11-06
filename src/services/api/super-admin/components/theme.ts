@@ -6,30 +6,21 @@ import {
   CreateThemeResponse,
   UpdateThemeRequest,
   UpdateThemeResponse,
-} from "@/types/owner-site/components/theme";
+} from "@/types/super-admin/components/theme";
 import { siteConfig } from "@/config/site";
+
 const API_BASE_URL = siteConfig.apiBaseUrl;
+
 export const useThemeApi = {
-  getThemes: async (): Promise<GetThemeResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/theme/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
-
-    await handleApiError(response);
-    const data = await response.json();
-
-    return {
-      data: data || [],
-      message:
-        data?.length > 0 ? "Themes retrieved successfully" : "No themes found",
-    };
-  },
-  getThemesPublished: async (): Promise<GetThemeResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/theme/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+  // Get themes with template slug
+  getThemes: async (templateSlug: string): Promise<GetThemeResponse> => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/template/${templateSlug}/theme/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     const data = await response.json();
@@ -41,14 +32,41 @@ export const useThemeApi = {
     };
   },
 
+  // Get published themes
+  getThemesPublished: async (
+    templateSlug: string
+  ): Promise<GetThemeResponse> => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/template/${templateSlug}/theme/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
+
+    await handleApiError(response);
+    const data = await response.json();
+
+    return {
+      data: data || [],
+      message:
+        data?.length > 0 ? "Themes retrieved successfully" : "No themes found",
+    };
+  },
+
+  // Create theme
   createTheme: async (
+    templateSlug: string,
     data: CreateThemeRequest
   ): Promise<CreateThemeResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/theme/`, {
-      method: "POST",
-      headers: createHeaders(),
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/api/template/${templateSlug}/theme/`,
+      {
+        method: "POST",
+        headers: createHeaders(),
+        body: JSON.stringify(data),
+      }
+    );
 
     await handleApiError(response);
     const responseData = await response.json();
@@ -58,18 +76,24 @@ export const useThemeApi = {
     };
   },
 
+  // Update theme
   updateTheme: async (
+    templateSlug: string,
+    componentId: string,
     data: UpdateThemeRequest
   ): Promise<UpdateThemeResponse> => {
     const requestBody = {
       data: data.data,
     };
 
-    const response = await fetch(`${API_BASE_URL}/api/theme/${data.id}/`, {
-      method: "PATCH",
-      headers: createHeaders(),
-      body: JSON.stringify(requestBody),
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/api/template/${templateSlug}/theme/${componentId}/`,
+      {
+        method: "PATCH",
+        headers: createHeaders(),
+        body: JSON.stringify(requestBody),
+      }
+    );
 
     await handleApiError(response);
     const responseData = await response.json();

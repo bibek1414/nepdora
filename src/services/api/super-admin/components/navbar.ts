@@ -7,16 +7,21 @@ import {
   UpdateNavbarRequest,
   UpdateNavbarResponse,
   DeleteNavbarResponse,
-} from "@/types/owner-site/components/navbar";
+} from "@/types/super-admin/components/navbar";
 import { siteConfig } from "@/config/site";
+
 const API_BASE_URL = siteConfig.apiBaseUrl;
+
 export const useNavbarApi = {
-  // Get navbar with preview status
-  getNavbar: async (): Promise<GetNavbarResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/navbar/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+  // Get navbar with template slug
+  getNavbar: async (templateSlug: string): Promise<GetNavbarResponse> => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-navbar/${templateSlug}/navbar/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     const data = await response.json();
@@ -28,11 +33,16 @@ export const useNavbarApi = {
   },
 
   // Get published navbar
-  getNavbarPublished: async (): Promise<GetNavbarResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/navbar/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+  getNavbarPublished: async (
+    templateSlug: string
+  ): Promise<GetNavbarResponse> => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-navbar/${templateSlug}/navbar/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     const data = await response.json();
@@ -45,17 +55,21 @@ export const useNavbarApi = {
 
   // Create navbar
   createNavbar: async (
+    templateSlug: string,
     data: CreateNavbarRequest
   ): Promise<CreateNavbarResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/navbar/`, {
-      method: "POST",
-      headers: createHeaders(),
-      body: JSON.stringify({
-        component_id: data.component_id,
-        content: data.content,
-        data: data.navbarData,
-      }),
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-navbar/${templateSlug}/navbar/`,
+      {
+        method: "POST",
+        headers: createHeaders(),
+        body: JSON.stringify({
+          component_id: data.component_id,
+          content: data.content,
+          data: data.navbarData,
+        }),
+      }
+    );
 
     await handleApiError(response);
     const responseData = await response.json();
@@ -66,17 +80,23 @@ export const useNavbarApi = {
     };
   },
 
-  // Update navbar - ID in URL (RESTful approach)
+  // Update navbar
   updateNavbar: async (
+    templateSlug: string,
+    componentId: string,
     data: UpdateNavbarRequest
   ): Promise<UpdateNavbarResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/navbar/${data.id}/`, {
-      method: "PATCH",
-      headers: createHeaders(),
-      body: JSON.stringify({
-        data: data.navbarData,
-      }),
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-navbar/${templateSlug}/navbar/${componentId}/`,
+      {
+        method: "PATCH",
+        headers: createHeaders(),
+        body: JSON.stringify({
+          data: data.navbarData,
+          ...(data.content && { content: data.content }),
+        }),
+      }
+    );
 
     await handleApiError(response);
     const responseData = await response.json();
@@ -87,12 +107,18 @@ export const useNavbarApi = {
     };
   },
 
-  // Delete navbar - ID in URL
-  deleteNavbar: async (id: string): Promise<DeleteNavbarResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/navbar/${id}/`, {
-      method: "DELETE",
-      headers: createHeaders(),
-    });
+  // Delete navbar
+  deleteNavbar: async (
+    templateSlug: string,
+    componentId: string
+  ): Promise<DeleteNavbarResponse> => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-navbar/${templateSlug}/navbar/${componentId}/`,
+      {
+        method: "DELETE",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
 

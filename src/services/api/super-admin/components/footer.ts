@@ -7,16 +7,21 @@ import {
   UpdateFooterRequest,
   UpdateFooterResponse,
   DeleteFooterResponse,
-} from "@/types/owner-site/components/footer";
+} from "@/types/super-admin/components/footer";
 import { siteConfig } from "@/config/site";
+
 const API_BASE_URL = siteConfig.apiBaseUrl;
+
 export const useFooterApi = {
-  // Get footer with preview status
-  getFooter: async (): Promise<GetFooterResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/footer/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+  // Get footer with template slug
+  getFooter: async (templateSlug: string): Promise<GetFooterResponse> => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-footer/${templateSlug}/footer/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     const data = await response.json();
@@ -28,11 +33,16 @@ export const useFooterApi = {
   },
 
   // Get published footer
-  getFooterPublished: async (): Promise<GetFooterResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/footer/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+  getFooterPublished: async (
+    templateSlug: string
+  ): Promise<GetFooterResponse> => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-footer/${templateSlug}/footer/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     const data = await response.json();
@@ -45,17 +55,21 @@ export const useFooterApi = {
 
   // Create footer
   createFooter: async (
+    templateSlug: string,
     data: CreateFooterRequest
   ): Promise<CreateFooterResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/footer/`, {
-      method: "POST",
-      headers: createHeaders(),
-      body: JSON.stringify({
-        component_id: data.component_id,
-        content: data.content,
-        data: data.footerData,
-      }),
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-footer/${templateSlug}/footer/`,
+      {
+        method: "POST",
+        headers: createHeaders(),
+        body: JSON.stringify({
+          component_id: data.component_id,
+          content: data.content,
+          data: data.footerData,
+        }),
+      }
+    );
 
     await handleApiError(response);
     const responseData = await response.json();
@@ -66,27 +80,32 @@ export const useFooterApi = {
     };
   },
 
-  // Update footer - ID in URL (RESTful approach)
+  // Update footer
   updateFooter: async (
+    templateSlug: string,
+    componentId: string,
     data: UpdateFooterRequest
   ): Promise<UpdateFooterResponse> => {
     console.log(
       "Making PATCH request to:",
-      `${API_BASE_URL}/api/footer/${data.id}/`
+      `${API_BASE_URL}/api/template-footer/${templateSlug}/footer/${componentId}/`
     );
     console.log("Update payload:", {
       data: data.footerData,
       ...(data.content && { content: data.content }),
     });
 
-    const response = await fetch(`${API_BASE_URL}/api/footer/${data.id}/`, {
-      method: "PATCH",
-      headers: createHeaders(),
-      body: JSON.stringify({
-        data: data.footerData,
-        ...(data.content && { content: data.content }),
-      }),
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-footer/${templateSlug}/footer/${componentId}/`,
+      {
+        method: "PATCH",
+        headers: createHeaders(),
+        body: JSON.stringify({
+          data: data.footerData,
+          ...(data.content && { content: data.content }),
+        }),
+      }
+    );
 
     await handleApiError(response);
     const responseData = await response.json();
@@ -97,12 +116,18 @@ export const useFooterApi = {
     };
   },
 
-  // Delete footer - ID in URL
-  deleteFooter: async (id: string): Promise<DeleteFooterResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/footer/${id}/`, {
-      method: "DELETE",
-      headers: createHeaders(),
-    });
+  // Delete footer
+  deleteFooter: async (
+    templateSlug: string,
+    componentId: string
+  ): Promise<DeleteFooterResponse> => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-footer/${templateSlug}/footer/${componentId}/`,
+      {
+        method: "DELETE",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
 

@@ -3,40 +3,38 @@ import { useFooterApi } from "@/services/api/super-admin/components/footer";
 import {
   CreateFooterRequest,
   UpdateFooterRequest,
-} from "@/types/owner-site/components/footer";
+} from "@/types/super-admin/components/footer";
 import { toast } from "sonner";
 
-const FOOTER_QUERY_KEY = ["footer"];
-
-export const useFooterQuery = () => {
+export const useFooterQuery = (templateSlug: string) => {
   return useQuery({
-    queryKey: FOOTER_QUERY_KEY,
-    queryFn: useFooterApi.getFooter,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ["footer", templateSlug],
+    queryFn: () => useFooterApi.getFooter(templateSlug),
+    enabled: !!templateSlug,
+    staleTime: 5 * 60 * 1000,
     retry: 2,
   });
 };
 
-export const useFooterQueryPublished = () => {
+export const useFooterQueryPublished = (templateSlug: string) => {
   return useQuery({
-    queryKey: FOOTER_QUERY_KEY,
-    queryFn: useFooterApi.getFooterPublished,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ["footer", templateSlug],
+    queryFn: () => useFooterApi.getFooterPublished(templateSlug),
+    enabled: !!templateSlug,
+    staleTime: 5 * 60 * 1000,
     retry: 2,
   });
 };
 
-export const useCreateFooterMutation = () => {
+export const useCreateFooterMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateFooterRequest) => {
       try {
-        // Try to create the footer
-        return await useFooterApi.createFooter(data);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return await useFooterApi.createFooter(templateSlug, data);
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        // Check if footer already exists - error.data.detail is the correct path
         const errorDetail =
           error?.data?.detail ||
           error?.detail ||
@@ -54,22 +52,20 @@ export const useCreateFooterMutation = () => {
           (error?.status === 400 && errorDetail.includes("already exists"));
 
         if (isFooterExists) {
-          // Get the existing footer from cache or fetch it
-          let existingFooter = queryClient.getQueryData(
-            FOOTER_QUERY_KEY
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ) as any;
+          let existingFooter = queryClient.getQueryData([
+            "footer",
+            templateSlug,
+            //eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ]) as any;
 
-          // If not in cache, fetch it
           if (!existingFooter || !existingFooter.data?.id) {
             try {
-              existingFooter = await useFooterApi.getFooter();
+              existingFooter = await useFooterApi.getFooter(templateSlug);
             } catch (fetchError) {
               throw new Error("Could not fetch existing footer to replace it");
             }
           }
 
-          // Extract the footer ID - try multiple possible locations
           const footerId =
             existingFooter?.data?.id ||
             existingFooter?.id ||
@@ -77,18 +73,13 @@ export const useCreateFooterMutation = () => {
 
           if (footerId) {
             try {
-              // Delete the existing footer
-              await useFooterApi.deleteFooter(footerId);
-
-              // Wait a brief moment to ensure deletion is complete
+              await useFooterApi.deleteFooter(templateSlug, footerId);
               await new Promise(resolve => setTimeout(resolve, 300));
-
-              // Create the new footer
-              const result = await useFooterApi.createFooter(data);
-
-              // Show info toast about replacement
+              const result = await useFooterApi.createFooter(
+                templateSlug,
+                data
+              );
               toast.info("Previous footer replaced with new design");
-
               return result;
             } catch (deleteError) {
               throw new Error("Failed to replace existing footer");
@@ -97,16 +88,14 @@ export const useCreateFooterMutation = () => {
             throw new Error("Could not find existing footer ID");
           }
         }
-
-        // Re-throw if it's a different error
         throw error;
       }
     },
     onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ["footer", templateSlug] });
       toast.success(data.message || "Footer created successfully");
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       const errorMessage =
         error?.data?.detail ||
@@ -119,44 +108,40 @@ export const useCreateFooterMutation = () => {
   });
 };
 
-export const useUpdateFooterMutation = () => {
+export const useUpdateFooterMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateFooterRequest) => useFooterApi.updateFooter(data),
+    mutationFn: ({
+      componentId,
+      data,
+    }: {
+      componentId: string;
+      data: UpdateFooterRequest;
+    }) => useFooterApi.updateFooter(templateSlug, componentId, data),
     onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ["footer", templateSlug] });
       toast.success(data.message || "Footer updated successfully");
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error.message || "Failed to update footer");
     },
   });
 };
 
-export const useDeleteFooterMutation = () => {
+export const useDeleteFooterMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => {
-      // Get footer ID from cache
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const existingFooter = queryClient.getQueryData(FOOTER_QUERY_KEY) as any;
-      const footerId = existingFooter?.data?.id;
-
-      if (!footerId) {
-        throw new Error("No footer found to delete");
-      }
-
-      return useFooterApi.deleteFooter(footerId);
-    },
+    mutationFn: (componentId: string) =>
+      useFooterApi.deleteFooter(templateSlug, componentId),
     onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
-      queryClient.setQueryData(FOOTER_QUERY_KEY, null);
+      queryClient.invalidateQueries({ queryKey: ["footer", templateSlug] });
+      queryClient.setQueryData(["footer", templateSlug], null);
       toast.success(data.message || "Footer deleted successfully");
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error.message || "Failed to delete footer");
     },

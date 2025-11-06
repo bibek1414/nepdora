@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useRouter } from "next/navigation";
-import { CanvasArea } from "@/components/site-owners/builder/builder/canvas-area";
+import { CanvasArea } from "@/components/super-admin/builder/builder/canvas-area";
 import { TopNavigation } from "@/components/super-admin/builder/builder/top-navigation";
 import { ComponentSidebar } from "@/components/super-admin/builder/builder/component-sidebar";
 import {
@@ -26,7 +26,7 @@ import { defaultHeroData } from "@/types/owner-site/components/hero";
 import {
   useCreateComponentMutation,
   usePageComponentsQuery,
-} from "@/hooks/super-admin/components/unified";
+} from "@/hooks/super-admin/components/use-unified";
 import { AboutUsStylesDialog } from "@/components/site-owners/builder/about/about-styles-dialog";
 import {
   defaultAboutUs1Data,
@@ -87,12 +87,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { data: templatesData = [], isLoading: isTemplatesLoading } =
     useTemplates();
 
-  const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
-  const createNavbarMutation = useCreateNavbarMutation();
+  const { data: navbarResponse, isLoading: isNavbarLoading } =
+    useNavbarQuery(templateSlug);
+  const createNavbarMutation = useCreateNavbarMutation(templateSlug);
 
   // Footer hooks
-  const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
-  const createFooterMutation = useCreateFooterMutation();
+  const { data: footerResponse, isLoading: isFooterLoading } =
+    useFooterQuery(templateSlug);
+  const createFooterMutation = useCreateFooterMutation(templateSlug);
 
   // Use the page hooks
   const { data: pagesData = [], isLoading: isPagesLoading } =
@@ -1165,6 +1167,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddFooter={() => setIsFooterDialogOpen(true)}
                   currentPageSlug={currentPage}
                   pageComponents={pageComponents}
+                  templateSlug={templateSlug}
                   isLoading={isPageComponentsLoading}
                   error={pageComponentsError}
                   onAddHero={handleAddHeroFromCanvas}
