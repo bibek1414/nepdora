@@ -9,7 +9,10 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useFAQs, useFAQCategories } from "@/hooks/superadmin/use-faq-category";
+import {
+  useFAQs,
+  useFAQCategories,
+} from "@/hooks/super-admin/use-faq-category";
 
 const SupportFAQ: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");

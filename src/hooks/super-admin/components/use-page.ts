@@ -5,16 +5,17 @@ import {
   CreatePageRequest,
   UpdatePageRequest,
   Page,
-} from "@/types/super-admin/page";
+} from "@/types/super-admin/components/page";
 
 export const PAGES_QUERY_KEY = ["pages"];
 export const PAGE_QUERY_KEY = (slug: string) => ["pages", slug];
 
 // Get all pages
-export const usePages = () => {
+export const usePages = (templateSlug: string) => {
   return useQuery({
-    queryKey: PAGES_QUERY_KEY,
-    queryFn: pageApi.getPages,
+    queryKey: [...PAGES_QUERY_KEY, templateSlug],
+    queryFn: () => pageApi.getPages(templateSlug),
+    enabled: !!templateSlug,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
@@ -30,16 +31,19 @@ export const usePage = (slug: string) => {
 };
 
 // Create new page
-export const useCreatePage = () => {
+export const useCreatePage = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (pageData: CreatePageRequest) => pageApi.createPage(pageData),
+    mutationFn: (pageData: Omit<CreatePageRequest, "template">) =>
+      pageApi.createPage({ ...pageData, template_slug: templateSlug }),
 
     onSuccess: (data: Page) => {
       console.log("Page created successfully:", data);
 
-      queryClient.invalidateQueries({ queryKey: PAGES_QUERY_KEY });
+      queryClient.invalidateQueries({
+        queryKey: [...PAGES_QUERY_KEY, templateSlug],
+      });
 
       queryClient.setQueryData(PAGE_QUERY_KEY(data.slug), data);
     },

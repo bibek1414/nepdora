@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { NewPageDialog } from "@/components/site-owners/builder/new-page/new-page-dialog";
-import { DeletePageDialog } from "@/components/site-owners/builder/new-page/delete-page-dialog";
+import { NewPageDialog } from "@/components/super-admin/builder/new-page/new-page-dialog";
+import { DeletePageDialog } from "@/components/super-admin/builder/new-page/delete-page-dialog";
 import { ThemeDialog } from "@/components/site-owners/builder/theme/theme-dialog";
 import { Button } from "@/components/ui/button";
 import { Page } from "@/types/owner-site/components/page";
@@ -14,25 +14,27 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
+
 interface TopNavigationProps {
   pages: Page[];
   currentPage: string;
+  templateSlug: string;
   onPageChange: (pageSlug: string) => void;
   onPageCreated: (page: Page) => void;
   onPageDeleted: (deletedSlug: string) => void;
-  siteUser: string;
 }
 
 export const TopNavigation: React.FC<TopNavigationProps> = ({
   pages,
   currentPage,
+  templateSlug, // Add this line
   onPageChange,
   onPageCreated,
   onPageDeleted,
-  siteUser,
 }) => {
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const { mutate: publish, isPending } = usePublishSite();
+
   return (
     <div className="sticky top-0 z-40 border-b border-gray-200 bg-white">
       <div className="flex items-center justify-between px-2 py-3">
@@ -48,7 +50,10 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             </div>
 
             {/* New Page Dialog */}
-            <NewPageDialog onPageCreated={onPageCreated} />
+            <NewPageDialog
+              templateSlug={templateSlug}
+              onPageCreated={onPageCreated}
+            />
 
             {/* Existing Pages */}
             <div className="flex items-center gap-2">
@@ -108,32 +113,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             <Palette className="mr-2 h-4 w-4" />
             Theme Settings
           </Button>
-          <Link
-            href={`/publish/${siteUser}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button
-              variant="outline"
-              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
-            >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              Live Site
-            </Button>
-          </Link>
-          <Link
-            href={`/preview/${siteUser}/${currentPage}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button
-              variant="outline"
-              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
-            >
-              <Eye className="mr-2 h-4 w-4" />
-              Preview
-            </Button>
-          </Link>
+
           <Button
             variant="outline"
             className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"

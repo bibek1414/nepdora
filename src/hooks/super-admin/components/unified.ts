@@ -11,54 +11,67 @@ import { ComponentTypeMap } from "@/types/owner-site/components/components";
 export const usePageComponentsQuery = <
   T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
 >(
-  pageSlug: string
+  pageSlug: string,
+  templateSlug: string
 ) => {
   return useQuery({
-    queryKey: ["pageComponents", pageSlug],
-    queryFn: () => componentsApi.getPageComponents<T>(pageSlug),
-    enabled: !!pageSlug,
+    queryKey: ["pageComponents", pageSlug, templateSlug],
+    queryFn: () => componentsApi.getPageComponents<T>(pageSlug, templateSlug),
+    enabled: !!pageSlug && !!templateSlug,
   });
 };
+
 export const usePageComponentsQueryPublished = <
   T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
 >(
-  pageSlug: string
+  pageSlug: string,
+  templateSlug: string
 ) => {
   return useQuery({
-    queryKey: ["pageComponents", pageSlug],
-    queryFn: () => componentsApi.getPageComponentsPublished<T>(pageSlug),
-    enabled: !!pageSlug,
+    queryKey: ["pageComponents", pageSlug, templateSlug],
+    queryFn: () =>
+      componentsApi.getPageComponentsPublished<T>(pageSlug, templateSlug),
+    enabled: !!pageSlug && !!templateSlug,
   });
 };
 
 // Generic hook for fetching components by type
 export const useComponentsByTypeQuery = <T extends keyof ComponentTypeMap>(
   pageSlug: string,
-  componentType: T
+  componentType: T,
+  templateSlug: string
 ) => {
   return useQuery({
-    queryKey: ["pageComponents", pageSlug, componentType],
+    queryKey: ["pageComponents", pageSlug, componentType, templateSlug],
     queryFn: () =>
-      componentsApi.getComponentsByType<T>(pageSlug, componentType),
-    enabled: !!pageSlug && !!componentType,
+      componentsApi.getComponentsByType<T>(
+        pageSlug,
+        componentType,
+        templateSlug
+      ),
+    enabled: !!pageSlug && !!componentType && !!templateSlug,
   });
 };
 
 // Generic hook for creating components
 export const useCreateComponentMutation = <T extends keyof ComponentTypeMap>(
   pageSlug: string,
-  componentType: T
+  componentType: T,
+  templateSlug: string
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: ComponentTypeMap[T]) => {
       // Get existing components to calculate proper order
-      const existingComponents =
-        await componentsApi.getPageComponents(pageSlug);
+      const existingComponents = await componentsApi.getPageComponents(
+        pageSlug,
+        templateSlug
+      );
 
       return componentsApi.createComponent(
         pageSlug,
+        templateSlug,
         {
           component_type: componentType,
           data,
@@ -67,9 +80,11 @@ export const useCreateComponentMutation = <T extends keyof ComponentTypeMap>(
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", pageSlug, componentType],
+        queryKey: ["pageComponents", pageSlug, templateSlug],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", pageSlug, componentType, templateSlug],
       });
       toast.success(`${componentType} component created successfully!`);
     },
@@ -86,7 +101,8 @@ export const useCreateComponentMutation = <T extends keyof ComponentTypeMap>(
 // Generic hook for updating components
 export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
   pageSlug: string,
-  componentType: T
+  componentType: T,
+  templateSlug: string
 ) => {
   const queryClient = useQueryClient();
 
@@ -101,13 +117,16 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
       componentsApi.updateComponent(
         pageSlug,
         componentId,
+        templateSlug,
         { data },
         componentType
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", pageSlug, componentType],
+        queryKey: ["pageComponents", pageSlug, templateSlug],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", pageSlug, componentType, templateSlug],
       });
       toast.success(`${componentType} component updated successfully!`);
     },
@@ -124,17 +143,25 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
 // Generic hook for deleting components
 export const useDeleteComponentMutation = (
   pageSlug: string,
-  componentType: keyof ComponentTypeMap
+  componentType: keyof ComponentTypeMap,
+  templateSlug: string
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (componentId: string) =>
-      componentsApi.deleteComponent(pageSlug, componentId, componentType),
+      componentsApi.deleteComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        componentType
+      ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", pageSlug, componentType],
+        queryKey: ["pageComponents", pageSlug, templateSlug],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", pageSlug, componentType, templateSlug],
       });
       toast.success(`${componentType} component deleted successfully!`);
     },
@@ -149,82 +176,102 @@ export const useDeleteComponentMutation = (
 };
 
 // Specific component hooks using the generic ones
-export const useHeroComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "hero"),
-  create: useCreateComponentMutation(pageSlug, "hero"),
-  update: useUpdateComponentMutation(pageSlug, "hero"),
-  delete: useDeleteComponentMutation(pageSlug, "hero"),
-});
-export const usePortfolioComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "portfolio"),
-  create: useCreateComponentMutation(pageSlug, "portfolio"),
-  update: useUpdateComponentMutation(pageSlug, "portfolio"),
-  delete: useDeleteComponentMutation(pageSlug, "portfolio"),
+export const useHeroComponents = (pageSlug: string, templateSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "hero", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "hero", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "hero", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "hero", templateSlug),
 });
 
-export const useAboutComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "about"),
-  create: useCreateComponentMutation(pageSlug, "about"),
-  update: useUpdateComponentMutation(pageSlug, "about"),
-  delete: useDeleteComponentMutation(pageSlug, "about"),
+export const usePortfolioComponents = (
+  pageSlug: string,
+  templateSlug: string
+) => ({
+  query: useComponentsByTypeQuery(pageSlug, "portfolio", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "portfolio", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "portfolio", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "portfolio", templateSlug),
 });
 
-export const useBlogComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "blog"),
-  create: useCreateComponentMutation(pageSlug, "blog"),
-  update: useUpdateComponentMutation(pageSlug, "blog"),
-  delete: useDeleteComponentMutation(pageSlug, "blog"),
+export const useAboutComponents = (pageSlug: string, templateSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "about", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "about", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "about", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "about", templateSlug),
 });
 
-export const useProductComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "products"),
-  create: useCreateComponentMutation(pageSlug, "products"),
-  update: useUpdateComponentMutation(pageSlug, "products"),
-  delete: useDeleteComponentMutation(pageSlug, "products"),
+export const useBlogComponents = (pageSlug: string, templateSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "blog", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "blog", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "blog", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "blog", templateSlug),
 });
 
-// NEW: Category component hooks
-export const useCategoryComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "category"),
-  create: useCreateComponentMutation(pageSlug, "category"),
-  update: useUpdateComponentMutation(pageSlug, "category"),
-  delete: useDeleteComponentMutation(pageSlug, "category"),
+export const useProductComponents = (
+  pageSlug: string,
+  templateSlug: string
+) => ({
+  query: useComponentsByTypeQuery(pageSlug, "products", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "products", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "products", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "products", templateSlug),
 });
 
-// NEW: SubCategory component hooks
-export const useSubCategoryComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "subcategory"),
-  create: useCreateComponentMutation(pageSlug, "subcategory"),
-  update: useUpdateComponentMutation(pageSlug, "subcategory"),
-  delete: useDeleteComponentMutation(pageSlug, "subcategory"),
+// Category component hooks
+export const useCategoryComponents = (
+  pageSlug: string,
+  templateSlug: string
+) => ({
+  query: useComponentsByTypeQuery(pageSlug, "category", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "category", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "category", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "category", templateSlug),
 });
 
-export const useTeamComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "team"),
-  create: useCreateComponentMutation(pageSlug, "team"),
-  update: useUpdateComponentMutation(pageSlug, "team"),
-  delete: useDeleteComponentMutation(pageSlug, "team"),
+// SubCategory component hooks
+export const useSubCategoryComponents = (
+  pageSlug: string,
+  templateSlug: string
+) => ({
+  query: useComponentsByTypeQuery(pageSlug, "subcategory", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "subcategory", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "subcategory", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "subcategory", templateSlug),
 });
 
-export const useTestimonialsComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "testimonials"),
-  create: useCreateComponentMutation(pageSlug, "testimonials"),
-  update: useUpdateComponentMutation(pageSlug, "testimonials"),
-  delete: useDeleteComponentMutation(pageSlug, "testimonials"),
+export const useTeamComponents = (pageSlug: string, templateSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "team", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "team", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "team", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "team", templateSlug),
 });
 
-export const useFAQComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "faq"),
-  create: useCreateComponentMutation(pageSlug, "faq"),
-  update: useUpdateComponentMutation(pageSlug, "faq"),
-  delete: useDeleteComponentMutation(pageSlug, "faq"),
+export const useTestimonialsComponents = (
+  pageSlug: string,
+  templateSlug: string
+) => ({
+  query: useComponentsByTypeQuery(pageSlug, "testimonials", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "testimonials", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "testimonials", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "testimonials", templateSlug),
+});
+
+export const useFAQComponents = (pageSlug: string, templateSlug: string) => ({
+  query: useComponentsByTypeQuery(pageSlug, "faq", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "faq", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "faq", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "faq", templateSlug),
 });
 
 // Existing specialized mutation hooks
-export const useCreateTestimonialsComponentMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "testimonials");
+export const useCreateTestimonialsComponentMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useCreateComponentMutation(pageSlug, "testimonials", templateSlug);
 
-export const useUpdateTestimonialsComponentMutation = () => {
+export const useUpdateTestimonialsComponentMutation = (
+  templateSlug: string
+) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -240,13 +287,14 @@ export const useUpdateTestimonialsComponentMutation = () => {
       componentsApi.updateComponent(
         pageSlug,
         componentId,
+        templateSlug,
         { data },
         "testimonials"
       ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Testimonials section updated successfully!");
     },
@@ -260,7 +308,9 @@ export const useUpdateTestimonialsComponentMutation = () => {
   });
 };
 
-export const useDeleteTestimonialsComponentMutation = () => {
+export const useDeleteTestimonialsComponentMutation = (
+  templateSlug: string
+) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -270,11 +320,17 @@ export const useDeleteTestimonialsComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "testimonials"),
+    }) =>
+      componentsApi.deleteComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        "testimonials"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Testimonials section removed successfully!");
     },
@@ -288,11 +344,13 @@ export const useDeleteTestimonialsComponentMutation = () => {
   });
 };
 
-// NEW: Category specific mutation hooks
-export const useCreateCategoryComponentMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "category");
+// Category specific mutation hooks
+export const useCreateCategoryComponentMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useCreateComponentMutation(pageSlug, "category", templateSlug);
 
-export const useUpdateCategoryComponentMutation = () => {
+export const useUpdateCategoryComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -308,13 +366,14 @@ export const useUpdateCategoryComponentMutation = () => {
       componentsApi.updateComponent(
         pageSlug,
         componentId,
+        templateSlug,
         { data },
         "category"
       ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Category section updated successfully!");
     },
@@ -328,7 +387,7 @@ export const useUpdateCategoryComponentMutation = () => {
   });
 };
 
-export const useDeleteCategoryComponentMutation = () => {
+export const useDeleteCategoryComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -338,11 +397,17 @@ export const useDeleteCategoryComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "category"),
+    }) =>
+      componentsApi.deleteComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        "category"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Category section removed successfully!");
     },
@@ -356,11 +421,13 @@ export const useDeleteCategoryComponentMutation = () => {
   });
 };
 
-// NEW: SubCategory specific mutation hooks
-export const useCreateSubCategoryComponentMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "subcategory");
+// SubCategory specific mutation hooks
+export const useCreateSubCategoryComponentMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useCreateComponentMutation(pageSlug, "subcategory", templateSlug);
 
-export const useUpdateSubCategoryComponentMutation = () => {
+export const useUpdateSubCategoryComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -376,13 +443,14 @@ export const useUpdateSubCategoryComponentMutation = () => {
       componentsApi.updateComponent(
         pageSlug,
         componentId,
+        templateSlug,
         { data },
         "subcategory"
       ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("SubCategory section updated successfully!");
     },
@@ -396,7 +464,7 @@ export const useUpdateSubCategoryComponentMutation = () => {
   });
 };
 
-export const useDeleteSubCategoryComponentMutation = () => {
+export const useDeleteSubCategoryComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -406,11 +474,17 @@ export const useDeleteSubCategoryComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "subcategory"),
+    }) =>
+      componentsApi.deleteComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        "subcategory"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("SubCategory section removed successfully!");
     },
@@ -425,28 +499,36 @@ export const useDeleteSubCategoryComponentMutation = () => {
 };
 
 // Other existing hooks remain the same...
-export const useCreateHeroMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "hero");
+export const useCreateHeroMutation = (pageSlug: string, templateSlug: string) =>
+  useCreateComponentMutation(pageSlug, "hero", templateSlug);
 
-export const useUpdateHeroMutation = (pageSlug: string) =>
-  useUpdateComponentMutation(pageSlug, "hero");
+export const useUpdateHeroMutation = (pageSlug: string, templateSlug: string) =>
+  useUpdateComponentMutation(pageSlug, "hero", templateSlug);
 
-export const useDeleteHeroMutation = (pageSlug: string) =>
-  useDeleteComponentMutation(pageSlug, "hero");
+export const useDeleteHeroMutation = (pageSlug: string, templateSlug: string) =>
+  useDeleteComponentMutation(pageSlug, "hero", templateSlug);
 
-export const useCreateAboutUsMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "about");
+export const useCreateAboutUsMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useCreateComponentMutation(pageSlug, "about", templateSlug);
 
-export const useUpdateAboutUsMutation = (pageSlug: string) =>
-  useUpdateComponentMutation(pageSlug, "about");
+export const useUpdateAboutUsMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useUpdateComponentMutation(pageSlug, "about", templateSlug);
 
-export const useDeleteAboutUsMutation = (pageSlug: string) =>
-  useDeleteComponentMutation(pageSlug, "about");
+export const useDeleteAboutUsMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useDeleteComponentMutation(pageSlug, "about", templateSlug);
 
-export const useCreateBlogComponentMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "blog");
+export const useCreateBlogComponentMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useCreateComponentMutation(pageSlug, "blog", templateSlug);
 
-export const useUpdateBlogComponentMutation = () => {
+export const useUpdateBlogComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -459,11 +541,17 @@ export const useUpdateBlogComponentMutation = () => {
       componentId: string;
       data: Partial<ComponentTypeMap["blog"]>;
     }) =>
-      componentsApi.updateComponent(pageSlug, componentId, { data }, "blog"),
+      componentsApi.updateComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        { data },
+        "blog"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Blog section updated successfully!");
     },
@@ -477,7 +565,7 @@ export const useUpdateBlogComponentMutation = () => {
   });
 };
 
-export const useDeleteBlogComponentMutation = () => {
+export const useDeleteBlogComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -487,11 +575,17 @@ export const useDeleteBlogComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "blog"),
+    }) =>
+      componentsApi.deleteComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        "blog"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Blog section removed successfully!");
     },
@@ -505,10 +599,12 @@ export const useDeleteBlogComponentMutation = () => {
   });
 };
 
-export const useCreateProductsComponentMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "products");
+export const useCreateProductsComponentMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useCreateComponentMutation(pageSlug, "products", templateSlug);
 
-export const useUpdateProductsComponentMutation = () => {
+export const useUpdateProductsComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -524,13 +620,14 @@ export const useUpdateProductsComponentMutation = () => {
       componentsApi.updateComponent(
         pageSlug,
         componentId,
+        templateSlug,
         { data },
         "products"
       ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Products section updated successfully!");
     },
@@ -544,7 +641,7 @@ export const useUpdateProductsComponentMutation = () => {
   });
 };
 
-export const useDeleteProductsComponentMutation = () => {
+export const useDeleteProductsComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -554,11 +651,17 @@ export const useDeleteProductsComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "products"),
+    }) =>
+      componentsApi.deleteComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        "products"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Products section removed successfully!");
     },
@@ -572,10 +675,12 @@ export const useDeleteProductsComponentMutation = () => {
   });
 };
 
-export const useCreateFAQComponentMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "faq");
+export const useCreateFAQComponentMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useCreateComponentMutation(pageSlug, "faq", templateSlug);
 
-export const useUpdateFAQComponentMutation = () => {
+export const useUpdateFAQComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -587,11 +692,18 @@ export const useUpdateFAQComponentMutation = () => {
       pageSlug: string;
       componentId: string;
       data: Partial<ComponentTypeMap["faq"]>;
-    }) => componentsApi.updateComponent(pageSlug, componentId, { data }, "faq"),
+    }) =>
+      componentsApi.updateComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        { data },
+        "faq"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("FAQ section updated successfully!");
     },
@@ -603,7 +715,7 @@ export const useUpdateFAQComponentMutation = () => {
   });
 };
 
-export const useDeleteFAQComponentMutation = () => {
+export const useDeleteFAQComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -613,11 +725,12 @@ export const useDeleteFAQComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "faq"),
+    }) =>
+      componentsApi.deleteComponent(pageSlug, componentId, templateSlug, "faq"),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("FAQ section removed successfully!");
     },
@@ -628,10 +741,13 @@ export const useDeleteFAQComponentMutation = () => {
     },
   });
 };
-export const useCreatePortfolioComponentMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "portfolio");
 
-export const useUpdatePortfolioComponentMutation = () => {
+export const useCreatePortfolioComponentMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useCreateComponentMutation(pageSlug, "portfolio", templateSlug);
+
+export const useUpdatePortfolioComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -647,13 +763,14 @@ export const useUpdatePortfolioComponentMutation = () => {
       componentsApi.updateComponent(
         pageSlug,
         componentId,
+        templateSlug,
         { data },
         "portfolio"
       ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Portfolio section updated successfully!");
     },
@@ -667,7 +784,7 @@ export const useUpdatePortfolioComponentMutation = () => {
   });
 };
 
-export const useDeletePortfolioComponentMutation = () => {
+export const useDeletePortfolioComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -677,11 +794,17 @@ export const useDeletePortfolioComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "portfolio"),
+    }) =>
+      componentsApi.deleteComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        "portfolio"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Portfolio section removed successfully!");
     },
@@ -695,15 +818,24 @@ export const useDeletePortfolioComponentMutation = () => {
   });
 };
 
-export const useUpdateComponentOrderMutation = (pageSlug: string) => {
+export const useUpdateComponentOrderMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ orderUpdates }: BulkOrderUpdateRequest) =>
-      componentOrdersApi.updateComponentOrders(pageSlug, orderUpdates),
+      componentOrdersApi.updateComponentOrders(
+        pageSlug,
+        templateSlug,
+        orderUpdates
+      ),
     onSuccess: () => {
       // Invalidate and refetch page components to get updated order
-      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", pageSlug, templateSlug],
+      });
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       toast.success("Component order updated successfully!");
     },
@@ -717,17 +849,23 @@ export const useUpdateComponentOrderMutation = (pageSlug: string) => {
     },
   });
 };
-export const useBannerComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "banner"),
-  create: useCreateComponentMutation(pageSlug, "banner"),
-  update: useUpdateComponentMutation(pageSlug, "banner"),
-  delete: useDeleteComponentMutation(pageSlug, "banner"),
+
+export const useBannerComponents = (
+  pageSlug: string,
+  templateSlug: string
+) => ({
+  query: useComponentsByTypeQuery(pageSlug, "banner", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "banner", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "banner", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "banner", templateSlug),
 });
 
-export const useCreateBannerComponentMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "banner");
+export const useCreateBannerComponentMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useCreateComponentMutation(pageSlug, "banner", templateSlug);
 
-export const useUpdateBannerComponentMutation = () => {
+export const useUpdateBannerComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -740,11 +878,17 @@ export const useUpdateBannerComponentMutation = () => {
       componentId: string;
       data: Partial<ComponentTypeMap["banner"]>;
     }) =>
-      componentsApi.updateComponent(pageSlug, componentId, { data }, "banner"),
+      componentsApi.updateComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        { data },
+        "banner"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Banner section updated successfully!");
     },
@@ -758,7 +902,7 @@ export const useUpdateBannerComponentMutation = () => {
   });
 };
 
-export const useDeleteBannerComponentMutation = () => {
+export const useDeleteBannerComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -768,11 +912,17 @@ export const useDeleteBannerComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "banner"),
+    }) =>
+      componentsApi.deleteComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        "banner"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Banner section removed successfully!");
     },
@@ -785,17 +935,23 @@ export const useDeleteBannerComponentMutation = () => {
     },
   });
 };
-export const useNewsletterComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "newsletter"),
-  create: useCreateComponentMutation(pageSlug, "newsletter"),
-  update: useUpdateComponentMutation(pageSlug, "newsletter"),
-  delete: useDeleteComponentMutation(pageSlug, "newsletter"),
+
+export const useNewsletterComponents = (
+  pageSlug: string,
+  templateSlug: string
+) => ({
+  query: useComponentsByTypeQuery(pageSlug, "newsletter", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "newsletter", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "newsletter", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "newsletter", templateSlug),
 });
 
-export const useCreateNewsletterComponentMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "newsletter");
+export const useCreateNewsletterComponentMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useCreateComponentMutation(pageSlug, "newsletter", templateSlug);
 
-export const useUpdateNewsletterComponentMutation = () => {
+export const useUpdateNewsletterComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -811,13 +967,14 @@ export const useUpdateNewsletterComponentMutation = () => {
       componentsApi.updateComponent(
         pageSlug,
         componentId,
+        templateSlug,
         { data },
         "newsletter"
       ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Newsletter section updated successfully!");
     },
@@ -831,7 +988,7 @@ export const useUpdateNewsletterComponentMutation = () => {
   });
 };
 
-export const useDeleteNewsletterComponentMutation = () => {
+export const useDeleteNewsletterComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -841,11 +998,17 @@ export const useDeleteNewsletterComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "newsletter"),
+    }) =>
+      componentsApi.deleteComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        "newsletter"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("Newsletter section removed successfully!");
     },
@@ -858,17 +1021,23 @@ export const useDeleteNewsletterComponentMutation = () => {
     },
   });
 };
-export const useYouTubeComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "youtube"),
-  create: useCreateComponentMutation(pageSlug, "youtube"),
-  update: useUpdateComponentMutation(pageSlug, "youtube"),
-  delete: useDeleteComponentMutation(pageSlug, "youtube"),
+
+export const useYouTubeComponents = (
+  pageSlug: string,
+  templateSlug: string
+) => ({
+  query: useComponentsByTypeQuery(pageSlug, "youtube", templateSlug),
+  create: useCreateComponentMutation(pageSlug, "youtube", templateSlug),
+  update: useUpdateComponentMutation(pageSlug, "youtube", templateSlug),
+  delete: useDeleteComponentMutation(pageSlug, "youtube", templateSlug),
 });
 
-export const useCreateYouTubeComponentMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "youtube");
+export const useCreateYouTubeComponentMutation = (
+  pageSlug: string,
+  templateSlug: string
+) => useCreateComponentMutation(pageSlug, "youtube", templateSlug);
 
-export const useUpdateYouTubeComponentMutation = () => {
+export const useUpdateYouTubeComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -881,11 +1050,17 @@ export const useUpdateYouTubeComponentMutation = () => {
       componentId: string;
       data: Partial<ComponentTypeMap["youtube"]>;
     }) =>
-      componentsApi.updateComponent(pageSlug, componentId, { data }, "youtube"),
+      componentsApi.updateComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        { data },
+        "youtube"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("YouTube section updated successfully!");
     },
@@ -899,7 +1074,7 @@ export const useUpdateYouTubeComponentMutation = () => {
   });
 };
 
-export const useDeleteYouTubeComponentMutation = () => {
+export const useDeleteYouTubeComponentMutation = (templateSlug: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -909,11 +1084,17 @@ export const useDeleteYouTubeComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "youtube"),
+    }) =>
+      componentsApi.deleteComponent(
+        pageSlug,
+        componentId,
+        templateSlug,
+        "youtube"
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
+        queryKey: ["pageComponents", variables.pageSlug, templateSlug],
       });
       toast.success("YouTube section removed successfully!");
     },

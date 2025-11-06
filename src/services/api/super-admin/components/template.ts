@@ -7,7 +7,7 @@ import {
   CreateTemplateResponse,
   DeleteTemplateResponse,
   GetTemplatesResponse,
-} from "@/types/super-admin/template";
+} from "@/types/super-admin/components/template";
 
 export const useTemplateApi = {
   getTemplates: async (): Promise<Template[]> => {
@@ -39,11 +39,11 @@ export const useTemplateApi = {
   },
 
   updateTemplate: async (
-    id: number | string,
+    slug: number | string,
     payload: CreateTemplateRequest
   ): Promise<{ data: Template }> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/templates/${id}/`, {
+    const response = await fetch(`${API_BASE_URL}/api/templates/${slug}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(payload),
@@ -54,10 +54,10 @@ export const useTemplateApi = {
   },
 
   deleteTemplate: async (
-    id: number | string
+    slug: number | string
   ): Promise<DeleteTemplateResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/templates/${id}/`, {
+    const response = await fetch(`${API_BASE_URL}/api/templates/${slug}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

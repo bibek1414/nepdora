@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Edit, Trash2, MessageSquare, Loader2 } from "lucide-react";
-import { useFAQs, useDeleteFAQ } from "@/hooks/superadmin/use-faq-category";
+import { useFAQs, useDeleteFAQ } from "@/hooks/super-admin/use-faq-category";
 import { FAQFormTrigger } from "./faq-form";
 import { FAQ } from "@/types/super-admin/faq-category";
 import { toast } from "sonner";

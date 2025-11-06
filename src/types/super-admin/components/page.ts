@@ -6,12 +6,12 @@ export interface Page {
 
 export interface CreatePageRequest {
   title: string;
-  template: number | string;
+  template_slug?: string;
 }
 
 export interface UpdatePageRequest {
   title?: string;
-  template?: number | string;
+  template_slug?: string;
 }
 
 export type GetPageResponse = Page;

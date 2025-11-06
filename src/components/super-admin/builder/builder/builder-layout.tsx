@@ -5,28 +5,28 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useRouter } from "next/navigation";
 import { CanvasArea } from "@/components/site-owners/builder/builder/canvas-area";
-import { TopNavigation } from "@/components/site-owners/builder/builder/top-navigation";
-import { ComponentSidebar } from "@/components/site-owners/builder/builder/component-sidebar";
+import { TopNavigation } from "@/components/super-admin/builder/builder/top-navigation";
+import { ComponentSidebar } from "@/components/super-admin/builder/builder/component-sidebar";
 import {
   useNavbarQuery,
   useCreateNavbarMutation,
-} from "@/hooks/superadmin/components/use-navbar";
+} from "@/hooks/super-admin/components/use-navbar";
 import { NavbarData } from "@/types/owner-site/components/navbar";
 import { NavbarTemplateDialog } from "@/components/site-owners/builder/navbar/navbar-template-dialog";
-import { usePages } from "@/hooks/superadmin/components/use-page";
-import { useCreatePage } from "@/hooks/superadmin/components/use-page";
-import { Page } from "@/types/owner-site/components/page";
+import { usePages } from "@/hooks/super-admin/components/use-page";
+import { useCreatePage } from "@/hooks/super-admin/components/use-page";
+import { Page } from "@/types/super-admin/components/page";
 import {
   useFooterQuery,
   useCreateFooterMutation,
-} from "@/hooks/superadmin/components/use-footer";
+} from "@/hooks/super-admin/components/use-footer";
 import { FooterStylesDialog } from "@/components/site-owners/builder/footer/footer-styles-dialog";
 import { HeroStylesDialog } from "@/components/site-owners/builder/hero/hero-styles-dialog";
 import { defaultHeroData } from "@/types/owner-site/components/hero";
 import {
   useCreateComponentMutation,
   usePageComponentsQuery,
-} from "@/hooks/superadmin/components/unified";
+} from "@/hooks/super-admin/components/unified";
 import { AboutUsStylesDialog } from "@/components/site-owners/builder/about/about-styles-dialog";
 import {
   defaultAboutUs1Data,
@@ -72,17 +72,18 @@ import { PageTemplateDialog } from "@/components/site-owners/builder/templates/p
 import { PageTemplate } from "@/types/owner-site/components/page-template";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useTemplates } from "@/hooks/superadmin/components/use-templates";
+import { useTemplates } from "@/hooks/super-admin/components/use-templates";
+
 interface BuilderLayoutProps {
   params: {
-    siteUser: string;
+    templateSlug: string;
     pageSlug: string;
   };
 }
 
 export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const router = useRouter();
-  const { siteUser, pageSlug } = params;
+  const { templateSlug, pageSlug } = params;
   const { data: templatesData = [], isLoading: isTemplatesLoading } =
     useTemplates();
 
@@ -94,15 +95,16 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createFooterMutation = useCreateFooterMutation();
 
   // Use the page hooks
-  const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
-  const createPageMutation = useCreatePage();
+  const { data: pagesData = [], isLoading: isPagesLoading } =
+    usePages(templateSlug);
+  const createPageMutation = useCreatePage(templateSlug);
 
-  // Page components with proper ordering
+  // Page components with proper ordering - UPDATED: Added templateSlug parameter
   const {
     data: pageComponentsResponse,
     isLoading: isPageComponentsLoading,
     error: pageComponentsError,
-  } = usePageComponentsQuery(pageSlug);
+  } = usePageComponentsQuery(pageSlug, templateSlug); // Fixed parameter order
 
   const [droppedComponents, setDroppedComponents] = useState<
     ComponentResponse[]
@@ -138,67 +140,88 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isPageTemplateDialogOpen, setIsPageTemplateDialogOpen] =
     useState(false);
+
   // Use pageSlug from URL params as current page
   const currentPage = pageSlug;
   const queryClient = useQueryClient();
-  // Unified component mutations
-  const createHeroMutation = useCreateComponentMutation(currentPage, "hero");
+
+  // UPDATED: Unified component mutations with templateSlug parameter
+  const createHeroMutation = useCreateComponentMutation(
+    currentPage,
+    "hero",
+    templateSlug
+  );
   const createAboutUsMutation = useCreateComponentMutation(
     currentPage,
-    "about"
+    "about",
+    templateSlug
   );
   const createProductsComponentMutation = useCreateComponentMutation(
     currentPage,
-    "products"
+    "products",
+    templateSlug
   );
   const createCategoryComponentMutation = useCreateComponentMutation(
     currentPage,
-    "category"
+    "category",
+    templateSlug
   );
   const createSubCategoryComponentMutation = useCreateComponentMutation(
     currentPage,
-    "subcategory"
+    "subcategory",
+    templateSlug
   );
   const createBlogComponentMutation = useCreateComponentMutation(
     currentPage,
-    "blog"
+    "blog",
+    templateSlug
   );
   const createServicesComponentMutation = useCreateComponentMutation(
     currentPage,
-    "services"
+    "services",
+    templateSlug
   );
   const createContactComponentMutation = useCreateComponentMutation(
     currentPage,
-    "contact"
+    "contact",
+    templateSlug
   );
   const createTeamComponentMutation = useCreateComponentMutation(
     currentPage,
-    "team"
+    "team",
+    templateSlug
   );
   const createTestimonialsComponentMutation = useCreateComponentMutation(
     currentPage,
-    "testimonials"
+    "testimonials",
+    templateSlug
   );
   const createFAQComponentMutation = useCreateComponentMutation(
     currentPage,
-    "faq"
+    "faq",
+    templateSlug
   );
   const createPortfolioComponentMutation = useCreateComponentMutation(
     currentPage,
-    "portfolio"
+    "portfolio",
+    templateSlug
   );
   const createBannerComponentMutation = useCreateComponentMutation(
     currentPage,
-    "banner"
+    "banner",
+    templateSlug
   );
   const createNewsletterComponentMutation = useCreateComponentMutation(
     currentPage,
-    "newsletter"
+    "newsletter",
+    templateSlug
   );
   const createYouTubeComponentMutation = useCreateComponentMutation(
     currentPage,
-    "youtube"
+    "youtube",
+    templateSlug
   );
+
   // Process page components with proper typing
   const pageComponents = React.useMemo(() => {
     if (!pageComponentsResponse) return [];
@@ -271,15 +294,16 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       !isTemplatesLoading
     ) {
       setIsCreatingHomePage(true);
-      const defaultTemplateId =
-        templatesData.length > 0 ? templatesData[0].id : 2;
+      console.log("Creating home page with template:", templateSlug);
       createPageMutation.mutate(
-        { title: "Home", template: defaultTemplateId },
+        { title: "Home" },
         {
           onSuccess: (data: Page) => {
             setIsCreatingHomePage(false);
             if (pageSlug !== data.slug) {
-              router.push(`/${siteUser}/template/builder/${data.slug}`);
+              router.push(
+                `/superadmin/template/builder/${templateSlug}/${data.slug}`
+              );
             }
           },
           onError: error => {
@@ -295,10 +319,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     createPageMutation,
     isCreatingHomePage,
     router,
-    siteUser,
     pageSlug,
     templatesData,
     isTemplatesLoading,
+    templateSlug,
   ]);
 
   // Validate current page exists
@@ -309,33 +333,34 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       if (!pageExists && !isCreatingHomePage) {
         const firstPage = pagesData[0];
         router.push(
-          `/${siteUser}/template/builder/?templateId=${firstPage.id}`
+          `/superadmin/template/builder/${templateSlug}/${firstPage.slug}`
         );
       }
     }
-  }, [pagesData, pageSlug, router, siteUser, isCreatingHomePage]);
+  }, [pagesData, pageSlug, router, isCreatingHomePage, templateSlug]); // Added templateSlug dependency
 
   // Get current page data
   const currentPageData = pagesData.find(page => page.slug === currentPage);
 
   // Handle page change
   const handlePageChange = (newPageSlug: string) => {
-    router.push(`/superadmin/template/builder/${siteUser}/${newPageSlug}`);
+    router.push(`/superadmin/template/builder/${templateSlug}/${newPageSlug}`);
   };
 
-  // Handle page creation and navigation
   const handlePageCreated = (page: Page) => {
-    router.push(`/superadmin/template/builder/${siteUser}/${page.slug}`);
+    router.push(`/superadmin/template/builder/${templateSlug}/${page.slug}`);
   };
 
   // Handle page deletion and navigation
   const handlePageDeleted = (deletedSlug: string) => {
-    if (currentPage === deletedSlug && pagesData.length > 1) {
+    if (pageSlug === deletedSlug && pagesData.length > 1) {
       const remainingPages = pagesData.filter(
         page => page.slug !== deletedSlug
       );
       if (remainingPages.length > 0) {
-        router.push(`/${siteUser}/template/builder/${remainingPages[0].slug}`);
+        router.push(
+          `/superadmin/template/builder/${templateSlug}/${remainingPages[0].slug}`
+        );
       }
     }
   };
@@ -382,7 +407,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   };
 
-  // Template selection handlers - same as before but ensuring proper order assignment
+  // Template selection handlers
   const handleNavbarTemplateSelect = (templateData: NavbarData) => {
     const payload = {
       content: "navbar content",
@@ -395,6 +420,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+
   const handlePageTemplateSelect = async (template: PageTemplate) => {
     try {
       // Navigate to superadmin template builder with template ID
@@ -407,6 +433,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       toast.error("Failed to open template builder. Please try again.");
     }
   };
+
   const handleFooterStyleSelect = (styleId: string) => {
     const payload = {
       content: "footer content",
@@ -450,7 +477,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           description:
             "Get the latest news and updates delivered to your inbox.",
         },
-        copyright: `Â© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
+        copyright: `© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
       },
       component_id: `footer-${Date.now()}`,
     };
@@ -505,6 +532,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+
   const handleYouTubeTemplateSelect = (
     template: "grid" | "carousel" | "playlist"
   ) => {
@@ -757,6 +785,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+
   const handleServicesTemplateSelect = (
     template: "grid-1" | "grid-2" | "list-1" | "grid-3"
   ) => {
@@ -840,6 +869,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAddBlog = () => {
     setIsBlogStylesDialogOpen(true);
   };
+
   const handleAddServices = () => {
     setIsServicesStylesDialogOpen(true);
   };
@@ -847,6 +877,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAddContact = () => {
     setIsContactStylesDialogOpen(true);
   };
+
   const handleAddYouTube = () => {
     setIsYouTubeStylesDialogOpen(true);
   };
@@ -1028,11 +1059,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsCategoriesStylesDialogOpen}
         onStyleSelect={handleCategoryTemplateSelect}
       />
+
       <PageTemplateDialog
         isOpen={isPageTemplateDialogOpen}
         onClose={() => setIsPageTemplateDialogOpen(false)}
         onSelectTemplate={handlePageTemplateSelect}
       />
+
       <PortfolioStylesDialog
         open={isPortfolioStylesDialogOpen}
         onOpenChange={setIsPortfolioStylesDialogOpen}
@@ -1050,11 +1083,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsBlogStylesDialogOpen}
         onStyleSelect={handleBlogTemplateSelect}
       />
+
       <ServicesStyleDialog
         open={isServicesStylesDialogOpen}
         onOpenChange={setIsServicesStylesDialogOpen}
         onStyleSelect={handleServicesTemplateSelect}
       />
+
       <ContactStylesDialog
         open={isContactStylesDialogOpen}
         onOpenChange={setIsContactStylesDialogOpen}
@@ -1090,6 +1125,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsNewsletterStylesDialogOpen}
         onStyleSelect={handleNewsletterTemplateSelect}
       />
+
       <YouTubeStylesDialog
         open={isYouTubeStylesDialogOpen}
         onOpenChange={setIsYouTubeStylesDialogOpen}
@@ -1098,8 +1134,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
       <TopNavigation
         pages={pagesData}
+        templateSlug={templateSlug}
         currentPage={currentPage}
-        siteUser={siteUser}
         onPageChange={handlePageChange}
         onPageCreated={handlePageCreated}
         onPageDeleted={handlePageDeleted}
@@ -1107,10 +1143,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
       <div className="bg-background flex min-h-screen flex-col">
         <div className="flex flex-1">
-          <ComponentSidebar
-            siteUser={siteUser}
-            onComponentClick={handleComponentClick}
-          />
+          <ComponentSidebar onComponentClick={handleComponentClick} />
 
           <div className="flex flex-1 flex-col">
             <div className="flex-1 overflow-auto bg-gray-50 p-6">

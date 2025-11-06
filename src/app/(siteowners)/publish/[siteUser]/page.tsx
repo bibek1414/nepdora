@@ -7,7 +7,7 @@ import { usePages } from "@/hooks/owner-site/use-page";
 import { usePagePublished } from "@/hooks/publish/use-page-publish";
 import { PageComponentRenderer } from "@/components/site-owners/publish/page-component-render";
 import { LoadingSpinner } from "@/components/site-owners/publish/loading-spinner";
-import { useDomains } from "@/hooks/superadmin/use-domain";
+import { useDomains } from "@/hooks/super-admin/use-domain";
 
 interface PreviewPageProps {
   params: Promise<{ siteUser: string }>;
