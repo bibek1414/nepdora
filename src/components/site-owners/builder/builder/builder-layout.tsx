@@ -740,7 +740,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
   const handleGalleryTemplateSelect = (
-    template: "gallery-1" | "gallery-2" | "gallery-3" | "gallery-4"
+    template:
+      | "gallery-1"
+      | "gallery-2"
+      | "gallery-3"
+      | "gallery-4"
+      | "gallery-5"
   ) => {
     const galleryData = {
       ...defaultGalleryData,

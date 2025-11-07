@@ -11,7 +11,12 @@ interface GalleryStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
-    template: "gallery-1" | "gallery-2" | "gallery-3" | "gallery-4"
+    template:
+      | "gallery-1"
+      | "gallery-2"
+      | "gallery-3"
+      | "gallery-4"
+      | "gallery-5"
   ) => void;
 }
 
@@ -21,7 +26,7 @@ export const GalleryStylesDialog: React.FC<GalleryStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "gallery-1" | "gallery-2" | "gallery-3" | "gallery-4" | null
+    "gallery-1" | "gallery-2" | "gallery-3" | "gallery-4" | "gallery-5" | null
   >(null);
 
   const templates = [
@@ -40,10 +45,22 @@ export const GalleryStylesDialog: React.FC<GalleryStylesDialogProps> = ({
       name: "3D Gallery",
       description: "3D gallery layout with hover effects",
     },
+    {
+      id: "gallery-4" as const,
+      name: "Our Latest Creations",
+      description:
+        "A visual collection of our most recent works - each piece crafted with intention, emotion, and style.",
+    },
+    {
+      id: "gallery-5" as const,
+      name: "Grid 5 Columns",
+      description:
+        "A visual collection of our most recent works - each piece crafted with intention, emotion, and style.",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "gallery-1" | "gallery-2" | "gallery-3" | "gallery-4";
+    id: "gallery-1" | "gallery-2" | "gallery-3" | "gallery-4" | "gallery-5";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {

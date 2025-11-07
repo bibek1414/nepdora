@@ -24,6 +24,8 @@ import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
+import { GalleryTemplate4 } from "./gallery-template-4";
+import { GalleryTemplate5 } from "./gallery-template-5";
 
 interface GalleryComponentProps {
   component: GalleryComponentData;
@@ -124,6 +126,10 @@ export const GalleryComponent: React.FC<GalleryComponentProps> = ({
         return <GalleryTemplate2 {...props} />;
       case "gallery-3":
         return <GalleryTemplate3 {...props} />;
+      case "gallery-4":
+        return <GalleryTemplate4 {...props} />;
+      case "gallery-5":
+        return <GalleryTemplate5 {...props} />;
       default:
         return (
           <div className="flex min-h-[200px] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-8">

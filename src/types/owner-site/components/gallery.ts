@@ -12,7 +12,7 @@ export interface GalleryData {
   title: string;
   subtitle?: string;
   images: GalleryImage[];
-  template: "gallery-1" | "gallery-2" | "gallery-3" | "gallery-4";
+  template: "gallery-1" | "gallery-2" | "gallery-3" | "gallery-4" | "gallery-5";
   layout: "grid" | "masonry" | "carousel";
   columns: 2 | 3 | 4 | 5;
   showTitles: boolean;
