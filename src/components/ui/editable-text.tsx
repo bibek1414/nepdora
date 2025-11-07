@@ -281,7 +281,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
     theme?.colors.primary || "#3B82F6",
     theme?.colors.secondary || "#F59E0B",
     "#DC2626",
-    "#16A34A",
+    "#FFFFFF",
     "#9333EA",
     "#CA8A04",
     "#DB2777",
@@ -460,7 +460,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                     value={selectionColor}
                     onChange={e => setSelectionColor(e.target.value)}
                     placeholder="#000000"
-                    className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                    className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm text-black focus:ring-2 focus:ring-blue-400 focus:outline-none"
                   />
                   <button
                     onClick={() => applyColorToSelection(selectionColor)}

@@ -1,6 +1,3 @@
-// lib/api/subscription.ts
-
-import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { getAuthToken } from "@/utils/auth";
 import { handleApiError } from "@/utils/api-error";

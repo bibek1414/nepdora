@@ -606,13 +606,13 @@ export default function DeliveryChargesList() {
 
           {/* Search */}
           <div className="relative mb-4">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-600" />
             <Input
               type="text"
               placeholder="Search location..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 placeholder:text-gray-300"
             />
           </div>
 
