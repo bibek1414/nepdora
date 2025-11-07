@@ -1,23 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import {
-  useState,
-  useEffect,
-  FormEvent,
-  ChangeEvent,
-  KeyboardEvent,
-} from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
+import { useEffect } from "react";
 
 interface FormData {
   email: string;
   password: string;
-}
-
-interface AuthCheckResult {
-  isValid: boolean;
-  shouldRedirect: boolean;
 }
 
 export default function AdminLogin() {
@@ -29,35 +19,24 @@ export default function AdminLogin() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  // Check if already authenticated
+  // Check if already authenticated on mount
   useEffect(() => {
-    const checkExistingAuth = (): AuthCheckResult => {
+    const checkExistingAuth = async () => {
       try {
-        const authStatus: string | null =
-          localStorage.getItem("adminAuthenticated");
-        const authTime: string | null = localStorage.getItem("adminAuthTime");
-        const currentTime: number = Date.now();
+        const response = await fetch("/api/auth/verify", {
+          method: "GET",
+          credentials: "include",
+        });
 
-        // Check if auth is valid and not expired
-        const SESSION_TIMEOUT: number = 8 * 60 * 60 * 1000; // 8 hours
-        const isValidAuth: boolean =
-          authStatus === "true" &&
-          authTime !== null &&
-          currentTime - parseInt(authTime) < SESSION_TIMEOUT;
+        const data = await response.json();
 
-        if (isValidAuth) {
-          router.push("/superadmin/dashboard");
-          return { isValid: true, shouldRedirect: true };
+        if (response.ok && data.authenticated) {
+          // Already logged in, redirect to dashboard
+          router.replace("/superadmin/dashboard");
         }
-
-        return { isValid: false, shouldRedirect: false };
       } catch (error) {
-        console.error("Auth check failed:", error);
-        // Clear potentially corrupted auth data
-        localStorage.removeItem("adminAuthenticated");
-        localStorage.removeItem("adminAuthTime");
-        localStorage.removeItem("adminUser");
-        return { isValid: false, shouldRedirect: false };
+        // Not authenticated, stay on login page
+        console.log("Not authenticated");
       }
     };
 
@@ -70,7 +49,6 @@ export default function AdminLogin() {
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
     if (error) setError("");
   };
 
@@ -86,55 +64,37 @@ export default function AdminLogin() {
         return;
       }
 
-      await new Promise<void>(resolve => setTimeout(resolve, 1000));
+      // Send credentials to SERVER for validation
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      // Get admin credentials from environment variables
-      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-      const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+      const data = await response.json();
 
-      if (
-        formData.email === adminEmail &&
-        formData.password === adminPassword
-      ) {
-        const currentTime: number = Date.now();
-
-        localStorage.setItem("adminAuthenticated", "true");
-        localStorage.setItem("adminAuthTime", currentTime.toString());
-        localStorage.setItem("adminUser", formData.email);
-
+      if (response.ok && data.success) {
+        // Clear form
         setFormData({ email: "", password: "" });
 
-        router.push("/superadmin/dashboard");
-      } else {
-        setError("Invalid credentials. Please check your email and password.");
+        // Redirect to dashboard with replace to prevent back button to login
+        router.replace("/superadmin/dashboard");
 
-        console.warn("Failed login attempt:", {
-          email: formData.email,
-          timestamp: new Date().toISOString(),
-          ip: "client-side",
-        });
+        // Force a refresh to trigger auth check
+        router.refresh();
+      } else {
+        setError(data.error || "Invalid credentials");
       }
     } catch (err) {
       console.error("Login error:", err);
       setError("Login failed. Please try again.");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === "Enter" && !isLoading) {
-      // Create a synthetic form event for handleLogin
-      const form = e.currentTarget.form;
-      if (form) {
-        const syntheticEvent = new Event("submit", {
-          bubbles: true,
-          cancelable: true,
-        });
-        Object.defineProperty(syntheticEvent, "target", { value: form });
-        Object.defineProperty(syntheticEvent, "currentTarget", { value: form });
-        handleLogin(syntheticEvent as unknown as FormEvent<HTMLFormElement>);
-      }
     }
   };
 
@@ -173,7 +133,6 @@ export default function AdminLogin() {
               className="focus:ring-primary border-gray-300"
               value={formData.email}
               onChange={handleInputChange}
-              onKeyPress={handleKeyPress}
               required
               disabled={isLoading}
               autoComplete="username"
@@ -189,7 +148,6 @@ export default function AdminLogin() {
               className="focus:ring-primary border-gray-300"
               value={formData.password}
               onChange={handleInputChange}
-              onKeyPress={handleKeyPress}
               required
               disabled={isLoading}
               autoComplete="current-password"
@@ -250,22 +208,7 @@ export default function AdminLogin() {
                 Signing in...
               </div>
             ) : (
-              <>
-                <svg
-                  className="mr-2 inline h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                  />
-                </svg>
-                Sign In
-              </>
+              "Sign In"
             )}
           </button>
         </form>

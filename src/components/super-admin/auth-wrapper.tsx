@@ -1,7 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import { useRouter, usePathname } from "next/navigation";
+
+interface AuthContextType {
+  adminEmail: string;
+  isAuthenticated: boolean;
+}
+
+const AuthContext = createContext<AuthContextType>({
+  adminEmail: "",
+  isAuthenticated: false,
+});
+
+// Export this hook for child components to use
+export const useAuthContext = () => useContext(AuthContext);
 
 interface AuthWrapperProps {
   children: React.ReactNode;
@@ -9,46 +22,36 @@ interface AuthWrapperProps {
 
 export default function AuthWrapper({ children }: AuthWrapperProps) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [adminEmail, setAdminEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
   const pathname = usePathname();
 
-  // Pages that don't need authentication
   const publicPaths = ["/superadmin", "/superadmin/login"];
   const isPublicPath = publicPaths.includes(pathname);
 
   useEffect(() => {
-    // If it's a public path, render without auth check
     if (isPublicPath) {
       setIsLoading(false);
-      setIsAuthenticated(true); // Allow rendering for public paths
+      setIsAuthenticated(true);
       return;
     }
 
-    const checkAuth = () => {
+    const checkAuth = async () => {
       try {
-        const authStatus = localStorage.getItem("adminAuthenticated");
-        const authTime = localStorage.getItem("adminAuthTime");
-        const currentTime = Date.now();
-        const SESSION_TIMEOUT = 8 * 60 * 60 * 1000; // 8 hours
+        const response = await fetch("/api/auth/verify", {
+          method: "GET",
+          credentials: "include",
+        });
 
-        const isValidAuth =
-          authStatus === "true" &&
-          authTime !== null &&
-          currentTime - parseInt(authTime) < SESSION_TIMEOUT;
+        const data = await response.json();
 
-        if (!isValidAuth) {
-          // Clear invalid/expired auth
-          localStorage.removeItem("adminAuthenticated");
-          localStorage.removeItem("adminAuthTime");
-          localStorage.removeItem("adminUser");
-
-          // Redirect to login
+        if (response.ok && data.authenticated) {
+          setIsAuthenticated(true);
+          setAdminEmail(data.user?.email || "");
+        } else {
           router.replace("/superadmin/login");
-          return;
         }
-
-        setIsAuthenticated(true);
       } catch (error) {
         console.error("Auth check failed:", error);
         router.replace("/superadmin/login");
@@ -60,7 +63,6 @@ export default function AuthWrapper({ children }: AuthWrapperProps) {
     checkAuth();
   }, [router, pathname, isPublicPath]);
 
-  // Show loading state while checking authentication
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -72,16 +74,14 @@ export default function AuthWrapper({ children }: AuthWrapperProps) {
     );
   }
 
-  // Don't render anything if not authenticated (will redirect)
   if (!isAuthenticated) {
     return null;
   }
 
-  // For public paths, render without sidebar
-  if (isPublicPath) {
-    return <>{children}</>;
-  }
-
-  // Render the authenticated content
-  return <>{children}</>;
+  // Provide auth context to all child components
+  return (
+    <AuthContext.Provider value={{ adminEmail, isAuthenticated }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

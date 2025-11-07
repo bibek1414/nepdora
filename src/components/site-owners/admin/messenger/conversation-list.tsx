@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState, useRef } from "react";
-import { Search, MessageCircle, MoreHorizontal, Edit } from "lucide-react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState, useMemo, useEffect } from "react";
+import { Search, MessageCircle, MoreHorizontal, RefreshCw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { messageStore, StoredMessage } from "@/lib/message-store";
-import { useFacebook } from "@/contexts/FacebookContext";
 import { useFacebookIntegrations } from "@/hooks/owner-site/admin/use-facebook-integrations";
+import { useConversations } from "@/hooks/owner-site/admin/use-conversations";
 import {
   Select,
   SelectContent,
@@ -16,22 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-interface Conversation {
-  id: string;
-  name: string;
-  avatar?: string;
-  lastMessage?: string;
-  snippet?: string;
-  timestamp?: string;
-  updated_time?: string;
-  unread: boolean;
-  participantId?: string;
-}
+import { ConversationListItem } from "@/types/owner-site/admin/conversations";
 
 interface ConversationListProps {
   selectedId: string | null;
-  onSelectConversation: (id: string, conversation?: Conversation) => void;
+  onSelectConversation: (
+    conversationId: string,
+    data: ConversationListItem
+  ) => void;
   onIntegrationChange?: (
     integration: {
       id: number;
@@ -42,165 +32,69 @@ interface ConversationListProps {
   ) => void;
 }
 
-// Transform Facebook API conversations into local Conversation shape
-function mapFbConversations(
-  fbConversations: Array<{
-    id: string;
-    participants: {
-      data: Array<{ id: string; name: string; profile_pic?: string }>;
-    };
-    updated_time: string;
-    unread_count?: number;
-    messages?: { data?: Array<{ message?: string; created_time?: string }> };
-  }>,
-  pageId: string
-): Conversation[] {
-  return (fbConversations || []).map(conv => {
-    const participant = conv.participants?.data?.find(p => p.id !== pageId);
-    const lastMessage = conv.messages?.data?.[0];
-    return {
-      id: conv.id,
-      name: participant?.name || "Unknown User",
-      avatar: participant?.profile_pic,
-      lastMessage: lastMessage?.message || "No messages",
-      timestamp: lastMessage?.created_time || conv.updated_time,
-      updated_time: conv.updated_time,
-      unread: (conv.unread_count || 0) > 0,
-      participantId: participant?.id,
-    } as Conversation;
-  });
-}
-
 export function ConversationList({
   selectedId,
   onSelectConversation,
   onIntegrationChange,
 }: ConversationListProps) {
-  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
-  const { integration } = useFacebook();
-  const { data: integrations = [] } = useFacebookIntegrations();
   const [selectedIntegrationId, setSelectedIntegrationId] = useState<
     string | null
   >(null);
 
+  const { data: integrations = [] } = useFacebookIntegrations();
+
   const activeIntegration = useMemo(() => {
-    const chosen = integrations.find(
-      i => String(i.id) === String(selectedIntegrationId || "")
-    );
-    if (chosen) return chosen;
-    if (integration) return integration;
-    // default to first available integration if any
-    return integrations[0] ?? null;
-  }, [integrations, selectedIntegrationId, integration]);
+    // If we have a selected integration, use it
+    if (selectedIntegrationId && integrations.length > 0) {
+      const chosen = integrations.find(
+        i => String(i.id) === String(selectedIntegrationId)
+      );
+      if (chosen) return chosen;
+    }
 
-  const pageId = activeIntegration?.page_id;
-  const pageAccessToken = activeIntegration?.page_access_token;
-  const lastNotifiedIntegrationId = useRef<number | null>(null);
+    // Otherwise use the first available integration
+    return integrations[0] || null;
+  }, [integrations, selectedIntegrationId]);
 
-  // Notify parent when integration changes (only when integration ID actually changes)
+  // Set initial integration when integrations load
   useEffect(() => {
-    const currentIntegrationId = activeIntegration?.id || null;
-
-    // Only notify if the integration ID actually changed
-    if (lastNotifiedIntegrationId.current === currentIntegrationId) {
-      return;
+    if (integrations.length > 0 && !selectedIntegrationId) {
+      setSelectedIntegrationId(String(integrations[0].id));
     }
+  }, [integrations, selectedIntegrationId]);
 
-    lastNotifiedIntegrationId.current = currentIntegrationId;
+  const pageId = activeIntegration?.page_id || null;
 
-    if (
-      activeIntegration &&
-      activeIntegration.id &&
-      pageId &&
-      pageAccessToken
-    ) {
-      onIntegrationChange?.({
-        id: activeIntegration.id,
-        pageId,
-        pageAccessToken,
-        pageName: activeIntegration.page_name,
-      });
-    } else {
-      onIntegrationChange?.(null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIntegration?.id, pageId, pageAccessToken]); // Only depend on ID, not the whole object
-
-  // ✅ Fetch conversations using React Query
+  // Fetch conversations using our new hook
   const {
-    data: items = [],
+    data: conversations = [],
     refetch,
     isLoading,
-  } = useQuery({
-    queryKey: ["conversations", pageId],
-    queryFn: async () => {
-      if (!pageId || !pageAccessToken) return [] as Conversation[];
-      const url = `/api/facebook/conversations?pageId=${encodeURIComponent(
-        pageId
-      )}&pageAccessToken=${encodeURIComponent(pageAccessToken)}`;
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error("Failed to fetch conversations");
-      const fbConversations = await res.json();
-      return mapFbConversations(fbConversations, pageId);
-    },
-    staleTime: 10_000, // 10s, adjust as needed
-    refetchOnWindowFocus: true,
-    enabled: Boolean(pageId && pageAccessToken),
-  });
+  } = useConversations(pageId);
 
-  // ✅ Handle real-time updates from messageStore
+  // Notify parent when integration changes
   useEffect(() => {
-    const handleNewMessage = (msg: StoredMessage) => {
-      queryClient.setQueryData<Conversation[]>(
-        ["conversations", pageId],
-        old => {
-          if (!old) return old;
+    if (activeIntegration && pageId && activeIntegration.id !== undefined) {
+      onIntegrationChange?.({
+        id: activeIntegration.id,
+        pageId: activeIntegration.page_id,
+        pageAccessToken: activeIntegration.page_access_token,
+        pageName: activeIntegration.page_name,
+      });
+    } else if (integrations.length === 0) {
+      onIntegrationChange?.(null);
+    }
+  }, [activeIntegration, pageId, onIntegrationChange, integrations.length]);
 
-          // Find target conversation
-          const idx = old.findIndex(c => c.id === msg.conversationId);
-          if (idx === -1) return old; // Optionally trigger refetch if missing
-
-          const updatedConv: Conversation = {
-            ...old[idx],
-            snippet: msg.message,
-            updated_time: msg.created_time,
-            unread: msg.conversationId !== selectedId,
-          };
-
-          // Move to top
-          const next = [
-            updatedConv,
-            ...old.filter(c => c.id !== msg.conversationId),
-          ];
-          return next;
-        }
-      );
-    };
-
-    messageStore.on("newMessage", handleNewMessage);
-    return () => {
-      messageStore.removeListener("newMessage", handleNewMessage);
-    };
-  }, [queryClient, selectedId, pageId]);
-
-  // ✅ Mark selected conversation as read
-  useEffect(() => {
-    if (!selectedId) return;
-    queryClient.setQueryData<Conversation[]>(
-      ["conversations", pageId],
-      old =>
-        old?.map(c => (c.id === selectedId ? { ...c, unread: false } : c)) ?? []
+  const filteredConversations = conversations.filter(conv => {
+    const otherParticipant = conv.participants.find(p => p.id !== pageId);
+    const name = otherParticipant?.name || "Unknown";
+    return (
+      name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      conv.snippet.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [selectedId, queryClient, pageId]);
-
-  const filteredConversations = items.filter(
-    conv =>
-      conv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (conv.snippet || conv.lastMessage || "")
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-  );
+  });
 
   const getInitials = (name: string) =>
     name
@@ -210,8 +104,7 @@ export function ConversationList({
       .toUpperCase()
       .slice(0, 2);
 
-  const formatTimestamp = (timestamp?: string) => {
-    if (!timestamp) return "";
+  const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
     const diff = now.getTime() - date.getTime();
@@ -225,12 +118,10 @@ export function ConversationList({
   };
 
   return (
-    <div className="flex h-full w-[360px] flex-col border-r border-gray-200 bg-white">
+    <div className="flex h-full w-[360px] flex-col border-r border-gray-200 bg-white py-15">
       {/* Header */}
-      <div className="sticky top-13 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold text-gray-900">Chats</h1>
-        </div>
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
+        <h1 className="text-2xl font-bold text-gray-900">Chats</h1>
         <div className="flex items-center gap-2">
           <Select
             value={
@@ -241,7 +132,11 @@ export function ConversationList({
           >
             <SelectTrigger className="h-9 w-40 text-left">
               <SelectValue
-                placeholder={activeIntegration?.page_name || "Select Page"}
+                placeholder={
+                  integrations.length === 0
+                    ? "No Pages"
+                    : activeIntegration?.page_name || "Select Page"
+                }
               />
             </SelectTrigger>
             <SelectContent className="max-h-60">
@@ -252,15 +147,15 @@ export function ConversationList({
               ))}
             </SelectContent>
           </Select>
-          <button className="rounded-full p-2 text-gray-600 hover:bg-gray-100">
-            <MoreHorizontal className="h-5 w-5" />
-          </button>
           <button
             onClick={() => refetch()}
             className="rounded-full p-2 text-gray-600 hover:bg-gray-100"
             title="Refresh"
           >
-            <Edit className="h-5 w-5" />
+            <RefreshCw className="h-5 w-5" />
+          </button>
+          <button className="rounded-full p-2 text-gray-600 hover:bg-gray-100">
+            <MoreHorizontal className="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -292,70 +187,50 @@ export function ConversationList({
             </p>
           </div>
         ) : (
-          filteredConversations.map(conversation => (
-            <button
-              key={conversation.id}
-              onClick={() =>
-                onSelectConversation(conversation.id, conversation)
-              }
-              className={cn(
-                "flex w-full items-center gap-3 px-2 py-2 text-left transition-colors hover:bg-gray-100",
-                selectedId === conversation.id && "bg-gray-100"
-              )}
-            >
-              {/* Avatar */}
-              <div className="relative flex-shrink-0">
-                <Avatar className="h-14 w-14">
-                  <AvatarImage
-                    src={conversation.avatar}
-                    alt={conversation.name}
-                  />
+          filteredConversations.map(conversation => {
+            const otherParticipant = conversation.participants.find(
+              p => p.id !== pageId
+            );
+            const name = otherParticipant?.name || "Unknown User";
+            const avatar = otherParticipant?.profile_pic;
+
+            return (
+              <button
+                key={conversation.conversation_id}
+                onClick={() =>
+                  onSelectConversation(
+                    conversation.conversation_id,
+                    conversation
+                  )
+                }
+                className={cn(
+                  "flex w-full items-center gap-3 px-2 py-2 text-left transition-colors hover:bg-gray-100",
+                  selectedId === conversation.conversation_id && "bg-gray-100"
+                )}
+              >
+                <Avatar className="h-14 w-14 flex-shrink-0">
+                  <AvatarImage src={avatar} alt={name} />
                   <AvatarFallback className="bg-blue-500 text-lg font-semibold text-white">
-                    {getInitials(conversation.name)}
+                    {getInitials(name)}
                   </AvatarFallback>
                 </Avatar>
-                {conversation.unread && (
-                  <span className="absolute -top-0.5 -right-0.5 block h-3 w-3 rounded-full bg-blue-600 ring-2 ring-white" />
-                )}
-              </div>
 
-              {/* Content */}
-              <div className="min-w-0 flex-1">
-                <div className="mb-0.5 flex items-baseline justify-between gap-2">
-                  <h3
-                    className={cn(
-                      "truncate text-[15px]",
-                      conversation.unread
-                        ? "font-semibold text-gray-900"
-                        : "font-normal text-gray-900"
-                    )}
-                  >
-                    {conversation.name}
-                  </h3>
-                  <span className="flex-shrink-0 text-xs text-gray-500">
-                    {formatTimestamp(
-                      conversation.updated_time ||
-                        conversation.timestamp ||
-                        new Date().toISOString()
-                    )}
-                  </span>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-0.5 flex items-baseline justify-between gap-2">
+                    <h3 className="truncate text-[15px] font-normal text-gray-900">
+                      {name}
+                    </h3>
+                    <span className="flex-shrink-0 text-xs text-gray-500">
+                      {formatTimestamp(conversation.updated_time)}
+                    </span>
+                  </div>
+                  <p className="truncate text-sm text-gray-600">
+                    {conversation.snippet || "No messages yet"}
+                  </p>
                 </div>
-
-                <p
-                  className={cn(
-                    "truncate text-sm",
-                    conversation.unread
-                      ? "font-semibold text-gray-900"
-                      : "text-gray-600"
-                  )}
-                >
-                  {conversation.snippet ||
-                    conversation.lastMessage ||
-                    "No messages yet"}
-                </p>
-              </div>
-            </button>
-          ))
+              </button>
+            );
+          })
         )}
       </div>
     </div>

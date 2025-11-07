@@ -70,7 +70,7 @@ export default function CreateTemplateDialog() {
 
       // ✅ Navigate to the correct builder route with templateSlug and default 'home' page
       const templateSlug = payload.slug || payload.id;
-      router.push(`/superadmin/template/builder/${templateSlug}/home`);
+      router.push(`/superadmin/builder/${templateSlug}/home`);
     } catch (error) {
       console.error("Failed to create template:", error);
     }
@@ -175,7 +175,7 @@ export default function CreateTemplateDialog() {
                     size="sm"
                     onClick={() =>
                       router.push(
-                        `/superadmin/template/builder/${getTemplateSlug(t)}/home`
+                        `/superadmin/builder/${getTemplateSlug(t)}/home`
                       )
                     }
                   >

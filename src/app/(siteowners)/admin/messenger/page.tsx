@@ -4,19 +4,15 @@ import { useState, useEffect, useCallback } from "react";
 import { ConversationList } from "@/components/site-owners/admin/messenger/conversation-list";
 import { ChatWindow } from "@/components/site-owners/admin/messenger/chat-window";
 import { MessageInput } from "@/components/site-owners/admin/messenger/message-input";
-import { sendMessage as sendFacebookMessage } from "@/lib/facebook";
-
-// Updated interface to include profile_pic
-interface FacebookMessageFromAPI {
-  id: string;
-  message: string;
-  created_time: string;
-  from: {
-    id: string;
-    name: string;
-    profile_pic?: string; // Added this field
-  };
-}
+import {
+  useConversationMessages,
+  useSendMessage,
+} from "@/hooks/owner-site/admin/use-conversations";
+import {
+  ConversationListItem,
+  MessageData,
+} from "@/types/owner-site/admin/conversations";
+import { useFacebookIntegrations } from "@/hooks/owner-site/admin/use-facebook-integrations";
 
 interface Message {
   id: string;
@@ -28,23 +24,12 @@ interface Message {
   senderProfilePic?: string;
 }
 
-interface ConversationData {
-  id: string;
-  name: string;
-  avatar?: string;
-  lastMessage?: string;
-  timestamp?: string;
-  unread: boolean;
-  participantId?: string;
-}
-
 export default function MessagingPage() {
-  const [selectedConversation, setSelectedConversation] = useState<
+  const [selectedConversationId, setSelectedConversationId] = useState<
     string | null
   >(null);
   const [selectedConversationData, setSelectedConversationData] =
-    useState<ConversationData | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+    useState<ConversationListItem | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedIntegration, setSelectedIntegration] = useState<{
     id: number;
@@ -52,6 +37,15 @@ export default function MessagingPage() {
     pageAccessToken: string;
     pageName: string;
   } | null>(null);
+  const [integrationsLoaded, setIntegrationsLoaded] = useState(false);
+
+  const { data: integrations = [], isLoading: integrationsLoading } =
+    useFacebookIntegrations();
+
+  const { data: conversationDetail, isLoading: isLoadingMessages } =
+    useConversationMessages(selectedConversationId);
+
+  const sendMessageMutation = useSendMessage();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -59,6 +53,16 @@ export default function MessagingPage() {
       document.body.style.overflow = "";
     };
   }, []);
+
+  // Reset error when integrations load
+  useEffect(() => {
+    if (integrations.length > 0) {
+      setError(null);
+      setIntegrationsLoaded(true);
+    } else if (integrations.length === 0 && integrationsLoaded) {
+      setError("No Facebook pages connected. Please connect a page first.");
+    }
+  }, [integrations, integrationsLoaded]);
 
   const handleIntegrationChange = useCallback(
     (
@@ -70,245 +74,106 @@ export default function MessagingPage() {
       } | null
     ) => {
       setSelectedIntegration(integration);
-      // Clear selected conversation and messages when integration changes
-      setSelectedConversation(null);
+      setSelectedConversationId(null);
       setSelectedConversationData(null);
-      setMessages([]);
-      if (!integration) {
-        setError(
-          "No Facebook integration selected. Please select a page from the dropdown."
-        );
-      } else {
-        setError(null);
+      setError(null); // Clear error when integration changes
+
+      if (!integration && integrations.length === 0) {
+        setError("No Facebook pages connected. Please connect a page first.");
+      } else if (!integration) {
+        setError("Please select a Facebook page from the dropdown.");
       }
     },
-    []
+    [integrations.length]
   );
 
-  const fetchMessages = useCallback(
-    async (conversationId: string) => {
-      if (!conversationId || !selectedIntegration) return;
-
-      try {
-        const response = await fetch(
-          `/api/facebook/conversations/${conversationId}/messages?pageAccessToken=${selectedIntegration.pageAccessToken}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch messages");
-        }
-
-        const data = await response.json();
-
-        // Debug: Log the raw data
-        console.log("Raw messages data:", data.messages);
-
-        // Map the messages with the profile_pic field
-        const formattedMessages = data.messages.map(
-          (msg: FacebookMessageFromAPI) => {
-            console.log("Processing message:", {
-              id: msg.id,
-              from: msg.from,
-              profile_pic: msg.from.profile_pic,
-            });
-
-            return {
-              id: msg.id,
-              conversationId,
-              sender:
-                msg.from.id === selectedIntegration.pageId
-                  ? "You"
-                  : msg.from.name,
-              content: msg.message,
-              // Keep raw ISO so sorting works in ChatWindow
-              timestamp: msg.created_time,
-              isOwn: msg.from.id === selectedIntegration.pageId,
-              senderProfilePic: msg.from.profile_pic, // This now comes from the API
-            };
-          }
-        );
-
-        console.log("Formatted messages with profile pics:", formattedMessages);
-        setMessages(formattedMessages.reverse());
-      } catch (err) {
-        console.error("Error fetching messages:", err);
-        setError("Failed to load messages. Please try again.");
-      }
-    },
-    [selectedIntegration]
-  );
-
-  // Real-time conversation list updates via page-level webhook stream
-  useEffect(() => {
-    if (!selectedIntegration) return;
-
-    console.log("🔌 Setting up page-level conversation stream");
-    const pageStream = new EventSource(
-      `/api/facebook/conversations/page-stream?pageId=${selectedIntegration.pageId}`
-    );
-
-    pageStream.onopen = () => {
-      console.log("✅ Page-level conversation stream connected");
-    };
-
-    pageStream.onmessage = event => {
-      try {
-        const data = JSON.parse(event.data);
-
-        if (data.type === "heartbeat" || data.type === "connected") {
-          return;
-        }
-
-        if (data.type === "conversation_update" && data.data) {
-          // ConversationList now manages its own state, so we don't need to update here
-          // The ConversationList component will refetch when needed
-          console.log(
-            "📨 Conversation update received (handled by ConversationList)"
-          );
-        }
-      } catch (e) {
-        console.error("Error parsing page-level SSE message:", e);
-      }
-    };
-
-    pageStream.onerror = err => {
-      console.error("Page-level conversation SSE error (auto-retry):", err);
-    };
-
-    return () => {
-      console.log("🔌 Closing page-level conversation stream");
-      pageStream.close();
-    };
-  }, [selectedIntegration]);
-
-  useEffect(() => {
-    if (selectedConversation && selectedIntegration) {
-      // Fetch initial messages
-      fetchMessages(selectedConversation);
-
-      // Set up SSE connection for real-time updates
-      const streamUrl = `/api/facebook/conversations/stream?conversationId=${selectedConversation}&pageId=${selectedIntegration.pageId}`;
-      const eventSource = new EventSource(streamUrl);
-
-      eventSource.onopen = () => {
-        console.log("SSE connected");
-      };
-
-      eventSource.onmessage = event => {
-        try {
-          const data = JSON.parse(event.data);
-
-          if (data.type === "heartbeat") {
-            // keep-alive
-            return;
-          }
-
-          if (data.type === "connected") {
-            console.log("SSE connected event received");
-            return;
-          }
-
-          if (
-            (data.type === "new_message" || data.type === "existing_message") &&
-            data.data
-          ) {
-            const webhookMessage = data.data;
-
-            // Convert webhook message format to our Message format
-            const newMessage: Message = {
-              id: webhookMessage.id,
-              conversationId: webhookMessage.conversationId,
-              sender:
-                webhookMessage.from.id === selectedIntegration.pageId
-                  ? "You"
-                  : webhookMessage.from.name,
-              content: webhookMessage.message,
-              timestamp: webhookMessage.created_time,
-              isOwn: webhookMessage.from.id === selectedIntegration.pageId,
-              senderProfilePic: webhookMessage.from.profile_pic,
-            };
-
-            // Add message if it doesn't already exist
-            setMessages(prev => {
-              const exists = prev.some(m => m.id === newMessage.id);
-              if (exists) {
-                return prev;
-              }
-              return [...prev, newMessage];
-            });
-
-            // ConversationList manages its own state, so we don't update it here
-          }
-        } catch (error) {
-          console.error("Error parsing SSE message:", error);
-        }
-      };
-
-      eventSource.onerror = error => {
-        console.error("SSE connection error (will auto-retry):", error);
-        // Do not manually close; EventSource will auto-reconnect
-      };
-
-      return () => {
-        eventSource.close();
-      };
-    }
-  }, [selectedConversation, selectedIntegration, fetchMessages]);
+  // Transform backend messages to frontend format
+  const messages: Message[] =
+    conversationDetail?.conversation?.messages?.map((msg: MessageData) => ({
+      id: msg.id,
+      conversationId: conversationDetail.conversation.conversation_id,
+      sender:
+        msg.from.id === selectedIntegration?.pageId ? "You" : msg.from.name,
+      content: msg.message,
+      timestamp: msg.created_time,
+      isOwn: msg.from.id === selectedIntegration?.pageId,
+      senderProfilePic: msg.from.profile_pic,
+    })) || [];
 
   const handleSendMessage = async (content: string) => {
-    if (!selectedConversation || !selectedIntegration) return;
-
-    const tempId = `temp-${Date.now()}`;
+    if (
+      !selectedConversationId ||
+      !selectedIntegration ||
+      !selectedConversationData
+    )
+      return;
 
     try {
-      // Get participant ID from selected conversation data or extract from conversation ID
-      let participantId: string | undefined =
-        selectedConversationData?.participantId;
+      // Get participant ID (the other person in the conversation)
+      const participantId = selectedConversationData.participants.find(
+        p => p.id !== selectedIntegration.pageId
+      )?.id;
 
       if (!participantId) {
-        // Fallback: Extract participant ID from conversation ID (format: t_<pageId>_<participantId>)
-        const parts = selectedConversation.split("_");
-        participantId = parts.length > 2 ? parts[2] : undefined;
+        throw new Error("Could not find participant ID");
       }
 
-      if (!participantId) {
-        throw new Error("Could not extract participant ID from conversation");
+      // Send message using ONLY recipient_id and conversationId
+      await sendMessageMutation.mutateAsync({
+        recipient_id: participantId, // This is the PSID (Page-Scoped ID)
+        message: content,
+        page_access_token: selectedIntegration.pageAccessToken,
+        conversationId: selectedConversationId, // Only for cache invalidation
+      });
+
+      console.log("✅ Message sent to:", participantId);
+      console.log("📝 Conversation ID:", selectedConversationId);
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error("❌ Error sending message:", err);
+
+      if (err.response?.data?.error?.code === 100) {
+        setError(
+          "Cannot send message. User must message the page first to start a conversation."
+        );
+      } else if (err.response?.data?.error?.code === 10) {
+        setError("Page access token has expired or is invalid.");
+      } else {
+        setError("Failed to send message. Please try again.");
       }
-
-      const newMessage: Message = {
-        id: tempId,
-        conversationId: selectedConversation,
-        sender: "You",
-        content,
-        timestamp: new Date().toISOString(),
-        isOwn: true,
-      };
-
-      setMessages(prev => [...prev, newMessage]);
-
-      await sendFacebookMessage(
-        participantId,
-        content,
-        selectedIntegration.pageAccessToken
-      );
-
-      await fetchMessages(selectedConversation);
-    } catch (err) {
-      console.error("Error sending message:", err);
-      setError("Failed to send message. Please try again.");
-
-      setMessages(prev => prev.filter(m => m.id !== tempId));
     }
   };
 
-  if (error && !selectedIntegration) {
+  const handleSelectConversation = (
+    conversationId: string,
+    data: ConversationListItem
+  ) => {
+    setSelectedConversationId(conversationId);
+    setSelectedConversationData(data);
+    setError(null); // Clear any previous errors when selecting a conversation
+  };
+
+  // Show loading state while checking integrations
+  if (integrationsLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-white">
+        <div className="text-center">
+          <div className="mb-4 text-4xl">⏳</div>
+          <p className="text-gray-500">Loading Facebook pages...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state only when there are truly no integrations
+  if (error && integrations.length === 0) {
     return (
       <div className="flex h-screen items-center justify-center bg-white">
         <div className="text-center">
           <div className="mb-4 text-4xl">⚠️</div>
           <p className="mb-4 text-red-500">{error}</p>
           <a
-            href="/admin/settings/integrations"
+            href="/admin/facebook"
             className="inline-block rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
           >
             Go to Integrations
@@ -318,43 +183,52 @@ export default function MessagingPage() {
     );
   }
 
-  const handleSelectConversation = (
-    id: string,
-    conversation?: ConversationData
-  ) => {
-    setSelectedConversation(id);
-    setSelectedConversationData(conversation || null);
-    setMessages([]); // Clear messages when switching conversations
-  };
-
-  // Get conversation name and avatar from selected conversation data or messages
   const conversationName =
-    selectedConversationData?.name ||
-    messages.find(m => !m.isOwn)?.sender ||
-    "Conversation";
-  const conversationAvatar =
-    selectedConversationData?.avatar ||
-    messages.find(m => !m.isOwn)?.senderProfilePic;
+    selectedConversationData?.participants.find(
+      p => p.id !== selectedIntegration?.pageId
+    )?.name || "Conversation";
+
+  const conversationAvatar = selectedConversationData?.participants.find(
+    p => p.id !== selectedIntegration?.pageId
+  )?.profile_pic;
 
   return (
     <div className="flex h-screen overflow-hidden bg-white">
       <ConversationList
-        selectedId={selectedConversation}
+        selectedId={selectedConversationId}
         onSelectConversation={handleSelectConversation}
         onIntegrationChange={handleIntegrationChange}
       />
       <div className="flex flex-1 flex-col overflow-hidden">
-        {selectedConversation && selectedIntegration ? (
+        {selectedConversationId && selectedIntegration ? (
           <>
-            <ChatWindow
-              messages={messages}
-              conversationName={conversationName}
-              conversationAvatar={conversationAvatar}
-            />
-            <MessageInput
-              onSendMessage={handleSendMessage}
-              disabled={!selectedIntegration}
-            />
+            {isLoadingMessages ? (
+              <div className="flex flex-1 items-center justify-center">
+                <div className="text-center">
+                  <div className="mb-4 text-5xl">⏳</div>
+                  <p className="text-lg text-gray-500">Loading messages...</p>
+                </div>
+              </div>
+            ) : (
+              <>
+                {error && (
+                  <div className="bg-red-50 p-3 text-center">
+                    <p className="text-sm text-red-600">{error}</p>
+                  </div>
+                )}
+                <ChatWindow
+                  messages={messages}
+                  conversationName={conversationName}
+                  conversationAvatar={conversationAvatar}
+                />
+                <MessageInput
+                  onSendMessage={handleSendMessage}
+                  disabled={
+                    !selectedIntegration || sendMessageMutation.isPending
+                  }
+                />
+              </>
+            )}
           </>
         ) : (
           <div className="flex flex-1 items-center justify-center">
@@ -362,9 +236,19 @@ export default function MessagingPage() {
               <div className="mb-4 text-5xl">💬</div>
               <p className="text-lg text-gray-500">
                 {!selectedIntegration
-                  ? "Please select a Facebook page from the dropdown"
+                  ? integrations.length === 0
+                    ? "No Facebook pages connected"
+                    : "Please select a Facebook page from the dropdown"
                   : "Select a conversation to start messaging"}
               </p>
+              {integrations.length === 0 && (
+                <a
+                  href="/admin/settings/integrations"
+                  className="mt-4 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                >
+                  Connect Facebook Page
+                </a>
+              )}
             </div>
           </div>
         )}

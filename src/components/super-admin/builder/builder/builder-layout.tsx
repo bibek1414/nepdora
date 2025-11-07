@@ -303,9 +303,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onSuccess: (data: Page) => {
             setIsCreatingHomePage(false);
             if (pageSlug !== data.slug) {
-              router.push(
-                `/superadmin/template/builder/${templateSlug}/${data.slug}`
-              );
+              router.push(`/superadmin/builder/${templateSlug}/${data.slug}`);
             }
           },
           onError: error => {
@@ -334,9 +332,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
       if (!pageExists && !isCreatingHomePage) {
         const firstPage = pagesData[0];
-        router.push(
-          `/superadmin/template/builder/${templateSlug}/${firstPage.slug}`
-        );
+        router.push(`/superadmin/builder/${templateSlug}/${firstPage.slug}`);
       }
     }
   }, [pagesData, pageSlug, router, isCreatingHomePage, templateSlug]); // Added templateSlug dependency
@@ -346,11 +342,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   // Handle page change
   const handlePageChange = (newPageSlug: string) => {
-    router.push(`/superadmin/template/builder/${templateSlug}/${newPageSlug}`);
+    router.push(`/superadmin/builder/${templateSlug}/${newPageSlug}`);
   };
 
   const handlePageCreated = (page: Page) => {
-    router.push(`/superadmin/template/builder/${templateSlug}/${page.slug}`);
+    router.push(`/superadmin/builder/${templateSlug}/${page.slug}`);
   };
 
   // Handle page deletion and navigation
@@ -361,7 +357,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       );
       if (remainingPages.length > 0) {
         router.push(
-          `/superadmin/template/builder/${templateSlug}/${remainingPages[0].slug}`
+          `/superadmin/builder/${templateSlug}/${remainingPages[0].slug}`
         );
       }
     }

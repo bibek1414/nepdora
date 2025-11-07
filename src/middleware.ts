@@ -98,7 +98,6 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith("/builder") ||
       pathname.startsWith("/support") ||
       pathname.startsWith("/payment") ||
-      pathname.startsWith("/superadmin") ||
       pathname.startsWith("/preview") ||
       pathname.startsWith("/subscription")
     ) {

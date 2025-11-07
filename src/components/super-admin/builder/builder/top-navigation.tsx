@@ -92,7 +92,11 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 
         {/* Right Section - Actions */}
         <div className="flex items-center gap-3">
-          <Link href="/admin" target="_blank" rel="noopener noreferrer">
+          <Link
+            href="/superadmin/dashboard"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Button
               variant="outline"
               size="sm"
