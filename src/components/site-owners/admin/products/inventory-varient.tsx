@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Trash2, Image as ImageIcon, PlusCircle } from "lucide-react";
+import { Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Card } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface OptionValue {
   id: string;
@@ -55,16 +72,18 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
   productStock = 0,
   onProductStockChange,
 }) => {
-  const [optionForms, setOptionForms] = useState<OptionFormData[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentForm, setCurrentForm] = useState<OptionFormData | null>(null);
+  const [deleteOptionId, setDeleteOptionId] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [groupBy, setGroupBy] = useState<string>("");
   const [groupImages, setGroupImages] = useState<
     Record<string, File | string | null>
   >({});
 
   useEffect(() => {
-    if (options.length > 0) {
-      generateVariants();
-    }
+    generateVariants();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options]);
 
   const generateVariants = () => {
@@ -74,11 +93,22 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
     }
 
     const cartesianProduct = (arrays: string[][]): string[][] => {
+      if (arrays.length === 0) return [];
       return arrays.reduce(
         (acc, curr) => acc.flatMap(a => curr.map(b => [...a, b])),
         [[]] as string[][]
       );
     };
+
+    // Get current option names set for quick lookup
+    const currentOptionNames = new Set(options.map(opt => opt.name));
+
+    // Filter out variants that reference deleted options before processing
+    const validVariants = variants.filter(v => {
+      const variantOptionNames = Object.keys(v.options);
+      // Only keep variants where all option names still exist
+      return variantOptionNames.every(name => currentOptionNames.has(name));
+    });
 
     const optionValueArrays = options.map(opt => opt.values.map(v => v.value));
     const combinations = cartesianProduct(optionValueArrays);
@@ -89,8 +119,8 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
         variantOptions[opt.name] = combo[i];
       });
 
-      // Find existing variant with the exact same options
-      const existingVariant = variants.find(v => {
+      // Find existing variant with the exact same options (only from valid variants)
+      const existingVariant = validVariants.find(v => {
         const existingOptions = Object.entries(v.options).sort();
         const newOptions = Object.entries(variantOptions).sort();
         return JSON.stringify(existingOptions) === JSON.stringify(newOptions);
@@ -108,7 +138,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
       return {
         id: `variant-${Date.now()}-${index}`,
         options: variantOptions,
-        price: variants.length > 0 ? variants[0].price : "0.00", // Use existing price if available
+        price: validVariants.length > 0 ? validVariants[0].price : "0.00",
         stock: trackStock ? 0 : productStock,
         image: null,
       };
@@ -117,106 +147,98 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
     onVariantsChange(newVariants);
   };
 
-  const handleAddOptionForm = () => {
+  const handleOpenDialog = (optionName?: string) => {
     const newForm: OptionFormData = {
       id: Date.now().toString(),
-      name: "",
+      name: optionName || "",
       values: [{ id: Date.now().toString(), value: "" }],
       editingOption: null,
     };
-    setOptionForms([...optionForms, newForm]);
+    setCurrentForm(newForm);
+    setIsDialogOpen(true);
   };
 
-  const handleSaveOption = (formId: string) => {
-    const form = optionForms.find(f => f.id === formId);
-    if (!form) return;
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setCurrentForm(null);
+  };
 
-    const validValues = form.values.filter(v => v.value.trim() !== "");
+  const handleSaveOption = () => {
+    if (!currentForm) return;
 
-    if (!form.name.trim() || validValues.length === 0) {
+    const validValues = currentForm.values.filter(v => v.value.trim() !== "");
+
+    if (!currentForm.name.trim() || validValues.length === 0) {
       return;
     }
 
-    if (form.editingOption) {
+    if (currentForm.editingOption) {
       const updatedOptions = options.map(opt =>
-        opt.id === form.editingOption!.id
-          ? { ...opt, name: form.name, values: validValues }
+        opt.id === currentForm.editingOption!.id
+          ? { ...opt, name: currentForm.name, values: validValues }
           : opt
       );
       onOptionsChange(updatedOptions);
     } else {
       const newOption: ProductOption = {
         id: Date.now().toString(),
-        name: form.name,
+        name: currentForm.name,
         values: validValues,
       };
       onOptionsChange([...options, newOption]);
     }
 
-    // Remove the form after saving
-    setOptionForms(optionForms.filter(f => f.id !== formId));
-  };
-
-  const handleCancelOption = (formId: string) => {
-    setOptionForms(optionForms.filter(f => f.id !== formId));
+    handleCloseDialog();
   };
 
   const handleDeleteOption = (optionId: string) => {
-    onOptionsChange(options.filter(opt => opt.id !== optionId));
+    setDeleteOptionId(optionId);
+    setIsDeleteDialogOpen(true);
   };
 
-  const handleAddOptionValue = (formId: string) => {
-    setOptionForms(
-      optionForms.map(form =>
-        form.id === formId
-          ? {
-              ...form,
-              values: [
-                ...form.values,
-                { id: Date.now().toString(), value: "" },
-              ],
-            }
-          : form
-      )
-    );
+  const handleConfirmDelete = () => {
+    if (deleteOptionId) {
+      onOptionsChange(options.filter(opt => opt.id !== deleteOptionId));
+      setDeleteOptionId(null);
+    }
+    setIsDeleteDialogOpen(false);
   };
 
-  const handleOptionNameChange = (formId: string, name: string) => {
-    setOptionForms(
-      optionForms.map(form => (form.id === formId ? { ...form, name } : form))
-    );
+  const handleCancelDelete = () => {
+    setIsDeleteDialogOpen(false);
+    setDeleteOptionId(null);
   };
 
-  const handleOptionValueChange = (
-    formId: string,
-    valueId: string,
-    value: string
-  ) => {
-    setOptionForms(
-      optionForms.map(form =>
-        form.id === formId
-          ? {
-              ...form,
-              values: form.values.map(ov =>
-                ov.id === valueId ? { ...ov, value } : ov
-              ),
-            }
-          : form
-      )
-    );
+  const handleAddOptionValue = () => {
+    if (!currentForm) return;
+    setCurrentForm({
+      ...currentForm,
+      values: [...currentForm.values, { id: Date.now().toString(), value: "" }],
+    });
   };
 
-  const handleRemoveOptionValue = (formId: string, valueId: string) => {
-    setOptionForms(
-      optionForms.map(form =>
-        form.id === formId
-          ? {
-              ...form,
-              values: form.values.filter(ov => ov.id !== valueId),
-            }
-          : form
-      )
-    );
+  const handleOptionNameChange = (name: string) => {
+    if (!currentForm) return;
+    setCurrentForm({ ...currentForm, name });
+  };
+
+  const handleOptionValueChange = (valueId: string, value: string) => {
+    if (!currentForm) return;
+    setCurrentForm({
+      ...currentForm,
+      values: currentForm.values.map(ov =>
+        ov.id === valueId ? { ...ov, value } : ov
+      ),
+    });
+  };
+
+  const handleRemoveOptionValue = (valueId: string) => {
+    if (!currentForm) return;
+    if (currentForm.values.length <= 1) return; // Keep at least one value
+    setCurrentForm({
+      ...currentForm,
+      values: currentForm.values.filter(ov => ov.id !== valueId),
+    });
   };
 
   const handleVariantChange = (
@@ -402,78 +424,6 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
     );
   };
 
-  const renderOptionForm = (form: OptionFormData) => (
-    <Card key={form.id} className="mb-4 space-y-4 p-4">
-      <div className="flex items-center gap-2">
-        <div className="flex-1 space-y-3">
-          <div>
-            <Label className="text-sm">Option name</Label>
-            <Input
-              placeholder="e.g., Size, Color, Material"
-              value={form.name}
-              onChange={e => handleOptionNameChange(form.id, e.target.value)}
-              className="mt-1 placeholder:text-gray-500"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-sm">Option values</Label>
-            {form.values.map((ov, index) => (
-              <div key={ov.id} className="flex items-center gap-2">
-                <Input
-                  placeholder={`Value ${index + 1}`}
-                  value={ov.value}
-                  onChange={e =>
-                    handleOptionValueChange(form.id, ov.id, e.target.value)
-                  }
-                  className="mt-1 placeholder:text-gray-500"
-                />
-                {form.values.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleRemoveOptionValue(form.id, ov.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => handleAddOptionValue(form.id)}
-              className="text-primary hover:text-primary/90"
-            >
-              Add another value
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex justify-between border-t pt-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => handleCancelOption(form.id)}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="button"
-          size="sm"
-          onClick={() => handleSaveOption(form.id)}
-          className="bg-gray-900 hover:bg-gray-800"
-        >
-          Done
-        </Button>
-      </div>
-    </Card>
-  );
-
   return (
     <div className="space-y-5 rounded-2xl border bg-white p-4">
       <div className="flex items-center gap-3">
@@ -508,15 +458,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => {
-                const newForm: OptionFormData = {
-                  id: Date.now().toString(),
-                  name: "Size",
-                  values: [{ id: Date.now().toString(), value: "" }],
-                  editingOption: null,
-                };
-                setOptionForms([...optionForms, newForm]);
-              }}
+              onClick={() => handleOpenDialog("Size")}
               className="rounded-full border-blue-200 bg-blue-50 px-4 text-blue-600 hover:bg-blue-100"
             >
               <Plus className="mr-1 h-4 w-4" />
@@ -526,15 +468,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => {
-                const newForm: OptionFormData = {
-                  id: Date.now().toString(),
-                  name: "Color",
-                  values: [{ id: Date.now().toString(), value: "" }],
-                  editingOption: null,
-                };
-                setOptionForms([...optionForms, newForm]);
-              }}
+              onClick={() => handleOpenDialog("Color")}
               className="rounded-full border-blue-200 bg-blue-50 px-4 text-blue-600 hover:bg-blue-100"
             >
               <Plus className="mr-1 h-4 w-4" />
@@ -544,7 +478,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
               type="button"
               variant="outline"
               size="sm"
-              onClick={handleAddOptionForm}
+              onClick={() => handleOpenDialog()}
               className="rounded-full border-blue-200 bg-blue-50 px-4 text-blue-600 hover:bg-blue-100"
             >
               <Plus className="mr-1 h-4 w-4" />
@@ -552,9 +486,6 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
             </Button>
           </div>
         </div>
-
-        {/* Render all active option forms */}
-        {optionForms.map(renderOptionForm)}
 
         {/* Display Added Options */}
         {options.length > 0 && (
@@ -583,17 +514,6 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
           </div>
         )}
 
-        {/* Add Another Option Button */}
-        {optionForms.length > 0 && (
-          <div
-            onClick={handleAddOptionForm}
-            className="flex cursor-pointer items-center gap-1 text-xs text-gray-700 hover:underline"
-          >
-            <PlusCircle className="h-3 w-4" />
-            <span>Add another option</span>
-          </div>
-        )}
-
         {/* Variants List */}
         {variants.length > 0 && (
           <div className="mt-6 space-y-4">
@@ -610,6 +530,117 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
           </div>
         )}
       </div>
+
+      {/* Add Variant Dialog */}
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={open => {
+          if (!open) {
+            handleCloseDialog();
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Add Variant Option</DialogTitle>
+            <DialogDescription>
+              Create a new variant option with multiple values.
+            </DialogDescription>
+          </DialogHeader>
+
+          {currentForm && (
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="option-name">Option name</Label>
+                <Input
+                  id="option-name"
+                  placeholder="e.g., Size, Color, Material"
+                  value={currentForm.name}
+                  onChange={e => handleOptionNameChange(e.target.value)}
+                  className="placeholder:text-gray-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Option values</Label>
+                {currentForm.values.map((ov, index) => (
+                  <div key={ov.id} className="flex items-center gap-2">
+                    <Input
+                      placeholder={`Value ${index + 1}`}
+                      value={ov.value}
+                      onChange={e =>
+                        handleOptionValueChange(ov.id, e.target.value)
+                      }
+                      className="placeholder:text-gray-500"
+                    />
+                    {currentForm.values.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleRemoveOptionValue(ov.id)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleAddOptionValue}
+                  className="text-primary hover:text-primary/90"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add another value
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={handleCloseDialog}>
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={handleSaveOption}
+              className="bg-gray-900 hover:bg-gray-800"
+            >
+              Save Option
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Variant Option?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this variant option? This action
+              cannot be undone and will remove all associated variants.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleCancelDelete}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

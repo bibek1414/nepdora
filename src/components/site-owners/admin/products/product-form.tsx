@@ -137,22 +137,24 @@ const ThumbnailSelector: React.FC<{
         />
       </div>
       <div
-        className={`relative aspect-square overflow-hidden rounded-lg border transition-all ${
+        className={`relative aspect-square rounded-lg border transition-all ${
           isSelected ? "border-primary ring-primary/20 ring-2" : "border-border"
         }`}
       >
-        <img
-          src={imageUrl}
-          alt={`Product image ${index + 1}`}
-          className="h-full w-full object-cover"
-        />
+        <div className="h-full w-full overflow-hidden rounded-lg">
+          <img
+            src={imageUrl}
+            alt={`Product image ${index + 1}`}
+            className="h-full w-full object-cover"
+          />
+        </div>
         {!disabled && (
           <Button
             type="button"
             variant="destructive"
             size="sm"
             onClick={() => onRemove(index)}
-            className="absolute -top-1.5 -right-1.5 z-50 h-6 w-6 rounded-full p-0 opacity-0 transition-all duration-200 group-hover:opacity-100 hover:scale-110"
+            className="absolute -top-1.5 -right-1.5 z-[100] h-6 w-6 rounded-full p-0 opacity-0 shadow-md transition-all duration-200 group-hover:opacity-100 hover:scale-110"
             aria-label={`Remove image ${index + 1}`}
           >
             <X className="h-3 w-3" />
