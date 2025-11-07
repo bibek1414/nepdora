@@ -533,7 +533,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                 onChange={handleCustomFontSizeChange}
                 min="8"
                 max="72"
-                className="h-10 w-20 rounded border border-gray-300 px-3 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                className="h-10 w-20 rounded border border-gray-300 px-3 text-sm text-black focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 placeholder="16"
               />
               <span className="flex items-center text-sm text-gray-500">
@@ -548,7 +548,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                     applyFontSizeToAll(newSize);
                   }
                 }}
-                className="rounded border border-gray-300 p-2 hover:bg-gray-100"
+                className="rounded border border-gray-300 p-2 text-black hover:bg-gray-100"
                 title="Decrease size"
               >
                 <Minus className="h-4 w-4" />
@@ -562,7 +562,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                     applyFontSizeToAll(newSize);
                   }
                 }}
-                className="rounded border border-gray-300 p-2 hover:bg-gray-100"
+                className="rounded border border-gray-300 p-2 text-black hover:bg-gray-100"
                 title="Increase size"
               >
                 <Plus className="h-4 w-4" />
@@ -578,10 +578,9 @@ export const EditableText: React.FC<EditableTextProps> = ({
                   setCustomFontSize(size);
                   applyFontSizeToAll(size);
                 }}
-                className="rounded border border-gray-300 px-3 py-2 text-sm transition-colors hover:bg-gray-100 hover:text-blue-600"
+                className="rounded border border-gray-300 px-3 py-2 text-sm text-black transition-colors hover:bg-gray-100 hover:text-blue-600"
                 style={{
                   fontSize: size,
-                  color: size === customFontSize ? "#3B82F6" : "inherit",
                 }}
               >
                 {parseInt(size)}px
@@ -724,7 +723,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                     onChange={e => setSelectionFontSize(`${e.target.value}px`)}
                     min="8"
                     max="72"
-                    className="h-8 w-16 rounded border border-gray-300 px-2 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                    className="h-8 w-16 rounded border border-gray-300 px-2 text-sm text-black focus:ring-2 focus:ring-blue-400 focus:outline-none"
                     placeholder="16"
                   />
                   <span className="flex items-center text-xs text-gray-500">
@@ -737,7 +736,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                         setSelectionFontSize(`${currentSize - 1}px`);
                       }
                     }}
-                    className="rounded border border-gray-300 p-1 hover:bg-gray-100"
+                    className="rounded border border-gray-300 p-1 text-black hover:bg-gray-100"
                     title="Decrease size"
                   >
                     <Minus className="h-3 w-3" />
@@ -749,7 +748,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                         setSelectionFontSize(`${currentSize + 1}px`);
                       }
                     }}
-                    className="rounded border border-gray-300 p-1 hover:bg-gray-100"
+                    className="rounded border border-gray-300 p-1 text-black hover:bg-gray-100"
                     title="Increase size"
                   >
                     <Plus className="h-3 w-3" />
@@ -768,10 +767,9 @@ export const EditableText: React.FC<EditableTextProps> = ({
                   <button
                     key={size}
                     onClick={() => applyFontSizeToSelection(size)}
-                    className="rounded border border-gray-300 px-2 py-1 text-xs transition-colors hover:bg-gray-100 hover:text-blue-600"
+                    className="rounded border border-gray-300 px-2 py-1 text-xs text-black transition-colors hover:bg-gray-100 hover:text-blue-600"
                     style={{
                       fontSize: size,
-                      color: size === selectionFontSize ? "#3B82F6" : "inherit",
                     }}
                   >
                     {parseInt(size)}px
