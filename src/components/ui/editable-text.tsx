@@ -7,6 +7,9 @@ import {
   Bold,
   Italic,
   Underline,
+  Minus,
+  Plus,
+  Type,
 } from "lucide-react";
 
 interface EditableTextProps {
@@ -41,6 +44,7 @@ interface EditableTextProps {
 interface TextStyle {
   color?: string;
   fontFamily?: string;
+  fontSize?: string;
 }
 
 interface TextSelection {
@@ -66,6 +70,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   currentFontFamily,
 }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showFontSizePicker, setShowFontSizePicker] = useState(false);
   const [showSelectionToolbar, setShowSelectionToolbar] = useState(false);
   const [selectedColor, setSelectedColor] = useState(
     currentTextColor || style?.color || theme?.colors.text || "#0F172A"
@@ -73,7 +78,9 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const [selectedFont, setSelectedFont] = useState(
     currentFontFamily || style?.fontFamily || theme?.fonts.body || "Inter"
   );
+  const [selectedFontSize, setSelectedFontSize] = useState("16px");
   const [customColor, setCustomColor] = useState("");
+  const [customFontSize, setCustomFontSize] = useState("16px");
   const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
   const [textSelection, setTextSelection] = useState<TextSelection | null>(
     null
@@ -81,10 +88,13 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const [selectionColor, setSelectionColor] = useState(
     theme?.colors.primary || "#3B82F6"
   );
+  const [selectionFontSize, setSelectionFontSize] = useState("16px");
   const [showColorInput, setShowColorInput] = useState(false);
+  const [showFontSizeInput, setShowFontSizeInput] = useState(false);
 
   const textRef = useRef<HTMLElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
+  const fontSizePickerRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
   // Set initial HTML content with preserved inline styles
@@ -115,6 +125,53 @@ export const EditableText: React.FC<EditableTextProps> = ({
     }
   };
 
+  // Apply font size to selected text
+  const applyFontSizeToSelection = (fontSize: string) => {
+    if (!textSelection) return;
+
+    // Use execCommand with styleWithCSS to apply font size
+    document.execCommand("styleWithCSS", false, "true");
+    applyFormatting("fontSize", "7"); // This sets a base size, we'll override with inline style
+
+    // Apply inline style for precise control
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const span = document.createElement("span");
+      span.style.fontSize = fontSize;
+      range.surroundContents(span);
+
+      // Update the value with HTML content
+      if (textRef.current) {
+        const newValue = textRef.current.innerHTML;
+        onChange(newValue);
+      }
+    }
+
+    // Clear selection after applying font size
+    setShowFontSizeInput(false);
+  };
+
+  // Apply font size to entire text
+  const applyFontSizeToAll = (fontSize: string) => {
+    if (textRef.current) {
+      textRef.current.style.fontSize = fontSize;
+      setSelectedFontSize(fontSize);
+
+      if (onStyleChange) {
+        onStyleChange({
+          color: selectedColor,
+          fontFamily: selectedFont,
+          fontSize: fontSize,
+        });
+      }
+
+      // Update the value with HTML content
+      const newValue = textRef.current.innerHTML;
+      onChange(newValue);
+    }
+  };
+
   // Handle text selection
   const handleTextSelect = () => {
     if (!isEditable) return;
@@ -136,10 +193,12 @@ export const EditableText: React.FC<EditableTextProps> = ({
       });
       setShowSelectionToolbar(true);
       setShowColorInput(false);
+      setShowFontSizeInput(false);
     } else {
       setTextSelection(null);
       setShowSelectionToolbar(false);
       setShowColorInput(false);
+      setShowFontSizeInput(false);
     }
   };
 
@@ -166,6 +225,23 @@ export const EditableText: React.FC<EditableTextProps> = ({
         left: rect.left + rect.width / 2,
       });
       setShowColorPicker(true);
+      setShowFontSizePicker(false);
+    }
+  };
+
+  // Handle font size button click for entire text
+  const handleFontSizeClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (textRef.current) {
+      const rect = textRef.current.getBoundingClientRect();
+      setPickerPosition({
+        top: rect.top - 10,
+        left: rect.left + rect.width / 2,
+      });
+      setShowFontSizePicker(true);
+      setShowColorPicker(false);
     }
   };
 
@@ -178,9 +254,31 @@ export const EditableText: React.FC<EditableTextProps> = ({
       onStyleChange({
         color: color,
         fontFamily: selectedFont,
+        fontSize: selectedFontSize,
       });
     }
   };
+
+  // Handle custom font size input for entire text
+  const handleCustomFontSizeChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const fontSize = e.target.value;
+    setCustomFontSize(fontSize);
+    applyFontSizeToAll(fontSize);
+  };
+
+  // Quick font size options
+  const quickFontSizes = [
+    "12px",
+    "14px",
+    "16px",
+    "18px",
+    "20px",
+    "24px",
+    "28px",
+    "32px",
+  ];
 
   // Close pickers when clicking outside
   useEffect(() => {
@@ -195,6 +293,16 @@ export const EditableText: React.FC<EditableTextProps> = ({
         setShowColorPicker(false);
       }
 
+      // Close font size picker
+      if (
+        fontSizePickerRef.current &&
+        !fontSizePickerRef.current.contains(event.target as Node) &&
+        textRef.current &&
+        !textRef.current.contains(event.target as Node)
+      ) {
+        setShowFontSizePicker(false);
+      }
+
       // Close selection toolbar
       if (
         toolbarRef.current &&
@@ -202,6 +310,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
       ) {
         setShowSelectionToolbar(false);
         setShowColorInput(false);
+        setShowFontSizeInput(false);
         setTextSelection(null);
       }
     };
@@ -241,8 +350,10 @@ export const EditableText: React.FC<EditableTextProps> = ({
     if (e.key === "Escape") {
       e.currentTarget.blur();
       setShowColorPicker(false);
+      setShowFontSizePicker(false);
       setShowSelectionToolbar(false);
       setShowColorInput(false);
+      setShowFontSizeInput(false);
       setTextSelection(null);
       window.getSelection()?.removeAllRanges();
     }
@@ -250,7 +361,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
 
   const commonProps = {
     ref: textRef,
-    contentEditable: isEditable && !showColorPicker,
+    contentEditable: isEditable && !showColorPicker && !showFontSizePicker,
     onBlur: handleTextChange,
     onMouseUp: handleTextSelect,
     onKeyDown: handleKeyDown,
@@ -266,12 +377,14 @@ export const EditableText: React.FC<EditableTextProps> = ({
         "empty:before:content-[attr(data-placeholder)] empty:before:text-gray-400",
         "empty:before:pointer-events-none empty:before:absolute",
       ],
-      (showColorPicker || showSelectionToolbar) && "ring-2 ring-blue-400"
+      (showColorPicker || showFontSizePicker || showSelectionToolbar) &&
+        "ring-2 ring-blue-400"
     ),
     style: {
       position: "relative" as const,
       color: selectedColor,
       fontFamily: selectedFont,
+      fontSize: selectedFontSize,
       ...style,
     },
   };
@@ -297,13 +410,22 @@ export const EditableText: React.FC<EditableTextProps> = ({
         {React.createElement(Tag, commonProps)}
 
         {isEditable && (
-          <button
-            onClick={handlePaletteClick}
-            className="absolute top-1/2 -right-8 -translate-y-1/2 rounded border border-gray-200 bg-white p-1 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 hover:bg-gray-50"
-            title="Change all text color"
-          >
-            <Palette className="h-3 w-3 text-gray-600" />
-          </button>
+          <div className="absolute top-1/2 -right-16 flex -translate-y-1/2 gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+            <button
+              onClick={handlePaletteClick}
+              className="rounded border border-gray-200 bg-white p-1 shadow-sm hover:bg-gray-50"
+              title="Change all text color"
+            >
+              <Palette className="h-3 w-3 text-gray-600" />
+            </button>
+            <button
+              onClick={handleFontSizeClick}
+              className="rounded border border-gray-200 bg-white p-1 shadow-sm hover:bg-gray-50"
+              title="Change all text size"
+            >
+              <Type className="h-3 w-3 text-gray-600" />
+            </button>
+          </div>
         )}
       </div>
 
@@ -348,6 +470,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                     onStyleChange({
                       color: color,
                       fontFamily: selectedFont,
+                      fontSize: selectedFontSize,
                     });
                   }
                 }}
@@ -367,6 +490,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                     onStyleChange({
                       color: color,
                       fontFamily: selectedFont,
+                      fontSize: selectedFontSize,
                     });
                   }
                 }}
@@ -374,6 +498,94 @@ export const EditableText: React.FC<EditableTextProps> = ({
                 style={{ backgroundColor: color }}
                 title={color}
               />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Main font size picker for entire text */}
+      {showFontSizePicker && (
+        <div
+          ref={fontSizePickerRef}
+          className="animate-in fade-in slide-in-from-top-2 fixed z-50 rounded-lg border border-gray-200 bg-white p-4 shadow-2xl duration-200"
+          style={{
+            top: `${pickerPosition.top}px`,
+            left: `${pickerPosition.left}px`,
+            transform: "translate(-50%, -100%)",
+            minWidth: "280px",
+          }}
+        >
+          <button
+            onClick={() => setShowFontSizePicker(false)}
+            className="absolute top-2 right-2 rounded-full p-1 transition-colors hover:bg-gray-100"
+          >
+            <X className="h-4 w-4 text-gray-500" />
+          </button>
+
+          <div className="mb-4 border-b border-gray-200 pb-4">
+            <h4 className="mb-2 text-xs font-semibold text-gray-700">
+              Font Size
+            </h4>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                value={parseInt(customFontSize) || 16}
+                onChange={handleCustomFontSizeChange}
+                min="8"
+                max="72"
+                className="h-10 w-20 rounded border border-gray-300 px-3 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                placeholder="16"
+              />
+              <span className="flex items-center text-sm text-gray-500">
+                px
+              </span>
+              <button
+                onClick={() => {
+                  const currentSize = parseInt(customFontSize) || 16;
+                  if (currentSize > 8) {
+                    const newSize = `${currentSize - 1}px`;
+                    setCustomFontSize(newSize);
+                    applyFontSizeToAll(newSize);
+                  }
+                }}
+                className="rounded border border-gray-300 p-2 hover:bg-gray-100"
+                title="Decrease size"
+              >
+                <Minus className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => {
+                  const currentSize = parseInt(customFontSize) || 16;
+                  if (currentSize < 72) {
+                    const newSize = `${currentSize + 1}px`;
+                    setCustomFontSize(newSize);
+                    applyFontSizeToAll(newSize);
+                  }
+                }}
+                className="rounded border border-gray-300 p-2 hover:bg-gray-100"
+                title="Increase size"
+              >
+                <Plus className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-4 gap-2">
+            {quickFontSizes.map(size => (
+              <button
+                key={size}
+                onClick={() => {
+                  setCustomFontSize(size);
+                  applyFontSizeToAll(size);
+                }}
+                className="rounded border border-gray-300 px-3 py-2 text-sm transition-colors hover:bg-gray-100 hover:text-blue-600"
+                style={{
+                  fontSize: size,
+                  color: size === customFontSize ? "#3B82F6" : "inherit",
+                }}
+              >
+                {parseInt(size)}px
+              </button>
             ))}
           </div>
         </div>
@@ -423,11 +635,26 @@ export const EditableText: React.FC<EditableTextProps> = ({
 
             {/* Color Button */}
             <button
-              onClick={() => setShowColorInput(!showColorInput)}
+              onClick={() => {
+                setShowColorInput(!showColorInput);
+                setShowFontSizeInput(false);
+              }}
               className="rounded p-2 transition-colors hover:bg-gray-100 active:bg-gray-200"
               title="Text Color"
             >
               <Palette className="h-4 w-4 text-gray-700" />
+            </button>
+
+            {/* Font Size Button */}
+            <button
+              onClick={() => {
+                setShowFontSizeInput(!showFontSizeInput);
+                setShowColorInput(false);
+              }}
+              className="rounded p-2 transition-colors hover:bg-gray-100 active:bg-gray-200"
+              title="Font Size"
+            >
+              <Type className="h-4 w-4 text-gray-700" />
             </button>
 
             {/* Close Button */}
@@ -435,6 +662,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
               onClick={() => {
                 setShowSelectionToolbar(false);
                 setShowColorInput(false);
+                setShowFontSizeInput(false);
                 setTextSelection(null);
                 window.getSelection()?.removeAllRanges();
               }}
@@ -480,6 +708,74 @@ export const EditableText: React.FC<EditableTextProps> = ({
                     style={{ backgroundColor: color }}
                     title={color}
                   />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Font size picker section */}
+          {showFontSizeInput && (
+            <div className="border-t border-gray-200 p-3">
+              <div className="mb-2">
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    value={parseInt(selectionFontSize) || 16}
+                    onChange={e => setSelectionFontSize(`${e.target.value}px`)}
+                    min="8"
+                    max="72"
+                    className="h-8 w-16 rounded border border-gray-300 px-2 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                    placeholder="16"
+                  />
+                  <span className="flex items-center text-xs text-gray-500">
+                    px
+                  </span>
+                  <button
+                    onClick={() => {
+                      const currentSize = parseInt(selectionFontSize) || 16;
+                      if (currentSize > 8) {
+                        setSelectionFontSize(`${currentSize - 1}px`);
+                      }
+                    }}
+                    className="rounded border border-gray-300 p-1 hover:bg-gray-100"
+                    title="Decrease size"
+                  >
+                    <Minus className="h-3 w-3" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      const currentSize = parseInt(selectionFontSize) || 16;
+                      if (currentSize < 72) {
+                        setSelectionFontSize(`${currentSize + 1}px`);
+                      }
+                    }}
+                    className="rounded border border-gray-300 p-1 hover:bg-gray-100"
+                    title="Increase size"
+                  >
+                    <Plus className="h-3 w-3" />
+                  </button>
+                  <button
+                    onClick={() => applyFontSizeToSelection(selectionFontSize)}
+                    className="rounded bg-blue-500 px-3 py-1 text-xs text-white hover:bg-blue-600"
+                  >
+                    Apply
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 gap-1">
+                {quickFontSizes.map(size => (
+                  <button
+                    key={size}
+                    onClick={() => applyFontSizeToSelection(size)}
+                    className="rounded border border-gray-300 px-2 py-1 text-xs transition-colors hover:bg-gray-100 hover:text-blue-600"
+                    style={{
+                      fontSize: size,
+                      color: size === selectionFontSize ? "#3B82F6" : "inherit",
+                    }}
+                  >
+                    {parseInt(size)}px
+                  </button>
                 ))}
               </div>
             </div>
