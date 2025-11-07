@@ -1,78 +1,77 @@
-import { getApiBaseUrl } from "@/config/site";
-import { createHeaders } from "@/utils/headers";
-import { handleApiError } from "@/utils/api-error";
 import {
-  ConversationListItem,
-  ConversationDetailResponse,
+  WebhookNewMessageEvent,
   SendMessageRequest,
-  SendMessageResponse,
 } from "@/types/owner-site/admin/conversations";
+import { getApiBaseUrl } from "@/config/site";
+
+// Use the vapebox subdomain for all API calls
+const API_BASE_URL = getApiBaseUrl();
+
+// 👇 Helper to handle responses
+async function handleResponse(res: Response) {
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "API request failed");
+  }
+  return res.json();
+}
 
 export const useConversationsApi = {
-  getConversations: async (pageId: string): Promise<ConversationListItem[]> => {
-    const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
-      `${API_BASE_URL}/api/conversations/${pageId}/`,
-      {
-        method: "GET",
-        headers: createHeaders(),
-        cache: "no-store",
-      }
-    );
-    await handleApiError(response);
-    return await response.json();
+  /**
+   * 📨 Get all conversations for a given pageId
+   */
+  async getConversations(pageId: string) {
+    const res = await fetch(`${API_BASE_URL}/api/conversations/${pageId}`);
+    return handleResponse(res);
   },
 
-  getConversationMessages: async (
-    conversationId: string
-  ): Promise<ConversationDetailResponse> => {
-    const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
-      `${API_BASE_URL}/api/conversation-messages/${conversationId}/`,
-      {
-        method: "GET",
-        headers: createHeaders(),
-        cache: "no-store",
-      }
+  /**
+   * 💬 Get messages for a specific conversation
+   */
+  async getConversationMessages(conversationId: string) {
+    const res = await fetch(
+      `${API_BASE_URL}/api/conversation-messages/${conversationId}`
     );
-    await handleApiError(response);
-    return await response.json();
+    return handleResponse(res);
   },
 
-  // FIXED: Always use recipient ID, never thread_id
-  sendMessage: async (
-    data: SendMessageRequest
-  ): Promise<SendMessageResponse> => {
-    const { recipient_id, message, page_access_token } = data;
+  /**
+   * 🚀 Send a message to a user (used by useSendMessage)
+   */
+  async sendMessage(data: SendMessageRequest & { conversationId: string }) {
+    const res = await fetch(`${API_BASE_URL}/api/send-message`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return handleResponse(res);
+  },
 
-    // Always use the /me/messages endpoint with recipient ID
-    const endpoint = `https://graph.facebook.com/v21.0/me/messages`;
+  /**
+   * 🔄 Subscribe to conversation messages (real-time updates)
+   * Simulates a webhook or websocket listener.
+   * In production, replace this with WebSocket, Pusher, or Facebook webhook updates.
+   */
+  subscribeToConversation(
+    conversationId: string,
+    callback: (data: WebhookNewMessageEvent["data"]) => void
+  ) {
+    // You can replace this polling with a real-time solution later
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(
+          `${API_BASE_URL}/api/conversation-messages/${conversationId}`
+        );
+        if (!res.ok) return;
+        const data = await res.json();
 
-    const body = {
-      recipient: { id: recipient_id },
-      message: { text: message },
-    };
-
-    const response = await fetch(
-      `${endpoint}?access_token=${page_access_token}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+        // Only call callback if there's a new message
+        if (data && data.message) callback(data);
+      } catch (err) {
+        console.error("Subscription error:", err);
       }
-    );
+    }, 5000); // poll every 5 seconds
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || "Failed to send message");
-    }
-
-    const result = await response.json();
-    return {
-      message_id: result.message_id,
-      recipient_id: result.recipient_id || recipient_id,
-    };
+    return () => clearInterval(interval);
   },
 };

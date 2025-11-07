@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { ConversationList } from "@/components/site-owners/admin/messenger/conversation-list";
 import { ChatWindow } from "@/components/site-owners/admin/messenger/chat-window";
 import { MessageInput } from "@/components/site-owners/admin/messenger/message-input";
@@ -14,16 +14,6 @@ import {
 } from "@/types/owner-site/admin/conversations";
 import { useFacebookIntegrations } from "@/hooks/owner-site/admin/use-facebook-integrations";
 
-interface Message {
-  id: string;
-  conversationId: string;
-  sender: string;
-  content: string;
-  timestamp: string;
-  isOwn: boolean;
-  senderProfilePic?: string;
-}
-
 export default function MessagingPage() {
   const [selectedConversationId, setSelectedConversationId] = useState<
     string | null
@@ -31,22 +21,37 @@ export default function MessagingPage() {
   const [selectedConversationData, setSelectedConversationData] =
     useState<ConversationListItem | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { data: integrations = [], isLoading: integrationsLoading } =
+    useFacebookIntegrations();
+
   const [selectedIntegration, setSelectedIntegration] = useState<{
     id: number;
     pageId: string;
     pageAccessToken: string;
     pageName: string;
   } | null>(null);
+
+  // Set the first integration as selected when integrations are loaded
+  useEffect(() => {
+    if (integrations.length > 0 && !selectedIntegration) {
+      const first = integrations[0];
+      setSelectedIntegration({
+        id: first.id!,
+        pageId: first.page_id,
+        pageAccessToken: first.page_access_token,
+        pageName: first.page_name,
+      });
+    }
+  }, [integrations, selectedIntegration]);
   const [integrationsLoaded, setIntegrationsLoaded] = useState(false);
 
-  const { data: integrations = [], isLoading: integrationsLoading } =
-    useFacebookIntegrations();
-
+  // 🔥 Real-time updates handled inside useConversationMessages
   const { data: conversationDetail, isLoading: isLoadingMessages } =
     useConversationMessages(selectedConversationId);
 
   const sendMessageMutation = useSendMessage();
 
+  // Prevent scrollbars in full-screen mode
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -54,7 +59,7 @@ export default function MessagingPage() {
     };
   }, []);
 
-  // Reset error when integrations load
+  // Handle integrations loading and empty state
   useEffect(() => {
     if (integrations.length > 0) {
       setError(null);
@@ -76,7 +81,7 @@ export default function MessagingPage() {
       setSelectedIntegration(integration);
       setSelectedConversationId(null);
       setSelectedConversationData(null);
-      setError(null); // Clear error when integration changes
+      setError(null);
 
       if (!integration && integrations.length === 0) {
         setError("No Facebook pages connected. Please connect a page first.");
@@ -87,19 +92,12 @@ export default function MessagingPage() {
     [integrations.length]
   );
 
-  // Transform backend messages to frontend format
-  const messages: Message[] =
-    conversationDetail?.conversation?.messages?.map((msg: MessageData) => ({
-      id: msg.id,
-      conversationId: conversationDetail.conversation.conversation_id,
-      sender:
-        msg.from.id === selectedIntegration?.pageId ? "You" : msg.from.name,
-      content: msg.message,
-      timestamp: msg.created_time,
-      isOwn: msg.from.id === selectedIntegration?.pageId,
-      senderProfilePic: msg.from.profile_pic,
-    })) || [];
+  // 🧠 Use the messages from the API directly (already in MessageData format)
+  const messages: MessageData[] = useMemo(() => {
+    return conversationDetail?.conversation?.messages ?? [];
+  }, [conversationDetail]);
 
+  // ✉️ Send message handler
   const handleSendMessage = async (content: string) => {
     if (
       !selectedConversationId ||
@@ -109,7 +107,6 @@ export default function MessagingPage() {
       return;
 
     try {
-      // Get participant ID (the other person in the conversation)
       const participantId = selectedConversationData.participants.find(
         p => p.id !== selectedIntegration.pageId
       )?.id;
@@ -118,17 +115,16 @@ export default function MessagingPage() {
         throw new Error("Could not find participant ID");
       }
 
-      // Send message using ONLY recipient_id and conversationId
       await sendMessageMutation.mutateAsync({
-        recipient_id: participantId, // This is the PSID (Page-Scoped ID)
+        recipient_id: participantId,
         message: content,
         page_access_token: selectedIntegration.pageAccessToken,
-        conversationId: selectedConversationId, // Only for cache invalidation
+        conversationId: selectedConversationId,
       });
 
       console.log("✅ Message sent to:", participantId);
       console.log("📝 Conversation ID:", selectedConversationId);
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("❌ Error sending message:", err);
 
@@ -150,10 +146,10 @@ export default function MessagingPage() {
   ) => {
     setSelectedConversationId(conversationId);
     setSelectedConversationData(data);
-    setError(null); // Clear any previous errors when selecting a conversation
+    setError(null);
   };
 
-  // Show loading state while checking integrations
+  // Loading integrations
   if (integrationsLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-white">
@@ -165,7 +161,7 @@ export default function MessagingPage() {
     );
   }
 
-  // Show error state only when there are truly no integrations
+  // No integrations error
   if (error && integrations.length === 0) {
     return (
       <div className="flex h-screen items-center justify-center bg-white">
@@ -183,6 +179,7 @@ export default function MessagingPage() {
     );
   }
 
+  // Determine conversation info
   const conversationName =
     selectedConversationData?.participants.find(
       p => p.id !== selectedIntegration?.pageId
@@ -199,6 +196,7 @@ export default function MessagingPage() {
         onSelectConversation={handleSelectConversation}
         onIntegrationChange={handleIntegrationChange}
       />
+
       <div className="flex flex-1 flex-col overflow-hidden">
         {selectedConversationId && selectedIntegration ? (
           <>
@@ -220,6 +218,7 @@ export default function MessagingPage() {
                   messages={messages}
                   conversationName={conversationName}
                   conversationAvatar={conversationAvatar}
+                  currentUserId={selectedIntegration.pageId}
                 />
                 <MessageInput
                   onSendMessage={handleSendMessage}

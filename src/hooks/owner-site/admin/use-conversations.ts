@@ -1,110 +1,174 @@
-// hooks/owner-site/admin/use-conversations.ts
-
+import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useConversationsApi } from "@/services/api/owner-sites/admin/conversations";
-import { SendMessageRequest } from "@/types/owner-site/admin/conversations";
+import {
+  WebhookNewMessageEvent,
+  SendMessageRequest,
+} from "@/types/owner-site/admin/conversations";
 import { toast } from "sonner";
 
-const CONVERSATIONS_QUERY_KEY = "conversations";
 const MESSAGES_QUERY_KEY = "conversation-messages";
 
-// Hook to get conversations by page_id
-export const useConversations = (pageId: string | null) => {
-  return useQuery({
-    queryKey: [CONVERSATIONS_QUERY_KEY, pageId],
-    queryFn: () => useConversationsApi.getConversations(pageId!),
-    enabled: !!pageId,
-    staleTime: 10_000, // 10 seconds
-    refetchOnWindowFocus: true,
-  });
-};
-
-// Hook to get conversation messages
 export const useConversationMessages = (conversationId: string | null) => {
-  return useQuery({
-    queryKey: [MESSAGES_QUERY_KEY, conversationId],
-    queryFn: () => useConversationsApi.getConversationMessages(conversationId!),
-    enabled: !!conversationId,
-    staleTime: 5_000, // 5 seconds
-    refetchOnWindowFocus: true,
-  });
-};
-
-// Hook to send a message with proper context
-export const useSendMessage = () => {
   const queryClient = useQueryClient();
 
+  const loadFromLocalStorage = () => {
+    if (!conversationId) return [];
+    const data = localStorage.getItem(`messages_${conversationId}`);
+    return data ? JSON.parse(data) : [];
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const saveToLocalStorage = (messages: any[]) => {
+    if (!conversationId) return;
+    localStorage.setItem(
+      `messages_${conversationId}`,
+      JSON.stringify(messages)
+    );
+  };
+
+  const query = useQuery({
+    queryKey: [MESSAGES_QUERY_KEY, conversationId],
+    queryFn: async () => {
+      const serverData = await useConversationsApi.getConversationMessages(
+        conversationId!
+      );
+      const localData = loadFromLocalStorage();
+
+      // ✅ Merge unique messages
+      const mergedMessages = [
+        ...serverData.conversation.messages,
+        ...localData.filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (lm: any) =>
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            !serverData.conversation.messages.some((sm: any) => sm.id === lm.id)
+        ),
+      ];
+
+      saveToLocalStorage(mergedMessages);
+
+      return {
+        ...serverData,
+        conversation: { ...serverData.conversation, messages: mergedMessages },
+      };
+    },
+    enabled: !!conversationId,
+    staleTime: 5000,
+  });
+
+  // 🔄 Real-time updates
+  useEffect(() => {
+    if (!conversationId) return;
+
+    const unsubscribe = useConversationsApi.subscribeToConversation(
+      conversationId,
+      (data: WebhookNewMessageEvent["data"]) => {
+        queryClient.setQueryData(
+          [MESSAGES_QUERY_KEY, conversationId],
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (old: any) => {
+            if (!old) return old;
+
+            const newMessage = {
+              id: data.message.id,
+              from: data.message.from,
+              message: data.message.message,
+              created_time: data.timestamp,
+            };
+
+            const exists = old.conversation.messages.some(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (m: any) => m.id === newMessage.id
+            );
+            if (exists) return old;
+
+            const updatedMessages = [...old.conversation.messages, newMessage];
+            saveToLocalStorage(updatedMessages);
+
+            return {
+              ...old,
+              conversation: {
+                ...old.conversation,
+                messages: updatedMessages,
+              },
+            };
+          }
+        );
+      }
+    );
+
+    return () => unsubscribe();
+  }, [conversationId, queryClient]);
+
+  return query;
+};
+
+export const useSendMessage = () => {
+  const queryClient = useQueryClient();
+  const MESSAGES_QUERY_KEY = "conversation-messages";
+
   return useMutation({
-    mutationFn: (data: SendMessageRequest & { conversationId: string }) =>
-      useConversationsApi.sendMessage(data),
-    onMutate: async variables => {
-      // Cancel outgoing refetches
+    mutationFn: async (
+      data: SendMessageRequest & { conversationId: string }
+    ) => {
+      return useConversationsApi.sendMessage(data);
+    },
+    onMutate: async newMessage => {
+      // Optimistically update the UI
       await queryClient.cancelQueries({
-        queryKey: [MESSAGES_QUERY_KEY, variables.conversationId],
+        queryKey: [MESSAGES_QUERY_KEY, newMessage.conversationId],
       });
 
-      // Snapshot previous value
       const previousMessages = queryClient.getQueryData([
         MESSAGES_QUERY_KEY,
-        variables.conversationId,
+        newMessage.conversationId,
       ]);
 
-      // Optimistically update to the new value
-      queryClient.setQueryData(
-        [MESSAGES_QUERY_KEY, variables.conversationId],
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (old: any) => {
-          if (!old) return old;
+      // Add the optimistic message to the cache
+      if (previousMessages) {
+        queryClient.setQueryData(
+          [MESSAGES_QUERY_KEY, newMessage.conversationId],
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (old: any) => {
+            if (!old) return old;
 
-          const optimisticMessage = {
-            id: `temp-${Date.now()}`,
-            from: {
-              id: variables.page_access_token, // Temporary - will be replaced on refetch
-              name: "You",
-              profile_pic: "",
-            },
-            message: variables.message,
-            created_time: new Date().toISOString(),
-          };
+            const optimisticMessage = {
+              id: `temp-${Date.now()}`,
+              from: "admin",
+              message: newMessage.message,
+              created_time: new Date().toISOString(),
+              isOptimistic: true,
+            };
 
-          return {
-            ...old,
-            conversation: {
-              ...old.conversation,
-              messages: [
-                ...(old.conversation.messages || []),
-                optimisticMessage,
-              ],
-            },
-          };
-        }
-      );
+            return {
+              ...old,
+              conversation: {
+                ...old.conversation,
+                messages: [...old.conversation.messages, optimisticMessage],
+              },
+            };
+          }
+        );
+      }
 
-      return { previousMessages, conversationId: variables.conversationId };
+      return { previousMessages };
     },
-    //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError: (error: any, variables, context) => {
-      // Rollback on error
+    onError: (error, variables, context) => {
+      // Revert on error
       if (context?.previousMessages) {
         queryClient.setQueryData(
-          [MESSAGES_QUERY_KEY, context.conversationId],
+          [MESSAGES_QUERY_KEY, variables.conversationId],
           context.previousMessages
         );
       }
-      toast.error(error.message || "Failed to send message");
+
+      toast("Failed to send message");
     },
-    onSuccess: (_, variables) => {
-      // Invalidate and refetch specific conversation messages
+    onSettled: (data, error, variables) => {
+      // Refetch after error or success to ensure we have the latest data
       queryClient.invalidateQueries({
         queryKey: [MESSAGES_QUERY_KEY, variables.conversationId],
       });
-
-      // Invalidate conversations list to update snippet
-      queryClient.invalidateQueries({
-        queryKey: [CONVERSATIONS_QUERY_KEY],
-      });
-
-      toast.success("Message sent successfully");
     },
   });
 };
