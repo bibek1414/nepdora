@@ -4,9 +4,10 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Plus, Image as ImageIcon, Mic, Smile } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface MessageInputProps {
-  onSendMessage: (content: string) => void;
+  onSendMessage: (content: string) => Promise<void>; // ✅ make it async-safe
   disabled?: boolean;
 }
 
@@ -18,6 +19,7 @@ export function MessageInput({
   const [isSending, setIsSending] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // auto-grow textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -29,18 +31,20 @@ export function MessageInput({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!message.trim() || disabled || isSending) return;
+    const trimmed = message.trim();
+    if (!trimmed || disabled || isSending) return;
 
     setIsSending(true);
     try {
-      await onSendMessage(message.trim());
+      await onSendMessage(trimmed);
       setMessage("");
-
-      if (textareaRef.current) {
-        textareaRef.current.style.height = "auto";
-      }
-    } catch (error) {
+      if (textareaRef.current) textareaRef.current.style.height = "auto";
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.error("Error sending message:", error);
+      toast.error(
+        error?.message || "Failed to send message. Please try again."
+      );
     } finally {
       setIsSending(false);
     }
@@ -56,7 +60,7 @@ export function MessageInput({
   return (
     <div className="sticky z-20 border-t border-gray-200 bg-white px-4 py-2">
       <div className="mx-auto flex max-w-3xl items-end gap-2">
-        {/* Action Buttons */}
+        {/* Left action buttons */}
         <div className="flex gap-1 pb-2">
           <button className="rounded-full p-2 text-blue-600 hover:bg-gray-100">
             <Plus className="h-5 w-5" />
@@ -69,7 +73,7 @@ export function MessageInput({
           </button>
         </div>
 
-        {/* Message Input */}
+        {/* Message input form */}
         <form onSubmit={handleSubmit} className="flex flex-1 items-end gap-2">
           <div className="relative flex-1">
             <textarea
@@ -87,7 +91,6 @@ export function MessageInput({
               style={{ paddingRight: "40px" }}
             />
 
-            {/* Emoji Button */}
             <button
               type="button"
               className="absolute right-2 bottom-2 rounded-full p-1 text-blue-600 hover:bg-gray-200"
@@ -96,13 +99,16 @@ export function MessageInput({
             </button>
           </div>
 
-          {/* Send Button */}
+          {/* Send button */}
           {message.trim() ? (
             <Button
               type="submit"
               size="icon"
               disabled={!message.trim() || disabled || isSending}
-              className="mb-1 h-9 w-9 flex-shrink-0 rounded-full bg-blue-600 hover:bg-blue-700"
+              className={cn(
+                "mb-1 h-9 w-9 flex-shrink-0 rounded-full bg-blue-600 hover:bg-blue-700",
+                isSending && "cursor-wait opacity-70"
+              )}
             >
               <Send className="h-4 w-4" />
             </Button>

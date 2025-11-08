@@ -13,13 +13,13 @@ export async function GET() {
 
     if (!response.ok) {
       console.error(`Backend API error: ${response.status}`);
-      return NextResponse.json([], { status: 200 }); 
+      return NextResponse.json([], { status: 200 });
     }
 
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching Facebook integrations:", error);
-    return NextResponse.json([], { status: 200 }); 
+    return NextResponse.json([], { status: 200 });
   }
 }
