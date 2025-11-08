@@ -10,6 +10,7 @@ export interface MessageData {
   from: Participant;
   message: string;
   created_time: string;
+  attachments?: Attachment[];
 }
 
 export interface ConversationData {
@@ -20,7 +21,6 @@ export interface ConversationData {
   participants: Participant[];
   snippet: string;
   updated_time: string;
-  last_synced: string;
   messages?: MessageData[];
 }
 
@@ -36,7 +36,6 @@ export interface ConversationListItem {
   participants: Participant[];
   snippet: string;
   updated_time: string;
-  last_synced: string;
 }
 
 // SIMPLIFIED: Remove thread_id - not needed
@@ -49,4 +48,26 @@ export interface SendMessageRequest {
 export interface SendMessageResponse {
   message_id: string;
   recipient_id: string;
+}
+
+export interface WebhookNewMessageEvent {
+  tenant: string;
+  type: "new_message";
+  data: {
+    conversation_id: string;
+    message: MessageData;
+    attachments?: Attachment[];
+    page_id: string;
+    snippet: string;
+    sender_name: string;
+    sender_id: string;
+    timestamp: string;
+    message_type: "text" | "image" | "video" | "audio" | "file" | string;
+  };
+}
+
+export interface Attachment {
+  sticker_id?: string;
+  type?: string;
+  url?: string;
 }

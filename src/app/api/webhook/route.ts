@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import axios, { AxiosError } from "axios";
 import { orderApi } from "@/services/api/owner-sites/admin/orders";
 import { messageStore } from "@/lib/message-store";
-import { getApiBaseUrl } from "@/config/site";
 import { cookies } from "next/headers";
 import { decodeJWT, isTokenExpired, JWTPayload } from "@/lib/jwt-utils";
 
