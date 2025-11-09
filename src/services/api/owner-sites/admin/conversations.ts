@@ -154,31 +154,32 @@ export const useConversationsApi = {
     return result;
   },
 
-  /**
-   * 🔄 Subscribe to conversation messages (polling fallback)
-   * Replace with real-time WebSocket or Pusher in production
-   */
   subscribeToConversation(
     conversationId: string,
-    callback: (data: WebhookNewMessageEvent["data"]) => void
+    callback: (message: any) => void
   ) {
-    const interval = setInterval(async () => {
+    if (!conversationId) return () => {};
+
+    const eventSource = new EventSource(
+      `${API_BASE_URL}/api/conversation-messages/${conversationId}`
+    );
+
+    eventSource.onmessage = event => {
       try {
-        const res = await fetch(
-          `${API_BASE_URL}/api/conversation-messages/${conversationId}`
-        );
-
-        if (!res.ok) return;
-
-        const data = await res.json();
-
-        // Only call callback if there's a new message
-        if (data && data.message) callback(data);
+        const data = JSON.parse(event.data);
+        callback(data);
       } catch (err) {
-        console.error("Subscription error:", err);
+        console.error("Failed to parse SSE message:", err);
       }
-    }, 5000); // poll every 5 seconds
+    };
 
-    return () => clearInterval(interval);
+    eventSource.onerror = err => {
+      console.error("SSE connection error:", err);
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
   },
 };

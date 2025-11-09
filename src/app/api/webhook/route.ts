@@ -62,37 +62,67 @@ async function postWebhookDataToApi(
   messageData: any,
   subdomain?: string | null
 ) {
+  // Skip API forwarding in development or if no subdomain is provided
+  if (process.env.NODE_ENV === "development") {
+    console.log("🛑 Skipping API forwarding in development mode");
+    return null;
+  }
+
   try {
     // Use subdomain from JWT if available, otherwise fallback to default
     const actualSubdomain = subdomain || "vapebox";
-
     const webhookApiEndpoint = `https://${actualSubdomain}.nepdora.baliyoventures.com/api/webhook/`;
 
-    console.log("🌐 Posting transformed message data to:", webhookApiEndpoint);
-    console.log(`   Using subdomain: ${actualSubdomain}`);
-    console.log("📦 Message data being sent:");
-    console.log(JSON.stringify(messageData, null, 2));
+    console.log("🌐 Attempting to forward message to:", webhookApiEndpoint);
+
+    // Only log a subset of the message data to avoid cluttering logs
+    console.log("📦 Message summary:", {
+      id: messageData.id,
+      conversationId: messageData.conversationId,
+      message:
+        messageData.message?.substring(0, 50) +
+        (messageData.message?.length > 50 ? "..." : ""),
+      from: messageData.from?.id,
+      timestamp: messageData.created_time,
+    });
 
     const response = await axios.post(webhookApiEndpoint, messageData, {
       headers: {
         "Content-Type": "application/json",
       },
-      timeout: 10000,
+      timeout: 5000, // Reduced timeout to fail faster
+      validateStatus: status => status < 500, // Don't throw for 4xx errors
     });
 
-    console.log("✅ Successfully posted to API:", response.status);
-    console.log("📥 API Response:", JSON.stringify(response.data, null, 2));
+    if (response.status === 404) {
+      console.log(
+        "ℹ️ API endpoint not found (404), but message will still be processed"
+      );
+      return null;
+    }
 
+    console.log("✅ Successfully forwarded message, status:", response.status);
     return response.data;
   } catch (error) {
-    const errorMessage =
-      error instanceof AxiosError
-        ? error.response?.data || error.message
-        : error instanceof Error
-          ? error.message
-          : "Unknown error";
-    console.error("❌ Failed to post webhook data to API:", errorMessage);
-    throw error;
+    // Log the error but don't throw - we want to continue processing the message
+    if (axios.isAxiosError(error)) {
+      if (error.code === "ECONNABORTED") {
+        console.log("⌛ API request timed out, continuing...");
+      } else if (error.response) {
+        console.log(
+          `⚠️ API returned ${error.response.status}:`,
+          error.response.statusText
+        );
+      } else {
+        console.log("⚠️ Failed to forward message:", error.message);
+      }
+    } else if (error instanceof Error) {
+      console.log("⚠️ Error forwarding message:", error.message);
+    } else {
+      console.log("⚠️ Unknown error forwarding message");
+    }
+
+    return null; // Return null to indicate failure but don't block processing
   }
 }
 
@@ -126,14 +156,57 @@ export async function POST(req: NextRequest) {
     console.log("=".repeat(80));
     console.log("📩 REAL-TIME WEBHOOK EVENT RECEIVED");
     console.log("=".repeat(80));
-    console.log("📦 Full Webhook Payload:");
+    console.log(" Full Webhook Payload:");
     console.log(JSON.stringify(body, null, 2));
     console.log("-".repeat(80));
 
-    if (body.object === "page") {
-      for (const entry of body.entry) {
-        console.log(`🏢 Page ID: ${entry.id}`);
-        console.log(`⏰ Time: ${entry.time}`);
+    // Handle both Facebook page events and custom webhook formats
+    if (body.object === "page" || body.type === "new_message") {
+      // Process each entry - there may be multiple if batched
+      const entries = body.entry || [];
+      if (body.type === "new_message" && body.data) {
+        // Handle custom webhook format
+        const webhookData = body.data;
+        console.log(" Processing custom webhook message:", webhookData);
+
+        const messageData = {
+          id: webhookData.message.id,
+          conversationId: webhookData.conversation_id,
+          message: webhookData.message.message,
+          from: {
+            id: webhookData.sender_id,
+            name: webhookData.sender_name,
+            email: webhookData.message.from?.email,
+          },
+          created_time: webhookData.timestamp,
+          pageId: webhookData.page_id,
+          senderId: webhookData.sender_id,
+          subdomain: subdomain || "vapebox",
+        };
+
+        // Store the message in the message store first
+        try {
+          console.log("💾 Storing message in message store:", messageData);
+          messageStore.addMessage(messageData);
+          console.log("✅ Successfully stored message");
+
+          // Try to forward to the API, but don't block on failure
+          postWebhookDataToApi(messageData, subdomain)
+            .then(() => console.log("✅ Successfully forwarded message to API"))
+            .catch(() => {}); // Errors are already logged in postWebhookDataToApi
+        } catch (error) {
+          console.error("❌ Failed to store message:", error);
+          // Even if storage fails, try to forward to API
+          postWebhookDataToApi(messageData, subdomain).catch(() => {});
+        }
+
+        return NextResponse.json({ status: "processed" });
+      }
+
+      // Process standard Facebook page events
+      for (const entry of entries) {
+        console.log(` Page ID: ${entry.id}`);
+        console.log(` Time: ${entry.time}`);
 
         for (const event of entry.messaging || []) {
           const senderId = event.sender.id;
@@ -163,26 +236,50 @@ export async function POST(req: NextRequest) {
             continue;
           }
 
-          // 🎯 PREPARE MESSAGE DATA FOR API
+          // Format timestamp for consistency
           const formattedTimestamp = timestamp
             ? new Date(timestamp).toISOString()
             : new Date().toISOString();
 
-          const conversationId = `t_${senderId}`;
+          // Check if this is a direct message or a webhook event
+          let messageData;
 
-          const messageData = {
-            id: messageId,
-            conversationId,
-            message,
-            from: {
-              id: senderId,
-              name: "Facebook User",
-            },
-            created_time: formattedTimestamp,
-            pageId: recipientId,
-            senderId,
-            subdomain: subdomain || "vapebox", // Include subdomain in message data
-          };
+          if (body.type === "new_message" && body.data) {
+            // Handle the webhook event format
+            const webhookData = body.data;
+            messageData = {
+              id: webhookData.message.id,
+              conversationId: webhookData.conversation_id,
+              message: webhookData.message.message,
+              from: {
+                id: webhookData.sender_id,
+                name: webhookData.sender_name,
+                email: webhookData.message.from?.email,
+              },
+              created_time: webhookData.timestamp,
+              pageId: webhookData.page_id,
+              senderId: webhookData.sender_id,
+              subdomain: subdomain || "vapebox",
+            };
+            console.log("📝 Processed webhook message:", messageData);
+          } else {
+            // Handle direct message format
+            const conversationId = `t_${senderId}`;
+
+            messageData = {
+              id: messageId,
+              conversationId,
+              message,
+              from: {
+                id: senderId,
+                name: "Facebook User",
+              },
+              created_time: formattedTimestamp,
+              pageId: recipientId,
+              senderId,
+              subdomain: subdomain || "vapebox",
+            };
+          }
 
           console.log("💾 Prepared message data:");
           console.log(JSON.stringify(messageData, null, 2));
@@ -198,7 +295,24 @@ export async function POST(req: NextRequest) {
 
           // 🎯 STORE IN LOCAL MESSAGE STORE
           try {
-            messageStore.addMessage(messageData);
+            // Ensure all required fields are present
+            const storedMessage = {
+              ...messageData,
+              // Ensure conversationId is in the correct format
+              conversationId: messageData.conversationId || `t_${senderId}`,
+              // Ensure pageId is set
+              pageId: recipientId,
+              // Ensure senderId is set
+              senderId,
+              // Ensure created_time is a valid ISO string
+              created_time: formattedTimestamp || new Date().toISOString(),
+            };
+
+            console.log(
+              "💾 Storing message:",
+              JSON.stringify(storedMessage, null, 2)
+            );
+            messageStore.addMessage(storedMessage);
             console.log("✅ Message successfully stored in real-time store");
           } catch (storeError) {
             console.error("❌ Failed to add message to store:", storeError);

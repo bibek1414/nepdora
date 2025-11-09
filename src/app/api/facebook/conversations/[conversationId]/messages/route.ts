@@ -1,121 +1,122 @@
-import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { messageStore } from "@/lib/message-store";
 
-const FACEBOOK_API_VERSION =
-  process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0";
+// Set the runtime to edge for better streaming support
+export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
-export interface FacebookMessage {
-  id: string;
-  message: string;
-  created_time: string;
-  from: {
-    id: string;
-    name: string;
-    picture?: {
-      data: {
-        height: number;
-        width: number;
-        is_silhouette: boolean;
-        url: string;
-      };
-    };
-  };
-}
+// Keep track of active connections
+const activeConnections = new Map<
+  string,
+  Set<ReadableStreamDefaultController>
+>();
 
-async function getUserProfilePicture(
-  userId: string,
-  pageAccessToken: string
-): Promise<string | undefined> {
-  try {
-    const response = await fetch(
-      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${userId}/picture?redirect=false&type=normal&access_token=${pageAccessToken}`
-    );
-    const data = await response.json();
-
-    if (data.data && data.data.url) {
-      return data.data.url;
+// Clean up function to remove dead connections
+function cleanupConnection(
+  conversationId: string,
+  controller: ReadableStreamDefaultController
+) {
+  const connections = activeConnections.get(conversationId);
+  if (connections) {
+    connections.delete(controller);
+    if (connections.size === 0) {
+      activeConnections.delete(conversationId);
     }
-  } catch (error) {
-    console.error(`Error fetching profile picture for ${userId}:`, error);
   }
-  return undefined;
 }
 
 export async function GET(
-  request: Request,
-  context: { params: Promise<{ conversationId: string }> }
+  request: NextRequest,
+  { params }: { params: { conversationId: string } }
 ) {
-  try {
-    const { conversationId } = await context.params;
-    const { searchParams } = new URL(request.url);
-    const pageAccessToken = searchParams.get("pageAccessToken");
+  // Ensure params are properly awaited/destructured
+  const { conversationId } = params;
 
-    if (!pageAccessToken) {
-      return NextResponse.json(
-        { error: "Page access token is required" },
-        { status: 400 }
-      );
-    }
-
-    // First, get the messages without pictures
-    const response = await fetch(
-      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${conversationId}/messages` +
-        `?fields=id,message,created_time,from{id,name}` +
-        `&access_token=${pageAccessToken}`
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.error("Facebook API error:", error);
-      throw new Error(error.error?.message || "Failed to fetch messages");
-    }
-
-    const data = await response.json();
-
-    // Get unique user IDs (excluding pages)
-    const userIds = [
-      ...new Set(
-        (data.data || [])
-          //eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .map((msg: any) => msg.from?.id)
-          .filter((id: string) => id && !id.startsWith("1049"))
-      ),
-    ] as string[];
-
-    // Fetch profile pictures for all unique users
-    const profilePics = new Map<string, string>();
-    await Promise.all(
-      userIds.map(async (userId: string) => {
-        const pic = await getUserProfilePicture(userId, pageAccessToken);
-        if (pic) {
-          profilePics.set(userId, pic);
-        }
-      })
-    );
-
-    // Transform the data to include profile pictures
-    //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const messages = (data.data || []).map((msg: any) => {
-      const profilePic = profilePics.get(msg.from?.id);
-
-      return {
-        ...msg,
-        from: {
-          id: msg.from?.id,
-          name: msg.from?.name,
-          profile_pic: profilePic,
-        },
-      };
+  if (!conversationId) {
+    return new Response(JSON.stringify({ error: "Missing conversationId" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
     });
-
-    return NextResponse.json({ messages });
-  } catch (error) {
-    console.error("Error in messages API route:", error);
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Failed to fetch messages",
-      },
-      { status: 500 }
-    );
   }
+
+  // Create a new SSE stream
+  const stream = new ReadableStream({
+    start(controller) {
+      console.log(`📡 SSE stream opened for conversation: ${conversationId}`);
+
+      // Add this connection to active connections
+      if (!activeConnections.has(conversationId)) {
+        activeConnections.set(conversationId, new Set());
+      }
+      activeConnections.get(conversationId)?.add(controller);
+
+      // Send a keep-alive ping every 25 seconds
+      const keepAliveInterval = setInterval(() => {
+        try {
+          controller.enqueue(`:keepalive\n\n`);
+        } catch (e) {
+          console.error("Failed to send keepalive:", e);
+          clearInterval(keepAliveInterval);
+        }
+      }, 25000);
+
+      // Send existing messages initially
+      try {
+        const existing = messageStore.getMessages(conversationId);
+        const initialData = JSON.stringify({
+          type: "initial",
+          messages: existing,
+          timestamp: new Date().toISOString(),
+        });
+        controller.enqueue(`data: ${initialData}\n\n`);
+      } catch (error) {
+        console.error("Error sending initial messages:", error);
+      }
+
+      // Listen for new messages
+      const messageListener = (message: any) => {
+        if (message.conversationId === conversationId) {
+          try {
+            const messageData = JSON.stringify({
+              type: "new",
+              message,
+              timestamp: new Date().toISOString(),
+            });
+            controller.enqueue(`data: ${messageData}\n\n`);
+          } catch (error) {
+            console.error("Error sending message:", error);
+          }
+        }
+      };
+
+      messageStore.on("newMessage", messageListener);
+
+      // Handle client disconnect or error
+      const closeStream = () => {
+        console.log(`❌ SSE stream closed for conversation: ${conversationId}`);
+        clearInterval(keepAliveInterval);
+        messageStore.removeListener("newMessage", messageListener);
+        cleanupConnection(conversationId, controller);
+        try {
+          controller.close();
+        } catch (e) {
+          console.error("Error closing controller:", e);
+        }
+      };
+
+      // Set up cleanup on client disconnect
+      request.signal.addEventListener("abort", closeStream);
+    },
+  });
+
+  // Return the SSE response
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Cache-Control": "no-cache, no-transform",
+      Connection: "keep-alive",
+      "Content-Encoding": "none",
+      "X-Accel-Buffering": "no", // Disable buffering for nginx
+    },
+  });
 }
