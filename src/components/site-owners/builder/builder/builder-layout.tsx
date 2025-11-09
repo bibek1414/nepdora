@@ -74,6 +74,13 @@ import { PageTemplate } from "@/types/owner-site/components/page-template";
 import { GalleryStylesDialog } from "@/components/site-owners/builder/gallery/gallery-styles-dialog";
 import { defaultGalleryData } from "@/types/owner-site/components/gallery";
 import { useQueryClient } from "@tanstack/react-query";
+import { PoliciesStylesDialog } from "@/components/site-owners/builder/policies/policies-styles-dialog";
+import {
+  defaultReturnExchangeData,
+  defaultShippingData,
+  defaultPrivacyData,
+  defaultTermsData,
+} from "@/types/owner-site/components/policies";
 import { toast } from "sonner";
 interface BuilderLayoutProps {
   params: {
@@ -99,7 +106,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   // Use the page hooks
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
   const createPageMutation = useCreatePage();
-
+  const [isPoliciesStylesDialogOpen, setIsPoliciesStylesDialogOpen] =
+    useState(false);
   // Page components with proper ordering
   const {
     data: pageComponentsResponse,
@@ -149,6 +157,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createAboutUsMutation = useCreateComponentMutation(
     currentPage,
     "about"
+  );
+  const createPoliciesComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "policies"
   );
   const createProductsComponentMutation = useCreateComponentMutation(
     currentPage,
@@ -248,6 +260,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "newsletter",
             "youtube",
             "gallery",
+            "policies",
           ].includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
@@ -358,6 +371,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsProductsStylesDialogOpen(true);
     } else if (componentId === "categories-sections") {
       setIsCategoriesStylesDialogOpen(true);
+    } else if (componentId === "policies-sections") {
+      setIsPoliciesStylesDialogOpen(true);
     } else if (componentId === "gallery-sections") {
       setIsGalleryStylesDialogOpen(true);
     } else if (componentId === "subcategories-sections") {
@@ -508,7 +523,37 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       onSuccess: () => setIsFooterDialogOpen(false),
     });
   };
+  const handlePoliciesTemplateSelect = (
+    template: "return-exchange" | "shipping" | "privacy" | "terms"
+  ) => {
+    let policyData;
 
+    switch (template) {
+      case "return-exchange":
+        policyData = defaultReturnExchangeData;
+        break;
+      case "shipping":
+        policyData = defaultShippingData;
+        break;
+      case "privacy":
+        policyData = defaultPrivacyData;
+        break;
+      case "terms":
+        policyData = defaultTermsData;
+        break;
+      default:
+        policyData = defaultReturnExchangeData;
+    }
+
+    createPoliciesComponentMutation.mutate(policyData, {
+      onSuccess: () => {
+        setIsPoliciesStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create policies component:", error);
+      },
+    });
+  };
   // Helper function to get next order value
   const getNextOrder = () => {
     if (pageComponents.length === 0) return 0;
@@ -896,7 +941,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAddHeroFromCanvas = () => {
     setIsHeroStylesDialogOpen(true);
   };
-
+  const handleAddPolicies = () => {
+    setIsPoliciesStylesDialogOpen(true);
+  };
   const handleAddAboutUsFromCanvas = () => {
     setIsAboutUsStylesDialogOpen(true);
   };
@@ -990,6 +1037,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           break;
         case "testimonials-sections":
           componentType = "testimonials";
+          break;
+        case "policies-sections":
+          componentType = "policies";
           break;
         case "portfolio-sections":
           componentType = "portfolio";
@@ -1086,7 +1136,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsFooterDialogOpen}
         onStyleSelect={handleFooterStyleSelect}
       />
-
+      <PoliciesStylesDialog
+        open={isPoliciesStylesDialogOpen}
+        onOpenChange={setIsPoliciesStylesDialogOpen}
+        onStyleSelect={handlePoliciesTemplateSelect}
+      />
       <HeroStylesDialog
         open={isHeroStylesDialogOpen}
         onOpenChange={setIsHeroStylesDialogOpen}

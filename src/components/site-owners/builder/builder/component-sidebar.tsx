@@ -150,6 +150,17 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       keywords: ["banner", "slider", "carousel", "hero", "promotional"],
     },
     {
+      id: "policies-sections",
+      label: "Policies",
+      icon: FileText,
+      keywords: [
+        "Return Policy",
+        "Shipping Policy",
+        "Terms & Conditions",
+        "Privacy Policy",
+      ],
+    },
+    {
       id: "newsletter-sections",
       label: "Newsletter",
       icon: Mail,

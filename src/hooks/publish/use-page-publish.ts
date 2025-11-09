@@ -24,7 +24,7 @@ import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
-
+import { PolicyComponentData } from "@/types/owner-site/components/policies";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -44,6 +44,7 @@ interface PageComponent {
     | "banner"
     | "newsletter"
     | "youtube"
+    | "policies"
     | "subcategory";
   data:
     | HeroComponentData["data"]
@@ -61,7 +62,8 @@ interface PageComponent {
     | GalleryComponentData["data"]
     | BannerComponentData["data"]
     | YouTubeComponentData["data"]
-    | SubCategoryComponentData["data"];
+    | SubCategoryComponentData["data"]
+    | PolicyComponentData["data"];
   order: number;
 }
 
@@ -107,6 +109,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
           "youtube",
           "banner",
           "gallery",
+          "policies",
         ].includes(component.component_type) &&
         !!component.data
     );
@@ -114,30 +117,30 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
 
   // Navigation handlers
   const handleBacktoHome = () => {
-    router.push(`/preview/${siteUser}`);
+    router.push(`/publish/${siteUser}`);
   };
 
   const handleProductClick = (productId: number, order: number) => {
-    console.log("Product clicked in preview:", { productId, order });
-    router.push(`/preview/${siteUser}/products/${productId}`);
+    console.log("Product clicked in publish:", { productId, order });
+    router.push(`/publish/${siteUser}/products/${productId}`);
   };
 
   const handleBlogClick = (blogSlug: string, order: number) => {
-    console.log("Blog clicked in preview:", { blogSlug, order });
-    router.push(`/preview/${siteUser}/blog/${blogSlug}`);
+    console.log("Blog clicked in publish:", { blogSlug, order });
+    router.push(`/publish/${siteUser}/blog/${blogSlug}`);
   };
   const handleServiceClick = (serviceSlug: string, order: number) => {
-    console.log("Service clicked in preview:", { serviceSlug, order });
-    router.push(`/preview/${siteUser}/services/${serviceSlug}`);
+    console.log("Service clicked in publish:", { serviceSlug, order });
+    router.push(`/publish/${siteUser}/services/${serviceSlug}`);
   };
   const handleCategoryClick = (categoryId: number, order: number) => {
-    console.log("Category clicked in preview:", { categoryId, order });
-    router.push(`/preview/${siteUser}/categories/${categoryId}`);
+    console.log("Category clicked in publish:", { categoryId, order });
+    router.push(`/publish/${siteUser}/categories/${categoryId}`);
   };
 
   const handleSubCategoryClick = (subcategoryId: number, order: number) => {
-    console.log("SubCategory clicked in preview:", { subcategoryId, order });
-    router.push(`/preview/${siteUser}/subcategories/${subcategoryId}`);
+    console.log("SubCategory clicked in publish:", { subcategoryId, order });
+    router.push(`/publish/${siteUser}/subcategories/${subcategoryId}`);
   };
 
   // Component update handlers (not used in preview mode)
@@ -159,6 +162,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
       | PortfolioComponentData
       | BannerComponentData
       | YouTubeComponentData
+      | PolicyComponentData
       | GalleryComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
