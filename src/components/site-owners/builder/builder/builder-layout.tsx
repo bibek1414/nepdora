@@ -527,6 +527,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "hero-7"
       | "hero-8"
       | "hero-9"
+      | "hero-10"
   ) => {
     // Get the specific configuration for this template
     const templateConfig = heroTemplateConfigs[template];

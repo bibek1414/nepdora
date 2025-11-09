@@ -30,6 +30,7 @@ import {
 } from "@/hooks/owner-site/components/use-unified";
 import { HeroTemplate8 } from "./hero-style-8";
 import { HeroTemplate9 } from "./hero-style-9";
+import { HeroTemplate10 } from "../../builder/hero/hero-style-10";
 
 interface HeroComponentProps {
   component: HeroComponentData;
@@ -136,6 +137,8 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
         return <HeroTemplate8 {...props} />;
       case "hero-9":
         return <HeroTemplate9 {...props} />;
+      case "hero-10":
+        return <HeroTemplate10 {...props} />;
       default:
         return (
           <div className="flex min-h-[60vh] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-20">

@@ -22,6 +22,7 @@ interface HeroStylesDialogProps {
       | "hero-7"
       | "hero-8"
       | "hero-9"
+      | "hero-10"
   ) => void;
 }
 
@@ -40,6 +41,7 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
     | "hero-7"
     | "hero-8"
     | "hero-9"
+    | "hero-10"
     | null
   >(null);
 
@@ -80,6 +82,10 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
       id: "hero-9" as const,
       name: "Hero Template 9",
     },
+    {
+      id: "hero-10" as const,
+      name: "Hero Template 10",
+    },
   ];
 
   const handleSelect = (template: {
@@ -92,7 +98,8 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
       | "hero-6"
       | "hero-8"
       | "hero-9"
-      | "hero-7";
+      | "hero-7"
+      | "hero-10";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
