@@ -136,7 +136,6 @@ export const useDeleteComponentMutation = (
       queryClient.invalidateQueries({
         queryKey: ["pageComponents", pageSlug, componentType],
       });
-      toast.success(`${componentType} component deleted successfully!`);
     },
     onError: (error: unknown) => {
       const errorMessage =

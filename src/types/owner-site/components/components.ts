@@ -14,6 +14,8 @@ import { NewsletterData } from "./newsletter";
 import { YouTubeData } from "./youtube";
 import { ServicesData } from "./services";
 import { GalleryData } from "./gallery";
+import { PolicyData } from "./policies";
+
 // Union type for all component data types
 export type ComponentData =
   | HeroData
@@ -31,6 +33,7 @@ export type ComponentData =
   | YouTubeData
   | ServicesData
   | GalleryData
+  | PolicyData
   | TestimonialsData;
 
 // Component type mapping for better type safety
@@ -51,6 +54,7 @@ export interface ComponentTypeMap {
   banner: BannerData;
   services: ServicesData;
   youtube: YouTubeData;
+  policies: PolicyData;
 }
 
 // Generic interfaces that replace the any types
@@ -115,7 +119,10 @@ export const isBlogComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"blog"> =>
   component.component_type === "blog";
-
+export const isPolicyComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"policies"> =>
+  component.component_type === "policies";
 export const isProductsComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"products"> =>

@@ -24,6 +24,7 @@ import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
+import { PolicyComponentData } from "@/types/owner-site/components/policies";
 
 interface PageComponent {
   id: string | number;
@@ -44,7 +45,8 @@ interface PageComponent {
     | "gallery"
     | "newsletter"
     | "youtube"
-    | "subcategory";
+    | "subcategory"
+    | "policies";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
@@ -61,7 +63,8 @@ interface PageComponent {
     | CategoryComponentData["data"]
     | BannerComponentData["data"]
     | YouTubeComponentData["data"]
-    | SubCategoryComponentData["data"];
+    | SubCategoryComponentData["data"]
+    | PolicyComponentData["data"];
   order: number;
 }
 
@@ -107,6 +110,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
           "youtube",
           "banner",
           "gallery",
+          "policies",
         ].includes(component.component_type) &&
         !!component.data
     );
@@ -126,10 +130,12 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
     console.log("Blog clicked in preview:", { blogSlug, order });
     router.push(`/preview/${siteUser}/blog/${blogSlug}`);
   };
+
   const handleServiceClick = (serviceSlug: string, order: number) => {
     console.log("Service clicked in preview:", { serviceSlug, order });
     router.push(`/preview/${siteUser}/services/${serviceSlug}`);
   };
+
   const handleCategoryClick = (categoryId: number, order: number) => {
     console.log("Category clicked in preview:", { categoryId, order });
     router.push(`/preview/${siteUser}/categories/${categoryId}`);
@@ -160,6 +166,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | BannerComponentData
       | YouTubeComponentData
       | GalleryComponentData
+      | PolicyComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
       componentId,

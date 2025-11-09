@@ -19,6 +19,7 @@ import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
 import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
 import { TeamComponentData } from "@/types/owner-site/components/team";
+import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
@@ -33,6 +34,7 @@ import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtu
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 import { GalleryComponent } from "../builder/gallery/gallery-component";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
+import { PolicyComponentData } from "@/types/owner-site/components/policies";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -52,7 +54,8 @@ interface PageComponent {
     | "newsletter"
     | "youtube"
     | "gallery"
-    | "subcategory";
+    | "subcategory"
+    | "policies";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
@@ -69,7 +72,8 @@ interface PageComponent {
     | NewsletterComponentData["data"]
     | YouTubeComponentData["data"]
     | BannerComponentData["data"]
-    | SubCategoryComponentData["data"];
+    | SubCategoryComponentData["data"]
+    | PolicyComponentData["data"];
   order: number;
 }
 
@@ -100,6 +104,7 @@ interface PageComponentRendererProps {
       | PortfolioComponentData
       | BannerComponentData
       | NewsletterComponentData
+      | PolicyComponentData
       | YouTubeComponentData
   ) => void;
 }
@@ -326,6 +331,16 @@ export function PageComponentRenderer({
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as YouTubeComponentData)
             }
+          />
+        );
+      case "policies":
+        return (
+          <PolicyComponent
+            key={component.id}
+            component={component as PolicyComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
           />
         );
       default:

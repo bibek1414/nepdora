@@ -9,6 +9,16 @@ import { ServicesComponent } from "@/components/site-owners/builder/services/ser
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
 import { CategoryComponent } from "@/components/site-owners/builder/category/category-component";
 import { SubCategoryComponent } from "@/components/site-owners/builder/sub-category/sub-category-component";
+import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
+import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
+import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
+import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
+import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
+import { NewsletterComponent } from "@/components/site-owners/builder/newsletter/newsletter-component";
+import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
+import { GalleryComponent } from "../builder/gallery/gallery-component";
+import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
+
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
@@ -17,22 +27,16 @@ import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
-import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
-import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
-import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
-import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
-import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
-import { NewsletterComponent } from "@/components/site-owners/builder/newsletter/newsletter-component";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
-import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
-import { GalleryComponent } from "../builder/gallery/gallery-component";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
+import { PolicyComponentData } from "@/types/owner-site/components/policies";
+
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -52,7 +56,8 @@ interface PageComponent {
     | "banner"
     | "newsletter"
     | "youtube"
-    | "subcategory";
+    | "subcategory"
+    | "policies";
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
@@ -69,7 +74,8 @@ interface PageComponent {
     | NewsletterComponentData["data"]
     | YouTubeComponentData["data"]
     | BannerComponentData["data"]
-    | SubCategoryComponentData["data"];
+    | SubCategoryComponentData["data"]
+    | PolicyComponentData["data"];
   order: number;
 }
 
@@ -101,6 +107,7 @@ interface PageComponentRendererProps {
       | BannerComponentData
       | NewsletterComponentData
       | YouTubeComponentData
+      | PolicyComponentData
   ) => void;
 }
 
@@ -326,6 +333,16 @@ export function PageComponentRenderer({
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as YouTubeComponentData)
             }
+          />
+        );
+      case "policies":
+        return (
+          <PolicyComponent
+            key={component.id}
+            component={component as PolicyComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
           />
         );
       default:

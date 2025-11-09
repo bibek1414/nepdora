@@ -56,7 +56,8 @@ import {
 } from "lucide-react";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Button } from "@/components/ui/site-owners/button";
-
+import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
+import { PolicyComponentData } from "@/types/owner-site/components/policies";
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
   navbar?: Navbar | null;
@@ -83,6 +84,7 @@ interface CanvasAreaProps {
   onAddNewsletter?: () => void;
   onAddYouTube?: () => void;
   onAddGallery?: () => void;
+  onAddPolicies?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -98,6 +100,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddHero,
   onAddAboutUs,
   onAddProducts,
+  onAddPolicies,
   onAddCategories,
   onAddSubCategories,
   onAddBlog,
@@ -131,6 +134,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       initialPageComponents.sort((a, b) => (a.order || 0) - (b.order || 0))
     );
   }, [initialPageComponents]);
+  const hasPolicies = pageComponents.some(c => c.component_type === "policies");
 
   // Hook for updating component order
   const updateOrderMutation = useUpdateComponentOrderMutation(currentPageSlug);
@@ -314,6 +318,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             component={component as TeamComponentData}
             onUpdate={() => {}}
             onMemberClick={() => {}}
+            {...commonProps}
+          />
+        );
+        break;
+      case "policies":
+        componentElement = (
+          <PolicyComponent
+            key={`policies-${component.id}`}
+            component={component as PolicyComponentData}
+            siteUser=""
             {...commonProps}
           />
         );
