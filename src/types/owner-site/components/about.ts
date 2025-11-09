@@ -118,7 +118,23 @@ export interface AboutUs7Data {
   buttonLink: string;
 }
 
-// Don't forget to update your AboutUsData type union to include AboutUs7Data
+export interface AboutUs8Data {
+  template: "about-8";
+  title: string;
+  description: string;
+  features: Array<{
+    id: string;
+    name: string;
+    description: string;
+  }>;
+  images: Array<{
+    id: string;
+    url: string;
+    alt: string;
+  }>;
+}
+
+// Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
   | AboutUs2Data
@@ -126,7 +142,8 @@ export type AboutUsData =
   | AboutUs4Data
   | AboutUs5Data
   | AboutUs6Data
-  | AboutUs7Data;
+  | AboutUs7Data
+  | AboutUs8Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -373,4 +390,59 @@ export const defaultAboutUs7Data: AboutUs7Data = {
   ],
   buttonText: "Learn more",
   buttonLink: "#",
+};
+
+export const defaultAboutUs8Data: AboutUs8Data = {
+  template: "about-8",
+  title: "Technical Specifications",
+  description:
+    "The walnut wood card tray is precision milled to perfectly fit a stack of Focus cards. The powder coated steel divider separates active cards from new ones, or can be used to archive important task lists.",
+  features: [
+    { id: "1", name: "Origin", description: "Designed by Good Goods, Inc." },
+    {
+      id: "2",
+      name: "Material",
+      description:
+        "Solid walnut base with rare earth magnets and powder coated steel card cover",
+    },
+    { id: "3", name: "Dimensions", description: '6.25" x 3.55" x 1.15"' },
+    {
+      id: "4",
+      name: "Finish",
+      description: "Hand sanded and finished with natural oil",
+    },
+    {
+      id: "5",
+      name: "Includes",
+      description: "Wood card tray and 3 refill packs",
+    },
+    {
+      id: "6",
+      name: "Considerations",
+      description:
+        "Made from natural materials. Grain and color vary with each item.",
+    },
+  ],
+  images: [
+    {
+      id: "1",
+      url: "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-01.jpg",
+      alt: "Walnut card tray with white powder coated steel divider and 3 punchout holes.",
+    },
+    {
+      id: "2",
+      url: "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-02.jpg",
+      alt: "Top down view of walnut card tray with embedded magnets and card groove.",
+    },
+    {
+      id: "3",
+      url: "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-03.jpg",
+      alt: "Side of walnut card tray with card groove and recessed card area.",
+    },
+    {
+      id: "4",
+      url: "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-04.jpg",
+      alt: "Walnut card tray filled with cards and card angled in dedicated groove.",
+    },
+  ],
 };

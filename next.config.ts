@@ -39,6 +39,10 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "plus.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "tailwindcss.com",
+      },
     ],
   },
 };

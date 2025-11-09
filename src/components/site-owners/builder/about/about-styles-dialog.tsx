@@ -21,6 +21,7 @@ interface AboutUsStylesDialogProps {
       | "about-5"
       | "about-6"
       | "about-7"
+      | "about-8"
   ) => void;
 }
 
@@ -37,6 +38,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
     | "about-5"
     | "about-6"
     | "about-7"
+    | "about-8"
     | null
   >(null);
 
@@ -48,6 +50,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
     { id: "about-5" as const, name: "Better Design" },
     { id: "about-6" as const, name: "Creative Layout" },
     { id: "about-7" as const, name: "Training Focused" },
+    { id: "about-8" as const, name: "Technical Specifications" },
   ];
 
   const handleSelect = (
@@ -59,6 +62,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
       | "about-5"
       | "about-6"
       | "about-7"
+      | "about-8"
   ) => {
     setSelectedStyle(templateId);
     setTimeout(() => {
