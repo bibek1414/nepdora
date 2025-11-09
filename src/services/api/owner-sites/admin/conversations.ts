@@ -153,33 +153,4 @@ export const useConversationsApi = {
     console.log("✅ Message sent successfully:", result);
     return result;
   },
-
-  subscribeToConversation(
-    conversationId: string,
-    callback: (message: any) => void
-  ) {
-    if (!conversationId) return () => {};
-
-    const eventSource = new EventSource(
-      `${API_BASE_URL}/api/conversation-messages/${conversationId}`
-    );
-
-    eventSource.onmessage = event => {
-      try {
-        const data = JSON.parse(event.data);
-        callback(data);
-      } catch (err) {
-        console.error("Failed to parse SSE message:", err);
-      }
-    };
-
-    eventSource.onerror = err => {
-      console.error("SSE connection error:", err);
-      eventSource.close();
-    };
-
-    return () => {
-      eventSource.close();
-    };
-  },
 };

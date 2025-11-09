@@ -1,70 +1,33 @@
 import { useEffect, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useConversationsApi } from "@/services/api/owner-sites/admin/conversations";
-import {
-  WebhookNewMessageEvent,
-  SendMessageRequest,
-} from "@/types/owner-site/admin/conversations";
+import { SendMessageRequest } from "@/types/owner-site/admin/conversations";
 import { toast } from "sonner";
 
 const MESSAGES_QUERY_KEY = "conversation-messages";
 
-// 🧩 Fetch conversation messages (with merge + localStorage sync)
-export const useConversationMessages = (conversationId: string | null) => {
+// 🧩 Fetch conversation messages once from backend
+export const useConversationMessages = (
+  conversationId: string | null,
+  pageId: string | null
+) => {
   const queryClient = useQueryClient();
   const isMounted = useRef(true);
 
-  const loadFromLocalStorage = () => {
-    if (!conversationId) return [];
-    try {
-      const data = localStorage.getItem(`messages_${conversationId}`);
-      return data ? JSON.parse(data) : [];
-    } catch {
-      return [];
-    }
-  };
-
-  const saveToLocalStorage = (messages: unknown[]) => {
-    if (!conversationId) return;
-    localStorage.setItem(
-      `messages_${conversationId}`,
-      JSON.stringify(messages)
-    );
-  };
-
+  // Fetch messages once from backend
   const query = useQuery({
     queryKey: [MESSAGES_QUERY_KEY, conversationId],
     enabled: !!conversationId,
-    staleTime: 5000,
+    staleTime: Infinity, // Don't refetch automatically
     queryFn: async () => {
-      const serverData = await useConversationsApi.getConversationMessages(
-        conversationId!
-      );
-      const localData = loadFromLocalStorage();
-
-      const serverMessages = serverData?.conversation?.messages ?? [];
-      const mergedMessages = [
-        ...serverMessages,
-        ...localData.filter(
-          (lm: any) => !serverMessages.some((sm: any) => sm.id === lm.id)
-        ),
-      ];
-
-      saveToLocalStorage(mergedMessages);
-
-      return {
-        ...serverData,
-        conversation: {
-          ...serverData.conversation,
-          messages: mergedMessages,
-        },
-      };
+      if (!conversationId) return null;
+      return useConversationsApi.getConversationMessages(conversationId);
     },
   });
 
-  // 🔄 Subscribe for live updates using SSE
+  // 🔄 Subscribe for live updates using SSE (based on pageId, not conversationId)
   useEffect(() => {
-    if (!conversationId) return;
+    if (!pageId) return;
 
     let eventSource: EventSource | null = null;
     let reconnectAttempts = 0;
@@ -72,19 +35,18 @@ export const useConversationMessages = (conversationId: string | null) => {
     let reconnectTimeout: NodeJS.Timeout;
 
     const connect = () => {
-      // Close existing connection if any
       if (eventSource) {
         eventSource.close();
       }
 
-      console.log(`🔌 Connecting to SSE for conversation: ${conversationId}`);
+      console.log(`🔌 Connecting to SSE for pageId: ${pageId}`);
       eventSource = new EventSource(
-        `/api/facebook/conversations/${conversationId}/messages`
+        `/api/facebook/messages/stream?pageId=${pageId}`
       );
 
       eventSource.onopen = () => {
-        console.log("✅ SSE connection established");
-        reconnectAttempts = 0; // Reset reconnect attempts on successful connection
+        console.log("✅ SSE connection established for pageId:", pageId);
+        reconnectAttempts = 0;
       };
 
       eventSource.onmessage = event => {
@@ -92,54 +54,86 @@ export const useConversationMessages = (conversationId: string | null) => {
 
         try {
           const data = JSON.parse(event.data);
-          console.log("📩 Received message:", data.type);
+          console.log("📩 [SSE Update] Received update:", data.type);
 
-          if (data.type === "initial") {
-            // Handle initial messages
-            queryClient.setQueryData(
-              [MESSAGES_QUERY_KEY, conversationId],
-              (old: any) => {
-                if (!old) return old;
-                const updatedMessages = [...(data.messages || [])];
-                saveToLocalStorage(updatedMessages);
-                return {
-                  ...old,
-                  conversation: {
-                    ...old.conversation,
-                    messages: updatedMessages,
-                  },
-                };
-              }
-            );
-          } else if (data.type === "new") {
-            // Handle new messages
-            queryClient.setQueryData(
-              [MESSAGES_QUERY_KEY, conversationId],
-              (old: any) => {
-                if (!old) return old;
+          if (data.type === "message_update") {
+            const message = data.message;
+            console.log("📨 Message update:", {
+              conversationId: message?.conversationId,
+              messageId: message?.id,
+              from: message?.from,
+              message: message?.message,
+            });
 
-                const newMessage = data.message;
-                const exists = old.conversation.messages.some(
-                  (m: any) => m.id === newMessage.id
-                );
+            // Optimistically update messages if this conversation is currently selected
+            if (
+              message?.conversationId &&
+              conversationId === message.conversationId
+            ) {
+              queryClient.setQueryData(
+                [MESSAGES_QUERY_KEY, conversationId],
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (old: any) => {
+                  if (!old) return old;
 
-                if (exists) return old;
+                  // Check if message already exists
+                  const exists = old.conversation?.messages?.some(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (m: any) => m.id === message.id
+                  );
+                  if (exists) return old;
 
-                const updatedMessages = [
-                  ...old.conversation.messages,
-                  newMessage,
-                ];
-                saveToLocalStorage(updatedMessages);
+                  // Add new message
+                  const updatedMessages = [
+                    ...(old.conversation?.messages || []),
+                    {
+                      id: message.id,
+                      from: message.from,
+                      message: message.message,
+                      created_time: message.created_time,
+                      attachments: message.attachments || [],
+                    },
+                  ];
 
-                return {
-                  ...old,
-                  conversation: {
-                    ...old.conversation,
-                    messages: updatedMessages,
-                  },
-                };
-              }
-            );
+                  return {
+                    ...old,
+                    conversation: {
+                      ...old.conversation,
+                      messages: updatedMessages,
+                    },
+                  };
+                }
+              );
+            }
+          } else if (data.type === "conversation_update") {
+            const update = data.update;
+            console.log("💬 Conversation update:", {
+              conversationId: update?.conversationId,
+              snippet: update?.snippet,
+              updated_time: update?.updated_time,
+            });
+
+            // Optimistically update conversation list
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            queryClient.setQueryData(["conversations", pageId], (old: any) => {
+              if (!old || !Array.isArray(old)) return old;
+
+              // Update the conversation and move it to top (will be sorted by updated_time)
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const updated = old.map((conv: any) => {
+                if (conv.conversation_id === update.conversationId) {
+                  return {
+                    ...conv,
+                    snippet: update.snippet || conv.snippet,
+                    updated_time: update.updated_time || conv.updated_time,
+                  };
+                }
+                return conv;
+              });
+
+              // Sort by updated_time (newest first) - conversation-list will handle this via useMemo
+              return updated;
+            });
           }
         } catch (error) {
           console.error("Error processing SSE message:", error);
@@ -149,7 +143,6 @@ export const useConversationMessages = (conversationId: string | null) => {
       eventSource.onerror = error => {
         console.error("SSE connection error:", error);
 
-        // Attempt to reconnect with exponential backoff
         if (reconnectAttempts < maxReconnectAttempts) {
           const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
           console.log(`Reconnecting in ${delay}ms...`);
@@ -168,10 +161,8 @@ export const useConversationMessages = (conversationId: string | null) => {
       };
     };
 
-    // Initial connection
     connect();
 
-    // Cleanup function
     return () => {
       isMounted.current = false;
       if (eventSource) {
@@ -181,7 +172,7 @@ export const useConversationMessages = (conversationId: string | null) => {
         clearTimeout(reconnectTimeout);
       }
     };
-  }, [conversationId, queryClient]);
+  }, [pageId, conversationId, queryClient]);
 
   return query;
 };
@@ -212,13 +203,14 @@ export const useSendMessage = () => {
       if (previous) {
         queryClient.setQueryData(
           [MESSAGES_QUERY_KEY, newMessage.conversationId],
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (old: any) => {
             if (!old) return old;
 
             const optimisticMessage = {
               id: `temp-${Date.now()}`,
               from: {
-                id: newMessage.page_id, // ✅ this now matches `currentUserId`
+                id: newMessage.page_id,
                 name: "You",
               },
               message: newMessage.message,
@@ -226,20 +218,13 @@ export const useSendMessage = () => {
               isOptimistic: true,
             };
 
-            const updated = {
+            return {
               ...old,
               conversation: {
                 ...old.conversation,
                 messages: [...old.conversation.messages, optimisticMessage],
               },
             };
-
-            localStorage.setItem(
-              `messages_${newMessage.conversationId}`,
-              JSON.stringify(updated.conversation.messages)
-            );
-
-            return updated;
           }
         );
       }
@@ -255,12 +240,6 @@ export const useSendMessage = () => {
         );
       }
       toast.error("Failed to send message");
-    },
-
-    onSettled: (_data, _error, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: [MESSAGES_QUERY_KEY, variables.conversationId],
-      });
     },
   });
 };

@@ -34,7 +34,10 @@ export default function MessagingPage() {
 
   const sendMessageMutation = useSendMessage();
   const { data: conversationDetail, isLoading: isLoadingMessages } =
-    useConversationMessages(selectedConversationId);
+    useConversationMessages(
+      selectedConversationId,
+      selectedIntegration?.pageId || null
+    );
 
   // ✅ Default integration selection
   useEffect(() => {
@@ -126,6 +129,7 @@ export default function MessagingPage() {
 
       console.log("✅ Message sent to:", participantId);
       setError(null);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("❌ Error sending message:", err);
       const fbErrorCode = err?.response?.data?.error?.code;

@@ -73,46 +73,31 @@ export function ConversationList({
     return integrations[0] || null;
   }, [integrations, selectedIntegrationId]);
 
-  const safeIntegrationId = activeIntegration?.id
-    ? String(activeIntegration.id)
-    : "";
   const pageId = activeIntegration?.page_id || null;
 
   const {
-    data: conversations = [],
+    data: conversationsData = [],
     refetch,
     isLoading,
   } = useQuery({
     queryKey: ["conversations", pageId],
     queryFn: async () => {
       if (!pageId) return [];
-
-      const localData = localStorage.getItem(`conversations_${pageId}`);
-      const localConversations = localData ? JSON.parse(localData) : [];
-
-      try {
-        const serverData = await useConversationsApi.getConversations(pageId);
-        const merged = [
-          ...serverData,
-          ...localConversations.filter(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (lc: any) =>
-              !serverData.some(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (sc: any) => sc.conversation_id === lc.conversation_id
-              )
-          ),
-        ];
-        localStorage.setItem(`conversations_${pageId}`, JSON.stringify(merged));
-        return merged;
-      } catch (error) {
-        console.error("Error fetching conversations:", error);
-        return localConversations;
-      }
+      return useConversationsApi.getConversations(pageId);
     },
     enabled: !!pageId,
-    staleTime: 30000,
+    staleTime: Infinity, // Don't refetch automatically
   });
+
+  // Sort conversations by updated_time (most recent first)
+  const conversations = useMemo(() => {
+    if (!conversationsData || !Array.isArray(conversationsData)) return [];
+    return [...conversationsData].sort((a, b) => {
+      const timeA = new Date(a.updated_time || 0).getTime();
+      const timeB = new Date(b.updated_time || 0).getTime();
+      return timeB - timeA; // Descending order (newest first)
+    });
+  }, [conversationsData]);
 
   const handleIntegrationSelect = useCallback(
     (value: string) => {

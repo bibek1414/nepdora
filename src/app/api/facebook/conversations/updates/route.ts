@@ -55,6 +55,7 @@ export async function GET(request: NextRequest) {
       }, 25000);
 
       // Handle new messages
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const messageListener = (message: any) => {
         console.log("📨 New message received in messageStore:", message);
         if (message.pageId === pageId) {
