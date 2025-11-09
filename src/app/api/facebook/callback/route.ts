@@ -12,6 +12,37 @@ function createServerHeaders(token: string) {
   };
 }
 
+// Helper to subscribe to webhook for a Facebook page
+async function subscribeToWebhook(pageId: string, pageAccessToken: string) {
+  try {
+    console.log(
+      `[Webhook Subscribe] Starting subscription for page: ${pageId}`
+    );
+
+    const response = await fetch(
+      `https://graph.facebook.com/v20.0/${pageId}/subscribed_apps?subscribed_fields=messages,messaging_postbacks`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ access_token: pageAccessToken }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log(`[Webhook Subscribe] SUCCESS for page ${pageId}:`, data);
+    } else {
+      console.error(`[Webhook Subscribe] FAILED for page ${pageId}:`, data);
+    }
+
+    return data;
+  } catch (error) {
+    console.error(`[Webhook Subscribe] ERROR for page ${pageId}:`, error);
+    throw error;
+  }
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
@@ -22,6 +53,12 @@ export async function GET(request: Request) {
 
   // Handle OAuth errors from Facebook
   if (error) {
+    console.error("[Facebook OAuth] Error received:", {
+      error,
+      errorReason,
+      errorDescription,
+    });
+
     const user = await getServerUser();
     const baseUrl = user?.subDomain
       ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.subDomain}.localhost:3000`)}`
@@ -37,10 +74,14 @@ export async function GET(request: Request) {
   // Handle successful OAuth callback with code
   if (code) {
     try {
+      console.log("[Facebook OAuth] Authorization code received");
+
       const user = await getServerUser();
       if (!user) {
         throw new Error("User not authenticated");
       }
+
+      console.log("[Facebook OAuth] User authenticated:", user.id);
 
       // Get JWT token from cookies
       const cookieStore = await cookies();
@@ -63,6 +104,8 @@ export async function GET(request: Request) {
         process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0"
       }/oauth/access_token`;
 
+      console.log("[Facebook OAuth] Exchanging code for access token");
+
       const tokenResponse = await axios.get(tokenUrl, {
         params: {
           client_id: appId,
@@ -79,6 +122,11 @@ export async function GET(request: Request) {
         throw new Error("No access token received from Facebook");
       }
 
+      console.log(
+        "[Facebook OAuth] Access token received, type:",
+        tokenType || "user"
+      );
+
       // For Business Integration System User tokens, we need to handle differently
       if (tokenType === "SystemUser" || configId) {
         await handleBusinessIntegrationToken(accessToken, user, authToken);
@@ -93,8 +141,12 @@ export async function GET(request: Request) {
 
       const successUrl = `${redirectBaseUrl}/admin/facebook?success=facebook_connected`;
 
+      console.log("[Facebook OAuth] Integration completed successfully");
+
       return NextResponse.redirect(successUrl);
     } catch (error: unknown) {
+      console.error("[Facebook OAuth] Error during callback:", error);
+
       const user = await getServerUser();
       const redirectBaseUrl = user?.subDomain
         ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.subDomain}.localhost:3000`)}`
@@ -112,6 +164,10 @@ export async function GET(request: Request) {
   }
 
   // No code or error parameter
+  console.error(
+    "[Facebook OAuth] Invalid callback - missing authorization code"
+  );
+
   const user = await getServerUser();
   const redirectBaseUrl = user?.subDomain
     ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.subDomain}.localhost:3000`)}`
@@ -134,6 +190,8 @@ async function handleBusinessIntegrationToken(
   authToken: string
 ) {
   try {
+    console.log("[Business Integration] Fetching client business ID");
+
     // Get client business ID from the token
     const meResponse = await axios.get(
       `https://graph.facebook.com/${process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0"}/me`,
@@ -151,6 +209,8 @@ async function handleBusinessIntegrationToken(
       throw new Error("No client business ID found in token");
     }
 
+    console.log("[Business Integration] Client Business ID:", clientBusinessId);
+
     // Get business pages and assets
     const businessResponse = await axios.get(
       `https://graph.facebook.com/${process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0"}/${clientBusinessId}/owned_pages`,
@@ -163,6 +223,7 @@ async function handleBusinessIntegrationToken(
     );
 
     const pages = businessResponse.data.data;
+    console.log(`[Business Integration] Found ${pages.length} pages`);
 
     // Save integration to your backend
     await saveBusinessIntegration({
@@ -173,6 +234,7 @@ async function handleBusinessIntegrationToken(
       authToken,
     });
   } catch (error) {
+    console.error("[Business Integration] Error:", error);
     throw error;
   }
 }
@@ -187,6 +249,8 @@ async function handleUserAccessToken(
   authToken: string
 ) {
   try {
+    console.log("[User Integration] Fetching user pages");
+
     // Get user's pages
     const pagesResponse = await axios.get(
       `https://graph.facebook.com/${process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v18.0"}/me/accounts`,
@@ -199,6 +263,7 @@ async function handleUserAccessToken(
     );
 
     const pages = pagesResponse.data.data;
+    console.log(`[User Integration] Found ${pages.length} pages`);
 
     // Save integration to your backend
     await saveUserIntegration({
@@ -208,6 +273,7 @@ async function handleUserAccessToken(
       authToken,
     });
   } catch (error) {
+    console.error("[User Integration] Error:", error);
     throw error;
   }
 }
@@ -240,8 +306,14 @@ async function saveBusinessIntegration({
 
   const authenticatedHeaders = createServerHeaders(authToken);
 
+  console.log(`[Save Business Integration] Processing ${pages.length} pages`);
+
   for (const page of pages) {
     try {
+      console.log(
+        `[Save Business Integration] Processing page: ${page.name} (${page.id})`
+      );
+
       const integrationData = {
         user_token: accessToken,
         app_id: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID,
@@ -271,6 +343,9 @@ async function saveBusinessIntegration({
       );
 
       if (existingIntegration) {
+        console.log(
+          `[Save Business Integration] Updating existing integration for page ${page.id}`
+        );
         // Update existing
         await fetch(`${backendUrl}/api/facebook/${existingIntegration.id}/`, {
           method: "PATCH",
@@ -278,6 +353,9 @@ async function saveBusinessIntegration({
           body: JSON.stringify(integrationData),
         });
       } else {
+        console.log(
+          `[Save Business Integration] Creating new integration for page ${page.id}`
+        );
         // Create new
         await fetch(`${backendUrl}/api/facebook/`, {
           method: "POST",
@@ -285,11 +363,23 @@ async function saveBusinessIntegration({
           body: JSON.stringify(integrationData),
         });
       }
+
+      // Subscribe to webhook after saving
+      console.log(
+        `[Save Business Integration] Subscribing to webhook for page ${page.id}`
+      );
+      await subscribeToWebhook(page.id, page.access_token);
     } catch (pageError) {
+      console.error(
+        `[Save Business Integration] Error processing page ${page.id}:`,
+        pageError
+      );
       // Continue with other pages even if one fails
       continue;
     }
   }
+
+  console.log("[Save Business Integration] Completed processing all pages");
 }
 
 /**
@@ -318,8 +408,14 @@ async function saveUserIntegration({
 
   const authenticatedHeaders = createServerHeaders(authToken);
 
+  console.log(`[Save User Integration] Processing ${pages.length} pages`);
+
   for (const page of pages) {
     try {
+      console.log(
+        `[Save User Integration] Processing page: ${page.name} (${page.id})`
+      );
+
       const integrationData = {
         user_token: accessToken,
         app_id: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID,
@@ -348,6 +444,9 @@ async function saveUserIntegration({
       );
 
       if (existingIntegration) {
+        console.log(
+          `[Save User Integration] Updating existing integration for page ${page.id}`
+        );
         // Update existing
         await fetch(`${backendUrl}/api/facebook/${existingIntegration.id}/`, {
           method: "PATCH",
@@ -355,6 +454,9 @@ async function saveUserIntegration({
           body: JSON.stringify(integrationData),
         });
       } else {
+        console.log(
+          `[Save User Integration] Creating new integration for page ${page.id}`
+        );
         // Create new
         await fetch(`${backendUrl}/api/facebook/`, {
           method: "POST",
@@ -362,9 +464,21 @@ async function saveUserIntegration({
           body: JSON.stringify(integrationData),
         });
       }
+
+      // Subscribe to webhook after saving
+      console.log(
+        `[Save User Integration] Subscribing to webhook for page ${page.id}`
+      );
+      await subscribeToWebhook(page.id, page.access_token);
     } catch (pageError) {
+      console.error(
+        `[Save User Integration] Error processing page ${page.id}:`,
+        pageError
+      );
       // Continue with other pages even if one fails
       continue;
     }
   }
+
+  console.log("[Save User Integration] Completed processing all pages");
 }
