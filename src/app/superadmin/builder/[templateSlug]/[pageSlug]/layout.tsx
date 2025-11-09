@@ -7,7 +7,6 @@ export default function BuilderLayout({
 }) {
   return (
     <AuthWrapper>
-      {/* Builder gets full screen without sidebar/header */}
       <div className="min-h-screen bg-white">{children}</div>
     </AuthWrapper>
   );

@@ -215,7 +215,7 @@ function enhanceListStyling(htmlContent: string): string {
  * @param blogContent - The blog content to sanitize
  * @returns Sanitized blog content
  */
-export function sanitizeBlogContent(blogContent: string): string {
+export function sanitizeContent(blogContent: string): string {
   return sanitizeHtmlContent(blogContent, {
     // Blog-specific customizations can go here
     enableListStyling: true,

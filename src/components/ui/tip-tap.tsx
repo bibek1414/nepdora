@@ -410,6 +410,7 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
         attributes: {
           class:
             "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none",
+          style: "list-style-position: inside;",
         },
       },
     });

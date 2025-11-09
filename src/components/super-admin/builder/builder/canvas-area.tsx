@@ -54,7 +54,8 @@ import {
 } from "lucide-react";
 import { useThemeQuery } from "@/hooks/super-admin/components/use-theme";
 import { Button } from "@/components/ui/site-owners/button";
-
+import { PolicyComponent } from "@/components/super-admin/builder/policies/policies-component";
+import { PolicyComponentData } from "@/types/owner-site/components/policies";
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
   navbar?: Navbar | null;
@@ -231,6 +232,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <AboutUsComponent
             key={`about-${component.id}`}
             component={component as AboutUsComponentData}
+            templateSlug={templateSlug}
+            {...commonProps}
+          />
+        );
+        break;
+      case "policies":
+        componentElement = (
+          <PolicyComponent
+            key={`policies-${component.id}`}
+            component={component as PolicyComponentData}
             templateSlug={templateSlug}
             {...commonProps}
           />

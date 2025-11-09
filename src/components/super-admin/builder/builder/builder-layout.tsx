@@ -74,6 +74,13 @@ import { PageTemplate } from "@/types/owner-site/components/page-template";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useTemplates } from "@/hooks/super-admin/components/use-templates";
+import { PoliciesStylesDialog } from "@/components/site-owners/builder/policies/policies-styles-dialog";
+import {
+  defaultReturnExchangeData,
+  defaultShippingData,
+  defaultPrivacyData,
+  defaultTermsData,
+} from "@/types/owner-site/components/policies";
 
 interface BuilderLayoutProps {
   params: {
@@ -102,12 +109,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     usePages(templateSlug);
   const createPageMutation = useCreatePage(templateSlug);
 
-  // Page components with proper ordering - UPDATED: Added templateSlug parameter
+  // Page components with proper ordering
   const {
     data: pageComponentsResponse,
     isLoading: isPageComponentsLoading,
     error: pageComponentsError,
-  } = usePageComponentsQuery(pageSlug, templateSlug); // Fixed parameter order
+  } = usePageComponentsQuery(pageSlug, templateSlug);
 
   const [droppedComponents, setDroppedComponents] = useState<
     ComponentResponse[]
@@ -143,12 +150,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isPageTemplateDialogOpen, setIsPageTemplateDialogOpen] =
     useState(false);
+  const [isPoliciesStylesDialogOpen, setIsPoliciesStylesDialogOpen] =
+    useState(false);
 
   // Use pageSlug from URL params as current page
   const currentPage = pageSlug;
   const queryClient = useQueryClient();
 
-  // UPDATED: Unified component mutations with templateSlug parameter
+  // Unified component mutations with templateSlug parameter
   const createHeroMutation = useCreateComponentMutation(
     currentPage,
     "hero",
@@ -224,6 +233,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     "youtube",
     templateSlug
   );
+  const createPoliciesComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "policies",
+    templateSlug
+  );
 
   // Process page components with proper typing
   const pageComponents = React.useMemo(() => {
@@ -265,6 +279,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "banner",
             "newsletter",
             "youtube",
+            "policies",
           ].includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
@@ -336,7 +351,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         router.push(`/superadmin/builder/${templateSlug}/${firstPage.slug}`);
       }
     }
-  }, [pagesData, pageSlug, router, isCreatingHomePage, templateSlug]); // Added templateSlug dependency
+  }, [pagesData, pageSlug, router, isCreatingHomePage, templateSlug]);
 
   // Get current page data
   const currentPageData = pagesData.find(page => page.slug === currentPage);
@@ -401,6 +416,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsYouTubeStylesDialogOpen(true);
     } else if (componentId === "newsletter-sections") {
       setIsNewsletterStylesDialogOpen(true);
+    } else if (componentId === "policies-sections") {
+      setIsPoliciesStylesDialogOpen(true);
     } else {
       console.log(`${componentId} clicked`);
     }
@@ -422,10 +439,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   const handlePageTemplateSelect = async (template: PageTemplate) => {
     try {
-      // Navigate to superadmin template builder with template ID
       router.push(`/superadmin/template/builder?templateId=${template.id}`);
-
-      // Close the dialog
       setIsPageTemplateDialogOpen(false);
     } catch (error) {
       console.error("Failed to navigate to template builder:", error);
@@ -485,6 +499,38 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
+  const handlePoliciesTemplateSelect = (
+    template: "return-exchange" | "shipping" | "privacy" | "terms"
+  ) => {
+    let policyData;
+
+    switch (template) {
+      case "return-exchange":
+        policyData = defaultReturnExchangeData;
+        break;
+      case "shipping":
+        policyData = defaultShippingData;
+        break;
+      case "privacy":
+        policyData = defaultPrivacyData;
+        break;
+      case "terms":
+        policyData = defaultTermsData;
+        break;
+      default:
+        policyData = defaultReturnExchangeData;
+    }
+
+    createPoliciesComponentMutation.mutate(policyData, {
+      onSuccess: () => {
+        setIsPoliciesStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create policies component:", error);
+      },
+    });
+  };
+
   // Helper function to get next order value
   const getNextOrder = () => {
     if (pageComponents.length === 0) return 0;
@@ -506,7 +552,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "hero-9"
       | "hero-10"
   ) => {
-    // Get the specific configuration for this template
     const templateConfig = heroTemplateConfigs[template];
 
     const heroData = {
@@ -910,6 +955,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     setIsFAQStylesDialogOpen(true);
   };
 
+  const handleAddPolicies = () => {
+    setIsPoliciesStylesDialogOpen(true);
+  };
+
   // Updated handleDrop with proper typing and component_type mapping
   const handleDrop = useCallback(
     (item: { type: string; id?: string }) => {
@@ -963,6 +1012,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         case "youtube-sections":
           componentType = "youtube";
           break;
+        case "policies-sections":
+          componentType = "policies";
+          break;
         default:
           if (
             [
@@ -981,6 +1033,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               "banner",
               "newsletter",
               "youtube",
+              "policies",
             ].includes(item.type)
           ) {
             componentType = item.type as keyof ComponentTypeMap;
@@ -1027,7 +1080,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      {/* All dialog components remain the same */}
+      {/* All dialog components */}
       <NavbarTemplateDialog
         isOpen={isNavbarDialogOpen}
         onClose={() => setIsNavbarDialogOpen(false)}
@@ -1134,6 +1187,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         open={isYouTubeStylesDialogOpen}
         onOpenChange={setIsYouTubeStylesDialogOpen}
         onStyleSelect={handleYouTubeTemplateSelect}
+      />
+
+      <PoliciesStylesDialog
+        open={isPoliciesStylesDialogOpen}
+        onOpenChange={setIsPoliciesStylesDialogOpen}
+        onStyleSelect={handlePoliciesTemplateSelect}
       />
 
       <TopNavigation

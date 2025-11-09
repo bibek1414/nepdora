@@ -134,7 +134,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       initialPageComponents.sort((a, b) => (a.order || 0) - (b.order || 0))
     );
   }, [initialPageComponents]);
-  const hasPolicies = pageComponents.some(c => c.component_type === "policies");
 
   // Hook for updating component order
   const updateOrderMutation = useUpdateComponentOrderMutation(currentPageSlug);

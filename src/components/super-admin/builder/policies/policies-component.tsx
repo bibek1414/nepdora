@@ -21,7 +21,7 @@ import {
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/use-unified";
+} from "@/hooks/super-admin/components/use-unified";
 import ReusableQuill from "@/components/ui/tip-tap";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
@@ -31,14 +31,14 @@ interface PolicyComponentProps {
   component: PolicyComponentData;
   isEditable?: boolean;
   pageSlug: string;
-  siteUser: string;
+  templateSlug: string;
 }
 
 export const PolicyComponent: React.FC<PolicyComponentProps> = ({
   component,
   isEditable = false,
   pageSlug,
-  siteUser,
+  templateSlug,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [data, setData] = useState(component.data);
@@ -47,8 +47,16 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
     component.data.content
   );
 
-  const deletePolicyMutation = useDeleteComponentMutation(pageSlug, "policies");
-  const updatePolicyMutation = useUpdateComponentMutation(pageSlug, "policies");
+  const deletePolicyMutation = useDeleteComponentMutation(
+    pageSlug,
+    "policies",
+    templateSlug
+  );
+  const updatePolicyMutation = useUpdateComponentMutation(
+    pageSlug,
+    "policies",
+    templateSlug
+  );
 
   // Track content changes only (not title)
   useEffect(() => {

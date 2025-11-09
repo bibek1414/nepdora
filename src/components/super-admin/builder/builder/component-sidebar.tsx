@@ -128,7 +128,17 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       icon: FileText,
       keywords: ["articles", "posts", "news"],
     },
-
+    {
+      id: "policies-sections",
+      label: "Policies",
+      icon: FileText,
+      keywords: [
+        "Return Policy",
+        "Shipping Policy",
+        "Terms & Conditions",
+        "Privacy Policy",
+      ],
+    },
     {
       id: "portfolio-sections",
       label: "Portfolio",

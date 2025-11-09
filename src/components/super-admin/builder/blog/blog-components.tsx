@@ -5,9 +5,9 @@ import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { BlogCard1 } from "./blog-card1";
-import { BlogCard2 } from "./blog-card2";
-import { BlogCard3 } from "./blog-card3";
+import { BlogCard1 } from "@/components/site-owners/builder/blog/blog-card1";
+import { BlogCard2 } from "@/components/site-owners/builder/blog/blog-card2";
+import { BlogCard3 } from "@/components/site-owners/builder/blog/blog-card3";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
