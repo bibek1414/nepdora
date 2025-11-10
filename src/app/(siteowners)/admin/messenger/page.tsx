@@ -143,6 +143,54 @@ export default function MessagingPage() {
     }
   };
 
+  // ✅ Send media handler (images, audio, video)
+  const handleSendMedia = async (
+    file: File | Blob,
+    type: "image" | "audio" | "video"
+  ) => {
+    if (
+      !selectedConversationId ||
+      !selectedIntegration ||
+      !selectedConversationData
+    )
+      return;
+
+    try {
+      // Get recipient (user, not the page)
+      const participantId = selectedConversationData.participants.find(
+        p => p.id !== selectedIntegration.pageId
+      )?.id;
+
+      if (!participantId)
+        throw new Error(
+          "Could not determine participant ID for this conversation."
+        );
+
+      await sendMessageMutation.mutateAsync({
+        recipient_id: participantId,
+        page_access_token: selectedIntegration.pageAccessToken,
+        conversationId: selectedConversationId,
+        page_id: selectedIntegration.pageId,
+        fileUpload: file,
+      });
+
+      console.log(`✅ ${type} sent to:`, participantId);
+      setError(null);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error(`❌ Error sending ${type}:`, err);
+      const fbErrorCode = err?.response?.data?.error?.code;
+      if (fbErrorCode === 100)
+        setError("User must message your Page first before you can reply.");
+      else if (fbErrorCode === 10)
+        setError(
+          "Page access token is invalid or expired. Please reconnect the page."
+        );
+      else setError(`Failed to send ${type}. Please try again.`);
+      throw err; // Re-throw to let the component handle it
+    }
+  };
+
   // ✅ Conversation selection
   const handleSelectConversation = (
     conversationId: string,
@@ -229,6 +277,7 @@ export default function MessagingPage() {
 
                 <MessageInput
                   onSendMessage={handleSendMessage}
+                  onSendMedia={handleSendMedia}
                   disabled={
                     !selectedIntegration || sendMessageMutation.isPending
                   }

@@ -136,8 +136,36 @@ export const useConversationMessages = (
                   console.log(
                     `➕ Adding new message ${message.id} to conversation ${message.conversationId}`
                   );
+                  
+                  // Remove matching optimistic messages when real message arrives
+                  // Match by: same sender AND (same text content OR within 5 seconds)
+                  const messageTime = new Date(message.created_time).getTime();
+                  const messagesWithoutOptimistic = (old.conversation?.messages || []).filter(
+                    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (m: any) => {
+                      // Keep non-optimistic messages
+                      if (!m.isOptimistic || !m.id?.startsWith('temp-')) return true;
+                      
+                      // Remove if same sender and same content
+                      if (m.from?.id === message.from?.id && m.message === message.message) {
+                        console.log(`🗑️ Removing optimistic message: ${m.id}`);
+                        return false;
+                      }
+                      
+                      // Remove if same sender and within 5 seconds (for media messages without text)
+                      const optimisticTime = new Date(m.created_time).getTime();
+                      const timeDiff = Math.abs(messageTime - optimisticTime);
+                      if (m.from?.id === message.from?.id && timeDiff < 5000) {
+                        console.log(`🗑️ Removing optimistic message by time: ${m.id}`);
+                        return false;
+                      }
+                      
+                      return true;
+                    }
+                  );
+                  
                   const updatedMessages = [
-                    ...(old.conversation?.messages || []),
+                    ...messagesWithoutOptimistic,
                     {
                       id: message.id,
                       from: message.from,
@@ -192,6 +220,7 @@ export const useConversationMessages = (
                     ...conv,
                     snippet: update.snippet || conv.snippet,
                     updated_time: update.updated_time || conv.updated_time,
+                    message_type: update.message_type || conv.message_type,
                   };
                 }
                 return conv;
@@ -278,15 +307,37 @@ export const useSendMessage = () => {
           (old: any) => {
             if (!old) return old;
 
+            // Create optimistic attachment if file upload exists
+            let optimisticAttachments = undefined;
+            if (newMessage.fileUpload) {
+              const file = newMessage.fileUpload as Blob;
+              const fileType = file.type;
+              let attachmentType = "file";
+              
+              if (fileType.startsWith("image/")) attachmentType = "image";
+              else if (fileType.startsWith("audio/")) attachmentType = "audio";
+              else if (fileType.startsWith("video/")) attachmentType = "video";
+
+              // Create a temporary URL for preview
+              const tempUrl = URL.createObjectURL(file);
+              
+              optimisticAttachments = [{
+                type: attachmentType,
+                url: tempUrl,
+                isOptimistic: true,
+              }];
+            }
+
             const optimisticMessage = {
               id: `temp-${Date.now()}`,
               from: {
                 id: newMessage.page_id,
                 name: "You",
               },
-              message: newMessage.message,
+              message: newMessage.message || "",
               created_time: new Date().toISOString(),
               isOptimistic: true,
+              attachments: optimisticAttachments,
             };
 
             return {
@@ -301,6 +352,13 @@ export const useSendMessage = () => {
       }
 
       return { previous };
+    },
+
+    onSuccess: (data, variables) => {
+      // Don't invalidate immediately - let SSE handle the update
+      // The SSE will deliver the real message and replace the optimistic one
+      // This prevents the message from disappearing after sending
+      console.log("✅ Message sent successfully, waiting for SSE update");
     },
 
     onError: (_error, variables, context) => {

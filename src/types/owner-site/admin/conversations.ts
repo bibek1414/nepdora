@@ -12,6 +12,7 @@ export interface MessageData {
   created_time: string;
   conversationId: string;
   attachments?: Attachment[];
+  isOptimistic?: boolean;
 }
 
 export interface ConversationData {
@@ -37,13 +38,22 @@ export interface ConversationListItem {
   participants: Participant[];
   snippet: string;
   updated_time: string;
+  message_type?: "text" | "image" | "video" | "audio" | "file" | string;
 }
 
 // SIMPLIFIED: Remove thread_id - not needed
 export interface SendMessageRequest {
   recipient_id: string;
-  message: string;
+  message?: string;
   page_access_token: string;
+  attachment?: {
+    type: "image" | "audio" | "video" | "file";
+    payload: {
+      url?: string;
+      is_reusable?: boolean;
+    };
+  };
+  fileUpload?: File | Blob;
 }
 
 export interface SendMessageResponse {
@@ -71,4 +81,5 @@ export interface Attachment {
   sticker_id?: string;
   type?: string;
   url?: string;
+  isOptimistic?: boolean;
 }

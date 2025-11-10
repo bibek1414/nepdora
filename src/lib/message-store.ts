@@ -22,6 +22,7 @@ interface ConversationUpdate {
   updated_time: string;
   sender_name: string;
   sender_id: string;
+  message_type?: "text" | "image" | "video" | "audio" | "file" | string;
 }
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Listener = (data: any) => void;

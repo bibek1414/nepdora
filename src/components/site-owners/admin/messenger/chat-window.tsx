@@ -11,6 +11,8 @@ import {
   Participant,
   Attachment,
 } from "@/types/owner-site/admin/conversations";
+import { VoiceMessage } from "./audio-message";
+import { VideoMessage } from "./video-message";
 
 interface ChatWindowProps {
   messages: MessageData[];
@@ -125,14 +127,37 @@ export function ChatWindow({
       .slice(0, 2);
   };
 
-  // ✅ Render message attachments (stickers, images, etc.)
+  // ✅ Render message attachments (stickers, images, audio, video, etc.)
   const renderAttachments = (attachments?: Attachment[]) => {
     if (!attachments?.length) return null;
 
     return (
       <div className="mt-1 flex flex-wrap gap-2">
         {attachments.map((att, i) => {
-          if (att.type === "sticker" || att.type === "image") {
+          // Handle audio messages (check for both "audio" and MIME types like "audio/mp4")
+          if (att.type?.startsWith("audio") && att.url) {
+            return (
+              <div key={i} className="w-full">
+                <VoiceMessage audioSrc={att.url} />
+              </div>
+            );
+          }
+
+          // Handle video messages (check for both "video" and MIME types like "video/mp4")
+          if (att.type?.startsWith("video") && att.url) {
+            return (
+              <div key={i} className="w-full">
+                <VideoMessage videoSrc={att.url} />
+              </div>
+            );
+          }
+
+          // Handle stickers and images
+          if (
+            att.type === "sticker" ||
+            att.type === "image" ||
+            att.type?.startsWith("image")
+          ) {
             return (
               <img
                 key={i}
@@ -142,6 +167,8 @@ export function ChatWindow({
               />
             );
           }
+
+          // Handle other file types
           return (
             <a
               key={i}
@@ -246,26 +273,60 @@ export function ChatWindow({
                   {/* Message bubble */}
                   <div
                     className={cn(
-                      "group relative max-w-[65%]",
+                      "group relative",
+                      message.attachments?.some(att =>
+                        att.type?.startsWith("video")
+                      )
+                        ? "max-w-[450px]" // Wider for videos
+                        : "max-w-[65%]",
                       isOwn && "items-end"
                     )}
                   >
-                    <div
-                      className={cn(
-                        "rounded-2xl px-3 py-2 text-[15px] leading-5 shadow-sm",
-                        isOwn
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-100 text-gray-900"
-                      )}
-                    >
-                      {message.message && (
-                        <p className="break-words whitespace-pre-wrap">
-                          {message.message}
-                        </p>
-                      )}
-                      {/* ✅ Render attachments inline */}
-                      {renderAttachments(message.attachments)}
-                    </div>
+                    {/* Check if message has audio/video attachments */}
+                    {message.attachments?.some(
+                      att =>
+                        att.type?.startsWith("audio") ||
+                        att.type?.startsWith("video")
+                    ) ? (
+                      // Render media without bubble background
+                      <div className="w-full space-y-2">
+                        {message.message && (
+                          <div
+                            className={cn(
+                              "rounded-2xl px-3 py-2 text-[15px] leading-5 shadow-sm",
+                              isOwn
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-100 text-gray-900"
+                            )}
+                          >
+                            <p className="break-words whitespace-pre-wrap">
+                              {message.message}
+                            </p>
+                          </div>
+                        )}
+                        <div className="relative z-10">
+                          {renderAttachments(message.attachments)}
+                        </div>
+                      </div>
+                    ) : (
+                      // Regular message bubble
+                      <div
+                        className={cn(
+                          "rounded-2xl px-3 py-2 text-[15px] leading-5 shadow-sm",
+                          isOwn
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-100 text-gray-900"
+                        )}
+                      >
+                        {message.message && (
+                          <p className="break-words whitespace-pre-wrap">
+                            {message.message}
+                          </p>
+                        )}
+                        {/* ✅ Render attachments inline */}
+                        {renderAttachments(message.attachments)}
+                      </div>
+                    )}
 
                     {/* Create Order Button */}
                     {!isOwn && hoveredMessageId === message.id && (

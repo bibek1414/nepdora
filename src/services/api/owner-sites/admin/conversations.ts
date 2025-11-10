@@ -109,10 +109,11 @@ export const useConversationsApi = {
   async sendMessage(
     data: SendMessageRequest & { conversationId: string; pageId?: string }
   ) {
-    const { conversationId, message, pageId } = data;
+    const { conversationId, message, pageId, fileUpload, attachment } = data;
 
     if (!conversationId) throw new Error("Conversation ID is required");
-    if (!message) throw new Error("Message content is required");
+    if (!message && !fileUpload && !attachment)
+      throw new Error("Message content or attachment is required");
 
     // Get correct page token
     const pageAccessToken = await this.getPageAccessToken(pageId);
@@ -127,7 +128,72 @@ export const useConversationsApi = {
       throw new Error("Recipient ID is required to send a message");
     }
 
-    // Send message to Facebook Graph API
+    // If there's a file upload, we need to upload it first
+    if (fileUpload) {
+      const formData = new FormData();
+      formData.append("recipient", JSON.stringify({ id: recipientId }));
+
+      // Determine attachment type based on file type
+      let attachmentType = "file";
+      const fileType = (fileUpload as Blob).type;
+      if (fileType.startsWith("image/")) attachmentType = "image";
+      else if (fileType.startsWith("audio/")) attachmentType = "audio";
+      else if (fileType.startsWith("video/")) attachmentType = "video";
+
+      formData.append(
+        "message",
+        JSON.stringify({
+          attachment: {
+            type: attachmentType,
+            payload: {
+              is_reusable: true,
+            },
+          },
+        })
+      );
+
+      formData.append("filedata", fileUpload);
+
+      const response = await fetch(
+        `https://graph.facebook.com/v17.0/me/messages?access_token=${encodeURIComponent(
+          pageAccessToken
+        )}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error("Facebook send attachment error:", result);
+        throw new Error(result.error?.message || "Failed to send attachment");
+      }
+
+      console.log("✅ Attachment sent successfully:", result);
+      return result;
+    }
+
+    // Send text message or attachment with URL to Facebook Graph API
+    const messagePayload: {
+      recipient: { id: string };
+      message: { text?: string; attachment?: typeof attachment };
+      messaging_type: string;
+    } = {
+      recipient: { id: recipientId },
+      message: {},
+      messaging_type: "RESPONSE",
+    };
+
+    if (message) {
+      messagePayload.message.text = message;
+    }
+
+    if (attachment) {
+      messagePayload.message.attachment = attachment;
+    }
+
     const response = await fetch(
       `https://graph.facebook.com/v17.0/me/messages?access_token=${encodeURIComponent(
         pageAccessToken
@@ -135,11 +201,7 @@ export const useConversationsApi = {
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          recipient: { id: recipientId },
-          message: { text: message },
-          messaging_type: "RESPONSE",
-        }),
+        body: JSON.stringify(messagePayload),
       }
     );
 

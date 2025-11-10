@@ -5,19 +5,24 @@ import { Send, Plus, Image as ImageIcon, Mic, Smile } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { VoiceRecorderModal } from "./voice-recorder-modal";
 
 interface MessageInputProps {
-  onSendMessage: (content: string) => Promise<void>; // ✅ make it async-safe
+  onSendMessage: (content: string) => Promise<void>;
+  onSendMedia?: (file: File | Blob, type: "image" | "audio" | "video") => Promise<void>;
   disabled?: boolean;
 }
 
 export function MessageInput({
   onSendMessage,
+  onSendMedia,
   disabled = false,
 }: MessageInputProps) {
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // auto-grow textarea
   useEffect(() => {
@@ -57,21 +62,93 @@ export function MessageInput({
     }
   };
 
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !onSendMedia) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    // Validate file size (max 25MB for Facebook)
+    if (file.size > 25 * 1024 * 1024) {
+      toast.error("Image size must be less than 25MB");
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      await onSendMedia(file, "image");
+      toast.success("Image sent successfully");
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } catch (error) {
+      console.error("Error sending image:", error);
+      toast.error("Failed to send image");
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const handleVoiceClick = () => {
+    setIsVoiceModalOpen(true);
+  };
+
+  const handleSendVoice = async (audioBlob: Blob) => {
+    if (!onSendMedia) return;
+
+    try {
+      await onSendMedia(audioBlob, "audio");
+      toast.success("Voice message sent successfully");
+    } catch (error) {
+      console.error("Error sending voice message:", error);
+      toast.error("Failed to send voice message");
+      throw error;
+    }
+  };
+
   return (
-    <div className="sticky z-20 border-t border-gray-200 bg-white px-4 py-2">
-      <div className="mx-auto flex max-w-3xl items-end gap-2">
-        {/* Left action buttons */}
-        <div className="flex gap-1 pb-2">
-          <button className="rounded-full p-2 text-blue-600 hover:bg-gray-100">
-            <Plus className="h-5 w-5" />
-          </button>
-          <button className="rounded-full p-2 text-blue-600 hover:bg-gray-100">
-            <ImageIcon className="h-5 w-5" />
-          </button>
-          <button className="rounded-full p-2 text-blue-600 hover:bg-gray-100">
-            <Mic className="h-5 w-5" />
-          </button>
-        </div>
+    <>
+      <div className="sticky z-20 border-t border-gray-200 bg-white px-4 py-2">
+        <div className="mx-auto flex max-w-3xl items-end gap-2">
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+
+          {/* Left action buttons */}
+          <div className="flex gap-1 pb-2">
+            <button
+              type="button"
+              onClick={handleImageClick}
+              disabled={disabled || isSending}
+              className="rounded-full p-2 text-blue-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Send image"
+            >
+              <ImageIcon className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={handleVoiceClick}
+              disabled={disabled || isSending}
+              className="rounded-full p-2 text-blue-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Record voice message"
+            >
+              <Mic className="h-5 w-5" />
+            </button>
+          </div>
 
         {/* Message input form */}
         <form onSubmit={handleSubmit} className="flex flex-1 items-end gap-2">
@@ -123,5 +200,13 @@ export function MessageInput({
         </form>
       </div>
     </div>
+
+      {/* Voice Recorder Modal */}
+      <VoiceRecorderModal
+        isOpen={isVoiceModalOpen}
+        onClose={() => setIsVoiceModalOpen(false)}
+        onSend={handleSendVoice}
+      />
+    </>
   );
 }

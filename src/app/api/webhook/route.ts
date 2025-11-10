@@ -94,6 +94,7 @@ export async function POST(req: NextRequest) {
         updated_time: webhookData.timestamp || new Date().toISOString(),
         sender_name: webhookData.sender_name,
         sender_id: webhookData.sender_id,
+        message_type: webhookData.message_type,
       };
 
       try {

@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { Search, MessageCircle, MoreHorizontal, RefreshCw } from "lucide-react";
+import {
+  Search,
+  MessageCircle,
+  RefreshCw,
+  PanelLeft,
+  PanelRight,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -44,6 +50,7 @@ export function ConversationList({
   const [selectedIntegrationId, setSelectedIntegrationId] = useState<
     string | null
   >(null);
+  const [collapsed, setCollapsed] = useState(false);
 
   const { data: integrations = [] } = useFacebookIntegrations();
 
@@ -161,76 +168,144 @@ export function ConversationList({
     }
   };
 
+  const getMessagePreview = (conversation: ConversationListItem) => {
+    const messageType = conversation.message_type;
+    const snippet = conversation.snippet || "";
+
+    // Check if snippet contains attachment pattern like "[6 attachment(s)]"
+    const attachmentMatch = snippet.match(/\[(\d+)\s+attachment\(s\)\]/i);
+
+    // Determine message preview based on message type
+    if (messageType === "audio") {
+      return "Sent a voice message";
+    }
+    if (messageType === "image") {
+      const count = attachmentMatch ? parseInt(attachmentMatch[1]) : 1;
+      return count > 1 ? `Sent ${count} photos` : "Sent a photo";
+    }
+    if (messageType === "video") {
+      return "Sent a video";
+    }
+    if (messageType === "file") {
+      return "Sent a file";
+    }
+
+    // If snippet has attachment pattern but no message_type
+    // Without message_type, we cannot accurately determine the attachment type
+    // Show generic message for old conversations
+    if (attachmentMatch) {
+      const count = parseInt(attachmentMatch[1]);
+      if (count === 1) {
+        return "Sent an attachment";
+      }
+      return `Sent ${count} attachments`;
+    }
+
+    return snippet || "No messages yet";
+  };
+
   return (
-    <div className="flex h-full w-[360px] flex-col border-r border-gray-200 bg-white py-15">
+    <div
+      className={cn(
+        "flex h-full flex-col border-r border-gray-200 bg-white py-15 transition-all duration-300 ease-in-out",
+        collapsed ? "w-16" : "w-[360px]"
+      )}
+    >
       {/* Header */}
       <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
-        <h1 className="text-2xl font-bold text-gray-900">Chats</h1>
-        <div className="flex items-center gap-2">
-          <Select
-            value={activeIntegration?.id ? String(activeIntegration.id) : ""}
-            onValueChange={handleIntegrationSelect}
-            disabled={integrations.length === 0}
-          >
-            <SelectTrigger className="h-9 w-40 text-left">
-              <SelectValue
-                placeholder={
-                  integrations.length === 0
-                    ? "No Pages"
-                    : activeIntegration?.page_name || "Select Page"
+        {!collapsed && (
+          <h1 className="text-2xl font-bold text-gray-900">Chats</h1>
+        )}
+        <div className={cn("flex items-center gap-2", collapsed && "mx-auto")}>
+          {!collapsed && (
+            <>
+              <Select
+                value={
+                  activeIntegration?.id ? String(activeIntegration.id) : ""
                 }
-              />
-            </SelectTrigger>
-            <SelectContent className="max-h-60">
-              {integrations.map(i => (
-                <SelectItem key={i.id} value={String(i.id)}>
-                  {i.page_name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+                onValueChange={handleIntegrationSelect}
+                disabled={integrations.length === 0}
+              >
+                <SelectTrigger className="h-9 w-40 text-left">
+                  <SelectValue
+                    placeholder={
+                      integrations.length === 0
+                        ? "No Pages"
+                        : activeIntegration?.page_name || "Select Page"
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {integrations.map(i => (
+                    <SelectItem key={i.id} value={String(i.id)}>
+                      {i.page_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <button
+                onClick={() => refetch()}
+                className={cn(
+                  "rounded-full p-2 text-gray-600 hover:bg-gray-100",
+                  isFetching && "animate-spin"
+                )}
+                title="Refresh"
+                disabled={!pageId || isFetching}
+              >
+                <RefreshCw className="h-5 w-5" />
+              </button>
+            </>
+          )}
           <button
-            onClick={() => refetch()}
-            className={cn(
-              "rounded-full p-2 text-gray-600 hover:bg-gray-100",
-              isFetching && "animate-spin"
-            )}
-            title="Refresh"
-            disabled={!pageId || isFetching}
+            onClick={() => setCollapsed(!collapsed)}
+            className="rounded-full p-2 text-gray-600 hover:bg-gray-100"
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <RefreshCw className="h-5 w-5" />
-          </button>
-          <button className="rounded-full p-2 text-gray-600 hover:bg-gray-100">
-            <MoreHorizontal className="h-5 w-5" />
+            {collapsed ? (
+              <PanelLeft className="h-5 w-5" />
+            ) : (
+              <PanelRight className="h-5 w-5" />
+            )}
           </button>
         </div>
       </div>
 
       {/* Search Bar */}
-      <div className="px-2 py-2">
-        <div className="relative">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            placeholder="Search Messages"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="h-9 rounded-full border-0 bg-gray-100 pl-9 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-blue-500"
-          />
+      {!collapsed && (
+        <div className="px-2 py-2">
+          <div className="relative">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Input
+              placeholder="Search Messages"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="h-9 rounded-full border-0 bg-gray-100 pl-9 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-blue-500"
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Conversations List */}
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
           <div className="flex h-full items-center justify-center text-gray-500">
-            Loading chats...
+            {!collapsed && "Loading chats..."}
           </div>
         ) : filteredConversations.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center p-6 text-center">
-            <MessageCircle className="mb-3 h-12 w-12 text-gray-300" />
-            <p className="text-sm text-gray-500">
-              {searchQuery ? "No conversations found" : "No conversations yet"}
-            </p>
+            <MessageCircle
+              className={cn(
+                "mb-3 text-gray-300",
+                collapsed ? "h-6 w-6" : "h-12 w-12"
+              )}
+            />
+            {!collapsed && (
+              <p className="text-sm text-gray-500">
+                {searchQuery
+                  ? "No conversations found"
+                  : "No conversations yet"}
+              </p>
+            )}
           </div>
         ) : (
           filteredConversations.map((conversation: ConversationListItem) => {
@@ -253,29 +328,38 @@ export function ConversationList({
                 }
                 className={cn(
                   "flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-gray-50",
-                  isActive ? "bg-blue-50" : ""
+                  isActive ? "bg-blue-50" : "",
+                  collapsed && "justify-center px-2"
                 )}
+                title={collapsed ? name : undefined}
               >
-                <Avatar className="h-14 w-14 flex-shrink-0">
+                <Avatar
+                  className={cn(
+                    "flex-shrink-0",
+                    collapsed ? "h-10 w-10" : "h-14 w-14"
+                  )}
+                >
                   <AvatarImage src={avatar} alt={name} />
                   <AvatarFallback className="bg-blue-500 text-lg font-semibold text-white">
                     {getInitials(name)}
                   </AvatarFallback>
                 </Avatar>
 
-                <div className="min-w-0 flex-1">
-                  <div className="mb-0.5 flex items-baseline justify-between gap-2">
-                    <h3 className="truncate text-[15px] font-normal text-gray-900">
-                      {name}
-                    </h3>
-                    <span className="flex-shrink-0 text-xs text-gray-500">
-                      {formatTimestamp(conversation.updated_time)}
-                    </span>
+                {!collapsed && (
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-0.5 flex items-baseline justify-between gap-2">
+                      <h3 className="truncate text-[15px] font-normal text-gray-900">
+                        {name}
+                      </h3>
+                      <span className="flex-shrink-0 text-xs text-gray-500">
+                        {formatTimestamp(conversation.updated_time)}
+                      </span>
+                    </div>
+                    <p className="truncate text-sm text-gray-600">
+                      {getMessagePreview(conversation)}
+                    </p>
                   </div>
-                  <p className="truncate text-sm text-gray-600">
-                    {conversation.snippet || "No messages yet"}
-                  </p>
-                </div>
+                )}
               </button>
             );
           })
