@@ -15,7 +15,7 @@ export const useThemeApi = {
   // Get themes with template slug
   getThemes: async (templateSlug: string): Promise<GetThemeResponse> => {
     const response = await fetch(
-      `${API_BASE_URL}/api/template-theme/${templateSlug}/theme/`,
+      `${API_BASE_URL}/api/template-theme/${templateSlug}/themes/`,
       {
         method: "GET",
         headers: createHeaders(),
@@ -37,7 +37,7 @@ export const useThemeApi = {
     templateSlug: string
   ): Promise<GetThemeResponse> => {
     const response = await fetch(
-      `${API_BASE_URL}/api/template-theme/${templateSlug}/theme/`,
+      `${API_BASE_URL}/api/template-theme/${templateSlug}/themes/`,
       {
         method: "GET",
         headers: createHeaders(),
@@ -60,7 +60,7 @@ export const useThemeApi = {
     data: CreateThemeRequest
   ): Promise<CreateThemeResponse> => {
     const response = await fetch(
-      `${API_BASE_URL}/api/template-theme/${templateSlug}/theme/`,
+      `${API_BASE_URL}/api/template-theme/${templateSlug}/themes/`,
       {
         method: "POST",
         headers: createHeaders(),
@@ -87,7 +87,7 @@ export const useThemeApi = {
     };
 
     const response = await fetch(
-      `${API_BASE_URL}/api/template-theme/${templateSlug}/theme/${componentId}/`,
+      `${API_BASE_URL}/api/template-theme/${templateSlug}/themes/${componentId}/`,
       {
         method: "PATCH",
         headers: createHeaders(),
