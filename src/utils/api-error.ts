@@ -50,10 +50,31 @@ export const handleApiError = async (response: Response): Promise<Response> => {
       throw error;
     }
 
-    // Handle unique constraint error (409)
+    // Handle unique constraint error (409) and other errors with params
     if (response.status === 409 && errorData.error?.params) {
-      const { constraint_type, constraint } = errorData.error.params;
+      const { constraint_type, constraint, ...fieldErrors } =
+        errorData.error.params;
 
+      // Check if params contain field-level error messages (like email, etc.)
+      const errorFields = Object.keys(fieldErrors).filter(
+        key => typeof fieldErrors[key] === "string"
+      );
+
+      if (errorFields.length > 0) {
+        // Use the first field error message directly
+        errorMessage = String(fieldErrors[errorFields[0]]);
+
+        const error = new Error(errorMessage) as ApiError;
+        error.status = response.status;
+        error.data = errorData;
+        error.fieldErrors = errorFields.reduce((acc, field) => {
+          acc[field] = [String(fieldErrors[field])];
+          return acc;
+        }, {} as FieldErrors);
+        throw error;
+      }
+
+      // Fallback to constraint-based messages
       if (constraint_type === "unique" && constraint === "unique_together") {
         errorMessage =
           "This entry already exists. Please use a different value.";

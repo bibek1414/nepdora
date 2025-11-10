@@ -210,8 +210,7 @@ export function FooterStyle4({
     } catch (error: any) {
       console.error("Newsletter subscription error:", error);
       setErrorMessage(
-        error?.response?.data?.message ||
-          "Failed to subscribe. Please try again."
+        error?.message || "Failed to subscribe. Please try again."
       );
       setSubscriptionStatus("error");
     }
