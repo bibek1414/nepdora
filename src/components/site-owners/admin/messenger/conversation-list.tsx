@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Search, MessageCircle, MoreHorizontal, RefreshCw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useFacebookIntegrations } from "@/hooks/owner-site/admin/use-facebook-integrations";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useConversationsApi } from "@/services/api/owner-sites/admin/conversations";
+import { useConversationList } from "@/hooks/owner-site/admin/use-conversation-list";
 import {
   Select,
   SelectContent,
@@ -20,7 +19,6 @@ import {
   Participant,
 } from "@/types/owner-site/admin/conversations";
 
-// ------------------- Conversation List Component -------------------
 interface ConversationListProps {
   selectedId: string | null;
   onSelectConversation: (
@@ -46,11 +44,31 @@ export function ConversationList({
   const [selectedIntegrationId, setSelectedIntegrationId] = useState<
     string | null
   >(null);
-  const queryClient = useQueryClient();
+
   const { data: integrations = [] } = useFacebookIntegrations();
 
-  // Set the first integration as selected if none is selected
-  useEffect(() => {
+  const activeIntegration = useMemo(() => {
+    if (selectedIntegrationId && integrations.length > 0) {
+      const chosen = integrations.find(
+        i => String(i.id) === String(selectedIntegrationId)
+      );
+      if (chosen) return chosen;
+    }
+    return integrations[0] || null;
+  }, [integrations, selectedIntegrationId]);
+
+  const pageId = activeIntegration?.page_id || null;
+
+  // Use the new hook with real-time updates
+  const {
+    data: conversationsData = [],
+    refetch,
+    isLoading,
+    isFetching,
+  } = useConversationList(pageId);
+
+  // Auto-select first integration
+  useMemo(() => {
     if (integrations.length > 0 && !selectedIntegrationId) {
       const firstIntegration = integrations[0];
       setSelectedIntegrationId(String(firstIntegration.id));
@@ -63,56 +81,15 @@ export function ConversationList({
     }
   }, [integrations, selectedIntegrationId, onIntegrationChange]);
 
-  const activeIntegration = useMemo(() => {
-    if (selectedIntegrationId && integrations.length > 0) {
-      const chosen = integrations.find(
-        i => String(i.id) === String(selectedIntegrationId)
-      );
-      if (chosen) return chosen;
-    }
-    return integrations[0] || null;
-  }, [integrations, selectedIntegrationId]);
-
-  const safeIntegrationId = activeIntegration?.id
-    ? String(activeIntegration.id)
-    : "";
-  const pageId = activeIntegration?.page_id || null;
-
-  const {
-    data: conversations = [],
-    refetch,
-    isLoading,
-  } = useQuery({
-    queryKey: ["conversations", pageId],
-    queryFn: async () => {
-      if (!pageId) return [];
-
-      const localData = localStorage.getItem(`conversations_${pageId}`);
-      const localConversations = localData ? JSON.parse(localData) : [];
-
-      try {
-        const serverData = await useConversationsApi.getConversations(pageId);
-        const merged = [
-          ...serverData,
-          ...localConversations.filter(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (lc: any) =>
-              !serverData.some(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (sc: any) => sc.conversation_id === lc.conversation_id
-              )
-          ),
-        ];
-        localStorage.setItem(`conversations_${pageId}`, JSON.stringify(merged));
-        return merged;
-      } catch (error) {
-        console.error("Error fetching conversations:", error);
-        return localConversations;
-      }
-    },
-    enabled: !!pageId,
-    staleTime: 30000,
-  });
+  // Sort conversations by updated_time (most recent first)
+  const conversations = useMemo(() => {
+    if (!conversationsData || !Array.isArray(conversationsData)) return [];
+    return [...conversationsData].sort((a, b) => {
+      const timeA = new Date(a.updated_time || 0).getTime();
+      const timeB = new Date(b.updated_time || 0).getTime();
+      return timeB - timeA;
+    });
+  }, [conversationsData]);
 
   const handleIntegrationSelect = useCallback(
     (value: string) => {
@@ -213,17 +190,13 @@ export function ConversationList({
             </SelectContent>
           </Select>
           <button
-            onClick={() => {
-              if (pageId) {
-                refetch();
-                queryClient.invalidateQueries({
-                  queryKey: ["conversations", pageId],
-                });
-              }
-            }}
-            className="rounded-full p-2 text-gray-600 hover:bg-gray-100"
+            onClick={() => refetch()}
+            className={cn(
+              "rounded-full p-2 text-gray-600 hover:bg-gray-100",
+              isFetching && "animate-spin"
+            )}
             title="Refresh"
-            disabled={!pageId}
+            disabled={!pageId || isFetching}
           >
             <RefreshCw className="h-5 w-5" />
           </button>

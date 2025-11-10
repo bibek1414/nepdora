@@ -21,10 +21,10 @@ export default function MessagingPage() {
   const [selectedConversationData, setSelectedConversationData] =
     useState<ConversationListItem | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [integrationsLoaded, setIntegrationsLoaded] = useState(false);
 
   const { data: integrations = [], isLoading: integrationsLoading } =
     useFacebookIntegrations();
-
   const [selectedIntegration, setSelectedIntegration] = useState<{
     id: number;
     pageId: string;
@@ -32,9 +32,14 @@ export default function MessagingPage() {
     pageName: string;
   } | null>(null);
 
-  const [integrationsLoaded, setIntegrationsLoaded] = useState(false);
+  const sendMessageMutation = useSendMessage();
+  const { data: conversationDetail, isLoading: isLoadingMessages } =
+    useConversationMessages(
+      selectedConversationId,
+      selectedIntegration?.pageId || null
+    );
 
-  // ✅ Set first integration by default
+  // ✅ Default integration selection
   useEffect(() => {
     if (integrations.length > 0 && !selectedIntegration) {
       const first = integrations[0];
@@ -47,13 +52,7 @@ export default function MessagingPage() {
     }
   }, [integrations, selectedIntegration]);
 
-  // ✅ Fetch conversation messages
-  const { data: conversationDetail, isLoading: isLoadingMessages } =
-    useConversationMessages(selectedConversationId);
-
-  const sendMessageMutation = useSendMessage();
-
-  // ✅ Disable page scrollbars
+  // ✅ Prevent page scrollbars during chat
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -61,7 +60,7 @@ export default function MessagingPage() {
     };
   }, []);
 
-  // ✅ Handle integrations state
+  // ✅ Handle integrations loaded state
   useEffect(() => {
     if (integrations.length > 0) {
       setError(null);
@@ -71,7 +70,7 @@ export default function MessagingPage() {
     }
   }, [integrations, integrationsLoaded]);
 
-  // ✅ Integration selection handler
+  // ✅ Integration selector
   const handleIntegrationChange = useCallback(
     (
       integration: {
@@ -95,12 +94,12 @@ export default function MessagingPage() {
     [integrations.length]
   );
 
-  // ✅ Extract message list
+  // ✅ Extract messages
   const messages: MessageData[] = useMemo(() => {
     return conversationDetail?.conversation?.messages ?? [];
   }, [conversationDetail]);
 
-  // ✅ Send message
+  // ✅ Send message handler
   const handleSendMessage = async (content: string) => {
     if (
       !selectedConversationId ||
@@ -110,41 +109,37 @@ export default function MessagingPage() {
       return;
 
     try {
-      // Find the recipient (the user, not the page)
+      // Get recipient (user, not the page)
       const participantId = selectedConversationData.participants.find(
         p => p.id !== selectedIntegration.pageId
       )?.id;
 
-      if (!participantId) {
+      if (!participantId)
         throw new Error(
           "Could not determine participant ID for this conversation."
         );
-      }
 
       await sendMessageMutation.mutateAsync({
         recipient_id: participantId,
         message: content,
         page_access_token: selectedIntegration.pageAccessToken,
         conversationId: selectedConversationId,
+        page_id: selectedIntegration.pageId, // ✅ Ensure optimistic message gets correct sender
       });
 
       console.log("✅ Message sent to:", participantId);
-      console.log("📝 Conversation ID:", selectedConversationId);
       setError(null);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("❌ Error sending message:", err);
-
       const fbErrorCode = err?.response?.data?.error?.code;
-      if (fbErrorCode === 100) {
+      if (fbErrorCode === 100)
         setError("User must message your Page first before you can reply.");
-      } else if (fbErrorCode === 10) {
+      else if (fbErrorCode === 10)
         setError(
           "Page access token is invalid or expired. Please reconnect the page."
         );
-      } else {
-        setError("Failed to send message. Please try again.");
-      }
+      else setError("Failed to send message. Please try again.");
     }
   };
 
@@ -158,7 +153,7 @@ export default function MessagingPage() {
     setError(null);
   };
 
-  // ✅ Loading integrations
+  // ✅ Loading state
   if (integrationsLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-white">
@@ -170,7 +165,7 @@ export default function MessagingPage() {
     );
   }
 
-  // ✅ No integrations error
+  // ✅ No integrations
   if (error && integrations.length === 0) {
     return (
       <div className="flex h-screen items-center justify-center bg-white">
@@ -188,7 +183,7 @@ export default function MessagingPage() {
     );
   }
 
-  // ✅ Determine conversation display info
+  // ✅ Determine conversation info
   const conversationName =
     selectedConversationData?.participants.find(
       p => p.id !== selectedIntegration?.pageId
@@ -198,7 +193,7 @@ export default function MessagingPage() {
     p => p.id !== selectedIntegration?.pageId
   )?.profile_pic;
 
-  // ✅ Render layout
+  // ✅ Render full layout
   return (
     <div className="flex h-screen overflow-hidden bg-white">
       <ConversationList
@@ -224,12 +219,14 @@ export default function MessagingPage() {
                     <p className="text-sm text-red-600">{error}</p>
                   </div>
                 )}
+
                 <ChatWindow
                   messages={messages}
                   conversationName={conversationName}
                   conversationAvatar={conversationAvatar}
-                  currentUserId={selectedIntegration.pageId}
+                  currentUserId={selectedIntegration.pageId} // ✅ Correctly marks sent messages
                 />
+
                 <MessageInput
                   onSendMessage={handleSendMessage}
                   disabled={

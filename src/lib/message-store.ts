@@ -1,5 +1,5 @@
 // lib/message-store.ts
-export interface StoredMessage {
+interface MessageData {
   id: string;
   conversationId: string;
   message: string;
@@ -11,152 +11,117 @@ export interface StoredMessage {
   created_time: string;
   pageId: string;
   senderId: string;
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  attachments?: any[];
 }
 
-// Simple event emitter implementation
-class EventEmitter {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  private events: Map<string, Function[]> = new Map();
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  on(event: string, listener: Function) {
-    if (!this.events.has(event)) {
-      this.events.set(event, []);
+interface ConversationUpdate {
+  conversationId: string;
+  pageId: string;
+  snippet: string;
+  updated_time: string;
+  sender_name: string;
+  sender_id: string;
+}
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Listener = (data: any) => void;
+
+class MessageStore {
+  private messages: Map<string, MessageData[]> = new Map();
+  private conversations: Map<string, ConversationUpdate> = new Map();
+  private listeners: Map<string, Set<Listener>> = new Map();
+
+  on(event: string, listener: Listener) {
+    if (!this.listeners.has(event)) {
+      this.listeners.set(event, new Set());
     }
-    this.events.get(event)!.push(listener);
+    this.listeners.get(event)!.add(listener);
+    console.log(
+      `✅ Added listener for event: ${event}, total: ${this.listeners.get(event)!.size}`
+    );
   }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  removeListener(event: string, listener: Function) {
-    const listeners = this.events.get(event);
+
+  off(event: string, listener: Listener) {
+    const listeners = this.listeners.get(event);
     if (listeners) {
-      const index = listeners.indexOf(listener);
-      if (index > -1) {
-        listeners.splice(index, 1);
-      }
+      listeners.delete(listener);
+      console.log(
+        `❌ Removed listener for event: ${event}, remaining: ${listeners.size}`
+      );
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  emit(event: string, ...args: any[]) {
-    const listeners = this.events.get(event);
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  emit(event: string, data: any) {
+    const listeners = this.listeners.get(event);
+    console.log(
+      `🔔 Emitting event: ${event}, listeners: ${listeners?.size || 0}`
+    );
     if (listeners) {
       listeners.forEach(listener => {
         try {
-          listener(...args);
-        } catch (error) {
-          console.error(`Error in event listener for ${event}:`, error);
+          listener(data);
+        } catch (err) {
+          console.error(`Error in listener for ${event}:`, err);
         }
       });
     }
   }
 
-  removeAllListeners(event?: string) {
-    if (event) {
-      this.events.delete(event);
-    } else {
-      this.events.clear();
-    }
-  }
-}
+  addMessage(message: MessageData) {
+    const { conversationId } = message;
 
-class MessageStore extends EventEmitter {
-  private messages: Map<string, StoredMessage> = new Map();
-  private conversationMessages: Map<string, string[]> = new Map(); // conversationId -> messageIds
-  private pageMessages: Map<string, string[]> = new Map(); // pageId -> messageIds
-
-  addMessage(message: StoredMessage) {
-    console.log(
-      `💾 Adding message to store: ${message.id} for conversation: ${message.conversationId}`
-    );
-
-    // Store the message
-    this.messages.set(message.id, message);
-
-    // Add to conversation index
-    if (!this.conversationMessages.has(message.conversationId)) {
-      this.conversationMessages.set(message.conversationId, []);
-    }
-    const conversation = this.conversationMessages.get(message.conversationId)!;
-    if (!conversation.includes(message.id)) {
-      conversation.push(message.id);
+    if (!this.messages.has(conversationId)) {
+      this.messages.set(conversationId, []);
     }
 
-    // Add to page index
-    if (!this.pageMessages.has(message.pageId)) {
-      this.pageMessages.set(message.pageId, []);
-    }
-    const page = this.pageMessages.get(message.pageId)!;
-    if (!page.includes(message.id)) {
-      page.push(message.id);
-    }
+    const messages = this.messages.get(conversationId)!;
 
-    console.log(
-      `📊 Store stats - Total messages: ${this.messages.size}, Conversations: ${this.conversationMessages.size}`
-    );
-
-    // Emit event for real-time subscribers
-    this.emit("newMessage", message);
-  }
-
-  getMessages(conversationId: string): StoredMessage[] {
-    const messageIds = this.conversationMessages.get(conversationId) || [];
-    const messages = messageIds
-      .map(id => this.messages.get(id))
-      .filter((msg): msg is StoredMessage => msg !== undefined)
-      .sort(
-        (a, b) =>
-          new Date(a.created_time).getTime() -
-          new Date(b.created_time).getTime()
+    // Avoid duplicates
+    const exists = messages.some(m => m.id === message.id);
+    if (!exists) {
+      messages.push(message);
+      console.log(
+        `💾 Added message ${message.id} to store for conversation ${conversationId}`
       );
 
-    console.log(
-      `🔍 Retrieved ${messages.length} messages for conversation ${conversationId}`
-    );
-    return messages;
+      // Emit message update event for this pageId
+      this.emit("message_update", {
+        pageId: message.pageId,
+        message,
+      });
+    }
   }
 
-  getMessagesByPage(pageId: string): StoredMessage[] {
-    const messageIds = this.pageMessages.get(pageId) || [];
-    const messages = messageIds
-      .map(id => this.messages.get(id))
-      .filter((msg): msg is StoredMessage => msg !== undefined)
-      .sort(
-        (a, b) =>
-          new Date(a.created_time).getTime() -
-          new Date(b.created_time).getTime()
-      );
+  updateConversation(update: ConversationUpdate) {
+    this.conversations.set(update.conversationId, update);
+    console.log(`💬 Updated conversation ${update.conversationId}`);
 
-    console.log(`🔍 Retrieved ${messages.length} messages for page ${pageId}`);
-    return messages;
+    // Emit conversation update event for this pageId
+    this.emit("conversation_update", {
+      pageId: update.pageId,
+      update,
+    });
   }
 
-  getLatestMessage(conversationId: string): StoredMessage | null {
-    const messages = this.getMessages(conversationId);
-    return messages.length > 0 ? messages[messages.length - 1] : null;
+  getMessages(conversationId: string): MessageData[] {
+    return this.messages.get(conversationId) || [];
   }
 
-  getAllMessages(): StoredMessage[] {
-    return Array.from(this.messages.values()).sort(
-      (a, b) =>
-        new Date(a.created_time).getTime() - new Date(b.created_time).getTime()
-    );
-  }
-
-  clear() {
-    console.log("🧹 Clearing message store");
-    this.messages.clear();
-    this.conversationMessages.clear();
-    this.pageMessages.clear();
-    this.removeAllListeners();
+  getConversation(conversationId: string): ConversationUpdate | undefined {
+    return this.conversations.get(conversationId);
   }
 
   getStats() {
     return {
-      totalMessages: this.messages.size,
-      totalConversations: this.conversationMessages.size,
-      totalPages: this.pageMessages.size,
-      conversations: Array.from(this.conversationMessages.entries()).map(
-        ([id, messages]) => ({
-          conversationId: id,
-          messageCount: messages.length,
+      totalMessages: Array.from(this.messages.values()).reduce(
+        (sum, msgs) => sum + msgs.length,
+        0
+      ),
+      totalConversations: this.conversations.size,
+      activeListeners: Array.from(this.listeners.entries()).map(
+        ([event, listeners]) => ({
+          event,
+          count: listeners.size,
         })
       ),
     };

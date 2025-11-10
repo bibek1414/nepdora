@@ -10,6 +10,7 @@ export interface MessageData {
   from: Participant;
   message: string;
   created_time: string;
+  conversationId: string;
   attachments?: Attachment[];
 }
 

@@ -153,32 +153,4 @@ export const useConversationsApi = {
     console.log("✅ Message sent successfully:", result);
     return result;
   },
-
-  /**
-   * 🔄 Subscribe to conversation messages (polling fallback)
-   * Replace with real-time WebSocket or Pusher in production
-   */
-  subscribeToConversation(
-    conversationId: string,
-    callback: (data: WebhookNewMessageEvent["data"]) => void
-  ) {
-    const interval = setInterval(async () => {
-      try {
-        const res = await fetch(
-          `${API_BASE_URL}/api/conversation-messages/${conversationId}`
-        );
-
-        if (!res.ok) return;
-
-        const data = await res.json();
-
-        // Only call callback if there's a new message
-        if (data && data.message) callback(data);
-      } catch (err) {
-        console.error("Subscription error:", err);
-      }
-    }, 5000); // poll every 5 seconds
-
-    return () => clearInterval(interval);
-  },
 };
