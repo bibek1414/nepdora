@@ -188,7 +188,7 @@ export function ChatWindow({
   return (
     <div className="flex flex-1 flex-col overflow-hidden bg-white">
       {/* HEADER */}
-      <div className="sticky top-14 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
+      <div className="sticky top-14 z-50 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10">
             <AvatarImage src={conversationAvatar} alt={conversationName} />
