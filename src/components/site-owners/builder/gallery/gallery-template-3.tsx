@@ -168,7 +168,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
         order: 0,
         x: "-320px",
         y: "15px",
-        zIndex: 50,
+        zIndex: 5,
         direction: "left",
       },
       {
@@ -176,19 +176,19 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
         order: 1,
         x: "-160px",
         y: "32px",
-        zIndex: 40,
+        zIndex: 4,
         direction: "left",
       },
-      { id: 3, order: 2, x: "0px", y: "8px", zIndex: 30, direction: "right" },
+      { id: 3, order: 2, x: "0px", y: "8px", zIndex: 3, direction: "right" },
       {
         id: 4,
         order: 3,
         x: "160px",
         y: "22px",
-        zIndex: 20,
+        zIndex: 2,
         direction: "right",
       },
-      { id: 5, order: 4, x: "320px", y: "44px", zIndex: 10, direction: "left" },
+      { id: 5, order: 4, x: "320px", y: "44px", zIndex: 1, direction: "left" },
     ];
     return base
       .slice(0, Math.max(1, count))
@@ -232,9 +232,9 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
           )}
         </div>
 
-        <div className="relative mb-8 h-[350px] w-full items-center justify-center lg:flex">
+        <div className="relative mb-8 w-full lg:min-h-[350px]">
           <motion.div
-            className="relative mx-auto flex w-full max-w-7xl justify-center"
+            className="relative mx-auto hidden w-full max-w-7xl justify-center lg:flex"
             initial={{ opacity: 0 }}
             animate={{ opacity: isVisible ? 1 : 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
@@ -299,6 +299,50 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
               </div>
             </motion.div>
           </motion.div>
+          <div className="flex w-full snap-x snap-mandatory gap-4 overflow-x-auto px-2 py-4 lg:hidden">
+            {activeImages.map(image => {
+              const actualIndex = data.images.findIndex(
+                img => img.id === image.id
+              );
+              return (
+                <div key={image.id} className="relative flex-shrink-0">
+                  <PhotoCard
+                    image={image}
+                    isEditable={isEditable}
+                    onOpenLightbox={() => setSelectedImage(image)}
+                    size={180}
+                    enableHover={!isEditable}
+                    enableRandomRotation={false}
+                  />
+                  {isEditable && (
+                    <div className="absolute top-2 right-2 z-10 flex gap-2">
+                      <label
+                        htmlFor={`gallery-upload-${componentId}-${actualIndex}`}
+                        className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg hover:bg-white"
+                      >
+                        Change
+                      </label>
+                      <input
+                        id={`gallery-upload-${componentId}-${actualIndex}`}
+                        type="file"
+                        accept="image/*"
+                        onChange={e => handleImageFileChange(e, actualIndex)}
+                        className="hidden"
+                      />
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleRemoveImage(actualIndex)}
+                        className="h-6 px-2"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -330,7 +374,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
             <img
               src={getImageUrl(selectedImage.image)}
               alt={selectedImage.image_alt_description}
-              className="h-auto w-full rounded-lg"
+              className="h-[480px] w-full rounded-lg object-cover"
             />
             {(selectedImage.title || selectedImage.description) && (
               <div className="mt-4">
@@ -385,28 +429,42 @@ const PhotoCard = ({
   image,
   isEditable,
   onOpenLightbox,
+  size = 220,
+  enableHover = true,
+  enableRandomRotation = true,
 }: {
   image: GalleryImage;
   isEditable: boolean;
   onOpenLightbox: () => void;
+  size?: number;
+  enableHover?: boolean;
+  enableRandomRotation?: boolean;
 }) => {
   const [rotation, setRotation] = useState<number>(0);
   useEffect(() => {
+    if (!enableRandomRotation) {
+      setRotation(0);
+      return;
+    }
     const randomRotation =
       getRandomNumberInRange(1, 4) * (Math.random() > 0.5 ? -1 : 1);
     setRotation(randomRotation);
-  }, []);
+  }, [enableRandomRotation]);
 
   return (
     <motion.div
-      whileHover={{
-        scale: 1.1,
-        transition: { type: "spring", stiffness: 300, damping: 20 },
-      }}
+      whileHover={
+        enableHover
+          ? {
+              scale: 1.1,
+              transition: { type: "spring", stiffness: 300, damping: 20 },
+            }
+          : undefined
+      }
       initial={{ rotate: rotation }}
       animate={{ rotate: rotation }}
       transition={{ type: "spring", stiffness: 70, damping: 12, mass: 1 }}
-      style={{ width: 220, height: 220, perspective: 400 }}
+      style={{ width: size, height: size, perspective: 400 }}
       className={cn("relative mx-auto shrink-0")}
       draggable={false}
       tabIndex={0}
@@ -417,6 +475,8 @@ const PhotoCard = ({
             src={getImageUrl(image.image)}
             alt={image.image_alt_description}
             className="h-full w-full rounded-3xl object-cover"
+            width={size}
+            height={size}
             disableImageChange={true}
             showAltEditor={true}
           />
