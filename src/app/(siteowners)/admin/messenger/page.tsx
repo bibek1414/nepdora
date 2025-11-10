@@ -258,7 +258,7 @@ export default function MessagingPage() {
       {/* Conversation List - Hidden on mobile when chat is open, always visible on desktop */}
       <div
         className={cn(
-          "w-full transition-all duration-300",
+          "transition-all duration-300",
           // On mobile: hide when chat is open, show when chat is closed
           // On desktop (md+): always show
           showMobileChat ? "hidden md:flex" : "flex"
