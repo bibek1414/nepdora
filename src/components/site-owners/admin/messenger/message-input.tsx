@@ -154,7 +154,10 @@ export function MessageInput({
           </div>
 
           {/* Message input form */}
-          <form onSubmit={handleSubmit} className="flex flex-1 items-end gap-1.5 md:gap-2">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-1 items-end gap-1.5 md:gap-2"
+          >
             <div className="relative flex-1">
               <textarea
                 ref={textareaRef}

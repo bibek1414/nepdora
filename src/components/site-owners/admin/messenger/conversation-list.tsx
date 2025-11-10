@@ -216,7 +216,12 @@ export function ConversationList({
         {!collapsed && (
           <h1 className="text-xl font-bold text-gray-900 md:text-2xl">Chats</h1>
         )}
-        <div className={cn("flex items-center gap-1 md:gap-2", collapsed && "mx-auto")}>
+        <div
+          className={cn(
+            "flex items-center gap-1 md:gap-2",
+            collapsed && "mx-auto"
+          )}
+        >
           {!collapsed && (
             <>
               <Select
