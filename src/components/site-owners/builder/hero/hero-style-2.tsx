@@ -73,7 +73,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
   const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
     const updatedData = { ...data, [field]: value };
     setData(updatedData);
-    // Only send the specific field that changed
     onUpdate?.({ [field]: value } as Partial<HeroData>);
   };
 
@@ -117,7 +116,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     };
     setData(updatedData);
 
-    // Only update the specific background fields for this component
     onUpdate?.({
       backgroundType: "image" as const,
       backgroundImageUrl: imageUrl,
@@ -131,7 +129,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
     if (!allowedTypes.includes(file.type)) {
       toast.error(
@@ -140,7 +137,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
       return;
     }
 
-    // Validate file size (5MB limit)
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       toast.error("Image size must be less than 5MB");
@@ -150,27 +146,22 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     setIsUploadingBackground(true);
 
     try {
-      // Create unique filename to avoid conflicts
       const timestamp = Date.now();
       const randomId = Math.random().toString(36).substr(2, 9);
       const uniqueFilename = `bg_${timestamp}_${randomId}_${file.name}`;
 
-      // Upload to Cloudinary with unique public_id
       const imageUrl = await uploadToCloudinary(file, {
         folder: "hero-backgrounds",
         resourceType: "image",
       });
 
-      // Update only this component's background
       handleBackgroundImageUpdate(imageUrl, `Background image: ${file.name}`);
-
       toast.success("Background image uploaded successfully!");
     } catch (error) {
       console.error("Background upload failed:", error);
       toast.error("Failed to upload background image. Please try again.");
     } finally {
       setIsUploadingBackground(false);
-      // Reset file input
       event.target.value = "";
     }
   };
@@ -243,7 +234,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
 
   return (
     <section
-      className="relative flex min-h-[60vh] w-full items-end p-8 md:p-16"
+      className="relative flex min-h-[50vh] w-full items-end p-4 sm:min-h-[60vh] sm:p-6 md:p-8 lg:p-16"
       style={{
         ...getBackgroundStyles(),
         color: textColor,
@@ -251,26 +242,30 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
       }}
       data-component-id={componentId}
     >
-      {/* Background Change Button - Only visible when editable */}
+      {/* Background Change Button */}
       {isEditable && (
-        <div className="absolute top-6 right-6 z-10">
+        <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4 md:top-6 md:right-6">
           <label
             htmlFor={`background-upload-${componentId}`}
-            className={`mr-12 cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
+            className={`cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-3 py-1.5 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white sm:px-4 sm:py-2 sm:text-sm ${
               isUploadingBackground ? "pointer-events-none opacity-50" : ""
             }`}
           >
             {isUploadingBackground ? (
-              <span className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Uploading...
+              <span className="flex items-center gap-1 sm:gap-2">
+                <Loader2 className="h-3 w-3 animate-spin sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Uploading...</span>
+                <span className="sm:hidden">...</span>
               </span>
             ) : (
-              "Change Background"
+              <>
+                <span className="hidden sm:inline">Change Background</span>
+                <span className="sm:hidden">Change BG</span>
+              </>
             )}
           </label>
           <input
-            id={`background-upload-${componentId}`} // FIX 8: Unique input ID
+            id={`background-upload-${componentId}`}
             type="file"
             accept="image/*"
             onChange={handleBackgroundFileChange}
@@ -284,16 +279,18 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
       {isUploadingBackground && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50">
           <div className="flex flex-col items-center gap-2 text-white">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <p className="text-sm font-medium">Uploading background image...</p>
+            <Loader2 className="h-6 w-6 animate-spin sm:h-8 sm:w-8" />
+            <p className="px-4 text-center text-xs font-medium sm:text-sm">
+              Uploading background...
+            </p>
           </div>
         </div>
       )}
 
-      {/* FIX 9: Conditional EditableImage with unique key */}
+      {/* Background EditableImage */}
       {data.backgroundType === "image" && data.backgroundImageUrl && (
         <EditableImage
-          key={`bg-${componentId}-${data.backgroundImageUrl}`} // Unique key
+          key={`bg-${componentId}-${data.backgroundImageUrl}`}
           src={data.backgroundImageUrl}
           alt={data.imageAlt || "Background image"}
           onImageChange={handleBackgroundImageUpdate}
@@ -329,16 +326,17 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
         />
       )}
 
-      {/* Rest of the component remains the same... */}
-      <div className="relative z-10 container mx-auto flex max-w-7xl items-end gap-8">
-        {/* Content */}
-        <div className={`flex flex-col gap-4 ${getLayoutClasses()}`}>
-          {/* Editable text components */}
+      {/* Main Content Container */}
+      <div className="relative z-10 container mx-auto flex w-full max-w-7xl flex-col items-end gap-6 sm:gap-8 lg:flex-row">
+        {/* Text Content */}
+        <div
+          className={`flex flex-col gap-3 sm:gap-4 ${getLayoutClasses()} w-full lg:w-auto`}
+        >
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="text-4xl leading-tight font-bold md:text-6xl"
+            className="text-3xl leading-tight font-bold sm:text-4xl md:text-5xl lg:text-6xl"
             style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter your hero title..."
@@ -348,7 +346,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             value={data.subtitle}
             onChange={handleTextUpdate("subtitle")}
             as="p"
-            className="max-w-2xl text-lg md:text-xl"
+            className="max-w-2xl text-base sm:text-lg md:text-xl"
             style={{ fontFamily: theme.fonts.body }}
             isEditable={isEditable}
             placeholder="Enter subtitle..."
@@ -359,7 +357,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="text-md max-w-2xl opacity-90"
+              className="max-w-2xl text-sm opacity-90 sm:text-base"
               style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
               placeholder="Enter description..."
@@ -367,13 +365,14 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             />
           )}
 
-          {/* Buttons with theme styling */}
-          <div className="mt-4 flex flex-wrap gap-3">
+          {/* Buttons */}
+          <div className="mt-2 flex flex-wrap gap-2 sm:mt-4 sm:gap-3">
             {data.buttons.map(btn => (
               <Button
                 key={`btn-${componentId}-${btn.id}`}
                 variant={btn.variant === "primary" ? "default" : btn.variant}
-                size="lg"
+                size="default"
+                className="px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base"
                 style={{
                   backgroundColor:
                     btn.variant === "primary"
@@ -403,11 +402,11 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
           </div>
         </div>
 
-        {/* Image Slider section with unique keys */}
+        {/* Image Slider */}
         {data.showSlider &&
           data.sliderImages &&
           data.sliderImages.length > 0 && (
-            <div className="relative w-1/3 md:block">
+            <div className="relative mt-6 w-full lg:mt-0 lg:w-1/3">
               <div className="relative overflow-hidden rounded-lg shadow-lg">
                 <div
                   className="flex transition-transform duration-500 ease-in-out"
@@ -440,7 +439,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                           onUpdate?.({ sliderImages: updatedSliderImages });
                         }}
                         isEditable={isEditable}
-                        className="h-80 w-full object-cover"
+                        className="h-48 w-full object-cover sm:h-64 md:h-80"
                         width={600}
                         height={400}
                         cloudinaryOptions={{
@@ -458,45 +457,51 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                   ))}
                 </div>
               </div>
+
+              {/* Slider Navigation */}
               {data.sliderImages.length > 1 && (
                 <>
                   <Button
                     variant="outline"
                     size="icon"
-                    className="bg-background/80 absolute top-1/2 left-2 z-10 -translate-y-1/2 backdrop-blur-sm"
+                    className="bg-background/80 absolute top-1/2 left-1 z-10 h-8 w-8 -translate-y-1/2 backdrop-blur-sm sm:left-2 sm:h-10 sm:w-10"
                     onClick={prevSlide}
                   >
-                    <ChevronLeft className="h-4 w-4" />
+                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
 
                   <Button
                     variant="outline"
                     size="icon"
-                    className="bg-background/80 absolute top-1/2 right-2 z-10 -translate-y-1/2 backdrop-blur-sm"
+                    className="bg-background/80 absolute top-1/2 right-1 z-10 h-8 w-8 -translate-y-1/2 backdrop-blur-sm sm:right-2 sm:h-10 sm:w-10"
                     onClick={nextSlide}
                   >
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
 
                   {/* Slide indicators */}
-                  <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 transform space-x-2">
+                  <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 transform space-x-1.5 sm:bottom-4 sm:space-x-2">
                     {data.sliderImages.map((_, index) => (
                       <button
                         key={index}
-                        className={`h-2 w-2 rounded-full transition-colors ${
+                        className={`h-1.5 w-1.5 rounded-full transition-colors sm:h-2 sm:w-2 ${
                           index === currentSlide ? "bg-white" : "bg-white/50"
                         }`}
                         onClick={() => setCurrentSlide(index)}
+                        aria-label={`Go to slide ${index + 1}`}
                       />
                     ))}
                   </div>
                 </>
               )}
+
+              {/* Add New Slide Button */}
               {isEditable && (
-                <div className="mt-6 text-center">
+                <div className="mt-4 text-center sm:mt-6">
                   <Button
                     variant="outline"
                     size="sm"
+                    className="text-xs sm:text-sm"
                     onClick={() => {
                       const newSlide = {
                         id: `slide-${Date.now()}`,
