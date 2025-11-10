@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Plus, Phone, Video, Info } from "lucide-react";
+import { Plus, Phone, Video, Info, ArrowLeft } from "lucide-react";
 import { ManualOrderDialog } from "@/components/site-owners/admin/orders/manual-order-dialog";
 import { cn } from "@/lib/utils";
 import {
@@ -21,6 +21,7 @@ interface ChatWindowProps {
   currentUserId?: string;
   participants?: Participant[];
   updated_time?: string;
+  onBack?: () => void;
 }
 
 export function ChatWindow({
@@ -30,6 +31,7 @@ export function ChatWindow({
   currentUserId,
   participants = [],
   updated_time = "",
+  onBack,
 }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const prevMessageCount = useRef<number>(0);
@@ -188,37 +190,47 @@ export function ChatWindow({
   return (
     <div className="flex flex-1 flex-col overflow-hidden bg-white">
       {/* HEADER */}
-      <div className="sticky top-14 z-50 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10">
+      <div className="sticky top-14 z-50 flex items-center justify-between border-b border-gray-200 bg-white px-2 py-3 md:px-4">
+        <div className="flex items-center gap-2 md:gap-3">
+          {/* Back button for mobile */}
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="rounded-full p-2 text-gray-700 hover:bg-gray-100 md:hidden"
+              aria-label="Back to conversations"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
+          <Avatar className="h-9 w-9 md:h-10 md:w-10">
             <AvatarImage src={conversationAvatar} alt={conversationName} />
             <AvatarFallback className="bg-blue-500 text-sm font-semibold text-white">
               {getInitials(conversationName)}
             </AvatarFallback>
           </Avatar>
           <div>
-            <h2 className="text-[15px] font-semibold text-gray-900">
+            <h2 className="text-sm font-semibold text-gray-900 md:text-[15px]">
               {conversationName}
             </h2>
             <p className="text-xs text-gray-500">{getLastActiveTime}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button className="rounded-full p-2 text-blue-600 hover:bg-gray-100">
+        <div className="flex items-center gap-1 md:gap-2">
+          <button className="hidden rounded-full p-2 text-blue-600 hover:bg-gray-100 sm:block">
             <Phone className="h-5 w-5" />
           </button>
-          <button className="rounded-full p-2 text-blue-600 hover:bg-gray-100">
+          <button className="hidden rounded-full p-2 text-blue-600 hover:bg-gray-100 sm:block">
             <Video className="h-5 w-5" />
           </button>
           <button className="rounded-full p-2 text-blue-600 hover:bg-gray-100">
-            <Info className="h-5 w-5" />
+            <Info className="h-4 w-4 md:h-5 md:w-5" />
           </button>
         </div>
       </div>
 
       {/* MESSAGES */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
+      <div className="flex-1 overflow-y-auto px-2 py-4 md:px-4 md:py-6">
         <div className="mx-auto max-w-4xl space-y-1">
           {sortedMessages.map((message, index) => {
             const isOwn = message.from.id === currentUserId;
@@ -277,8 +289,8 @@ export function ChatWindow({
                       message.attachments?.some(att =>
                         att.type?.startsWith("video")
                       )
-                        ? "max-w-[450px]" // Wider for videos
-                        : "max-w-[65%]",
+                        ? "max-w-[280px] sm:max-w-[450px]" // Wider for videos, responsive
+                        : "max-w-[85%] sm:max-w-[75%] md:max-w-[65%]",
                       isOwn && "items-end"
                     )}
                   >

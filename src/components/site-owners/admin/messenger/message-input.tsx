@@ -120,8 +120,8 @@ export function MessageInput({
 
   return (
     <>
-      <div className="sticky z-20 border-t border-gray-200 bg-white px-4 py-2">
-        <div className="mx-auto flex max-w-3xl items-end gap-2">
+      <div className="sticky z-20 border-t border-gray-200 bg-white px-2 py-2 md:px-4">
+        <div className="mx-auto flex max-w-3xl items-end gap-1.5 md:gap-2">
           {/* Hidden file input */}
           <input
             ref={fileInputRef}
@@ -132,29 +132,29 @@ export function MessageInput({
           />
 
           {/* Left action buttons */}
-          <div className="flex gap-1 pb-2">
+          <div className="flex gap-0.5 pb-2 md:gap-1">
             <button
               type="button"
               onClick={handleImageClick}
               disabled={disabled || isSending}
-              className="rounded-full p-2 text-blue-600 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-full p-1.5 text-blue-600 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 md:p-2"
               title="Send image"
             >
-              <ImageIcon className="h-5 w-5" />
+              <ImageIcon className="h-4 w-4 md:h-5 md:w-5" />
             </button>
             <button
               type="button"
               onClick={handleVoiceClick}
               disabled={disabled || isSending}
-              className="rounded-full p-2 text-blue-600 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-full p-1.5 text-blue-600 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 md:p-2"
               title="Record voice message"
             >
-              <Mic className="h-5 w-5" />
+              <Mic className="h-4 w-4 md:h-5 md:w-5" />
             </button>
           </div>
 
           {/* Message input form */}
-          <form onSubmit={handleSubmit} className="flex flex-1 items-end gap-2">
+          <form onSubmit={handleSubmit} className="flex flex-1 items-end gap-1.5 md:gap-2">
             <div className="relative flex-1">
               <textarea
                 ref={textareaRef}
@@ -163,19 +163,19 @@ export function MessageInput({
                 onKeyDown={handleKeyDown}
                 placeholder="Aa"
                 className={cn(
-                  "w-full resize-none rounded-2xl border-0 bg-gray-100 px-4 py-2 text-[15px] leading-5 text-gray-900 placeholder:text-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none",
+                  "w-full resize-none rounded-2xl border-0 bg-gray-100 px-3 py-2 text-sm leading-5 text-gray-900 placeholder:text-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none md:px-4 md:text-[15px]",
                   "max-h-[120px] min-h-[36px]"
                 )}
                 disabled={disabled || isSending}
                 rows={1}
-                style={{ paddingRight: "40px" }}
+                style={{ paddingRight: "36px" }}
               />
 
               <button
                 type="button"
-                className="absolute right-2 bottom-2 rounded-full p-1 text-blue-600 hover:bg-gray-200"
+                className="absolute right-1.5 bottom-2 rounded-full p-1 text-blue-600 hover:bg-gray-200 md:right-2"
               >
-                <Smile className="h-5 w-5" />
+                <Smile className="h-4 w-4 md:h-5 md:w-5" />
               </button>
             </div>
 
@@ -186,18 +186,18 @@ export function MessageInput({
                 size="icon"
                 disabled={!message.trim() || disabled || isSending}
                 className={cn(
-                  "mb-1 h-9 w-9 flex-shrink-0 rounded-full bg-blue-600 hover:bg-blue-700",
+                  "mb-1 h-8 w-8 flex-shrink-0 rounded-full bg-blue-600 hover:bg-blue-700 md:h-9 md:w-9",
                   isSending && "cursor-wait opacity-70"
                 )}
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-3.5 w-3.5 md:h-4 md:w-4" />
               </Button>
             ) : (
               <button
                 type="button"
-                className="mb-1 rounded-full p-2 text-blue-600 hover:bg-gray-100"
+                className="mb-1 rounded-full p-1.5 text-blue-600 hover:bg-gray-100 md:p-2"
               >
-                <Smile className="h-5 w-5" />
+                <Smile className="h-4 w-4 md:h-5 md:w-5" />
               </button>
             )}
           </form>

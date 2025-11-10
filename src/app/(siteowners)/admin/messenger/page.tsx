@@ -13,6 +13,7 @@ import {
   MessageData,
 } from "@/types/owner-site/admin/conversations";
 import { useFacebookIntegrations } from "@/hooks/owner-site/admin/use-facebook-integrations";
+import { cn } from "@/lib/utils";
 
 export default function MessagingPage() {
   const [selectedConversationId, setSelectedConversationId] = useState<
@@ -22,6 +23,7 @@ export default function MessagingPage() {
     useState<ConversationListItem | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [integrationsLoaded, setIntegrationsLoaded] = useState(false);
+  const [showMobileChat, setShowMobileChat] = useState(false);
 
   const { data: integrations = [], isLoading: integrationsLoading } =
     useFacebookIntegrations();
@@ -199,6 +201,15 @@ export default function MessagingPage() {
     setSelectedConversationId(conversationId);
     setSelectedConversationData(data);
     setError(null);
+    // Only toggle mobile chat view on mobile screens (< 768px)
+    if (window.innerWidth < 768) {
+      setShowMobileChat(true);
+    }
+  };
+
+  // ✅ Back to conversation list on mobile
+  const handleBackToList = () => {
+    setShowMobileChat(false);
   };
 
   // ✅ Loading state
@@ -244,13 +255,31 @@ export default function MessagingPage() {
   // ✅ Render full layout
   return (
     <div className="flex h-screen overflow-hidden bg-white">
-      <ConversationList
-        selectedId={selectedConversationId}
-        onSelectConversation={handleSelectConversation}
-        onIntegrationChange={handleIntegrationChange}
-      />
+      {/* Conversation List - Hidden on mobile when chat is open, always visible on desktop */}
+      <div
+        className={cn(
+          "w-full transition-all duration-300",
+          // On mobile: hide when chat is open, show when chat is closed
+          // On desktop (md+): always show
+          showMobileChat ? "hidden md:flex" : "flex"
+        )}
+      >
+        <ConversationList
+          selectedId={selectedConversationId}
+          onSelectConversation={handleSelectConversation}
+          onIntegrationChange={handleIntegrationChange}
+        />
+      </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden">
+      {/* Chat Area - Full width on mobile when open, side-by-side on desktop */}
+      <div
+        className={cn(
+          "flex flex-1 flex-col overflow-hidden",
+          // On mobile: hide when showMobileChat is false, show when true
+          // On desktop (md+): always show
+          !showMobileChat ? "hidden md:flex" : "flex"
+        )}
+      >
         {selectedConversationId && selectedIntegration ? (
           <>
             {isLoadingMessages ? (
@@ -273,6 +302,7 @@ export default function MessagingPage() {
                   conversationName={conversationName}
                   conversationAvatar={conversationAvatar}
                   currentUserId={selectedIntegration.pageId} // ✅ Correctly marks sent messages
+                  onBack={handleBackToList}
                 />
 
                 <MessageInput

@@ -208,15 +208,15 @@ export function ConversationList({
     <div
       className={cn(
         "flex h-full flex-col border-r border-gray-200 bg-white py-15 transition-all duration-300 ease-in-out",
-        collapsed ? "w-16" : "w-[360px]"
+        collapsed ? "w-16" : "w-full sm:w-[320px] md:w-[360px]"
       )}
     >
       {/* Header */}
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-3 py-3 md:px-4">
         {!collapsed && (
-          <h1 className="text-2xl font-bold text-gray-900">Chats</h1>
+          <h1 className="text-xl font-bold text-gray-900 md:text-2xl">Chats</h1>
         )}
-        <div className={cn("flex items-center gap-2", collapsed && "mx-auto")}>
+        <div className={cn("flex items-center gap-1 md:gap-2", collapsed && "mx-auto")}>
           {!collapsed && (
             <>
               <Select
@@ -226,7 +226,7 @@ export function ConversationList({
                 onValueChange={handleIntegrationSelect}
                 disabled={integrations.length === 0}
               >
-                <SelectTrigger className="h-9 w-40 text-left">
+                <SelectTrigger className="h-8 w-28 text-left text-xs sm:h-9 sm:w-40 sm:text-sm">
                   <SelectValue
                     placeholder={
                       integrations.length === 0
@@ -246,19 +246,19 @@ export function ConversationList({
               <button
                 onClick={() => refetch()}
                 className={cn(
-                  "rounded-full p-2 text-gray-600 hover:bg-gray-100",
+                  "rounded-full p-1.5 text-gray-600 hover:bg-gray-100 md:p-2",
                   isFetching && "animate-spin"
                 )}
                 title="Refresh"
                 disabled={!pageId || isFetching}
               >
-                <RefreshCw className="h-5 w-5" />
+                <RefreshCw className="h-4 w-4 md:h-5 md:w-5" />
               </button>
             </>
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="rounded-full p-2 text-gray-600 hover:bg-gray-100"
+            className="hidden rounded-full p-2 text-gray-600 hover:bg-gray-100 md:block"
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? (
@@ -279,7 +279,7 @@ export function ConversationList({
               placeholder="Search Messages"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="h-9 rounded-full border-0 bg-gray-100 pl-9 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-blue-500"
+              className="h-8 rounded-full border-0 bg-gray-100 pl-9 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-blue-500 sm:h-9"
             />
           </div>
         </div>
@@ -327,7 +327,7 @@ export function ConversationList({
                   )
                 }
                 className={cn(
-                  "flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-gray-50",
+                  "flex w-full items-center gap-2 px-3 py-2.5 text-left hover:bg-gray-50 sm:gap-3 sm:px-4 sm:py-3",
                   isActive ? "bg-blue-50" : "",
                   collapsed && "justify-center px-2"
                 )}
@@ -336,7 +336,7 @@ export function ConversationList({
                 <Avatar
                   className={cn(
                     "flex-shrink-0",
-                    collapsed ? "h-10 w-10" : "h-14 w-14"
+                    collapsed ? "h-10 w-10" : "h-11 w-11 sm:h-14 sm:w-14"
                   )}
                 >
                   <AvatarImage src={avatar} alt={name} />
@@ -348,14 +348,14 @@ export function ConversationList({
                 {!collapsed && (
                   <div className="min-w-0 flex-1">
                     <div className="mb-0.5 flex items-baseline justify-between gap-2">
-                      <h3 className="truncate text-[15px] font-normal text-gray-900">
+                      <h3 className="truncate text-sm font-normal text-gray-900 sm:text-[15px]">
                         {name}
                       </h3>
-                      <span className="flex-shrink-0 text-xs text-gray-500">
+                      <span className="flex-shrink-0 text-[10px] text-gray-500 sm:text-xs">
                         {formatTimestamp(conversation.updated_time)}
                       </span>
                     </div>
-                    <p className="truncate text-sm text-gray-600">
+                    <p className="truncate text-xs text-gray-600 sm:text-sm">
                       {getMessagePreview(conversation)}
                     </p>
                   </div>
