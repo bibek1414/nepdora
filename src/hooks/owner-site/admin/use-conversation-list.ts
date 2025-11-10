@@ -82,7 +82,8 @@ export const useConversationList = (pageId: string | null) => {
                   snippet: update.snippet || updated[existingIndex].snippet,
                   updated_time:
                     update.updated_time || updated[existingIndex].updated_time,
-                  message_type: update.message_type || updated[existingIndex].message_type,
+                  message_type:
+                    update.message_type || updated[existingIndex].message_type,
                 };
 
                 // Sort by updated_time (newest first)

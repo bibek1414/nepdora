@@ -136,34 +136,42 @@ export const useConversationMessages = (
                   console.log(
                     `➕ Adding new message ${message.id} to conversation ${message.conversationId}`
                   );
-                  
+
                   // Remove matching optimistic messages when real message arrives
                   // Match by: same sender AND (same text content OR within 5 seconds)
                   const messageTime = new Date(message.created_time).getTime();
-                  const messagesWithoutOptimistic = (old.conversation?.messages || []).filter(
+                  const messagesWithoutOptimistic = (
+                    old.conversation?.messages || []
+                  ).filter(
                     //eslint-disable-next-line @typescript-eslint/no-explicit-any
                     (m: any) => {
                       // Keep non-optimistic messages
-                      if (!m.isOptimistic || !m.id?.startsWith('temp-')) return true;
-                      
+                      if (!m.isOptimistic || !m.id?.startsWith("temp-"))
+                        return true;
+
                       // Remove if same sender and same content
-                      if (m.from?.id === message.from?.id && m.message === message.message) {
+                      if (
+                        m.from?.id === message.from?.id &&
+                        m.message === message.message
+                      ) {
                         console.log(`🗑️ Removing optimistic message: ${m.id}`);
                         return false;
                       }
-                      
+
                       // Remove if same sender and within 5 seconds (for media messages without text)
                       const optimisticTime = new Date(m.created_time).getTime();
                       const timeDiff = Math.abs(messageTime - optimisticTime);
                       if (m.from?.id === message.from?.id && timeDiff < 5000) {
-                        console.log(`🗑️ Removing optimistic message by time: ${m.id}`);
+                        console.log(
+                          `🗑️ Removing optimistic message by time: ${m.id}`
+                        );
                         return false;
                       }
-                      
+
                       return true;
                     }
                   );
-                  
+
                   const updatedMessages = [
                     ...messagesWithoutOptimistic,
                     {
@@ -313,19 +321,21 @@ export const useSendMessage = () => {
               const file = newMessage.fileUpload as Blob;
               const fileType = file.type;
               let attachmentType = "file";
-              
+
               if (fileType.startsWith("image/")) attachmentType = "image";
               else if (fileType.startsWith("audio/")) attachmentType = "audio";
               else if (fileType.startsWith("video/")) attachmentType = "video";
 
               // Create a temporary URL for preview
               const tempUrl = URL.createObjectURL(file);
-              
-              optimisticAttachments = [{
-                type: attachmentType,
-                url: tempUrl,
-                isOptimistic: true,
-              }];
+
+              optimisticAttachments = [
+                {
+                  type: attachmentType,
+                  url: tempUrl,
+                  isOptimistic: true,
+                },
+              ];
             }
 
             const optimisticMessage = {

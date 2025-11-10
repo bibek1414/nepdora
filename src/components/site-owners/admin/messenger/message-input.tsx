@@ -9,7 +9,10 @@ import { VoiceRecorderModal } from "./voice-recorder-modal";
 
 interface MessageInputProps {
   onSendMessage: (content: string) => Promise<void>;
-  onSendMedia?: (file: File | Blob, type: "image" | "audio" | "video") => Promise<void>;
+  onSendMedia?: (
+    file: File | Blob,
+    type: "image" | "audio" | "video"
+  ) => Promise<void>;
   disabled?: boolean;
 }
 
@@ -134,7 +137,7 @@ export function MessageInput({
               type="button"
               onClick={handleImageClick}
               disabled={disabled || isSending}
-              className="rounded-full p-2 text-blue-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-full p-2 text-blue-600 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
               title="Send image"
             >
               <ImageIcon className="h-5 w-5" />
@@ -143,63 +146,63 @@ export function MessageInput({
               type="button"
               onClick={handleVoiceClick}
               disabled={disabled || isSending}
-              className="rounded-full p-2 text-blue-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-full p-2 text-blue-600 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
               title="Record voice message"
             >
               <Mic className="h-5 w-5" />
             </button>
           </div>
 
-        {/* Message input form */}
-        <form onSubmit={handleSubmit} className="flex flex-1 items-end gap-2">
-          <div className="relative flex-1">
-            <textarea
-              ref={textareaRef}
-              value={message}
-              onChange={e => setMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Aa"
-              className={cn(
-                "w-full resize-none rounded-2xl border-0 bg-gray-100 px-4 py-2 text-[15px] leading-5 text-gray-900 placeholder:text-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none",
-                "max-h-[120px] min-h-[36px]"
-              )}
-              disabled={disabled || isSending}
-              rows={1}
-              style={{ paddingRight: "40px" }}
-            />
+          {/* Message input form */}
+          <form onSubmit={handleSubmit} className="flex flex-1 items-end gap-2">
+            <div className="relative flex-1">
+              <textarea
+                ref={textareaRef}
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Aa"
+                className={cn(
+                  "w-full resize-none rounded-2xl border-0 bg-gray-100 px-4 py-2 text-[15px] leading-5 text-gray-900 placeholder:text-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none",
+                  "max-h-[120px] min-h-[36px]"
+                )}
+                disabled={disabled || isSending}
+                rows={1}
+                style={{ paddingRight: "40px" }}
+              />
 
-            <button
-              type="button"
-              className="absolute right-2 bottom-2 rounded-full p-1 text-blue-600 hover:bg-gray-200"
-            >
-              <Smile className="h-5 w-5" />
-            </button>
-          </div>
+              <button
+                type="button"
+                className="absolute right-2 bottom-2 rounded-full p-1 text-blue-600 hover:bg-gray-200"
+              >
+                <Smile className="h-5 w-5" />
+              </button>
+            </div>
 
-          {/* Send button */}
-          {message.trim() ? (
-            <Button
-              type="submit"
-              size="icon"
-              disabled={!message.trim() || disabled || isSending}
-              className={cn(
-                "mb-1 h-9 w-9 flex-shrink-0 rounded-full bg-blue-600 hover:bg-blue-700",
-                isSending && "cursor-wait opacity-70"
-              )}
-            >
-              <Send className="h-4 w-4" />
-            </Button>
-          ) : (
-            <button
-              type="button"
-              className="mb-1 rounded-full p-2 text-blue-600 hover:bg-gray-100"
-            >
-              <Smile className="h-5 w-5" />
-            </button>
-          )}
-        </form>
+            {/* Send button */}
+            {message.trim() ? (
+              <Button
+                type="submit"
+                size="icon"
+                disabled={!message.trim() || disabled || isSending}
+                className={cn(
+                  "mb-1 h-9 w-9 flex-shrink-0 rounded-full bg-blue-600 hover:bg-blue-700",
+                  isSending && "cursor-wait opacity-70"
+                )}
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            ) : (
+              <button
+                type="button"
+                className="mb-1 rounded-full p-2 text-blue-600 hover:bg-gray-100"
+              >
+                <Smile className="h-5 w-5" />
+              </button>
+            )}
+          </form>
+        </div>
       </div>
-    </div>
 
       {/* Voice Recorder Modal */}
       <VoiceRecorderModal

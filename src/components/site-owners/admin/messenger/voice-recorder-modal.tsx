@@ -71,7 +71,7 @@ export function VoiceRecorderModal({
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
 
-      mediaRecorder.ondataavailable = (event) => {
+      mediaRecorder.ondataavailable = event => {
         if (event.data.size > 0) {
           audioChunksRef.current.push(event.data);
         }
@@ -84,7 +84,7 @@ export function VoiceRecorderModal({
         setAudioUrl(url);
 
         // Stop all tracks
-        stream.getTracks().forEach((track) => track.stop());
+        stream.getTracks().forEach(track => track.stop());
       };
 
       mediaRecorder.start();
@@ -93,7 +93,7 @@ export function VoiceRecorderModal({
 
       // Start timer
       timerRef.current = setInterval(() => {
-        setRecordingTime((prev) => prev + 1);
+        setRecordingTime(prev => prev + 1);
       }, 1000);
     } catch (error) {
       console.error("Error accessing microphone:", error);
@@ -119,7 +119,7 @@ export function VoiceRecorderModal({
         mediaRecorderRef.current.resume();
         setIsPaused(false);
         timerRef.current = setInterval(() => {
-          setRecordingTime((prev) => prev + 1);
+          setRecordingTime(prev => prev + 1);
         }, 1000);
       } else {
         mediaRecorderRef.current.pause();
@@ -172,9 +172,7 @@ export function VoiceRecorderModal({
       <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Voice Message
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-900">Voice Message</h2>
           <button
             onClick={onClose}
             className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
@@ -202,7 +200,7 @@ export function VoiceRecorderModal({
           </div>
 
           {/* Timer */}
-          <div className="text-2xl font-mono font-semibold text-gray-900">
+          <div className="font-mono text-2xl font-semibold text-gray-900">
             {formatTime(recordingTime)}
           </div>
 
@@ -232,7 +230,7 @@ export function VoiceRecorderModal({
                 {isPlaying ? (
                   <Pause className="h-5 w-5" />
                 ) : (
-                  <Play className="h-5 w-5 ml-0.5" />
+                  <Play className="ml-0.5 h-5 w-5" />
                 )}
               </button>
               <div className="flex-1">
