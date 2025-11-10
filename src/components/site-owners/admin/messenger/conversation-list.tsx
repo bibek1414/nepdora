@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Search, MessageCircle, MoreHorizontal, RefreshCw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useFacebookIntegrations } from "@/hooks/owner-site/admin/use-facebook-integrations";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useConversationsApi } from "@/services/api/owner-sites/admin/conversations";
+import { useConversationList } from "@/hooks/owner-site/admin/use-conversation-list";
 import {
   Select,
   SelectContent,
@@ -20,7 +19,6 @@ import {
   Participant,
 } from "@/types/owner-site/admin/conversations";
 
-// ------------------- Conversation List Component -------------------
 interface ConversationListProps {
   selectedId: string | null;
   onSelectConversation: (
@@ -46,22 +44,8 @@ export function ConversationList({
   const [selectedIntegrationId, setSelectedIntegrationId] = useState<
     string | null
   >(null);
-  const queryClient = useQueryClient();
-  const { data: integrations = [] } = useFacebookIntegrations();
 
-  // Set the first integration as selected if none is selected
-  useEffect(() => {
-    if (integrations.length > 0 && !selectedIntegrationId) {
-      const firstIntegration = integrations[0];
-      setSelectedIntegrationId(String(firstIntegration.id));
-      onIntegrationChange?.({
-        id: firstIntegration.id!,
-        pageId: firstIntegration.page_id,
-        pageAccessToken: firstIntegration.page_access_token,
-        pageName: firstIntegration.page_name,
-      });
-    }
-  }, [integrations, selectedIntegrationId, onIntegrationChange]);
+  const { data: integrations = [] } = useFacebookIntegrations();
 
   const activeIntegration = useMemo(() => {
     if (selectedIntegrationId && integrations.length > 0) {
@@ -75,19 +59,27 @@ export function ConversationList({
 
   const pageId = activeIntegration?.page_id || null;
 
+  // Use the new hook with real-time updates
   const {
     data: conversationsData = [],
     refetch,
     isLoading,
-  } = useQuery({
-    queryKey: ["conversations", pageId],
-    queryFn: async () => {
-      if (!pageId) return [];
-      return useConversationsApi.getConversations(pageId);
-    },
-    enabled: !!pageId,
-    staleTime: Infinity, // Don't refetch automatically
-  });
+    isFetching,
+  } = useConversationList(pageId);
+
+  // Auto-select first integration
+  useMemo(() => {
+    if (integrations.length > 0 && !selectedIntegrationId) {
+      const firstIntegration = integrations[0];
+      setSelectedIntegrationId(String(firstIntegration.id));
+      onIntegrationChange?.({
+        id: firstIntegration.id!,
+        pageId: firstIntegration.page_id,
+        pageAccessToken: firstIntegration.page_access_token,
+        pageName: firstIntegration.page_name,
+      });
+    }
+  }, [integrations, selectedIntegrationId, onIntegrationChange]);
 
   // Sort conversations by updated_time (most recent first)
   const conversations = useMemo(() => {
@@ -95,7 +87,7 @@ export function ConversationList({
     return [...conversationsData].sort((a, b) => {
       const timeA = new Date(a.updated_time || 0).getTime();
       const timeB = new Date(b.updated_time || 0).getTime();
-      return timeB - timeA; // Descending order (newest first)
+      return timeB - timeA;
     });
   }, [conversationsData]);
 
@@ -198,17 +190,13 @@ export function ConversationList({
             </SelectContent>
           </Select>
           <button
-            onClick={() => {
-              if (pageId) {
-                refetch();
-                queryClient.invalidateQueries({
-                  queryKey: ["conversations", pageId],
-                });
-              }
-            }}
-            className="rounded-full p-2 text-gray-600 hover:bg-gray-100"
+            onClick={() => refetch()}
+            className={cn(
+              "rounded-full p-2 text-gray-600 hover:bg-gray-100",
+              isFetching && "animate-spin"
+            )}
             title="Refresh"
-            disabled={!pageId}
+            disabled={!pageId || isFetching}
           >
             <RefreshCw className="h-5 w-5" />
           </button>

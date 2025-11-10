@@ -1,3 +1,4 @@
+// hooks/owner-site/admin/use-conversations.ts
 import { useEffect, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useConversationsApi } from "@/services/api/owner-sites/admin/conversations";
@@ -6,84 +7,136 @@ import { toast } from "sonner";
 
 const MESSAGES_QUERY_KEY = "conversation-messages";
 
-// 🧩 Fetch conversation messages once from backend
 export const useConversationMessages = (
   conversationId: string | null,
   pageId: string | null
 ) => {
   const queryClient = useQueryClient();
   const isMounted = useRef(true);
+  const eventSourceRef = useRef<EventSource | null>(null);
+  const conversationIdRef = useRef(conversationId);
+
+  // Keep conversationId ref updated
+  useEffect(() => {
+    conversationIdRef.current = conversationId;
+  }, [conversationId]);
 
   // Fetch messages once from backend
   const query = useQuery({
     queryKey: [MESSAGES_QUERY_KEY, conversationId],
     enabled: !!conversationId,
-    staleTime: Infinity, // Don't refetch automatically
+    staleTime: Infinity,
     queryFn: async () => {
       if (!conversationId) return null;
       return useConversationsApi.getConversationMessages(conversationId);
     },
   });
 
-  // 🔄 Subscribe for live updates using SSE (based on pageId, not conversationId)
+  // 🔄 Subscribe for live updates using SSE
   useEffect(() => {
-    if (!pageId) return;
+    if (!pageId) {
+      console.log("⏸️ SSE: No pageId, skipping connection");
+      return;
+    }
 
-    let eventSource: EventSource | null = null;
+    // Prevent duplicate connections during Fast Refresh
+    if (eventSourceRef.current) {
+      console.log("⏸️ SSE: Already connected, skipping");
+      return;
+    }
+
     let reconnectAttempts = 0;
     const maxReconnectAttempts = 5;
     let reconnectTimeout: NodeJS.Timeout;
 
     const connect = () => {
-      if (eventSource) {
-        eventSource.close();
+      // Close existing connection
+      if (eventSourceRef.current) {
+        console.log("🔌 Closing existing SSE connection");
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
       }
 
-      console.log(`🔌 Connecting to SSE for pageId: ${pageId}`);
-      eventSource = new EventSource(
-        `/api/facebook/messages/stream?pageId=${pageId}`
-      );
+      const sseUrl = `/api/facebook/messages/stream?pageId=${pageId}`;
+      console.log(`🔌 Connecting to SSE: ${sseUrl}`);
+
+      const eventSource = new EventSource(sseUrl);
+      eventSourceRef.current = eventSource;
 
       eventSource.onopen = () => {
-        console.log("✅ SSE connection established for pageId:", pageId);
+        console.log(`✅ SSE connection established for pageId: ${pageId}`);
         reconnectAttempts = 0;
       };
 
       eventSource.onmessage = event => {
-        if (!isMounted.current) return;
+        if (!isMounted.current) {
+          console.log("⏸️ Component unmounted, ignoring SSE message");
+          return;
+        }
 
         try {
           const data = JSON.parse(event.data);
-          console.log("📩 [SSE Update] Received update:", data.type);
+          console.log(`📩 [SSE] Received event:`, data.type);
+
+          if (data.type === "connected") {
+            console.log(`🔗 SSE connected for pageId: ${pageId}`);
+            return;
+          }
 
           if (data.type === "message_update") {
             const message = data.message;
-            console.log("📨 Message update:", {
+            const currentConv = conversationIdRef.current;
+
+            console.log(`📨 [SSE] Message update:`, {
               conversationId: message?.conversationId,
               messageId: message?.id,
-              from: message?.from,
-              message: message?.message,
+              text: message?.message,
+              currentConversation: currentConv,
+              match: currentConv === message?.conversationId,
             });
 
-            // Optimistically update messages if this conversation is currently selected
-            if (
-              message?.conversationId &&
-              conversationId === message.conversationId
-            ) {
+            // ✅ ALWAYS update the cache, regardless of selected conversation
+            // This ensures messages are there when user selects the conversation
+            if (message?.conversationId) {
               queryClient.setQueryData(
-                [MESSAGES_QUERY_KEY, conversationId],
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                [MESSAGES_QUERY_KEY, message.conversationId],
+                //eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (old: any) => {
-                  if (!old) return old;
+                  // If no data exists yet, create initial structure
+                  if (!old) {
+                    console.log(
+                      `📦 Creating new conversation data for ${message.conversationId}`
+                    );
+                    return {
+                      conversation: {
+                        conversation_id: message.conversationId,
+                        messages: [
+                          {
+                            id: message.id,
+                            from: message.from,
+                            message: message.message,
+                            created_time: message.created_time,
+                            attachments: message.attachments || [],
+                          },
+                        ],
+                      },
+                    };
+                  }
 
                   // Check if message already exists
                   const exists = old.conversation?.messages?.some(
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    //eslint-disable-next-line @typescript-eslint/no-explicit-any
                     (m: any) => m.id === message.id
                   );
-                  if (exists) return old;
 
-                  // Add new message
+                  if (exists) {
+                    console.log(`ℹ️ Message ${message.id} already exists`);
+                    return old;
+                  }
+
+                  console.log(
+                    `➕ Adding new message ${message.id} to conversation ${message.conversationId}`
+                  );
                   const updatedMessages = [
                     ...(old.conversation?.messages || []),
                     {
@@ -104,24 +157,38 @@ export const useConversationMessages = (
                   };
                 }
               );
+
+              // If this is the currently selected conversation, show a visual indicator
+              if (currentConv === message.conversationId) {
+                console.log(
+                  `✅ Message added to currently viewed conversation`
+                );
+              } else {
+                console.log(
+                  `📬 Message cached for conversation ${message.conversationId}`
+                );
+              }
             }
           } else if (data.type === "conversation_update") {
             const update = data.update;
-            console.log("💬 Conversation update:", {
+            console.log(`💬 [SSE] Conversation update:`, {
               conversationId: update?.conversationId,
               snippet: update?.snippet,
-              updated_time: update?.updated_time,
             });
 
-            // Optimistically update conversation list
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // Update conversation list
+            //eslint-disable-next-line @typescript-eslint/no-explicit-any
             queryClient.setQueryData(["conversations", pageId], (old: any) => {
-              if (!old || !Array.isArray(old)) return old;
-
-              // Update the conversation and move it to top (will be sorted by updated_time)
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              if (!old || !Array.isArray(old)) {
+                console.log("⚠️ No conversation list to update");
+                return old;
+              }
+              //eslint-disable-next-line @typescript-eslint/no-explicit-any
               const updated = old.map((conv: any) => {
                 if (conv.conversation_id === update.conversationId) {
+                  console.log(
+                    `✅ Updating conversation ${update.conversationId}`
+                  );
                   return {
                     ...conv,
                     snippet: update.snippet || conv.snippet,
@@ -131,32 +198,35 @@ export const useConversationMessages = (
                 return conv;
               });
 
-              // Sort by updated_time (newest first) - conversation-list will handle this via useMemo
               return updated;
             });
           }
         } catch (error) {
-          console.error("Error processing SSE message:", error);
+          console.error("❌ Error processing SSE message:", error);
         }
       };
 
       eventSource.onerror = error => {
-        console.error("SSE connection error:", error);
+        console.error("❌ SSE connection error:", error);
+
+        if (eventSource.readyState === EventSource.CLOSED) {
+          console.log("🔌 SSE connection closed");
+        }
 
         if (reconnectAttempts < maxReconnectAttempts) {
           const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
-          console.log(`Reconnecting in ${delay}ms...`);
+          console.log(
+            `🔄 Reconnecting in ${delay}ms... (attempt ${reconnectAttempts + 1}/${maxReconnectAttempts})`
+          );
 
           reconnectTimeout = setTimeout(() => {
             reconnectAttempts++;
             connect();
           }, delay);
         } else {
-          console.error("Max reconnection attempts reached");
-          if (eventSource) {
-            eventSource.close();
-            eventSource = null;
-          }
+          console.error("❌ Max reconnection attempts reached");
+          eventSource.close();
+          eventSourceRef.current = null;
         }
       };
     };
@@ -164,20 +234,24 @@ export const useConversationMessages = (
     connect();
 
     return () => {
+      console.log("🧹 Cleaning up SSE connection");
       isMounted.current = false;
-      if (eventSource) {
-        eventSource.close();
+
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
       }
+
       if (reconnectTimeout) {
         clearTimeout(reconnectTimeout);
       }
     };
-  }, [pageId, conversationId, queryClient]);
+  }, [pageId, queryClient]); // Removed conversationId from deps to prevent reconnections
 
   return query;
 };
 
-// 📨 Send message with optimistic update (fixed)
+// 📨 Send message with optimistic update
 export const useSendMessage = () => {
   const queryClient = useQueryClient();
 
@@ -185,7 +259,6 @@ export const useSendMessage = () => {
     mutationFn: async (
       data: SendMessageRequest & { conversationId: string; page_id: string }
     ) => {
-      // page_id now passed from MessagingPage
       return useConversationsApi.sendMessage(data);
     },
 
@@ -199,11 +272,10 @@ export const useSendMessage = () => {
         newMessage.conversationId,
       ]);
 
-      // ✅ Add optimistic message
       if (previous) {
         queryClient.setQueryData(
           [MESSAGES_QUERY_KEY, newMessage.conversationId],
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
           (old: any) => {
             if (!old) return old;
 

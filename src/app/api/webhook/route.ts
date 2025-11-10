@@ -1,3 +1,4 @@
+// app/api/webhook/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { messageStore } from "@/lib/message-store";
 
@@ -24,7 +25,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    // 🎯 LOG THE RECEIVED WEBHOOK DATA
     console.log("=".repeat(80));
     console.log("📩 WEBHOOK DATA RECEIVED");
     console.log("=".repeat(80));
@@ -41,17 +41,16 @@ export async function POST(req: NextRequest) {
         message_type: webhookData.message_type,
       });
 
-      // Extract message data - message can be an object with id, message, etc.
+      // Extract message data
       let messageId: string;
       let messageText: string;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       let attachments: any[] = [];
 
       if (
         typeof webhookData.message === "object" &&
         webhookData.message !== null
       ) {
-        // Message is an object (from backend) - extract from message object
         messageId =
           webhookData.message.id ||
           `msg_${Date.now()}_${webhookData.sender_id}`;
@@ -62,7 +61,6 @@ export async function POST(req: NextRequest) {
           "";
         attachments = webhookData.message.attachments || [];
       } else {
-        // Message is text string or use snippet
         messageId = `msg_${Date.now()}_${webhookData.sender_id}`;
         messageText =
           typeof webhookData.message === "string"
@@ -70,7 +68,6 @@ export async function POST(req: NextRequest) {
             : webhookData.snippet || "";
       }
 
-      // Use snippet for conversation display (snippet is the preview text)
       const conversationSnippet = webhookData.snippet || messageText;
 
       // Create message data structure
@@ -81,7 +78,7 @@ export async function POST(req: NextRequest) {
         from: {
           id: webhookData.sender_id,
           name: webhookData.sender_name,
-          profile_pic: undefined, // Will be filled from participants if available
+          profile_pic: webhookData.message?.from?.profile_pic,
         },
         created_time: webhookData.timestamp || new Date().toISOString(),
         pageId: webhookData.page_id,
@@ -107,10 +104,17 @@ export async function POST(req: NextRequest) {
           JSON.stringify(conversationUpdate, null, 2)
         );
 
-        // Store message and emit conversation update
+        // ✅ Store message (this will emit "message_update" event)
+        console.log("🚀 About to add message to store...");
         messageStore.addMessage(messageData);
-        messageStore.emit("conversationUpdate", conversationUpdate);
+
+        // ✅ Update conversation (this will emit "conversation_update" event)
+        console.log("🚀 About to update conversation...");
+        messageStore.updateConversation(conversationUpdate);
+
         console.log("✅ Successfully stored and emitted updates");
+        const stats = messageStore.getStats();
+        console.log("📊 Store stats:", JSON.stringify(stats, null, 2));
       } catch (error) {
         console.error("❌ Failed to store message:", error);
       }
