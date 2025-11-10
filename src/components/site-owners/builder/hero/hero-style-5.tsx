@@ -245,7 +245,6 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           className="mb-4 text-sm tracking-[0.2em] uppercase"
           style={{
             color: "#D1D5DB", // text-gray-300 equivalent
-            fontFamily: theme.fonts.body,
           }}
           isEditable={isEditable}
           placeholder="Enter subtitle/badge text..."

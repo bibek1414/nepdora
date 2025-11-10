@@ -11,6 +11,8 @@ import {
   Plus,
   Type,
 } from "lucide-react";
+import { useDynamicFonts } from "@/providers/dynamic-font-provider";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface EditableTextProps {
   value: string;
@@ -22,21 +24,7 @@ interface EditableTextProps {
   isEditable?: boolean;
   placeholder?: string;
   multiline?: boolean;
-  theme?: {
-    colors: {
-      text: string;
-      primary: string;
-      primaryForeground: string;
-      secondary: string;
-      secondaryForeground: string;
-      background: string;
-    };
-    fonts: {
-      body: string;
-      heading: string;
-    };
-  };
-  themeId?: string;
+  useHeadingFont?: boolean; // New prop to determine if this should use heading font
   currentTextColor?: string;
   currentFontFamily?: string;
 }
@@ -52,6 +40,7 @@ interface TextSelection {
   range: Range;
   color?: string;
 }
+
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cn = (...classes: any[]) => classes.filter(Boolean).join(" ");
 
@@ -65,18 +54,27 @@ export const EditableText: React.FC<EditableTextProps> = ({
   isEditable = false,
   placeholder = "Click to edit...",
   multiline = false,
-  theme,
+  useHeadingFont = false, // Default to body font
   currentTextColor,
   currentFontFamily,
 }) => {
+  // Get dynamic fonts from context
+  const { bodyFont, headingFont } = useDynamicFonts();
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme;
+
+  // Determine which font to use based on component type
+  const isHeading = ["h1", "h2", "h3", "h4", "h5", "h6"].includes(Tag);
+  const defaultFont = useHeadingFont || isHeading ? headingFont : bodyFont;
+
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showFontSizePicker, setShowFontSizePicker] = useState(false);
   const [showSelectionToolbar, setShowSelectionToolbar] = useState(false);
   const [selectedColor, setSelectedColor] = useState(
-    currentTextColor || style?.color || theme?.colors.text || "#0F172A"
+    currentTextColor || style?.color || theme?.colors?.text || "#0F172A"
   );
   const [selectedFont, setSelectedFont] = useState(
-    currentFontFamily || style?.fontFamily || theme?.fonts.body || "Inter"
+    currentFontFamily || style?.fontFamily || defaultFont
   );
   const [selectedFontSize, setSelectedFontSize] = useState("16px");
   const [customColor, setCustomColor] = useState("");
@@ -86,7 +84,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
     null
   );
   const [selectionColor, setSelectionColor] = useState(
-    theme?.colors.primary || "#3B82F6"
+    theme?.colors?.primary || "#3B82F6"
   );
   const [selectionFontSize, setSelectionFontSize] = useState("16px");
   const [showColorInput, setShowColorInput] = useState(false);
@@ -96,6 +94,20 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const pickerRef = useRef<HTMLDivElement>(null);
   const fontSizePickerRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
+
+  // Update font when dynamic fonts change
+  useEffect(() => {
+    if (!currentFontFamily && !style?.fontFamily) {
+      setSelectedFont(defaultFont);
+    }
+  }, [defaultFont, currentFontFamily, style?.fontFamily]);
+
+  // Update color when theme changes
+  useEffect(() => {
+    if (!currentTextColor && !style?.color && theme?.colors?.text) {
+      setSelectedColor(theme.colors.text);
+    }
+  }, [theme?.colors?.text, currentTextColor, style?.color]);
 
   // Set initial HTML content with preserved inline styles
   useEffect(() => {
@@ -383,16 +395,17 @@ export const EditableText: React.FC<EditableTextProps> = ({
     style: {
       position: "relative" as const,
       color: selectedColor,
-      fontFamily: selectedFont,
+      // Use CSS variables with fallback to selected font
+      fontFamily: `var(${isHeading || useHeadingFont ? "--font-heading" : "--font-body"}, ${selectedFont})`,
       fontSize: selectedFontSize,
       ...style,
     },
   };
 
   const quickColors = [
-    theme?.colors.text || "#0F172A",
-    theme?.colors.primary || "#3B82F6",
-    theme?.colors.secondary || "#F59E0B",
+    theme?.colors?.text || "#0F172A",
+    theme?.colors?.primary || "#3B82F6",
+    theme?.colors?.secondary || "#F59E0B",
     "#DC2626",
     "#FFFFFF",
     "#9333EA",
