@@ -1,4 +1,3 @@
-// hooks/owner-site/admin/use-conversations.ts
 import { useEffect, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useConversationsApi } from "@/services/api/owner-sites/admin/conversations";
