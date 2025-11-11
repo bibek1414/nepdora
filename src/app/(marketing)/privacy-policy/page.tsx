@@ -269,11 +269,11 @@ export default function PrivacyPolicyPage() {
             <div className="border-border bg-muted/30 rounded-lg border p-6">
               <p className="text-muted-foreground mb-2">
                 <strong className="text-foreground">Email:</strong>{" "}
-                support@rugkala.com
+                support@nepdora.com
               </p>
               <p className="text-muted-foreground mb-2">
                 <strong className="text-foreground">Website:</strong>{" "}
-                https://rugkala.com
+                https://nepdora.com
               </p>
               <p className="text-muted-foreground">
                 <strong className="text-foreground">Address:</strong> Kathmandu,

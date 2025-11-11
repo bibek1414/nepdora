@@ -2,6 +2,18 @@ import React from "react";
 import Link from "next/link";
 import { MessageSquare, Mail, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { generateAdminPageMetadata } from "@/lib/metadata-utils";
+import type { Metadata } from "next";
+
+// ✅ Add dynamic metadata
+export async function generateMetadata(): Promise<Metadata> {
+  return generateAdminPageMetadata({
+    pageName: "Inquiries Management",
+    pageDescription:
+      "View and manage all customer inquiries in {storeName}. Access contact form messages, popup inquiries, and newsletter subscriptions in one place.",
+    pageRoute: "/admin/inquiries",
+  });
+}
 
 interface InquiryItem {
   name: string;
@@ -43,6 +55,7 @@ export default function InquiriesManagement() {
             Manage all your customer inquiries and communications
           </p>
         </div>
+
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {inquiryItems.map(item => {
             const Icon = item.icon;

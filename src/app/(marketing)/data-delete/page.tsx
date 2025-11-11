@@ -77,7 +77,7 @@ export default function DataDeletionPage() {
               </p>
               <div className="bg-muted/50 rounded-lg p-4">
                 <p className="text-foreground mb-2">
-                  <strong>Email:</strong> privacy@rugkala.com
+                  <strong>Email:</strong> privacy@nepdora.com
                 </p>
                 <p className="text-foreground mb-2">
                   <strong>Subject:</strong> Data Deletion Request
@@ -97,7 +97,7 @@ export default function DataDeletionPage() {
                 Fill out our data deletion request form:
               </p>
               <a
-                href="https://rugkala.com/contact"
+                href="https://nepdora.com/contact"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-lg px-6 py-3 font-semibold transition-colors"
               >
                 Submit Deletion Request
@@ -283,15 +283,15 @@ export default function DataDeletionPage() {
             <div className="border-border bg-muted/30 rounded-lg border p-6">
               <p className="text-muted-foreground mb-2">
                 <strong className="text-foreground">Email:</strong>{" "}
-                privacy@rugkala.com
+                privacy@nepdora.com
               </p>
               <p className="text-muted-foreground mb-2">
                 <strong className="text-foreground">Support Email:</strong>{" "}
-                support@rugkala.com
+                support@nepdora.com
               </p>
               <p className="text-muted-foreground mb-2">
                 <strong className="text-foreground">Website:</strong>{" "}
-                https://rugkala.com
+                https://nepdora.com
               </p>
               <p className="text-muted-foreground">
                 <strong className="text-foreground">Response Time:</strong>{" "}
@@ -339,7 +339,7 @@ export default function DataDeletionPage() {
           </p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <a
-              href="mailto:privacy@rugkala.com?subject=Data%20Deletion%20Request"
+              href="mailto:privacy@nepdora.com?subject=Data%20Deletion%20Request"
               className="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-lg px-8 py-3 font-semibold transition-colors"
             >
               Email Us

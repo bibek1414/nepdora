@@ -404,7 +404,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       // Production
-      const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "rugkala.com";
+      const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
       const protocol = process.env.NEXT_PUBLIC_PROTOCOL || "https";
       const logoutUrl = `${protocol}://${baseDomain}/logout`;
       window.location.href = logoutUrl;

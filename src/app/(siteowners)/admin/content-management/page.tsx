@@ -11,6 +11,18 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { generateAdminPageMetadata } from "@/lib/metadata-utils";
+import type { Metadata } from "next";
+
+// ✅ Add this metadata function
+export async function generateMetadata(): Promise<Metadata> {
+  return generateAdminPageMetadata({
+    pageName: "Content Management",
+    pageDescription:
+      "Easily manage all your website content in {storeName}. Control blogs, videos, portfolio, FAQs, testimonials, and more from one dashboard.",
+    pageRoute: "/admin/content-management",
+  });
+}
 
 interface ContentItem {
   name: string;
@@ -58,7 +70,7 @@ const contentItems: ContentItem[] = [
   },
   {
     name: "Team",
-    href: "/admin/team",
+    href: "/admin/team-member",
     icon: Users,
     description: "Manage your team members",
   },

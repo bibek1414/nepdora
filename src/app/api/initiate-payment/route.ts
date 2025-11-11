@@ -162,7 +162,7 @@ function buildRedirectUrls(req: Request, subdomain: string | null) {
     if (isLocalhost) {
       baseUrl = `${protocol}://${subdomain}.localhost:${process.env.NEXT_PUBLIC_FRONTEND_PORT || 3000}`;
     } else {
-      baseUrl = `${protocol}://${subdomain}.${process.env.NEXT_PUBLIC_BASE_DOMAIN || "rugkala.com"}`;
+      baseUrl = `${protocol}://${subdomain}.${process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com"}`;
     }
 
     const successUrl = `${baseUrl}/preview/${subdomain}/success?method=`;
@@ -190,7 +190,7 @@ function extractSubdomainFromRequest(req: Request): string | null {
     return null;
   }
 
-  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "rugkala.com";
+  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
   if (host.endsWith(`.${baseDomain}`)) {
     const subdomain = host.replace(`.${baseDomain}`, "").split(":")[0];
     if (subdomain && subdomain !== "www") {

@@ -29,7 +29,7 @@ export function buildTenantFrontendUrl(
 ): string {
   const path = opts?.path ?? "/";
   const isDev = opts?.isDev ?? process.env.NODE_ENV !== "production";
-  const baseDomain = opts?.baseDomain ?? "rugkala.com";
+  const baseDomain = opts?.baseDomain ?? "nepdora.com";
   const port = opts?.port ?? 3000;
   if (isDev) {
     return `http://${subdomain}.localhost:${port}${path}`;

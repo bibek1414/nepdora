@@ -115,7 +115,7 @@ const ProcessSection = () => {
               <div className="relative z-10 mb-6">
                 <div className="bg-card flex items-center space-x-3 rounded-lg border p-3">
                   <span className="text-card-foreground font-medium">
-                    rugkala.com
+                    nepdora.com
                   </span>
                   <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500">
                     <svg

@@ -4,7 +4,7 @@ export const siteConfig = {
   apiBaseUrl:
     process.env.NEXT_PUBLIC_API_BASE_URL ||
     "https://nepdora.baliyoventures.com",
-  baseDomain: process.env.NEXT_PUBLIC_BASE_DOMAIN || "rugkala.com",
+  baseDomain: process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com",
   protocol: process.env.NEXT_PUBLIC_PROTOCOL || "https",
   isDev: process.env.NODE_ENV !== "production",
   frontendDevPort: Number(process.env.NEXT_PUBLIC_FRONTEND_PORT || 3000),
@@ -27,8 +27,8 @@ export const buildPreviewApi = (subdomain: string) =>
  * Extract subdomain from URL or query params
  */
 export const extractSubdomain = (url: URL): string | null => {
-  const hostname = url.hostname; // e.g., bibek.rugkala.com
-  const baseDomain = siteConfig.baseDomain; // rugkala.com
+  const hostname = url.hostname; // e.g., bibek.nepdora.com
+  const baseDomain = siteConfig.baseDomain; // nepdora.com
 
   // 1. Prod subdomain
   if (hostname.endsWith(`.${baseDomain}`)) {
