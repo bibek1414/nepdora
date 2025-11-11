@@ -845,6 +845,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "grid-3"
       | "carousel-1"
       | "stagger-1"
+      | "card-7"
   ) => {
     const testimonialsData = {
       ...defaultTestimonialsData,

@@ -19,6 +19,7 @@ interface TestimonialsStylesDialogProps {
       | "grid-3"
       | "carousel-1"
       | "stagger-1"
+      | "card-7"
   ) => void;
 }
 
@@ -32,6 +33,7 @@ export const TestimonialsStylesDialog: React.FC<
     | "grid-3"
     | "carousel-1"
     | "stagger-1"
+    | "card-7"
     | null
   >(null);
 
@@ -60,10 +62,21 @@ export const TestimonialsStylesDialog: React.FC<
       id: "stagger-1" as const,
       name: "Stagger Style 1",
     },
+    {
+      id: "card-7" as const,
+      name: "Card Style 7",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "grid-1" | "grid-2" | "list-1" | "grid-3" | "carousel-1" | "stagger-1";
+    id:
+      | "grid-1"
+      | "grid-2"
+      | "list-1"
+      | "grid-3"
+      | "carousel-1"
+      | "stagger-1"
+      | "card-7";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
