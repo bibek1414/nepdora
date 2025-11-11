@@ -76,6 +76,8 @@ export interface Order {
   is_manual?: boolean;
   latitude?: number | null;
   longitude?: number | null;
+  location_accuracy?: number | null;
+  location_timestamp?: number | null;
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   customer_details?: any;
   // New fields

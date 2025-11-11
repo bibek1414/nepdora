@@ -18,11 +18,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { ChevronLeft, ChevronRight, Package2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Package2, X, MapPin } from "lucide-react";
 import { useUpdateOrderStatus } from "@/hooks/owner-site/admin/use-orders";
 import { toast } from "sonner";
 import { WhatsAppOrderButton } from "@/components/ui/whatsapp-order-button";
 import { SMSOrderButton } from "@/components/ui/sms-order-button";
+import { LocationLinkButton } from "@/lib/location-widget";
+import { getApiBaseUrl } from "@/config/site";
 
 interface OrderDialogProps {
   orders: Order[];
@@ -151,6 +153,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
   const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const updateOrderStatus = useUpdateOrderStatus();
+  const apiBaseUrl = getApiBaseUrl();
 
   useEffect(() => {
     if (currentOrderId && orders.length > 0) {
@@ -391,6 +394,73 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                 <div className="md:col-span-2">
                   <p className="text-gray-500">Transaction ID</p>
                   <p className="font-medium">{currentOrder.transaction_id}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Location Section */}
+            <div className="mt-4 mb-4 border-t pt-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-gray-700">
+                  <MapPin className="mr-1 inline h-4 w-4" />
+                  Delivery Location
+                </h3>
+                {!currentOrder.latitude && !currentOrder.longitude && (
+                  <LocationLinkButton
+                    orderId={currentOrder.id.toString()}
+                    confirmPageUrl={`${window.location.origin}/location/confirm`}
+                    callbackUrl={`${apiBaseUrl}/api/order/${currentOrder.id}/`}
+                    redirectUrl={`${window.location.origin}/admin/orders`}
+                    className="flex items-center gap-1 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
+                    label="Get Location"
+                  />
+                )}
+              </div>
+              {currentOrder.latitude && currentOrder.longitude ? (
+                <div className="mt-3 rounded-md bg-green-50 p-3 text-xs">
+                  <div className="mb-2 flex items-center gap-1 text-green-800">
+                    <MapPin className="h-3 w-3" />
+                    <span className="font-medium">Location Confirmed</span>
+                  </div>
+                  <div className="space-y-1 text-gray-700">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Latitude:</span>
+                      <span className="font-mono">
+                        {currentOrder.latitude.toFixed(6)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Longitude:</span>
+                      <span className="font-mono">
+                        {currentOrder.longitude.toFixed(6)}
+                      </span>
+                    </div>
+                    {currentOrder.location_accuracy && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Accuracy:</span>
+                        <span>
+                          ±{Math.round(currentOrder.location_accuracy)}m
+                        </span>
+                      </div>
+                    )}
+                    <div className="mt-2 border-t border-green-200 pt-2">
+                      <a
+                        href={`https://www.google.com/maps?q=${currentOrder.latitude},${currentOrder.longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 hover:underline"
+                      >
+                        View on Google Maps →
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-3 rounded-md bg-yellow-50 p-3 text-xs text-yellow-800">
+                  <p>
+                    📍 Location not yet confirmed. Send the location link to the
+                    customer to get their exact delivery location.
+                  </p>
                 </div>
               )}
             </div>
