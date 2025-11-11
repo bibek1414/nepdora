@@ -4,7 +4,6 @@ export interface GalleryImage {
   image_alt_description: string;
   title?: string;
   description?: string;
-  category?: string;
   is_active: boolean;
 }
 
@@ -19,7 +18,6 @@ export interface GalleryData {
   showDescriptions: boolean;
   enableLightbox: boolean;
   enableFiltering: boolean;
-  categories: string[];
   spacing: "tight" | "normal" | "wide";
   borderRadius: "none" | "small" | "medium" | "large";
   hoverEffect: "none" | "zoom" | "overlay" | "lift";
@@ -57,7 +55,6 @@ export const defaultGalleryData: GalleryData = {
       image_alt_description: "Gallery image 1",
       title: "Mountain View",
       description: "Beautiful mountain landscape",
-      category: "Nature",
       is_active: true,
     },
     {
@@ -67,7 +64,6 @@ export const defaultGalleryData: GalleryData = {
       image_alt_description: "Gallery image 2",
       title: "Forest Path",
       description: "Serene forest trail",
-      category: "Nature",
       is_active: true,
     },
     {
@@ -77,7 +73,6 @@ export const defaultGalleryData: GalleryData = {
       image_alt_description: "Gallery image 3",
       title: "Ocean Sunset",
       description: "Stunning ocean view",
-      category: "Nature",
       is_active: true,
     },
     {
@@ -87,7 +82,6 @@ export const defaultGalleryData: GalleryData = {
       image_alt_description: "Gallery image 4",
       title: "Mountain Peak",
       description: "Snow-capped mountains",
-      category: "Nature",
       is_active: true,
     },
   ],
@@ -98,7 +92,6 @@ export const defaultGalleryData: GalleryData = {
   showDescriptions: false,
   enableLightbox: true,
   enableFiltering: true,
-  categories: ["Nature", "Architecture", "People", "Abstract"],
   spacing: "normal",
   borderRadius: "medium",
   hoverEffect: "zoom",

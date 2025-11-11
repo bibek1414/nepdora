@@ -70,9 +70,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showFontSizePicker, setShowFontSizePicker] = useState(false);
   const [showSelectionToolbar, setShowSelectionToolbar] = useState(false);
-  const [selectedColor, setSelectedColor] = useState(
-    currentTextColor || style?.color || theme?.colors?.text || "#0F172A"
-  );
+
   const [selectedFont, setSelectedFont] = useState(
     currentFontFamily || style?.fontFamily || defaultFont
   );
@@ -105,7 +103,6 @@ export const EditableText: React.FC<EditableTextProps> = ({
   // Update color when theme changes
   useEffect(() => {
     if (!currentTextColor && !style?.color && theme?.colors?.text) {
-      setSelectedColor(theme.colors.text);
     }
   }, [theme?.colors?.text, currentTextColor, style?.color]);
 
@@ -172,7 +169,6 @@ export const EditableText: React.FC<EditableTextProps> = ({
 
       if (onStyleChange) {
         onStyleChange({
-          color: selectedColor,
           fontFamily: selectedFont,
           fontSize: fontSize,
         });
@@ -261,7 +257,6 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const handleCustomColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const color = e.target.value;
     setCustomColor(color);
-    setSelectedColor(color);
     if (onStyleChange) {
       onStyleChange({
         color: color,
@@ -394,7 +389,6 @@ export const EditableText: React.FC<EditableTextProps> = ({
     ),
     style: {
       position: "relative" as const,
-      color: selectedColor,
       // Use CSS variables with fallback to selected font
       fontFamily: `var(${isHeading || useHeadingFont ? "--font-heading" : "--font-body"}, ${selectedFont})`,
       fontSize: selectedFontSize,
@@ -468,17 +462,14 @@ export const EditableText: React.FC<EditableTextProps> = ({
             <div className="flex gap-2">
               <input
                 type="color"
-                value={customColor || selectedColor}
                 onChange={handleCustomColorChange}
                 className="h-10 w-12 cursor-pointer rounded border border-gray-300"
               />
               <input
                 type="text"
-                value={customColor || selectedColor}
                 onChange={e => {
                   const color = e.target.value;
                   setCustomColor(color);
-                  setSelectedColor(color);
                   if (onStyleChange) {
                     onStyleChange({
                       color: color,
@@ -498,7 +489,6 @@ export const EditableText: React.FC<EditableTextProps> = ({
               <button
                 key={color}
                 onClick={() => {
-                  setSelectedColor(color);
                   if (onStyleChange) {
                     onStyleChange({
                       color: color,

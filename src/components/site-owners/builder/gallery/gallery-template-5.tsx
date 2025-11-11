@@ -108,7 +108,6 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
       image_alt_description: "New gallery image",
       title: "New Image",
       description: "Add description here",
-      category: data.categories[0] || "Uncategorized",
       is_active: true,
     };
     const updatedImages = [...data.images, newImage];

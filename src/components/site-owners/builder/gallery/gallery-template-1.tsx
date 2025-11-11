@@ -26,7 +26,6 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
   const [data, setData] = useState(galleryData);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-  const [activeCategory, setActiveCategory] = useState<string>("All");
 
   const componentId = React.useId();
 
@@ -111,7 +110,6 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
       image_alt_description: "New gallery image",
       title: "New Image",
       description: "Add description here",
-      category: data.categories[0] || "Uncategorized",
       is_active: true,
     };
     const updatedImages = [...data.images, newImage];
@@ -140,12 +138,7 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
     return URL.createObjectURL(image);
   };
 
-  const filteredImages =
-    activeCategory === "All"
-      ? data.images.filter(img => img.is_active)
-      : data.images.filter(
-          img => img.is_active && img.category === activeCategory
-        );
+  const filteredImages = data.images.filter(img => img.is_active);
 
   const gridClass = `grid gap-${data.spacing === "tight" ? "2" : data.spacing === "wide" ? "6" : "4"} grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-${data.columns}`;
 
@@ -169,29 +162,6 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
             />
           )}
         </div>
-
-        {/* Category Filter */}
-        {data.enableFiltering && data.categories.length > 0 && (
-          <div className="mb-8 flex flex-wrap justify-center gap-2">
-            <Button
-              variant={activeCategory === "All" ? "default" : "outline"}
-              onClick={() => setActiveCategory("All")}
-              size="sm"
-            >
-              All
-            </Button>
-            {data.categories.map(category => (
-              <Button
-                key={category}
-                variant={activeCategory === category ? "default" : "outline"}
-                onClick={() => setActiveCategory(category)}
-                size="sm"
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
-        )}
 
         {/* Upload Loading Overlay */}
         {isUploading && (
