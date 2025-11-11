@@ -11,6 +11,7 @@ import { NavbarStyle1 } from "./styles/navbar-style-1";
 import { NavbarStyle2 } from "./styles/navbar-style-2";
 import { NavbarStyle3 } from "./styles/navbar-style-3";
 import { NavbarStyle4 } from "./styles/navbar-style-4";
+import { NavbarStyle5 } from "./styles/navbar-style-5";
 import { Button } from "@/components/ui/button";
 import { Edit, Edit2, Settings, Trash2 } from "lucide-react";
 import {
@@ -37,6 +38,7 @@ const styleMap = {
   "style-2": NavbarStyle2,
   "style-3": NavbarStyle3,
   "style-4": NavbarStyle4,
+  "style-5": NavbarStyle5,
 };
 
 export const NavbarComponent: React.FC<NavbarComponentProps> = ({
@@ -64,6 +66,18 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
     if (!isEditable) return;
 
     deleteNavbar(navbar.id);
+  };
+
+  const handleUpdateBanner = (bannerText: string) => {
+    if (!isEditable) return;
+
+    updateNavbar({
+      id: navbar.id,
+      navbarData: {
+        ...navbar.data,
+        bannerText: bannerText,
+      },
+    });
   };
 
   const StyleComponent =
@@ -136,6 +150,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
         isEditable={isEditable}
         siteUser={siteUser}
         disableClicks={disableClicks}
+        onUpdateBanner={handleUpdateBanner}
       />
     </div>
   );

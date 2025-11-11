@@ -19,6 +19,7 @@ export interface NavbarData {
   buttons: NavbarButton[];
   style: string;
   showCart: boolean;
+  bannerText?: string;
 }
 
 export interface Navbar {
