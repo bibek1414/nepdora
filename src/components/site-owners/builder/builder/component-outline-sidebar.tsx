@@ -111,6 +111,25 @@ export const ComponentOutlineSidebar: React.FC<
                   } rounded-md`}
                 >
                   {localItems.map((c, index) => {
+                    // Count how many components of the same type appear before this one
+                    const sameTypeCount = localItems
+                      .slice(0, index + 1)
+                      .filter(
+                        item => item.component_type === c.component_type
+                      ).length;
+
+                    // Get the base label
+                    const baseLabel =
+                      typeToLabel[c.component_type] || c.component_type;
+
+                    // Add number if there are multiple components of the same type
+                    const displayLabel =
+                      localItems.filter(
+                        item => item.component_type === c.component_type
+                      ).length > 1
+                        ? `${baseLabel} ${sameTypeCount}`
+                        : baseLabel;
+
                     return (
                       <Draggable
                         key={c.component_id}
@@ -132,10 +151,7 @@ export const ComponentOutlineSidebar: React.FC<
                             >
                               <GripVertical className="h-3 w-3 text-gray-400" />
                             </div>
-                            <span className="truncate">
-                              {typeToLabel[c.component_type] ||
-                                c.component_type}
-                            </span>
+                            <span className="truncate">{displayLabel}</span>
                           </div>
                         )}
                       </Draggable>
