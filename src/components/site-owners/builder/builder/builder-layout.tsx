@@ -71,6 +71,7 @@ import { defaultYouTubeData } from "@/types/owner-site/components/youtube";
 import { heroTemplateConfigs } from "@/types/owner-site/components/hero";
 import { PageTemplateDialog } from "@/components/site-owners/builder/templates/page-template-dialog";
 import { PageTemplate } from "@/types/owner-site/components/page-template";
+import { ComponentOutlineSidebar } from "@/components/site-owners/builder/builder/component-outline-sidebar";
 import { GalleryStylesDialog } from "@/components/site-owners/builder/gallery/gallery-styles-dialog";
 import { defaultGalleryData } from "@/types/owner-site/components/gallery";
 import { useQueryClient } from "@tanstack/react-query";
@@ -1328,6 +1329,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               </div>
             </div>
           </div>
+
+          <ComponentOutlineSidebar
+            currentPageSlug={currentPage}
+            components={pageComponents}
+          />
         </div>
       </div>
     </DndProvider>
