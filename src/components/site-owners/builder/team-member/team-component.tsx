@@ -8,6 +8,7 @@ import {
 import { TeamCard1 } from "./team-card-1";
 import { TeamCard2 } from "./team-card-2";
 import { TeamCard3 } from "./team-card-3";
+import { TeamCard4 } from "./team-card-4";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -155,25 +156,31 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       onClick: () => handleMemberClick(member),
     };
 
-    switch (style) {
+    const styleKey = style as string;
+    switch (styleKey) {
       case "grid-2":
         return <TeamCard2 key={member.id} {...cardProps} />;
       case "list-1":
         return <TeamCard3 key={member.id} {...cardProps} />;
       case "grid-1":
         return <TeamCard1 key={member.id} {...cardProps} />;
+      case "card-4":
+        return <TeamCard4 key={member.id} {...cardProps} />;
       default:
         return <TeamCard1 key={member.id} {...cardProps} />;
     }
   };
 
   const getGridClass = () => {
-    switch (style) {
+    const styleKey = style as string;
+    switch (styleKey) {
       case "grid-2":
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
       case "list-1":
         return "grid-cols-1 lg:grid-cols-2 gap-8";
       case "grid-1":
+      case "card-4":
+        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
       default:
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
     }

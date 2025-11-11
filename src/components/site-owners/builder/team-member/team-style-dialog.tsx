@@ -10,7 +10,7 @@ import Image from "next/image";
 interface TeamStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (style: "grid-1" | "grid-2" | "list-1") => void;
+  onStyleSelect: (style: "grid-1" | "grid-2" | "list-1" | "card-4") => void;
 }
 
 export const TeamStylesDialog: React.FC<TeamStylesDialogProps> = ({
@@ -19,7 +19,7 @@ export const TeamStylesDialog: React.FC<TeamStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | "list-1" | null
+    "grid-1" | "grid-2" | "list-1" | "card-4" | null
   >(null);
 
   const templates = [
@@ -35,9 +35,15 @@ export const TeamStylesDialog: React.FC<TeamStylesDialogProps> = ({
       id: "list-1" as const,
       name: "List Style",
     },
+    {
+      id: "card-4" as const,
+      name: "Card Style 4",
+    },
   ];
 
-  const handleSelect = (template: { id: "grid-1" | "grid-2" | "list-1" }) => {
+  const handleSelect = (template: {
+    id: "grid-1" | "grid-2" | "list-1" | "card-4";
+  }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
       onStyleSelect(template.id);

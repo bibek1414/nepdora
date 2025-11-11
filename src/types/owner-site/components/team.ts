@@ -1,7 +1,7 @@
 export interface TeamData {
   component_id?: string;
   component_type: "team";
-  style: "grid-1" | "grid-2" | "list-1";
+  style: "grid-1" | "grid-2" | "list-1" | "card-4";
   title: string;
   subtitle?: string;
   page_size: number;

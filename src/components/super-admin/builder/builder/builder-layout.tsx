@@ -855,11 +855,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleTeamTemplateSelect = (
-    template: "grid-1" | "grid-2" | "list-1"
+    template: "grid-1" | "grid-2" | "list-1" | "card-4"
   ) => {
-    const teamData = {
+    const teamData: ComponentTypeMap["team"] = {
       ...defaultTeamData,
-      style: template,
+      style: template as ComponentTypeMap["team"]["style"],
     };
 
     createTeamComponentMutation.mutate(teamData, {
