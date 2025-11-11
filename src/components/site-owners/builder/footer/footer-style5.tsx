@@ -15,8 +15,6 @@ import {
   Youtube,
   Globe,
   Music2,
-  CheckCircle,
-  AlertCircle,
 } from "lucide-react";
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
@@ -36,11 +34,11 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Twitter,
   Instagram,
   Linkedin,
-  LinkedIn: Linkedin, // Alternative spelling
+  LinkedIn: Linkedin,
   Youtube,
-  YouTube: Youtube, // Alternative spelling
+  YouTube: Youtube,
   Music2,
-  Tiktok: Music2, // Map Tiktok to Music2 icon
+  Tiktok: Music2,
   Globe,
 };
 

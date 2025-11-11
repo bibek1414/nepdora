@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { Button as CButton } from "@/components/ui/button";
 import { Trash2, Calendar, Save } from "lucide-react";
@@ -46,6 +46,7 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
   const [originalContent, setOriginalContent] = useState(
     component.data.content
   );
+  const [isSaving, setIsSaving] = useState(false);
 
   const deleteTextEditorMutation = useDeleteComponentMutation(
     pageSlug,
@@ -56,11 +57,39 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
     "text_editor"
   );
 
+  // Ref to store the timeout ID for debouncing
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   // Track content changes only (not title)
   useEffect(() => {
     const hasModifications = data.content !== originalContent;
     setHasContentChanges(hasModifications);
   }, [data.content, originalContent]);
+
+  // Auto-save effect with 2-second debounce
+  useEffect(() => {
+    // Only auto-save if in edit mode and there are changes
+    if (!isEditable || !hasContentChanges) {
+      return;
+    }
+
+    // Clear existing timeout
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
+    }
+
+    // Set new timeout for 2 seconds
+    autoSaveTimeoutRef.current = setTimeout(() => {
+      handleAutoSave();
+    }, 2000);
+
+    // Cleanup function
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+    };
+  }, [data.content, hasContentChanges, isEditable]);
 
   // Sanitize content for preview mode
   const sanitizedContent = useMemo(() => {
@@ -69,6 +98,42 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
     }
     return sanitizeContent(data.content);
   }, [data.content, isEditable]);
+
+  // Auto-save function
+  const handleAutoSave = () => {
+    const componentId = component.component_id || component.id.toString();
+
+    setIsSaving(true);
+
+    const updatedData = {
+      ...data,
+      lastUpdated: new Date().toISOString().split("T")[0],
+    };
+
+    updateTextEditorMutation.mutate(
+      {
+        componentId,
+        data: updatedData,
+      },
+      {
+        onSuccess: () => {
+          setOriginalContent(data.content);
+          setHasContentChanges(false);
+          setIsSaving(false);
+          toast.success("Changes saved automatically", {
+            duration: 2000,
+          });
+        },
+        onError: error => {
+          setIsSaving(false);
+          toast.error("Auto-save failed", {
+            description:
+              error instanceof Error ? error.message : "Please try again",
+          });
+        },
+      }
+    );
+  };
 
   // Handle title change with auto-save
   const handleTitleChange = (value: string) => {
@@ -107,41 +172,23 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
     setData(prev => ({ ...prev, content: value }));
   };
 
-  // Save content changes only
+  // Manual save content changes
   const handleSaveChanges = () => {
-    const componentId = component.component_id || component.id.toString();
+    // Clear any pending auto-save
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
+    }
 
-    const loadingToast = toast.loading("Saving changes...");
-
-    const updatedData = {
-      ...data,
-      lastUpdated: new Date().toISOString().split("T")[0],
-    };
-
-    updateTextEditorMutation.mutate(
-      {
-        componentId,
-        data: updatedData,
-      },
-      {
-        onSuccess: () => {
-          toast.dismiss(loadingToast);
-          setOriginalContent(data.content);
-          setHasContentChanges(false);
-        },
-        onError: error => {
-          toast.dismiss(loadingToast);
-          toast.error("Failed to update policy", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    handleAutoSave();
   };
 
   // Discard content changes only
   const handleDiscardChanges = () => {
+    // Clear any pending auto-save
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
+    }
+
     setData(prev => ({ ...prev, content: originalContent }));
     setHasContentChanges(false);
     toast.info("Changes discarded");
@@ -150,7 +197,7 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
 
-    const loadingToast = toast.loading("Deleting policy...");
+    const loadingToast = toast.loading("Deleting text editor...");
 
     deleteTextEditorMutation.mutate(componentId, {
       onSuccess: () => {
@@ -159,7 +206,7 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
       },
       onError: error => {
         toast.dismiss(loadingToast);
-        toast.error("Failed to delete policy", {
+        toast.error("Failed to delete text editor", {
           description:
             error instanceof Error ? error.message : "Please try again",
         });
@@ -185,29 +232,40 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
       {/* Action Buttons */}
       {isEditable && (
         <>
-          {/* Save/Discard Buttons - Show when there are content changes */}
-          {hasContentChanges && (
-            <div className="bg-background/95 fixed top-18 left-1/2 z-50 flex -translate-x-1/2 transform gap-2 rounded-lg border border-gray-200 p-2 backdrop-blur-sm">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={handleDiscardChanges}
-                disabled={updateTextEditorMutation.isPending}
-              >
-                Discard Changes
-              </Button>
-              <Button
-                size="sm"
-                variant="default"
-                onClick={handleSaveChanges}
-                disabled={updateTextEditorMutation.isPending}
-                className="gap-2"
-              >
-                <Save className="h-4 w-4" />
-                {updateTextEditorMutation.isPending
-                  ? "Saving..."
-                  : "Save Changes"}
-              </Button>
+          {/* Auto-save indicator */}
+          {(isSaving || hasContentChanges) && (
+            <div className="bg-background/95 fixed top-18 left-1/2 z-50 flex -translate-x-1/2 transform items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 backdrop-blur-sm">
+              {isSaving ? (
+                <>
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+                  <span className="text-sm text-gray-600">Saving...</span>
+                </>
+              ) : (
+                <>
+                  <div className="h-2 w-2 animate-pulse rounded-full bg-orange-500" />
+                  <span className="text-sm text-gray-600">Unsaved changes</span>
+                  <div className="ml-2 flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleDiscardChanges}
+                      disabled={updateTextEditorMutation.isPending}
+                    >
+                      Discard
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="default"
+                      onClick={handleSaveChanges}
+                      disabled={updateTextEditorMutation.isPending}
+                      className="gap-2"
+                    >
+                      <Save className="h-4 w-4" />
+                      Save Now
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
@@ -230,9 +288,9 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
           >
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete TextEditor</AlertDialogTitle>
+                <AlertDialogTitle>Delete Text Editor</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete this policy? This action
+                  Are you sure you want to delete this text editor? This action
                   cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
@@ -254,19 +312,20 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
       )}
 
       {/* TextEditor Content */}
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-lg bg-white">
           {/* Content */}
           <div className="px-8 py-8">
             {isEditable ? (
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  TextEditor Content (Click to edit)
+                  Text Editor Content (Auto-saves 2 seconds after you stop
+                  typing)
                 </label>
                 <ReusableQuill
                   value={data.content}
                   onChange={handleContentChange}
-                  placeholder="Enter policy content..."
+                  placeholder="Enter content..."
                   height="500px"
                   toolbar="advanced"
                   onImageUpload={handleImageUpload}
