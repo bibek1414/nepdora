@@ -38,28 +38,31 @@ export const FAQCard2: React.FC<FAQCard2Props> = ({ faqs }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2 sm:space-y-3">
       {faqs.map(faq => (
-        <Card key={faq.id} className="border border-gray-200 duration-200">
+        <Card
+          key={faq.id}
+          className="rounded-lg border border-gray-200 duration-200"
+        >
           <CardContent className="p-0">
             <button
               onClick={() => toggleItem(faq.id)}
-              className="flex w-full items-center justify-between p-6 text-left transition-colors duration-200 hover:bg-gray-50"
+              className="flex w-full items-center justify-between p-2 text-left transition-colors duration-200 hover:bg-gray-50 sm:p-3 md:p-4"
             >
-              <h3 className="pr-4 font-semibold text-gray-900">
+              <h3 className="pr-2 text-sm font-semibold text-gray-900 sm:pr-4 sm:text-base">
                 {faq.question}
               </h3>
               <div className="text-primary flex-shrink-0">
                 {openItems.has(faq.id) ? (
                   <Minus
-                    className="h-5 w-5"
+                    className="h-3 w-3 sm:h-4 sm:w-4"
                     style={{
                       color: theme.colors.primary,
                     }}
                   />
                 ) : (
                   <Plus
-                    className="h-5 w-5"
+                    className="h-3 w-3 sm:h-4 sm:w-4"
                     style={{
                       color: theme.colors.primary,
                     }}
@@ -68,9 +71,11 @@ export const FAQCard2: React.FC<FAQCard2Props> = ({ faqs }) => {
               </div>
             </button>
             {openItems.has(faq.id) && (
-              <div className="px-6 pb-6">
-                <div className="border-t border-gray-100 pt-4">
-                  <p className="text-gray-600">{faq.answer}</p>
+              <div className="px-2 pb-2 sm:px-3 sm:pb-3 md:px-4 md:pb-4">
+                <div className="border-t border-gray-100 pt-2 sm:pt-3">
+                  <p className="text-xs leading-relaxed text-gray-600 sm:text-sm">
+                    {faq.answer}
+                  </p>
                 </div>
               </div>
             )}

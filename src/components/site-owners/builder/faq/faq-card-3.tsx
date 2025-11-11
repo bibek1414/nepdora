@@ -1,101 +1,55 @@
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { FAQ } from "@/types/owner-site/admin/faq";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface FAQCard3Props {
   faqs: FAQ[];
 }
 
 export const FAQCard3: React.FC<FAQCard3Props> = ({ faqs }) => {
-  const [expandedCard, setExpandedCard] = useState<number | null>(null);
-  const { data: themeResponse } = useThemeQuery();
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
-
-  const toggleCard = (id: number) => {
-    setExpandedCard(expandedCard === id ? null : id);
-  };
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      {faqs.map(faq => (
-        <Card
-          key={faq.id}
-          className="group hover:border-primary/30 border border-gray-200 transition-all duration-300"
-        >
-          <CardHeader className="pb-3">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 rounded-full transition-colors duration-200">
-                <HelpCircle
-                  className="text-primary h-5 w-5"
-                  style={{
-                    color: theme.colors.primary,
-                    fontFamily: theme.fonts.heading,
-                  }}
-                />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-sm leading-tight font-semibold text-gray-900">
-                  {faq.question}
-                </h3>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-0">
+    <div className="flex flex-col items-center text-center text-slate-800">
+      <div className="mt-6 flex w-full max-w-2xl flex-col items-start gap-5 text-left">
+        {faqs.map((faq, index) => (
+          <div
+            key={faq.id ?? index}
+            className="flex w-full flex-col items-start"
+          >
             <div
-              className={`transition-all duration-300 ${
-                expandedCard === faq.id
-                  ? "max-h-96 opacity-100"
-                  : "max-h-20 opacity-60"
-              } overflow-hidden`}
+              className="flex w-full cursor-pointer items-center justify-between rounded border border-indigo-100 p-5"
+              onClick={() => setOpenIndex(openIndex === index ? null : index)}
             >
-              <p className="text-sm leading-relaxed text-gray-600">
-                {faq.answer}
-              </p>
-            </div>
-            <div className="mt-4 flex justify-end">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => toggleCard(faq.id)}
-                className="h-8 text-xs font-medium"
-                style={{
-                  color: theme.colors.secondary,
-                  fontFamily: theme.fonts.heading,
-                }}
+              <h2 className="text-base">{faq.question}</h2>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 18 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={`${openIndex === index ? "rotate-180" : ""} transition-all duration-500 ease-in-out`}
               >
-                {expandedCard === faq.id ? (
-                  <>
-                    Show Less
-                    <ChevronUp className="ml-1 h-3 w-3" />
-                  </>
-                ) : (
-                  <>
-                    Read More
-                    <ChevronDown className="ml-1 h-3 w-3" />
-                  </>
-                )}
-              </Button>
+                <path
+                  d="m4.5 7.2 3.793 3.793a1 1 0 0 0 1.414 0L13.5 7.2"
+                  stroke="#1D293D"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </div>
-          </CardContent>
-        </Card>
-      ))}
+            <p
+              className={`px-4 text-base text-slate-500 transition-all duration-500 ease-in-out ${
+                openIndex === index
+                  ? "max-h-[300px] translate-y-0 pt-4 opacity-100"
+                  : "max-h-0 -translate-y-2 opacity-0"
+              }`}
+            >
+              {faq.answer}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

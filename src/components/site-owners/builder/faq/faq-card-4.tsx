@@ -140,8 +140,8 @@ export const FAQCard4: React.FC<FAQCard4Props> = ({
 
   return (
     <div className="bg-background-light dark:bg-background-dark min-h-screen">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+      <div className="container mx-auto px-3 sm:px-4">
+        <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 md:gap-8">
           {faqs.map((faq, index) => {
             const iconType = getIconType(faq.question, index);
             const iconConfig = iconMap[iconType] || iconMap.default;
@@ -152,20 +152,38 @@ export const FAQCard4: React.FC<FAQCard4Props> = ({
                 key={faq.id}
                 className="bg-card-light dark:bg-card-dark group gap-0 border-0 py-0 transition-shadow duration-300"
               >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start gap-4">
+                <CardHeader className="pb-2 md:pb-3">
+                  <div className="flex items-center gap-3 md:gap-4">
                     <div
-                      className={`flex h-12 w-12 items-center justify-center rounded-lg ${iconConfig.bg} flex-shrink-0`}
+                      className={`flex h-10 w-10 items-center justify-center rounded-lg md:h-12 md:w-12 ${iconConfig.bg} flex-shrink-0`}
                     >
                       <IconComponent
-                        className={`h-6 w-6 ${iconConfig.color}`}
+                        className={`h-5 w-5 md:h-6 md:w-6 ${iconConfig.color}`}
                       />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-text-light-heading dark:text-text-dark-heading mt-2 text-lg font-semibold">
+                      <h3 className="text-text-light-heading dark:text-text-dark-heading mt-1 text-base font-semibold md:mt-2 md:text-lg">
                         {faq.question}
                       </h3>
                     </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={
+                        expandedCard === faq.id
+                          ? "Collapse answer"
+                          : "Expand answer"
+                      }
+                      aria-expanded={expandedCard === faq.id}
+                      onClick={() => toggleCard(faq.id)}
+                      className="ml-1 h-8 w-8 md:h-9 md:w-9"
+                    >
+                      {expandedCard === faq.id ? (
+                        <ChevronUp className="h-4 w-4 md:h-5 md:w-5" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4 md:h-5 md:w-5" />
+                      )}
+                    </Button>
                   </div>
                 </CardHeader>
 
@@ -173,11 +191,11 @@ export const FAQCard4: React.FC<FAQCard4Props> = ({
                   <div
                     className={`transition-all duration-300 ${
                       expandedCard === faq.id
-                        ? "max-h-96 opacity-100"
-                        : "max-h-20 opacity-60"
+                        ? "max-h-full opacity-100"
+                        : "max-h-16 opacity-70 md:max-h-20"
                     } overflow-hidden`}
                   >
-                    <p className="text-text-light-body dark:text-text-dark-body leading-relaxed">
+                    <p className="text-text-light-body dark:text-text-dark-body text-sm leading-relaxed md:text-base">
                       {faq.answer}
                     </p>
                   </div>
