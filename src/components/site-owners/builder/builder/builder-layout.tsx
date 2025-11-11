@@ -75,13 +75,17 @@ import { GalleryStylesDialog } from "@/components/site-owners/builder/gallery/ga
 import { defaultGalleryData } from "@/types/owner-site/components/gallery";
 import { useQueryClient } from "@tanstack/react-query";
 import { PoliciesStylesDialog } from "@/components/site-owners/builder/policies/policies-styles-dialog";
+import { TextEditorStylesDialog } from "../text-editor/text-editor-dialog";
+import { defaultTextEditorData } from "@/types/owner-site/components/text-editor";
 import {
   defaultReturnExchangeData,
   defaultShippingData,
   defaultPrivacyData,
   defaultTermsData,
 } from "@/types/owner-site/components/policies";
+
 import { toast } from "sonner";
+
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -107,6 +111,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
   const createPageMutation = useCreatePage();
   const [isPoliciesStylesDialogOpen, setIsPoliciesStylesDialogOpen] =
+    useState(false);
+  const [isTextEditorStylesDialogOpen, setIsTextEditorStylesDialogOpen] =
     useState(false);
   // Page components with proper ordering
   const {
@@ -161,6 +167,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createPoliciesComponentMutation = useCreateComponentMutation(
     currentPage,
     "policies"
+  );
+  const createTextEditorComponentMutation = useCreateComponentMutation(
+    currentPage,
+    "text_editor"
   );
   const createProductsComponentMutation = useCreateComponentMutation(
     currentPage,
@@ -261,6 +271,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "youtube",
             "gallery",
             "policies",
+            "text_editor",
           ].includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
@@ -371,6 +382,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setIsProductsStylesDialogOpen(true);
     } else if (componentId === "categories-sections") {
       setIsCategoriesStylesDialogOpen(true);
+    } else if (componentId === "text-editor-sections") {
+      setIsTextEditorStylesDialogOpen(true);
     } else if (componentId === "policies-sections") {
       setIsPoliciesStylesDialogOpen(true);
     } else if (componentId === "gallery-sections") {
@@ -521,6 +534,16 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     };
     createFooterMutation.mutate(payload, {
       onSuccess: () => setIsFooterDialogOpen(false),
+    });
+  };
+  const handleTextEditorTemplateSelect = () => {
+    createTextEditorComponentMutation.mutate(defaultTextEditorData, {
+      onSuccess: () => {
+        setIsTextEditorStylesDialogOpen(false);
+      },
+      onError: error => {
+        console.error("Failed to create text editor component:", error);
+      },
     });
   };
   const handlePoliciesTemplateSelect = (
@@ -947,7 +970,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAddAboutUsFromCanvas = () => {
     setIsAboutUsStylesDialogOpen(true);
   };
-
+  const handleAddTextEditor = () => {
+    setIsTextEditorStylesDialogOpen(true);
+  };
   const handleAddProducts = () => {
     setIsProductsStylesDialogOpen(true);
   };
@@ -1023,6 +1048,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         case "subcategories-sections":
           componentType = "subcategory";
           break;
+        case "text-editor-sections":
+          componentType = "text_editor";
+          break;
         case "blog-sections":
           componentType = "blog";
           break;
@@ -1077,6 +1105,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               "banner",
               "newsletter",
               "youtube",
+              "text_editor",
               "gallery",
             ].includes(item.type)
           ) {
@@ -1140,6 +1169,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         open={isPoliciesStylesDialogOpen}
         onOpenChange={setIsPoliciesStylesDialogOpen}
         onStyleSelect={handlePoliciesTemplateSelect}
+      />
+      <TextEditorStylesDialog
+        open={isTextEditorStylesDialogOpen}
+        onOpenChange={setIsTextEditorStylesDialogOpen}
+        onStyleSelect={handleTextEditorTemplateSelect}
       />
       <HeroStylesDialog
         open={isHeroStylesDialogOpen}

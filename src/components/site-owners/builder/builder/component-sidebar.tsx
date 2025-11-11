@@ -161,6 +161,17 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       ],
     },
     {
+      id: "text-editor-sections",
+      label: "Text Editor",
+      icon: FileText,
+      keywords: [
+        "Text Editor ",
+        "Editor",
+        "Rich Text Editor",
+        "WYSIWYG Editor",
+      ],
+    },
+    {
       id: "newsletter-sections",
       label: "Newsletter",
       icon: Mail,
