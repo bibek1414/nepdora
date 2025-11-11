@@ -25,6 +25,7 @@ import { NewsletterComponentData } from "@/types/owner-site/components/newslette
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
+import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 
 interface PageComponent {
   id: string | number;
@@ -45,6 +46,7 @@ interface PageComponent {
     | "gallery"
     | "newsletter"
     | "youtube"
+    | "text_editor"
     | "subcategory"
     | "policies";
   data:
@@ -61,6 +63,7 @@ interface PageComponent {
     | PortfolioComponentData["data"]
     | NewsletterComponentData["data"]
     | CategoryComponentData["data"]
+    | TextEditorComponentData["data"]
     | BannerComponentData["data"]
     | YouTubeComponentData["data"]
     | SubCategoryComponentData["data"]
@@ -111,6 +114,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
           "banner",
           "gallery",
           "policies",
+          "text_editor",
         ].includes(component.component_type) &&
         !!component.data
     );
@@ -167,6 +171,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | YouTubeComponentData
       | GalleryComponentData
       | PolicyComponentData
+      | TextEditorComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
       componentId,

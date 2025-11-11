@@ -58,6 +58,8 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Button } from "@/components/ui/site-owners/button";
 import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
+import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
+import { TextEditorComponent } from "@/components/site-owners/builder/text-editor/text-editor-component";
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
   navbar?: Navbar | null;
@@ -326,6 +328,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <PolicyComponent
             key={`policies-${component.id}`}
             component={component as PolicyComponentData}
+            siteUser=""
+            {...commonProps}
+          />
+        );
+        break;
+      case "text_editor":
+        componentElement = (
+          <TextEditorComponent
+            key={`text_editor-${component.id}`}
+            component={component as TextEditorComponentData}
             siteUser=""
             {...commonProps}
           />

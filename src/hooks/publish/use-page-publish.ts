@@ -25,6 +25,7 @@ import { NewsletterComponentData } from "@/types/owner-site/components/newslette
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
+import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -45,6 +46,7 @@ interface PageComponent {
     | "newsletter"
     | "youtube"
     | "policies"
+    | "text_editor"
     | "subcategory";
   data:
     | HeroComponentData["data"]
@@ -60,6 +62,7 @@ interface PageComponent {
     | NewsletterComponentData["data"]
     | CategoryComponentData["data"]
     | GalleryComponentData["data"]
+    | TextEditorComponentData["data"]
     | BannerComponentData["data"]
     | YouTubeComponentData["data"]
     | SubCategoryComponentData["data"]
@@ -107,6 +110,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
           "subcategory",
           "portfolio",
           "youtube",
+          "text_editor",
           "banner",
           "gallery",
           "policies",
@@ -162,6 +166,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
       | PortfolioComponentData
       | BannerComponentData
       | YouTubeComponentData
+      | TextEditorComponentData
       | PolicyComponentData
       | GalleryComponentData
   ) => {

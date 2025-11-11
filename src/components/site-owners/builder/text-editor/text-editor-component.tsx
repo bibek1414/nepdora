@@ -3,7 +3,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { Button as CButton } from "@/components/ui/button";
-
 import { Trash2, Calendar, Save } from "lucide-react";
 import {
   AlertDialog,
@@ -17,30 +16,29 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import {
-  PolicyData,
-  PolicyComponentData,
-} from "@/types/owner-site/components/policies";
+  TextEditorData,
+  TextEditorComponentData,
+} from "@/types/owner-site/components/text-editor";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
-} from "@/hooks/super-admin/components/use-unified";
+} from "@/hooks/owner-site/components/use-unified";
 import ReusableQuill from "@/components/ui/tip-tap";
 import { uploadToCloudinary } from "@/utils/cloudinary";
-import { EditableText } from "@/components/ui/editable-text";
 import { sanitizeContent } from "@/utils/html-sanitizer";
 
-interface PolicyComponentProps {
-  component: PolicyComponentData;
+interface TextEditorComponentProps {
+  component: TextEditorComponentData;
   isEditable?: boolean;
   pageSlug: string;
-  templateSlug: string;
+  siteUser: string;
 }
 
-export const PolicyComponent: React.FC<PolicyComponentProps> = ({
+export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
   component,
   isEditable = false,
   pageSlug,
-  templateSlug,
+  siteUser,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [data, setData] = useState(component.data);
@@ -49,15 +47,13 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
     component.data.content
   );
 
-  const deletePolicyMutation = useDeleteComponentMutation(
+  const deleteTextEditorMutation = useDeleteComponentMutation(
     pageSlug,
-    "policies",
-    templateSlug
+    "text_editor"
   );
-  const updatePolicyMutation = useUpdateComponentMutation(
+  const updateTextEditorMutation = useUpdateComponentMutation(
     pageSlug,
-    "policies",
-    templateSlug
+    "text_editor"
   );
 
   // Track content changes only (not title)
@@ -88,7 +84,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
       lastUpdated: new Date().toISOString().split("T")[0],
     };
 
-    updatePolicyMutation.mutate(
+    updateTextEditorMutation.mutate(
       {
         componentId,
         data: updatedData,
@@ -122,7 +118,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
       lastUpdated: new Date().toISOString().split("T")[0],
     };
 
-    updatePolicyMutation.mutate(
+    updateTextEditorMutation.mutate(
       {
         componentId,
         data: updatedData,
@@ -156,7 +152,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
 
     const loadingToast = toast.loading("Deleting policy...");
 
-    deletePolicyMutation.mutate(componentId, {
+    deleteTextEditorMutation.mutate(componentId, {
       onSuccess: () => {
         toast.dismiss(loadingToast);
         setIsDeleteDialogOpen(false);
@@ -174,7 +170,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
   const handleImageUpload = async (file: File): Promise<string> => {
     try {
       const imageUrl = await uploadToCloudinary(file, {
-        folder: "policies",
+        folder: "text-editor",
         resourceType: "image",
       });
       return imageUrl;
@@ -196,7 +192,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
                 size="sm"
                 variant="outline"
                 onClick={handleDiscardChanges}
-                disabled={updatePolicyMutation.isPending}
+                disabled={updateTextEditorMutation.isPending}
               >
                 Discard Changes
               </Button>
@@ -204,11 +200,13 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
                 size="sm"
                 variant="default"
                 onClick={handleSaveChanges}
-                disabled={updatePolicyMutation.isPending}
+                disabled={updateTextEditorMutation.isPending}
                 className="gap-2"
               >
                 <Save className="h-4 w-4" />
-                {updatePolicyMutation.isPending ? "Saving..." : "Save Changes"}
+                {updateTextEditorMutation.isPending
+                  ? "Saving..."
+                  : "Save Changes"}
               </Button>
             </div>
           )}
@@ -219,7 +217,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
               size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
-              disabled={deletePolicyMutation.isPending}
+              disabled={deleteTextEditorMutation.isPending}
             >
               <Trash2 className="h-4 w-4" />
             </CButton>
@@ -232,7 +230,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
           >
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete Policy</AlertDialogTitle>
+                <AlertDialogTitle>Delete TextEditor</AlertDialogTitle>
                 <AlertDialogDescription>
                   Are you sure you want to delete this policy? This action
                   cannot be undone.
@@ -243,9 +241,11 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
                 <AlertDialogAction
                   onClick={handleDelete}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  disabled={deletePolicyMutation.isPending}
+                  disabled={deleteTextEditorMutation.isPending}
                 >
-                  {deletePolicyMutation.isPending ? "Deleting..." : "Delete"}
+                  {deleteTextEditorMutation.isPending
+                    ? "Deleting..."
+                    : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -253,39 +253,15 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
         </>
       )}
 
-      {/* Policy Content */}
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+      {/* TextEditor Content */}
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-lg bg-white">
-          {/* Header */}
-          <div className="border-b border-gray-200 px-8 py-6">
-            <div className="flex flex-col items-center justify-center gap-4 text-center">
-              <div>
-                <EditableText
-                  value={data.title}
-                  onChange={handleTitleChange}
-                  as="h1"
-                  className="text-5xl font-bold text-gray-900"
-                  isEditable={isEditable}
-                  placeholder="Enter policy title..."
-                  multiline={false}
-                />
-                {/* <div className="mt-2 flex items-center justify-center gap-2 text-sm text-gray-600">
-                  <Calendar className="h-4 w-4" />
-                  <span>
-                    Last Updated:{" "}
-                    {data.lastUpdated || new Date().toLocaleDateString()}
-                  </span>
-                </div> */}
-              </div>
-            </div>
-          </div>
-
           {/* Content */}
           <div className="px-8 py-8">
             {isEditable ? (
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Policy Content (Click to edit)
+                  TextEditor Content (Click to edit)
                 </label>
                 <ReusableQuill
                   value={data.content}
