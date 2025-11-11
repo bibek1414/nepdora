@@ -132,33 +132,38 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
 
   if (!activeImage && !isEditable) {
     return (
-      <div className="flex h-20 w-full items-center justify-center rounded-lg border border-gray-200 bg-gray-50 md:h-24 lg:h-60">
-        <p className="text-gray-500">No banner image available</p>
+      <div className="flex h-32 w-full items-center justify-center rounded-lg border border-gray-200 bg-gray-50 sm:h-40 md:h-48 lg:h-60">
+        <p className="px-2 text-xs text-gray-500 sm:text-sm">
+          No banner image available
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="w-full space-y-4">
-      <div className="mx-auto mt-10 max-w-7xl px-4 sm:px-6 lg:px-4">
+    <div className="w-full space-y-2 sm:space-y-4">
+      <div className="mx-auto mt-4 max-w-7xl px-2 sm:mt-10 sm:px-4 md:px-6 lg:px-4">
         {activeImage ? (
-          <div className="group relative h-20 overflow-hidden rounded-lg md:h-24 lg:h-80">
+          <div className="group relative h-32 overflow-hidden rounded-lg sm:h-40 md:h-48 lg:h-80">
             {/* Change Background Button - Only visible when editable */}
             {isEditable && (
-              <div className="absolute top-2 right-2 z-20">
+              <div className="absolute top-1 right-1 z-20 sm:top-2 sm:right-2">
                 <label
                   htmlFor={`banner-upload-${componentId}`}
-                  className={`cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-3 py-1.5 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white md:px-4 md:py-2 md:text-sm ${
+                  className={`cursor-pointer rounded border border-gray-300 bg-white/90 px-1.5 py-0.5 text-[10px] font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white sm:rounded-lg sm:px-2 sm:py-1 sm:text-xs md:px-3 md:py-1.5 md:text-sm ${
                     isUploading ? "pointer-events-none opacity-50" : ""
                   }`}
                 >
                   {isUploading ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 className="h-3 w-3 animate-spin md:h-4 md:w-4" />
-                      Uploading...
+                    <span className="flex items-center gap-1 sm:gap-2">
+                      <Loader2 className="h-2.5 w-2.5 animate-spin sm:h-3 sm:w-3 md:h-4 md:w-4" />
+                      <span className="hidden sm:inline">Uploading...</span>
                     </span>
                   ) : (
-                    "Change Image"
+                    <span className="whitespace-nowrap">
+                      <span className="hidden sm:inline">Change Image</span>
+                      <span className="sm:hidden">Change</span>
+                    </span>
                   )}
                 </label>
                 <input
@@ -175,10 +180,13 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
             {/* Upload Loading Overlay */}
             {isUploading && (
               <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
-                <div className="flex flex-col items-center gap-2 text-white">
-                  <Loader2 className="h-8 w-8 animate-spin" />
-                  <p className="text-sm font-medium">
-                    Uploading banner image...
+                <div className="flex flex-col items-center gap-1.5 px-2 text-white sm:gap-2">
+                  <Loader2 className="h-6 w-6 animate-spin sm:h-8 sm:w-8" />
+                  <p className="text-xs font-medium sm:text-sm">
+                    <span className="hidden sm:inline">
+                      Uploading banner image...
+                    </span>
+                    <span className="sm:hidden">Uploading...</span>
                   </p>
                 </div>
               </div>
@@ -228,31 +236,36 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
 
             {/* Editable link overlay for edit mode */}
             {isEditable && (
-              <div className="absolute bottom-2 left-2 z-10 flex gap-2">
+              <div className="absolute bottom-1 left-1 z-10 flex gap-1 sm:bottom-2 sm:left-2 sm:gap-2">
                 <EditableLink
                   text="Edit Link"
                   href={activeImage.link || ""}
                   onChange={(text, href) => handleLinkUpdate(0, href)}
                   isEditable={isEditable}
                   siteUser={siteUser}
-                  className="rounded bg-black/50 px-2 py-1 text-xs text-white"
+                  className="rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white sm:px-2 sm:py-1 sm:text-xs"
                 />
                 <Button
                   size="sm"
                   variant="destructive"
                   onClick={() => handleRemoveImage(0)}
-                  className="h-6 px-2"
+                  className="h-5 w-5 p-0 sm:h-6 sm:w-6 sm:px-2"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                 </Button>
               </div>
             )}
           </div>
         ) : (
-          <div className="flex h-20 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 md:h-24 lg:h-60">
-            <Button onClick={handleAddImage} variant="outline">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Banner Image
+          <div className="flex h-32 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 sm:h-40 md:h-48 lg:h-60">
+            <Button
+              onClick={handleAddImage}
+              variant="outline"
+              className="text-xs sm:text-sm"
+            >
+              <Plus className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Add Banner Image</span>
+              <span className="sm:hidden">Add Image</span>
             </Button>
           </div>
         )}
