@@ -20,6 +20,7 @@ import { SubCategoryComponentData } from "@/types/owner-site/components/sub-cate
 import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
+import { TextEditorComponent } from "../builder/text-editor/text-editor-component";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
@@ -35,6 +36,7 @@ import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 import { GalleryComponent } from "../builder/gallery/gallery-component";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
+import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -55,6 +57,7 @@ interface PageComponent {
     | "youtube"
     | "gallery"
     | "subcategory"
+    | "text_editor"
     | "policies";
   data:
     | HeroComponentData["data"]
@@ -73,6 +76,7 @@ interface PageComponent {
     | YouTubeComponentData["data"]
     | BannerComponentData["data"]
     | SubCategoryComponentData["data"]
+    | TextEditorComponentData["data"]
     | PolicyComponentData["data"];
   order: number;
 }
@@ -102,6 +106,7 @@ interface PageComponentRendererProps {
       | GalleryComponentData
       | SubCategoryComponentData
       | PortfolioComponentData
+      | TextEditorComponentData
       | BannerComponentData
       | NewsletterComponentData
       | PolicyComponentData
@@ -219,6 +224,16 @@ export function PageComponentRenderer({
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as NewsletterComponentData)
             }
+          />
+        );
+      case "text_editor":
+        return (
+          <TextEditorComponent
+            key={component.id}
+            component={component as TextEditorComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
           />
         );
       case "team":

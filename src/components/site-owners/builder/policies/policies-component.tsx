@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/site-owners/button";
+import { Button as CButton } from "@/components/ui/button";
 import { Trash2, Calendar, Save } from "lucide-react";
 import {
   AlertDialog,
@@ -205,14 +206,14 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
 
           {/* Delete Button */}
           <div className="bg-background/80 absolute top-4 right-4 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
-            <Button
+            <CButton
               size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
               disabled={deletePolicyMutation.isPending}
             >
               <Trash2 className="h-4 w-4" />
-            </Button>
+            </CButton>
           </div>
 
           {/* Delete Confirmation Dialog */}

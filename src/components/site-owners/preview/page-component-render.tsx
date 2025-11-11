@@ -18,7 +18,7 @@ import { NewsletterComponent } from "@/components/site-owners/builder/newsletter
 import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
 import { GalleryComponent } from "../builder/gallery/gallery-component";
 import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
-
+import { TextEditorComponent } from "@/components/site-owners/builder/text-editor/text-editor-component";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
@@ -36,6 +36,7 @@ import { NewsletterComponentData } from "@/types/owner-site/components/newslette
 import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
+import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 
 interface PageComponent {
   id: string | number;
@@ -57,6 +58,7 @@ interface PageComponent {
     | "newsletter"
     | "youtube"
     | "subcategory"
+    | "text_editor"
     | "policies";
   data:
     | HeroComponentData["data"]
@@ -75,6 +77,7 @@ interface PageComponent {
     | YouTubeComponentData["data"]
     | BannerComponentData["data"]
     | SubCategoryComponentData["data"]
+    | TextEditorComponentData["data"]
     | PolicyComponentData["data"];
   order: number;
 }
@@ -107,6 +110,7 @@ interface PageComponentRendererProps {
       | BannerComponentData
       | NewsletterComponentData
       | YouTubeComponentData
+      | TextEditorComponentData
       | PolicyComponentData
   ) => void;
 }
@@ -340,6 +344,16 @@ export function PageComponentRenderer({
           <PolicyComponent
             key={component.id}
             component={component as PolicyComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+          />
+        );
+      case "text_editor":
+        return (
+          <TextEditorComponent
+            key={component.id}
+            component={component as TextEditorComponentData}
             isEditable={false}
             siteUser={siteUser}
             pageSlug={pageSlug}
