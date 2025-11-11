@@ -224,13 +224,13 @@ export const CustomerPublishAuthProvider = ({
             // If we couldn't extract subdomain from URL path, try getting it from window.location.host
             if (!siteUser) {
               const hostname = window.location.hostname;
-              // Check if we're on a subdomain (e.g., bibek.localhost or bibek.nepdora.com)
+              // Check if we're on a subdomain (e.g., bibek.localhost or bibek.rugkala.com)
               if (hostname.includes(".localhost")) {
                 siteUser = hostname.split(".")[0];
               } else if (
-                hostname.includes(".nepdora.com") &&
-                hostname !== "nepdora.com" &&
-                hostname !== "www.nepdora.com"
+                hostname.includes(".rugkala.com") &&
+                hostname !== "rugkala.com" &&
+                hostname !== "www.rugkala.com"
               ) {
                 siteUser = hostname.split(".")[0];
               }

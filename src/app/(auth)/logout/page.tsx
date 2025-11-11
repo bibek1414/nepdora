@@ -12,7 +12,7 @@ export default function LogoutPage() {
     document.cookie.split(";").forEach(cookie => {
       const eqPos = cookie.indexOf("=");
       const name = eqPos > -1 ? cookie.slice(0, eqPos) : cookie;
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.nepdora.com;`;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.rugkala.com;`;
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;`; // fallback
     });
 

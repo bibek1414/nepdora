@@ -27,7 +27,7 @@ export default function DomainTable({
     tenantSchemaName: string,
     domainId: number
   ) => {
-    const url = `https://${tenantSchemaName}.nepdora.com`;
+    const url = `https://${tenantSchemaName}.rugkala.com`;
     window.open(url, "_blank", "noopener,noreferrer");
     onFrontendUrlClick(tenantSchemaName);
   };
@@ -48,7 +48,7 @@ export default function DomainTable({
         <TableBody>
           {domains.length > 0 ? (
             domains.map(domain => {
-              const frontendUrl = `${domain.tenant.schema_name}.nepdora.com`;
+              const frontendUrl = `${domain.tenant.schema_name}.rugkala.com`;
 
               return (
                 <TableRow

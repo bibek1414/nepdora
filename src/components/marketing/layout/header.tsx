@@ -55,7 +55,7 @@ const Header: React.FC = () => {
       return (
         <a
           key={item}
-          href="https://docs.nepdora.com"
+          href="https://docs.rugkala.com"
           target="_blank"
           rel="noopener noreferrer"
           className="text-muted-foreground hover:text-primary cursor-pointer font-medium transition-colors"
@@ -81,7 +81,7 @@ const Header: React.FC = () => {
       return (
         <a
           key={item}
-          href="https://docs.nepdora.com"
+          href="https://docs.rugkala.com"
           target="_blank"
           rel="noopener noreferrer"
           onClick={closeMenu}

@@ -21,7 +21,7 @@ function extractSubdomain(request: NextRequest): string | null {
   const rootDomainFormatted = rootDomain.split(":")[0];
 
   // Preview deployments (Vercel: tenant---branch-name.vercel.app)
-  if (hostname.includes("---") && hostname.endsWith(".nepdora.com")) {
+  if (hostname.includes("---") && hostname.endsWith(".rugkala.com")) {
     const parts = hostname.split("---");
     return parts.length > 0 ? parts[0] : null;
   }

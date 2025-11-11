@@ -17,7 +17,7 @@ export default function TermsOfServicePage() {
           <p className="text-foreground leading-relaxed">
             Welcome to Nepdora. These Terms of Service (&quot;Terms&quot;,
             &quot;Terms of Service&quot;) govern your use of our website located
-            at https://nepdora.com (together or individually
+            at https://rugkala.com (together or individually
             &quot;Service&quot;) operated by Nepdora.
           </p>
           <p className="text-foreground mt-4 leading-relaxed">
@@ -452,7 +452,7 @@ export default function TermsOfServicePage() {
                 href="/privacy-policy"
                 className="text-primary font-semibold hover:underline"
               >
-                https://nepdora.com/privacy-policy
+                https://rugkala.com/privacy-policy
               </a>
               .
             </p>
@@ -496,15 +496,15 @@ export default function TermsOfServicePage() {
             <div className="border-border bg-muted/30 rounded-lg border p-6">
               <p className="text-muted-foreground mb-2">
                 <strong className="text-foreground">Email:</strong>{" "}
-                legal@nepdora.com
+                legal@rugkala.com
               </p>
               <p className="text-muted-foreground mb-2">
                 <strong className="text-foreground">Support Email:</strong>{" "}
-                support@nepdora.com
+                support@rugkala.com
               </p>
               <p className="text-muted-foreground mb-2">
                 <strong className="text-foreground">Website:</strong>{" "}
-                https://nepdora.com
+                https://rugkala.com
               </p>
               <p className="text-muted-foreground">
                 <strong className="text-foreground">Address:</strong> Kathmandu,

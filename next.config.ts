@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "*.nepdora.com",
+        hostname: "*.rugkala.com",
       },
       {
         protocol: "https",

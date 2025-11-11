@@ -123,7 +123,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             </Button>
           </Link>
           <a
-            href="https://docs.nepdora.com"
+            href="https://docs.rugkala.com"
             target="_blank"
             rel="noopener noreferrer"
           >

@@ -23,7 +23,7 @@ function extractSubdomainFromRequest(req: Request): string | null {
     return null;
   }
 
-  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
+  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "rugkala.com";
   if (host.endsWith(`.${baseDomain}`)) {
     const subdomain = host.replace(`.${baseDomain}`, "").split(":")[0];
     if (subdomain && subdomain !== "www") {
