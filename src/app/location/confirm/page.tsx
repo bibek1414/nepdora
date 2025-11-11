@@ -258,122 +258,119 @@ function ConfirmLocationClient() {
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       />
-
-      {/* Load Leaflet JS */}
       <Script
         src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         strategy="afterInteractive"
         onLoad={() => setLoadedLeaflet(true)}
       />
 
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="mx-auto max-w-2xl px-4">
-          {/* Header */}
-          <header className="mb-6 text-center">
-            <h1 className="text-2xl font-semibold text-blue-600">
-              Confirm Your Location
-            </h1>
-            <p className="mt-1 text-sm text-gray-600">
-              Order: <span className="font-medium">{orderId || "--"}</span>
-            </p>
-          </header>
-
-          {/* Map Container with Fixed Styling */}
-          <div className="mb-4 overflow-hidden rounded-lg bg-white shadow-md">
+      <div className="min-h-screen bg-[#F9FAFB] px-6 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row">
+          {/* Left Section: Map */}
+          <div className="flex-1 overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-100">
             <div
               ref={mapRef}
               id="map"
               className="relative w-full"
               style={{
-                height: "450px",
-                minHeight: "450px",
+                height: "480px",
+                minHeight: "480px",
                 touchAction: "pan-x pan-y",
               }}
             />
           </div>
 
-          {/* Global Styles for Leaflet */}
-          <style jsx global>{`
-            /* Ensure Leaflet container takes full height */
-            .leaflet-container {
-              height: 100% !important;
-              width: 100% !important;
-              position: relative;
-              z-index: 1;
-            }
+          {/* Right Section: Controls */}
+          <div className="w-full flex-shrink-0 space-y-4 md:w-80">
+            {/* Search Box */}
+            <div className="rounded-xl bg-white p-4 shadow-sm ring-1 ring-gray-100">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-700">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 text-blue-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 12h14M12 5l7 7-7 7"
+                  />
+                </svg>
+                Search Address
+              </h3>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Enter delivery address..."
+                  className="w-full rounded-md border border-gray-200 bg-gray-50 py-2 pr-3 pl-3 text-sm text-gray-700 placeholder-gray-400 transition-all outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                />
+              </div>
+              <p className="mt-2 text-xs text-gray-500">
+                📍 Or click directly on the map to select your location.
+              </p>
+            </div>
 
-            /* Fix for tile rendering */
-            .leaflet-container img {
-              max-width: none !important;
-              max-height: none !important;
-            }
+            {/* Action Buttons */}
+            <div className="space-y-3 rounded-xl bg-white p-4 shadow-sm ring-1 ring-gray-100">
+              <button
+                onClick={onConfirm}
+                disabled={disabled || confirming}
+                className="w-full rounded-md bg-blue-600 py-2.5 text-sm font-medium text-white transition-all hover:bg-blue-700 active:scale-[0.99] disabled:opacity-50"
+              >
+                {confirming ? "Confirming..." : "Confirm Location"}
+              </button>
+              <button
+                className="w-full rounded-md border border-gray-200 bg-gray-50 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                onClick={() => window.location.reload()}
+              >
+                Clear Selection
+              </button>
+            </div>
 
-            /* Ensure tiles load properly */
-            .leaflet-tile-container {
-              pointer-events: auto;
-            }
-
-            /* Fix for map panes */
-            .leaflet-pane {
-              z-index: auto;
-            }
-
-            /* Ensure marker is visible */
-            .leaflet-marker-icon {
-              z-index: 600 !important;
-            }
-
-            /* Remove any transform issues */
-            .leaflet-container .leaflet-tile {
-              transform: translate3d(0, 0, 0);
-            }
-
-            /* Fix control positioning */
-            .leaflet-control-container {
-              position: relative;
-            }
-
-            /* Ensure zoom controls are visible */
-            .leaflet-control-zoom {
-              margin: 10px;
-            }
-          `}</style>
-
-          {/* Location Details Card */}
-          <div className="mb-4 rounded-lg bg-white p-5 shadow-md">
-            <div className="mt-4 flex items-start gap-2 border-t border-gray-200 pt-4">
-              <span className="text-lg">📍</span>
-              <p className="text-xs text-gray-600">
-                Drag the marker to adjust your exact location. Use pinch or
-                scroll to zoom. Click &quot;Confirm Location&quot; when ready.
+            {/* Order Info */}
+            <div className="rounded-xl bg-white p-4 shadow-sm ring-1 ring-gray-100">
+              <h4 className="mb-3 text-sm font-medium text-gray-700">
+                Order Details
+              </h4>
+              <p className="text-sm text-gray-600">
+                Order ID:{" "}
+                <span className="font-medium text-gray-800">
+                  {orderId || "--"}
+                </span>
+              </p>
+              <p className="mt-1 text-sm text-gray-600">
+                Status:{" "}
+                <span className="rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-700">
+                  Pending Confirmation
+                </span>
               </p>
             </div>
           </div>
-
-          {/* Confirm Button */}
-          <button
-            onClick={onConfirm}
-            disabled={disabled || confirming}
-            className="w-full rounded-lg bg-blue-600 px-4 py-3 text-base font-medium text-white transition-all hover:bg-blue-700 hover:shadow-lg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {confirming ? "Confirming..." : "Confirm Location"}
-          </button>
-
-          {/* Status Message */}
-          {status.message && (
-            <div
-              className={`mt-4 rounded-lg px-4 py-2 text-center text-sm font-medium ${
-                status.type === "success"
-                  ? "bg-green-50 text-green-700"
-                  : status.type === "error"
-                    ? "bg-red-50 text-red-700"
-                    : "bg-gray-50 text-gray-600"
-              }`}
-            >
-              {status.message}
-            </div>
-          )}
         </div>
+
+        {/* Footer tip */}
+        <div className="mx-auto mt-6 max-w-6xl rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+          💡 Tip: Click on the map to select your location, search for an
+          address, or drag the marker to adjust your delivery point.
+        </div>
+
+        {/* Status Message */}
+        {status.message && (
+          <div
+            className={`mx-auto mt-4 max-w-2xl rounded-md px-4 py-2 text-center text-sm ${
+              status.type === "success"
+                ? "bg-green-50 text-green-700"
+                : status.type === "error"
+                  ? "bg-red-50 text-red-700"
+                  : "bg-gray-50 text-gray-700"
+            }`}
+          >
+            {status.message}
+          </div>
+        )}
       </div>
     </>
   );
