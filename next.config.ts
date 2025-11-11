@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
       },
       {
+        protocol: "http",
+        hostname: "*.nepdora.baliyoventures.com",
+      },
+      {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
