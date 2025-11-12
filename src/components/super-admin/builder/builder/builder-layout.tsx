@@ -724,8 +724,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     template:
       | "grid-1"
       | "grid-2"
-      | "list-1"
-      | "carousel-1"
+      | "list-3"
+      | "carousel-6"
       | "grid-4"
       | "grid-5"
   ) => {

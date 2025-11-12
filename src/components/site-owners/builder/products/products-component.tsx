@@ -10,6 +10,7 @@ import { ProductCard2 } from "./product-card2";
 import { ProductCard3 } from "./product-card3";
 import { ProductCard4 } from "./product-card4";
 import { ProductCard5 } from "./product-card5";
+import { ProductCard6 } from "./product-card6";
 import ProductFilterSidebar from "./products-filter/product-filter-sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -31,6 +32,13 @@ import { EditableText } from "@/components/ui/editable-text";
 import Pagination from "@/components/ui/site-owners/pagination";
 import { useProductFilters } from "@/hooks/owner-site/admin/use-product";
 import Link from "next/link";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ProductsComponentProps {
   component: ProductsComponentData;
@@ -69,6 +77,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
 
   // Determine if we should show sidebar based on style
   const shouldShowSidebar = showSidebar && style === "grid-4";
+  const isCarouselStyle = style === "carousel-1" || style === "carousel-6";
 
   const currentFilters = shouldShowSidebar && !isEditable ? productFilters : {};
 
@@ -86,7 +95,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   const { data, isLoading, error } = useProducts({
     page: currentPage,
     page_size: page_size,
-    ...(shouldShowSidebar && !isEditable ? currentFilters : {}), // Only apply filters for ProductCard4 and not in editable mode
+    ...(shouldShowSidebar && !isEditable ? currentFilters : {}),
   });
 
   // Extract products from the API response structure
@@ -189,6 +198,8 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
         return <ProductCard3 key={product.id} {...cardProps} />;
       case "carousel-1":
         return <ProductCard1 key={product.id} {...cardProps} />;
+      case "carousel-6":
+        return <ProductCard6 key={product.id} {...cardProps} />;
       case "grid-4":
         return <ProductCard4 key={product.id} {...cardProps} />;
       case "grid-5":
@@ -206,7 +217,8 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
       case "list-1":
         return "grid-cols-1 lg:grid-cols-2 gap-8";
       case "carousel-1":
-        return "flex overflow-x-auto gap-6 pb-4";
+      case "carousel-6":
+        return "";
       case "grid-4":
         return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 4)}`;
       case "grid-1":
@@ -220,7 +232,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     return (
       <div className="group relative">
         {/* Delete Control with AlertDialog */}
-        <div className="absolute top-4 right-4 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute top-4 right-4 z-50 opacity-0 transition-opacity group-hover:opacity-100">
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
@@ -341,7 +353,11 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
 
                 {/* Loading State */}
                 {isLoading && (
-                  <div className={`grid ${getGridClass()} gap-6`}>
+                  <div
+                    className={
+                      isCarouselStyle ? "" : `grid ${getGridClass()} gap-6`
+                    }
+                  >
                     {Array.from({ length: Math.min(page_size, 8) }).map(
                       (_, index) => (
                         <div key={index} className="flex flex-col space-y-3">
@@ -370,38 +386,61 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                   </Alert>
                 )}
 
-                {/* Products Grid */}
+                {/* Products Grid/Carousel */}
                 {!isLoading && !error && products.length > 0 && (
                   <>
-                    <div
-                      className={`${
-                        style === "carousel-1"
-                          ? "flex gap-6 overflow-x-auto pb-4"
-                          : `grid ${getGridClass()} gap-6`
-                      }`}
-                    >
-                      {products.map((product, index) => (
-                        <div
-                          key={product.id}
-                          className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
-                        >
-                          {/* Overlay to prevent clicks in builder mode */}
-                          <div className="absolute inset-0 z-10 bg-transparent" />
-                          {renderProductCard(product, index)}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Pagination */}
-                    {pagination && pagination.totalPages > 1 && (
-                      <div className="mt-8">
-                        <Pagination
-                          currentPage={currentPage}
-                          totalPages={pagination.totalPages}
-                          onPageChange={handlePageChange}
-                        />
+                    {isCarouselStyle ? (
+                      <Carousel
+                        opts={{
+                          align: "start",
+                          loop: true,
+                        }}
+                        className="w-full"
+                      >
+                        <CarouselContent className="-ml-4">
+                          {products.map((product, index) => (
+                            <CarouselItem
+                              key={product.id}
+                              className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                            >
+                              <div className="relative">
+                                {/* Overlay to prevent clicks in builder mode */}
+                                <div className="absolute inset-0 z-10 bg-transparent" />
+                                {renderProductCard(product, index)}
+                              </div>
+                            </CarouselItem>
+                          ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="left-0" />
+                        <CarouselNext className="right-0" />
+                      </Carousel>
+                    ) : (
+                      <div className={`grid ${getGridClass()} gap-6`}>
+                        {products.map((product, index) => (
+                          <div
+                            key={product.id}
+                            className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
+                          >
+                            {/* Overlay to prevent clicks in builder mode */}
+                            <div className="absolute inset-0 z-10 bg-transparent" />
+                            {renderProductCard(product, index)}
+                          </div>
+                        ))}
                       </div>
                     )}
+
+                    {/* Pagination - Hide for carousel */}
+                    {!isCarouselStyle &&
+                      pagination &&
+                      pagination.totalPages > 1 && (
+                        <div className="mt-8">
+                          <Pagination
+                            currentPage={currentPage}
+                            totalPages={pagination.totalPages}
+                            onPageChange={handlePageChange}
+                          />
+                        </div>
+                      )}
                   </>
                 )}
 
@@ -485,11 +524,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
             {/* Loading State */}
             {isLoading && (
               <div
-                className={`${
-                  style === "carousel-1"
-                    ? "flex gap-6 overflow-x-auto pb-4"
-                    : `grid ${getGridClass()} gap-8`
-                }`}
+                className={
+                  isCarouselStyle ? "" : `grid ${getGridClass()} gap-8`
+                }
               >
                 {Array.from({ length: page_size }).map((_, index) => (
                   <div key={index} className="flex flex-col space-y-4">
@@ -517,33 +554,52 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
               </Alert>
             )}
 
-            {/* Products Grid */}
+            {/* Products Grid/Carousel */}
             {!isLoading && !error && products.length > 0 && (
               <>
-                <div
-                  className={`${
-                    style === "carousel-1"
-                      ? "flex gap-8 overflow-x-auto pb-4"
-                      : `grid ${getGridClass()} gap-8`
-                  }`}
-                >
-                  {products.map((product, index) => (
-                    <div key={product.id} className="flex-shrink-0">
-                      {renderProductCard(product, index)}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Pagination */}
-                {pagination && pagination.totalPages > 1 && (
-                  <div className="mt-12">
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={pagination.totalPages}
-                      onPageChange={handlePageChange}
-                    />
+                {isCarouselStyle ? (
+                  <Carousel
+                    opts={{
+                      align: "start",
+                      loop: true,
+                    }}
+                    className="w-full"
+                  >
+                    <CarouselContent className="-ml-4">
+                      {products.map((product, index) => (
+                        <CarouselItem
+                          key={product.id}
+                          className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                        >
+                          {renderProductCard(product, index)}
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="left-0" />
+                    <CarouselNext className="right-0" />
+                  </Carousel>
+                ) : (
+                  <div className={`grid ${getGridClass()} gap-8`}>
+                    {products.map((product, index) => (
+                      <div key={product.id} className="flex-shrink-0">
+                        {renderProductCard(product, index)}
+                      </div>
+                    ))}
                   </div>
                 )}
+
+                {/* Pagination - Hide for carousel */}
+                {!isCarouselStyle &&
+                  pagination &&
+                  pagination.totalPages > 1 && (
+                    <div className="mt-12">
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={pagination.totalPages}
+                        onPageChange={handlePageChange}
+                      />
+                    </div>
+                  )}
               </>
             )}
 

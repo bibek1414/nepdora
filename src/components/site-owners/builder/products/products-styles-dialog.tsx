@@ -1,4 +1,3 @@
-// products-styles-dialog.tsx
 import React, { useState } from "react";
 import {
   Dialog,
@@ -12,7 +11,7 @@ interface ProductsStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
-    style: "grid-1" | "grid-2" | "list-1" | "grid-4" | "grid-5"
+    style: "grid-1" | "grid-2" | "list-3" | "grid-4" | "grid-5" | "carousel-6"
   ) => void;
 }
 
@@ -22,34 +21,20 @@ export const ProductsStylesDialog: React.FC<ProductsStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | "list-1" | "grid-4" | "grid-5" | null
+    "grid-1" | "grid-2" | "list-3" | "grid-4" | "grid-5" | "carousel-6" | null
   >(null);
 
   const templates = [
-    {
-      id: "grid-1" as const,
-      name: "Grid Style 1",
-    },
-    {
-      id: "grid-2" as const,
-      name: "Grid Style 2",
-    },
-    {
-      id: "list-1" as const,
-      name: "List Style",
-    },
-    {
-      id: "grid-4" as const,
-      name: "Grid Style 4",
-    },
-    {
-      id: "grid-5" as const,
-      name: "Grid Style 5",
-    },
+    { id: "grid-1" as const, name: "Grid Style 1" },
+    { id: "grid-2" as const, name: "Grid Style 2" },
+    { id: "list-3" as const, name: "List Style 3" },
+    { id: "grid-4" as const, name: "Grid Style 4" },
+    { id: "grid-5" as const, name: "Grid Style 5" },
+    { id: "carousel-6" as const, name: "Carousel Style 6" },
   ];
 
   const handleSelect = (template: {
-    id: "grid-1" | "grid-2" | "list-1" | "grid-4" | "grid-5";
+    id: "grid-1" | "grid-2" | "list-3" | "grid-4" | "grid-5" | "carousel-6";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
@@ -92,9 +77,7 @@ export const ProductsStylesDialog: React.FC<ProductsStylesDialogProps> = ({
                   <div className="relative w-full">
                     <Image
                       src={`/images/site-owners/products/product${
-                        template.id === "list-1"
-                          ? "3"
-                          : template.id.split("-")[1]
+                        template.id.split("-")[1]
                       }.png`}
                       alt={template.name}
                       width={400}
