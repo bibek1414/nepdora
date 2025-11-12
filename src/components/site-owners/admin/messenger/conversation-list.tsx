@@ -68,11 +68,24 @@ export function ConversationList({
 
   // Use the new hook with real-time updates
   const {
-    data: conversationsData = [],
+    data: conversationsResponse,
     refetch,
     isLoading,
     isFetching,
   } = useConversationList(pageId);
+
+  const conversationsData = useMemo(() => {
+    if (!conversationsResponse) return [];
+    // Handle both array and object with results property
+    if (Array.isArray(conversationsResponse)) return conversationsResponse;
+    if (
+      conversationsResponse.results &&
+      Array.isArray(conversationsResponse.results)
+    ) {
+      return conversationsResponse.results;
+    }
+    return [];
+  }, [conversationsResponse]);
 
   // Auto-select first integration
   useMemo(() => {
@@ -190,9 +203,6 @@ export function ConversationList({
       return "Sent a file";
     }
 
-    // If snippet has attachment pattern but no message_type
-    // Without message_type, we cannot accurately determine the attachment type
-    // Show generic message for old conversations
     if (attachmentMatch) {
       const count = parseInt(attachmentMatch[1]);
       if (count === 1) {
