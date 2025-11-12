@@ -45,6 +45,16 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   const createCategoryMutation = useCreateCategory();
   const updateCategoryMutation = useUpdateCategory();
 
+  // Store original values for comparison when editing
+  const originalValues = React.useMemo(
+    () => ({
+      name: category?.name || "",
+      description: category?.description || "",
+      image: category?.image || null,
+    }),
+    [category]
+  );
+
   const form = useForm<CreateCategoryRequest>({
     resolver: zodResolver(CreateCategorySchema),
     defaultValues: {
@@ -56,49 +66,94 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
   const onSubmit = async (data: CreateCategoryRequest) => {
     try {
-      console.log("Submitting data:", data); // Debug log
+      if (isEditing && category) {
+        // When editing, only include changed fields
+        const changedFields: Partial<CreateCategoryRequest> = {};
 
-      // Check if we have a file upload
-      const hasFileUpload = data.image instanceof File;
-
-      if (hasFileUpload) {
-        // Use FormData if there's a file upload
-        const formData = new FormData();
-
-        // Ensure fields are properly set before appending
-        if (data.name && data.name.trim()) {
-          formData.append("name", data.name.trim());
-        }
-        if (data.description && data.description.trim()) {
-          formData.append("description", data.description.trim());
-        }
-        if (data.image) {
-          formData.append("image", data.image);
+        // Check if name changed
+        if (data.name.trim() !== originalValues.name) {
+          changedFields.name = data.name.trim();
         }
 
-        // Debug: Log FormData contents
-        console.log("FormData contents:");
-        for (const pair of formData.entries()) {
-          console.log(pair[0] + ": " + pair[1]);
+        // Check if description changed
+        if (data.description.trim() !== originalValues.description) {
+          changedFields.description = data.description.trim();
         }
 
-        if (isEditing && category) {
+        // Check if image changed
+        // Image changed if:
+        // 1. It's a new File (user uploaded a new image)
+        // 2. It's null but original had an image (image was removed)
+        // 3. It's a different string URL (shouldn't happen in normal flow, but handle it)
+        const isNewFile = data.image instanceof File;
+        const isRemoved = data.image === null && originalValues.image !== null;
+        const isDifferentUrl =
+          typeof data.image === "string" &&
+          typeof originalValues.image === "string" &&
+          data.image !== originalValues.image;
+
+        if (isNewFile) {
+          changedFields.image = data.image;
+        } else if (isRemoved) {
+          // Image was removed
+          changedFields.image = null;
+        } else if (isDifferentUrl) {
+          // URL changed (edge case)
+          changedFields.image = data.image;
+        }
+
+        // Only proceed if there are changes
+        if (Object.keys(changedFields).length === 0) {
+          onClose();
+          return;
+        }
+
+        // Check if we have a file upload
+        const hasFileUpload = changedFields.image instanceof File;
+
+        if (hasFileUpload) {
+          // Use FormData if there's a file upload
+          const formData = new FormData();
+
+          if (changedFields.name) {
+            formData.append("name", changedFields.name);
+          }
+          if (changedFields.description) {
+            formData.append("description", changedFields.description);
+          }
+          if (changedFields.image) {
+            formData.append("image", changedFields.image);
+          }
+
           await updateCategoryMutation.mutateAsync({
             slug: category.slug,
             //eslint-disable-next-line @typescript-eslint/no-explicit-any
-            data: formData as any, // Type assertion for FormData
+            data: formData as any,
           });
         } else {
-          //eslint-disable-next-line @typescript-eslint/no-explicit-any
-          await createCategoryMutation.mutateAsync(formData as any);
-        }
-      } else {
-        // Use JSON if no file upload
-        if (isEditing && category) {
+          // Use JSON if no file upload
           await updateCategoryMutation.mutateAsync({
             slug: category.slug,
-            data,
+            data: changedFields,
           });
+        }
+      } else {
+        // Creating new category - send all fields
+        const hasFileUpload = data.image instanceof File;
+
+        if (hasFileUpload) {
+          const formData = new FormData();
+          if (data.name && data.name.trim()) {
+            formData.append("name", data.name.trim());
+          }
+          if (data.description && data.description.trim()) {
+            formData.append("description", data.description.trim());
+          }
+          if (data.image) {
+            formData.append("image", data.image);
+          }
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await createCategoryMutation.mutateAsync(formData as any);
         } else {
           await createCategoryMutation.mutateAsync(data);
         }

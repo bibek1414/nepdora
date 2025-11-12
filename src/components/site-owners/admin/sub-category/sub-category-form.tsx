@@ -57,24 +57,44 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
   const categories = categoriesData?.results || [];
 
   // Helper function to get category ID from either string or object
-  const getCategoryId = (
-    category: string | { id: number } | null | undefined
-  ): string | undefined => {
-    if (!category) return undefined;
-    if (typeof category === "string") {
-      // If it's a string, find the category by slug and return its ID
-      const foundCategory = categories.find(cat => cat.slug === category);
-      return foundCategory?.id.toString();
-    }
-    return category.id.toString();
-  };
+  const getCategoryId = React.useCallback(
+    (
+      category: string | { id: number } | null | undefined,
+      categoriesList: typeof categories
+    ): string | undefined => {
+      if (!category) return undefined;
+      if (typeof category === "string") {
+        // If it's a string, find the category by slug and return its ID
+        const foundCategory = categoriesList.find(cat => cat.slug === category);
+        return foundCategory?.id.toString();
+      }
+      return category.id.toString();
+    },
+    []
+  );
+
+  // Store original values for comparison when editing
+  const originalCategoryId = React.useMemo(
+    () => getCategoryId(subCategory?.category, categories) || "",
+    [subCategory, categories, getCategoryId]
+  );
+
+  const originalValues = React.useMemo(
+    () => ({
+      name: subCategory?.name || "",
+      description: subCategory?.description || "",
+      category: originalCategoryId,
+      image: subCategory?.image || null,
+    }),
+    [subCategory, originalCategoryId]
+  );
 
   const form = useForm<CreateSubCategoryRequest>({
     resolver: zodResolver(CreateSubCategorySchema),
     defaultValues: {
       name: subCategory?.name || "",
       description: subCategory?.description || "",
-      category: getCategoryId(subCategory?.category) || "",
+      category: getCategoryId(subCategory?.category, categories) || "",
       image: subCategory?.image || null,
     },
   });
@@ -82,11 +102,86 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
   const onSubmit = async (data: CreateSubCategoryRequest) => {
     try {
       if (isEditing && subCategory) {
-        await updateSubCategoryMutation.mutateAsync({
-          slug: subCategory.slug,
-          data,
-        });
+        // When editing, only include changed fields
+        const changedFields: Partial<CreateSubCategoryRequest> = {};
+
+        // Check if name changed
+        if (data.name.trim() !== originalValues.name) {
+          changedFields.name = data.name.trim();
+        }
+
+        // Check if description changed
+        if (data.description.trim() !== originalValues.description) {
+          changedFields.description = data.description.trim();
+        }
+
+        // Check if category changed
+        if (data.category !== originalValues.category) {
+          changedFields.category = data.category;
+        }
+
+        // Check if image changed
+        // Image changed if:
+        // 1. It's a new File (user uploaded a new image)
+        // 2. It's null but original had an image (image was removed)
+        // 3. It's a different string URL (shouldn't happen in normal flow, but handle it)
+        const isNewFile = data.image instanceof File;
+        const isRemoved = data.image === null && originalValues.image !== null;
+        const isDifferentUrl =
+          typeof data.image === "string" &&
+          typeof originalValues.image === "string" &&
+          data.image !== originalValues.image;
+
+        if (isNewFile) {
+          changedFields.image = data.image;
+        } else if (isRemoved) {
+          // Image was removed
+          changedFields.image = null;
+        } else if (isDifferentUrl) {
+          // URL changed (edge case)
+          changedFields.image = data.image;
+        }
+
+        // Only proceed if there are changes
+        if (Object.keys(changedFields).length === 0) {
+          onClose();
+          return;
+        }
+
+        // Check if we have a file upload
+        const hasFileUpload = changedFields.image instanceof File;
+
+        if (hasFileUpload) {
+          // Use FormData if there's a file upload
+          const formData = new FormData();
+
+          if (changedFields.name) {
+            formData.append("name", changedFields.name);
+          }
+          if (changedFields.description) {
+            formData.append("description", changedFields.description);
+          }
+          if (changedFields.category) {
+            formData.append("category", changedFields.category);
+          }
+          if (changedFields.image) {
+            formData.append("image", changedFields.image);
+          }
+
+          await updateSubCategoryMutation.mutateAsync({
+            slug: subCategory.slug,
+            //eslint-disable-next-line @typescript-eslint/no-explicit-any
+            data: formData as any,
+          });
+        } else {
+          // Use JSON if no file upload
+          await updateSubCategoryMutation.mutateAsync({
+            slug: subCategory.slug,
+            data: changedFields,
+          });
+        }
       } else {
+        // Creating new subcategory - send all fields
         await createSubCategoryMutation.mutateAsync(data);
       }
       onClose();
