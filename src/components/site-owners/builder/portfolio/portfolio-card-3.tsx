@@ -71,24 +71,25 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
 
   return (
     <CardWrapper>
-      <article className="group border-border hover:border-primary/50 flex flex-col gap-6 border-b pb-6 transition-all duration-300 md:flex-row">
+      <article className="group border-border hover:border-primary/50 flex flex-col gap-3 border-b pb-4 transition-all duration-300 sm:gap-4 sm:pb-5 md:flex-row md:gap-6 md:pb-6">
         {/* Image */}
-        <div className="relative h-64 w-full shrink-0 overflow-hidden rounded-lg md:h-48 md:w-80">
+        <div className="relative h-48 w-full shrink-0 overflow-hidden rounded-lg sm:h-56 md:h-48 md:w-80 lg:h-56">
           <Image
             src={portfolioImage}
             alt={portfolio.thumbnail_image_alt_description || portfolio.title}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 320px, 320px"
           />
         </div>
 
         {/* Content */}
-        <div className="flex flex-1 flex-col justify-between">
+        <div className="flex flex-1 flex-col justify-between gap-3 sm:gap-4">
           <div>
             {/* Category */}
             {showCategories && portfolio.category && (
               <Badge
-                className="mb-3"
+                className="mb-2 text-xs sm:mb-3 sm:text-sm"
                 style={{
                   background: theme.colors.secondary,
                   color: theme.colors.secondaryForeground,
@@ -101,7 +102,7 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
 
             {/* Title */}
             <h3
-              className="mb-3 text-2xl font-bold"
+              className="mb-2 text-lg leading-tight font-bold sm:mb-3 sm:text-xl md:text-2xl"
               style={{
                 color: theme.colors.primary,
                 fontFamily: theme.fonts.heading,
@@ -112,7 +113,7 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
 
             {/* Description */}
             <div
-              className="text-muted-foreground mb-4 line-clamp-3 text-sm"
+              className="text-muted-foreground mb-3 line-clamp-2 text-xs leading-relaxed sm:mb-4 sm:line-clamp-3 sm:text-sm"
               dangerouslySetInnerHTML={{
                 __html:
                   (portfolio?.meta_description
@@ -125,11 +126,17 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
             {showTechnologies &&
               portfolio.tags &&
               portfolio.tags.length > 0 && (
-                <div className="mb-4 flex flex-wrap gap-2">
+                <div className="mb-3 flex flex-wrap gap-1.5 sm:mb-4 sm:gap-2">
                   {portfolio.tags.map(tag => (
-                    <Badge key={tag.id} variant="outline">
-                      <Tag className="mr-1 h-3 w-3" />
-                      {tag.name}
+                    <Badge
+                      key={tag.id}
+                      variant="outline"
+                      className="text-xs sm:text-sm"
+                    >
+                      <Tag className="mr-1 h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                      <span className="max-w-[80px] truncate sm:max-w-none">
+                        {tag.name}
+                      </span>
                     </Badge>
                   ))}
                 </div>
@@ -137,44 +144,58 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
             <Button
               variant="ghost"
               size="sm"
-              className="group/btn"
+              className="group/btn w-full justify-start text-xs sm:w-auto sm:text-sm"
               style={{ color: theme.colors.primary }}
             >
-              View Details
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+              <span className="sm:hidden">Details</span>
+              <span className="hidden sm:inline">View Details</span>
+              <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover/btn:translate-x-1 sm:h-4 sm:w-4" />
             </Button>
 
-            {portfolio.project_url && (
-              <a
-                href={portfolio.project_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={e => e.stopPropagation()}
-              >
-                <Button variant="outline" size="sm">
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  Live Demo
-                </Button>
-              </a>
-            )}
+            <div className="flex flex-wrap gap-2 sm:gap-3">
+              {portfolio.project_url && (
+                <a
+                  href={portfolio.project_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  className="flex-1 sm:flex-none"
+                >
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs sm:w-auto sm:text-sm"
+                  >
+                    <ExternalLink className="mr-1.5 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                    <span className="sm:hidden">Demo</span>
+                    <span className="hidden sm:inline">Live Demo</span>
+                  </Button>
+                </a>
+              )}
 
-            {portfolio.github_url && (
-              <a
-                href={portfolio.github_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={e => e.stopPropagation()}
-              >
-                <Button variant="outline" size="sm">
-                  <Github className="mr-2 h-4 w-4" />
-                  Code
-                </Button>
-              </a>
-            )}
+              {portfolio.github_url && (
+                <a
+                  href={portfolio.github_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  className="flex-1 sm:flex-none"
+                >
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs sm:w-auto sm:text-sm"
+                  >
+                    <Github className="mr-1.5 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                    Code
+                  </Button>
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </article>
