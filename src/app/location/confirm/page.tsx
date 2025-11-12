@@ -16,6 +16,19 @@ function ConfirmLocationClient() {
   const orderId = searchParams.get("orderId");
   const callbackUrl = searchParams.get("callback");
   const redirectUrl = searchParams.get("redirect");
+  const shortId = searchParams.get("shortId");
+
+  const [resolved, setResolved] = useState<{
+    orderId: string;
+    callbackUrl?: string | null;
+    redirectUrl?: string | null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    extraParams?: Record<string, any> | null;
+  } | null>(null);
+
+  const finalOrderId = resolved?.orderId ?? orderId;
+  const finalCallbackUrl = resolved?.callbackUrl ?? callbackUrl;
+  const finalRedirectUrl = resolved?.redirectUrl ?? redirectUrl;
 
   const mapRef = useRef<HTMLDivElement | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,12 +47,42 @@ function ConfirmLocationClient() {
   const [confirming, setConfirming] = useState(false);
 
   const disabled = useMemo(
-    () => !current || !orderId || !loadedLeaflet,
-    [current, orderId, loadedLeaflet]
+    () =>
+      !current ||
+      !finalOrderId ||
+      !loadedLeaflet ||
+      (shortId !== null && !!shortId && !resolved),
+    [current, finalOrderId, loadedLeaflet, shortId, resolved]
   );
 
   useEffect(() => {
-    if (!orderId) {
+    if (!shortId) return;
+    setStatus({ message: "Loading link..." });
+    fetch(`/location/url?id=${encodeURIComponent(shortId)}`)
+      .then(res => {
+        if (!res.ok) throw new Error("not-found");
+        return res.json();
+      })
+      .then(data => {
+        setResolved(data);
+        setStatus({ message: "Ready. Please confirm your location." });
+        try {
+          if (typeof window !== "undefined") {
+            const url = new URL(window.location.href);
+            url.searchParams.delete("shortId");
+            if (data?.orderId)
+              url.searchParams.set("orderId", String(data.orderId));
+            window.history.replaceState({}, "", url.toString());
+          }
+        } catch {}
+      })
+      .catch(() => {
+        setStatus({ message: "Invalid or expired link.", type: "error" });
+      });
+  }, [shortId]);
+
+  useEffect(() => {
+    if (!finalOrderId) {
       setStatus({ message: "Error: No order ID provided", type: "error" });
       return;
     }
@@ -78,7 +121,7 @@ function ConfirmLocationClient() {
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
-  }, [orderId]);
+  }, [finalOrderId]);
 
   useEffect(() => {
     if (!loadedLeaflet || !current || !mapRef.current) return;
@@ -201,19 +244,19 @@ function ConfirmLocationClient() {
   }, [loadedLeaflet, current]);
 
   async function onConfirm() {
-    if (!current || !orderId) return;
+    if (!current || !finalOrderId) return;
     setConfirming(true);
     setStatus({ message: "Confirming location..." });
     const payload = {
-      orderId,
+      orderId: finalOrderId,
       latitude: current.lat,
       longitude: current.lng,
       accuracy: current.accuracy ?? undefined,
       timestamp: current.timestamp ?? undefined,
     };
     try {
-      if (callbackUrl) {
-        const res = await fetch(callbackUrl, {
+      if (finalCallbackUrl) {
+        const res = await fetch(finalCallbackUrl, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -223,11 +266,11 @@ function ConfirmLocationClient() {
           message: "Location confirmed successfully!",
           type: "success",
         });
-        if (redirectUrl) {
+        if (finalRedirectUrl) {
           setTimeout(() => {
             try {
-              const u = new URL(redirectUrl);
-              u.searchParams.set("orderId", orderId);
+              const u = new URL(finalRedirectUrl);
+              u.searchParams.set("orderId", finalOrderId);
               u.searchParams.set("lat", String(current.lat));
               u.searchParams.set("lng", String(current.lng));
               u.searchParams.set("ok", "1");
@@ -338,7 +381,7 @@ function ConfirmLocationClient() {
               <p className="text-sm text-gray-600">
                 Order ID:{" "}
                 <span className="font-medium text-gray-800">
-                  {orderId || "--"}
+                  {finalOrderId || "--"}
                 </span>
               </p>
               <p className="mt-1 text-sm text-gray-600">

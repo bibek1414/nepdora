@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 
 export type BuildConfirmUrlOptions = {
   confirmPageUrl: string;
@@ -8,19 +9,24 @@ export type BuildConfirmUrlOptions = {
   extraParams?: Record<string, string | number | boolean | null | undefined>;
 };
 
-function buildConfirmUrl(options: BuildConfirmUrlOptions): string {
+// Updated buildConfirmUrl function
+async function buildConfirmUrl(
+  options: BuildConfirmUrlOptions
+): Promise<string> {
   const { confirmPageUrl, orderId, callbackUrl, redirectUrl, extraParams } =
     options;
+
+  // Store parameters and get short ID
+  const response = await fetch("/location/url", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ orderId, callbackUrl, redirectUrl, extraParams }),
+  });
+
+  const { shortId } = await response.json();
+
   const url = new URL(confirmPageUrl);
-  url.searchParams.set("orderId", orderId);
-  if (callbackUrl) url.searchParams.set("callback", callbackUrl);
-  if (redirectUrl) url.searchParams.set("redirect", redirectUrl);
-  if (extraParams) {
-    for (const [key, value] of Object.entries(extraParams)) {
-      if (value === undefined || value === null) continue;
-      url.searchParams.set(key, String(value));
-    }
-  }
+  url.searchParams.set("shortId", shortId);
   return url.toString();
 }
 
@@ -51,17 +57,22 @@ export const LocationLinkButton: React.FC<LocationLinkButtonProps> = ({
   target = "_blank",
   rel = "noopener noreferrer",
 }) => {
-  const href = React.useMemo(
-    () =>
-      buildConfirmUrl({
+  const [href, setHref] = useState("#");
+
+  useEffect(() => {
+    const generateUrl = async () => {
+      const url = await buildConfirmUrl({
         confirmPageUrl,
         orderId,
         callbackUrl,
         redirectUrl,
         extraParams,
-      }),
-    [confirmPageUrl, orderId, callbackUrl, redirectUrl, extraParams]
-  );
+      });
+      setHref(url);
+    };
+
+    generateUrl();
+  }, [confirmPageUrl, orderId, callbackUrl, redirectUrl, extraParams]);
 
   if (asLink) {
     return (
