@@ -62,35 +62,39 @@ export const SubCategoryCard2: React.FC<SubCategoryCard2Props> = ({
 
   return (
     <CardWrapper>
-      <div className="group relative h-80 cursor-pointer overflow-hidden rounded-xl shadow-lg">
+      <div className="group relative h-72 cursor-pointer overflow-hidden rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl sm:h-80 md:h-96">
         <Image
           src={subcategoryImage}
           alt={subcategory.name}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
         <div className="absolute inset-0 bg-black/30" />
 
         {/* Parent Category Badge */}
         {showParentCategory && (
-          <div className="absolute top-4 left-4">
-            <Badge className="bg-white/90 text-xs text-black">
+          <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
+            <Badge className="bg-white/90 text-[10px] font-medium text-black sm:text-xs">
               <Tag className="mr-1 h-3 w-3" />
               {categoryName}
             </Badge>
           </div>
         )}
 
-        <div className="absolute bottom-4 left-4 text-white">
-          <h2 className="text-2xl font-bold md:text-3xl">{subcategory.name}</h2>
+        <div className="absolute right-4 bottom-4 left-4 text-white sm:right-auto">
+          <h2 className="text-xl font-bold sm:text-2xl md:text-3xl">
+            {subcategory.name}
+          </h2>
           {showDescription && subcategory.description && (
-            <p className="mt-1 line-clamp-2 text-sm opacity-90">
+            <p className="mt-2 line-clamp-3 text-sm opacity-90 sm:line-clamp-2 sm:text-base">
               {subcategory.description}
             </p>
           )}
-          <a className="mt-2 inline-flex items-center rounded-full bg-black/70 px-4 py-2 text-sm font-semibold transition-colors hover:bg-black md:text-base">
-            EXPLORE <ArrowRight className="ml-2 h-4 w-4" />
-          </a>
+          <div className="mt-3 inline-flex items-center rounded-full bg-black/70 px-4 py-2 text-xs font-semibold tracking-wide uppercase transition-colors hover:bg-black sm:text-sm md:text-base">
+            Explore
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </div>
         </div>
       </div>
     </CardWrapper>

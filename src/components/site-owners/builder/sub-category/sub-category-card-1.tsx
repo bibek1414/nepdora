@@ -66,33 +66,37 @@ export const SubCategoryCard1: React.FC<SubCategoryCard1Props> = ({
 
   return (
     <CardWrapper>
-      <div className="bg-background-light dark:bg-background-dark">
+      <div className="bg-background-light dark:bg-background-dark flex flex-col rounded-xl p-4 shadow-sm transition-shadow duration-300 hover:shadow-md sm:p-5 md:p-6">
         {/* Parent Category Badge */}
         {showParentCategory && (
-          <div className="mb-2 flex justify-center">
-            <Badge variant="outline" className="text-xs">
+          <div className="mb-3 flex justify-center">
+            <Badge
+              variant="outline"
+              className="text-[10px] font-medium sm:text-xs"
+            >
               <Tag className="mr-1 h-3 w-3" />
               {categoryName}
             </Badge>
           </div>
         )}
 
-        <div className="bg-card-light dark:bg-card-dark mb-4 flex h-64 items-center justify-center rounded-lg p-6 transition-transform hover:scale-105">
+        <div className="bg-card-light dark:bg-card-dark mb-5 flex h-48 items-center justify-center rounded-lg p-4 transition-transform duration-300 hover:scale-[1.03] sm:h-56 sm:p-5 md:h-64 md:p-6">
           <Image
             src={subcategoryImage}
             alt={subcategory.name}
             width={400}
             height={400}
             className="max-h-full max-w-full object-contain"
+            sizes="(max-width: 640px) 200px, 300px"
           />
         </div>
 
-        <h3 className="text-text-light dark:text-text-dark mb-2 text-center text-lg font-semibold">
+        <h3 className="text-text-light dark:text-text-dark mb-2 text-center text-lg font-semibold sm:text-xl">
           {subcategory.name}
         </h3>
 
         {showDescription && subcategory.description && (
-          <p className="text-muted-foreground mb-2 text-center text-sm">
+          <p className="text-muted-foreground mb-4 text-center text-sm leading-relaxed sm:text-base">
             {subcategory.description}
           </p>
         )}

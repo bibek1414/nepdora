@@ -101,20 +101,21 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
         }}
       >
         {/* Image */}
-        <div className="relative h-56 overflow-hidden">
+        <div className="relative h-52 overflow-hidden sm:h-56 md:h-64">
           <Image
             src={subcategoryImage}
             alt={subcategory.name}
             width={400}
             height={280}
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
 
           {/* Parent Category Badge */}
           {showParentCategory && (
-            <div className="absolute top-3 left-3">
+            <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
               <Badge
-                className="bg-white/90 text-xs text-black"
+                className="bg-white/90 text-[10px] font-medium text-black sm:text-xs"
                 style={{ fontFamily: theme.fonts.body }}
               >
                 <Tag className="mr-1 h-3 w-3" />
@@ -144,10 +145,10 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
         </div>
 
         {/* Content */}
-        <div className="p-5">
-          <div className="mb-3 flex items-center justify-between">
+        <div className="p-4 sm:p-5">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <h3
-              className="text-xl font-bold transition-colors duration-300"
+              className="text-lg font-bold transition-colors duration-300 sm:text-xl"
               style={{
                 fontFamily: theme.fonts.heading,
               }}
@@ -155,20 +156,20 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
               {subcategory.name}
             </h3>
             <ArrowRight
-              className="h-5 w-5 transition-all duration-300 group-hover:translate-x-1"
+              className="h-5 w-5 flex-shrink-0 transition-all duration-300 group-hover:translate-x-1"
               style={{ color: theme.colors.primary }}
             />
           </div>
 
           {showDescription && subcategory.description && (
-            <p className="mb-4 line-clamp-2 text-sm">
+            <p className="mb-4 line-clamp-3 text-sm leading-relaxed sm:line-clamp-2 sm:text-base">
               {subcategory.description}
             </p>
           )}
 
           <Button
             onClick={handleViewSubCategory}
-            className="w-full transform rounded-lg px-4 py-3 font-semibold shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            className="w-full transform rounded-lg px-4 py-2.5 text-sm font-semibold shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg sm:py-3 sm:text-base"
             style={{
               background: theme.colors.primary,
               fontFamily: theme.fonts.heading,
