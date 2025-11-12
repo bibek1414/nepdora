@@ -36,6 +36,11 @@ export const BannerStylesDialog: React.FC<BannerStylesDialogProps> = ({
       name: "Image Slider",
       description: "Auto-sliding image carousel with navigation controls",
     },
+    {
+      id: "banner-3" as const,
+      name: "Three Column",
+      description: "Three column banner with navigation controls",
+    },
   ];
 
   const handleSelect = (template: {
