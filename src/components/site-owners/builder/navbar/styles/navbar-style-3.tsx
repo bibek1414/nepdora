@@ -19,25 +19,7 @@ const EditableItem: React.FC<{
   onDelete?: () => void;
   children: React.ReactNode;
 }> = ({ onEdit, onDelete, children }) => (
-  <div className="group relative">
-    {children}
-    <div className="absolute -top-8 -right-3 hidden items-center rounded-full p-1 group-hover:flex">
-      <button
-        onClick={onEdit}
-        className="text-primary hover:bg-primary-foreground/20 rounded-full p-1"
-      >
-        <Edit className="h-4 w-4" />
-      </button>
-      {onDelete && (
-        <button
-          onClick={onDelete}
-          className="hover:bg-primary-foreground/20 rounded-full p-1 text-red-500"
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
-      )}
-    </div>
-  </div>
+  <div className="group relative">{children}</div>
 );
 
 interface NavbarStyleProps {
@@ -221,16 +203,6 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                 </a>
               )
             )}
-            {isEditable && onAddLink && (
-              <Button
-                onClick={onAddLink}
-                variant="outline"
-                size="sm"
-                className="pointer-events-auto"
-              >
-                <Plus className="mr-2 h-4 w-4" /> Link
-              </Button>
-            )}
           </div>
 
           {/* Buttons */}
@@ -277,16 +249,6 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                   )}
                 </Button>
               )
-            )}
-            {isEditable && onAddButton && (
-              <Button
-                onClick={onAddButton}
-                variant="outline"
-                size="sm"
-                className="pointer-events-auto"
-              >
-                <Plus className="mr-2 h-4 w-4" /> Button
-              </Button>
             )}
           </div>
 

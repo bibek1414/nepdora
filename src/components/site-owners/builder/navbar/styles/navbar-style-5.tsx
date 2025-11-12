@@ -448,17 +448,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                         </a>
                       )
                     )}
-
-                    {isEditable && onAddLink && (
-                      <Button
-                        onClick={onAddLink}
-                        variant="outline"
-                        size="sm"
-                        className="pointer-events-auto"
-                      >
-                        <Plus className="mr-2 h-4 w-4" /> Link
-                      </Button>
-                    )}
                   </div>
                 </div>
 
@@ -507,16 +496,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                         aria-hidden="true"
                         className="h-6 w-px bg-gray-200"
                       ></span>
-                    )}
-                    {isEditable && onAddButton && (
-                      <Button
-                        onClick={onAddButton}
-                        variant="outline"
-                        size="sm"
-                        className="pointer-events-auto"
-                      >
-                        <Plus className="mr-2 h-4 w-4" /> Button
-                      </Button>
                     )}
                   </div>
 

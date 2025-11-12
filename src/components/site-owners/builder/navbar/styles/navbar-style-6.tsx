@@ -218,135 +218,134 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
     <>
       <div className="bg-white">
         {/* Top Bar */}
-        <div
-          className="flex h-9 items-center justify-between px-4 text-xs sm:px-6 lg:px-8"
-          style={{ backgroundColor: theme.colors.primary }}
-        >
-          {/* Left side - Links with separators */}
-          <div className="flex items-center gap-4">
-            {links.slice(0, 3).map((link, index) => (
-              <React.Fragment key={link.id}>
-                {isEditable ? (
-                  <EditableItem
-                    onEdit={() => onEditLink && onEditLink(link)}
-                    onDelete={() => onDeleteLink && onDeleteLink(link.id)}
-                  >
-                    <EditableLink
-                      text={link.text}
-                      href={link.href}
-                      onChange={(text, href) => {
-                        if (onEditLink) {
-                          onEditLink({ ...link, text, href });
-                        }
-                      }}
-                      isEditable={isEditable}
-                      siteUser={siteUser}
-                      className="flex cursor-pointer items-center gap-1.5 text-white hover:text-white/80"
-                      textPlaceholder="Link text..."
-                      hrefPlaceholder="Enter URL..."
-                    />
-                  </EditableItem>
-                ) : (
-                  <a
-                    href={generateLinkHref(link.href)}
-                    onClick={e => handleLinkClick(e, link.href)}
-                    className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
-                      disableClicks
-                        ? "cursor-default opacity-60"
-                        : "cursor-pointer"
-                    }`}
-                  >
-                    {link.text}
-                  </a>
-                )}
-
-                {/* Add separator between links except after the last one */}
-                {index < Math.min(3, links.length) - 1 && (
-                  <span className="h-4 w-px bg-white/30"></span>
-                )}
-              </React.Fragment>
-            ))}
-
-            {/* Add new link button */}
-            {isEditable && onAddLink && links.length < 3 && (
-              <Button
-                onClick={onAddLink}
-                variant="ghost"
-                size="sm"
-                className="pointer-events-auto h-7 px-2 text-white hover:bg-white/20 hover:text-white"
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
-            )}
-          </div>
-
-          {/* Right side - Top bar items with icons and separators */}
-          <div className="flex items-center gap-4">
-            {topBarItems.map((item, index) => (
-              <React.Fragment key={item.id}>
-                {isEditable ? (
-                  <div className="group relative flex h-full items-center justify-center gap-1.5">
-                    <EditableText
-                      value={item.text}
-                      onChange={newText =>
-                        handleTopBarItemTextChange(item.id, newText)
-                      }
-                      isEditable={isEditable}
-                      className="text-center text-white hover:text-white/90"
-                      placeholder="Enter text..."
-                    />
-                    <Button
-                      onClick={() => handleDeleteTopBarItem(item.id)}
-                      variant="ghost"
-                      size="sm"
-                      className="pointer-events-auto ml-1 flex h-6 w-6 items-center justify-center p-0 text-white transition-opacity group-hover:opacity-100 hover:bg-white/20 hover:text-white"
+        <div style={{ backgroundColor: theme.colors.primary }}>
+          <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-4 text-xs sm:px-6 lg:px-8">
+            {/* Left side - Links with separators */}
+            <div className="flex items-center gap-4">
+              {links.slice(0, 3).map((link, index) => (
+                <React.Fragment key={link.id}>
+                  {isEditable ? (
+                    <EditableItem
+                      onEdit={() => onEditLink && onEditLink(link)}
+                      onDelete={() => onDeleteLink && onDeleteLink(link.id)}
                     >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
-                ) : (
-                  <a
-                    href={
-                      item.href && !disableClicks
-                        ? item.href.startsWith("tel:") ||
-                          item.href.startsWith("mailto:")
-                          ? item.href
-                          : generateLinkHref(item.href)
-                        : "#"
-                    }
-                    onClick={e =>
-                      disableClicks ? e.preventDefault() : undefined
-                    }
-                    className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
-                      disableClicks
-                        ? "cursor-default opacity-60"
-                        : "cursor-pointer"
-                    }`}
-                  >
-                    <span
-                      className="mx-auto max-w-3xl text-xl"
-                      dangerouslySetInnerHTML={{ __html: item.text }}
-                    ></span>
-                  </a>
-                )}
+                      <EditableLink
+                        text={link.text}
+                        href={link.href}
+                        onChange={(text, href) => {
+                          if (onEditLink) {
+                            onEditLink({ ...link, text, href });
+                          }
+                        }}
+                        isEditable={isEditable}
+                        siteUser={siteUser}
+                        className="flex cursor-pointer items-center gap-1.5 text-white hover:text-white/80"
+                        textPlaceholder="Link text..."
+                        hrefPlaceholder="Enter URL..."
+                      />
+                    </EditableItem>
+                  ) : (
+                    <a
+                      href={generateLinkHref(link.href)}
+                      onClick={e => handleLinkClick(e, link.href)}
+                      className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
+                        disableClicks
+                          ? "cursor-default opacity-60"
+                          : "cursor-pointer"
+                      }`}
+                    >
+                      {link.text}
+                    </a>
+                  )}
 
-                {/* Add separator between items except after the last one */}
-                {index < topBarItems.length - 1 && (
-                  <span className="h-4 w-px bg-white/30"></span>
-                )}
-              </React.Fragment>
-            ))}
+                  {/* Add separator between links except after the last one */}
+                  {index < Math.min(3, links.length) - 1 && (
+                    <span className="h-4 w-px bg-white/30"></span>
+                  )}
+                </React.Fragment>
+              ))}
 
-            {isEditable && (
-              <Button
-                onClick={handleAddTopBarItem}
-                variant="ghost"
-                size="sm"
-                className="pointer-events-auto h-7 px-2 text-white hover:bg-white/20 hover:text-white"
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
-            )}
+              {/* Add new link button */}
+              {isEditable && onAddLink && links.length < 3 && (
+                <Button
+                  onClick={onAddLink}
+                  variant="ghost"
+                  size="sm"
+                  className="pointer-events-auto h-7 px-2 text-white hover:bg-white/20 hover:text-white"
+                >
+                  <Plus className="h-3 w-3" />
+                </Button>
+              )}
+            </div>
+
+            {/* Right side - Top bar items with icons and separators */}
+            <div className="flex items-center gap-4">
+              {topBarItems.map((item, index) => (
+                <React.Fragment key={item.id}>
+                  {isEditable ? (
+                    <div className="group relative flex h-full items-center justify-center gap-1.5">
+                      <EditableText
+                        value={item.text}
+                        onChange={newText =>
+                          handleTopBarItemTextChange(item.id, newText)
+                        }
+                        isEditable={isEditable}
+                        className="text-center text-white hover:text-white/90"
+                        placeholder="Enter text..."
+                      />
+                      <Button
+                        onClick={() => handleDeleteTopBarItem(item.id)}
+                        variant="ghost"
+                        size="sm"
+                        className="pointer-events-auto ml-1 flex h-6 w-6 items-center justify-center p-0 text-white transition-opacity group-hover:opacity-100 hover:bg-white/20 hover:text-white"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <a
+                      href={
+                        item.href && !disableClicks
+                          ? item.href.startsWith("tel:") ||
+                            item.href.startsWith("mailto:")
+                            ? item.href
+                            : generateLinkHref(item.href)
+                          : "#"
+                      }
+                      onClick={e =>
+                        disableClicks ? e.preventDefault() : undefined
+                      }
+                      className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
+                        disableClicks
+                          ? "cursor-default opacity-60"
+                          : "cursor-pointer"
+                      }`}
+                    >
+                      <span
+                        className="mx-auto max-w-3xl text-xl"
+                        dangerouslySetInnerHTML={{ __html: item.text }}
+                      ></span>
+                    </a>
+                  )}
+
+                  {/* Add separator between items except after the last one */}
+                  {index < topBarItems.length - 1 && (
+                    <span className="h-4 w-px bg-white/30"></span>
+                  )}
+                </React.Fragment>
+              ))}
+
+              {isEditable && (
+                <Button
+                  onClick={handleAddTopBarItem}
+                  variant="ghost"
+                  size="sm"
+                  className="pointer-events-auto h-7 px-2 text-white hover:bg-white/20 hover:text-white"
+                >
+                  <Plus className="h-3 w-3" />
+                </Button>
+              )}
+            </div>
           </div>
         </div>
 

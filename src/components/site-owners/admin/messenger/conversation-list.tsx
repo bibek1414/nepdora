@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useFacebookIntegrations } from "@/hooks/owner-site/admin/use-facebook-integrations";
-import { useConversationList } from "@/hooks/owner-site/admin/use-conversation-list";
+import { useConversationList } from "@/hooks/owner-site/admin/use-conversations";
 import {
   Select,
   SelectContent,
@@ -66,7 +66,7 @@ export function ConversationList({
 
   const pageId = activeIntegration?.page_id || null;
 
-  // Use the new hook with real-time updates
+  // Fetch conversation list
   const {
     data: conversationsResponse,
     refetch,
@@ -76,7 +76,6 @@ export function ConversationList({
 
   const conversationsData = useMemo(() => {
     if (!conversationsResponse) return [];
-    // Handle both array and object with results property
     if (Array.isArray(conversationsResponse)) return conversationsResponse;
     if (
       conversationsResponse.results &&
@@ -101,7 +100,7 @@ export function ConversationList({
     }
   }, [integrations, selectedIntegrationId, onIntegrationChange]);
 
-  // Sort conversations by updated_time (most recent first)
+  // Sort conversations by updated_time
   const conversations = useMemo(() => {
     if (!conversationsData || !Array.isArray(conversationsData)) return [];
     return [...conversationsData].sort((a, b) => {
@@ -184,31 +183,19 @@ export function ConversationList({
   const getMessagePreview = (conversation: ConversationListItem) => {
     const messageType = conversation.message_type;
     const snippet = conversation.snippet || "";
-
-    // Check if snippet contains attachment pattern like "[6 attachment(s)]"
     const attachmentMatch = snippet.match(/\[(\d+)\s+attachment\(s\)\]/i);
 
-    // Determine message preview based on message type
-    if (messageType === "audio") {
-      return "Sent a voice message";
-    }
+    if (messageType === "audio") return "Sent a voice message";
     if (messageType === "image") {
       const count = attachmentMatch ? parseInt(attachmentMatch[1]) : 1;
       return count > 1 ? `Sent ${count} photos` : "Sent a photo";
     }
-    if (messageType === "video") {
-      return "Sent a video";
-    }
-    if (messageType === "file") {
-      return "Sent a file";
-    }
+    if (messageType === "video") return "Sent a video";
+    if (messageType === "file") return "Sent a file";
 
     if (attachmentMatch) {
       const count = parseInt(attachmentMatch[1]);
-      if (count === 1) {
-        return "Sent an attachment";
-      }
-      return `Sent ${count} attachments`;
+      return count === 1 ? "Sent an attachment" : `Sent ${count} attachments`;
     }
 
     return snippet || "No messages yet";

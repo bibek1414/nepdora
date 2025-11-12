@@ -7,15 +7,21 @@ import { MessageInput } from "@/components/site-owners/admin/messenger/message-i
 import {
   useConversationMessages,
   useSendMessage,
+  useConversationList,
 } from "@/hooks/owner-site/admin/use-conversations";
 import {
   ConversationListItem,
   MessageData,
 } from "@/types/owner-site/admin/conversations";
 import { useFacebookIntegrations } from "@/hooks/owner-site/admin/use-facebook-integrations";
+import { useWebSocketMessages } from "@/hooks/owner-site/admin/use-websocket-messages";
 import { cn } from "@/lib/utils";
 
-export default function MessagingPage() {
+interface MessagingPageProps {
+  subDomain: string;
+}
+
+export default function MessagingPage({ subDomain }: MessagingPageProps) {
   const [selectedConversationId, setSelectedConversationId] = useState<
     string | null
   >(null);
@@ -35,13 +41,25 @@ export default function MessagingPage() {
   } | null>(null);
 
   const sendMessageMutation = useSendMessage();
+
+  // Use separate hooks for data fetching
+  const { refetch: refetchConversations } = useConversationList(
+    selectedIntegration?.pageId || null
+  );
   const { data: conversationDetail, isLoading: isLoadingMessages } =
     useConversationMessages(
       selectedConversationId,
       selectedIntegration?.pageId || null
     );
 
-  // ✅ Default integration selection
+  // WebSocket connection for real-time updates
+  const { isConnected } = useWebSocketMessages({
+    subDomain,
+    pageId: selectedIntegration?.pageId || null,
+    enabled: !!selectedIntegration?.pageId,
+  });
+
+  // Default integration selection
   useEffect(() => {
     if (integrations.length > 0 && !selectedIntegration) {
       const first = integrations[0];
@@ -54,7 +72,7 @@ export default function MessagingPage() {
     }
   }, [integrations, selectedIntegration]);
 
-  // ✅ Prevent page scrollbars during chat
+  // Prevent page scrollbars during chat
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -62,7 +80,7 @@ export default function MessagingPage() {
     };
   }, []);
 
-  // ✅ Handle integrations loaded state
+  // Handle integrations loaded state
   useEffect(() => {
     if (integrations.length > 0) {
       setError(null);
@@ -72,7 +90,7 @@ export default function MessagingPage() {
     }
   }, [integrations, integrationsLoaded]);
 
-  // ✅ Integration selector
+  // Integration selector
   const handleIntegrationChange = useCallback(
     (
       integration: {
@@ -96,12 +114,12 @@ export default function MessagingPage() {
     [integrations.length]
   );
 
-  // ✅ Extract messages
+  // Extract messages
   const messages: MessageData[] = useMemo(() => {
     return conversationDetail?.conversation?.messages ?? [];
   }, [conversationDetail]);
 
-  // ✅ Send message handler
+  // Send message handler
   const handleSendMessage = async (content: string) => {
     if (
       !selectedConversationId ||
@@ -111,7 +129,6 @@ export default function MessagingPage() {
       return;
 
     try {
-      // Get recipient (user, not the page)
       const participantId = selectedConversationData.participants.find(
         p => p.id !== selectedIntegration.pageId
       )?.id;
@@ -126,12 +143,12 @@ export default function MessagingPage() {
         message: content,
         page_access_token: selectedIntegration.pageAccessToken,
         conversationId: selectedConversationId,
-        page_id: selectedIntegration.pageId, // ✅ Ensure optimistic message gets correct sender
+        page_id: selectedIntegration.pageId,
       });
 
       console.log("✅ Message sent to:", participantId);
       setError(null);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("❌ Error sending message:", err);
       const fbErrorCode = err?.response?.data?.error?.code;
@@ -145,7 +162,7 @@ export default function MessagingPage() {
     }
   };
 
-  // ✅ Send media handler (images, audio, video)
+  // Send media handler
   const handleSendMedia = async (
     file: File | Blob,
     type: "image" | "audio" | "video"
@@ -158,7 +175,6 @@ export default function MessagingPage() {
       return;
 
     try {
-      // Get recipient (user, not the page)
       const participantId = selectedConversationData.participants.find(
         p => p.id !== selectedIntegration.pageId
       )?.id;
@@ -178,7 +194,7 @@ export default function MessagingPage() {
 
       console.log(`✅ ${type} sent to:`, participantId);
       setError(null);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(`❌ Error sending ${type}:`, err);
       const fbErrorCode = err?.response?.data?.error?.code;
@@ -189,11 +205,11 @@ export default function MessagingPage() {
           "Page access token is invalid or expired. Please reconnect the page."
         );
       else setError(`Failed to send ${type}. Please try again.`);
-      throw err; // Re-throw to let the component handle it
+      throw err;
     }
   };
 
-  // ✅ Conversation selection
+  // Conversation selection
   const handleSelectConversation = (
     conversationId: string,
     data: ConversationListItem
@@ -201,18 +217,17 @@ export default function MessagingPage() {
     setSelectedConversationId(conversationId);
     setSelectedConversationData(data);
     setError(null);
-    // Only toggle mobile chat view on mobile screens (< 768px)
     if (window.innerWidth < 768) {
       setShowMobileChat(true);
     }
   };
 
-  // ✅ Back to conversation list on mobile
+  // Back to conversation list on mobile
   const handleBackToList = () => {
     setShowMobileChat(false);
   };
 
-  // ✅ Loading state
+  // Loading state
   if (integrationsLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-white">
@@ -224,7 +239,7 @@ export default function MessagingPage() {
     );
   }
 
-  // ✅ No integrations
+  // No integrations
   if (error && integrations.length === 0) {
     return (
       <div className="flex h-screen items-center justify-center bg-white">
@@ -242,7 +257,7 @@ export default function MessagingPage() {
     );
   }
 
-  // ✅ Determine conversation info
+  // Determine conversation info
   const conversationName =
     selectedConversationData?.participants.find(
       p => p.id !== selectedIntegration?.pageId
@@ -252,15 +267,12 @@ export default function MessagingPage() {
     p => p.id !== selectedIntegration?.pageId
   )?.profile_pic;
 
-  // ✅ Render full layout
   return (
     <div className="flex h-screen overflow-hidden bg-white">
-      {/* Conversation List - Hidden on mobile when chat is open, always visible on desktop */}
+      {/* Conversation List */}
       <div
         className={cn(
           "transition-all duration-300",
-          // On mobile: hide when chat is open, show when chat is closed
-          // On desktop (md+): always show
           showMobileChat ? "hidden md:flex" : "flex"
         )}
       >
@@ -271,12 +283,10 @@ export default function MessagingPage() {
         />
       </div>
 
-      {/* Chat Area - Full width on mobile when open, side-by-side on desktop */}
+      {/* Chat Area */}
       <div
         className={cn(
           "flex flex-1 flex-col overflow-hidden",
-          // On mobile: hide when showMobileChat is false, show when true
-          // On desktop (md+): always show
           !showMobileChat ? "hidden md:flex" : "flex"
         )}
       >
@@ -301,7 +311,7 @@ export default function MessagingPage() {
                   messages={messages}
                   conversationName={conversationName}
                   conversationAvatar={conversationAvatar}
-                  currentUserId={selectedIntegration.pageId} // ✅ Correctly marks sent messages
+                  currentUserId={selectedIntegration.pageId}
                   onBack={handleBackToList}
                 />
 
