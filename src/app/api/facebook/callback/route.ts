@@ -12,33 +12,124 @@ function createServerHeaders(token: string) {
   };
 }
 
+// Helper to subscribe app-level webhook subscription
+async function subscribeAppWebhook() {
+  try {
+    const appId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID;
+    const appSecret = process.env.FACEBOOK_APP_SECRET;
+    const webhookUrl = process.env.FACEBOOK_WEBHOOK_URL;
+    const verifyToken = process.env.FACEBOOK_VERIFY_TOKEN;
+    const apiVersion = process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v20.0";
+
+    if (!appId || !appSecret || !webhookUrl || !verifyToken) {
+      console.error(
+        "[App Webhook Subscribe] Missing required environment variables"
+      );
+      return;
+    }
+
+    console.log(`[App Webhook Subscribe] Setting up app ${appId} webhook`);
+
+    // All available fields for Facebook Messenger webhooks
+    const fields = [
+      "messages",
+      "messaging_postbacks",
+      "messaging_optins",
+      "message_deliveries",
+      "messaging_referrals",
+      "message_reads",
+      "messaging_handovers",
+      "messaging_policy_enforcement",
+      "message_echoes",
+      "standby",
+      "messaging_account_linking",
+    ].join(", ");
+
+    const url = `https://graph.facebook.com/${apiVersion}/${appId}/subscriptions`;
+
+    const params = new URLSearchParams({
+      access_token: `${appId}|${appSecret}`,
+      object: "page",
+      callback_url: webhookUrl,
+      verify_token: verifyToken,
+      fields: fields,
+      include_values: "true",
+    });
+
+    console.log(`[App Webhook Subscribe] Fields: ${fields}`);
+
+    const response = await fetch(`${url}?${params.toString()}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("[App Webhook Subscribe] SUCCESS:", data);
+      return data;
+    } else {
+      const errorData = await response.json();
+      console.error(
+        `[App Webhook Subscribe] FAILED: ${response.statusText}`,
+        errorData
+      );
+      throw new Error(
+        `Webhook subscription failed: ${JSON.stringify(errorData)}`
+      );
+    }
+  } catch (error) {
+    console.error("[App Webhook Subscribe] ERROR:", error);
+    throw error;
+  }
+}
+
 // Helper to subscribe to webhook for a Facebook page
-async function subscribeToWebhook(pageId: string, pageAccessToken: string) {
+async function subscribePageWebhook(pageId: string, pageAccessToken: string) {
   try {
     console.log(
-      `[Webhook Subscribe] Starting subscription for page: ${pageId}`
+      `[Page Webhook Subscribe] Starting subscription for page: ${pageId}`
     );
 
+    const apiVersion = process.env.NEXT_PUBLIC_FACEBOOK_API_VERSION || "v20.0";
+
     const response = await fetch(
-      `https://graph.facebook.com/v20.0/${pageId}/subscribed_apps?subscribed_fields=messages,messaging_postbacks`,
+      `https://graph.facebook.com/${apiVersion}/${pageId}/subscribed_apps`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ access_token: pageAccessToken }),
+        body: JSON.stringify({
+          access_token: pageAccessToken,
+          subscribed_fields: [
+            "messages",
+            "messaging_postbacks",
+            "messaging_optins",
+            "message_deliveries",
+            "messaging_referrals",
+            "message_reads",
+            "messaging_handovers",
+            "messaging_policy_enforcement",
+            "message_echoes",
+            "standby",
+            "messaging_account_linking",
+          ],
+        }),
       }
     );
 
     const data = await response.json();
 
     if (response.ok) {
-      console.log(`[Webhook Subscribe] SUCCESS for page ${pageId}:`, data);
+      console.log(`[Page Webhook Subscribe] SUCCESS for page ${pageId}:`, data);
     } else {
-      console.error(`[Webhook Subscribe] FAILED for page ${pageId}:`, data);
+      console.error(
+        `[Page Webhook Subscribe] FAILED for page ${pageId}:`,
+        data
+      );
     }
 
     return data;
   } catch (error) {
-    console.error(`[Webhook Subscribe] ERROR for page ${pageId}:`, error);
+    console.error(`[Page Webhook Subscribe] ERROR for page ${pageId}:`, error);
     throw error;
   }
 }
@@ -126,6 +217,17 @@ export async function GET(request: Request) {
         "[Facebook OAuth] Access token received, type:",
         tokenType || "user"
       );
+
+      // Subscribe app-level webhook (do this once per app, not per page)
+      try {
+        await subscribeAppWebhook();
+      } catch (webhookError) {
+        console.error(
+          "[Facebook OAuth] App webhook subscription failed, but continuing:",
+          webhookError
+        );
+        // Don't fail the entire flow if webhook subscription fails
+      }
 
       // For Business Integration System User tokens, we need to handle differently
       if (tokenType === "SystemUser" || configId) {
@@ -364,11 +466,11 @@ async function saveBusinessIntegration({
         });
       }
 
-      // Subscribe to webhook after saving
+      // Subscribe to page webhook after saving
       console.log(
-        `[Save Business Integration] Subscribing to webhook for page ${page.id}`
+        `[Save Business Integration] Subscribing to page webhook for ${page.id}`
       );
-      await subscribeToWebhook(page.id, page.access_token);
+      await subscribePageWebhook(page.id, page.access_token);
     } catch (pageError) {
       console.error(
         `[Save Business Integration] Error processing page ${page.id}:`,
@@ -465,11 +567,11 @@ async function saveUserIntegration({
         });
       }
 
-      // Subscribe to webhook after saving
+      // Subscribe to page webhook after saving
       console.log(
-        `[Save User Integration] Subscribing to webhook for page ${page.id}`
+        `[Save User Integration] Subscribing to page webhook for ${page.id}`
       );
-      await subscribeToWebhook(page.id, page.access_token);
+      await subscribePageWebhook(page.id, page.access_token);
     } catch (pageError) {
       console.error(
         `[Save User Integration] Error processing page ${page.id}:`,
