@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Navbar, NavbarData } from "@/types/owner-site/components/navbar";
+import {
+  Navbar,
+  NavbarData,
+  NavbarLink,
+} from "@/types/owner-site/components/navbar";
 import {
   useUpdateNavbarMutation,
   useDeleteNavbarMutation,
@@ -12,6 +16,8 @@ import { NavbarStyle2 } from "./styles/navbar-style-2";
 import { NavbarStyle3 } from "./styles/navbar-style-3";
 import { NavbarStyle4 } from "./styles/navbar-style-4";
 import { NavbarStyle5 } from "./styles/navbar-style-5";
+import { NavbarStyle6 } from "./styles/navbar-style-6";
+
 import { Button } from "@/components/ui/button";
 import { Edit, Edit2, Settings, Trash2 } from "lucide-react";
 import {
@@ -39,6 +45,7 @@ const styleMap = {
   "style-3": NavbarStyle3,
   "style-4": NavbarStyle4,
   "style-5": NavbarStyle5,
+  "style-6": NavbarStyle6,
 };
 
 export const NavbarComponent: React.FC<NavbarComponentProps> = ({
@@ -79,6 +86,66 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
       },
     });
   };
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleUpdateTopBar = (topBarItems: any[]) => {
+    if (!isEditable) return;
+
+    updateNavbar({
+      id: navbar.id,
+      navbarData: {
+        ...navbar.data,
+        topBarItems: topBarItems,
+      },
+    });
+  };
+
+  const handleEditLink = (link: NavbarLink) => {
+    if (!isEditable) return;
+
+    const updatedLinks = navbar.data.links.map(l =>
+      l.id === link.id ? link : l
+    );
+
+    updateNavbar({
+      id: navbar.id,
+      navbarData: {
+        ...navbar.data,
+        links: updatedLinks,
+      },
+    });
+  };
+
+  const handleDeleteLink = (linkId: string) => {
+    if (!isEditable) return;
+
+    const updatedLinks = navbar.data.links.filter(l => l.id !== linkId);
+
+    updateNavbar({
+      id: navbar.id,
+      navbarData: {
+        ...navbar.data,
+        links: updatedLinks,
+      },
+    });
+  };
+
+  const handleAddLink = () => {
+    if (!isEditable) return;
+
+    const newLink: NavbarLink = {
+      id: Date.now().toString(),
+      text: "New Link",
+      href: "#",
+    };
+
+    updateNavbar({
+      id: navbar.id,
+      navbarData: {
+        ...navbar.data,
+        links: [...navbar.data.links, newLink],
+      },
+    });
+  };
 
   const StyleComponent =
     styleMap[navbar.data.style as keyof typeof styleMap] || NavbarStyle1;
@@ -92,7 +159,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
       }
     >
       {isEditable && (
-        <div className="absolute -top-2 right-2 z-10 flex gap-2">
+        <div className="absolute -top-10 right-2 z-10 flex gap-2">
           <Button
             size="sm"
             variant="outline"
@@ -151,6 +218,11 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
         siteUser={siteUser}
         disableClicks={disableClicks}
         onUpdateBanner={handleUpdateBanner}
+        onUpdateTopBar={handleUpdateTopBar}
+        onEditLink={handleEditLink}
+        onDeleteLink={handleDeleteLink}
+        onAddLink={handleAddLink}
+        onEditLogo={() => setIsEditorOpen(true)}
       />
     </div>
   );

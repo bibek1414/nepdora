@@ -22,7 +22,7 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
   onSelectTemplate,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "style-1" | "style-2" | "style-3" | "style-4" | "style-5" | null
+    "style-1" | "style-2" | "style-3" | "style-4" | "style-5" | "style-6" | null
   >(null);
 
   const templates = [
@@ -46,7 +46,7 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
     },
     {
       id: "style-2" as const,
-      name: "Navbar Centerd Logo",
+      name: "Navbar Centered Logo",
       data: {
         style: "style-2",
         logoText: "Centered",
@@ -63,7 +63,7 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
     },
     {
       id: "style-3" as const,
-      name: "Navbar with Search ",
+      name: "Navbar with Search",
       data: {
         style: "style-3",
         logoText: "Centered",
@@ -96,26 +96,52 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
     },
     {
       id: "style-5" as const,
-      name: "Navbar Style 1",
+      name: "E-commerce Navbar",
       data: {
         style: "style-5",
         logoText: "Brand",
         logoType: "text",
         showCart: true,
+        bannerText: "Get free delivery on orders over $100",
         links: [
-          { id: "1", text: "Home", href: "#" },
-          { id: "2", text: "Features", href: "#" },
-          { id: "3", text: "Pricing", href: "#" },
+          { id: "1", text: "Women", href: "#" },
+          { id: "2", text: "Men", href: "#" },
+          { id: "3", text: "New Arrivals", href: "#" },
+          { id: "4", text: "Sale", href: "#" },
         ],
         buttons: [
-          { id: "1", text: "Get Started", variant: "primary", href: "#" },
+          { id: "1", text: "Sign in", variant: "outline", href: "#" },
+          { id: "2", text: "Create account", variant: "primary", href: "#" },
+        ],
+      } as NavbarData,
+    },
+    {
+      id: "style-6" as const,
+      name: "E-commerce with Top Bar",
+      data: {
+        style: "style-6",
+        logoText: "Brand",
+        logoType: "text",
+        showCart: true,
+        links: [
+          { id: "1", text: "About Us", href: "#" },
+          { id: "2", text: "Frequently Asked Questions", href: "#" },
+          { id: "3", text: "Privacy Policy", href: "#" },
+        ],
+        buttons: [],
+        topBarItems: [
+          {
+            id: "1",
+            text: "Customer Service:+977-9801100037",
+            href: "tel:+9779801100037",
+          },
         ],
       } as NavbarData,
     },
   ];
 
   const handleSelect = (template: {
-    id: "style-1" | "style-2" | "style-3" | "style-4" | "style-5";
+    id: "style-1" | "style-2" | "style-3" | "style-4" | "style-5" | "style-6";
     data: NavbarData;
   }) => {
     setSelectedStyle(template.id);

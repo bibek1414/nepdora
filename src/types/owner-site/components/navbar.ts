@@ -11,6 +11,12 @@ export interface NavbarButton {
   href: string;
 }
 
+export interface TopBarItem {
+  id: string;
+  text: string;
+  href?: string;
+}
+
 export interface NavbarData {
   logoText: string;
   logoImage?: string;
@@ -20,6 +26,7 @@ export interface NavbarData {
   style: string;
   showCart: boolean;
   bannerText?: string;
+  topBarItems?: TopBarItem[];
 }
 
 export interface Navbar {
