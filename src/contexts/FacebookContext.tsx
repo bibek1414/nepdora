@@ -7,9 +7,12 @@ import {
   ReactNode,
   useEffect,
 } from "react";
-import { useFacebookApi } from "@/services/api/owner-sites/admin/facebook";
 import { FacebookIntegration } from "@/types/owner-site/admin/facebook";
 import { toast } from "sonner";
+import {
+  getFacebookIntegrations,
+  deleteFacebookIntegration,
+} from "@/lib/actions/facebook-actions";
 
 interface FacebookContextType {
   isConnected: boolean;
@@ -37,10 +40,12 @@ export const FacebookProvider = ({ children }: { children: ReactNode }) => {
     console.log("🔄 [FacebookContext] Starting refreshIntegration...");
 
     try {
-      console.log("📡 [FacebookContext] Calling API to fetch integrations...");
-      const data = await useFacebookApi.getFacebookIntegrations();
+      console.log(
+        "📡 [FacebookContext] Calling Server Action to fetch integrations..."
+      );
+      const data = await getFacebookIntegrations();
 
-      console.log("📊 [FacebookContext] API Response:", {
+      console.log("📊 [FacebookContext] Server Action Response:", {
         totalIntegrations: data.length,
         rawData: JSON.stringify(data, null, 2),
       });
@@ -186,14 +191,18 @@ export const FacebookProvider = ({ children }: { children: ReactNode }) => {
 
       setIsLoading(true);
 
-      console.log("📡 [FacebookContext] Calling API to delete integration...");
-      const response = await useFacebookApi.deleteFacebookIntegration(
-        integration.id
+      console.log(
+        "📡 [FacebookContext] Calling Server Action to delete integration..."
       );
+      const response = await deleteFacebookIntegration(integration.id);
 
-      console.log("✅ [FacebookContext] API Response:", {
+      console.log("✅ [FacebookContext] Server Action Response:", {
         response: JSON.stringify(response, null, 2),
       });
+
+      if (!response.success) {
+        throw new Error(response.message);
+      }
 
       setIntegration(null);
       setIsConnected(false);
