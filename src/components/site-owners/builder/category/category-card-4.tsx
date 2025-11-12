@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   ChevronRight,
-  ChevronLeft,
+  ChevronDown,
   ArrowRight,
   Loader2,
   Plus,
@@ -59,6 +59,10 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
   // State management
   const [hoveredCategory, setHoveredCategory] = useState<Category | null>(null);
   const [isUploadingBackground, setIsUploadingBackground] = useState(false);
+  const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] = useState(false);
+  const [activeMobileCategoryId, setActiveMobileCategoryId] = useState<
+    number | null
+  >(null);
 
   // Featured category content (editable) - Initialize all required properties
   const [featuredContent, setFeaturedContent] = useState<
@@ -261,6 +265,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
   const handleCategoryClick = (category: Category) => {
     if (isEditable) return; // Don't navigate in edit mode
     window.location.href = getCategoryUrl(category);
+    setIsMobileCategoriesOpen(false);
   };
 
   const handleSubCategoryClick = (
@@ -269,6 +274,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
   ) => {
     if (isEditable) return; // Don't navigate in edit mode
     window.location.href = getSubCategoryUrl(subcategory, category);
+    setIsMobileCategoriesOpen(false);
   };
 
   // Loading state
@@ -309,11 +315,127 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
 
   return (
     <div
-      className="mx-auto flex min-h-[80vh] max-w-7xl"
+      className="mx-auto flex min-h-[80vh] max-w-7xl flex-col md:flex-row"
       style={{ fontFamily: theme.fonts.body }}
     >
-      {/* Left Sidebar - Categories */}
-      <div className="relative z-20 flex w-60 flex-col border-r border-gray-200 bg-white">
+      {/* Mobile Categories */}
+      <div className="border-b border-gray-200 bg-white md:hidden">
+        <div className="flex items-center justify-between px-4 py-3">
+          <h2 className="text-base font-semibold text-gray-800">Categories</h2>
+          <button
+            onClick={() => setIsMobileCategoriesOpen(prev => !prev)}
+            className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+          >
+            {isMobileCategoriesOpen ? "Hide" : "Show"}
+            <ChevronDown
+              className={`h-4 w-4 transition-transform ${
+                isMobileCategoriesOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+        </div>
+        {isMobileCategoriesOpen && (
+          <div className="max-h-[22rem] overflow-y-auto px-4 pb-4">
+            {categories.length === 0 ? (
+              <div className="py-6 text-center text-sm text-gray-500">
+                <p>No categories available</p>
+                {isEditable && (
+                  <p className="mt-1 text-xs">
+                    Add categories to see them here
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {categories.map(category => {
+                  const categorySubcategories = getSubCategoriesForCategory(
+                    category.id
+                  );
+
+                  const isActive = activeMobileCategoryId === category.id;
+
+                  return (
+                    <div
+                      key={`mobile-cat-${componentId}-${category.id}`}
+                      className="rounded-lg border border-gray-200 bg-white shadow-sm"
+                    >
+                      <button
+                        onClick={() =>
+                          setActiveMobileCategoryId(prev =>
+                            prev === category.id ? null : category.id
+                          )
+                        }
+                        className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left"
+                      >
+                        <div className="flex flex-1 items-center gap-3">
+                          <img
+                            key={`mobile-cat-img-${componentId}-${category.id}`}
+                            src={
+                              category.image ||
+                              "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=32&h=32&fit=crop"
+                            }
+                            alt={category.name}
+                            className="h-9 w-9 rounded object-cover"
+                            onError={e => {
+                              (e.target as HTMLImageElement).src =
+                                "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=32&h=32&fit=crop";
+                            }}
+                          />
+                          <span className="text-sm font-medium text-gray-800">
+                            {category.name}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {!isEditable && (
+                            <button
+                              onClick={event => {
+                                event.stopPropagation();
+                                handleCategoryClick(category);
+                              }}
+                              className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700 transition hover:bg-gray-200"
+                            >
+                              View
+                              <ArrowRight className="h-3 w-3" />
+                            </button>
+                          )}
+                          <ChevronDown
+                            className={`h-4 w-4 text-gray-500 transition-transform ${
+                              isActive ? "rotate-180" : ""
+                            }`}
+                          />
+                        </div>
+                      </button>
+                      {categorySubcategories.length > 0 && isActive && (
+                        <div className="border-t border-gray-100 px-3 py-2">
+                          <p className="mb-2 text-xs font-semibold tracking-wide text-gray-500 uppercase">
+                            Subcategories
+                          </p>
+                          <div className="space-y-2">
+                            {categorySubcategories.map(sub => (
+                              <button
+                                key={`mobile-sub-${componentId}-${sub.id}`}
+                                onClick={() =>
+                                  handleSubCategoryClick(sub, category)
+                                }
+                                className="w-full rounded-md bg-gray-50 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
+                              >
+                                {sub.name}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Left Sidebar - Categories (Desktop) */}
+      <div className="relative z-20 hidden w-full flex-col border-b border-gray-200 bg-white md:flex md:w-60 md:flex-shrink-0 md:border-r md:border-b-0">
         <div className="flex-1">
           <div className="p-4">
             {categories.length === 0 ? (
@@ -427,7 +549,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
       <div className="flex flex-1 flex-col">
         <div
           key={`featured-${componentId}-${featuredContent.currentImageIndex}`}
-          className="relative flex min-h-[500px] flex-1 items-center"
+          className="relative flex min-h-[420px] flex-1 items-center sm:min-h-[460px] md:min-h-[500px]"
           style={{
             background: currentBackgroundImage
               ? `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${currentBackgroundImage})`
@@ -439,7 +561,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
         >
           {/* Background Change Button - Only visible when editable */}
           {isEditable && (
-            <div className="absolute top-4 right-30 z-10 flex flex-col gap-2">
+            <div className="absolute top-4 right-4 z-10 flex w-[11.5rem] flex-col gap-2 sm:top-6 sm:right-6">
               <label
                 htmlFor={`background-upload-${componentId}`}
                 className={`cursor-pointer rounded bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
@@ -467,7 +589,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
 
               <button
                 onClick={addBackgroundImage}
-                className="rounded bg-gray-600 px-4 py-2 text-sm text-white hover:bg-gray-700"
+                className="rounded bg-gray-600 px-4 py-2 text-sm text-white transition hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-70"
                 disabled={isUploadingBackground}
                 style={{ fontFamily: theme.fonts.body }}
               >
@@ -478,7 +600,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
                   onClick={() =>
                     removeBackgroundImage(featuredContent.currentImageIndex)
                   }
-                  className="rounded bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
+                  className="rounded bg-red-600 px-4 py-2 text-sm text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
                   disabled={isUploadingBackground}
                   style={{ fontFamily: theme.fonts.body }}
                 >
@@ -490,11 +612,11 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
 
           {/* Background Upload Loading Overlay */}
           {isUploadingBackground && (
-            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50">
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 px-4">
               <div className="flex flex-col items-center gap-2 text-white">
                 <Loader2 className="h-8 w-8 animate-spin" />
                 <p
-                  className="text-sm font-medium"
+                  className="text-center text-sm font-medium"
                   style={{ fontFamily: theme.fonts.body }}
                 >
                   Uploading background image...
@@ -503,14 +625,14 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
             </div>
           )}
 
-          <div className="container mx-auto px-8">
+          <div className="container mx-auto px-4 py-12 sm:px-6 md:px-8 md:py-0">
             <div className="max-w-2xl text-white">
               <EditableText
                 key={`subtitle-${componentId}`}
                 value={featuredContent.subtitle}
                 onChange={value => handleContentUpdate("subtitle", value)}
                 placeholder="Enter subtitle..."
-                className="mb-4 text-lg font-medium opacity-90"
+                className="mb-3 text-sm font-medium opacity-90 sm:mb-4 sm:text-base md:text-lg"
                 isEditable={isEditable}
                 as="p"
                 style={{ fontFamily: theme.fonts.body }}
@@ -521,7 +643,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
                 value={featuredContent.title}
                 onChange={value => handleContentUpdate("title", value)}
                 placeholder="Enter main title..."
-                className="mb-6 text-6xl leading-tight font-bold"
+                className="mb-4 text-4xl leading-tight font-bold sm:mb-6 sm:text-5xl md:text-6xl"
                 isEditable={isEditable}
                 as="h1"
                 style={{ fontFamily: theme.fonts.heading }}
@@ -532,7 +654,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
                 value={featuredContent.description}
                 onChange={value => handleContentUpdate("description", value)}
                 placeholder="Enter description..."
-                className="mb-8 text-xl leading-relaxed opacity-90"
+                className="mb-6 text-base leading-relaxed opacity-90 sm:mb-8 sm:text-lg md:text-xl"
                 isEditable={isEditable}
                 as="p"
                 multiline={true}
@@ -546,7 +668,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
                 onChange={handleButtonUpdate}
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="inline-flex transform items-center gap-2 rounded-lg bg-emerald-600 px-8 py-4 text-lg font-semibold text-white transition-all duration-200 hover:scale-105 hover:bg-emerald-700"
+                className="inline-flex transform items-center gap-2 rounded-lg px-6 py-3 text-base font-semibold text-white transition-all duration-200 hover:scale-105 sm:px-8 sm:py-4 sm:text-lg"
                 style={{
                   backgroundColor: theme.colors.primary,
                   color: theme.colors.primaryForeground,
@@ -562,12 +684,12 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
           {featuredContent.backgroundImages.length > 1 && (
             <>
               {/* Dots Indicator */}
-              <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2">
+              <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 gap-2 sm:bottom-8">
                 {featuredContent.backgroundImages.map((_, index) => (
                   <button
                     key={`dot-${componentId}-${index}`}
                     onClick={() => setImageIndex(index)}
-                    className={`h-1 w-30 rounded-full transition-colors ${
+                    className={`h-1.5 w-8 rounded-full transition-colors sm:h-2 sm:w-10 ${
                       index === featuredContent.currentImageIndex
                         ? "bg-white"
                         : "bg-white/50 hover:bg-white/70"
