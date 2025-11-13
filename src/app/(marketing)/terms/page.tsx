@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: "Nepdora",
     images: [
       {
-        url: "https://www.nepdora.com/images/og-image-all.png",
+        url: "https://www.nepdora.com/images/nepdora-image.png",
         width: 1200,
         height: 630,
         alt: "Nepdora's Terms of Service",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title: "Terms of Service | Nepdora",
     description:
       "Read the Terms of Service for using Nepdora's website builder, e-commerce, and social media management platform.",
-    images: ["https://www.nepdora.com/images/og-image-all.png"],
+    images: ["https://www.nepdora.com/images/nepdora-image.png"],
   },
 };
 export default function TermsOfServicePage() {

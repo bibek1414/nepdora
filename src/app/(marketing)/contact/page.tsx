@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "Nepdora",
     images: [
       {
-        url: "https://www.nepdora.com/og-image-all.png",
+        url: "https://www.nepdora.com/nepdora-image.png",
         width: 1200,
         height: 630,
         alt: "Contact the Nepdora support team",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: "Contact Nepdora: Get Web Development & E-commerce Support",
     description:
       "Need help? Contact the Nepdora team via phone, email, or live chat for quick support.",
-    images: ["https://www.nepdora.com/og-image-all.png"],
+    images: ["https://www.nepdora.com/nepdora-image.png"],
   },
 };
 

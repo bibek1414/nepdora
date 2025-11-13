@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "Nepdora",
     images: [
       {
-        url: "https://www.nepdora.com/og-image-all.png",
+        url: "https://www.nepdora.com/nepdora-image.png",
         width: 1200,
         height: 630,
         alt: "Nepdora's powerful website and e-commerce features",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: "Nepdora Features: Website Builder, E-commerce & Social Tools",
     description:
       "Explore features like web hosting, online store setup, analytics, and centralized social media management.",
-    images: ["https://www.nepdora.com/og-image-all.png"],
+    images: ["https://www.nepdora.com/nepdora-image.png"],
   },
 };
 

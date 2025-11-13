@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "Nepdora",
     images: [
       {
-        url: "https://www.nepdora.com/og-image-all.png",
+        url: "https://www.nepdora.com/nepdora-image.png",
         width: 1200,
         height: 630,
         alt: "Nepdora's transparent and flexible pricing plans",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: "Nepdora Pricing: Start Free, Upgrade for More Features",
     description:
       "Start for FREE! Compare Nepdora's transparent pricing plans and only pay as you grow.",
-    images: ["https://www.nepdora.com/og-image-all.png"],
+    images: ["https://www.nepdora.com/nepdora-image.png"],
   },
 };
 

@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "Nepdora",
     images: [
       {
-        url: "/og-image-all.png",
+        url: "/nepdora-image.png",
         width: 1200,
         height: 630,
         alt: "Nepdora - Your Complete Website Builder in Nepal",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     title: "Nepdora — Your Complete Website Builder in Nepal",
     description:
       "Create modern websites, businesses, and portfolios with Nepdora.",
-    images: ["/og-image-all.png"],
+    images: ["/nepdora-image.png"],
   },
 };
 
@@ -63,7 +63,7 @@ export default function Marketing() {
     url: "https://nepdora.com",
     description:
       "Nepdora — Your complete platform for creating modern websites, businesses, and portfolios in Nepal.",
-    image: "https://nepdora.com/og-image-all.png",
+    image: "https://nepdora.com/nepdora-image.png",
     sameAs: [
       "https://www.facebook.com/NepdoraWebBuilder",
       "https://www.instagram.com/nep_dora",
