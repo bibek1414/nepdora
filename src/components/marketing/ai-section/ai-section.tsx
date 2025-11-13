@@ -25,9 +25,9 @@ export default function AISection() {
           {/* Right side - Content */}
           <div className="order-1 space-y-8 lg:order-2">
             <div className="space-y-6">
-              <h1 className="text-2xl leading-tight font-bold text-black lg:text-3xl">
+              <h2 className="text-2xl leading-tight font-bold text-black lg:text-3xl">
                 Start selling online faster with AI
-              </h1>
+              </h2>
 
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
