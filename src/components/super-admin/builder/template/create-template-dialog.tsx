@@ -20,6 +20,7 @@ import { useTemplateToken } from "@/hooks/super-admin/components/use-template-to
 import { CreateTemplateAccountForm } from "@/components/auth/template/create-template-form";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 type TemplateItem = {
   id: number | string;
@@ -118,7 +119,30 @@ export default function CreateTemplateDialog() {
   };
 
   /**
-   * Handle template login - verify with API and redirect
+   * Set cross-domain cookies for authentication
+   */
+  const setCrossDomainCookie = (
+    name: string,
+    value: string,
+    days: number = 7
+  ) => {
+    const baseDomain = siteConfig.baseDomain;
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+
+    // Set cookie for current host
+    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax${
+      process.env.NODE_ENV === "production" ? "; Secure" : ""
+    }`;
+
+    // Set cookie scoped to base domain (for cross-subdomain access)
+    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; domain=.${baseDomain}; path=/; SameSite=Lax${
+      process.env.NODE_ENV === "production" ? "; Secure" : ""
+    }`;
+  };
+
+  /**
+   * Handle template login with proper cross-domain authentication
    */
   const handleTemplateLogin = async (template: TemplateItem) => {
     try {
@@ -129,26 +153,39 @@ export default function CreateTemplateDialog() {
         client_id: template.id,
       });
 
-      // Store tokens in localStorage (same as login flow)
-      localStorage.setItem("authToken", response.access_token);
-      localStorage.setItem("refreshToken", response.refresh_token);
-
-      // Store user data
+      // Prepare user data
       const userData = {
+        user_id: response.owner.id,
         id: response.owner.id,
         email: response.owner.email,
         role: response.owner.role,
-        sub_domain: response.client.domain,
+        sub_domain: response.client.schema_name,
+        domain: response.client.domain,
+        store_name: response.client.name,
+        has_profile: true,
+        has_profile_completed: true,
       };
+
+      // Store in localStorage (for main domain)
+      localStorage.setItem("authToken", response.access_token);
+      localStorage.setItem("refreshToken", response.refresh_token);
+      localStorage.setItem(
+        "authTokens",
+        JSON.stringify({
+          access_token: response.access_token,
+          refresh_token: response.refresh_token,
+        })
+      );
       localStorage.setItem("authUser", JSON.stringify(userData));
 
-      // Also set cookies for middleware (same as login)
-      document.cookie = `authToken=${response.access_token}; path=/; max-age=86400; SameSite=Lax`;
-      document.cookie = `authUser=${JSON.stringify(userData)}; path=/; max-age=86400; SameSite=Lax`;
+      // Set cross-domain cookies (critical for tenant domain access)
+      setCrossDomainCookie("authToken", response.access_token);
+      setCrossDomainCookie("refreshToken", response.refresh_token);
+      setCrossDomainCookie("authUser", JSON.stringify(userData));
 
       toast.success(`Logging into ${template.name}...`);
 
-      // Build the subdomain URL
+      // Build the subdomain URL with auth tokens as query parameters
       const isLocalhost = window.location.hostname.includes("localhost");
       let templateUrl: string;
 
@@ -158,14 +195,19 @@ export default function CreateTemplateDialog() {
         templateUrl = `http://${response.client.schema_name}.localhost:${port}/admin`;
       } else {
         // Production: template-name.nepdora.com/admin
-        templateUrl = `https://${response.client.schema_name}.nepdora.com/admin`;
+        templateUrl = `https://${response.client.schema_name}.${siteConfig.baseDomain}/admin`;
       }
 
-      // Redirect to the template admin
-      window.location.href = templateUrl;
+      // Add auth tokens as query parameters for immediate cross-domain authentication
+      const separator = templateUrl.includes("?") ? "&" : "?";
+      const finalUrl = `${templateUrl}${separator}auth_token=${encodeURIComponent(
+        response.access_token
+      )}&refresh_token=${encodeURIComponent(response.refresh_token)}`;
+
+      // Redirect to the template admin with auth tokens
+      window.location.href = finalUrl;
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
       console.error("Failed to login to template:", error);
       toast.error(
         error?.response?.data?.error?.message ||
