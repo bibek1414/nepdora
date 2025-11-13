@@ -1,6 +1,7 @@
 export interface Template {
   id: number | string;
   slug: string;
+  owner_id: number;
   name: string;
   schema_name: string;
 }

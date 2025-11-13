@@ -9,11 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import {
   useTemplates,
-  useUpdateTemplate,
   useDeleteTemplate,
 } from "@/hooks/super-admin/components/use-templates";
 import { useTemplateToken } from "@/hooks/super-admin/components/use-template-token";
@@ -27,6 +25,7 @@ type TemplateItem = {
   name: string;
   slug: string;
   schema_name?: string;
+  owner_id: number; // Make sure owner_id is included
   created_at?: string;
   updated_at?: string;
 };
@@ -36,9 +35,6 @@ export default function CreateTemplateDialog() {
 
   // State
   const [open, setOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [editName, setEditName] = useState("");
-  const [editTarget, setEditTarget] = useState<TemplateItem | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<TemplateItem | null>(null);
   const [loggingInTemplateId, setLoggingInTemplateId] = useState<
@@ -53,45 +49,15 @@ export default function CreateTemplateDialog() {
     refetch: fetchTemplates,
   } = useTemplates();
 
-  const updateTemplateMutation = useUpdateTemplate();
   const deleteTemplateMutation = useDeleteTemplate();
   const templateTokenMutation = useTemplateToken();
 
-  // Derived states
-  const submitting = updateTemplateMutation.isPending;
-  const deletingId = deleteTemplateMutation.variables;
+  // Track which template is being deleted
+  const [deletingOwnerId, setDeletingOwnerId] = useState<number | null>(null);
 
   const handleTemplateCreated = () => {
     setOpen(false);
     fetchTemplates();
-  };
-
-  const openEdit = (t: TemplateItem) => {
-    setEditTarget(t);
-    setEditName(t.name);
-    setEditOpen(true);
-  };
-
-  const handleEditSave = async () => {
-    if (!editTarget || !editName.trim()) return;
-
-    try {
-      const slug = editTarget.slug || editTarget.id;
-      await updateTemplateMutation.mutateAsync({
-        slug,
-        payload: {
-          name: editName.trim(),
-        },
-      });
-
-      setEditOpen(false);
-      setEditTarget(null);
-      setEditName("");
-      toast.success("Template updated successfully");
-    } catch (error) {
-      console.error("Failed to update template:", error);
-      toast.error("Failed to update template");
-    }
   };
 
   const openDelete = (t: TemplateItem) => {
@@ -103,24 +69,20 @@ export default function CreateTemplateDialog() {
     if (!deleteTarget) return;
 
     try {
-      const slug = deleteTarget.slug || deleteTarget.id;
-      await deleteTemplateMutation.mutateAsync(slug);
+      setDeletingOwnerId(deleteTarget.owner_id);
+      await deleteTemplateMutation.mutateAsync(deleteTarget.owner_id); // Use owner_id here
       setDeleteOpen(false);
       setDeleteTarget(null);
+      setDeletingOwnerId(null);
       toast.success("Template deleted successfully");
     } catch (error) {
       console.error("Failed to delete template:", error);
       toast.error("Failed to delete template");
+      setDeletingOwnerId(null);
     }
   };
 
-  const getTemplateSlug = (template: TemplateItem) => {
-    return template.slug || template.id;
-  };
-
-  /**
-   * Set cross-domain cookies for authentication
-   */
+  // Rest of your existing functions (setCrossDomainCookie, handleTemplateLogin, etc.)
   const setCrossDomainCookie = (
     name: string,
     value: string,
@@ -130,30 +92,23 @@ export default function CreateTemplateDialog() {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
 
-    // Set cookie for current host
     document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax${
       process.env.NODE_ENV === "production" ? "; Secure" : ""
     }`;
 
-    // Set cookie scoped to base domain (for cross-subdomain access)
     document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; domain=.${baseDomain}; path=/; SameSite=Lax${
       process.env.NODE_ENV === "production" ? "; Secure" : ""
     }`;
   };
 
-  /**
-   * Handle template login with proper cross-domain authentication
-   */
   const handleTemplateLogin = async (template: TemplateItem) => {
     try {
       setLoggingInTemplateId(template.id);
 
-      // Call the template-tokens API to verify and get tokens
       const response = await templateTokenMutation.mutateAsync({
         client_id: template.id,
       });
 
-      // Prepare user data
       const userData = {
         user_id: response.owner.id,
         id: response.owner.id,
@@ -166,7 +121,6 @@ export default function CreateTemplateDialog() {
         has_profile_completed: true,
       };
 
-      // Store in localStorage (for main domain)
       localStorage.setItem("authToken", response.access_token);
       localStorage.setItem("refreshToken", response.refresh_token);
       localStorage.setItem(
@@ -178,33 +132,27 @@ export default function CreateTemplateDialog() {
       );
       localStorage.setItem("authUser", JSON.stringify(userData));
 
-      // Set cross-domain cookies (critical for tenant domain access)
       setCrossDomainCookie("authToken", response.access_token);
       setCrossDomainCookie("refreshToken", response.refresh_token);
       setCrossDomainCookie("authUser", JSON.stringify(userData));
 
       toast.success(`Logging into ${template.name}...`);
 
-      // Build the subdomain URL with auth tokens as query parameters
       const isLocalhost = window.location.hostname.includes("localhost");
       let templateUrl: string;
 
       if (isLocalhost) {
-        // Local development: template-name.localhost:3000/admin
         const port = window.location.port || "3000";
         templateUrl = `http://${response.client.schema_name}.localhost:${port}/admin`;
       } else {
-        // Production: template-name.nepdora.com/admin
         templateUrl = `https://${response.client.schema_name}.${siteConfig.baseDomain}/admin`;
       }
 
-      // Add auth tokens as query parameters for immediate cross-domain authentication
       const separator = templateUrl.includes("?") ? "&" : "?";
       const finalUrl = `${templateUrl}${separator}auth_token=${encodeURIComponent(
         response.access_token
       )}&refresh_token=${encodeURIComponent(response.refresh_token)}`;
 
-      // Redirect to the template admin with auth tokens
       window.location.href = finalUrl;
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -262,11 +210,6 @@ export default function CreateTemplateDialog() {
                   {t.slug && (
                     <div className="text-xs text-gray-500">Slug: {t.slug}</div>
                   )}
-                  {t.schema_name && (
-                    <div className="text-xs text-gray-400">
-                      Schema: {t.schema_name}
-                    </div>
-                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
@@ -285,23 +228,16 @@ export default function CreateTemplateDialog() {
                     )}
                   </Button>
                   <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => openEdit(t)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
                     variant="destructive"
                     size="sm"
                     onClick={() => openDelete(t)}
                     disabled={
                       deleteTemplateMutation.isPending &&
-                      deletingId === getTemplateSlug(t)
+                      deletingOwnerId === t.owner_id
                     }
                   >
                     {deleteTemplateMutation.isPending &&
-                    deletingId === getTemplateSlug(t)
+                    deletingOwnerId === t.owner_id
                       ? "Deleting..."
                       : "Delete"}
                   </Button>
@@ -327,49 +263,6 @@ export default function CreateTemplateDialog() {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Dialog */}
-      <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit Template</DialogTitle>
-            <DialogDescription>Rename this template.</DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
-              Template Name
-            </label>
-            <Input
-              placeholder="Template name"
-              value={editName}
-              onChange={e => setEditName(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleEditSave();
-                }
-              }}
-            />
-          </div>
-
-          <div className="mt-4 flex justify-end gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setEditOpen(false)}
-              disabled={submitting}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleEditSave}
-              disabled={!editName.trim() || submitting}
-            >
-              {submitting ? "Saving..." : "Save"}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <DialogContent className="sm:max-w-md">
@@ -377,7 +270,8 @@ export default function CreateTemplateDialog() {
             <DialogTitle>Delete Template</DialogTitle>
             <DialogDescription>
               Are you sure you want to delete &quot;{deleteTarget?.name}&quot;?
-              This action cannot be undone.
+              This action cannot be undone and will delete the template account
+              completely.
             </DialogDescription>
           </DialogHeader>
 
@@ -394,7 +288,9 @@ export default function CreateTemplateDialog() {
               onClick={handleDeleteConfirm}
               disabled={deleteTemplateMutation.isPending}
             >
-              {deleteTemplateMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteTemplateMutation.isPending
+                ? "Deleting..."
+                : "Delete Account"}
             </Button>
           </div>
         </DialogContent>

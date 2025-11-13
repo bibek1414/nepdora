@@ -117,6 +117,7 @@ export function SubscriptionBlocker() {
         className="max-h-[90vh] !max-w-5xl scale-85"
         onInteractOutside={e => e.preventDefault()}
         onEscapeKeyDown={e => e.preventDefault()}
+        showCloseButton={false}
       >
         <AnimatePresence mode="wait">
           {!showPaymentDialog ? (

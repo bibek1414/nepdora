@@ -24,28 +24,11 @@ export const useCreateTemplate = () => {
   });
 };
 
-export const useUpdateTemplate = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      slug,
-      payload,
-    }: {
-      slug: string | number;
-      payload: CreateTemplateRequest;
-    }) => useTemplateApi.updateTemplate(slug, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["templates"] });
-    },
-  });
-};
-
 export const useDeleteTemplate = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (slug: string | number) => useTemplateApi.deleteTemplate(slug),
+    mutationFn: (ownerId: number) => useTemplateApi.deleteTemplate(ownerId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["templates"] });
     },

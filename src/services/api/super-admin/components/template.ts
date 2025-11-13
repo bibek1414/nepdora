@@ -38,30 +38,11 @@ export const useTemplateApi = {
     return { data: json as Template };
   },
 
-  updateTemplate: async (
-    slug: number | string,
-    payload: CreateTemplateRequest
-  ): Promise<{ data: Template }> => {
+  // Updated to use owner_id instead of slug
+  deleteTemplate: async (ownerId: number): Promise<DeleteTemplateResponse> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(
-      `${API_BASE_URL}/api/template-tenants/${slug}/`,
-      {
-        method: "PATCH",
-        headers: createHeaders(),
-        body: JSON.stringify(payload),
-      }
-    );
-    await handleApiError(response);
-    const json = await response.json();
-    return (json?.data ? json : { data: json }) as { data: Template };
-  },
-
-  deleteTemplate: async (
-    slug: number | string
-  ): Promise<DeleteTemplateResponse> => {
-    const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
-      `${API_BASE_URL}/api/template-tenants/${slug}/`,
+      `${API_BASE_URL}/api/template-tenants/${ownerId}/`,
       {
         method: "DELETE",
         headers: createHeaders(),
