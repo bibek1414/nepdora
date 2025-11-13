@@ -1,3 +1,46 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Nepdora",
+  description:
+    "Learn how Nepdora collects, uses, and protects your personal data. Our privacy policy covers account information, Facebook Login, and your data rights.",
+  alternates: {
+    canonical: "https://www.nepdora.com/privacy-policy",
+  },
+  keywords: [
+    "Nepdora privacy policy",
+    "data protection Nepal",
+    "user privacy",
+    "Facebook login privacy",
+    "personal data",
+  ],
+  authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
+  metadataBase: new URL("https://www.nepdora.com"),
+  openGraph: {
+    title: "Privacy Policy | Nepdora",
+    description:
+      "Learn how Nepdora collects, uses, and protects your personal data. Our policy covers account information, Facebook Login, and your data rights.",
+    url: "https://www.nepdora.com/privacy-policy",
+    siteName: "Nepdora",
+    images: [
+      {
+        url: "https://www.nepdora.com/images/og-image-all.png",
+        width: 1200,
+        height: 630,
+        alt: "Nepdora's Privacy Policy",
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy | Nepdora",
+    description:
+      "Learn how Nepdora collects, uses, and protects your personal data, including information from Facebook Login.",
+    images: ["https://www.nepdora.com/images/og-image-all.png"],
+  },
+};
 export default function PrivacyPolicyPage() {
   const lastUpdated = "October 29, 2025";
 

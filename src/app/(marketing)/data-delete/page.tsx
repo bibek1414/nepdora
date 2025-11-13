@@ -1,3 +1,46 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Data Deletion Instructions | Nepdora",
+  description:
+    "Find out how to permanently delete your account and personal data from Nepdora, including information collected via Facebook Login. Follow our step-by-step instructions.",
+  alternates: {
+    canonical: "https://www.nepdora.com/data-deletion",
+  },
+  keywords: [
+    "data deletion",
+    "delete Nepdora account",
+    "remove personal data",
+    "Facebook data removal",
+    "right to be forgotten",
+  ],
+  authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
+  metadataBase: new URL("https://www.nepdora.com"),
+  openGraph: {
+    title: "Data Deletion Instructions | Nepdora",
+    description:
+      "Find out how to permanently delete your account and personal data from Nepdora, including information collected via Facebook Login.",
+    url: "https://www.nepdora.com/data-deletion",
+    siteName: "Nepdora",
+    images: [
+      {
+        url: "https://www.nepdora.com/images/og-image-all.png",
+        width: 1200,
+        height: 630,
+        alt: "Instructions for deleting your Nepdora data",
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Data Deletion Instructions | Nepdora",
+    description:
+      "Step-by-step instructions on how to permanently delete your account and personal data from the Nepdora platform.",
+    images: ["https://www.nepdora.com/images/og-image-all.png"],
+  },
+};
 export default function DataDeletionPage() {
   const lastUpdated = "October 29, 2025";
 
