@@ -15,7 +15,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Nepdora — Your Complete Website Builder in Nepal",
   description:
-    "Create modern websites, businesses, and portfolios with Nepdora.",
+    "Launch your business online quickly with our free website builder, free hosting, and comprehensive suite of essential business tools. Start now!",
   keywords: [
     "website builder Nepal",
     "create website Nepal",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Nepdora — Your Complete Website Builder in Nepal",
     description:
-      "Create modern websites, businesses, and portfolios with Nepdora.",
+      "Launch your business online quickly with our free website builder, free hosting, and comprehensive suite of essential business tools. Start now!",
     url: "https://www.nepdora.com",
     siteName: "Nepdora",
     images: [
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Nepdora — Your Complete Website Builder in Nepal",
     description:
-      "Create modern websites, businesses, and portfolios with Nepdora.",
+      "Launch your business online quickly with our free website builder, free hosting, and comprehensive suite of essential business tools. Start now!",
     images: ["/nepdora-image.jpg"],
   },
 };

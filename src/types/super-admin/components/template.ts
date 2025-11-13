@@ -2,6 +2,7 @@ export interface Template {
   id: number | string;
   slug: string;
   name: string;
+  schema_name: string;
 }
 
 export interface CreateTemplateRequest {

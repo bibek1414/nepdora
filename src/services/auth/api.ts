@@ -10,7 +10,23 @@ interface SignupData {
   phone: string;
   store_name: string;
 }
+interface CreateTemplateAccountData {
+  email: string;
+  password: string;
+  phone: string;
+  store_name: string;
+  template_name: string;
+}
 
+interface TemplateAccountResponse {
+  id: number | string;
+  slug: string;
+  name: string;
+  store_name: string;
+  email: string;
+  message: string;
+  success: boolean;
+}
 interface LoginData {
   email: string;
   password: string;
@@ -61,7 +77,32 @@ export async function signupUser(data: SignupData): Promise<SignupResponse> {
 
   return response.json();
 }
+export async function createTemplateAccount(
+  data: CreateTemplateAccountData
+): Promise<TemplateAccountResponse> {
+  const response = await fetch(`${API_BASE_URL}/api/signup/`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ...data,
+      is_template_account: true,
+    }),
+  });
 
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new ApiError(
+      "Template account creation failed",
+      response.status,
+      errorData
+    );
+  }
+
+  return response.json();
+}
 export async function loginUser(data: LoginData): Promise<LoginResponse> {
   const response = await fetch(
     `${API_BASE_URL}/_allauth/browser/v1/auth/login`,
