@@ -17,7 +17,8 @@ import {
   ChevronDown,
   Package,
 } from "lucide-react";
-import { CartIcon } from "../../cart/cart-icon";
+import { CartIcon } from "@/components/site-owners/builder/cart/cart-icon";
+
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";

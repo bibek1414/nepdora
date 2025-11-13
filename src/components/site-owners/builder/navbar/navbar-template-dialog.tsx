@@ -132,8 +132,8 @@ export const NavbarTemplateDialog: React.FC<NavbarTemplateDialogProps> = ({
         topBarItems: [
           {
             id: "1",
-            text: "Customer Service:+977-9801100037",
-            href: "tel:+9779801100037",
+            text: "Customer Service:+977-9860425440",
+            href: "tel:+9779860425440",
           },
         ],
       } as NavbarData,

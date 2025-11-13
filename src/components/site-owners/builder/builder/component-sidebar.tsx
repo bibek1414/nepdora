@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   Search,
   X,
@@ -12,18 +11,23 @@ import {
   Package,
   Mail,
   Quote,
-  DollarSign,
   FileText,
   Image as ImageIcon,
   FolderOpen,
   Tag,
+  PanelLeft,
+  PanelRight,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface ComponentSidebarProps {
   siteUser: string;
   onComponentClick?: (componentId: string) => void;
+  collapsed?: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
 }
 
 type Item = {
@@ -36,8 +40,9 @@ type Item = {
 export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
   siteUser,
   onComponentClick,
+  collapsed = false,
+  onCollapsedChange,
 }) => {
-  const router = useRouter();
   const [query, setQuery] = useState("");
 
   const handleComponentClick = (componentId: string) => {
@@ -129,14 +134,12 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       icon: Info,
       keywords: ["questions", "answers", "help"],
     },
-
     {
       id: "blog-sections",
       label: "Blog",
       icon: FileText,
       keywords: ["articles", "posts", "news"],
     },
-
     {
       id: "portfolio-sections",
       label: "Portfolio",
@@ -164,12 +167,7 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
       id: "text-editor-sections",
       label: "Text Editor",
       icon: FileText,
-      keywords: [
-        "Text Editor ",
-        "Editor",
-        "Rich Text Editor",
-        "WYSIWYG Editor",
-      ],
+      keywords: ["Text Editor", "Editor", "Rich Text Editor", "WYSIWYG Editor"],
     },
     {
       id: "newsletter-sections",
@@ -195,17 +193,57 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
   }, [items, query]);
 
   return (
-    <div className="sticky top-15 left-0 z-20 h-screen w-40 border-r bg-white">
-      <div className="flex h-full flex-col">
-        {/* Header */}
-        <div className="px-2 py-2">
-          <h2 className="text-lg font-semibold text-gray-900">Components</h2>
+    <div
+      className={cn(
+        "bg-background sticky top-0 z-50 flex h-screen flex-col border-r transition-all duration-300 ease-in-out",
+        collapsed ? "w-16" : "w-64"
+      )}
+    >
+      {/* Logo Section */}
+      <div className="flex h-16 items-center border-b px-4">
+        <div
+          className={cn(
+            "flex items-center gap-2 transition-all duration-300",
+            collapsed ? "w-full justify-center" : "w-full"
+          )}
+        >
+          {!collapsed && (
+            <div className="flex flex-col">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center">
+                  <Image
+                    src="/fulllogo.svg"
+                    alt="Logo"
+                    width={150}
+                    height={40}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Search Bar */}
-        <div className="px-2">
+        {/* Toggle Button */}
+        <button
+          onClick={() => onCollapsedChange?.(!collapsed)}
+          className={cn(
+            "flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-gray-100"
+          )}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {collapsed ? (
+            <PanelLeft className="mr-1 h-4 w-4 text-gray-600" />
+          ) : (
+            <PanelRight className="h-5 w-5 text-gray-600" />
+          )}
+        </button>
+      </div>
+
+      {/* Search Bar */}
+      {!collapsed && (
+        <div className="border-b px-4 py-3">
           <div className="relative">
-            <Search className="absolute top-1/2 left-3 z-10 h-3 w-4 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
               type="text"
               placeholder="Search components…"
@@ -217,7 +255,7 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
                   handleComponentClick(filtered[0].id);
                 }
               }}
-              className="mb-2 h-2 w-full rounded-md border-gray-200 bg-gray-50 pr-9 pl-8 text-[8px] placeholder:text-[8px] placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500"
+              className="h-9 w-full rounded-md border-gray-200 bg-gray-50 pr-9 pl-9 text-sm placeholder:text-sm placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500"
             />
             {query && (
               <Button
@@ -226,34 +264,45 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
                 size="icon"
                 aria-label="Clear search"
                 onClick={() => setQuery("")}
-                className="absolute top-1/2 right-2 h-6 w-6 -translate-y-1/2 p-1 hover:bg-gray-100"
+                className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 p-1 hover:bg-gray-100"
               >
                 <X className="h-4 w-4 text-gray-400" />
               </Button>
             )}
           </div>
         </div>
+      )}
 
-        {/* Component Sections */}
-        <div className="flex-1 overflow-y-auto text-gray-600">
-          <div className="space-y-1 px-2">
-            {filtered.length === 0 ? (
-              <div className="px-3 py-3 text-sm text-gray-400">No matches</div>
-            ) : (
-              filtered.map(({ id, label, icon: Icon }) => (
+      {/* Component List */}
+      <div className="scrollbar-hide flex-1 overflow-y-auto py-4">
+        <nav className="grid gap-1 px-2">
+          {filtered.length === 0
+            ? !collapsed && (
+                <div className="px-3 py-3 text-sm text-gray-400">
+                  No matches
+                </div>
+              )
+            : filtered.map(({ id, label, icon: Icon }) => (
                 <Button
                   key={id}
                   variant="ghost"
                   onClick={() => handleComponentClick(id)}
-                  className="flex h-auto w-full items-center justify-start gap-3 px-3 py-1 text-left text-[9px] font-medium text-gray-700 hover:bg-gray-100"
+                  className={cn(
+                    "group hover:bg-accent hover:text-accent-foreground flex h-auto items-center rounded-md px-2 py-2 text-sm font-medium text-gray-700 transition-colors",
+                    collapsed ? "justify-center" : "justify-start"
+                  )}
+                  title={collapsed ? label : undefined}
                 >
-                  <Icon className="h-2 w-2 text-gray-700" />
-                  <span>{label}</span>
+                  <Icon
+                    className={cn(
+                      "h-4 w-4 flex-shrink-0",
+                      collapsed ? "mr-0" : "mr-2"
+                    )}
+                  />
+                  {!collapsed && <span className="truncate">{label}</span>}
                 </Button>
-              ))
-            )}
-          </div>
-        </div>
+              ))}
+        </nav>
       </div>
     </div>
   );

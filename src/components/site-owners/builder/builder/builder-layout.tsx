@@ -130,6 +130,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isHeroStylesDialogOpen, setIsHeroStylesDialogOpen] = useState(false);
   const [isAboutUsStylesDialogOpen, setIsAboutUsStylesDialogOpen] =
     useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isProductsStylesDialogOpen, setIsProductsStylesDialogOpen] =
     useState(false);
   const [isCategoriesStylesDialogOpen, setIsCategoriesStylesDialogOpen] =
@@ -1279,6 +1280,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onPageChange={handlePageChange}
         onPageCreated={handlePageCreated}
         onPageDeleted={handlePageDeleted}
+        isSidebarCollapsed={sidebarCollapsed}
       />
 
       <div className="bg-background flex min-h-screen flex-col">
@@ -1286,10 +1288,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           <ComponentSidebar
             siteUser={siteUser}
             onComponentClick={handleComponentClick}
+            collapsed={sidebarCollapsed}
+            onCollapsedChange={setSidebarCollapsed}
           />
 
           <div className="flex flex-1 flex-col">
-            <div className="flex-1 overflow-auto bg-gray-50 p-6">
+            <div className="mt-10 flex-1 overflow-auto bg-gray-50 p-6">
               <div className="mx-auto max-w-7xl">
                 <div className="mb-4">
                   <h2 className="text-foreground text-2xl font-bold capitalize">

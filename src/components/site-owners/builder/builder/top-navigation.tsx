@@ -4,16 +4,10 @@ import { DeletePageDialog } from "@/components/site-owners/builder/new-page/dele
 import { ThemeDialog } from "@/components/site-owners/builder/theme/theme-dialog";
 import { Button } from "@/components/ui/button";
 import { Page } from "@/types/owner-site/components/page";
-import {
-  ArrowLeft,
-  Palette,
-  Eye,
-  Upload,
-  ChevronDown,
-  ExternalLink,
-} from "lucide-react";
+import { ArrowLeft, Palette, Eye, Upload, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
+
 interface TopNavigationProps {
   pages: Page[];
   currentPage: string;
@@ -21,6 +15,7 @@ interface TopNavigationProps {
   onPageCreated: (page: Page) => void;
   onPageDeleted: (deletedSlug: string) => void;
   siteUser: string;
+  isSidebarCollapsed?: boolean; // Add this prop
 }
 
 export const TopNavigation: React.FC<TopNavigationProps> = ({
@@ -30,84 +25,81 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   onPageCreated,
   onPageDeleted,
   siteUser,
+  isSidebarCollapsed = false, // Default to false
 }) => {
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const { mutate: publish, isPending } = usePublishSite();
+
   return (
-    <div className="sticky top-0 z-40 border-b border-gray-200 bg-white">
-      <div className="flex items-center justify-between px-2 py-3">
-        {/* Left Section - Logo + Page Management */}
-        <div className="flex items-center gap-6">
-          {/* Logo */}
-          <img src="/fulllogo.svg" alt="Logo" className="h-8" />
+    <header className="fixed top-0 right-0 left-0 z-45 h-16 border-b bg-white">
+      <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Left Section - Page Management */}
+        <div
+          className={`flex items-center gap-4 transition-all duration-300 ease-in-out ${
+            isSidebarCollapsed ? "ml-16" : "ml-64"
+          }`}
+        >
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <span className="font-medium">Page Management</span>
+          </div>
 
-          {/* Page Management */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-xs text-gray-600">
-              <span>Page Management</span>
-            </div>
+          {/* New Page Dialog */}
+          <NewPageDialog onPageCreated={onPageCreated} />
 
-            {/* New Page Dialog */}
-            <NewPageDialog onPageCreated={onPageCreated} />
-
-            {/* Existing Pages */}
-            <div className="flex items-center gap-2">
-              {pages.map(page => (
-                <div
-                  key={page.slug}
-                  className={`flex items-center gap-1 rounded-md border text-sm ${
-                    currentPage === page.slug
-                      ? "border-gray-600 bg-gray-600 text-white"
-                      : "border-gray-200 bg-white hover:bg-gray-50"
-                  }`}
+          {/* Existing Pages */}
+          <div className="flex items-center gap-2">
+            {pages.map(page => (
+              <div
+                key={page.slug}
+                className={`flex items-center gap-1 rounded-md border text-sm ${
+                  currentPage === page.slug
+                    ? "border-gray-600 bg-gray-600 text-white"
+                    : "border-gray-200 bg-white hover:bg-gray-50"
+                }`}
+              >
+                <button
+                  onClick={() => onPageChange(page.slug)}
+                  className="px-3 py-1.5 capitalize"
                 >
-                  <button
-                    onClick={() => onPageChange(page.slug)}
-                    className="px-3 py-1.5 capitalize"
-                  >
-                    {page.title}
-                  </button>
+                  {page.title}
+                </button>
 
-                  {/* Delete button */}
-                  {pages.length > 1 && (
-                    <DeletePageDialog
-                      page={page}
-                      onPageDeleted={onPageDeleted}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+                {/* Delete button */}
+                {pages.length > 1 && (
+                  <DeletePageDialog page={page} onPageDeleted={onPageDeleted} />
+                )}
+              </div>
+            ))}
+          </div>
 
-            <div className="text-xs text-gray-500">
-              {pages.length} page{pages.length !== 1 ? "s" : ""}
-            </div>
+          <div className="text-xs text-gray-500">
+            {pages.length} page{pages.length !== 1 ? "s" : ""}
           </div>
         </div>
 
         {/* Right Section - Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center space-x-2">
           <Link href="/admin" target="_blank" rel="noopener noreferrer">
             <Button
               variant="outline"
               size="sm"
-              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+              className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Dashboard
             </Button>
           </Link>
 
-          {/* Theme Settings Button - Now opens dialog instead of navigating */}
           <Button
             variant="outline"
             size="sm"
             onClick={() => setIsThemeDialogOpen(true)}
-            className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+            className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
           >
             <Palette className="mr-2 h-4 w-4" />
             Theme Settings
           </Button>
+
           <Link
             href={`/publish/${siteUser}`}
             target="_blank"
@@ -115,12 +107,14 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
           >
             <Button
               variant="outline"
-              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+              size="sm"
+              className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
             >
-              <ExternalLink className="mr-2 h-4 w-4" />
               Live Site
+              <ExternalLink className="ml-2 h-4 w-4" />
             </Button>
           </Link>
+
           <Link
             href={`/preview/${siteUser}/${currentPage}`}
             target="_blank"
@@ -128,15 +122,18 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
           >
             <Button
               variant="outline"
-              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+              size="sm"
+              className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
             >
-              <Eye className="mr-2 h-4 w-4" />
               Preview
+              <ExternalLink className="ml-2 h-4 w-4" />
             </Button>
           </Link>
+
           <Button
             variant="outline"
-            className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+            size="sm"
+            className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
             onClick={() => publish()}
             disabled={isPending}
           >
@@ -151,6 +148,6 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         open={isThemeDialogOpen}
         onOpenChange={setIsThemeDialogOpen}
       />
-    </div>
+    </header>
   );
 };

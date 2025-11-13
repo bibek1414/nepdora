@@ -11,6 +11,8 @@ import { NavbarStyle1 } from "./styles/navbar-style-1";
 import { NavbarStyle2 } from "./styles/navbar-style-2";
 import { NavbarStyle3 } from "./styles/navbar-style-3";
 import { NavbarStyle4 } from "./styles/navbar-style-4";
+import { NavbarStyle5 } from "./styles/navbar-style-5";
+import { NavbarStyle6 } from "./styles/navbar-style-6";
 import { Button } from "@/components/ui/button";
 import { Edit, Edit2, Settings, Trash2 } from "lucide-react";
 import {
@@ -37,6 +39,8 @@ const styleMap = {
   "style-2": NavbarStyle2,
   "style-3": NavbarStyle3,
   "style-4": NavbarStyle4,
+  "style-5": NavbarStyle5,
+  "style-6": NavbarStyle6,
 };
 
 export const NavbarComponent: React.FC<NavbarComponentProps> = ({
