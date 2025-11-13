@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: "Nepdora",
     images: [
       {
-        url: "https://www.nepdora.com/images/nepdora-image.png",
+        url: "https://www.nepdora.com/nepdora-image.jpg",
         width: 1200,
         height: 630,
         alt: "Nepdora's Privacy Policy",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Privacy Policy | Nepdora",
     description:
       "Learn how Nepdora collects, uses, and protects your personal data, including information from Facebook Login.",
-    images: ["https://www.nepdora.com/images/nepdora-image.png"],
+    images: ["https://www.nepdora.com/nepdora-image.jpg"],
   },
 };
 export default function PrivacyPolicyPage() {

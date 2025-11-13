@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: "Nepdora",
     images: [
       {
-        url: "https://www.nepdora.com/images/nepdora-image.png",
+        url: "https://www.nepdora.com/nepdora-image.jpg",
         width: 1200,
         height: 630,
         alt: "Instructions for deleting your Nepdora data",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Data Deletion Instructions | Nepdora",
     description:
       "Step-by-step instructions on how to permanently delete your account and personal data from the Nepdora platform.",
-    images: ["https://www.nepdora.com/images/nepdora-image.png"],
+    images: ["https://www.nepdora.com/nepdora-image.jpg"],
   },
 };
 export default function DataDeletionPage() {
