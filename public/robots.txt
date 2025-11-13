@@ -1,0 +1,14 @@
+userAgent: '*'
+disallow: /api/
+disallow: /account/
+disallow: /admin/
+disallow: /logout/
+disallow: /builder/
+disallow: /preview/
+disallow: /publish/
+disallow: /superadmin/
+disallow: /subscription/
+disallow: /payment/
+disallow: /location/
+disallow: /test/
+disallow: /_next/
