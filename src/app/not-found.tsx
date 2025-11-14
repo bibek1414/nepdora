@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "404 - Page Not Found | Nepdora",
@@ -22,19 +23,21 @@ export default function NotFound() {
         The page you are looking for might have been removed, had its name
         changed, or is temporarily unavailable.
       </p>
+
       <div className="mt-6 flex items-center gap-4">
-        <a
+        <Link
           href="/"
           className="rounded-md bg-gray-800 px-7 py-2.5 text-white transition-all hover:bg-black active:scale-95"
         >
           Return Home
-        </a>
-        <a
+        </Link>
+
+        <Link
           href="/contact"
           className="rounded-md border border-gray-300 px-7 py-2.5 text-gray-800 transition-all active:scale-95"
         >
           Contact support
-        </a>
+        </Link>
       </div>
     </div>
   );
