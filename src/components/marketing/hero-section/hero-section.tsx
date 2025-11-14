@@ -9,7 +9,7 @@ const WebsiteBuilderHero = () => {
   return (
     <div className="bg-background mx-auto max-w-7xl">
       <div className="container mx-auto py-8 sm:py-12 lg:py-20">
-        <div className="lgrid-cols-1 grid items-center lg:grid-cols-2">
+        <div className="grid items-center lg:grid-cols-2">
           {/* Left side content */}
           <div className="space-y-6 text-center sm:space-y-8 lg:pr-4 lg:text-left xl:pr-8">
             {/* Discount badge */}
@@ -19,7 +19,7 @@ const WebsiteBuilderHero = () => {
 
             {/* Main heading */}
             <div className="space-y-3 sm:space-y-4">
-              <h1 className="text-foreground text-2xl leading-tight font-bold sm:text-2xl lg:text-2xl xl:text-3xl">
+              <h1 className="text-foreground text-3xl leading-tight font-bold sm:text-4xl lg:text-5xl xl:text-6xl">
                 <span className="text-primary">Create a website</span> with ease
               </h1>
             </div>
@@ -36,7 +36,7 @@ const WebsiteBuilderHero = () => {
                   className="flex items-center justify-center space-x-3 lg:justify-start"
                 >
                   <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full">
-                    <Check className="text-primary text-bold h-4 w-4" />
+                    <Check className="text-primary h-5 w-5 font-bold" />
                   </div>
                   <span className="text-muted-foreground text-sm font-medium sm:text-base">
                     {feature}
@@ -48,7 +48,7 @@ const WebsiteBuilderHero = () => {
             {/* CTA Button */}
             <div className="space-y-3 pt-2 sm:space-y-4">
               <Link href="/admin/signup">
-                <Button className="hover:bg-primary/90 text-primary-foreground bg-primary mb-2 w-full transform rounded-xl px-6 py-3 text-xs font-semibold transition-all duration-200 hover:scale-105 sm:w-auto sm:px-8 sm:py-2 sm:text-xs">
+                <Button className="hover:bg-primary/90 text-primary-foreground bg-primary mb-2 w-full transform rounded-xl px-6 py-4 text-base font-semibold transition-all duration-200 hover:scale-105 sm:w-auto sm:px-8 sm:text-lg">
                   Create your website for free
                 </Button>
               </Link>
@@ -61,16 +61,19 @@ const WebsiteBuilderHero = () => {
             </div>
           </div>
 
-          {/* Right side image */}
+          {/* Right side image - FIXED ASPECT RATIO */}
           <div className="relative order-first lg:order-last">
             <div className="mx-auto w-full max-w-lg lg:max-w-none">
               <Image
                 src="/images/marketing-hero.avif"
-                alt="Website builder interface"
+                alt="Website builder interface showing drag and drop functionality"
                 width={800}
                 height={800}
-                className="h-auto w-full rounded-lg object-contain"
+                className="h-auto w-full rounded-lg"
+                style={{ objectFit: "contain" }}
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
                 priority
+                quality={85}
               />
             </div>
           </div>

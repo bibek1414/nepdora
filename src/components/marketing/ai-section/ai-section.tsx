@@ -8,16 +8,17 @@ export default function AISection() {
     <section className="relative mx-auto max-w-7xl overflow-hidden">
       <div className="container mx-auto px-4 py-20 lg:py-32">
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          {/* Left side - Image */}
+          {/* Left side - Image FIXED */}
           <div className="relative order-2 lg:order-1">
-            <div className="relative">
+            <div className="relative aspect-[3/2] w-full">
               <Image
                 src="/images/image3.avif"
-                alt="AI Website Builder Interface"
-                width={600}
-                height={400}
-                className="h-auto w-full rounded-2xl"
-                priority
+                alt="AI Website Builder Interface with automated design tools"
+                fill
+                className="rounded-2xl object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                loading="lazy"
+                quality={85}
               />
             </div>
           </div>
@@ -25,7 +26,7 @@ export default function AISection() {
           {/* Right side - Content */}
           <div className="order-1 space-y-8 lg:order-2">
             <div className="space-y-6">
-              <h2 className="text-2xl leading-tight font-bold text-black lg:text-3xl">
+              <h2 className="text-3xl leading-tight font-bold text-black lg:text-4xl">
                 Start selling online faster with AI
               </h2>
 
@@ -63,8 +64,8 @@ export default function AISection() {
             </div>
 
             <div className="pt-4">
-              <Link href="admin/signup">
-                <Button>Launch Your Website in Minutes</Button>
+              <Link href="/admin/signup">
+                <Button size="lg">Launch Your Website in Minutes</Button>
               </Link>
             </div>
           </div>

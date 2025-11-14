@@ -1,21 +1,36 @@
 import Script from "next/script";
+import dynamic from "next/dynamic";
 import HeroSection from "@/components/marketing/hero-section/hero-section";
 import FeaturesSection from "@/components/marketing/features-section/features-section";
 import ProcessSection from "@/components/marketing/process-section/process-section";
 import PricingSection from "@/components/marketing/pricing-section/pricing-section";
-import TestimonialsSection from "@/components/marketing/testimonials/testimonials";
-import FAQSection from "@/components/marketing/faq-section/faq-section";
-import ContactSection from "@/components/marketing/contact-us/contact-us";
 import BuildYourWay from "@/components/marketing/build-your-way/build-your-way";
 import StatsSection from "@/components/marketing/stats-section/stats-section";
 import AISection from "@/components/marketing/ai-section/ai-section";
-import TemplatesPage from "@/components/marketing/templates/templates-page";
 import type { Metadata } from "next";
+
+// Lazy load non-critical components to reduce initial load
+const TestimonialsSection = dynamic(
+  () => import("@/components/marketing/testimonials/testimonials"),
+  { loading: () => <div className="py-20" /> }
+);
+const FAQSection = dynamic(
+  () => import("@/components/marketing/faq-section/faq-section"),
+  { loading: () => <div className="py-20" /> }
+);
+const ContactSection = dynamic(
+  () => import("@/components/marketing/contact-us/contact-us"),
+  { loading: () => <div className="py-16" /> }
+);
+const TemplatesPage = dynamic(
+  () => import("@/components/marketing/templates/templates-page"),
+  { loading: () => <div className="py-20" /> }
+);
 
 export const metadata: Metadata = {
   title: "Nepdora — Your Complete Website Builder in Nepal",
   description:
-    "Launch your business online quickly with our free website builder, free hosting, and comprehensive suite of essential business tools. Start now!",
+    "Launch your business online in just 5 minutes with Nepdora's free website builder. Get free hosting, AI-powered templates, e-commerce tools, CRM system, and 24/7 customer support. Perfect for businesses, portfolios, and online stores in Nepal. Start building your dream website today with zero coding required!",
   keywords: [
     "website builder Nepal",
     "create website Nepal",
@@ -23,6 +38,8 @@ export const metadata: Metadata = {
     "portfolio website Nepal",
     "Nepdora",
     "Made in Nepal",
+    "free website builder",
+    "AI website builder",
   ],
   authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
   metadataBase: new URL("https://www.nepdora.com"),
@@ -32,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Nepdora — Your Complete Website Builder in Nepal",
     description:
-      "Launch your business online quickly with our free website builder, free hosting, and comprehensive suite of essential business tools. Start now!",
+      "Launch your business online in just 5 minutes with Nepdora's free website builder. Get free hosting, AI-powered templates, e-commerce tools, and 24/7 support. Start building today!",
     url: "https://www.nepdora.com",
     siteName: "Nepdora",
     images: [
@@ -50,7 +67,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Nepdora — Your Complete Website Builder in Nepal",
     description:
-      "Launch your business online quickly with our free website builder, free hosting, and comprehensive suite of essential business tools. Start now!",
+      "Launch your business online in just 5 minutes with Nepdora's free website builder. Get free hosting, AI-powered templates, e-commerce tools, and 24/7 support. Start building today!",
     images: ["/nepdora-image.jpg"],
   },
 };
@@ -109,18 +126,58 @@ export default function Marketing() {
     },
   };
 
+  // Add FAQ Schema
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "How quickly can I build my website?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "With our AI-powered platform, you can have a fully functional website ready in as little as 5 minutes. Choose a template, customize it with your content, and launch!",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Do I need coding skills to use Nepdora?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Not at all! Our drag-and-drop builder is designed for everyone. No coding knowledge required. Everything is visual and intuitive.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Can I use my own domain name?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes! You can connect your existing domain or register a new one directly through our platform. We also provide free SSL certificates.",
+        },
+      },
+    ],
+  };
+
   return (
     <>
-      {/* SEO JSON-LD Structured Data */}
+      {/* SEO JSON-LD Structured Data - Load after interactive for better performance */}
       <Script
         id="schema-website"
         type="application/ld+json"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
       <Script
         id="schema-corporation"
         type="application/ld+json"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(corporationSchema) }}
+      />
+      <Script
+        id="schema-faq"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       {/* Marketing Page Sections */}
