@@ -169,7 +169,7 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
     <div className="w-full space-y-2 sm:space-y-4">
       <div className="bg-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
+          <div className="mx-auto max-w-2xl lg:max-w-none">
             {displayImages.length > 0 ? (
               <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:space-y-0 lg:gap-x-6">
                 {displayImages.map((image, displayIndex) => {

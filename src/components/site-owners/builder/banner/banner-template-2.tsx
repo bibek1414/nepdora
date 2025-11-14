@@ -165,7 +165,7 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
 
   return (
     <div className="w-full space-y-4">
-      <div className="mx-auto max-w-7xl px-4 py-10">
+      <div className="mx-auto max-w-7xl px-4">
         {allActiveImages.length > 0 ? (
           <Card className="group relative aspect-[3/1] w-full overflow-hidden py-0 md:aspect-[4/1]">
             {/* Change Image Button - Only visible when editable */}
