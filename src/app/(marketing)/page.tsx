@@ -8,6 +8,7 @@ import BuildYourWay from "@/components/marketing/build-your-way/build-your-way";
 import StatsSection from "@/components/marketing/stats-section/stats-section";
 import AISection from "@/components/marketing/ai-section/ai-section";
 import type { Metadata } from "next";
+import { HeroScrollDemo } from "@/components/marketing/hero-scroll/hero-scroll";
 
 // Lazy load non-critical components to reduce initial load
 const TestimonialsSection = dynamic(
@@ -183,14 +184,15 @@ export default function Marketing() {
       {/* Marketing Page Sections */}
       <div>
         <HeroSection />
-        <StatsSection />
-        <PricingSection />
+        <HeroScrollDemo />
+        {/* <StatsSection /> */}
         <FeaturesSection />
         <ProcessSection />
         <BuildYourWay />
         <AISection />
         <TemplatesPage />
         <TestimonialsSection />
+        <PricingSection />
         <ContactSection />
         <FAQSection />
       </div>

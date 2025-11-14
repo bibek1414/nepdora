@@ -38,9 +38,8 @@ const ProcessSection = () => {
         <div className="grid items-center gap-16 lg:grid-cols-2">
           {/* Left Content */}
           <div className="space-y-8">
-            <h2 className="text-foreground text-4xl leading-tight font-bold md:text-5xl">
-              Create a website in 3<br />
-              easy steps
+            <h2 className="text-foreground text-4xl leading-tight font-bold tracking-tight md:text-5xl">
+              3 Easy Steps
             </h2>
 
             <div className="space-y-6">
@@ -73,7 +72,10 @@ const ProcessSection = () => {
 
             <div className="flex items-center gap-4">
               <Link href={"/admin/signup"}>
-                <Button size="lg" className="rounded-lg px-8 py-3 font-medium">
+                <Button
+                  size="lg"
+                  className="h-16 rounded-full px-8 py-3 font-medium"
+                >
                   Start building for free
                 </Button>
               </Link>
@@ -81,7 +83,7 @@ const ProcessSection = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="rounded-lg px-8 py-3 font-medium"
+                className="h-16 rounded-full px-8 py-3 font-medium"
               >
                 <a
                   href="https://docs.nepdora.com"

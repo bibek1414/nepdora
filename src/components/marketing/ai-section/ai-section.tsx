@@ -65,7 +65,9 @@ export default function AISection() {
 
             <div className="pt-4">
               <Link href="/admin/signup">
-                <Button size="lg">Launch Your Website in Minutes</Button>
+                <Button size="lg" className="h-16 rounded-full">
+                  Launch Your Website in Minutes
+                </Button>
               </Link>
             </div>
           </div>

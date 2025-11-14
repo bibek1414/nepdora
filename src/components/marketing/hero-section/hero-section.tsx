@@ -11,25 +11,24 @@ const WebsiteBuilderHero = () => {
       <div className="container mx-auto py-8 sm:py-12 lg:py-20">
         <div className="grid items-center lg:grid-cols-2">
           {/* Left side content */}
-          <div className="space-y-6 text-center sm:space-y-8 lg:pr-4 lg:text-left xl:pr-8">
+          <div className="text-center lg:pr-4 lg:text-left xl:pr-8">
             {/* Discount badge */}
-            <div className="bg-secondary text-secondary-foreground inline-flex items-center rounded-full px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm">
-              Up to 75% off Website builder
-            </div>
+            {/* <div className="inline-flex items-center rounded-full bg-yellow-50 px-3 py-2 text-xs sm:px-4 sm:text-xs">
+              Website + Social Media In a Single Place
+            </div> */}
 
             {/* Main heading */}
-            <div className="space-y-3 sm:space-y-4">
-              <h1 className="text-foreground text-3xl leading-tight font-bold sm:text-4xl lg:text-5xl xl:text-6xl">
-                <span className="text-primary">Create a website</span> with ease
-              </h1>
-            </div>
+            <h1 className="text-foreground mb-3 text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl lg:text-5xl xl:text-6xl">
+              Build Any Website
+            </h1>
 
             {/* Features list */}
             <div className="mx-auto max-w-md space-y-3 sm:space-y-4 lg:mx-0">
               {[
-                "Free domain name",
-                "Build your site fast, with AI",
-                "24/7 live customer support",
+                "E-comerce Website",
+                "Business Website",
+                "Agency Website",
+                " 100+ websites for any types of Business",
               ].map((feature, index) => (
                 <div
                   key={index}
@@ -46,32 +45,25 @@ const WebsiteBuilderHero = () => {
             </div>
 
             {/* CTA Button */}
-            <div className="space-y-3 pt-2 sm:space-y-4">
+            <div className="mt-10 space-y-3 pt-2 sm:space-y-4">
               <Link href="/admin/signup">
-                <Button className="hover:bg-primary/90 text-primary-foreground bg-primary mb-2 w-full transform rounded-xl px-6 py-4 text-base font-semibold transition-all duration-200 hover:scale-105 sm:w-auto sm:px-8 sm:text-lg">
+                <Button className="bg-primary hover:bg-primary mb-2 h-16 w-full transform rounded-full px-6 py-4 text-base font-semibold text-white transition-all duration-200 hover:scale-105 sm:w-auto sm:px-8 sm:text-lg">
                   Create your website for free
                 </Button>
               </Link>
-
-              {/* Money back guarantee */}
-              <div className="text-muted-foreground flex items-center justify-center space-x-2 text-xs sm:text-sm lg:justify-start">
-                <Shield className="h-4 w-4" />
-                <span>30-day money-back guarantee</span>
-              </div>
             </div>
           </div>
 
           {/* Right side image - FIXED ASPECT RATIO */}
           <div className="relative order-first lg:order-last">
-            <div className="mx-auto w-full max-w-lg lg:max-w-none">
+            <div className="ml-auto w-full max-w-lg lg:max-w-none">
               <Image
-                src="/images/marketing-hero.avif"
+                src="/nepdora.jpg"
                 alt="Website builder interface showing drag and drop functionality"
-                width={800}
-                height={800}
-                className="h-auto w-full rounded-lg"
+                width={500}
+                height={100}
+                className="ml-auto h-auto w-[70%] rounded-lg"
                 style={{ objectFit: "contain" }}
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
                 priority
                 quality={85}
               />

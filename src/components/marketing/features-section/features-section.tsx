@@ -1,6 +1,4 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   Globe,
   Zap,
@@ -14,122 +12,128 @@ import {
   CreditCard,
   Smartphone,
   Settings,
-  Target,
 } from "lucide-react";
-import { Feature } from "@/types/marketing/feature";
 
-const FeaturesSection: React.FC = () => {
-  const features: Feature[] = [
+const FeaturesSection = () => {
+  const features = [
     {
-      icon: Palette,
-      title: "AI-Powered Templates",
+      icon: <Palette />,
+      title: "100+ Stunning Templates",
       description:
-        "Choose from 500+ stunning templates or let AI create a custom design that matches your brand perfectly.",
+        "Either choose from our beautiful templates or let AI  design for you.",
     },
     {
-      icon: ShoppingCart,
+      icon: <ShoppingCart />,
       title: "Complete E-commerce",
       description:
         "Full online store with product management, inventory tracking, payment processing, and order fulfillment.",
     },
     {
-      icon: Users,
+      icon: <Users />,
       title: "Mini CRM System",
       description:
-        "Manage customer relationships, track leads, and automate follow-ups with our built-in CRM tools.",
+        "Manage customer relationships, track leads with our built-in CRM tools.",
     },
+
     {
-      icon: MessageSquare,
-      title: "Support Ticket System",
-      description:
-        "Handle customer inquiries efficiently with automated ticket routing and response management.",
-    },
-    {
-      icon: Globe,
+      icon: <Globe />,
       title: "Custom Domain",
-      description:
-        "Connect your own domain name and get professional email addresses for your business.",
+      description: "Connect your own domain and get it live within 5 minutes.",
     },
     {
-      icon: Truck,
+      icon: <Truck />,
       title: "Logistics Integration",
       description:
-        "Seamless order placement to delivery tracking with major shipping and logistics partners.",
+        "Send and Track your order directly integrated with your preferred logistics provider.",
     },
     {
-      icon: Zap,
+      icon: <Zap />,
       title: "5-Minute Setup",
       description:
         "Get your business online in just 5 minutes with our streamlined onboarding process.",
     },
+
     {
-      icon: Shield,
-      title: "Enterprise Security",
-      description:
-        "Bank-level security with SSL certificates, data encryption, and regular security audits.",
-    },
-    {
-      icon: BarChart3,
+      icon: <BarChart3 />,
       title: "Analytics Dashboard",
       description:
         "Track your business performance with detailed analytics, sales reports, and customer insights.",
     },
     {
-      icon: CreditCard,
+      icon: <CreditCard />,
       title: "Payment Processing",
       description:
         "Accept payments from customers worldwide with support for all major payment methods.",
     },
-    {
-      icon: Smartphone,
-      title: "Mobile Optimized",
-      description:
-        "Your website looks perfect on all devices with responsive design and mobile-first approach.",
-    },
-    {
-      icon: Settings,
-      title: "Easy Management",
-      description:
-        "Intuitive dashboard to manage your entire business operations from one central location.",
-    },
   ];
 
   return (
-    <section id="features" className="bg-background py-20">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-16 text-center">
-          <div className="mb-4 text-3xl font-bold md:text-4xl">
-            Everything You Need to
-            <span className="from-primary to-secondary block bg-gradient-to-r bg-clip-text text-transparent">
-              Succeed Online
-            </span>
-          </div>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-            Powerful tools and features to help you create, manage, and grow
-            your online presence.
-          </p>
+    <section id="features" className="bg-background pt-20">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-2 text-center text-3xl font-extrabold text-black md:text-5xl">
+          Features: Your Business Deserve
         </div>
+        <p className="text-center">
+          We deliver what we promise, no less, no more
+        </p>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 py-10 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, index) => (
-            <Card
-              key={index}
-              className="group border-primary/10 hover:border-primary/20 hover: transform transition-all duration-300 hover:-translate-y-1"
-            >
-              <CardContent className="p-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
-                  <feature.icon className="h-6 w-6" />
-                </div>
-                <h3 className="mb-3 text-lg font-semibold">{feature.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-              </CardContent>
-            </Card>
+            <Feature key={feature.title} {...feature} index={index} />
           ))}
         </div>
       </div>
     </section>
+  );
+};
+
+const Feature = ({
+  title,
+  description,
+  icon,
+  index,
+}: {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  index: number;
+}) => {
+  // Helper to build className string
+  const buildClassName = (...classes: (string | boolean)[]) => {
+    return classes.filter(Boolean).join(" ");
+  };
+
+  return (
+    <div
+      className={buildClassName(
+        "group/feature relative flex flex-col py-10 lg:border-r dark:border-neutral-800",
+        (index === 0 || index === 4 || index === 8) &&
+          "lg:border-l dark:border-neutral-800",
+        index < 4 && "lg:border-b dark:border-neutral-800"
+      )}
+    >
+      {index < 4 && (
+        <div className="pointer-events-none absolute inset-0 h-full w-full bg-gradient-to-t from-neutral-100 to-transparent opacity-0 transition duration-200 group-hover/feature:opacity-100 dark:from-neutral-800" />
+      )}
+      {index >= 4 && index < 8 && (
+        <div className="pointer-events-none absolute inset-0 h-full w-full bg-gradient-to-t from-neutral-100 to-transparent opacity-0 transition duration-200 group-hover/feature:opacity-100 dark:from-neutral-800" />
+      )}
+      {index >= 8 && (
+        <div className="pointer-events-none absolute inset-0 h-full w-full bg-gradient-to-b from-neutral-100 to-transparent opacity-0 transition duration-200 group-hover/feature:opacity-100 dark:from-neutral-800" />
+      )}
+      <div className="relative z-10 mb-4 px-10 text-neutral-600 dark:text-neutral-400">
+        {icon}
+      </div>
+      <div className="text-md relative z-10 px-10 font-bold">
+        <div className="absolute inset-y-0 left-0 h-6 w-1 origin-center rounded-tr-full rounded-br-full bg-neutral-300 transition-all duration-200 group-hover/feature:h-8 group-hover/feature:bg-blue-500 dark:bg-neutral-700" />
+        <span className="inline-block text-black transition duration-200 group-hover/feature:translate-x-2 dark:text-neutral-100">
+          {title}
+        </span>
+      </div>
+      <p className="relative z-10 max-w-xs px-10 text-xs leading-relaxed text-neutral-600 dark:text-neutral-300">
+        {description}
+      </p>
+    </div>
   );
 };
 

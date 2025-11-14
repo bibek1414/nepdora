@@ -1,5 +1,5 @@
 import "./globals.css";
-import { DM_Sans } from "next/font/google";
+import { DM_Sans, Inter } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CustomerAuthProvider } from "@/contexts/customer/AuthContext";
 import { CustomerPublishAuthProvider } from "@/contexts/publish/AuthContext";
@@ -15,6 +15,11 @@ import type { Metadata } from "next";
 const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -57,7 +62,7 @@ export default function RootLayout({
       <head>
         <GoogleAnalyticsStatic measurementId="G-1GZLGXVXWT" />
       </head>
-      <body className={dmSans.className}>
+      <body className={inter.className}>
         <AuthProvider>
           <CustomerAuthProvider>
             <CustomerPublishAuthProvider>

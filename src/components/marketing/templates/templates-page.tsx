@@ -169,21 +169,10 @@ const TemplatesPage = () => {
     <div className="bg-background min-h-screen">
       <div className="mx-auto max-w-7xl px-3 py-8 sm:px-4 sm:py-12 lg:px-8 lg:py-16">
         {/* Header Section */}
-        <div className="mb-8 text-center sm:mb-12 lg:mb-16">
-          <h2 className="text-foreground mb-4 text-2xl font-bold sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
-            Choose a website template that inspires you
+        <div className="mb-8 text-center">
+          <h2 className="text-foreground mb-4 text-2xl font-extrabold tracking-tight sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+            Choose From 100+ Templates
           </h2>
-          <p className="text-muted-foreground mx-auto mb-6 max-w-4xl px-2 text-sm leading-relaxed sm:mb-8 sm:text-base md:text-lg lg:text-xl">
-            Take advantage of 150+ responsive, designer-made templates, suitable
-            for businesses, ecommerce stores, portfolios, landing pages, blogs,
-            and more.
-          </p>
-          <Button
-            size="lg"
-            className="rounded-full px-6 text-sm sm:px-8 sm:text-base"
-          >
-            Get started for free
-          </Button>
         </div>
 
         {/* Category Navigation */}
@@ -198,38 +187,6 @@ const TemplatesPage = () => {
           {currentTemplates.map((template: Template) => (
             <TemplateCard key={template.id} template={template} />
           ))}
-        </div>
-
-        {/* Bottom Line Separator */}
-        <div className="mt-12 mb-6 sm:mt-16 sm:mb-8">
-          <div className="via-border h-px bg-gradient-to-r from-transparent to-transparent"></div>
-        </div>
-
-        {/* Footer CTA */}
-        <div className="mt-12 text-center sm:mt-16">
-          <h2 className="text-foreground mb-3 text-xl font-bold sm:mb-4 sm:text-2xl md:text-3xl">
-            Can&apos;t find the perfect template?
-          </h2>
-          <p className="text-muted-foreground mx-auto mb-6 max-w-2xl px-3 text-sm leading-relaxed sm:mb-8 sm:text-base">
-            Start with a blank canvas and create something unique, or contact
-            our design team for a custom solution tailored to your needs.
-          </p>
-          <div className="flex flex-col justify-center gap-3 px-4 sm:flex-row sm:gap-4">
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full rounded-full px-6 text-sm sm:w-auto sm:px-8 sm:text-base"
-            >
-              Start from scratch
-            </Button>
-            <Button
-              variant="default"
-              size="lg"
-              className="w-full rounded-full px-6 text-sm sm:w-auto sm:px-8 sm:text-base"
-            >
-              Contact design team
-            </Button>
-          </div>
         </div>
       </div>
     </div>

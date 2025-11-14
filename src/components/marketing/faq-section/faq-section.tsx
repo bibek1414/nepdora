@@ -49,21 +49,13 @@ const FAQSection: React.FC = () => {
   ];
 
   return (
-    <section className="bg-background py-20">
+    <section className="bg-background py-40">
       <div className="mx-auto max-w-4xl px-6">
         <div className="mb-16 text-center">
-          <Badge variant="outline" className="mb-4">
-            <MessageSquare className="mr-2 h-4 w-4" />
-            FAQ
-          </Badge>
-          <div className="mb-4 text-3xl font-bold md:text-4xl">
-            Frequently Asked
-            <span className="from-primary to-secondary bg-gradient-to-r bg-clip-text text-transparent">
-              {" "}
-              Questions
-            </span>
+          <div className="mb-2 text-5xl font-extrabold tracking-tight md:text-4xl">
+            Frequently Asked Questions
           </div>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-sm">
             Everything you need to know about Nepdora
           </p>
         </div>

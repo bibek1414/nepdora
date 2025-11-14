@@ -54,12 +54,12 @@ const CustomerTestimonials = () => {
       <div className="mx-auto max-w-5xl">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h2 className="text-foreground mb-4 text-3xl font-bold md:text-4xl">
-            Thousands of satisfied customers
+          <h2 className="text-foreground mb-2 text-3xl font-extrabold tracking-tight md:text-4xl">
+            Thousands of Satisfied Customers
           </h2>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
+          <p className="text-muted-foreground mx-auto max-w-2xl text-sm">
             Don&apos;t just take our word for it – thousands of customers trust
-            Nepdora for their hosting needs.
+            Nepdora.
           </p>
         </div>
 
@@ -100,7 +100,7 @@ const CustomerTestimonials = () => {
           <Link href={"/admin/signup"}>
             <Button
               size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-8 py-3 font-medium transition-colors duration-200"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground h-16 rounded-full px-8 py-3 font-medium transition-colors duration-200"
             >
               Read more reviews
             </Button>

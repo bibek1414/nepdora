@@ -38,26 +38,17 @@ export default function ContactUs() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-16">
       <div className="mb-12 text-center">
-        <div className="mb-4 text-3xl font-bold text-gray-900">
-          Contact <span className="text-primary">Us</span>
+        <div className="mb-2 text-5xl font-extrabold tracking-tight text-black">
+          Get In Touch
         </div>
         <p className="mx-auto max-w-2xl text-lg text-gray-600">
-          Get in touch with us. We&apos;d love to hear from you and will get
-          back to you as soon as possible.
+          We&apos;d love to hear from you.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div className="">
         {/* Contact Form - Left Side */}
-        <Card className="h-fit">
-          <CardHeader>
-            <CardTitle className="text-2xl font-semibold text-gray-900">
-              Send us a Message
-            </CardTitle>
-            <CardDescription className="text-gray-600">
-              Fill out the form below and we&apos;ll get back to you shortly.
-            </CardDescription>
-          </CardHeader>
+        <Card className="mx-auto h-fit max-w-xl border-0 py-0">
           <CardContent>
             <div className="space-y-6">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -118,7 +109,7 @@ export default function ContactUs() {
               <Button
                 type="button"
                 onClick={handleSubmit}
-                className="w-full bg-blue-600 py-3 font-medium text-white transition-colors hover:bg-blue-700"
+                className="h-16 w-full rounded-full py-3 font-medium text-white transition-colors"
               >
                 Send Message
               </Button>
@@ -127,7 +118,7 @@ export default function ContactUs() {
         </Card>
 
         {/* Map - Right Side */}
-        <div className="space-y-6">
+        {/* <div className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl font-semibold text-gray-900">
@@ -152,7 +143,7 @@ export default function ContactUs() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </div> */}
       </div>
     </section>
   );

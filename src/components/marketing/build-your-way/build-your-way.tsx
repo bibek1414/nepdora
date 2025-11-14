@@ -63,8 +63,7 @@ export default function BuildYourWay() {
           Build a website your way
         </h2>
         <p className="mx-auto max-w-2xl text-lg text-gray-600">
-          Effortlessly perfect your website with user-friendly, intuitive
-          customization tools.
+          Effortlessly perfect your website with user-friendly, tools.
         </p>
       </div>
 
@@ -104,7 +103,7 @@ export default function BuildYourWay() {
       {/* CTA Button */}
       <div className="text-center">
         <Link href="/admin/signup">
-          <Button size="lg" className="px-10 py-4">
+          <Button size="lg" className="h-16 rounded-full px-10 py-4">
             Get started with Nepdora
           </Button>
         </Link>
