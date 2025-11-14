@@ -137,7 +137,7 @@ const Header: React.FC = () => {
               </Link>
               <Link href="/admin/signup">
                 <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: bg-gradient-to-r text-white transition-all duration-200">
-                  Get Started Free
+                  Create Your Website for Free
                 </Button>
               </Link>
             </>
@@ -199,7 +199,7 @@ const Header: React.FC = () => {
                     className="block"
                   >
                     <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: w-full bg-gradient-to-r text-white transition-all duration-200">
-                      Get Started Free
+                      Start Using the Nepdora Free
                     </Button>
                   </Link>
                 </>

@@ -41,9 +41,9 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
           </div>
         </div>
         <div className="p-4">
-          <h3 className="mb-2 text-lg font-semibold text-gray-900 transition-colors duration-200 group-hover:text-purple-600">
+          <div className="mb-2 text-lg font-semibold text-gray-900 transition-colors duration-200 group-hover:text-purple-600">
             {template.name}
-          </h3>
+          </div>
           <p className="mb-4 text-sm leading-relaxed text-gray-600">
             {template.description}
           </p>

@@ -90,7 +90,7 @@ export default function BuildYourWay() {
       <div className="text-center">
         <Link href="admin/signup">
           <Button size="lg" className="px-10 py-4">
-            Get started
+            Get started with Nepdora
           </Button>
         </Link>
       </div>

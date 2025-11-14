@@ -54,7 +54,7 @@ const CountdownAnimation = () => {
             ) : (
               // Show one at a time
               <div className="flex h-32 items-center">
-                <h1
+                <h2
                   className={`text-6xl font-bold transition-all duration-300 ease-in-out md:text-7xl lg:text-8xl ${
                     isVisible
                       ? "translate-y-0 transform opacity-100"
@@ -68,7 +68,7 @@ const CountdownAnimation = () => {
                   }`}
                 >
                   {currentText}
-                </h1>
+                </h2>
               </div>
             )}
           </div>

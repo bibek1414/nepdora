@@ -56,13 +56,13 @@ const FAQSection: React.FC = () => {
             <MessageSquare className="mr-2 h-4 w-4" />
             FAQ
           </Badge>
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+          <div className="mb-4 text-3xl font-bold md:text-4xl">
             Frequently Asked
             <span className="from-primary to-secondary bg-gradient-to-r bg-clip-text text-transparent">
               {" "}
               Questions
             </span>
-          </h2>
+          </div>
           <p className="text-muted-foreground text-lg">
             Everything you need to know about Nepdora
           </p>

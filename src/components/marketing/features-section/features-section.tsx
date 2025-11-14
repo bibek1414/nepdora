@@ -98,12 +98,12 @@ const FeaturesSection: React.FC = () => {
     <section id="features" className="bg-background py-20">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+          <div className="mb-4 text-3xl font-bold md:text-4xl">
             Everything You Need to
             <span className="from-primary to-secondary block bg-gradient-to-r bg-clip-text text-transparent">
               Succeed Online
             </span>
-          </h2>
+          </div>
           <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
             Powerful tools and features to help you create, manage, and grow
             your online presence.

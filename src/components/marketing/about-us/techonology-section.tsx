@@ -23,9 +23,9 @@ export default function Technology() {
           </div>
           <div className="order-2 space-y-6">
             <Badge variant="secondary">TECHNOLOGY</Badge>
-            <h1 className="text-4xl leading-tight font-bold text-gray-900 lg:text-5xl">
+            <h2 className="text-4xl leading-tight font-bold text-gray-900 lg:text-5xl">
               Innovation on the go
-            </h1>
+            </h2>
             <p className="text-lg leading-relaxed text-gray-600">
               As one of the fastest and most efficient web hosting service
               providers around, we keep adapting to the latest tech advancements
@@ -59,7 +59,9 @@ export default function Technology() {
                 next level. Join Nepdora and hustle with us.
               </p>
               <Link href="/admin/signup">
-                <Button className="px-6 py-3">Get Started</Button>
+                <Button className="px-6 py-3">
+                  Build Your Free Nepdora Website
+                </Button>
               </Link>
             </div>
             <div className="relative order-2">
@@ -106,7 +108,7 @@ export default function Technology() {
               </p>
               <Link href="/contact">
                 <Button className="bg-primary px-6 py-3 text-white">
-                  Contact us
+                  Reach Out to Nepdora Support
                 </Button>
               </Link>
             </div>

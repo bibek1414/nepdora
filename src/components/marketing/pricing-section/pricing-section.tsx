@@ -117,9 +117,9 @@ const DynamicPricingSection = () => {
       <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h2 className="text-foreground mb-6 text-3xl font-bold md:text-4xl">
+          <div className="text-foreground mb-6 text-3xl font-bold md:text-4xl">
             Find the perfect Nepdora plan for you
-          </h2>
+          </div>
           <p className="text-muted-foreground mb-8 text-lg">
             Nothing is free in this world - Choose quality that delivers results
           </p>
@@ -180,9 +180,9 @@ const DynamicPricingSection = () => {
                     </span>
                   </div>
 
-                  <h3 className="text-foreground mb-2 text-center text-xl font-bold">
+                  <div className="text-foreground mb-2 text-center text-xl font-bold">
                     {plan.name}
-                  </h3>
+                  </div>
                   <p className="text-muted-foreground mb-6 text-center text-sm">
                     {plan.tagline}
                   </p>
@@ -218,9 +218,9 @@ const DynamicPricingSection = () => {
 
                   {/* Features */}
                   <div className="pt-6">
-                    <h4 className="text-foreground mb-4 font-medium">
+                    <div className="text-foreground mb-4 font-medium">
                       {plan.name} benefits:
-                    </h4>
+                    </div>
                     <ul className="space-y-3">
                       {availableFeatures.map(feature => (
                         <li key={feature.id} className="flex items-start gap-3">

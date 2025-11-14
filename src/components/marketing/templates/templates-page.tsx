@@ -182,7 +182,7 @@ const TemplatesPage = () => {
             size="lg"
             className="rounded-full px-6 text-sm sm:px-8 sm:text-base"
           >
-            Get started
+            Get started for free
           </Button>
         </div>
 

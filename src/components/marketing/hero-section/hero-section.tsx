@@ -49,7 +49,7 @@ const WebsiteBuilderHero = () => {
             <div className="space-y-3 pt-2 sm:space-y-4">
               <Link href="/admin/signup">
                 <Button className="hover:bg-primary/90 text-primary-foreground bg-primary mb-2 w-full transform rounded-xl px-6 py-3 text-xs font-semibold transition-all duration-200 hover:scale-105 sm:w-auto sm:px-8 sm:py-2 sm:text-xs">
-                  Start now
+                  Create your website for free
                 </Button>
               </Link>
 

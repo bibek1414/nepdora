@@ -50,7 +50,7 @@ const ProcessSection = () => {
                   className="cursor-pointer"
                   onClick={() => setActiveStep(step.id)}
                 >
-                  <h3
+                  <div
                     className={`mb-3 text-xl font-semibold transition-colors duration-200 ${
                       activeStep === step.id
                         ? "text-primary"
@@ -58,7 +58,7 @@ const ProcessSection = () => {
                     }`}
                   >
                     {step.id}. {step.title}
-                  </h3>
+                  </div>
 
                   {activeStep === step.id && (
                     <div className="border-primary mb-4 border-l-4 pl-4">
@@ -71,11 +71,27 @@ const ProcessSection = () => {
               ))}
             </div>
 
-            <Link href={"/admin/signup"}>
-              <Button size="lg" className="rounded-lg px-8 py-3 font-medium">
-                Get started
+            <div className="flex items-center gap-4">
+              <Link href={"/admin/signup"}>
+                <Button size="lg" className="rounded-lg px-8 py-3 font-medium">
+                  Start building for free
+                </Button>
+              </Link>
+
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-lg px-8 py-3 font-medium"
+              >
+                <a
+                  href="https://docs.nepdora.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Read Docs
+                </a>
               </Button>
-            </Link>
+            </div>
           </div>
 
           {/* Right Content - Interactive Image Display */}

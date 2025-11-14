@@ -64,7 +64,7 @@ export default function AISection() {
 
             <div className="pt-4">
               <Link href="admin/signup">
-                <Button>Get started</Button>
+                <Button>Launch Your Website in Minutes</Button>
               </Link>
             </div>
           </div>

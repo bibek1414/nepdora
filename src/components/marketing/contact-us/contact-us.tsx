@@ -38,9 +38,9 @@ export default function ContactUs() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-16">
       <div className="mb-12 text-center">
-        <h2 className="mb-4 text-3xl font-bold text-gray-900">
-          Contact <span className="text-blue-600">Us</span>
-        </h2>
+        <div className="mb-4 text-3xl font-bold text-gray-900">
+          Contact <span className="text-primary">Us</span>
+        </div>
         <p className="mx-auto max-w-2xl text-lg text-gray-600">
           Get in touch with us. We&apos;d love to hear from you and will get
           back to you as soon as possible.
