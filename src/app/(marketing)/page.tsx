@@ -28,7 +28,7 @@ const TemplatesPage = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "Nepdora — Your Complete Website Builder in Nepal",
+  title: "Nepdora — Your Complete Website Builder in Minutes",
   description:
     "Launch your business online in just 5 minutes with Nepdora's free website builder. Get free hosting, AI-powered templates, e-commerce tools, CRM system, and 24/7 customer support. Perfect for businesses, portfolios, and online stores in Nepal. Start building your dream website today with zero coding required!",
   keywords: [
