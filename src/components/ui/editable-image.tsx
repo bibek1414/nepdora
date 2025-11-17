@@ -216,7 +216,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
             alt={localAlt}
             width={width}
             height={height}
-            className="h-auto w-full object-cover"
+            className="h-full w-full object-cover"
             priority={priority}
           />
         )}

@@ -7,6 +7,9 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { uploadToCloudinary } from "@/utils/cloudinary";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 interface AboutUsTemplate7Props {
   aboutUsData: AboutUs7Data;
@@ -22,7 +25,10 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
   siteUser,
 }) => {
   const [data, setData] = useState(aboutUsData);
+  const [isUploading, setIsUploading] = useState<number | null>(null);
   const { data: themeResponse } = useThemeQuery();
+
+  const componentId = React.useId();
 
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -75,14 +81,50 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
       onUpdate?.({ trainings: updatedTrainings } as Partial<AboutUs7Data>);
     };
 
-  // Handle training alt updates
-  const handleTrainingAltUpdate = (index: number) => (altText: string) => {
-    const updatedTrainings = [...data.trainings];
-    updatedTrainings[index] = { ...updatedTrainings[index], imageAlt: altText };
+  // Handle file upload for training images
+  const handleImageFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-    const updatedData = { ...data, trainings: updatedTrainings };
-    setData(updatedData);
-    onUpdate?.({ trainings: updatedTrainings } as Partial<AboutUs7Data>);
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(
+        `Please select a valid image file (${allowedTypes.join(", ")})`
+      );
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    setIsUploading(index);
+
+    try {
+      const imageUrl = await uploadToCloudinary(file, {
+        folder: "about-us-images",
+        resourceType: "image",
+      });
+
+      handleTrainingImageUpdate(index)(
+        imageUrl,
+        `Training image: ${file.name}`
+      );
+      toast.success("Image uploaded successfully!");
+    } catch (error) {
+      console.error("Upload failed:", error);
+      toast.error("Failed to upload image. Please try again.");
+    } finally {
+      setIsUploading(null);
+      event.target.value = "";
+    }
   };
 
   // Handle button link updates
@@ -137,25 +179,63 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
               key={training.id}
               className="group relative h-96 overflow-hidden rounded-lg bg-cover bg-center"
             >
-              <EditableImage
-                src={training.imageUrl}
-                alt={training.imageAlt}
-                onImageChange={handleTrainingImageUpdate(idx)}
-                onAltChange={handleTrainingAltUpdate(idx)}
-                isEditable={isEditable}
-                className="object-cover"
-                cloudinaryOptions={{
-                  folder: "about-us-images",
-                  resourceType: "image",
-                }}
-                showAltEditor={isEditable}
-                placeholder={{
-                  width: 400,
-                  height: 500,
-                  text: "Upload training image",
-                }}
-              />
-              <div className="bg-opacity-40 group-hover:bg-opacity-20 absolute inset-0 flex flex-col justify-end p-6 transition-all duration-300">
+              {/* Change Image Button - Only visible when editable */}
+              {isEditable && (
+                <div className="absolute top-2 right-2 z-20">
+                  <label
+                    htmlFor={`training-upload-${componentId}-${idx}`}
+                    className={`cursor-pointer rounded border border-gray-300 bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
+                      isUploading === idx
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }`}
+                  >
+                    {isUploading === idx ? (
+                      <span className="flex items-center gap-1">
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        <span className="hidden sm:inline">Uploading...</span>
+                      </span>
+                    ) : (
+                      "Change"
+                    )}
+                  </label>
+                  <input
+                    id={`training-upload-${componentId}-${idx}`}
+                    type="file"
+                    accept="image/*"
+                    onChange={e => handleImageFileChange(e, idx)}
+                    className="hidden"
+                    disabled={isUploading === idx}
+                  />
+                </div>
+              )}
+
+              {/* Upload Loading Overlay */}
+              {isUploading === idx && (
+                <div className="absolute inset-0 z-30 flex items-center justify-center rounded-lg bg-black/50">
+                  <div className="flex flex-col items-center gap-2 text-white">
+                    <Loader2 className="h-6 w-6 animate-spin sm:h-8 sm:w-8" />
+                    <p className="text-xs font-medium sm:text-sm">
+                      Uploading...
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Training Image */}
+              <div className="h-96 w-full overflow-hidden rounded-lg bg-cover bg-center">
+                <Image
+                  src={training.imageUrl}
+                  alt={training.imageAlt}
+                  width={400}
+                  height={500}
+                  className="h-96 w-full object-cover"
+                  priority={idx === 0}
+                />
+              </div>
+
+              {/* Text Overlay */}
+              <div className="absolute inset-0 flex flex-col justify-end bg-black/40 p-6 transition-all duration-300 group-hover:bg-black/20">
                 <EditableText
                   value={training.title}
                   onChange={handleTrainingUpdate(idx, "title")}
@@ -176,30 +256,31 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
                   />
                 )}
               </div>
-              <div className="absolute bottom-[-1.25rem] left-1/2 -translate-x-1/2"></div>
             </div>
           ))}
         </div>
 
         {/* Learn More Button */}
-        <div className="mt-20 text-center">
-          <EditableLink
-            text={data.buttonText}
-            href={data.buttonLink}
-            onChange={handleButtonLinkUpdate}
-            className="rounded-lg px-8 py-3 font-bold transition-transform duration-200 hover:scale-105"
-            style={{
-              backgroundColor: theme.colors.primary,
-              color: theme.colors.primaryForeground,
-            }}
-            isEditable={isEditable}
-            textPlaceholder="Learn more"
-            hrefPlaceholder="#learn-more"
-            siteUser={siteUser}
-          >
-            {data.buttonText || "Learn more"}
-          </EditableLink>
-        </div>
+        {data.buttonText && data.buttonLink && (
+          <div className="mt-20 text-center">
+            <EditableLink
+              text={data.buttonText}
+              href={data.buttonLink}
+              onChange={handleButtonLinkUpdate}
+              className="rounded-lg px-8 py-3 font-bold transition-transform duration-200 hover:scale-105"
+              style={{
+                backgroundColor: theme.colors.primary,
+                color: theme.colors.primaryForeground,
+              }}
+              isEditable={isEditable}
+              textPlaceholder="Learn more"
+              hrefPlaceholder="#learn-more"
+              siteUser={siteUser}
+            >
+              {data.buttonText}
+            </EditableLink>
+          </div>
+        )}
       </div>
     </div>
   );
