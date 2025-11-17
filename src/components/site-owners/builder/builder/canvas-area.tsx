@@ -60,6 +60,7 @@ import { PolicyComponent } from "@/components/site-owners/builder/policies/polic
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 import { TextEditorComponent } from "@/components/site-owners/builder/text-editor/text-editor-component";
+
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
   navbar?: Navbar | null;
@@ -87,6 +88,7 @@ interface CanvasAreaProps {
   onAddYouTube?: () => void;
   onAddGallery?: () => void;
   onAddPolicies?: () => void;
+  onAddSection: (position?: "above" | "below", index?: number) => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -99,6 +101,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   pageComponents: initialPageComponents,
   isLoading,
   error,
+  onAddSection,
   onAddHero,
   onAddAboutUs,
   onAddProducts,
@@ -115,6 +118,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const [pageComponents, setPageComponents] = useState<ComponentResponse[]>(
     initialPageComponents.sort((a, b) => (a.order || 0) - (b.order || 0))
   );
+  const [hoveredComponentIndex, setHoveredComponentIndex] = useState<
+    number | null
+  >(null);
+
   const { data: themeResponse } = useThemeQuery();
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -131,6 +138,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       heading: "Poppins",
     },
   };
+
   React.useEffect(() => {
     setPageComponents(
       initialPageComponents.sort((a, b) => (a.order || 0) - (b.order || 0))
@@ -206,6 +214,14 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       }
     },
     [handleReorder, pageComponents.length]
+  );
+
+  // Handle add section above/below
+  const handleAddSection = useCallback(
+    (position: "above" | "below", index: number) => {
+      onAddSection(position, index);
+    },
+    [onAddSection]
   );
 
   // Component renderer with proper typing
@@ -409,6 +425,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     const isFirst = index === 0;
     const isLast = index === pageComponents.length - 1;
+    const isHovered = hoveredComponentIndex === index;
 
     return (
       <Draggable
@@ -423,7 +440,39 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             className={`group relative ${
               snapshot.isDragging ? "opacity-75 shadow-2xl" : ""
             }`}
+            onMouseEnter={() => setHoveredComponentIndex(index)}
+            onMouseLeave={() => setHoveredComponentIndex(null)}
           >
+            {/* Add Section Above Button - Show on hover and not first component */}
+            {!isFirst && isHovered && (
+              <div className="absolute -top-6 left-1/2 z-30 -translate-x-1/2 transform">
+                <Button
+                  onClick={() => handleAddSection("above", index)}
+                  variant="outline"
+                  size="sm"
+                  className="gap-1 border border-dashed border-blue-300 bg-white text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+                >
+                  <Plus className="h-3 w-3" />
+                  Add Section Above
+                </Button>
+              </div>
+            )}
+
+            {/* Add Section Below Button - Show on hover and not last component */}
+            {!isLast && isHovered && (
+              <div className="absolute -bottom-6 left-1/2 z-30 -translate-x-1/2 transform">
+                <Button
+                  onClick={() => handleAddSection("below", index)}
+                  variant="outline"
+                  size="sm"
+                  className="gap-1 border border-dashed border-blue-300 bg-white text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+                >
+                  <Plus className="h-3 w-3" />
+                  Add Section Below
+                </Button>
+              </div>
+            )}
+
             {/* Control buttons container */}
             <div className="absolute top-2 left-2 z-20 flex flex-col gap-1">
               {/* Drag handle */}
@@ -538,6 +587,21 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         </div>
       )}
 
+      {/* Add Section Button at the Top */}
+      <div className="border-b border-dashed border-gray-300 bg-gray-50/50">
+        <div className="flex items-center justify-center p-4">
+          <Button
+            onClick={() => onAddSection("above", 0)}
+            variant="outline"
+            size="sm"
+            className="gap-2 border-2 border-dashed border-blue-300 bg-white text-blue-600 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+          >
+            <Plus className="h-4 w-4" />
+            Add New Section
+          </Button>
+        </div>
+      </div>
+
       {/* Main Content Area with Drag and Drop */}
       <div className="min-h-[400px]">
         {/* Loading state */}
@@ -567,13 +631,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className={`space-y-0 ${
+                  className={`space-y-8 py-4 ${
                     snapshot.isDraggingOver ? "bg-blue-50" : ""
                   } transition-colors duration-200`}
                 >
-                  {pageComponents.map((component, index) =>
-                    renderComponent(component, index)
-                  )}
+                  {pageComponents.map((component, index) => (
+                    <React.Fragment key={component.component_id}>
+                      {/* Render the component */}
+                      {renderComponent(component, index)}
+                    </React.Fragment>
+                  ))}
                   {provided.placeholder}
                 </div>
               )}
@@ -581,8 +648,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           </DragDropContext>
         )}
 
-        {/* Content area for placeholders and interactions */}
-        <div className="p-8">
+        {/* <div className="p-8">
           <PlaceholderManager
             isLoading={isLoading}
             navbar={navbar}
@@ -610,7 +676,20 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             onAddFAQ={onAddFAQ}
           />
 
-          {/* Other Components (existing dropped components) */}
+          <div className="border-t border-dashed border-gray-300 bg-gray-50/50">
+            <div className="flex items-center justify-center p-8">
+              <Button
+                onClick={() => onAddSection("below", pageComponents.length - 1)}
+                variant="outline"
+                size="lg"
+                className="gap-2 border-2 border-dashed border-blue-300 bg-white text-blue-600 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+              >
+                <Plus className="h-5 w-5" />
+                Add New Section
+              </Button>
+            </div>
+          </div>
+
           {droppedComponents.map(component => (
             <div
               key={component.id}
@@ -623,7 +702,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
       {/* Footer Section */}

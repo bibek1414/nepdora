@@ -6,7 +6,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useRouter } from "next/navigation";
 import { CanvasArea } from "@/components/site-owners/builder/builder/canvas-area";
 import { TopNavigation } from "@/components/site-owners/builder/builder/top-navigation";
-import { ComponentSidebar } from "@/components/site-owners/builder/builder/component-sidebar";
+import { AddSectionDialog } from "@/components/site-owners/builder/builder/add-section-sidebar";
 import {
   useNavbarQuery,
   useCreateNavbarMutation,
@@ -84,7 +84,6 @@ import {
   defaultPrivacyData,
   defaultTermsData,
 } from "@/types/owner-site/components/policies";
-
 import { toast } from "sonner";
 
 interface BuilderLayoutProps {
@@ -97,40 +96,18 @@ interface BuilderLayoutProps {
 export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const router = useRouter();
   const { siteUser, pageSlug } = params;
-  // Add state:
+
+  // Add Section Sidebar state
+  const [isAddSectionDialogOpen, setIsAddSectionDialogOpen] = useState(false);
+
+  // Dialog states
   const [isGalleryStylesDialogOpen, setIsGalleryStylesDialogOpen] =
     useState(false);
-
-  const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
-  const createNavbarMutation = useCreateNavbarMutation();
-
-  // Footer hooks
-  const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
-  const createFooterMutation = useCreateFooterMutation();
-
-  // Use the page hooks
-  const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
-  const createPageMutation = useCreatePage();
-  const [isPoliciesStylesDialogOpen, setIsPoliciesStylesDialogOpen] =
-    useState(false);
-  const [isTextEditorStylesDialogOpen, setIsTextEditorStylesDialogOpen] =
-    useState(false);
-  // Page components with proper ordering
-  const {
-    data: pageComponentsResponse,
-    isLoading: isPageComponentsLoading,
-    error: pageComponentsError,
-  } = usePageComponentsQuery(pageSlug);
-
-  const [droppedComponents, setDroppedComponents] = useState<
-    ComponentResponse[]
-  >([]);
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
   const [isFooterDialogOpen, setIsFooterDialogOpen] = useState(false);
   const [isHeroStylesDialogOpen, setIsHeroStylesDialogOpen] = useState(false);
   const [isAboutUsStylesDialogOpen, setIsAboutUsStylesDialogOpen] =
     useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isProductsStylesDialogOpen, setIsProductsStylesDialogOpen] =
     useState(false);
   const [isCategoriesStylesDialogOpen, setIsCategoriesStylesDialogOpen] =
@@ -140,7 +117,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isBlogStylesDialogOpen, setIsBlogStylesDialogOpen] = useState(false);
   const [isServicesStylesDialogOpen, setIsServicesStylesDialogOpen] =
     useState(false);
-  const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
   const [isContactStylesDialogOpen, setIsContactStylesDialogOpen] =
     useState(false);
   const [isTeamStylesDialogOpen, setIsTeamStylesDialogOpen] = useState(false);
@@ -157,10 +133,35 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isPageTemplateDialogOpen, setIsPageTemplateDialogOpen] =
     useState(false);
-  // Use pageSlug from URL params as current page
+  const [isPoliciesStylesDialogOpen, setIsPoliciesStylesDialogOpen] =
+    useState(false);
+  const [isTextEditorStylesDialogOpen, setIsTextEditorStylesDialogOpen] =
+    useState(false);
+
+  const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
+  const createNavbarMutation = useCreateNavbarMutation();
+
+  const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
+  const createFooterMutation = useCreateFooterMutation();
+
+  const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
+  const createPageMutation = useCreatePage();
+  const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
+
+  const {
+    data: pageComponentsResponse,
+    isLoading: isPageComponentsLoading,
+    error: pageComponentsError,
+  } = usePageComponentsQuery(pageSlug);
+
+  const [droppedComponents, setDroppedComponents] = useState<
+    ComponentResponse[]
+  >([]);
+
   const currentPage = pageSlug;
   const queryClient = useQueryClient();
-  // Unified component mutations
+
+  // Component mutations
   const createHeroMutation = useCreateComponentMutation(currentPage, "hero");
   const createAboutUsMutation = useCreateComponentMutation(
     currentPage,
@@ -194,7 +195,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     currentPage,
     "gallery"
   );
-
   const createServicesComponentMutation = useCreateComponentMutation(
     currentPage,
     "services"
@@ -231,7 +231,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     currentPage,
     "youtube"
   );
-  // Process page components with proper typing
+
+  // Process page components
   const pageComponents = React.useMemo(() => {
     if (!pageComponentsResponse) return [];
 
@@ -281,22 +282,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       }
     );
 
-    const transformedComponents = filteredComponents.map(
-      (component: ComponentResponse) => ({
-        id: component.id,
-        component_id: component.component_id,
-        component_type: component.component_type,
-        data: component.data,
-        type: component.component_type,
-        order: component.order || 0,
-        page: component.page,
-      })
-    );
-
-    return transformedComponents;
+    return filteredComponents.map((component: ComponentResponse) => ({
+      id: component.id,
+      component_id: component.component_id,
+      component_type: component.component_type,
+      data: component.data,
+      type: component.component_type,
+      order: component.order || 0,
+      page: component.page,
+    }));
   }, [pageComponentsResponse]);
 
-  // Auto-create home page if no pages exist
+  // Auto-create home page
   useEffect(() => {
     if (
       !isPagesLoading &&
@@ -305,7 +302,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       !isCreatingHomePage
     ) {
       setIsCreatingHomePage(true);
-
       createPageMutation.mutate(
         { title: "Home" },
         {
@@ -336,7 +332,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   useEffect(() => {
     if (pagesData && pagesData.length > 0) {
       const pageExists = pagesData.find(page => page.slug === pageSlug);
-
       if (!pageExists && !isCreatingHomePage) {
         const firstPage = pagesData[0];
         router.push(`/builder/${siteUser}/${firstPage.slug}`);
@@ -344,20 +339,16 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   }, [pagesData, pageSlug, router, siteUser, isCreatingHomePage]);
 
-  // Get current page data
   const currentPageData = pagesData.find(page => page.slug === currentPage);
 
-  // Handle page change
   const handlePageChange = (newPageSlug: string) => {
     router.push(`/builder/${siteUser}/${newPageSlug}`);
   };
 
-  // Handle page creation and navigation
   const handlePageCreated = (page: Page) => {
     router.push(`/builder/${siteUser}/${page.slug}`);
   };
 
-  // Handle page deletion and navigation
   const handlePageDeleted = (deletedSlug: string) => {
     if (currentPage === deletedSlug && pagesData.length > 1) {
       const remainingPages = pagesData.filter(
@@ -369,54 +360,142 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   };
 
-  const handleComponentClick = (componentId: string) => {
+  const handleComponentClick = (componentId: string, template?: string) => {
     if (componentId === "page-templates") {
-      setIsPageTemplateDialogOpen(true);
-    } else if (componentId === "navbar") {
-      setIsNavbarDialogOpen(true);
-    } else if (componentId === "footer") {
-      setIsFooterDialogOpen(true);
+      if (template) {
+        setIsPageTemplateDialogOpen(true);
+      } else {
+        setIsPageTemplateDialogOpen(true);
+      }
     } else if (componentId === "hero-sections") {
-      setIsHeroStylesDialogOpen(true);
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleHeroTemplateSelect(template as any);
+      } else {
+        setIsHeroStylesDialogOpen(true);
+      }
     } else if (componentId === "about-sections") {
-      setIsAboutUsStylesDialogOpen(true);
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleAboutUsTemplateSelect(template as any);
+      } else {
+        setIsAboutUsStylesDialogOpen(true);
+      }
     } else if (componentId === "products-sections") {
-      setIsProductsStylesDialogOpen(true);
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleProductsTemplateSelect(template as any);
+      } else {
+        setIsProductsStylesDialogOpen(true);
+      }
     } else if (componentId === "categories-sections") {
-      setIsCategoriesStylesDialogOpen(true);
-    } else if (componentId === "text-editor-sections") {
-      setIsTextEditorStylesDialogOpen(true);
-    } else if (componentId === "policies-sections") {
-      setIsPoliciesStylesDialogOpen(true);
-    } else if (componentId === "gallery-sections") {
-      setIsGalleryStylesDialogOpen(true);
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleCategoryTemplateSelect(template as any);
+      } else {
+        setIsCategoriesStylesDialogOpen(true);
+      }
     } else if (componentId === "subcategories-sections") {
-      setIsSubCategoriesStylesDialogOpen(true);
-    } else if (componentId === "blog-sections") {
-      setIsBlogStylesDialogOpen(true);
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleSubCategoryTemplateSelect(template as any);
+      } else {
+        setIsSubCategoriesStylesDialogOpen(true);
+      }
     } else if (componentId === "services-sections") {
-      setIsServicesStylesDialogOpen(true);
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleServicesTemplateSelect(template as any);
+      } else {
+        setIsServicesStylesDialogOpen(true);
+      }
     } else if (componentId === "contact-sections") {
-      setIsContactStylesDialogOpen(true);
-    } else if (componentId === "testimonials-sections") {
-      setIsTestimonialsStylesDialogOpen(true);
-    } else if (componentId === "faq-sections") {
-      setIsFAQStylesDialogOpen(true);
-    } else if (componentId === "portfolio-sections") {
-      setIsPortfolioStylesDialogOpen(true);
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleContactTemplateSelect(template as any);
+      } else {
+        setIsContactStylesDialogOpen(true);
+      }
     } else if (componentId === "team-members-sections") {
-      setIsTeamStylesDialogOpen(true);
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleTeamTemplateSelect(template as any);
+      } else {
+        setIsTeamStylesDialogOpen(true);
+      }
+    } else if (componentId === "testimonials-sections") {
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleTestimonialsTemplateSelect(template as any);
+      } else {
+        setIsTestimonialsStylesDialogOpen(true);
+      }
+    } else if (componentId === "gallery-sections") {
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleGalleryTemplateSelect(template as any);
+      } else {
+        setIsGalleryStylesDialogOpen(true);
+      }
+    } else if (componentId === "blog-sections") {
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleBlogTemplateSelect(template as any);
+      } else {
+        setIsBlogStylesDialogOpen(true);
+      }
+    } else if (componentId === "faq-sections") {
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleFAQTemplateSelect(template as any);
+      } else {
+        setIsFAQStylesDialogOpen(true);
+      }
+    } else if (componentId === "portfolio-sections") {
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handlePortfolioTemplateSelect(template as any);
+      } else {
+        setIsPortfolioStylesDialogOpen(true);
+      }
     } else if (componentId === "banner-sections") {
-      setIsBannerStylesDialogOpen(true);
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleBannerTemplateSelect(template as any);
+      } else {
+        setIsBannerStylesDialogOpen(true);
+      }
     } else if (componentId === "youtube-sections") {
-      setIsYouTubeStylesDialogOpen(true);
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleYouTubeTemplateSelect(template as any);
+      } else {
+        setIsYouTubeStylesDialogOpen(true);
+      }
     } else if (componentId === "newsletter-sections") {
-      setIsNewsletterStylesDialogOpen(true);
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleNewsletterTemplateSelect(template as any);
+      } else {
+        setIsNewsletterStylesDialogOpen(true);
+      }
+    } else if (componentId === "policies-sections") {
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handlePoliciesTemplateSelect(template as any);
+      } else {
+        setIsPoliciesStylesDialogOpen(true);
+      }
+    } else if (componentId === "text-editor-sections") {
+      if (template) {
+        handleTextEditorTemplateSelect();
+      } else {
+        setIsTextEditorStylesDialogOpen(true);
+      }
     } else {
       console.log(`${componentId} clicked`);
     }
   };
-
   // Template selection handlers - same as before but ensuring proper order assignment
   const handleNavbarTemplateSelect = (templateData: NavbarData) => {
     const payload = {
@@ -1157,6 +1236,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   return (
     <DndProvider backend={HTML5Backend}>
       {/* All dialog components remain the same */}
+      <AddSectionDialog
+        open={isAddSectionDialogOpen}
+        onOpenChange={setIsAddSectionDialogOpen}
+        onComponentClick={handleComponentClick}
+      />
       <NavbarTemplateDialog
         isOpen={isNavbarDialogOpen}
         onClose={() => setIsNavbarDialogOpen(false)}
@@ -1280,21 +1364,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onPageChange={handlePageChange}
         onPageCreated={handlePageCreated}
         onPageDeleted={handlePageDeleted}
-        isSidebarCollapsed={sidebarCollapsed}
       />
 
       <div className="bg-background flex min-h-screen flex-col">
         <div className="flex flex-1">
-          <ComponentSidebar
-            siteUser={siteUser}
-            onComponentClick={handleComponentClick}
-            collapsed={sidebarCollapsed}
-            onCollapsedChange={setSidebarCollapsed}
-          />
-
           <div className="flex flex-1 flex-col">
             <div className="mt-10 flex-1 overflow-auto bg-gray-50 p-6">
-              <div className="mx-auto max-w-7xl">
+              <div className="mx-auto w-full max-w-7xl">
                 <div className="mb-4">
                   <h2 className="text-foreground text-2xl font-bold capitalize">
                     {currentPageData?.title || currentPage} Page
@@ -1327,6 +1403,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddFAQ={handleAddFAQ}
                   onAddPortfolio={handleAddPortfolio}
                   onAddBanner={handleAddBanner}
+                  onAddSection={() => setIsAddSectionDialogOpen(true)}
                   onAddGallery={handleAddGallery}
                   onAddNewsletter={handleAddNewsletter}
                 />

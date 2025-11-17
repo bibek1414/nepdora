@@ -316,7 +316,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                       }`}
                     >
                       <span
-                        className="mx-auto max-w-3xl text-xl"
+                        className="mx-auto max-w-3xl text-sm"
                         dangerouslySetInnerHTML={{ __html: item.text }}
                       ></span>
                     </a>

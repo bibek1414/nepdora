@@ -35,9 +35,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left Section - Page Management */}
         <div
-          className={`flex items-center gap-4 transition-all duration-300 ease-in-out ${
-            isSidebarCollapsed ? "ml-16" : "ml-64"
-          }`}
+          className={`flex items-center gap-4 px-3 transition-all duration-300 ease-in-out`}
         >
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <span className="font-medium">Page Management</span>
