@@ -46,8 +46,6 @@ export default function FacebookPagesManagement({ initialPages }: Props) {
 
   const sanitizedPages = initialPages.map(sanitizePage);
 
-  const showEmptyState = !initialPages || initialPages.length === 0;
-
   const handleDeleteClick = (id: number) => {
     setSelectedPageId(id);
     setDeleteDialogOpen(true);
