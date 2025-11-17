@@ -4,22 +4,66 @@ import { handleApiError } from "@/utils/api-error";
 import {
   Template,
   CreateTemplateRequest,
+  UpdateTemplateRequest,
   CreateTemplateResponse,
+  UpdateTemplateResponse,
   DeleteTemplateResponse,
   GetTemplatesResponse,
 } from "@/types/super-admin/components/template";
 
 export const useTemplateApi = {
-  getTemplates: async (): Promise<Template[]> => {
+  getTemplates: async (
+    page: number = 1,
+    pageSize: number = 10
+  ): Promise<{
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Template[];
+  }> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/template-tenants/`, {
-      method: "GET",
-      headers: createHeaders(),
-      cache: "no-store",
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-tenants/?page=${page}&page_size=${pageSize}`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+        cache: "no-store",
+      }
+    );
     await handleApiError(response);
-    const data: GetTemplatesResponse = await response.json();
-    return Array.isArray(data) ? data : (data?.data ?? []);
+    const data = await response.json();
+
+    // Handle both array response and paginated response
+    if (Array.isArray(data)) {
+      return {
+        count: data.length,
+        next: null,
+        previous: null,
+        results: data,
+      };
+    }
+
+    // Handle paginated response
+    if (data.results) {
+      return data;
+    }
+
+    // Handle the case where data is wrapped in a data property
+    if (data.data && Array.isArray(data.data)) {
+      return {
+        count: data.data.length,
+        next: null,
+        previous: null,
+        results: data.data,
+      };
+    }
+
+    return {
+      count: 0,
+      next: null,
+      previous: null,
+      results: [],
+    };
   },
 
   createTemplate: async (
@@ -37,8 +81,39 @@ export const useTemplateApi = {
       return json as CreateTemplateResponse;
     return { data: json as Template };
   },
+  updateTemplate: async (
+    ownerId: number | string,
+    payload: UpdateTemplateRequest
+  ): Promise<UpdateTemplateResponse> => {
+    const API_BASE_URL = getApiBaseUrl();
 
-  // Updated to use owner_id instead of slug
+    const formData = new FormData();
+    if (payload.template_image) {
+      formData.append("template_image", payload.template_image);
+    }
+
+    const response = await fetch(
+      `${API_BASE_URL}/api/template-tenants/${ownerId}/`,
+      {
+        method: "PATCH",
+        body: formData,
+      }
+    );
+
+    await handleApiError(response);
+
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const json = await response.json();
+      if ((json as UpdateTemplateResponse)?.data)
+        return json as UpdateTemplateResponse;
+
+      return { data: json as Template };
+    }
+
+    throw new Error("Unexpected response format from server");
+  },
+
   deleteTemplate: async (ownerId: number): Promise<DeleteTemplateResponse> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(

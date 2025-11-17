@@ -8,21 +8,11 @@ import {
   LayoutDashboard,
   Package,
   FileText,
-  Users,
   Edit3,
-  Briefcase,
-  Calendar,
-  Globe,
   Bug,
-  Gift,
   MessageSquare,
-  Tag,
   User,
-  Bot,
-  Trophy,
   Mail,
-  Youtube,
-  ChevronDown,
   PanelRight,
   PanelLeft,
   MessageCircle,
@@ -30,6 +20,7 @@ import {
   Truck,
   Unplug,
   Facebook,
+  LayoutPanelTop,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -54,6 +45,11 @@ interface AdminSidebarProps {
 const navigationGroups = [
   {
     items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
+  },
+  {
+    items: [
+      { name: "Template", href: "/admin/template", icon: LayoutPanelTop },
+    ],
   },
   {
     items: [{ name: "Products", href: "/admin/products", icon: Package }],
