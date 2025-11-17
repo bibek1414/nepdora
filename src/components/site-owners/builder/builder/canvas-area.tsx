@@ -504,7 +504,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   );
 
   return (
-    <div className="scale-90 rounded-lg border-2 border-dashed bg-white transition-colors">
+    <div className="rounded-lg border-2 border-dashed bg-white transition-colors">
       {/* Navbar Section */}
       {navbar ? (
         <div className="group relative mb-4 border-b">
