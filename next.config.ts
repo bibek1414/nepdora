@@ -60,7 +60,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
 
   // Production source maps (disable for faster builds)
   productionBrowserSourceMaps: false,
