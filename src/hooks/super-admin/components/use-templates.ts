@@ -3,12 +3,13 @@ import { useTemplateApi } from "@/services/api/super-admin/components/template";
 import {
   Template,
   CreateTemplateRequest,
+  UpdateTemplateRequest,
 } from "@/types/super-admin/components/template";
 
-export const useTemplates = () => {
+export const useTemplates = (page: number = 1, pageSize: number = 10) => {
   return useQuery({
-    queryKey: ["templates"],
-    queryFn: () => useTemplateApi.getTemplates(),
+    queryKey: ["templates", page, pageSize],
+    queryFn: () => useTemplateApi.getTemplates(page, pageSize),
   });
 };
 
@@ -20,6 +21,26 @@ export const useCreateTemplate = () => {
       useTemplateApi.createTemplate(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["templates"] });
+    },
+  });
+};
+
+export const useUpdateTemplate = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      ownerId,
+      payload,
+    }: {
+      ownerId: number | string;
+      payload: UpdateTemplateRequest;
+    }) => useTemplateApi.updateTemplate(ownerId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["templates"] });
+    },
+    onError: (error: Error) => {
+      console.error("Update template error:", error);
     },
   });
 };

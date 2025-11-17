@@ -16,18 +16,20 @@ import {
 } from "@/hooks/super-admin/components/use-templates";
 import { useTemplateToken } from "@/hooks/super-admin/components/use-template-token";
 import { CreateTemplateAccountForm } from "@/components/auth/template/create-template-form";
+import { EditTemplateForm } from "@/components/auth/template/edit-template-form";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Edit } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import Pagination from "@/components/ui/pagination";
+import { Template } from "@/types/super-admin/components/template";
 
-type TemplateItem = {
-  id: number | string;
-  name: string;
-  slug: string;
-  schema_name?: string;
-  owner_id: number; // Make sure owner_id is included
-  created_at?: string;
-  updated_at?: string;
+type TemplateItem = Template;
+
+type PaginationInfo = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: TemplateItem[];
 };
 
 export default function CreateTemplateDialog() {
@@ -35,19 +37,34 @@ export default function CreateTemplateDialog() {
 
   // State
   const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false); // Add edit dialog state
+  const [editingTemplate, setEditingTemplate] = useState<TemplateItem | null>(
+    null
+  ); // Add editing template state
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<TemplateItem | null>(null);
   const [loggingInTemplateId, setLoggingInTemplateId] = useState<
     number | string | null
   >(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   // TanStack Query hooks
   const {
-    data: templates = [],
+    data: paginationData,
     isLoading: loading,
     error,
     refetch: fetchTemplates,
-  } = useTemplates();
+  } = useTemplates(page, pageSize);
+
+  const templates = paginationData?.results || [];
+  const pagination = paginationData
+    ? {
+        count: paginationData.count,
+        next: paginationData.next,
+        previous: paginationData.previous,
+      }
+    : null;
 
   const deleteTemplateMutation = useDeleteTemplate();
   const templateTokenMutation = useTemplateToken();
@@ -58,6 +75,28 @@ export default function CreateTemplateDialog() {
   const handleTemplateCreated = () => {
     setOpen(false);
     fetchTemplates();
+    // Reset to first page when a new template is created
+    setPage(1);
+  };
+
+  // Add edit handler
+  const handleEdit = (template: TemplateItem) => {
+    setEditingTemplate(template);
+    setEditOpen(true);
+  };
+
+  // Add edit success handler
+  const handleEditSuccess = () => {
+    setEditOpen(false);
+    setEditingTemplate(null);
+    fetchTemplates();
+    toast.success("Template image updated successfully");
+  };
+
+  // Add edit cancel handler
+  const handleEditCancel = () => {
+    setEditOpen(false);
+    setEditingTemplate(null);
   };
 
   const openDelete = (t: TemplateItem) => {
@@ -70,17 +109,39 @@ export default function CreateTemplateDialog() {
 
     try {
       setDeletingOwnerId(deleteTarget.owner_id);
-      await deleteTemplateMutation.mutateAsync(deleteTarget.owner_id); // Use owner_id here
+      await deleteTemplateMutation.mutateAsync(deleteTarget.owner_id);
       setDeleteOpen(false);
       setDeleteTarget(null);
       setDeletingOwnerId(null);
       toast.success("Template deleted successfully");
+
+      // If we're on a page that might become empty after deletion, go to previous page
+      if (templates.length === 1 && page > 1) {
+        setPage(page - 1);
+      } else {
+        fetchTemplates();
+      }
     } catch (error) {
       console.error("Failed to delete template:", error);
       toast.error("Failed to delete template");
       setDeletingOwnerId(null);
     }
   };
+
+  // Pagination handlers
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setPage(1); // Reset to first page when changing page size
+  };
+
+  // Calculate pagination info
+  const totalPages = pagination ? Math.ceil(pagination.count / pageSize) : 0;
+  const startItem = pagination ? (page - 1) * pageSize + 1 : 0;
+  const endItem = pagination ? Math.min(page * pageSize, pagination.count) : 0;
 
   // Rest of your existing functions (setCrossDomainCookie, handleTemplateLogin, etc.)
   const setCrossDomainCookie = (
@@ -178,15 +239,34 @@ export default function CreateTemplateDialog() {
         <div className="flex items-center justify-between border-b px-4 py-3">
           <div className="text-sm font-medium text-gray-700">
             Saved Templates
+            {pagination && (
+              <span className="ml-2 text-xs text-gray-500">
+                ({startItem}-{endItem} of {pagination.count})
+              </span>
+            )}
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => fetchTemplates()}
-            disabled={loading}
-          >
-            {loading ? "Refreshing..." : "Refresh"}
-          </Button>
+          <div className="flex items-center gap-2">
+            {/* Page Size Selector */}
+            <select
+              value={pageSize}
+              onChange={e => handlePageSizeChange(Number(e.target.value))}
+              className="rounded-md border border-gray-300 px-2 py-1 text-sm"
+              disabled={loading}
+            >
+              <option value={5}>5 per page</option>
+              <option value={10}>10 per page</option>
+              <option value={20}>20 per page</option>
+              <option value={50}>50 per page</option>
+            </select>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => fetchTemplates()}
+              disabled={loading}
+            >
+              {loading ? "Refreshing..." : "Refresh"}
+            </Button>
+          </div>
         </div>
         {error ? (
           <div className="px-4 py-6 text-sm text-red-600">
@@ -197,54 +277,94 @@ export default function CreateTemplateDialog() {
             No templates found
           </div>
         ) : (
-          <ul className="divide-y">
-            {templates.map(t => (
-              <li
-                key={t.id}
-                className="flex items-center justify-between px-4 py-3 transition-colors hover:bg-gray-50"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-sm font-medium text-gray-900">
-                    {t.name}
-                  </div>
-                  {t.slug && (
-                    <div className="text-xs text-gray-500">Slug: {t.slug}</div>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => handleTemplateLogin(t)}
-                    disabled={loggingInTemplateId !== null}
-                  >
-                    {loggingInTemplateId === t.id ? (
-                      <>
-                        <Loader2 className="mr-1 h-3 w-3 animate-spin" />
-                        Logging in...
-                      </>
-                    ) : (
-                      "Open Template"
+          <>
+            <ul className="divide-y">
+              {templates.map(t => (
+                <li
+                  key={t.id}
+                  className="flex items-center justify-between px-4 py-3 transition-colors hover:bg-gray-50"
+                >
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    {/* Template Image */}
+                    {t.template_image && (
+                      <img
+                        src={t.template_image}
+                        alt={t.name}
+                        className="h-10 w-10 rounded-lg border object-cover"
+                      />
                     )}
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => openDelete(t)}
-                    disabled={
-                      deleteTemplateMutation.isPending &&
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium text-gray-900">
+                        {t.name}
+                      </div>
+                      {t.slug && (
+                        <div className="text-xs text-gray-500">
+                          Slug: {t.slug}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(t)}
+                    >
+                      <Edit className="mr-1 h-3 w-3" />
+                      Edit
+                    </Button>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => handleTemplateLogin(t)}
+                      disabled={loggingInTemplateId !== null}
+                    >
+                      {loggingInTemplateId === t.id ? (
+                        <>
+                          <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                          Logging in...
+                        </>
+                      ) : (
+                        "Open Template"
+                      )}
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => openDelete(t)}
+                      disabled={
+                        deleteTemplateMutation.isPending &&
+                        deletingOwnerId === t.owner_id
+                      }
+                    >
+                      {deleteTemplateMutation.isPending &&
                       deletingOwnerId === t.owner_id
-                    }
-                  >
-                    {deleteTemplateMutation.isPending &&
-                    deletingOwnerId === t.owner_id
-                      ? "Deleting..."
-                      : "Delete"}
-                  </Button>
-                </div>
-              </li>
-            ))}
-          </ul>
+                        ? "Deleting..."
+                        : "Delete"}
+                    </Button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {/* Use the imported Pagination component */}
+            {pagination && totalPages > 1 && (
+              <div className="border-t px-4 py-3">
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                  count={pagination.count}
+                  pageSize={pageSize}
+                  hasNext={!!pagination.next}
+                  hasPrevious={!!pagination.previous}
+                  onPageSizeChange={handlePageSizeChange}
+                  showFirstLast={true}
+                  maxVisiblePages={7}
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -260,6 +380,26 @@ export default function CreateTemplateDialog() {
           </DialogHeader>
 
           <CreateTemplateAccountForm onSuccess={handleTemplateCreated} />
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Template Dialog */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Template</DialogTitle>
+            <DialogDescription>
+              Update the template image for &quot;{editingTemplate?.name}&quot;.
+            </DialogDescription>
+          </DialogHeader>
+
+          {editingTemplate && (
+            <EditTemplateForm
+              template={editingTemplate}
+              onSuccess={handleEditSuccess}
+              onCancel={handleEditCancel}
+            />
+          )}
         </DialogContent>
       </Dialog>
 
