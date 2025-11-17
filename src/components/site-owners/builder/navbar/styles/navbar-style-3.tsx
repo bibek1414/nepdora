@@ -1,4 +1,3 @@
-// navbar-style-3.tsx
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,7 +6,7 @@ import {
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
 import { getButtonVariant } from "@/lib/utils";
-import { Plus, Edit, Trash2, Menu, Search } from "lucide-react";
+import { Plus, Edit, Trash2, Menu, Search, ShoppingCart } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import { SearchBar } from "@/components/site-owners/builder/search-bar/search-bar";
@@ -33,6 +32,7 @@ interface NavbarStyleProps {
   onAddButton?: () => void;
   onEditButton?: (button: NavbarButton) => void;
   onDeleteButton?: (buttonId: string) => void;
+  onEditCart?: () => void;
   disableClicks?: boolean;
 }
 
@@ -47,13 +47,13 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
   onAddButton,
   onEditButton,
   onDeleteButton,
+  onEditCart,
   disableClicks = false,
 }) => {
   const { links, buttons, showCart } = navbarData;
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
-  // Get theme data
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -110,7 +110,6 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
         } ${disableClicks ? "pointer-events-none" : ""}`}
         style={{ fontFamily: theme.fonts.heading }}
       >
-        {/* Left side: Logo and Desktop Search */}
         <div className="flex min-w-0 flex-1 items-center gap-6">
           <div
             className={`flex-shrink-0 ${disableClicks ? "pointer-events-auto" : ""}`}
@@ -132,7 +131,6 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
             )}
           </div>
 
-          {/* Desktop Search Bar */}
           <div
             className={`relative hidden max-w-md flex-1 md:block ${disableClicks ? "pointer-events-auto" : ""}`}
           >
@@ -144,9 +142,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
           </div>
         </div>
 
-        {/* Right side: Mobile Search Toggle, Links, Buttons, and Cart */}
         <div className="flex flex-shrink-0 items-center gap-2">
-          {/* Mobile Search Toggle */}
           <div
             className={`md:hidden ${disableClicks ? "pointer-events-auto" : ""}`}
           >
@@ -167,7 +163,6 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
             </Button>
           </div>
 
-          {/* Desktop Links */}
           <div className="hidden items-center gap-4 lg:flex">
             {links.map(link =>
               isEditable && onEditLink && onDeleteLink ? (
@@ -205,7 +200,6 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
             )}
           </div>
 
-          {/* Buttons */}
           <div className="flex items-center gap-2">
             {buttons.map(button =>
               isEditable && onEditButton && onDeleteButton ? (
@@ -252,16 +246,33 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
             )}
           </div>
 
-          {/* Cart */}
           {showCart && (
             <div className={disableClicks ? "pointer-events-auto" : ""}>
-              <CartIcon onToggleCart={toggleCart} />
+              {isEditable && onEditCart ? (
+                <EditableItem onEdit={onEditCart}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="relative"
+                    onClick={e => e.preventDefault()}
+                  >
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                      0
+                    </span>
+                  </Button>
+                </EditableItem>
+              ) : (
+                <CartIcon onToggleCart={toggleCart} />
+              )}
             </div>
           )}
         </div>
       </nav>
 
-      <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      {!isEditable && (
+        <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      )}
     </>
   );
 };

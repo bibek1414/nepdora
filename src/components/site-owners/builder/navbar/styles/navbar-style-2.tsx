@@ -6,7 +6,7 @@ import {
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
 import { getButtonVariant } from "@/lib/utils";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, Trash2, ShoppingCart } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
@@ -31,6 +31,7 @@ interface NavbarStyleProps {
   onAddButton?: () => void;
   onEditButton?: (button: NavbarButton) => void;
   onDeleteButton?: (buttonId: string) => void;
+  onEditCart?: () => void;
   disableClicks?: boolean;
 }
 
@@ -45,6 +46,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   onAddButton,
   onEditButton,
   onDeleteButton,
+  onEditCart,
   disableClicks = false,
 }) => {
   const { links, buttons, showCart } = navbarData;
@@ -52,10 +54,8 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   const leftLinks = links.slice(0, midIndex);
   const rightLinks = links.slice(midIndex);
 
-  // Add state and handlers for the cart
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Get theme data
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -81,7 +81,6 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
     setIsCartOpen(false);
   };
 
-  // Add the same generateLinkHref function
   const generateLinkHref = (originalHref: string) => {
     if (isEditable || !siteUser || disableClicks) return "#";
 
@@ -93,7 +92,6 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
     return `/preview/${siteUser}/${cleanHref}`;
   };
 
-  // Handler to prevent clicks when disabled
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
     if (disableClicks || isEditable) {
       e.preventDefault();
@@ -267,13 +265,31 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
           )}
           {showCart && (
             <div className={disableClicks ? "pointer-events-auto" : ""}>
-              <CartIcon onToggleCart={toggleCart} />
+              {isEditable && onEditCart ? (
+                <EditableItem onEdit={onEditCart}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="relative"
+                    onClick={e => e.preventDefault()}
+                  >
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                      0
+                    </span>
+                  </Button>
+                </EditableItem>
+              ) : (
+                <CartIcon onToggleCart={toggleCart} />
+              )}
             </div>
           )}
         </div>
       </nav>
 
-      <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      {!isEditable && (
+        <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      )}
     </>
   );
 };

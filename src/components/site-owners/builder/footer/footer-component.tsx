@@ -244,8 +244,14 @@ export function Footer({
 
   const handleSaveFooter = async (newData: FooterData) => {
     try {
-      // Process the data to ensure correct icons
-      const processedData = getProcessedFooterData();
+      // Process the NEW data to ensure correct icons (not currentFooterData!)
+      const processedData = { ...newData };
+
+      // Ensure social links have correct icons
+      processedData.socialLinks = processedData.socialLinks.map(link => ({
+        ...link,
+        icon: getSocialIcon(link.platform),
+      }));
 
       // Determine if we should update or create
       const shouldUpdate =
@@ -256,6 +262,7 @@ export function Footer({
       if (shouldUpdate && footerIdToUse) {
         // Update existing footer
         console.log("Updating existing footer with ID:", footerIdToUse);
+        console.log("Processed data being sent:", processedData);
         const updateData = {
           id: footerIdToUse,
           footerData: processedData,

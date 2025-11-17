@@ -15,6 +15,7 @@ import {
   Heart,
   Package,
   LogOut,
+  ShoppingCart,
 } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
@@ -56,6 +57,7 @@ interface NavbarStyleProps {
   onAddButton?: () => void;
   onEditButton?: (button: NavbarButton) => void;
   onDeleteButton?: (buttonId: string) => void;
+  onEditCart?: () => void;
   disableClicks?: boolean;
 }
 
@@ -70,6 +72,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   onAddButton,
   onEditButton,
   onDeleteButton,
+  onEditCart,
   disableClicks = false,
 }) => {
   const { links, buttons, showCart } = navbarData;
@@ -77,11 +80,9 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
 
-  // Get wishlist data
   const { data: wishlistData } = useWishlist();
   const wishlistCount = wishlistData?.length || 0;
 
-  // Get theme data
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -98,7 +99,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     },
   };
 
-  // Fetch categories and subcategories
   const { data: categoriesData } = useCategories();
   const { data: subCategoriesData } = useSubCategories();
 
@@ -231,7 +231,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
           </div>
 
           <div className="hidden items-center gap-6 md:flex">
-            {/* Desktop Search Bar */}
             <div
               className={`relative hidden max-w-md flex-1 md:block ${disableClicks ? "pointer-events-auto" : ""}`}
             >
@@ -242,7 +241,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
               />
             </div>
 
-            {/* Regular Navigation Links */}
             {links.map(link =>
               isEditable && onEditLink && onDeleteLink ? (
                 <EditableItem
@@ -278,7 +276,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
               )
             )}
 
-            {/* Categories Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -363,7 +360,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Regular buttons (editable ones) */}
           {buttons.map(button =>
             isEditable && onEditButton && onDeleteButton ? (
               <EditableItem
@@ -408,7 +404,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
             )
           )}
 
-          {/* Fixed Login/Profile Button - Always present, not editable */}
           {!isAuthenticated ? (
             <Button
               variant="default"
@@ -497,14 +492,31 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
 
           {showCart && (
             <div className={disableClicks ? "pointer-events-auto" : ""}>
-              <CartIcon onToggleCart={toggleCart} />
+              {isEditable && onEditCart ? (
+                <EditableItem onEdit={onEditCart}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="relative"
+                    onClick={e => e.preventDefault()}
+                  >
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                      0
+                    </span>
+                  </Button>
+                </EditableItem>
+              ) : (
+                <CartIcon onToggleCart={toggleCart} />
+              )}
             </div>
           )}
         </div>
       </nav>
 
-      {/* Side Cart */}
-      <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      {!isEditable && (
+        <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      )}
     </>
   );
 };

@@ -16,6 +16,7 @@ import {
   LogOut,
   ChevronDown,
   Package,
+  ShoppingCart,
 } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
@@ -54,6 +55,7 @@ interface NavbarStyleProps {
   onAddButton?: () => void;
   onEditButton?: (button: NavbarButton) => void;
   onDeleteButton?: (buttonId: string) => void;
+  onEditCart?: () => void;
   disableClicks?: boolean;
   onUpdateTopBar?: (items: TopBarItem[]) => void;
 }
@@ -69,6 +71,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
   onAddButton,
   onEditButton,
   onDeleteButton,
+  onEditCart,
   disableClicks = false,
   onUpdateTopBar,
 }) => {
@@ -82,11 +85,9 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
   const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
 
-  // Get wishlist data
   const { data: wishlistData } = useWishlist();
   const wishlistCount = wishlistData?.length || 0;
 
-  // Initialize top bar items from navbarData or use defaults
   const [topBarItems, setTopBarItems] = useState<TopBarItem[]>(
     initialTopBarItems || [
       {
@@ -97,14 +98,12 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
     ]
   );
 
-  // Sync with navbarData when it changes
   useEffect(() => {
     if (initialTopBarItems) {
       setTopBarItems(initialTopBarItems);
     }
   }, [initialTopBarItems]);
 
-  // Get theme data
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -217,10 +216,8 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
   return (
     <>
       <div className="bg-white">
-        {/* Top Bar */}
         <div style={{ backgroundColor: theme.colors.primary }}>
           <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-4 text-xs sm:px-6 lg:px-8">
-            {/* Left side - Links with separators */}
             <div className="flex items-center gap-4">
               {links.slice(0, 3).map((link, index) => (
                 <React.Fragment key={link.id}>
@@ -258,14 +255,12 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                     </a>
                   )}
 
-                  {/* Add separator between links except after the last one */}
                   {index < Math.min(3, links.length) - 1 && (
                     <span className="h-4 w-px bg-white/30"></span>
                   )}
                 </React.Fragment>
               ))}
 
-              {/* Add new link button */}
               {isEditable && onAddLink && links.length < 3 && (
                 <Button
                   onClick={onAddLink}
@@ -278,7 +273,6 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
               )}
             </div>
 
-            {/* Right side - Top bar items with icons and separators */}
             <div className="flex items-center gap-4">
               {topBarItems.map((item, index) => (
                 <React.Fragment key={item.id}>
@@ -328,7 +322,6 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                     </a>
                   )}
 
-                  {/* Add separator between items except after the last one */}
                   {index < topBarItems.length - 1 && (
                     <span className="h-4 w-px bg-white/30"></span>
                   )}
@@ -349,7 +342,6 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
           </div>
         </div>
 
-        {/* Main Header */}
         <header className="relative bg-white shadow-sm">
           <nav
             aria-label="Top"
@@ -359,7 +351,6 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
             style={{ fontFamily: theme.fonts.heading }}
           >
             <div className="flex h-20 items-center justify-between">
-              {/* Logo */}
               <div
                 className={`flex ${disableClicks ? "pointer-events-auto" : ""}`}
               >
@@ -382,7 +373,6 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                 )}
               </div>
 
-              {/* Search Bar */}
               <div
                 className={`mx-8 flex-1 ${disableClicks ? "pointer-events-auto" : ""}`}
               >
@@ -393,9 +383,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                 />
               </div>
 
-              {/* Right side actions */}
               <div className="flex items-center gap-4">
-                {/* Wishlist Icon */}
                 {!isEditable && (
                   <Button
                     variant="ghost"
@@ -419,16 +407,30 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   </Button>
                 )}
 
-                {/* Cart Icon */}
                 {showCart && (
                   <div
                     className={`${disableClicks ? "pointer-events-auto" : ""}`}
                   >
-                    <CartIcon onToggleCart={toggleCart} />
+                    {isEditable && onEditCart ? (
+                      <EditableItem onEdit={onEditCart}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="relative"
+                          onClick={e => e.preventDefault()}
+                        >
+                          <ShoppingCart className="h-5 w-5" />
+                          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                            0
+                          </span>
+                        </Button>
+                      </EditableItem>
+                    ) : (
+                      <CartIcon onToggleCart={toggleCart} />
+                    )}
                   </div>
                 )}
 
-                {/* User Account Dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -512,8 +514,9 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
         </header>
       </div>
 
-      {/* Side Cart */}
-      <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      {!isEditable && (
+        <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      )}
     </>
   );
 };

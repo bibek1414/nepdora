@@ -123,13 +123,26 @@ export const useUpdateFooterMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateFooterRequest) => useFooterApi.updateFooter(data),
+    mutationFn: async (data: UpdateFooterRequest) => {
+      console.log("🔧 UPDATE FOOTER MUTATION CALLED:", data);
+
+      // Ensure we have the ID
+      if (!data.id) {
+        throw new Error("Footer ID is required for update");
+      }
+
+      const result = await useFooterApi.updateFooter(data);
+      console.log("✅ UPDATE RESPONSE:", result);
+      return result;
+    },
     onSuccess: data => {
+      console.log("🎉 UPDATE SUCCESS:", data);
       queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
       toast.success(data.message || "Footer updated successfully");
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
+      console.error("❌ UPDATE ERROR:", error);
       toast.error(error.message || "Failed to update footer");
     },
   });

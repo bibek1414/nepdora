@@ -31,6 +31,8 @@ interface NavbarStyleProps {
   onAddButton?: () => void;
   onEditButton?: (button: NavbarButton) => void;
   onDeleteButton?: (buttonId: string) => void;
+  onEditCart?: () => void;
+  onToggleCart?: () => void;
   disableClicks?: boolean;
 }
 
@@ -45,6 +47,8 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
   onAddButton,
   onEditButton,
   onDeleteButton,
+  onEditCart,
+  onToggleCart,
   disableClicks = false,
 }) => {
   const { links, buttons, showCart } = navbarData;
@@ -223,15 +227,26 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
               <Plus className="mr-2 h-4 w-4" /> Button
             </Button>
           )}
+
+          {/* Cart Icon with Editable Wrapper */}
           {showCart && (
             <div className={disableClicks ? "pointer-events-auto" : ""}>
-              <CartIcon onToggleCart={toggleCart} />
+              {isEditable && onEditCart ? (
+                <EditableItem onEdit={onEditCart}>
+                  <CartIcon onToggleCart={() => {}} />
+                </EditableItem>
+              ) : (
+                <CartIcon onToggleCart={toggleCart} />
+              )}
             </div>
           )}
         </div>
       </nav>
 
-      <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      {/* Only show SideCart in preview mode, not in editable mode */}
+      {!isEditable && (
+        <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      )}
     </>
   );
 };

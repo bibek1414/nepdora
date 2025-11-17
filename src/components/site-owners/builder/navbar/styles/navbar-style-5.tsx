@@ -5,7 +5,7 @@ import {
   NavbarLink,
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
-import { Plus, Edit, Trash2, Menu, Search } from "lucide-react";
+import { Plus, Edit, Trash2, Menu, Search, ShoppingCart } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
@@ -61,6 +61,7 @@ interface NavbarStyleProps {
   onAddButton?: () => void;
   onEditButton?: (button: NavbarButton) => void;
   onDeleteButton?: (buttonId: string) => void;
+  onEditCart?: () => void;
   disableClicks?: boolean;
   onUpdateBanner?: (text: string) => void;
 }
@@ -76,6 +77,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
   onAddButton,
   onEditButton,
   onDeleteButton,
+  onEditCart,
   disableClicks = false,
   onUpdateBanner,
 }) => {
@@ -87,7 +89,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
     navbarData.bannerText || "Get free delivery on orders over $100"
   );
 
-  // Get theme data
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -138,12 +139,9 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
     }
   };
 
-  // Group links for mega menu (first 2 links become main categories if we have enough links)
-  // If we have fewer links, just show them as regular links
   const mainCategoryLinks = links.length >= 4 ? links.slice(0, 2) : [];
   const remainingLinks = links.length >= 4 ? links.slice(2) : links;
 
-  // Split remaining links into groups for mega menu
   const getLinkGroup = (index: number) => {
     if (remainingLinks.length === 0) return [];
     const groupSize = Math.ceil(remainingLinks.length / 3);
@@ -154,7 +152,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
   return (
     <>
       <div className="bg-white">
-        {/* Promo Banner */}
         <div
           className="flex h-10 items-center justify-center px-4 text-sm font-medium text-white sm:px-6 lg:px-8"
           style={{ backgroundColor: theme.colors.primary }}
@@ -175,7 +172,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
           )}
         </div>
 
-        {/* Header */}
         <header className="relative bg-white">
           <nav
             aria-label="Top"
@@ -186,7 +182,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
           >
             <div className="border-b border-gray-200">
               <div className="flex h-16 items-center">
-                {/* Mobile menu button */}
                 <button
                   type="button"
                   onClick={() => {
@@ -206,7 +201,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                   <Menu className="h-6 w-6" />
                 </button>
 
-                {/* Logo */}
                 <div
                   className={`ml-4 flex lg:ml-0 ${disableClicks ? "pointer-events-auto" : ""}`}
                 >
@@ -229,7 +223,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                   )}
                 </div>
 
-                {/* Desktop Flyout menus */}
                 <div className="group/popover-group hidden lg:ml-8 lg:block lg:self-stretch">
                   <div className="flex h-full space-x-8">
                     {mainCategoryLinks.map((link, index) => (
@@ -315,7 +308,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                               <div className="bg-white">
                                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                                   <div className="grid grid-cols-2 gap-x-8 gap-y-10 py-16">
-                                    {/* Link groups in columns */}
                                     <div className="row-start-1 grid grid-cols-3 gap-x-8 gap-y-10 text-sm">
                                       {[0, 1, 2].map(groupIndex => {
                                         const linkGroup =
@@ -411,7 +403,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                       </Popover>
                     ))}
 
-                    {/* Regular links without mega menu */}
                     {remainingLinks.map(link =>
                       isEditable && onEditLink && onDeleteLink ? (
                         <EditableItem
@@ -451,9 +442,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                   </div>
                 </div>
 
-                {/* Right side actions */}
                 <div className="ml-auto flex items-center">
-                  {/* Desktop auth links */}
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                     {buttons.slice(0, 2).map(button =>
                       isEditable && onEditButton && onDeleteButton ? (
@@ -499,7 +488,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                     )}
                   </div>
 
-                  {/* Search */}
                   <div className="flex lg:ml-6">
                     <a
                       href="#"
@@ -518,12 +506,27 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                     </a>
                   </div>
 
-                  {/* Cart */}
                   {showCart && (
                     <div
                       className={`ml-4 flow-root lg:ml-6 ${disableClicks ? "pointer-events-auto" : ""}`}
                     >
-                      <CartIcon onToggleCart={toggleCart} />
+                      {isEditable && onEditCart ? (
+                        <EditableItem onEdit={onEditCart}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="relative"
+                            onClick={e => e.preventDefault()}
+                          >
+                            <ShoppingCart className="h-6 w-6" />
+                            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                              0
+                            </span>
+                          </Button>
+                        </EditableItem>
+                      ) : (
+                        <CartIcon onToggleCart={toggleCart} />
+                      )}
                     </div>
                   )}
                 </div>
@@ -533,7 +536,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
         </header>
       </div>
 
-      {/* Mobile Menu */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent side="left" className="w-full max-w-xs overflow-y-auto">
           <SheetHeader>
@@ -541,7 +543,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
           </SheetHeader>
 
           <div className="mt-2">
-            {/* Mobile menu with tabs (only if we have main category links) */}
             {mainCategoryLinks.length > 0 ? (
               <Tabs
                 defaultValue={mainCategoryLinks[0]?.id || "links"}
@@ -622,7 +623,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                 })}
               </Tabs>
             ) : (
-              /* Simple mobile menu without tabs if no main categories */
               <div className="space-y-6 px-4 py-6">
                 {remainingLinks.map(link =>
                   isEditable && onEditLink && onDeleteLink ? (
@@ -656,7 +656,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
               </div>
             )}
 
-            {/* Additional links (only show if we have main categories and remaining links) */}
             {mainCategoryLinks.length > 0 && remainingLinks.length > 0 && (
               <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                 {remainingLinks.map(link =>
@@ -691,7 +690,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
               </div>
             )}
 
-            {/* Buttons */}
             {buttons.length > 0 && (
               <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                 {buttons.map(button =>
@@ -729,8 +727,9 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
         </SheetContent>
       </Sheet>
 
-      {/* Side Cart */}
-      <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      {!isEditable && (
+        <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      )}
     </>
   );
 };

@@ -37,7 +37,8 @@ import {
 import { toast } from "sonner";
 import { AboutUsTemplate6 } from "./about-style-6";
 import { AboutUsTemplate7 } from "./about-style-7";
-import { AboutUsTemplate8 } from "../../builder/about/about-style-8";
+
+import { AboutUsTemplate8 } from "./about-style-8";
 
 interface AboutUsComponentProps {
   component: AboutUsComponentData;
