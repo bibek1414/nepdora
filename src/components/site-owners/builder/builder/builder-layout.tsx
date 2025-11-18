@@ -626,6 +626,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "product-4"
       | "product-5"
       | "product-6"
+      | "product-7"
   ) => {
     const productsData = { ...defaultProductsData, style: template };
     try {

@@ -11,6 +11,7 @@ import { ProductCard3 } from "./product-card3";
 import { ProductCard4 } from "./product-card4";
 import { ProductCard5 } from "./product-card5";
 import { ProductCard6 } from "./product-card6";
+import { ProductCard7 } from "./product-card7";
 import ProductFilterSidebar from "./products-filter/product-filter-sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -78,7 +79,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   // Determine if we should show sidebar based on style
   const shouldShowSidebar = showSidebar && style === "product-4";
   const isCarouselStyle = style === "product-1" || style === "product-6";
-
+  const isFullSectionStyle = style === "product-7";
   const currentFilters = shouldShowSidebar && !isEditable ? productFilters : {};
 
   // Use unified mutation hooks
@@ -204,7 +205,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
         return <ProductCard4 key={product.id} {...cardProps} />;
       case "product-5":
         return <ProductCard5 key={product.id} {...cardProps} />;
-      case "product-1":
+      case "product-7":
+        return <ProductCard7 key={product.id} {...cardProps} />;
+      case "grid-1":
       default:
         return <ProductCard1 key={product.id} {...cardProps} />;
     }
@@ -216,6 +219,8 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
         return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 3)}`;
       case "product-3":
         return "grid-cols-1 lg:grid-cols-2 gap-8";
+      case "product-7":
+        return "";
       case "product-1":
       case "product-6":
         return "";
@@ -292,26 +297,28 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
         {/* Products Preview with Conditional Sidebar Layout */}
         <div className="py-8">
           <div className="container mx-auto px-4">
-            {/* Header */}
-            <div className="mb-8 text-center">
-              <EditableText
-                value={title}
-                onChange={handleTitleChange}
-                as="h2"
-                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-              <EditableText
-                value={subtitle || ""}
-                onChange={handleSubtitleChange}
-                as="p"
-                className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                isEditable={true}
-                placeholder="Enter subtitle..."
-                multiline={true}
-              />
-            </div>
+            {/* Header - Hide for product-7 as it has its own header */}
+            {!isFullSectionStyle && (
+              <div className="mb-8 text-center">
+                <EditableText
+                  value={title}
+                  onChange={handleTitleChange}
+                  as="h2"
+                  className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                  isEditable={true}
+                  placeholder="Enter title..."
+                />
+                <EditableText
+                  value={subtitle || ""}
+                  onChange={handleSubtitleChange}
+                  as="p"
+                  className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                  isEditable={true}
+                  placeholder="Enter subtitle..."
+                  multiline={true}
+                />
+              </div>
+            )}
 
             <div className={shouldShowSidebar ? "relative flex gap-6" : ""}>
               {/* Sidebar - Only show for ProductCard4 (product-4) */}
@@ -355,7 +362,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                 {isLoading && (
                   <div
                     className={
-                      isCarouselStyle ? "" : `grid ${getGridClass()} gap-6`
+                      isCarouselStyle || isFullSectionStyle
+                        ? ""
+                        : `grid ${getGridClass()} gap-6`
                     }
                   >
                     {Array.from({ length: Math.min(page_size, 8) }).map(
@@ -389,7 +398,15 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                 {/* Products Grid/Carousel */}
                 {!isLoading && !error && products.length > 0 && (
                   <>
-                    {isCarouselStyle ? (
+                    {isFullSectionStyle ? (
+                      // ProductCard7 is a complete section, render it once with all products
+                      <ProductCard7
+                        products={products}
+                        siteUser={isEditable ? undefined : siteUser}
+                        title={title}
+                        subtitle={subtitle}
+                      />
+                    ) : isCarouselStyle ? (
                       <Carousel
                         opts={{
                           align: "start",
@@ -429,8 +446,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                       </div>
                     )}
 
-                    {/* Pagination - Hide for carousel */}
+                    {/* Pagination - Hide for carousel and full section styles */}
                     {!isCarouselStyle &&
+                      !isFullSectionStyle &&
                       pagination &&
                       pagination.totalPages > 1 && (
                         <div className="mt-8">
@@ -468,19 +486,21 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   return (
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h2
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></h2>
-          {subtitle && (
-            <p
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            ></p>
-          )}
-        </div>
+        {/* Header - Hide for product-7 as it has its own header */}
+        {!isFullSectionStyle && (
+          <div className="mb-12 text-center">
+            <h2
+              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+              dangerouslySetInnerHTML={{ __html: title }}
+            ></h2>
+            {subtitle && (
+              <p
+                className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
+            )}
+          </div>
+        )}
 
         {/* Conditional Layout: Sidebar + Products OR Just Products */}
         <div className={shouldShowSidebar ? "flex gap-8" : ""}>
@@ -525,7 +545,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
             {isLoading && (
               <div
                 className={
-                  isCarouselStyle ? "" : `grid ${getGridClass()} gap-8`
+                  isCarouselStyle || isFullSectionStyle
+                    ? ""
+                    : `grid ${getGridClass()} gap-8`
                 }
               >
                 {Array.from({ length: page_size }).map((_, index) => (
@@ -557,7 +579,14 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
             {/* Products Grid/Carousel */}
             {!isLoading && !error && products.length > 0 && (
               <>
-                {isCarouselStyle ? (
+                {isFullSectionStyle ? (
+                  <ProductCard7
+                    products={products}
+                    siteUser={siteUser}
+                    title={title}
+                    subtitle={subtitle}
+                  />
+                ) : isCarouselStyle ? (
                   <Carousel
                     opts={{
                       align: "start",
@@ -588,8 +617,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                   </div>
                 )}
 
-                {/* Pagination - Hide for carousel */}
+                {/* Pagination - Hide for carousel and full section styles */}
                 {!isCarouselStyle &&
+                  !isFullSectionStyle &&
                   pagination &&
                   pagination.totalPages > 1 && (
                     <div className="mt-12">

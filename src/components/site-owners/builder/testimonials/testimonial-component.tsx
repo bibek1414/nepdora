@@ -251,11 +251,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
           {/* Control Buttons */}
           <div className="absolute -right-5 z-30 flex translate-x-full gap-2 transition-opacity">
             {/* Add Button */}
-            <Button
-              onClick={handleAddClick}
-              variant="outline"
-              size="sm"
-            >
+            <Button onClick={handleAddClick} variant="outline" size="sm">
               <Plus className="mr-1 h-4 w-4" />
               Testimonial
             </Button>
