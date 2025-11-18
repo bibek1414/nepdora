@@ -150,15 +150,15 @@ export const GalleryComponent: React.FC<GalleryComponentProps> = ({
     <div className="group relative">
       {isEditable && (
         <>
-          <div className="bg-background/80 absolute top-4 right-4 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="bg-background/80 absolute -right-5 z-30 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
             <Button
               size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
               disabled={deleteGalleryMutation.isPending}
-              className="h-8 w-8"
             >
               <Trash2 className="h-4 w-4" />
+              Delete
             </Button>
           </div>
 

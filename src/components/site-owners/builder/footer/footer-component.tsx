@@ -350,7 +350,7 @@ export function Footer({
     <div className="group relative">
       {/* Centralized Edit/Delete Controls */}
       {isEditable && (
-        <div className="bg-background/80 absolute top-4 right-4 z-20 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+        <div className="absolute -right-5 z-20 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
           <Button
             size="sm"
             variant="outline"

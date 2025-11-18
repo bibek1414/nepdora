@@ -180,7 +180,7 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
     return (
       <div className="group relative">
         {/* Delete Control with AlertDialog */}
-        <div className="absolute top-4 right-4 z-20 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}

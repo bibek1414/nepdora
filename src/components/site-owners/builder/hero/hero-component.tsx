@@ -160,7 +160,7 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
       {/* Edit Controls - Only show when editable */}
       {isEditable && (
         <>
-          <div className="bg-background/80 absolute top-4 right-4 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="bg-background/80 absolute -right-5 z-30 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
             <Button
               size="sm"
               variant="destructive"
@@ -169,6 +169,7 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
               className=""
             >
               <Trash2 className="h-4 w-4" />
+              Delete
             </Button>
           </div>
 

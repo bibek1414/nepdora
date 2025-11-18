@@ -156,14 +156,9 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     return (
       <div className="group relative">
         {/* Controls */}
-        <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute -right-5 z-20 flex translate-x-full gap-2 opacity-0 transition-opacity group-hover:opacity-100">
           {/* Add Button */}
-          <Button
-            onClick={handleAddClick}
-            variant="default"
-            size="sm"
-            className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
-          >
+          <Button onClick={handleAddClick} variant="outline" size="sm">
             <Plus className="mr-1 h-4 w-4" />
             FAQ
           </Button>

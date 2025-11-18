@@ -1411,13 +1411,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   transformOrigin: "top",
                 }}
               >
-                <div className="mb-4">
+                <div className="py-4">
                   <h2 className="text-foreground text-2xl font-bold capitalize">
                     {currentPageData?.title || currentPage} Page
                   </h2>
-                  <p className="text-muted-foreground text-sm">
-                    /{currentPage}
-                  </p>
                 </div>
 
                 <CanvasArea

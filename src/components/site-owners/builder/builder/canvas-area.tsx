@@ -423,7 +423,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         );
         break;
       case "banner":
-        return (
+        componentElement = (
           <BannerComponent
             key={`banner-${component.id}`}
             component={component as BannerComponentData}
@@ -431,6 +431,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             {...commonProps}
           />
         );
+        break;
       default:
         return null;
     }
@@ -449,9 +450,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
-            className={`group relative ${
-              snapshot.isDragging ? "opacity-75 shadow-2xl" : ""
-            }`}
+            className={`group relative ${snapshot.isDragging ? "l z-50" : ""}`}
+            style={{
+              ...provided.draggableProps.style,
+              ...(snapshot.isDragging && {
+                // Counter the parent scale(0.7) during drag
+                transform: provided.draggableProps.style?.transform
+                  ? `${provided.draggableProps.style.transform}`
+                  : undefined,
+              }),
+            }}
             onMouseEnter={() => setHoveredComponentIndex(index)}
             onMouseLeave={() => setHoveredComponentIndex(null)}
           >
@@ -486,16 +494,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             )}
 
             {/* Control buttons container */}
-            <div className="absolute top-2 left-2 z-20 flex flex-col gap-1">
-              {/* Drag handle */}
-              <div
-                {...provided.dragHandleProps}
-                className="cursor-grab rounded border bg-white p-1 shadow-md transition-colors hover:bg-gray-50 active:cursor-grabbing"
-                title="Drag to reorder"
-              >
-                <GripVertical className="h-4 w-4 text-gray-500" />
-              </div>
-
+            <div className="absolute top-2 -left-12 z-20 flex flex-col gap-1">
               {/* Arrow controls */}
               <div className="flex flex-col gap-0.5">
                 <button
@@ -528,10 +527,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
             {/* Component wrapper with visual feedback */}
             <div
-              className={`transition-all duration-200 ${
+              className={`transition-all duration-150 ${
                 snapshot.isDragging
-                  ? "rounded-lg ring-2 ring-blue-500 ring-offset-2"
-                  : "rounded-lg hover:ring-1 hover:ring-gray-300 hover:ring-offset-1"
+                  ? "scale-[0.5] rounded-xl shadow-2xl ring-4 ring-blue-500"
+                  : "rounded-lg hover:ring-2 hover:ring-gray-300"
               }`}
             >
               {componentElement}

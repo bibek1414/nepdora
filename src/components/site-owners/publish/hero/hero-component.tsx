@@ -160,7 +160,7 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
       {/* Edit Controls - Only show when editable */}
       {isEditable && (
         <>
-          <div className="bg-background/80 absolute top-4 right-4 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="bg-background/80 absolute top-4 -right-45 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
             <Button
               size="sm"
               variant="destructive"

@@ -191,7 +191,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
     return (
       <div className="group relative">
         {/* Delete Control */}
-        <div className="absolute top-4 right-4 z-20 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
           <div className="flex gap-2">
             <Button
               onClick={handleAddMember}

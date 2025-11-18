@@ -249,13 +249,12 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
         )}
         <div className="group relative">
           {/* Control Buttons */}
-          <div className="absolute top-4 right-4 z-20 flex gap-2 transition-opacity">
+          <div className="absolute -right-5 z-30 flex translate-x-full gap-2 transition-opacity">
             {/* Add Button */}
             <Button
               onClick={handleAddClick}
-              variant="default"
+              variant="outline"
               size="sm"
-              className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
             >
               <Plus className="mr-1 h-4 w-4" />
               Testimonial

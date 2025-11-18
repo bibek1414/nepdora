@@ -10,15 +10,13 @@ import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { EditableText } from "@/components/ui/editable-text";
+import { EditableText } from "@/components/ui/navbar/editable-text";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const EditableItem: React.FC<{
   onEdit: () => void;
@@ -193,7 +191,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
 
                 {/* Desktop Navigation */}
                 <div className="hidden lg:ml-8 lg:block lg:self-stretch">
-                  <div className="mt-6 flex h-full space-x-8">
+                  <div className="flex h-full space-x-8">
                     {links.map(link => (
                       <div key={link.id} className="flex">
                         {isEditable && onEditLink && onDeleteLink ? (
@@ -204,7 +202,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                             <a
                               href={link.href}
                               onClick={e => e.preventDefault()}
-                              className="flex items-center text-sm font-medium hover:text-gray-800"
+                              className="mt-6 flex items-center text-sm font-medium hover:text-gray-800"
                               style={{
                                 color: theme.colors.text,
                               }}

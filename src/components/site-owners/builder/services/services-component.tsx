@@ -226,7 +226,7 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
     return (
       <div className="group relative">
         {/* Delete Control with AlertDialog */}
-        <div className="absolute top-4 right-4 z-20 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute inset-y-4 top-4 -right-5 z-20 translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
