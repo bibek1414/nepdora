@@ -31,7 +31,7 @@ import { AlertCircle, Trash2, FolderOpen } from "lucide-react";
 import { Category } from "@/types/owner-site/admin/product";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
-import Pagination from "@/components/ui/pagination";
+import Pagination from "@/components/ui/site-owners/pagination";
 import Link from "next/link";
 interface CategoryComponentProps {
   component: CategoryComponentData;
@@ -75,7 +75,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
     page_size = 8,
     title = "Our Categories",
     subtitle,
-    style = "grid-1",
+    style = "category-1",
     showDescription = true,
     showProductCount = true,
     itemsPerRow = 4,
@@ -221,21 +221,20 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
       showProductCount,
       onClick: () => handleCategoryClick(category),
     };
-
     switch (style) {
-      case "grid-2":
+      case "category-2":
         return <CategoryCard2 key={category.id} {...cardProps} />;
-      case "list-1":
+      case "category-3":
         return <CategoryCard2 key={category.id} {...cardProps} />;
-      case "grid-3":
+      case "category-4":
         return <CategoryCard3 key={category.id} index={index} {...cardProps} />;
-      case "carousel-1":
+      case "category-1":
         return <CategoryCard1 key={category.id} {...cardProps} />;
-      case "card-1":
+      case "category-5":
         return <CategoryCard5 key={category.id} {...cardProps} />;
-      case "link-1":
+      case "category-6":
         return <CategoryCard4 key={category.id} {...cardProps} />;
-      case "grid-1":
+      case "category-7":
       default:
         return <CategoryCard1 key={category.id} {...cardProps} />;
     }
@@ -243,15 +242,15 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
   const getGridClass = () => {
     switch (style) {
-      case "grid-2":
+      case "category-1":
         return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 3)}`;
-      case "list-1":
+      case "category-2":
         return "grid-cols-1 lg:grid-cols-2 gap-8";
-      case "carousel-1":
+      case "category-3":
         return "flex overflow-x-auto gap-6 pb-4";
-      case "link-1":
+      case "category-6":
         return "";
-      case "grid-1":
+      case "category-7":
       default:
         return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 4)}`;
     }
@@ -348,7 +347,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
         </div>
 
         {/* Special rendering for CategoryCard4 */}
-        {style === "link-1" ? (
+        {style === "category-4" ? (
           renderCategoryCard4()
         ) : (
           /* Categories Preview for other styles */
@@ -406,7 +405,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
               {!isLoading && !error && categories.length > 0 && (
                 <>
                   <div
-                    className={`${style === "carousel-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-6`}`}
+                    className={`${style === "category-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-6`}`}
                   >
                     {categories.map((category, index) => (
                       <div
@@ -456,7 +455,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
         {/* Special rendering for CategoryCard4 on live site */}
-        {style === "link-1" ? (
+        {style === "category-4" ? (
           renderCategoryCard4()
         ) : (
           <>
@@ -475,7 +474,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
             {isLoading && (
               <div
-                className={`${style === "carousel-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
+                className={`${style === "category-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
               >
                 {Array.from({ length: page_size }).map((_, index) => (
                   <div key={index} className="flex flex-col space-y-4">
@@ -505,7 +504,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
             {!isLoading && !error && categories.length > 0 && (
               <>
                 <div
-                  className={`${style === "carousel-1" ? "flex gap-8 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
+                  className={`${style === "category-1" ? "flex gap-8 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
                 >
                   {categories.map((category, index) => (
                     <div key={category.id} className="flex-shrink-0">

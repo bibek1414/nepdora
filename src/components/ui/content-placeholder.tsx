@@ -107,6 +107,7 @@ interface PlaceholderManagerProps {
   onAddBlog?: () => void;
   onAddContact?: () => void;
   onAddFAQ?: () => void;
+  onAddSection: () => void; // Add this prop
 }
 
 export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
@@ -134,6 +135,7 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
   onAddBlog,
   onAddContact,
   onAddFAQ,
+  onAddSection, // Add this
 }) => {
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -152,6 +154,33 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
   };
 
   if (isLoading) return null;
+
+  // Add a new condition for empty state that opens the add section dialog
+  if (!navbar && pageComponentsLength === 0 && droppedComponentsLength === 0) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center py-20 text-center">
+        <div className="mb-4 rounded-full bg-gray-100 p-6">
+          <Sparkles
+            className="h-12 w-12"
+            style={{ color: theme.colors.primary }}
+          />
+        </div>
+        <h3
+          className="text-foreground mb-2 text-xl font-semibold"
+          style={{ fontFamily: theme.fonts.heading }}
+        >
+          Start Building Your Site
+        </h3>
+        <p className="text-muted-foreground mb-6 max-w-md">
+          Click below to open the component library and add your first section.
+        </p>
+        <Button onClick={onAddSection} variant="default" className="gap-2">
+          <Plus className="h-4 w-4" />
+          Open Component Library
+        </Button>
+      </div>
+    );
+  }
 
   if (
     !hasHero &&
@@ -178,14 +207,21 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
           Create an engaging hero section to welcome your visitors and showcase
           what you offer.
         </p>
-        <Button onClick={onAddHero} variant="default" className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Hero Section
-        </Button>
+        <div className="flex gap-3">
+          <Button onClick={onAddHero} variant="default" className="gap-2">
+            <Plus className="h-4 w-4" />
+            Add Hero Section
+          </Button>
+          <Button onClick={onAddSection} variant="outline" className="gap-2">
+            <Plus className="h-4 w-4" />
+            Browse All Components
+          </Button>
+        </div>
       </div>
     );
   }
 
+  // Rest of your existing conditions with added onAddSection to secondary actions
   if (
     hasHero &&
     !hasAbout &&
@@ -196,7 +232,13 @@ export const PlaceholderManager: React.FC<PlaceholderManagerProps> = ({
     !hasTeam &&
     !hasTestimonials
   ) {
-    const secondaryActions: PlaceholderAction[] = [];
+    const secondaryActions: PlaceholderAction[] = [
+      {
+        label: "Browse All Components",
+        icon: Plus,
+        onClick: onAddSection,
+      },
+    ];
 
     if (onAddTeam) {
       secondaryActions.push({

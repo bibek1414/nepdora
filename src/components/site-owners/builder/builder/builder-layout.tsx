@@ -6,7 +6,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useRouter } from "next/navigation";
 import { CanvasArea } from "@/components/site-owners/builder/builder/canvas-area";
 import { TopNavigation } from "@/components/site-owners/builder/builder/top-navigation";
-import { AddSectionDialog } from "@/components/site-owners/builder/builder/add-section-sidebar";
+import { AddSectionDialog } from "@/components/site-owners/builder/builder/add-section-dialog";
 import {
   useNavbarQuery,
   useCreateNavbarMutation,
@@ -23,10 +23,7 @@ import {
 import { FooterStylesDialog } from "@/components/site-owners/builder/footer/footer-styles-dialog";
 import { HeroStylesDialog } from "@/components/site-owners/builder/hero/hero-styles-dialog";
 import { defaultHeroData } from "@/types/owner-site/components/hero";
-import {
-  useCreateComponentMutation,
-  usePageComponentsQuery,
-} from "@/hooks/owner-site/components/use-unified";
+import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-unified";
 import { AboutUsStylesDialog } from "@/components/site-owners/builder/about/about-styles-dialog";
 import {
   defaultAboutUs1Data,
@@ -85,6 +82,7 @@ import {
   defaultTermsData,
 } from "@/types/owner-site/components/policies";
 import { toast } from "sonner";
+import { componentsApi } from "@/services/api/owner-sites/components/unified";
 
 interface BuilderLayoutProps {
   params: {
@@ -97,8 +95,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const router = useRouter();
   const { siteUser, pageSlug } = params;
 
-  // Add Section Sidebar state
+  // Add Section state with pending insert index
   const [isAddSectionDialogOpen, setIsAddSectionDialogOpen] = useState(false);
+  const [pendingInsertIndex, setPendingInsertIndex] = useState<
+    number | undefined
+  >(undefined);
 
   // Dialog states
   const [isGalleryStylesDialogOpen, setIsGalleryStylesDialogOpen] =
@@ -138,6 +139,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isTextEditorStylesDialogOpen, setIsTextEditorStylesDialogOpen] =
     useState(false);
 
+  // Queries and Mutations
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const createNavbarMutation = useCreateNavbarMutation();
 
@@ -160,77 +162,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   const currentPage = pageSlug;
   const queryClient = useQueryClient();
-
-  // Component mutations
-  const createHeroMutation = useCreateComponentMutation(currentPage, "hero");
-  const createAboutUsMutation = useCreateComponentMutation(
-    currentPage,
-    "about"
-  );
-  const createPoliciesComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "policies"
-  );
-  const createTextEditorComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "text_editor"
-  );
-  const createProductsComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "products"
-  );
-  const createCategoryComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "category"
-  );
-  const createSubCategoryComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "subcategory"
-  );
-  const createBlogComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "blog"
-  );
-  const createGalleryComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "gallery"
-  );
-  const createServicesComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "services"
-  );
-  const createContactComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "contact"
-  );
-  const createTeamComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "team"
-  );
-  const createTestimonialsComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "testimonials"
-  );
-  const createFAQComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "faq"
-  );
-  const createPortfolioComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "portfolio"
-  );
-  const createBannerComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "banner"
-  );
-  const createNewsletterComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "newsletter"
-  );
-  const createYouTubeComponentMutation = useCreateComponentMutation(
-    currentPage,
-    "youtube"
-  );
 
   // Process page components
   const pageComponents = React.useMemo(() => {
@@ -293,6 +224,66 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }));
   }, [pageComponentsResponse]);
 
+  // Helper function to get component display name
+  const getComponentDisplayName = (componentType: string): string => {
+    const names: Record<string, string> = {
+      hero: "Hero",
+      about: "About Us",
+      products: "Products",
+      category: "Category",
+      subcategory: "SubCategory",
+      blog: "Blog",
+      services: "Services",
+      contact: "Contact",
+      team: "Team",
+      testimonials: "Testimonials",
+      faq: "FAQ",
+      portfolio: "Portfolio",
+      banner: "Banner",
+      newsletter: "Newsletter",
+      youtube: "YouTube",
+      gallery: "Gallery",
+      policies: "Policies",
+      text_editor: "Text Editor",
+    };
+    return names[componentType] || componentType;
+  };
+
+  // Helper function to create component with insertIndex support
+  const createComponentWithIndex = async (
+    componentType: keyof ComponentTypeMap,
+    data: ComponentTypeMap[keyof ComponentTypeMap],
+    insertIndex?: number
+  ) => {
+    try {
+      await componentsApi.createComponent(
+        currentPage,
+        {
+          component_type: componentType,
+          data,
+        },
+        pageComponents,
+        insertIndex
+      );
+
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", currentPage],
+      });
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+
+      // Show success toast
+      toast.success(
+        `${getComponentDisplayName(componentType)} section added successfully!`
+      );
+    } catch (error) {
+      console.error(`Failed to create ${componentType} component:`, error);
+      toast.error(
+        `Failed to add ${getComponentDisplayName(componentType)} section`
+      );
+      throw error;
+    }
+  };
+
   // Auto-create home page
   useEffect(() => {
     if (
@@ -341,6 +332,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   const currentPageData = pagesData.find(page => page.slug === currentPage);
 
+  // Page handlers
   const handlePageChange = (newPageSlug: string) => {
     router.push(`/builder/${siteUser}/${newPageSlug}`);
   };
@@ -360,13 +352,739 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   };
 
+  // Updated handler for Add Section that stores the insertIndex
+  const handleAddSection = (position?: "above" | "below", index?: number) => {
+    let insertIndex: number;
+
+    if (index !== undefined) {
+      insertIndex = position === "above" ? index : index + 1;
+    } else {
+      insertIndex = pageComponents.length;
+    }
+
+    setPendingInsertIndex(insertIndex);
+    setIsAddSectionDialogOpen(true);
+  };
+
+  // Navbar handlers
+  const handleNavbarSelectFromDialog = (navbarData: NavbarData) => {
+    const payload = {
+      content: "navbar content",
+      navbarData: navbarData,
+      component_id: `nav-${Date.now()}`,
+    };
+    createNavbarMutation.mutate(payload, {
+      onSuccess: () => {
+        console.log("Navbar created successfully from dialog");
+        toast.success("Navbar added successfully!");
+      },
+      onError: error => {
+        console.error("Failed to create navbar from dialog:", error);
+        toast.error("Failed to create navbar");
+      },
+    });
+  };
+
+  const handleNavbarTemplateSelect = (templateData: NavbarData) => {
+    const payload = {
+      content: "navbar content",
+      navbarData: templateData,
+      component_id: `nav-${Date.now()}`,
+    };
+    createNavbarMutation.mutate(payload, {
+      onSuccess: () => {
+        setIsNavbarDialogOpen(false);
+        toast.success("Navbar added successfully!");
+      },
+      onError: () => {
+        toast.error("Failed to add navbar");
+      },
+    });
+  };
+
+  // Footer handlers
+  const handleFooterSelectFromDialog = (
+    footerStyle:
+      | "style-1"
+      | "style-2"
+      | "style-3"
+      | "style-4"
+      | "style-5"
+      | "style-6"
+  ) => {
+    const payload = {
+      content: "footer content",
+      footerData: {
+        style: footerStyle,
+        logoText: "Your Brand",
+        logoType: "text" as "text" | "image" | "both",
+        logoImage: "",
+        companyName: "Your Brand",
+        description:
+          "Innovative solutions for a modern world. We build amazing experiences.",
+        sections: [
+          {
+            id: "s1",
+            title: "Company",
+            links: [
+              { id: "l1", text: "About Us", href: "#" },
+              { id: "l2", text: "Careers", href: "#" },
+            ],
+          },
+          {
+            id: "s2",
+            title: "Resources",
+            links: [
+              { id: "l3", text: "Blog", href: "#" },
+              { id: "l4", text: "Help Center", href: "#" },
+            ],
+          },
+        ],
+        socialLinks: [
+          { id: "soc1", platform: "Facebook", href: "#", icon: Facebook },
+          { id: "soc2", platform: "Twitter", href: "#", icon: Twitter },
+        ],
+        contactInfo: {
+          email: "support@yourbrand.com",
+          phone: "+1 234 567 890",
+        },
+        newsletter: {
+          enabled: true,
+          title: "Join our Newsletter",
+          description:
+            "Get the latest news and updates delivered to your inbox.",
+        },
+        copyright: `© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
+      },
+      component_id: `footer-${Date.now()}`,
+    };
+    createFooterMutation.mutate(payload, {
+      onSuccess: () => {
+        console.log("Footer created successfully from dialog");
+        toast.success("Footer added successfully!");
+      },
+      onError: error => {
+        console.error("Failed to create footer from dialog:", error);
+        toast.error("Failed to create footer");
+      },
+    });
+  };
+
+  const handleFooterStyleSelect = (styleId: string) => {
+    const payload = {
+      content: "footer content",
+      footerData: {
+        style: styleId,
+        logoText: "Your Brand",
+        logoType: "text" as "text" | "image" | "both",
+        logoImage: "",
+        companyName: "Your Brand",
+        description:
+          "Innovative solutions for a modern world. We build amazing experiences.",
+        sections: [
+          {
+            id: "s1",
+            title: "Company",
+            links: [
+              { id: "l1", text: "About Us", href: "#" },
+              { id: "l2", text: "Careers", href: "#" },
+            ],
+          },
+          {
+            id: "s2",
+            title: "Resources",
+            links: [
+              { id: "l3", text: "Blog", href: "#" },
+              { id: "l4", text: "Help Center", href: "#" },
+            ],
+          },
+        ],
+        socialLinks: [
+          { id: "soc1", platform: "Facebook", href: "#", icon: Facebook },
+          { id: "soc2", platform: "Twitter", href: "#", icon: Twitter },
+        ],
+        contactInfo: {
+          email: "support@yourbrand.com",
+          phone: "+1 234 567 890",
+        },
+        newsletter: {
+          enabled: true,
+          title: "Join our Newsletter",
+          description:
+            "Get the latest news and updates delivered to your inbox.",
+        },
+        copyright: `© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
+      },
+      component_id: `footer-${Date.now()}`,
+    };
+    createFooterMutation.mutate(payload, {
+      onSuccess: () => {
+        setIsFooterDialogOpen(false);
+        toast.success("Footer added successfully!");
+      },
+      onError: () => {
+        toast.error("Failed to add footer");
+      },
+    });
+  };
+
+  // Template selection handlers with insertIndex support
+  const handleHeroTemplateSelect = async (
+    template:
+      | "hero-1"
+      | "hero-2"
+      | "hero-3"
+      | "hero-4"
+      | "hero-5"
+      | "hero-6"
+      | "hero-7"
+      | "hero-8"
+      | "hero-9"
+      | "hero-10"
+  ) => {
+    const templateConfig = heroTemplateConfigs[template];
+    const heroData = {
+      ...defaultHeroData,
+      template: template,
+      backgroundType: templateConfig.backgroundType,
+      backgroundColor:
+        templateConfig.backgroundColor || defaultHeroData.backgroundColor,
+      backgroundImageUrl:
+        templateConfig.backgroundImageUrl || defaultHeroData.backgroundImageUrl,
+      showOverlay: templateConfig.showOverlay ?? defaultHeroData.showOverlay,
+      overlayOpacity:
+        templateConfig.overlayOpacity ?? defaultHeroData.overlayOpacity,
+      showSlider: templateConfig.showSlider ?? defaultHeroData.showSlider,
+    };
+
+    try {
+      await createComponentWithIndex("hero", heroData, pendingInsertIndex);
+      setIsHeroStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleAboutUsTemplateSelect = async (
+    template:
+      | "about-1"
+      | "about-2"
+      | "about-3"
+      | "about-4"
+      | "about-5"
+      | "about-6"
+      | "about-7"
+      | "about-8"
+  ) => {
+    let aboutUsData: AboutUsData;
+    switch (template) {
+      case "about-1":
+        aboutUsData = defaultAboutUs1Data;
+        break;
+      case "about-2":
+        aboutUsData = defaultAboutUs2Data;
+        break;
+      case "about-3":
+        aboutUsData = defaultAboutUs3Data;
+        break;
+      case "about-4":
+        aboutUsData = defaultAboutUs4Data;
+        break;
+      case "about-5":
+        aboutUsData = defaultAboutUs5Data;
+        break;
+      case "about-6":
+        aboutUsData = defaultAboutUs6Data;
+        break;
+      case "about-7":
+        aboutUsData = defaultAboutUs7Data;
+        break;
+      case "about-8":
+        aboutUsData = defaultAboutUs8Data;
+        break;
+      default:
+        aboutUsData = defaultAboutUs1Data;
+    }
+
+    try {
+      await createComponentWithIndex("about", aboutUsData, pendingInsertIndex);
+      setIsAboutUsStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleProductsTemplateSelect = async (
+    template:
+      | "product-1"
+      | "product-2"
+      | "product-3"
+      | "product-4"
+      | "product-5"
+      | "product-6"
+  ) => {
+    const productsData = { ...defaultProductsData, style: template };
+    try {
+      await createComponentWithIndex(
+        "products",
+        productsData,
+        pendingInsertIndex
+      );
+      setIsProductsStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleCategoryTemplateSelect = async (
+    template:
+      | "category-1"
+      | "category-2"
+      | "category-3"
+      | "category-4"
+      | "category-5"
+      | "category-6"
+  ) => {
+    const categoryData = {
+      page_size: 8,
+      component_type: "category" as const,
+      title: "Our Categories",
+      subtitle: "Browse our product categories",
+      style: template,
+      showDescription: true,
+      showProductCount: true,
+      itemsPerRow: 4,
+    };
+    try {
+      await createComponentWithIndex(
+        "category",
+        categoryData,
+        pendingInsertIndex
+      );
+      setIsCategoriesStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleSubCategoryTemplateSelect = async (
+    template: "subcategory-1" | "subcategory-2" | "subcategory-3"
+  ) => {
+    const subCategoryData = {
+      component_type: "subcategory" as const,
+      page_size: 8,
+      title: "Our SubCategories",
+      subtitle: "Explore our product subcategories",
+      style: template,
+      showDescription: true,
+      showProductCount: true,
+      showParentCategory: true,
+      itemsPerRow: 4,
+    };
+    try {
+      await createComponentWithIndex(
+        "subcategory",
+        subCategoryData,
+        pendingInsertIndex
+      );
+      setIsSubCategoriesStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleBlogTemplateSelect = async (
+    template: "blog-1" | "blog-2" | "blog-3"
+  ) => {
+    const blogData = { ...defaultBlogData, style: template };
+    try {
+      await createComponentWithIndex("blog", blogData, pendingInsertIndex);
+      setIsBlogStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleServicesTemplateSelect = async (
+    template: "services-1" | "services-2" | "services-3" | "services-4"
+  ) => {
+    const servicesData = { ...defaultServicesData, style: template };
+    try {
+      await createComponentWithIndex(
+        "services",
+        servicesData,
+        pendingInsertIndex
+      );
+      setIsServicesStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleContactTemplateSelect = async (
+    template: "contact-1" | "contact-2" | "contact-3" | "contact-4"
+  ) => {
+    const contactData = { ...defaultContactData, style: template };
+    try {
+      await createComponentWithIndex(
+        "contact",
+        contactData,
+        pendingInsertIndex
+      );
+      setIsContactStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleTeamTemplateSelect = async (
+    template: "team-1" | "team-2" | "team-3" | "team-4"
+  ) => {
+    const teamData: ComponentTypeMap["team"] = {
+      ...defaultTeamData,
+      style: template as ComponentTypeMap["team"]["style"],
+    };
+    try {
+      await createComponentWithIndex("team", teamData, pendingInsertIndex);
+      setIsTeamStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleTestimonialsTemplateSelect = async (
+    template:
+      | "testimonial-1"
+      | "testimonial-2"
+      | "testimonial-3"
+      | "testimonial-4"
+      | "testimonial-5"
+      | "testimonial-6"
+      | "testimonial-7"
+  ) => {
+    const testimonialsData = { ...defaultTestimonialsData, style: template };
+    try {
+      await createComponentWithIndex(
+        "testimonials",
+        testimonialsData,
+        pendingInsertIndex
+      );
+      setIsTestimonialsStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleFAQTemplateSelect = async (
+    template: "faq-1" | "faq-2" | "faq-3" | "faq-4" | "faq-5"
+  ) => {
+    const faqData = { ...defaultFAQData, style: template };
+    try {
+      await createComponentWithIndex("faq", faqData, pendingInsertIndex);
+      setIsFAQStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handlePortfolioTemplateSelect = async (
+    template: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4"
+  ) => {
+    const portfolioData = { ...defaultPortfolioData, style: template };
+    try {
+      await createComponentWithIndex(
+        "portfolio",
+        portfolioData,
+        pendingInsertIndex
+      );
+      setIsPortfolioStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleBannerTemplateSelect = async (
+    template: "banner-1" | "banner-2" | "banner-3" | "banner-4"
+  ) => {
+    const bannerData = { ...defaultBannerData, template: template };
+    try {
+      await createComponentWithIndex("banner", bannerData, pendingInsertIndex);
+      setIsBannerStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleNewsletterTemplateSelect = async (
+    template: "newsletter-1" | "newsletter-2" | "newsletter-3"
+  ) => {
+    const newsletterData = { ...defaultNewsletterData, style: template };
+    try {
+      await createComponentWithIndex(
+        "newsletter",
+        newsletterData,
+        pendingInsertIndex
+      );
+      setIsNewsletterStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleYouTubeTemplateSelect = async (
+    template: "youtube-1" | "youtube-2" | "youtube-3"
+  ) => {
+    const youtubeData = { ...defaultYouTubeData, style: template };
+    try {
+      await createComponentWithIndex(
+        "youtube",
+        youtubeData,
+        pendingInsertIndex
+      );
+      setIsYouTubeStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleGalleryTemplateSelect = async (
+    template:
+      | "gallery-1"
+      | "gallery-2"
+      | "gallery-3"
+      | "gallery-4"
+      | "gallery-5"
+  ) => {
+    const galleryData = { ...defaultGalleryData, template: template };
+    try {
+      await createComponentWithIndex(
+        "gallery",
+        galleryData,
+        pendingInsertIndex
+      );
+      setIsGalleryStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handlePoliciesTemplateSelect = async (
+    template: "policies-1" | "policies-2" | "policies-3" | "policies-4"
+  ) => {
+    let policyData;
+    switch (template) {
+      case "policies-1":
+        policyData = defaultReturnExchangeData;
+        break;
+      case "policies-2":
+        policyData = defaultShippingData;
+        break;
+      case "policies-3":
+        policyData = defaultPrivacyData;
+        break;
+      case "policies-4":
+        policyData = defaultTermsData;
+        break;
+      default:
+        policyData = defaultReturnExchangeData;
+    }
+    try {
+      await createComponentWithIndex(
+        "policies",
+        policyData,
+        pendingInsertIndex
+      );
+      setIsPoliciesStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  const handleTextEditorTemplateSelect = async () => {
+    try {
+      await createComponentWithIndex(
+        "text_editor",
+        defaultTextEditorData,
+        pendingInsertIndex
+      );
+      setIsTextEditorStylesDialogOpen(false);
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+    } catch (error) {
+      // Error toast already shown in createComponentWithIndex
+    }
+  };
+
+  // Page template handler
+  const handlePageTemplateSelect = async (template: PageTemplate) => {
+    try {
+      const newPage = await createPageMutation.mutateAsync({
+        title: template.name,
+      });
+      const existingComponents = await componentsApi.getPageComponents(
+        newPage.slug
+      );
+
+      for (const component of template.components) {
+        const componentData = {
+          ...component.defaultData,
+          order: component.order,
+        };
+        await componentsApi.createComponent(
+          newPage.slug,
+          {
+            component_type: component.type as keyof ComponentTypeMap,
+            data: componentData,
+            order: component.order,
+          },
+          existingComponents
+        );
+      }
+
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", newPage.slug],
+      });
+      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      router.push(`/builder/${siteUser}/${newPage.slug}`);
+      setIsPageTemplateDialogOpen(false);
+      toast.success(
+        `Page "${template.name}" created successfully with ${template.components.length} components!`
+      );
+    } catch (error) {
+      console.error("Failed to create page from template:", error);
+      toast.error("Failed to create page from template. Please try again.");
+    }
+  };
+
+  // Add handlers that store insertIndex and open dialogs
+  const handleAddHeroFromCanvas = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsHeroStylesDialogOpen(true);
+  };
+
+  const handleAddAboutUsFromCanvas = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsAboutUsStylesDialogOpen(true);
+  };
+
+  const handleAddProducts = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsProductsStylesDialogOpen(true);
+  };
+
+  const handleAddCategories = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsCategoriesStylesDialogOpen(true);
+  };
+
+  const handleAddSubCategories = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsSubCategoriesStylesDialogOpen(true);
+  };
+
+  const handleAddBlog = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsBlogStylesDialogOpen(true);
+  };
+
+  const handleAddServices = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsServicesStylesDialogOpen(true);
+  };
+
+  const handleAddContact = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsContactStylesDialogOpen(true);
+  };
+
+  const handleAddTeam = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsTeamStylesDialogOpen(true);
+  };
+
+  const handleAddTestimonials = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsTestimonialsStylesDialogOpen(true);
+  };
+
+  const handleAddFAQ = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsFAQStylesDialogOpen(true);
+  };
+
+  const handleAddPortfolio = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsPortfolioStylesDialogOpen(true);
+  };
+
+  const handleAddBanner = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsBannerStylesDialogOpen(true);
+  };
+
+  const handleAddNewsletter = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsNewsletterStylesDialogOpen(true);
+  };
+
+  const handleAddYouTube = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsYouTubeStylesDialogOpen(true);
+  };
+
+  const handleAddGallery = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsGalleryStylesDialogOpen(true);
+  };
+
+  const handleAddPolicies = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsPoliciesStylesDialogOpen(true);
+  };
+
+  const handleAddTextEditor = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsTextEditorStylesDialogOpen(true);
+  };
+
+  // Component click handler for Add Section Dialog
   const handleComponentClick = (componentId: string, template?: string) => {
     if (componentId === "page-templates") {
-      if (template) {
-        setIsPageTemplateDialogOpen(true);
-      } else {
-        setIsPageTemplateDialogOpen(true);
-      }
+      setIsPageTemplateDialogOpen(true);
     } else if (componentId === "hero-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -496,623 +1214,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       console.log(`${componentId} clicked`);
     }
   };
-  // Template selection handlers - same as before but ensuring proper order assignment
-  const handleNavbarTemplateSelect = (templateData: NavbarData) => {
-    const payload = {
-      content: "navbar content",
-      navbarData: templateData,
-      component_id: `nav-${Date.now()}`,
-    };
-    createNavbarMutation.mutate(payload, {
-      onSuccess: () => {
-        setIsNavbarDialogOpen(false);
-      },
-    });
-  };
-  const handlePageTemplateSelect = async (template: PageTemplate) => {
-    try {
-      // Create the page first
-      const newPage = await createPageMutation.mutateAsync({
-        title: template.name,
-      });
 
-      // Now create components for the NEW page using its slug
-      // Import the componentsApi directly to create components
-      const { componentsApi } = await import(
-        "@/services/api/owner-sites/components/unified"
-      );
-      // Get existing components for proper ordering (should be empty for new page)
-      const existingComponents = await componentsApi.getPageComponents(
-        newPage.slug
-      );
-
-      // Create all the components for this page
-      for (const component of template.components) {
-        const componentData = {
-          ...component.defaultData,
-          order: component.order,
-        };
-
-        // Create component using the API directly with the NEW page slug
-        await componentsApi.createComponent(
-          newPage.slug, // Use the new page slug, not currentPage!
-          {
-            component_type: component.type as keyof ComponentTypeMap,
-            data: componentData,
-            order: component.order,
-          },
-          existingComponents
-        );
-      }
-
-      // Invalidate queries to refresh the UI when we navigate to the new page
-      queryClient.invalidateQueries({
-        queryKey: ["pageComponents", newPage.slug],
-      });
-      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
-
-      // Navigate to the new page
-      router.push(`/builder/${siteUser}/${newPage.slug}`);
-
-      // Close the dialog
-      setIsPageTemplateDialogOpen(false);
-
-      // Show success message
-      toast.success(
-        `Page "${template.name}" created successfully with ${template.components.length} components!`
-      );
-    } catch (error) {
-      console.error("Failed to create page from template:", error);
-      toast.error("Failed to create page from template. Please try again.");
-    }
-  };
-  const handleFooterStyleSelect = (styleId: string) => {
-    const payload = {
-      content: "footer content",
-      footerData: {
-        style: styleId,
-        logoText: "Your Brand",
-        logoType: "text" as "text" | "image" | "both",
-        logoImage: "",
-        companyName: "Your Brand",
-        description:
-          "Innovative solutions for a modern world. We build amazing experiences.",
-        sections: [
-          {
-            id: "s1",
-            title: "Company",
-            links: [
-              { id: "l1", text: "About Us", href: "#" },
-              { id: "l2", text: "Careers", href: "#" },
-            ],
-          },
-          {
-            id: "s2",
-            title: "Resources",
-            links: [
-              { id: "l3", text: "Blog", href: "#" },
-              { id: "l4", text: "Help Center", href: "#" },
-            ],
-          },
-        ],
-        socialLinks: [
-          { id: "soc1", platform: "Facebook", href: "#", icon: Facebook },
-          { id: "soc2", platform: "Twitter", href: "#", icon: Twitter },
-        ],
-        contactInfo: {
-          email: "support@yourbrand.com",
-          phone: "+1 234 567 890",
-        },
-        newsletter: {
-          enabled: true,
-          title: "Join our Newsletter",
-          description:
-            "Get the latest news and updates delivered to your inbox.",
-        },
-        copyright: `Â© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
-      },
-      component_id: `footer-${Date.now()}`,
-    };
-    createFooterMutation.mutate(payload, {
-      onSuccess: () => setIsFooterDialogOpen(false),
-    });
-  };
-  const handleTextEditorTemplateSelect = () => {
-    createTextEditorComponentMutation.mutate(defaultTextEditorData, {
-      onSuccess: () => {
-        setIsTextEditorStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create text editor component:", error);
-      },
-    });
-  };
-  const handlePoliciesTemplateSelect = (
-    template: "return-exchange" | "shipping" | "privacy" | "terms"
-  ) => {
-    let policyData;
-
-    switch (template) {
-      case "return-exchange":
-        policyData = defaultReturnExchangeData;
-        break;
-      case "shipping":
-        policyData = defaultShippingData;
-        break;
-      case "privacy":
-        policyData = defaultPrivacyData;
-        break;
-      case "terms":
-        policyData = defaultTermsData;
-        break;
-      default:
-        policyData = defaultReturnExchangeData;
-    }
-
-    createPoliciesComponentMutation.mutate(policyData, {
-      onSuccess: () => {
-        setIsPoliciesStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create policies component:", error);
-      },
-    });
-  };
-  // Helper function to get next order value
-  const getNextOrder = () => {
-    if (pageComponents.length === 0) return 0;
-    const maxOrder = Math.max(...pageComponents.map(c => c.order || 0));
-    return maxOrder + 1;
-  };
-
-  // Template selection handlers with proper order assignment
-  const handleHeroTemplateSelect = (
-    template:
-      | "hero-1"
-      | "hero-2"
-      | "hero-3"
-      | "hero-4"
-      | "hero-5"
-      | "hero-6"
-      | "hero-7"
-      | "hero-8"
-      | "hero-9"
-      | "hero-10"
-  ) => {
-    // Get the specific configuration for this template
-    const templateConfig = heroTemplateConfigs[template];
-
-    const heroData = {
-      ...defaultHeroData,
-      template: template,
-      backgroundType: templateConfig.backgroundType,
-      backgroundColor:
-        templateConfig.backgroundColor || defaultHeroData.backgroundColor,
-      backgroundImageUrl:
-        templateConfig.backgroundImageUrl || defaultHeroData.backgroundImageUrl,
-      showOverlay: templateConfig.showOverlay ?? defaultHeroData.showOverlay,
-      overlayOpacity:
-        templateConfig.overlayOpacity ?? defaultHeroData.overlayOpacity,
-      showSlider: templateConfig.showSlider ?? defaultHeroData.showSlider,
-    };
-
-    createHeroMutation.mutate(heroData, {
-      onSuccess: () => {
-        setIsHeroStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create hero component:", error);
-      },
-    });
-  };
-  const handleYouTubeTemplateSelect = (
-    template: "grid" | "carousel" | "playlist"
-  ) => {
-    const youtubeData = {
-      ...defaultYouTubeData,
-      style: template,
-    };
-
-    createYouTubeComponentMutation.mutate(youtubeData, {
-      onSuccess: () => {
-        setIsYouTubeStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create YouTube component:", error);
-      },
-    });
-  };
-
-  const handleBannerTemplateSelect = (
-    template: "banner-1" | "banner-2" | "banner-3" | "banner-4"
-  ) => {
-    const bannerData = {
-      ...defaultBannerData,
-      template: template,
-    };
-
-    createBannerComponentMutation.mutate(bannerData, {
-      onSuccess: () => {
-        setIsBannerStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create banner component:", error);
-      },
-    });
-  };
-
-  const handleNewsletterTemplateSelect = (
-    template: "style-1" | "style-2" | "style-3"
-  ) => {
-    const newsletterData = {
-      ...defaultNewsletterData,
-      style: template,
-    };
-
-    createNewsletterComponentMutation.mutate(newsletterData, {
-      onSuccess: () => {
-        setIsNewsletterStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create newsletter component:", error);
-      },
-    });
-  };
-
-  const handlePortfolioTemplateSelect = (
-    template: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4"
-  ) => {
-    const portfolioData = {
-      ...defaultPortfolioData,
-      style: template,
-    };
-
-    createPortfolioComponentMutation.mutate(portfolioData, {
-      onSuccess: () => {
-        setIsPortfolioStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create portfolio component:", error);
-      },
-    });
-  };
-
-  const handleContactTemplateSelect = (
-    template: "form-1" | "form-2" | "form-3" | "form-4"
-  ) => {
-    const contactData = {
-      ...defaultContactData,
-      style: template,
-    };
-
-    createContactComponentMutation.mutate(contactData, {
-      onSuccess: () => {
-        setIsContactStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create contact component:", error);
-      },
-    });
-  };
-
-  const handleAboutUsTemplateSelect = (
-    template:
-      | "about-1"
-      | "about-2"
-      | "about-3"
-      | "about-4"
-      | "about-5"
-      | "about-6"
-      | "about-7"
-      | "about-8"
-  ) => {
-    let aboutUsData: AboutUsData;
-
-    switch (template) {
-      case "about-1":
-        aboutUsData = defaultAboutUs1Data;
-        break;
-      case "about-2":
-        aboutUsData = defaultAboutUs2Data;
-        break;
-      case "about-3":
-        aboutUsData = defaultAboutUs3Data;
-        break;
-      case "about-4":
-        aboutUsData = defaultAboutUs4Data;
-        break;
-      case "about-5":
-        aboutUsData = defaultAboutUs5Data;
-        break;
-      case "about-6":
-        aboutUsData = defaultAboutUs6Data;
-        break;
-      case "about-7":
-        aboutUsData = defaultAboutUs7Data;
-        break;
-      case "about-8":
-        aboutUsData = defaultAboutUs8Data;
-        break;
-      default:
-        aboutUsData = defaultAboutUs1Data;
-    }
-
-    createAboutUsMutation.mutate(aboutUsData, {
-      onSuccess: () => {
-        setIsAboutUsStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create about us component:", error);
-      },
-    });
-  };
-
-  const handleProductsTemplateSelect = (
-    template:
-      | "grid-1"
-      | "grid-2"
-      | "list-3"
-      | "carousel-6"
-      | "grid-4"
-      | "grid-5"
-  ) => {
-    const productsData = {
-      ...defaultProductsData,
-      style: template,
-    };
-
-    createProductsComponentMutation.mutate(productsData, {
-      onSuccess: () => {
-        setIsProductsStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create products component:", error);
-      },
-    });
-  };
-
-  const handleCategoryTemplateSelect = (
-    template: "grid-1" | "grid-2" | "list-1" | "grid-3" | "link-1" | "card-1"
-  ) => {
-    const categoryData = {
-      page_size: 8,
-      component_type: "category" as const,
-      title: "Our Categories",
-      subtitle: "Browse our product categories",
-      style: template,
-      showDescription: true,
-      showProductCount: true,
-      itemsPerRow: 4,
-    };
-
-    createCategoryComponentMutation.mutate(categoryData, {
-      onSuccess: () => {
-        setIsCategoriesStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create category component:", error);
-      },
-    });
-  };
-  const handleGalleryTemplateSelect = (
-    template:
-      | "gallery-1"
-      | "gallery-2"
-      | "gallery-3"
-      | "gallery-4"
-      | "gallery-5"
-  ) => {
-    const galleryData = {
-      ...defaultGalleryData,
-      template: template,
-    };
-
-    createGalleryComponentMutation.mutate(galleryData, {
-      onSuccess: () => {
-        setIsGalleryStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create gallery component:", error);
-      },
-    });
-  };
-  const handleSubCategoryTemplateSelect = (
-    template: "grid-1" | "grid-2" | "list-1"
-  ) => {
-    const subCategoryData = {
-      component_type: "subcategory" as const,
-      page_size: 8,
-      title: "Our SubCategories",
-      subtitle: "Explore our product subcategories",
-      style: template,
-      showDescription: true,
-      showProductCount: true,
-      showParentCategory: true,
-      itemsPerRow: 4,
-    };
-
-    createSubCategoryComponentMutation.mutate(subCategoryData, {
-      onSuccess: () => {
-        setIsSubCategoriesStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create subcategory component:", error);
-      },
-    });
-  };
-
-  const handleTestimonialsTemplateSelect = (
-    template:
-      | "grid-1"
-      | "grid-2"
-      | "list-1"
-      | "grid-3"
-      | "carousel-1"
-      | "stagger-1"
-      | "card-7"
-  ) => {
-    const testimonialsData = {
-      ...defaultTestimonialsData,
-      style: template,
-    };
-
-    createTestimonialsComponentMutation.mutate(testimonialsData, {
-      onSuccess: () => {
-        setIsTestimonialsStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create testimonials component:", error);
-      },
-    });
-  };
-
-  const handleBlogTemplateSelect = (
-    template: "grid-1" | "grid-2" | "list-1"
-  ) => {
-    const blogData = {
-      ...defaultBlogData,
-      style: template,
-    };
-
-    createBlogComponentMutation.mutate(blogData, {
-      onSuccess: () => {
-        setIsBlogStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create blog component:", error);
-      },
-    });
-  };
-  const handleServicesTemplateSelect = (
-    template: "grid-1" | "grid-2" | "list-1" | "grid-3"
-  ) => {
-    const servicesData = {
-      ...defaultServicesData,
-      style: template,
-    };
-
-    createServicesComponentMutation.mutate(servicesData, {
-      onSuccess: () => {
-        setIsServicesStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create services component:", error);
-      },
-    });
-  };
-
-  const handleTeamTemplateSelect = (
-    template: "grid-1" | "grid-2" | "list-1" | "card-4"
-  ) => {
-    const teamData: ComponentTypeMap["team"] = {
-      ...defaultTeamData,
-      style: template as ComponentTypeMap["team"]["style"],
-    };
-
-    createTeamComponentMutation.mutate(teamData, {
-      onSuccess: () => {
-        setIsTeamStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create team component:", error);
-      },
-    });
-  };
-
-  const handleFAQTemplateSelect = (
-    template:
-      | "accordion"
-      | "plus-minus"
-      | "card-grid"
-      | "card-grid-4"
-      | "simple"
-  ) => {
-    const faqData = {
-      ...defaultFAQData,
-      style: template,
-    };
-
-    createFAQComponentMutation.mutate(faqData, {
-      onSuccess: () => {
-        setIsFAQStylesDialogOpen(false);
-      },
-      onError: error => {
-        console.error("Failed to create FAQ component:", error);
-      },
-    });
-  };
-
-  // Add handlers
-  const handleAddHeroFromCanvas = () => {
-    setIsHeroStylesDialogOpen(true);
-  };
-  const handleAddPolicies = () => {
-    setIsPoliciesStylesDialogOpen(true);
-  };
-  const handleAddAboutUsFromCanvas = () => {
-    setIsAboutUsStylesDialogOpen(true);
-  };
-  const handleAddTextEditor = () => {
-    setIsTextEditorStylesDialogOpen(true);
-  };
-  const handleAddProducts = () => {
-    setIsProductsStylesDialogOpen(true);
-  };
-
-  const handleAddCategories = () => {
-    setIsCategoriesStylesDialogOpen(true);
-  };
-
-  const handleAddSubCategories = () => {
-    setIsSubCategoriesStylesDialogOpen(true);
-  };
-
-  const handleAddBlog = () => {
-    setIsBlogStylesDialogOpen(true);
-  };
-  const handleAddServices = () => {
-    setIsServicesStylesDialogOpen(true);
-  };
-
-  const handleAddContact = () => {
-    setIsContactStylesDialogOpen(true);
-  };
-  const handleAddYouTube = () => {
-    setIsYouTubeStylesDialogOpen(true);
-  };
-
-  const handleAddTeam = () => {
-    setIsTeamStylesDialogOpen(true);
-  };
-
-  const handleAddPortfolio = () => {
-    setIsPortfolioStylesDialogOpen(true);
-  };
-
-  const handleAddBanner = () => {
-    setIsBannerStylesDialogOpen(true);
-  };
-
-  const handleAddNewsletter = () => {
-    setIsNewsletterStylesDialogOpen(true);
-  };
-
-  const handleAddTestimonials = () => {
-    setIsTestimonialsStylesDialogOpen(true);
-  };
-  const handleAddGallery = () => {
-    setIsGalleryStylesDialogOpen(true);
-  };
-  const handleAddFAQ = () => {
-    setIsFAQStylesDialogOpen(true);
-  };
-
-  // Updated handleDrop with proper typing and component_type mapping
+  // Drop handler
   const handleDrop = useCallback(
     (item: { type: string; id?: string }) => {
       if (item.type === "navbar" || item.type === "footer") return;
 
-      // Map drag item type to component_type
       let componentType: keyof ComponentTypeMap;
       switch (item.type) {
         case "hero-sections":
@@ -1189,6 +1296,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               "youtube",
               "text_editor",
               "gallery",
+              "policies",
             ].includes(item.type)
           ) {
             componentType = item.type as keyof ComponentTypeMap;
@@ -1203,7 +1311,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         component_id: item.id || `${componentType}-${Date.now()}`,
         component_type: componentType,
         data: {} as ComponentTypeMap[keyof ComponentTypeMap],
-        order: getNextOrder(),
+        order: pageComponents.length,
       };
 
       setDroppedComponents(prev => [...prev, newComponent]);
@@ -1235,28 +1343,25 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      {/* All dialog components remain the same */}
+      {/* All Dialog Components */}
       <AddSectionDialog
         open={isAddSectionDialogOpen}
         onOpenChange={setIsAddSectionDialogOpen}
         onComponentClick={handleComponentClick}
+        onNavbarSelect={handleNavbarSelectFromDialog}
+        onFooterSelect={handleFooterSelectFromDialog}
       />
       <NavbarTemplateDialog
         isOpen={isNavbarDialogOpen}
         onClose={() => setIsNavbarDialogOpen(false)}
         onSelectTemplate={handleNavbarTemplateSelect}
       />
-
       <FooterStylesDialog
         open={isFooterDialogOpen}
         onOpenChange={setIsFooterDialogOpen}
         onStyleSelect={handleFooterStyleSelect}
       />
-      <PoliciesStylesDialog
-        open={isPoliciesStylesDialogOpen}
-        onOpenChange={setIsPoliciesStylesDialogOpen}
-        onStyleSelect={handlePoliciesTemplateSelect}
-      />
+
       <TextEditorStylesDialog
         open={isTextEditorStylesDialogOpen}
         onOpenChange={setIsTextEditorStylesDialogOpen}
@@ -1267,7 +1372,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsHeroStylesDialogOpen}
         onStyleSelect={handleHeroTemplateSelect}
       />
-
       <AboutUsStylesDialog
         open={isAboutUsStylesDialogOpen}
         onOpenChange={setIsAboutUsStylesDialogOpen}
@@ -1278,85 +1382,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onOpenChange={setIsGalleryStylesDialogOpen}
         onStyleSelect={handleGalleryTemplateSelect}
       />
-      <ProductsStylesDialog
-        open={isProductsStylesDialogOpen}
-        onOpenChange={setIsProductsStylesDialogOpen}
-        onStyleSelect={handleProductsTemplateSelect}
-      />
 
-      <CategoryStylesDialog
-        open={isCategoriesStylesDialogOpen}
-        onOpenChange={setIsCategoriesStylesDialogOpen}
-        onStyleSelect={handleCategoryTemplateSelect}
-      />
       <PageTemplateDialog
         isOpen={isPageTemplateDialogOpen}
         onClose={() => setIsPageTemplateDialogOpen(false)}
         onSelectTemplate={handlePageTemplateSelect}
       />
-      <PortfolioStylesDialog
-        open={isPortfolioStylesDialogOpen}
-        onOpenChange={setIsPortfolioStylesDialogOpen}
-        onStyleSelect={handlePortfolioTemplateSelect}
-      />
 
-      <SubCategoryStylesDialog
-        open={isSubCategoriesStylesDialogOpen}
-        onOpenChange={setIsSubCategoriesStylesDialogOpen}
-        onStyleSelect={handleSubCategoryTemplateSelect}
-      />
-
-      <BlogStylesDialog
-        open={isBlogStylesDialogOpen}
-        onOpenChange={setIsBlogStylesDialogOpen}
-        onStyleSelect={handleBlogTemplateSelect}
-      />
-      <ServicesStyleDialog
-        open={isServicesStylesDialogOpen}
-        onOpenChange={setIsServicesStylesDialogOpen}
-        onStyleSelect={handleServicesTemplateSelect}
-      />
-      <ContactStylesDialog
-        open={isContactStylesDialogOpen}
-        onOpenChange={setIsContactStylesDialogOpen}
-        onStyleSelect={handleContactTemplateSelect}
-      />
-
-      <TeamStylesDialog
-        open={isTeamStylesDialogOpen}
-        onOpenChange={setIsTeamStylesDialogOpen}
-        onStyleSelect={handleTeamTemplateSelect}
-      />
-
-      <TestimonialsStylesDialog
-        open={isTestimonialsStylesDialogOpen}
-        onOpenChange={setIsTestimonialsStylesDialogOpen}
-        onStyleSelect={handleTestimonialsTemplateSelect}
-      />
-
-      <FAQStylesDialog
-        open={isFAQStylesDialogOpen}
-        onOpenChange={setIsFAQStylesDialogOpen}
-        onStyleSelect={handleFAQTemplateSelect}
-      />
-
-      <BannerStylesDialog
-        open={isBannerStylesDialogOpen}
-        onOpenChange={setIsBannerStylesDialogOpen}
-        onStyleSelect={handleBannerTemplateSelect}
-      />
-
-      <NewsletterStylesDialog
-        open={isNewsletterStylesDialogOpen}
-        onOpenChange={setIsNewsletterStylesDialogOpen}
-        onStyleSelect={handleNewsletterTemplateSelect}
-      />
-      <YouTubeStylesDialog
-        open={isYouTubeStylesDialogOpen}
-        onOpenChange={setIsYouTubeStylesDialogOpen}
-        onStyleSelect={handleYouTubeTemplateSelect}
-      />
-
+      {/* Top Navigation */}
       <TopNavigation
         pages={pagesData}
         currentPage={currentPage}
@@ -1366,11 +1399,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onPageDeleted={handlePageDeleted}
       />
 
+      {/* Main Layout */}
       <div className="bg-background flex min-h-screen flex-col">
         <div className="flex flex-1">
           <div className="flex flex-1 flex-col">
-            <div className="mt-10 flex-1 overflow-auto bg-gray-50 p-6">
-              <div className="mx-auto w-full max-w-7xl">
+            <div className="mt-10 flex-1 overflow-auto bg-gray-200 p-6">
+              <div
+                className="mx-auto max-w-7xl px-5"
+                style={{
+                  transform: "scale(0.7)",
+                  transformOrigin: "top",
+                }}
+              >
                 <div className="mb-4">
                   <h2 className="text-foreground text-2xl font-bold capitalize">
                     {currentPageData?.title || currentPage} Page
@@ -1403,9 +1443,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                   onAddFAQ={handleAddFAQ}
                   onAddPortfolio={handleAddPortfolio}
                   onAddBanner={handleAddBanner}
-                  onAddSection={() => setIsAddSectionDialogOpen(true)}
-                  onAddGallery={handleAddGallery}
                   onAddNewsletter={handleAddNewsletter}
+                  onAddYouTube={handleAddYouTube}
+                  onAddGallery={handleAddGallery}
+                  onAddPolicies={handleAddPolicies}
+                  onAddSection={handleAddSection}
                 />
               </div>
             </div>

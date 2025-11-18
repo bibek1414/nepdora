@@ -137,15 +137,15 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     const cardProps = { faqs };
 
     switch (style) {
-      case "card-grid-4":
+      case "faq-4":
         return <FAQCard4 {...cardProps} />;
-      case "simple":
+      case "faq-5":
         return <FAQCard5 {...cardProps} />;
-      case "plus-minus":
+      case "faq-2":
         return <FAQCard2 {...cardProps} />;
-      case "card-grid":
+      case "faq-3":
         return <FAQCard3 {...cardProps} />;
-      case "accordion":
+      case "faq-1":
       default:
         return <FAQCard1 {...cardProps} />;
     }

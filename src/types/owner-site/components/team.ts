@@ -1,7 +1,8 @@
 export interface TeamData {
   component_id?: string;
   component_type: "team";
-  style: "grid-1" | "grid-2" | "list-1" | "card-4";
+  style: "team-1" | "team-2" | "team-3" | "team-4";
+
   title: string;
   subtitle?: string;
   page_size: number;
@@ -19,7 +20,7 @@ export interface TeamComponentData {
 
 export const defaultTeamData: TeamData = {
   component_type: "team",
-  style: "grid-1",
+  style: "team-1",
   title: "Meet Our Team",
   subtitle: "Get to know the talented individuals who make it all happen",
   page_size: 8,

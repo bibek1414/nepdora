@@ -10,7 +10,7 @@ export interface CategoryComponentData {
 // Default data for category component
 export const defaultCategoryData: CategoryData = {
   component_type: "category",
-  style: "grid-1",
+  style: "category-1",
   title: "Our Categories",
   subtitle: "Browse our product categories",
   page_size: 8,
@@ -34,13 +34,14 @@ export interface CategoryData {
   component_id?: string;
   component_type: "category";
   style:
-    | "grid-1"
-    | "grid-2"
-    | "list-1"
-    | "carousel-1"
-    | "grid-3"
-    | "link-1"
-    | "card-1";
+    | "category-1"
+    | "category-2"
+    | "category-3"
+    | "category-4"
+    | "category-5"
+    | "category-6"
+    | "category-7";
+
   title: string;
   subtitle?: string;
   page_size: number;

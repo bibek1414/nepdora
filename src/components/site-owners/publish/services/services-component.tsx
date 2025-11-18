@@ -52,7 +52,7 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
     page_size = 6,
     title = "Latest Services",
     subtitle,
-    style = "grid-1",
+    style = "services-1",
     showDate = true,
   } = component.data || {};
 
@@ -195,13 +195,13 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
     };
 
     switch (style) {
-      case "grid-2":
+      case "services-2":
         return <ServicesCard2 {...cardProps} />;
-      case "list-1":
+      case "services-3":
         return <ServicesCard3 {...cardProps} />;
-      case "grid-3":
+      case "services-4":
         return <ServicesCard4 {...cardProps} />;
-      case "grid-1":
+      case "services-1":
       default:
         return <ServicesCard1 {...cardProps} />;
     }
@@ -209,13 +209,13 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
 
   const getGridClass = () => {
     switch (style) {
-      case "grid-2":
+      case "services-2":
         return `grid-cols-1 sm:grid-cols-4 sm:grid-cols-1`;
-      case "list-1":
+      case "services-3":
         return "grid-cols-1 gap-6";
-      case "grid-3":
+      case "services-4":
         return `grid-cols-1 lg:grid-cols-4 sm:grid-cols-1 `;
-      case "grid-1":
+      case "services-1":
       default:
         return `grid-cols-1 sm:grid-cols-4 sm:grid-cols-1`;
     }

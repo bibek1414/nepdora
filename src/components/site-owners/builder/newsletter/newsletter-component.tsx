@@ -162,11 +162,11 @@ export const NewsletterComponent: React.FC<NewsletterComponentProps> = ({
     };
 
     switch (style) {
-      case "style-2":
+      case "newsletter-2":
         return <NewsletterForm2 {...formProps} />;
-      case "style-3":
+      case "newsletter-3":
         return <NewsletterForm3 {...formProps} />;
-      case "style-1":
+      case "newsletter-1":
       default:
         return <NewsletterForm1 {...formProps} />;
     }

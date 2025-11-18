@@ -6,11 +6,11 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Search,
   X,
-  LayoutDashboard,
   Crown,
   Info,
   Menu,
@@ -23,15 +23,31 @@ import {
   Tag,
   ChevronRight,
   Star,
+  Shield,
+  Type,
+  Navigation,
+  Square,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { NavbarData } from "@/types/owner-site/components/navbar";
+import { FooterData } from "@/types/owner-site/components/footer";
 
 interface AddSectionDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onComponentClick: (componentId: string, template?: string) => void;
+  onNavbarSelect?: (navbarData: NavbarData) => void;
+  onFooterSelect?: (
+    footerStyle:
+      | "style-1"
+      | "style-2"
+      | "style-3"
+      | "style-4"
+      | "style-5"
+      | "style-6"
+  ) => void;
 }
 
 type ComponentItem = {
@@ -43,6 +59,7 @@ type ComponentItem = {
   hasTemplates?: boolean;
   templates?: TemplateItem[];
   popular?: boolean;
+  type?: "section" | "navbar" | "footer";
 };
 
 type TemplateItem = {
@@ -56,6 +73,8 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
   open,
   onOpenChange,
   onComponentClick,
+  onNavbarSelect,
+  onFooterSelect,
 }) => {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -478,9 +497,130 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/youtube/youtube-3.png",
       },
     ],
+    policies: [
+      {
+        id: "policies-1",
+        name: "Policy Layout 1",
+        image: "/images/site-owners/policies/policy1.png",
+        description: "Clean policy layout with sidebar navigation",
+      },
+    ],
+    text_editor: [
+      {
+        id: "text-editor-1",
+        name: "Text Editor Layout 1",
+        image: "/images/site-owners/text-editor/text1.png",
+        description: "Clean text layout with proper typography",
+      },
+    ],
+    // NAVBAR TEMPLATES
+    navbar: [
+      {
+        id: "navbar-1",
+        name: "Navbar Style 1",
+        image: "/images/site-owners/navbars/navbar1.png",
+        description: "Simple navbar with logo and navigation links",
+      },
+      {
+        id: "navbar-2",
+        name: "Navbar Centered Logo",
+        image: "/images/site-owners/navbars/navbar2.png",
+        description: "Centered logo with navigation on sides",
+      },
+      {
+        id: "navbar-3",
+        name: "Navbar with Search",
+        image: "/images/site-owners/navbars/navbar3.png",
+        description: "Includes search functionality",
+      },
+      {
+        id: "navbar-4",
+        name: "Navbar with Categories",
+        image: "/images/site-owners/navbars/navbar4.png",
+        description: "Dropdown categories for e-commerce",
+      },
+      {
+        id: "navbar-5",
+        name: "E-commerce Navbar",
+        image: "/images/site-owners/navbars/navbar5.png",
+        description: "Full e-commerce navigation with cart",
+      },
+      {
+        id: "navbar-6",
+        name: "E-commerce with Top Bar",
+        image: "/images/site-owners/navbars/navbar6.png",
+        description: "Includes top bar for announcements",
+      },
+    ],
+    // FOOTER TEMPLATES
+    footer: [
+      {
+        id: "footer-1",
+        name: "Footer Style 1",
+        image: "/images/site-owners/footers/footer1.png",
+        description: "Simple footer with links and copyright",
+      },
+      {
+        id: "footer-2",
+        name: "Footer Style 2",
+        image: "/images/site-owners/footers/footer2.png",
+        description: "Multi-column footer with social links",
+      },
+      {
+        id: "footer-3",
+        name: "Footer Style 3",
+        image: "/images/site-owners/footers/footer3.png",
+        description: "Modern footer with newsletter signup",
+      },
+      {
+        id: "footer-4",
+        name: "Footer Style 4",
+        image: "/images/site-owners/footers/footer4.png",
+        description: "E-commerce footer with categories",
+      },
+      {
+        id: "footer-5",
+        name: "Footer Style 5",
+        image: "/images/site-owners/footers/footer5.png",
+        description: "Minimal footer with centered content",
+      },
+      {
+        id: "footer-6",
+        name: "Footer Style 6",
+        image: "/images/site-owners/footers/footer6.png",
+        description: "Complex footer with multiple sections",
+      },
+    ],
   };
 
+  // Define which templates to show in the "All Templates" view
+  const default_templates = [
+    "newsletter-3",
+    "youtube-1",
+    "hero-1",
+    "about-1",
+    "services-1",
+    "contact-1",
+    "policies-1",
+    "text-editor-1",
+    "navbar-1", // Add navbar to featured
+    "footer-1", // Add footer to featured
+  ];
+
   const components: ComponentItem[] = [
+    // NAVBAR COMPONENT
+    {
+      id: "navbar-sections",
+      label: "Navbar",
+      icon: Navigation,
+      keywords: ["header", "navigation", "menu", "nav"],
+      hasTemplates: true,
+      templates: templates.navbar,
+      popular: true,
+      type: "navbar",
+    },
+
+    // EXISTING SECTIONS
     {
       id: "hero-sections",
       label: "Hero Section",
@@ -489,6 +629,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.hero,
       popular: true,
+      type: "section",
     },
     {
       id: "about-sections",
@@ -498,6 +639,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.about,
       popular: true,
+      type: "section",
     },
     {
       id: "services-sections",
@@ -507,6 +649,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.services,
       popular: true,
+      type: "section",
     },
     {
       id: "products-sections",
@@ -516,6 +659,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.products,
       popular: true,
+      type: "section",
     },
     {
       id: "categories-sections",
@@ -524,6 +668,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["category", "taxonomy", "organization"],
       hasTemplates: true,
       templates: templates.category,
+      type: "section",
     },
     {
       id: "subcategories-sections",
@@ -532,6 +677,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["subcategory", "nested"],
       hasTemplates: true,
       templates: templates.subcategory,
+      type: "section",
     },
     {
       id: "contact-sections",
@@ -540,6 +686,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["form", "email"],
       hasTemplates: true,
       templates: templates.contact,
+      type: "section",
     },
     {
       id: "testimonials-sections",
@@ -548,6 +695,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["reviews", "clients"],
       hasTemplates: true,
       templates: templates.testimonials,
+      type: "section",
     },
     {
       id: "team-members-sections",
@@ -556,6 +704,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["employees", "staff"],
       hasTemplates: true,
       templates: templates.team,
+      type: "section",
     },
     {
       id: "gallery-sections",
@@ -564,6 +713,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["images", "photos"],
       hasTemplates: true,
       templates: templates.gallery,
+      type: "section",
     },
     {
       id: "banner-sections",
@@ -572,6 +722,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["banner", "slider"],
       hasTemplates: true,
       templates: templates.banner,
+      type: "section",
     },
     {
       id: "blog-sections",
@@ -580,6 +731,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["articles", "posts"],
       hasTemplates: true,
       templates: templates.blog,
+      type: "section",
     },
     {
       id: "faq-sections",
@@ -588,6 +740,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["questions", "help"],
       hasTemplates: true,
       templates: templates.faq,
+      type: "section",
     },
     {
       id: "portfolio-sections",
@@ -596,6 +749,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["projects", "work"],
       hasTemplates: true,
       templates: templates.portfolio,
+      type: "section",
     },
     {
       id: "newsletter-sections",
@@ -604,6 +758,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["subscribe", "email"],
       hasTemplates: true,
       templates: templates.newsletter,
+      type: "section",
     },
     {
       id: "youtube-sections",
@@ -612,20 +767,40 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["video", "embed"],
       hasTemplates: true,
       templates: templates.youtube,
+      type: "section",
     },
     {
       id: "policies-sections",
       label: "Policies",
-      icon: FileText,
-      keywords: ["return", "shipping", "privacy"],
-      description: "Policy pages",
+      icon: Shield,
+      keywords: ["return", "shipping", "privacy", "terms", "policy"],
+      hasTemplates: true,
+      templates: templates.policies,
+      popular: true,
+      type: "section",
     },
     {
       id: "text-editor-sections",
       label: "Text Editor",
-      icon: FileText,
-      keywords: ["editor", "content"],
-      description: "Custom text content",
+      icon: Type,
+      keywords: ["editor", "content", "text", "rich text", "custom"],
+      hasTemplates: true,
+      templates: templates.text_editor,
+      popular: true,
+      type: "section",
+    },
+
+    // FOOTER COMPONENT
+    {
+      id: "footer-sections",
+      label: "Footer",
+      icon: Square,
+      keywords: ["bottom", "links", "copyright", "social"],
+      description: "Site footer with multiple layout options",
+      hasTemplates: true,
+      templates: templates.footer,
+      popular: true,
+      type: "footer",
     },
   ];
 
@@ -645,12 +820,36 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
   };
 
   const handleTemplateSelect = (componentId: string, templateId: string) => {
-    onComponentClick(componentId, templateId);
+    const component = components.find(comp => comp.id === componentId);
+
+    if (component?.type === "navbar" && onNavbarSelect) {
+      // Handle navbar selection
+      const navbarData = getNavbarData(templateId);
+      onNavbarSelect(navbarData);
+    } else if (component?.type === "footer" && onFooterSelect) {
+      // Handle footer selection
+      const footerStyle = getFooterStyle(templateId);
+      onFooterSelect(footerStyle);
+    } else {
+      // Handle regular section components
+      onComponentClick(componentId, templateId);
+    }
+
     handleClose();
   };
 
   const handleComponentSelect = (component: ComponentItem) => {
-    if (component.hasTemplates && component.templates) {
+    if (component.type === "navbar" && onNavbarSelect) {
+      const navbarData = getNavbarData(
+        component.templates?.[0]?.id || "navbar-1"
+      );
+      onNavbarSelect(navbarData);
+    } else if (component.type === "footer" && onFooterSelect) {
+      const footerStyle = getFooterStyle(
+        component.templates?.[0]?.id || "footer-1"
+      );
+      onFooterSelect(footerStyle);
+    } else if (component.hasTemplates && component.templates) {
       onComponentClick(component.id, component.templates[0].id);
     } else {
       onComponentClick(component.id);
@@ -666,32 +865,152 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
 
   const getCurrentTemplates = () => {
     if (!selectedCategory) {
-      // Show popular components with their templates
-      return popularComponents.map(component => ({
+      // Show only default templates in the main view
+      const allTemplates = components.flatMap(
+        component =>
+          component.templates?.map(template => ({
+            component,
+            template: { ...template, componentId: component.id },
+          })) || []
+      );
+
+      // Filter to only show templates that are in default_templates array
+      return allTemplates.filter(({ template }) =>
+        default_templates.includes(template.id)
+      );
+    }
+
+    // Show all templates for selected category (when a category is selected)
+    const component = components.find(comp => comp.id === selectedCategory);
+    if (component?.templates) {
+      return component.templates.map(template => ({
         component,
-        templates: component.templates?.slice(0, 3) || [], // Show first 3 templates for each popular component
+        template: { ...template, componentId: component.id },
       }));
     }
 
-    // Show all templates for selected category
-    const component = components.find(comp => comp.id === selectedCategory);
-    if (component?.templates) {
-      return [
-        {
-          component,
-          templates: component.templates,
-        },
-      ];
-    }
-
     return [];
+  };
+
+  // Helper function to get navbar data based on template ID
+  const getNavbarData = (templateId: string): NavbarData => {
+    const styleNumber = templateId.split("-")[1];
+
+    const baseData: NavbarData = {
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      style: `style-${styleNumber}` as any,
+      logoText: "Brand",
+      logoType: "text",
+      showCart: true,
+      links: [
+        { id: "1", text: "Home", href: "#" },
+        { id: "2", text: "About", href: "#" },
+        { id: "3", text: "Contact", href: "#" },
+      ],
+      buttons: [],
+    };
+
+    switch (styleNumber) {
+      case "1":
+        return {
+          ...baseData,
+          buttons: [
+            { id: "1", text: "Get Started", variant: "primary", href: "#" },
+          ],
+        };
+      case "2":
+        return {
+          ...baseData,
+          logoText: "Centered",
+          links: [
+            { id: "1", text: "Home", href: "#" },
+            { id: "2", text: "About", href: "#" },
+            { id: "3", text: "Services", href: "#" },
+            { id: "4", text: "Contact", href: "#" },
+          ],
+          buttons: [
+            { id: "1", text: "Book Now", variant: "primary", href: "#" },
+          ],
+        };
+      case "3":
+        return {
+          ...baseData,
+          logoText: "SearchNav",
+          links: [
+            { id: "1", text: "Home", href: "#" },
+            { id: "2", text: "Products", href: "#" },
+            { id: "3", text: "About", href: "#" },
+          ],
+          buttons: [{ id: "1", text: "Search", variant: "outline", href: "#" }],
+        };
+      case "4":
+        return {
+          ...baseData,
+          logoText: "Store",
+          links: [
+            { id: "1", text: "Home", href: "#" },
+            { id: "2", text: "Categories", href: "#" },
+            { id: "3", text: "Deals", href: "#" },
+          ],
+          buttons: [
+            { id: "1", text: "Shop Now", variant: "primary", href: "#" },
+          ],
+        };
+      case "5":
+        return {
+          ...baseData,
+          bannerText: "Get free delivery on orders over $100",
+          links: [
+            { id: "1", text: "Women", href: "#" },
+            { id: "2", text: "Men", href: "#" },
+            { id: "3", text: "New Arrivals", href: "#" },
+            { id: "4", text: "Sale", href: "#" },
+          ],
+          buttons: [
+            { id: "1", text: "Sign in", variant: "outline", href: "#" },
+            { id: "2", text: "Create account", variant: "primary", href: "#" },
+          ],
+        };
+      case "6":
+        return {
+          ...baseData,
+          links: [
+            { id: "1", text: "About Us", href: "#" },
+            { id: "2", text: "FAQ", href: "#" },
+            { id: "3", text: "Privacy Policy", href: "#" },
+          ],
+          buttons: [],
+          topBarItems: [
+            {
+              id: "1",
+              text: "Customer Service: +977-9860425440",
+              href: "tel:+9779860425440",
+            },
+          ],
+        };
+      default:
+        return baseData;
+    }
+  };
+
+  // Helper function to get footer style based on template ID
+  const getFooterStyle = (
+    templateId: string
+  ): "style-1" | "style-2" | "style-3" | "style-4" | "style-5" | "style-6" => {
+    const styleNumber = templateId.split("-")[1];
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return `style-${styleNumber}` as any;
   };
 
   const currentTemplates = getCurrentTemplates();
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="h-[80vh] !max-w-6xl overflow-hidden p-0">
+      <DialogContent className="p-0h-[80vh] h-[80vh] !max-w-6xl scale-80 overflow-hidden p-0">
+        <DialogClose className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 z-50 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </DialogClose>
         <div className="flex h-full overflow-hidden">
           {/* Left Sidebar - Components List */}
           <div className="flex h-full w-64 flex-col border-r">
@@ -700,31 +1019,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
                 Components
               </DialogTitle>
             </DialogHeader>
-
-            {/* Search */}
-            <div className="border-b px-4 py-3">
-              <div className="relative">
-                <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <Input
-                  type="text"
-                  placeholder="Search..."
-                  value={query}
-                  onChange={e => setQuery(e.target.value)}
-                  className="h-9 pr-9 pl-9 text-sm"
-                />
-                {query && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setQuery("")}
-                    className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2"
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
-                )}
-              </div>
-            </div>
 
             {/* Components List */}
             <ScrollArea className="flex-1 overflow-auto">
@@ -755,144 +1049,129 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
 
           {/* Right Content Area - Templates Grid */}
           <div className="flex flex-1 flex-col overflow-hidden">
-            <ScrollArea className="h-full flex-1">
-              <div className="p-6">
-                {!selectedCategory ? (
-                  <>
-                    <div className="mb-8">
+            {/* Sticky Header Section */}
+            <div className="sticky top-0 z-10 border-b bg-white px-6 pt-6 pb-4">
+              {!selectedCategory ? (
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Featured Templates
+                  </h2>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setSelectedCategory(null)}
+                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
+                  >
+                    <ChevronRight className="h-4 w-4 rotate-180" />
+                    Back
+                  </button>
+                  {currentTemplates[0] && (
+                    <div>
                       <h2 className="text-2xl font-bold text-gray-900">
-                        Popular Components
+                        {currentTemplates[0].component.label}
                       </h2>
-                      <p className="mt-1 text-gray-600">
-                        Get started with these commonly used components
+                      <p className="text-gray-600">
+                        {currentTemplates[0].component.description}
                       </p>
                     </div>
+                  )}
+                </div>
+              )}
+            </div>
 
-                    {/* Grid showing templates for each popular component */}
-                    {currentTemplates.map(({ component, templates }) => (
-                      <div key={component.id} className="mb-8">
-                        <div className="mb-4 flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50">
-                            <component.icon className="h-4 w-4 text-blue-600" />
+            {/* Scrollable Templates Area */}
+            <div className="flex-1 overflow-auto">
+              <div className="p-6">
+                {!selectedCategory ? (
+                  /* Featured Templates Grid */
+                  <div className="grid grid-cols-3 gap-6">
+                    {currentTemplates.map(({ component, template }) => (
+                      <div
+                        key={`${component.id}-${template.id}`}
+                        className="group cursor-pointer"
+                        onClick={() =>
+                          handleTemplateSelect(component.id, template.id)
+                        }
+                      >
+                        <div className="relative overflow-hidden rounded-lg border border-gray-200 transition-all hover:border-blue-400">
+                          {/* Template Preview Image */}
+                          <div className="relative flex aspect-video items-center justify-center bg-gray-50">
+                            <img
+                              src={template.image}
+                              alt={template.name}
+                              width={800}
+                              height={200}
+                              className="h-auto w-full rounded"
+                            />
                           </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              {component.label}
-                            </h3>
-                            <p className="text-sm text-gray-500">
-                              {component.description}
-                            </p>
-                          </div>
-                        </div>
 
-                        <div className="grid grid-cols-3 gap-4">
-                          {templates.map(template => (
-                            <div
-                              key={template.id}
-                              className="group cursor-pointer"
-                              onClick={() =>
-                                handleTemplateSelect(component.id, template.id)
-                              }
-                            >
-                              <div className="relative overflow-hidden rounded-lg border border-gray-200 transition-all hover:border-blue-400 hover:shadow-lg">
-                                <div className="relative flex aspect-video items-center justify-center bg-gray-50">
-                                  <img
-                                    src={template.image}
-                                    alt={template.name}
-                                    className="h-full w-full object-cover"
-                                  />
+                          {/* Template Info */}
+                          <div className="bg-white p-4">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <h3 className="text-sm font-medium text-gray-900">
+                                  {template.name}
+                                </h3>
+                                <div className="mt-1 flex items-center gap-1">
+                                  <component.icon className="h-3 w-3 text-blue-600" />
+                                  <span className="text-xs text-gray-500">
+                                    {component.label}
+                                  </span>
                                 </div>
-                                <div className="bg-white p-3">
-                                  <h3 className="text-sm font-medium text-gray-900">
-                                    {template.name}
-                                  </h3>
-                                </div>
+                                {template.description && (
+                                  <p className="mt-2 text-xs text-gray-500">
+                                    {template.description}
+                                  </p>
+                                )}
                               </div>
+                              {component.popular && (
+                                <Star className="h-3 w-3 shrink-0 fill-yellow-400 text-yellow-400" />
+                              )}
                             </div>
-                          ))}
-                          {templates.length > 0 && (
-                            <button
-                              onClick={() => handleCategorySelect(component.id)}
-                              className="flex aspect-video items-center justify-center rounded-lg border-2 border-dashed border-gray-300 transition-all hover:border-blue-400 hover:bg-blue-50"
-                            >
-                              <div className="text-center">
-                                <ChevronRight className="mx-auto h-6 w-6 text-gray-400" />
-                                <p className="mt-2 text-sm font-medium text-gray-600">
-                                  View All
-                                </p>
-                                <p className="text-xs text-gray-500">
-                                  {component.templates?.length || 0} templates
-                                </p>
-                              </div>
-                            </button>
-                          )}
+                          </div>
                         </div>
                       </div>
                     ))}
-                  </>
+                  </div>
                 ) : (
-                  <>
-                    {/* Selected Category Templates */}
-                    {currentTemplates.map(({ component, templates }) => (
-                      <div key={component.id}>
-                        <div className="mb-6 flex items-center gap-3">
-                          <button
-                            onClick={() => setSelectedCategory(null)}
-                            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
-                          >
-                            <ChevronRight className="h-4 w-4 rotate-180" />
-                            Back to Popular
-                          </button>
-                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
-                            <component.icon className="h-5 w-5 text-blue-600" />
+                  /* Selected Category Templates Grid */
+                  <div className="grid grid-cols-3 gap-4">
+                    {currentTemplates.map(({ component, template }) => (
+                      <div
+                        key={template.id}
+                        className="group cursor-pointer"
+                        onClick={() =>
+                          handleTemplateSelect(component.id, template.id)
+                        }
+                      >
+                        <div className="relative overflow-hidden rounded-lg border border-gray-200 transition-all hover:border-blue-400">
+                          <div className="relative flex aspect-video items-center justify-center bg-transparent">
+                            <img
+                              src={template.image}
+                              alt={template.name}
+                              width={800}
+                              height={200}
+                              className="h-auto w-full rounded"
+                            />
                           </div>
-                          <div>
-                            <h2 className="text-2xl font-bold text-gray-900">
-                              {component.label}
-                            </h2>
-                            <p className="text-gray-600">
-                              {component.description}
-                            </p>
+                          <div className="bg-white p-3">
+                            <h3 className="text-sm font-medium text-gray-900">
+                              {template.name}
+                            </h3>
+                            {template.description && (
+                              <p className="mt-1 text-xs text-gray-500">
+                                {template.description}
+                              </p>
+                            )}
                           </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-4">
-                          {templates.map(template => (
-                            <div
-                              key={template.id}
-                              className="group cursor-pointer"
-                              onClick={() =>
-                                handleTemplateSelect(component.id, template.id)
-                              }
-                            >
-                              <div className="relative overflow-hidden rounded-lg border border-gray-200 transition-all hover:border-blue-400 hover:shadow-lg">
-                                <div className="relative flex aspect-video items-center justify-center bg-gray-50">
-                                  <img
-                                    src={template.image}
-                                    alt={template.name}
-                                    className="h-full w-full object-cover"
-                                  />
-                                </div>
-                                <div className="bg-white p-3">
-                                  <h3 className="text-sm font-medium text-gray-900">
-                                    {template.name}
-                                  </h3>
-                                  {template.description && (
-                                    <p className="mt-1 text-xs text-gray-500">
-                                      {template.description}
-                                    </p>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
                         </div>
                       </div>
                     ))}
-                  </>
+                  </div>
                 )}
               </div>
-            </ScrollArea>
+            </div>
           </div>
         </div>
       </DialogContent>

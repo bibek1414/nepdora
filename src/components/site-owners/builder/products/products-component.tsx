@@ -76,8 +76,8 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   } = component.data || {};
 
   // Determine if we should show sidebar based on style
-  const shouldShowSidebar = showSidebar && style === "grid-4";
-  const isCarouselStyle = style === "carousel-1" || style === "carousel-6";
+  const shouldShowSidebar = showSidebar && style === "product-4";
+  const isCarouselStyle = style === "product-1" || style === "product-6";
 
   const currentFilters = shouldShowSidebar && !isEditable ? productFilters : {};
 
@@ -192,19 +192,19 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     };
 
     switch (style) {
-      case "grid-2":
+      case "product-2":
         return <ProductCard2 key={product.id} {...cardProps} />;
-      case "list-1":
+      case "product-3":
         return <ProductCard3 key={product.id} {...cardProps} />;
-      case "carousel-1":
+      case "product-1":
         return <ProductCard1 key={product.id} {...cardProps} />;
-      case "carousel-6":
+      case "product-6":
         return <ProductCard6 key={product.id} {...cardProps} />;
-      case "grid-4":
+      case "product-4":
         return <ProductCard4 key={product.id} {...cardProps} />;
-      case "grid-5":
+      case "product-5":
         return <ProductCard5 key={product.id} {...cardProps} />;
-      case "grid-1":
+      case "product-1":
       default:
         return <ProductCard1 key={product.id} {...cardProps} />;
     }
@@ -212,14 +212,14 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
 
   const getGridClass = () => {
     switch (style) {
-      case "grid-2":
+      case "product-2":
         return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 3)}`;
-      case "list-1":
+      case "product-3":
         return "grid-cols-1 lg:grid-cols-2 gap-8";
-      case "carousel-1":
-      case "carousel-6":
+      case "product-1":
+      case "product-6":
         return "";
-      case "grid-4":
+      case "product-4":
         return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 4)}`;
       case "grid-1":
       default:
@@ -314,7 +314,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
             </div>
 
             <div className={shouldShowSidebar ? "relative flex gap-6" : ""}>
-              {/* Sidebar - Only show for ProductCard4 (grid-4) */}
+              {/* Sidebar - Only show for ProductCard4 (product-4) */}
               {shouldShowSidebar && (
                 <div className="hidden lg:block">
                   <ProductFilterSidebar

@@ -1,7 +1,7 @@
 export interface BlogData {
   component_id?: string;
   component_type: "blog";
-  style: "grid-1" | "grid-2" | "list-1" | "carousel-1";
+  style: "blog-1" | "blog-2" | "blog-3" | "blog-4";
   title: string;
   subtitle?: string;
   page_size: number;
@@ -25,7 +25,7 @@ export interface BlogComponentData {
 
 export const defaultBlogData: BlogData = {
   component_type: "blog",
-  style: "grid-1",
+  style: "blog-1",
   title: "Latest Blog Posts",
   subtitle: "Stay updated with our newest articles and insights.",
   page_size: 6,

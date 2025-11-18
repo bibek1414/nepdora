@@ -1,7 +1,7 @@
 export interface ContactData {
   component_id?: string;
   component_type: "contact";
-  style: "form-1" | "form-2" | "form-3" | "form-4";
+  style: "contact-1" | "contact-2" | "contact-3" | "contact-4";
   title: string;
   subtitle?: string;
   description?: string;
@@ -41,7 +41,7 @@ export interface ContactFormSubmission {
 
 export const defaultContactData: ContactData = {
   component_type: "contact",
-  style: "form-1",
+  style: "contact-1",
   title: "Get in Touch",
   subtitle: "We'd love to hear from you",
   description: "Send us a message and we'll respond as soon as possible.",
@@ -63,7 +63,7 @@ export const defaultContactData: ContactData = {
 // Default data variations for different styles
 export const defaultContact1Data: ContactData = {
   ...defaultContactData,
-  style: "form-1",
+  style: "contact-1",
   title: "Contact Us",
   subtitle: "Get in touch with our team",
   description: "We're here to help and answer any questions you might have.",
@@ -71,7 +71,7 @@ export const defaultContact1Data: ContactData = {
 
 export const defaultContact2Data: ContactData = {
   ...defaultContactData,
-  style: "form-2",
+  style: "contact-2",
   title: "Let's Talk",
   subtitle: "Start a conversation",
   description:
@@ -80,7 +80,7 @@ export const defaultContact2Data: ContactData = {
 
 export const defaultContact3Data: ContactData = {
   ...defaultContactData,
-  style: "form-3",
+  style: "contact-3",
   title: "Send us a Message",
   subtitle: "We're always ready to help",
   description:
@@ -89,7 +89,7 @@ export const defaultContact3Data: ContactData = {
 
 export const defaultContact4Data: ContactData = {
   ...defaultContactData,
-  style: "form-4",
+  style: "contact-4",
   title: "Visit Our Location",
   subtitle: "Find us or get in touch",
   description: "Visit us in person or send us a message using the form below.",

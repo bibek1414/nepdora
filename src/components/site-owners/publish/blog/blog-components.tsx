@@ -201,11 +201,11 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     };
 
     switch (style) {
-      case "grid-2":
+      case "blog-2":
         return <BlogCard2 {...cardProps} />;
-      case "list-1":
+      case "blog-2":
         return <BlogCard3 {...cardProps} />;
-      case "grid-1":
+      case "blog-1":
       default:
         return <BlogCard1 {...cardProps} />;
     }
@@ -213,11 +213,11 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
 
   const getGridClass = () => {
     switch (style) {
-      case "grid-2":
+      case "blog-2":
         return `grid-cols-1 sm:grid-cols-4 `;
-      case "list-1":
+      case "blog-3":
         return "grid-cols-1 gap-6";
-      case "grid-1":
+      case "blog-1":
       default:
         return `grid-cols-1 sm:grid-cols-4 `;
     }

@@ -170,11 +170,11 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
     };
 
     switch (style) {
-      case "grid-2":
+      case "subcategory-2":
         return <SubCategoryCard2 key={subcategory.id} {...cardProps} />;
-      case "list-1":
+      case "subcategory-3":
         return <SubCategoryCard3 key={subcategory.id} {...cardProps} />;
-      case "carousel-1":
+      case "subcategory-1":
         return <SubCategoryCard1 key={subcategory.id} {...cardProps} />;
       case "grid-1":
       default:
@@ -184,11 +184,11 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
 
   const getGridClass = () => {
     switch (style) {
-      case "grid-2":
+      case "subcategory-2":
         return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 3)}`;
-      case "list-1":
+      case "subcategory-3":
         return "grid-cols-1 lg:grid-cols-2 gap-8";
-      case "carousel-1":
+      case "subcategory-1":
         return "flex overflow-x-auto gap-6 pb-4";
       case "grid-1":
       default:
@@ -310,7 +310,7 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
             {!isLoading && !error && subcategories.length > 0 && (
               <>
                 <div
-                  className={`${style === "carousel-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-6`}`}
+                  className={`${style === "subcategory-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-6`}`}
                 >
                   {subcategories.map((subcategory, index) => (
                     <div
@@ -373,7 +373,7 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
 
         {isLoading && (
           <div
-            className={`${style === "carousel-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
+            className={`${style === "subcategory-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
           >
             {Array.from({ length: page_size }).map((_, index) => (
               <div key={index} className="flex flex-col space-y-4">
@@ -403,7 +403,7 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
         {!isLoading && !error && subcategories.length > 0 && (
           <>
             <div
-              className={`${style === "carousel-1" ? "flex gap-8 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
+              className={`${style === "subcategory-1" ? "flex gap-8 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
             >
               {subcategories.map((subcategory, index) => (
                 <div key={subcategory.id} className="flex-shrink-0">

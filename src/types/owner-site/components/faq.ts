@@ -1,7 +1,8 @@
 export interface FAQData {
   component_id?: string;
   component_type: "faq";
-  style: "accordion" | "plus-minus" | "card-grid" | "card-grid-4" | "simple";
+  style: "faq-1" | "faq-2" | "faq-3" | "faq-4" | "faq-5";
+
   title: string;
   subtitle?: string;
   order?: number;
@@ -18,7 +19,7 @@ export interface FAQComponentData {
 
 export const defaultFAQData: FAQData = {
   component_type: "faq",
-  style: "accordion",
+  style: "faq-1",
   title: "Frequently Asked Questions",
   subtitle: "Find answers to common questions about our services",
 };

@@ -79,17 +79,41 @@ export const componentsApi = {
     }
   },
 
-  // Create a new component
   createComponent: async <T extends keyof ComponentTypeMap>(
     pageSlug: string,
     payload: CreateComponentRequest<T>,
-    existingComponents?: ComponentResponse[] // Add this parameter to pass current components
+    existingComponents?: ComponentResponse[],
+    insertIndex?: number // Add this parameter for precise insertion
   ): Promise<ComponentResponse<T>> => {
     try {
-      // Calculate next order if not provided
+      // Calculate next order based on insertIndex or append to end
       let order = payload.order;
-      if (order === undefined || order === 0) {
-        if (existingComponents && existingComponents.length > 0) {
+
+      if (order === undefined) {
+        if (insertIndex !== undefined) {
+          // Insert at specific position
+          order = insertIndex;
+
+          // Update orders of subsequent components
+          if (existingComponents && existingComponents.length > 0) {
+            const componentsToUpdate = existingComponents.filter(
+              comp => comp.order >= insertIndex
+            );
+
+            // Update backend orders for subsequent components
+            for (const component of componentsToUpdate) {
+              await fetch(
+                `${API_BASE_URL}/api/pages/${pageSlug}/components/${component.component_id}/`,
+                {
+                  method: "PATCH",
+                  headers: createHeaders(),
+                  body: JSON.stringify({ order: component.order + 1 }),
+                }
+              );
+            }
+          }
+        } else if (existingComponents && existingComponents.length > 0) {
+          // Append to end
           const maxOrder = Math.max(
             ...existingComponents.map(c => c.order || 0)
           );

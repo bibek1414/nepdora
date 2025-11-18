@@ -184,15 +184,15 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     };
 
     switch (style) {
-      case "grid-2":
+      case "testimonial-2":
         return <TestimonialCard2 key={testimonial.id} {...cardProps} />;
-      case "grid-3":
+      case "testimonial-4":
         return <TestimonialCard4 key={testimonial.id} {...cardProps} />;
-      case "card-7":
+      case "testimonial-7":
         return <TestimonialCard7 key={testimonial.id} {...cardProps} />;
-      case "list-1":
+      case "testimonial-3":
         return <TestimonialCard3 key={testimonial.id} {...cardProps} />;
-      case "grid-1":
+      case "testimonial-1":
       default:
         return <TestimonialCard1 key={testimonial.id} {...cardProps} />;
     }
@@ -200,7 +200,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
   // Render carousel or stagger separately
   const renderCarouselOrStagger = () => {
-    if (style === "carousel-1") {
+    if (style === "testimonial-5") {
       return (
         <TestimonialCard5
           testimonials={testimonials.slice(0, page_size)}
@@ -209,7 +209,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
       );
     }
 
-    if (style === "stagger-1") {
+    if (style === "testimonial-6") {
       return (
         <TestimonialCard6
           testimonials={testimonials.slice(0, page_size)}
@@ -223,15 +223,15 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
   const getGridClass = () => {
     switch (style) {
-      case "grid-2":
+      case "testimonial-2":
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
-      case "list-1":
+      case "testimonial-3":
         return "grid-cols-1 lg:grid-cols-3 gap-8";
-      case "card-7":
+      case "testimonial-7":
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6";
-      case "carousel-1":
-      case "stagger-1": // Add stagger-1 here
-        return ""; // No grid for carousel or stagger
+      case "testimonial-5":
+      case "testimonial-6":
+        return "";
       case "grid-1":
       default:
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
@@ -242,7 +242,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   if (isEditable) {
     return (
       <>
-        {style === "card-7" && (
+        {style === "testimonial-7" && (
           <style>{`
             @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
           `}</style>
@@ -324,7 +324,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
           {/* Testimonials Preview */}
           <div className="py-8">
-            {style === "card-7" ? (
+            {style === "testimonial-7" ? (
               <div className="mx-auto flex max-w-6xl flex-col items-start px-6 text-sm md:px-16 lg:px-24">
                 <EditableText
                   value={title}
@@ -423,12 +423,12 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
                 {isLoading && (
                   <div
                     className={
-                      style === "carousel-1" || style === "stagger-1"
+                      style === "testimonial-5" || style === "testimonial-6"
                         ? ""
                         : `grid ${getGridClass()} gap-6`
                     }
                   >
-                    {style === "carousel-1" || style === "stagger-1" ? (
+                    {style === "testimonial-5" || style === "testimonial-6" ? (
                       <div className="flex gap-4 overflow-hidden">
                         {Array.from({ length: 3 }).map((_, index) => (
                           <div key={index} className="w-80 flex-shrink-0">
@@ -470,7 +470,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
                 {!isLoading && !error && testimonials.length > 0 && (
                   <>
-                    {style === "carousel-1" || style === "stagger-1" ? (
+                    {style === "testimonial-5" || style === "testimonial-6" ? (
                       renderCarouselOrStagger()
                     ) : (
                       <div className={`grid ${getGridClass()} gap-6`}>
@@ -508,7 +508,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   }
 
   // Live site rendering
-  if (style === "card-7") {
+  if (style === "testimonial-7") {
     return (
       <>
         <section className="mx-auto flex max-w-6xl flex-col items-start px-6 py-12 text-sm md:px-16 md:py-16 lg:px-24">
@@ -592,12 +592,12 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
         {isLoading && (
           <div
             className={
-              style === "carousel-1" || style === "stagger-1"
+              style === "testimonial-5" || style === "testimonial-6"
                 ? ""
                 : `grid ${getGridClass()} gap-8`
             }
           >
-            {style === "carousel-1" || style === "stagger-1" ? (
+            {style === "testimonial-5" || style === "testimonial-6" ? (
               <div className="flex gap-6 overflow-hidden">
                 {Array.from({ length: 3 }).map((_, index) => (
                   <div key={index} className="w-80 flex-shrink-0">
@@ -637,7 +637,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
         {!isLoading && !error && testimonials.length > 0 && (
           <>
-            {style === "carousel-1" || style === "stagger-1" ? (
+            {style === "testimonial-5" || style === "testimonial-6" ? (
               renderCarouselOrStagger()
             ) : (
               <div className={`grid ${getGridClass()} gap-8`}>

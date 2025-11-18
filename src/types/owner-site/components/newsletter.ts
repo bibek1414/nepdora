@@ -1,7 +1,7 @@
 export interface NewsletterData {
   component_id?: string;
   component_type: "newsletter";
-  style: "style-1" | "style-2" | "style-3";
+  style: "newsletter-1" | "newsletter-2" | "newsletter-3";
   title: string;
   subtitle?: string;
   description?: string;
@@ -31,7 +31,7 @@ export interface NewsletterFormSubmission {
 
 export const defaultNewsletterData: NewsletterData = {
   component_type: "newsletter",
-  style: "style-1",
+  style: "newsletter-1",
   title: "Stay Updated",
   subtitle: "Subscribe to our newsletter",
   description:
@@ -47,7 +47,7 @@ export const defaultNewsletterData: NewsletterData = {
 // Default data variations for different styles
 export const defaultNewsletter1Data: NewsletterData = {
   ...defaultNewsletterData,
-  style: "style-1",
+  style: "newsletter-1",
   title: "Newsletter Signup",
   subtitle: "Stay in the loop",
   description:
@@ -56,7 +56,7 @@ export const defaultNewsletter1Data: NewsletterData = {
 
 export const defaultNewsletter2Data: NewsletterData = {
   ...defaultNewsletterData,
-  style: "style-2",
+  style: "newsletter-2",
   title: "Join Our Community",
   subtitle: "Never miss an update",
   description:
@@ -67,7 +67,7 @@ export const defaultNewsletter2Data: NewsletterData = {
 
 export const defaultNewsletter3Data: NewsletterData = {
   ...defaultNewsletterData,
-  style: "style-3",
+  style: "newsletter-3",
   title: "Get Weekly Insights",
   subtitle: "Expert tips delivered to your inbox",
   description:

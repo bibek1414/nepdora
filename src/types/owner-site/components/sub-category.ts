@@ -1,7 +1,7 @@
 export interface SubCategoryData {
   component_id?: string;
   component_type: "subcategory";
-  style: "grid-1" | "grid-2" | "list-1" | "carousel-1";
+  style: "subcategory-1" | "subcategory-2" | "subcategory-3" | "subcategory-4";
   title: string;
   subtitle?: string;
   page_size: number;
@@ -26,7 +26,7 @@ export interface SubCategoryComponentData {
 // Default data for subcategory component
 export const defaultSubCategoryData: SubCategoryData = {
   component_type: "subcategory",
-  style: "grid-1",
+  style: "subcategory-1",
   title: "Our SubCategories",
   subtitle: "Explore specific product subcategories",
   page_size: 8,

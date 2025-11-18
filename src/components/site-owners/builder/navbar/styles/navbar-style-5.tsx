@@ -17,11 +17,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const EditableItem: React.FC<{
@@ -29,25 +25,7 @@ const EditableItem: React.FC<{
   onDelete?: () => void;
   children: React.ReactNode;
 }> = ({ onEdit, onDelete, children }) => (
-  <div className="group relative">
-    {children}
-    <div className="absolute -top-8 -right-3 z-50 hidden items-center gap-1 rounded-full bg-white p-1 shadow-md group-hover:flex">
-      <button
-        onClick={onEdit}
-        className="text-primary hover:bg-primary-foreground/20 rounded-full p-1"
-      >
-        <Edit className="h-4 w-4" />
-      </button>
-      {onDelete && (
-        <button
-          onClick={onDelete}
-          className="hover:bg-primary-foreground/20 rounded-full p-1 text-red-500"
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
-      )}
-    </div>
-  </div>
+  <div className="group relative">{children}</div>
 );
 
 interface NavbarStyleProps {
@@ -139,16 +117,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
     }
   };
 
-  const mainCategoryLinks = links.length >= 4 ? links.slice(0, 2) : [];
-  const remainingLinks = links.length >= 4 ? links.slice(2) : links;
-
-  const getLinkGroup = (index: number) => {
-    if (remainingLinks.length === 0) return [];
-    const groupSize = Math.ceil(remainingLinks.length / 3);
-    const start = index * groupSize;
-    return remainingLinks.slice(start, start + groupSize);
-  };
-
   return (
     <>
       <div className="bg-white">
@@ -166,7 +134,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
             />
           ) : (
             <div
-              className="text-foreground/80 prose prose-sm max-w-none leading-relaxed"
+              className="prose prose-sm max-w-none leading-relaxed"
               dangerouslySetInnerHTML={{ __html: bannerText }}
             />
           )}
@@ -223,222 +191,45 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                   )}
                 </div>
 
-                <div className="group/popover-group hidden lg:ml-8 lg:block lg:self-stretch">
-                  <div className="flex h-full space-x-8">
-                    {mainCategoryLinks.map((link, index) => (
-                      <Popover
-                        key={link.id}
-                        open={openPopovers[link.id] || false}
-                        onOpenChange={open => {
-                          if (!disableClicks && !isEditable) {
-                            setOpenPopovers(prev => ({
-                              ...prev,
-                              [link.id]: open,
-                            }));
-                          }
-                        }}
-                      >
-                        <div className="group/popover flex" key={link.id}>
-                          <div className="relative flex">
-                            {isEditable && onEditLink && onDeleteLink ? (
-                              <EditableItem
-                                onEdit={() => onEditLink(link)}
-                                onDelete={() => onDeleteLink(link.id)}
-                              >
-                                <PopoverTrigger asChild>
-                                  <button
-                                    className="relative flex items-center justify-center text-sm font-medium transition-colors duration-200 ease-out hover:text-gray-800"
-                                    style={{
-                                      color: openPopovers[link.id]
-                                        ? theme.colors.primary
-                                        : theme.colors.text,
-                                    }}
-                                    onClick={e => {
-                                      e.preventDefault();
-                                    }}
-                                  >
-                                    {link.text}
-                                    <span
-                                      aria-hidden="true"
-                                      className="absolute inset-x-0 -bottom-px z-30 h-0.5 bg-transparent duration-200 ease-in"
-                                      style={{
-                                        backgroundColor: openPopovers[link.id]
-                                          ? theme.colors.primary
-                                          : "transparent",
-                                      }}
-                                    ></span>
-                                  </button>
-                                </PopoverTrigger>
-                              </EditableItem>
-                            ) : (
-                              <PopoverTrigger asChild>
-                                <button
-                                  className="relative flex items-center justify-center text-sm font-medium transition-colors duration-200 ease-out hover:text-gray-800"
-                                  style={{
-                                    color: openPopovers[link.id]
-                                      ? theme.colors.primary
-                                      : theme.colors.text,
-                                  }}
-                                  onClick={e => {
-                                    if (disableClicks) {
-                                      e.preventDefault();
-                                      return;
-                                    }
-                                  }}
-                                >
-                                  {link.text}
-                                  <span
-                                    aria-hidden="true"
-                                    className="absolute inset-x-0 -bottom-px z-30 h-0.5 bg-transparent duration-200 ease-in"
-                                    style={{
-                                      backgroundColor: openPopovers[link.id]
-                                        ? theme.colors.primary
-                                        : "transparent",
-                                    }}
-                                  ></span>
-                                </button>
-                              </PopoverTrigger>
-                            )}
-
-                            <PopoverContent
-                              className="w-screen max-w-7xl p-0"
-                              align="start"
-                              sideOffset={1}
+                {/* Desktop Navigation */}
+                <div className="hidden lg:ml-8 lg:block lg:self-stretch">
+                  <div className="mt-6 flex h-full space-x-8">
+                    {links.map(link => (
+                      <div key={link.id} className="flex">
+                        {isEditable && onEditLink && onDeleteLink ? (
+                          <EditableItem
+                            onEdit={() => onEditLink(link)}
+                            onDelete={() => onDeleteLink(link.id)}
+                          >
+                            <a
+                              href={link.href}
+                              onClick={e => e.preventDefault()}
+                              className="flex items-center text-sm font-medium hover:text-gray-800"
+                              style={{
+                                color: theme.colors.text,
+                              }}
                             >
-                              <div className="bg-white">
-                                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                                  <div className="grid grid-cols-2 gap-x-8 gap-y-10 py-16">
-                                    <div className="row-start-1 grid grid-cols-3 gap-x-8 gap-y-10 text-sm">
-                                      {[0, 1, 2].map(groupIndex => {
-                                        const linkGroup =
-                                          getLinkGroup(groupIndex);
-                                        if (linkGroup.length === 0) return null;
-
-                                        return (
-                                          <div key={groupIndex}>
-                                            <p
-                                              className="font-medium text-gray-900"
-                                              style={{
-                                                color: theme.colors.text,
-                                              }}
-                                            >
-                                              {link.text}
-                                            </p>
-                                            <ul
-                                              role="list"
-                                              className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
-                                            >
-                                              {linkGroup.map(subLink =>
-                                                isEditable &&
-                                                onEditLink &&
-                                                onDeleteLink ? (
-                                                  <EditableItem
-                                                    key={subLink.id}
-                                                    onEdit={() =>
-                                                      onEditLink(subLink)
-                                                    }
-                                                    onDelete={() =>
-                                                      onDeleteLink(subLink.id)
-                                                    }
-                                                  >
-                                                    <li className="flex">
-                                                      <a
-                                                        href={subLink.href}
-                                                        onClick={e =>
-                                                          e.preventDefault()
-                                                        }
-                                                        className="cursor-pointer hover:text-gray-800"
-                                                        style={{
-                                                          color:
-                                                            theme.colors.text,
-                                                        }}
-                                                      >
-                                                        {subLink.text}
-                                                      </a>
-                                                    </li>
-                                                  </EditableItem>
-                                                ) : (
-                                                  <li
-                                                    className="flex"
-                                                    key={subLink.id}
-                                                  >
-                                                    <a
-                                                      href={generateLinkHref(
-                                                        subLink.href
-                                                      )}
-                                                      onClick={e => {
-                                                        handleLinkClick(
-                                                          e,
-                                                          subLink.href
-                                                        );
-                                                        setOpenPopovers(
-                                                          prev => ({
-                                                            ...prev,
-                                                            [link.id]: false,
-                                                          })
-                                                        );
-                                                      }}
-                                                      className="cursor-pointer hover:text-gray-800"
-                                                      style={{
-                                                        color:
-                                                          theme.colors.text,
-                                                      }}
-                                                    >
-                                                      {subLink.text}
-                                                    </a>
-                                                  </li>
-                                                )
-                                              )}
-                                            </ul>
-                                          </div>
-                                        );
-                                      })}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </PopoverContent>
-                          </div>
-                        </div>
-                      </Popover>
-                    ))}
-
-                    {remainingLinks.map(link =>
-                      isEditable && onEditLink && onDeleteLink ? (
-                        <EditableItem
-                          key={link.id}
-                          onEdit={() => onEditLink(link)}
-                          onDelete={() => onDeleteLink(link.id)}
-                        >
+                              {link.text}
+                            </a>
+                          </EditableItem>
+                        ) : (
                           <a
-                            href={link.href}
-                            onClick={e => e.preventDefault()}
-                            className="flex cursor-pointer items-center text-sm font-medium hover:text-gray-800"
+                            href={generateLinkHref(link.href)}
+                            onClick={e => handleLinkClick(e, link.href)}
+                            className={`flex items-center text-sm font-medium hover:text-gray-800 ${
+                              disableClicks
+                                ? "cursor-default opacity-60"
+                                : "cursor-pointer"
+                            }`}
                             style={{
                               color: theme.colors.text,
                             }}
                           >
                             {link.text}
                           </a>
-                        </EditableItem>
-                      ) : (
-                        <a
-                          key={link.id}
-                          href={generateLinkHref(link.href)}
-                          onClick={e => handleLinkClick(e, link.href)}
-                          className={`flex items-center text-sm font-medium hover:text-gray-800 ${
-                            disableClicks
-                              ? "cursor-default opacity-60"
-                              : "cursor-pointer"
-                          }`}
-                          style={{
-                            color: theme.colors.text,
-                          }}
-                        >
-                          {link.text}
-                        </a>
-                      )
-                    )}
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -536,6 +327,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
         </header>
       </div>
 
+      {/* Mobile Menu */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent side="left" className="w-full max-w-xs overflow-y-auto">
           <SheetHeader>
@@ -543,153 +335,40 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
           </SheetHeader>
 
           <div className="mt-2">
-            {mainCategoryLinks.length > 0 ? (
-              <Tabs
-                defaultValue={mainCategoryLinks[0]?.id || "links"}
-                className="w-full"
-              >
-                <div className="border-b border-gray-200">
-                  <TabsList className="w-full justify-start rounded-none border-0 bg-transparent p-0">
-                    {mainCategoryLinks.map(link => (
-                      <TabsTrigger
-                        key={link.id}
-                        value={link.id}
-                        className="flex-1 border-b-2 border-transparent px-1 py-4 text-base font-medium text-gray-900 data-[state=active]:border-indigo-600 data-[state=active]:text-indigo-600"
-                        style={{
-                          borderColor: theme.colors.primary,
-                          color: theme.colors.text,
-                        }}
-                      >
-                        {link.text}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </div>
-
-                {mainCategoryLinks.map((link, index) => {
-                  const linkGroup = getLinkGroup(index);
-                  return (
-                    <TabsContent
-                      key={link.id}
-                      value={link.id}
-                      className="space-y-10 px-4 pt-10 pb-8"
-                    >
-                      <div>
-                        <p
-                          className="font-medium text-gray-900"
-                          style={{ color: theme.colors.text }}
-                        >
-                          {link.text}
-                        </p>
-                        <ul
-                          role="list"
-                          className="mt-6 flex flex-col space-y-6"
-                        >
-                          {linkGroup.map(subLink =>
-                            isEditable && onEditLink && onDeleteLink ? (
-                              <EditableItem
-                                key={subLink.id}
-                                onEdit={() => onEditLink(subLink)}
-                                onDelete={() => onDeleteLink(subLink.id)}
-                              >
-                                <li className="flow-root">
-                                  <a
-                                    href={subLink.href}
-                                    onClick={e => e.preventDefault()}
-                                    className="-m-2 block cursor-pointer p-2 text-gray-500"
-                                  >
-                                    {subLink.text}
-                                  </a>
-                                </li>
-                              </EditableItem>
-                            ) : (
-                              <li className="flow-root" key={subLink.id}>
-                                <a
-                                  href={generateLinkHref(subLink.href)}
-                                  onClick={e =>
-                                    handleLinkClick(e, subLink.href)
-                                  }
-                                  className="-m-2 block cursor-pointer p-2 text-gray-500 hover:text-gray-900"
-                                >
-                                  {subLink.text}
-                                </a>
-                              </li>
-                            )
-                          )}
-                        </ul>
-                      </div>
-                    </TabsContent>
-                  );
-                })}
-              </Tabs>
-            ) : (
-              <div className="space-y-6 px-4 py-6">
-                {remainingLinks.map(link =>
-                  isEditable && onEditLink && onDeleteLink ? (
-                    <EditableItem
-                      key={link.id}
-                      onEdit={() => onEditLink(link)}
-                      onDelete={() => onDeleteLink(link.id)}
-                    >
-                      <div className="flow-root">
-                        <a
-                          href={link.href}
-                          onClick={e => e.preventDefault()}
-                          className="-m-2 block cursor-pointer p-2 font-medium text-gray-900"
-                        >
-                          {link.text}
-                        </a>
-                      </div>
-                    </EditableItem>
-                  ) : (
-                    <div className="flow-root" key={link.id}>
+            {/* Mobile Links */}
+            <div className="space-y-6 px-4 py-6">
+              {links.map(link =>
+                isEditable && onEditLink && onDeleteLink ? (
+                  <EditableItem
+                    key={link.id}
+                    onEdit={() => onEditLink(link)}
+                    onDelete={() => onDeleteLink(link.id)}
+                  >
+                    <div className="flow-root">
                       <a
-                        href={generateLinkHref(link.href)}
-                        onClick={e => handleLinkClick(e, link.href)}
-                        className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
+                        href={link.href}
+                        onClick={e => e.preventDefault()}
+                        className="-m-2 block cursor-pointer p-2 font-medium text-gray-900"
                       >
                         {link.text}
                       </a>
                     </div>
-                  )
-                )}
-              </div>
-            )}
-
-            {mainCategoryLinks.length > 0 && remainingLinks.length > 0 && (
-              <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                {remainingLinks.map(link =>
-                  isEditable && onEditLink && onDeleteLink ? (
-                    <EditableItem
-                      key={link.id}
-                      onEdit={() => onEditLink(link)}
-                      onDelete={() => onDeleteLink(link.id)}
+                  </EditableItem>
+                ) : (
+                  <div className="flow-root" key={link.id}>
+                    <a
+                      href={generateLinkHref(link.href)}
+                      onClick={e => handleLinkClick(e, link.href)}
+                      className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
                     >
-                      <div className="flow-root">
-                        <a
-                          href={link.href}
-                          onClick={e => e.preventDefault()}
-                          className="-m-2 block cursor-pointer p-2 font-medium text-gray-900"
-                        >
-                          {link.text}
-                        </a>
-                      </div>
-                    </EditableItem>
-                  ) : (
-                    <div className="flow-root" key={link.id}>
-                      <a
-                        href={generateLinkHref(link.href)}
-                        onClick={e => handleLinkClick(e, link.href)}
-                        className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
-                      >
-                        {link.text}
-                      </a>
-                    </div>
-                  )
-                )}
-              </div>
-            )}
+                      {link.text}
+                    </a>
+                  </div>
+                )
+              )}
+            </div>
 
+            {/* Mobile Buttons */}
             {buttons.length > 0 && (
               <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                 {buttons.map(button =>

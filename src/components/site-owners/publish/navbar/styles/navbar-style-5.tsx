@@ -169,7 +169,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
             />
           ) : (
             <div
-              className="text-foreground/80 prose prose-sm max-w-none leading-relaxed"
+              className="prose prose-sm max-w-none leading-relaxed"
               dangerouslySetInnerHTML={{ __html: bannerText }}
             />
           )}

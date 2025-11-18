@@ -1,22 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Template } from "@/types/owner-site/admin/template";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Download, Loader2 } from "lucide-react";
-import {
-  useImportTemplate,
-  usePreviewTemplate,
-} from "@/hooks/owner-site/admin/use-template";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,13 +17,39 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Search, X, Eye, Loader2 } from "lucide-react";
+import {
+  useGetTemplates,
+  useImportTemplate,
+  usePreviewTemplate,
+} from "@/hooks/owner-site/admin/use-template";
+import { Template } from "@/types/owner-site/admin/template";
 
+// Debounce hook
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
+// Template Card Component
 interface TemplateCardProps {
   template: Template;
 }
 
-const TemplateCard = ({ template }: TemplateCardProps) => {
+export const TemplateCard = ({ template }: TemplateCardProps) => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const { mutate: importTemplate, isPending } = useImportTemplate();
   const { openPreview } = usePreviewTemplate();
 
@@ -53,86 +69,87 @@ const TemplateCard = ({ template }: TemplateCardProps) => {
     });
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-    });
-  };
-
   return (
     <>
-      <Card className="gap-0 overflow-hidden py-0 transition-all hover:shadow-lg">
-        <CardHeader className="">
-          {template.template_image ? (
-            <div className="aspect-video w-full overflow-hidden bg-gray-100">
+      <div className="group">
+        <Card className="gap-0 overflow-hidden border-gray-200 py-0 transition-all duration-300 hover:border-blue-300">
+          <div
+            className="relative aspect-[4/3] overflow-hidden bg-gray-100"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            {template.template_image ? (
               <img
                 src={template.template_image}
                 alt={template.name}
                 className="h-full w-full object-cover"
               />
-            </div>
-          ) : (
-            <div className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-purple-100 to-blue-100">
-              <Badge variant="secondary" className="text-lg">
-                Featured
-              </Badge>
-            </div>
-          )}
-        </CardHeader>
-
-        <div className="my-3 ml-6 space-y-2 font-bold capitalize">
-          {template.name.replace(/-/g, " ")}
-        </div>
-
-        <CardFooter className="flex gap-2 p-6 pt-0">
-          <Button
-            variant="outline"
-            className="flex-1"
-            onClick={handlePreview}
-            disabled={isPending}
-          >
-            <Eye className="mr-2 h-4 w-4" />
-            Preview
-          </Button>
-          <Button
-            className="flex-1"
-            onClick={handleUseTemplate}
-            disabled={isPending}
-          >
-            {isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Importing...
-              </>
             ) : (
-              <>
-                <Download className="mr-2 h-4 w-4" />
-                Use Template
-              </>
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                <span className="text-4xl text-gray-400">📄</span>
+              </div>
             )}
-          </Button>
-        </CardFooter>
-      </Card>
 
+            {/* Hover Overlay with Preview Button */}
+            <div
+              className={`absolute inset-0 flex items-center justify-center bg-black/60 transition-opacity duration-300 ${
+                isHovered ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <Button
+                onClick={handlePreview}
+                variant="secondary"
+                size="lg"
+                className="bg-white text-gray-900 hover:bg-gray-100"
+              >
+                <Eye className="mr-2 h-4 w-4" />
+                Preview
+              </Button>
+            </div>
+          </div>
+
+          <CardContent className="p-4">
+            <h3 className="mb-1 text-lg font-semibold text-gray-900 capitalize">
+              {template.name.replace(/-/g, " ")}
+            </h3>
+          </CardContent>
+
+          <div className="px-4 pb-4">
+            <Button
+              onClick={handleUseTemplate}
+              disabled={isPending}
+              className="w-full bg-blue-600 text-white hover:bg-blue-700"
+            >
+              {isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Importing...
+                </>
+              ) : (
+                "Use Template"
+              )}
+            </Button>
+          </div>
+        </Card>
+      </div>
+
+      {/* Confirmation Dialog */}
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Import Template</AlertDialogTitle>
-            <AlertDialogDescription className="space-y-2">
-              <p>
-                Are you sure you want to import the{" "}
-                <span className="font-semibold">
-                  {template.name.replace(/-/g, " ")}
-                </span>{" "}
-                template?
-              </p>
-              <p className="font-medium text-red-600">
+            <AlertDialogDescription>
+              Are you sure you want to import the{" "}
+              <span className="font-semibold capitalize">
+                {template.name.replace(/-/g, " ")}
+              </span>{" "}
+              template?
+              <br />
+              <br />
+              <span className="font-medium text-red-600">
                 Warning: This will erase all your current data and replace it
                 with the template content.
-              </p>
+              </span>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -140,7 +157,7 @@ const TemplateCard = ({ template }: TemplateCardProps) => {
             <AlertDialogAction
               onClick={handleConfirmImport}
               disabled={isPending}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-blue-600 hover:bg-blue-700"
             >
               {isPending ? (
                 <>
@@ -157,5 +174,3 @@ const TemplateCard = ({ template }: TemplateCardProps) => {
     </>
   );
 };
-
-export default TemplateCard;

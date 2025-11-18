@@ -1,7 +1,8 @@
 export interface YouTubeData {
   component_id?: string;
   component_type: "youtube";
-  style: "grid" | "carousel" | "playlist";
+  style: "youtube-1" | "youtube-2" | "youtube-3";
+
   title: string;
   subtitle?: string;
   order?: number;
@@ -18,7 +19,7 @@ export interface YouTubeComponentData {
 
 export const defaultYouTubeData: YouTubeData = {
   component_type: "youtube",
-  style: "grid",
+  style: "youtube-1",
   title: "Our Videos",
   subtitle: "Watch our latest content and updates",
 };

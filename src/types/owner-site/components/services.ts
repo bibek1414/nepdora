@@ -1,7 +1,7 @@
 export interface ServicesData {
   component_id?: string;
   component_type: "services";
-  style: "grid-1" | "grid-2" | "list-1" | "grid-3";
+  style: "services-1" | "services-2" | "services-3" | "services-4";
   title: string;
   subtitle?: string;
   page_size: number;
@@ -22,7 +22,7 @@ export interface ServicesComponentData {
 
 export const defaultServicesData: ServicesData = {
   component_type: "services",
-  style: "grid-1",
+  style: "services-1",
   title: "Latest Services Posts",
   subtitle: "Stay updated with our newest articles and insights.",
   page_size: 6,

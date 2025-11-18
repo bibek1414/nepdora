@@ -1,5 +1,6 @@
 export interface PolicyData {
-  template: "return-exchange" | "shipping" | "privacy" | "terms";
+  template: "policies-1" | "policies-2" | "policies-3" | "policies-4";
+
   title: string;
   lastUpdated: string;
   content: string;
@@ -21,7 +22,7 @@ export interface PolicyComponentData {
 
 // Default Return & Exchange Policy
 export const defaultReturnExchangeData: PolicyData = {
-  template: "return-exchange",
+  template: "policies-1",
   title: "Return & Exchange Policy",
   lastUpdated: new Date().toISOString().split("T")[0],
   content: `
@@ -78,7 +79,7 @@ export const defaultReturnExchangeData: PolicyData = {
 
 // Default Shipping Policy
 export const defaultShippingData: PolicyData = {
-  template: "shipping",
+  template: "policies-2",
   title: "Shipping Policy",
   lastUpdated: new Date().toISOString().split("T")[0],
   content: `
@@ -149,7 +150,7 @@ export const defaultShippingData: PolicyData = {
 
 // Default Privacy Policy
 export const defaultPrivacyData: PolicyData = {
-  template: "privacy",
+  template: "policies-3",
   title: "Privacy Policy",
   lastUpdated: new Date().toISOString().split("T")[0],
   content: `
@@ -225,7 +226,7 @@ export const defaultPrivacyData: PolicyData = {
 
 // Default Terms & Conditions
 export const defaultTermsData: PolicyData = {
-  template: "terms",
+  template: "policies-4",
   title: "Terms & Conditions",
   lastUpdated: new Date().toISOString().split("T")[0],
   content: `

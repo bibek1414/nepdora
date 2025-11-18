@@ -163,13 +163,13 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
     };
 
     switch (style) {
-      case "form-2":
+      case "contact-2":
         return <ContactForm2 {...formProps} />;
-      case "form-3":
+      case "contact-3":
         return <ContactForm3 {...formProps} />;
-      case "form-4":
+      case "contact-4":
         return <ContactForm4 {...formProps} />;
-      case "form-1":
+      case "contact-1":
       default:
         return <ContactForm1 {...formProps} />;
     }
@@ -229,7 +229,7 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
         <div className="py-8">
           <div className="container mx-auto px-4">
             {/* Only show title/subtitle editing for non-form-4 styles */}
-            {style !== "form-4" && (
+            {style !== "contact-4" && (
               <div className="mb-8 text-center">
                 <EditableText
                   value={title}
@@ -265,7 +265,7 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
         {/* Only show title/subtitle for non-form-4 styles */}
-        {style !== "form-4" && (
+        {style !== "contact-4" && (
           <div className="mb-12 text-center">
             <h2
               className="text-foreground mb-4 text-4xl font-bold tracking-tight"

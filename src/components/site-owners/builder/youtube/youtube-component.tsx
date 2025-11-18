@@ -135,11 +135,11 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
     const cardProps = { videos };
 
     switch (style) {
-      case "carousel":
+      case "youtube-2":
         return <YouTubeCard2 {...cardProps} />;
-      case "playlist":
+      case "youtube-3":
         return <YouTubeCard3 {...cardProps} />;
-      case "grid":
+      case "youtube-1":
       default:
         return <YouTubeCard1 {...cardProps} />;
     }

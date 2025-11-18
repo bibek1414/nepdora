@@ -71,23 +71,24 @@ interface CanvasAreaProps {
   pageComponents: ComponentResponse[];
   isLoading: boolean;
   error: Error | null;
-  onAddHero?: () => void;
-  onAddAboutUs?: () => void;
-  onAddProducts?: () => void;
-  onAddCategories?: () => void;
-  onAddSubCategories?: () => void;
-  onAddBlog?: () => void;
-  onAddServices?: () => void;
-  onAddContact?: () => void;
-  onAddTeam?: () => void;
-  onAddTestimonials?: () => void;
-  onAddFAQ?: () => void;
-  onAddPortfolio?: () => void;
-  onAddBanner?: () => void;
-  onAddNewsletter?: () => void;
-  onAddYouTube?: () => void;
-  onAddGallery?: () => void;
-  onAddPolicies?: () => void;
+  onAddHero?: (insertIndex?: number) => void;
+  onAddAboutUs?: (insertIndex?: number) => void;
+  onAddProducts?: (insertIndex?: number) => void;
+  onAddCategories?: (insertIndex?: number) => void;
+  onAddSubCategories?: (insertIndex?: number) => void;
+  onAddBlog?: (insertIndex?: number) => void;
+  onAddServices?: (insertIndex?: number) => void;
+  onAddContact?: (insertIndex?: number) => void;
+  onAddTeam?: (insertIndex?: number) => void;
+  onAddTestimonials?: (insertIndex?: number) => void;
+  onAddFAQ?: (insertIndex?: number) => void;
+  onAddPortfolio?: (insertIndex?: number) => void;
+  onAddBanner?: (insertIndex?: number) => void;
+  onAddNewsletter?: (insertIndex?: number) => void;
+  onAddYouTube?: (insertIndex?: number) => void;
+  onAddGallery?: (insertIndex?: number) => void;
+  onAddPolicies?: (insertIndex?: number) => void;
+
   onAddSection: (position?: "above" | "below", index?: number) => void;
 }
 
@@ -216,10 +217,21 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     [handleReorder, pageComponents.length]
   );
 
-  // Handle add section above/below
+  // Handle add section above/below with proper index calculation
   const handleAddSection = useCallback(
     (position: "above" | "below", index: number) => {
-      onAddSection(position, index);
+      let insertIndex: number;
+
+      if (position === "above") {
+        // Insert at the current index (pushes current item down)
+        insertIndex = index;
+      } else {
+        // Insert after the current index
+        insertIndex = index + 1;
+      }
+
+      // Call the parent's onAddSection with the calculated insert index
+      onAddSection(position, insertIndex);
     },
     [onAddSection]
   );
@@ -424,7 +436,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     }
 
     const isFirst = index === 0;
-    const isLast = index === pageComponents.length - 1;
+    const isLastComponent = index === pageComponents.length - 1;
     const isHovered = hoveredComponentIndex === index;
 
     return (
@@ -443,7 +455,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             onMouseEnter={() => setHoveredComponentIndex(index)}
             onMouseLeave={() => setHoveredComponentIndex(null)}
           >
-            {/* Add Section Above Button - Show on hover and not first component */}
+            {/* Add Section Above Button - Show when not first and hovered */}
             {!isFirst && isHovered && (
               <div className="absolute -top-6 left-1/2 z-30 -translate-x-1/2 transform">
                 <Button
@@ -458,8 +470,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
               </div>
             )}
 
-            {/* Add Section Below Button - Show on hover and not last component */}
-            {!isLast && isHovered && (
+            {/* Add Section Below Button - Show when hovered and either not last OR no footer */}
+            {isHovered && (!isLastComponent || !footer) && (
               <div className="absolute -bottom-6 left-1/2 z-30 -translate-x-1/2 transform">
                 <Button
                   onClick={() => handleAddSection("below", index)}
@@ -501,13 +513,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
                 <button
                   onClick={() => handleMoveDown(index)}
-                  disabled={isLast}
+                  disabled={isLastComponent}
                   className={`rounded border bg-white p-1 shadow-md transition-colors ${
-                    isLast
+                    isLastComponent
                       ? "cursor-not-allowed text-gray-300"
                       : "cursor-pointer text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                   }`}
-                  title={isLast ? "Already at bottom" : "Move down"}
+                  title={isLastComponent ? "Already at bottom" : "Move down"}
                 >
                   <ChevronDown className="h-4 w-4" />
                 </button>
@@ -559,39 +571,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         <div className="group relative mb-4 border-b">
           <NavbarComponent navbar={navbar} siteUser="" />
         </div>
-      ) : (
-        <div className="border-b border-dashed border-gray-300 bg-gray-50/50">
-          <div className="flex items-center justify-center p-8">
-            <div className="text-center">
-              <div className="mx-auto mb-4 w-fit rounded-full bg-gray-100 p-4">
-                <Navigation
-                  className="h-8 w-8"
-                  style={{
-                    color: theme.colors.primary,
-                  }}
-                />
-              </div>
-              <h4 className="text-foreground mb-2 text-lg font-semibold">
-                Add a Navigation Bar
-              </h4>
-              <p className="text-muted-foreground mb-4 max-w-xs text-sm">
-                Every website needs navigation. Start with a professional navbar
-                template.
-              </p>
-              <Button onClick={onAddNavbar} variant="default" className="gap-2">
-                <Plus className="h-4 w-4" />
-                Add Navbar
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      ) : null}
 
       {/* Add Section Button at the Top */}
       <div className="border-b border-dashed border-gray-300 bg-gray-50/50">
         <div className="flex items-center justify-center p-4">
           <Button
-            onClick={() => onAddSection("above", 0)}
+            onClick={() => handleAddSection("above", 0)}
             variant="outline"
             size="sm"
             className="gap-2 border-2 border-dashed border-blue-300 bg-white text-blue-600 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
@@ -648,61 +634,57 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           </DragDropContext>
         )}
 
-        {/* <div className="p-8">
-          <PlaceholderManager
-            isLoading={isLoading}
-            navbar={navbar}
-            hasHero={hasHero}
-            hasAbout={hasAbout}
-            hasTeam={hasTeam}
-            hasTestimonials={hasTestimonials}
-            hasProducts={hasProducts}
-            hasCategories={hasCategories}
-            hasSubCategories={hasSubCategories}
-            hasBlog={hasBlog}
-            hasContact={hasContact}
-            hasFAQ={hasFAQ}
-            pageComponentsLength={pageComponents.length}
-            droppedComponentsLength={droppedComponents.length}
-            onAddHero={onAddHero}
-            onAddAboutUs={onAddAboutUs}
-            onAddTeam={onAddTeam}
-            onAddTestimonials={onAddTestimonials}
-            onAddProducts={onAddProducts}
-            onAddCategories={onAddCategories}
-            onAddSubCategories={onAddSubCategories}
-            onAddBlog={onAddBlog}
-            onAddContact={onAddContact}
-            onAddFAQ={onAddFAQ}
-          />
-
+        {/* Add Section button at the bottom (before footer) */}
+        {pageComponents.length > 0 && (
           <div className="border-t border-dashed border-gray-300 bg-gray-50/50">
-            <div className="flex items-center justify-center p-8">
+            <div className="flex items-center justify-center p-4">
               <Button
-                onClick={() => onAddSection("below", pageComponents.length - 1)}
+                onClick={() =>
+                  handleAddSection("below", pageComponents.length - 1)
+                }
                 variant="outline"
-                size="lg"
+                size="sm"
                 className="gap-2 border-2 border-dashed border-blue-300 bg-white text-blue-600 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
               >
-                <Plus className="h-5 w-5" />
+                <Plus className="h-4 w-4" />
                 Add New Section
               </Button>
             </div>
           </div>
+        )}
 
-          {droppedComponents.map(component => (
-            <div
-              key={component.id}
-              className="mb-4 rounded-lg border border-dashed border-gray-300 p-4"
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-foreground font-medium">
-                  Component: {component.component_type}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div> */}
+        {/* Empty state */}
+        {!isLoading && pageComponents.length === 0 && (
+          <div className="p-8">
+            <PlaceholderManager
+              isLoading={isLoading}
+              navbar={navbar}
+              hasHero={hasHero}
+              hasAbout={hasAbout}
+              hasTeam={hasTeam}
+              hasTestimonials={hasTestimonials}
+              hasProducts={hasProducts}
+              hasCategories={hasCategories}
+              hasSubCategories={hasSubCategories}
+              hasBlog={hasBlog}
+              hasContact={hasContact}
+              hasFAQ={hasFAQ}
+              pageComponentsLength={pageComponents.length}
+              droppedComponentsLength={droppedComponents.length}
+              onAddHero={() => onAddHero?.(0)}
+              onAddAboutUs={() => onAddAboutUs?.(0)}
+              onAddTeam={() => onAddTeam?.(0)}
+              onAddTestimonials={() => onAddTestimonials?.(0)}
+              onAddProducts={() => onAddProducts?.(0)}
+              onAddCategories={() => onAddCategories?.(0)}
+              onAddSubCategories={() => onAddSubCategories?.(0)}
+              onAddBlog={() => onAddBlog?.(0)}
+              onAddContact={() => onAddContact?.(0)}
+              onAddFAQ={() => onAddFAQ?.(0)}
+              onAddSection={() => handleAddSection("below", 0)}
+            />
+          </div>
+        )}
       </div>
 
       {/* Footer Section */}
@@ -715,33 +697,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             isEditable={true}
           />
         </div>
-      ) : (
-        <div className="border-t border-dashed border-gray-300 bg-gray-50/50">
-          <div className="flex items-center justify-center p-8">
-            <div className="text-center">
-              <div className="mx-auto mb-4 w-fit rounded-full bg-gray-100 p-4">
-                <FileText
-                  className="h-8 w-8"
-                  style={{
-                    color: theme.colors.primary,
-                  }}
-                />
-              </div>
-              <h4 className="text-foreground mb-2 text-lg font-semibold">
-                Add a Footer
-              </h4>
-              <p className="text-muted-foreground mb-4 max-w-xs text-sm">
-                Finish your page with a professional footer to provide essential
-                links.
-              </p>
-              <Button onClick={onAddFooter} variant="default" className="gap-2">
-                <Plus className="h-4 w-4" />
-                Add Footer
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 };
