@@ -2,38 +2,15 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useGetTemplates } from "@/hooks/owner-site/admin/use-template";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Pagination from "@/components/ui/pagination";
 import { TemplateCard } from "./template-card";
 import { Search, X, Layout } from "lucide-react";
-
-// Debounce hook
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
+import useDebouncer from "@/hooks/use-debouncer";
 
 const TemplateList = () => {
   const [filters, setFilters] = useState({
@@ -41,7 +18,7 @@ const TemplateList = () => {
     page_size: 12,
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  const debouncedSearchTerm = useDebouncer(searchTerm, 300);
 
   useEffect(() => {
     setFilters(prev => ({
@@ -174,28 +151,15 @@ const TemplateList = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+    <div className="min-h-screen">
+      <div className="mx-auto">
         {/* Header Section */}
-        <div className="mb-12 text-center">
-          <h1 className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">
-            Choose From {templatesData.count}+ Templates
-          </h1>
-          <p className="text-lg text-gray-600">
-            Select a template to get started quickly
-          </p>
-
-          {searchTerm && (
-            <div className="mt-4">
-              <Badge variant="secondary" className="px-4 py-1 text-sm">
-                Showing results for &apos;{searchTerm}&apos;
-              </Badge>
-            </div>
-          )}
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Templates</h1>
         </div>
 
         {/* Search Bar */}
-        <div className="mx-auto mb-12 max-w-md">
+        <div className="mt-5 mb-8 max-w-md">
           <div className="relative">
             <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
             <Input

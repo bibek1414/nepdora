@@ -670,16 +670,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
               hasFAQ={hasFAQ}
               pageComponentsLength={pageComponents.length}
               droppedComponentsLength={droppedComponents.length}
-              onAddHero={() => onAddHero?.(0)}
-              onAddAboutUs={() => onAddAboutUs?.(0)}
-              onAddTeam={() => onAddTeam?.(0)}
-              onAddTestimonials={() => onAddTestimonials?.(0)}
-              onAddProducts={() => onAddProducts?.(0)}
-              onAddCategories={() => onAddCategories?.(0)}
-              onAddSubCategories={() => onAddSubCategories?.(0)}
-              onAddBlog={() => onAddBlog?.(0)}
-              onAddContact={() => onAddContact?.(0)}
-              onAddFAQ={() => onAddFAQ?.(0)}
               onAddSection={() => handleAddSection("below", 0)}
             />
           </div>

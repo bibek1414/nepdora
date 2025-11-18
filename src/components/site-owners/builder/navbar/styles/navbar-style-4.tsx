@@ -128,7 +128,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   const handleCategoryFilter = (categorySlug: string, categoryName: string) => {
     if (isEditable || disableClicks) return;
 
-    const filterUrl = `/preview/${siteUser}/products?category=${categorySlug}`;
+    const filterUrl = `/preview/${siteUser}/collections/products?category=${categorySlug}`;
     router.push(filterUrl);
   };
 
@@ -138,7 +138,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   ) => {
     if (isEditable || disableClicks) return;
 
-    const filterUrl = `/preview/${siteUser}/products?sub_category=${subCategorySlug}`;
+    const filterUrl = `/preview/${siteUser}/collections/products?sub_category=${subCategorySlug}`;
     router.push(filterUrl);
   };
 
@@ -148,7 +148,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   ) => {
     if (isEditable || disableClicks) return;
 
-    const filterUrl = `/preview/${siteUser}/products?category=${categorySlug}&sub_category=${subCategorySlug}`;
+    const filterUrl = `/preview/${siteUser}/collections/products?category=${categorySlug}&sub_category=${subCategorySlug}`;
     router.push(filterUrl);
   };
 
