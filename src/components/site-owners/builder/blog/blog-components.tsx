@@ -228,7 +228,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     return (
       <div className="group relative">
         {/* Delete Control with AlertDialog */}
-        <div className="translate-x-fullopacity-0 absolute -right-5 z-30 flex transition-opacity group-hover:opacity-100">
+        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}

@@ -150,10 +150,10 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
     return (
       <div className="group relative">
         {/* Delete Control */}
-        <div className="translate-x-fullopacity-0 absolute -right-5 z-30 flex transition-opacity group-hover:opacity-100">
+        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
           <div className="flex items-center gap-2">
             <YouTubeFormTrigger mode="create">
-              <Button className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900">
+              <Button className="bg-white text-gray-800 hover:bg-white hover:text-gray-900">
                 <Plus className="mr-2 h-4 w-4" />
                 Add YouTube Video
               </Button>
