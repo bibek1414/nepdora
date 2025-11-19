@@ -201,14 +201,14 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
     return (
       <div className="group relative">
         {/* Delete Control with AlertDialog */}
-        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute -right-1 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
             <div className="flex items-center gap-2">
               <Link href="/admin/subcategories/" target="_blank" rel="noopener">
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="outline" className="text-sm">
                   Manage Subcategories
                 </Button>
               </Link>
@@ -217,7 +217,7 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
                   onClick={handleDeleteClick}
                   variant="destructive"
                   size="sm"
-                  className="h-8 px-3"
+                  className="h-8 px-3 text-sm"
                   disabled={deleteSubCategoryComponent.isPending}
                 >
                   <Trash2 className="mr-1 h-4 w-4" />

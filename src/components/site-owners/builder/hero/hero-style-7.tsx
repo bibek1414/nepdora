@@ -287,7 +287,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                     handleCollectionUpdate(collection.id, "subtitle", value)
                   }
                   as="p"
-                  className="mb-2 text-sm tracking-wider"
+                  className="mb-2 tracking-wider"
                   isEditable={isEditable}
                   placeholder="Enter subtitle..."
                 />
@@ -299,7 +299,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                     handleCollectionUpdate(collection.id, "title", value)
                   }
                   as="h2"
-                  className="mb-4 text-4xl font-bold"
+                  className="mb-4 font-bold"
                   isEditable={isEditable}
                   placeholder="Enter collection title..."
                   multiline={true}

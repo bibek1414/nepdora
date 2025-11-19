@@ -1,0 +1,652 @@
+"use client";
+
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  Palette,
+  Type,
+  X,
+  Minus,
+  Plus,
+  Highlighter,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  List,
+  ListOrdered,
+  ChevronDown,
+} from "lucide-react";
+import { useTextSelection } from "@/contexts/text-selection-context";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+
+export const StickyFormattingToolbar: React.FC = () => {
+  const {
+    selection,
+    clearSelection,
+    applyFormatting,
+    applyColor,
+    applyFontSize,
+  } = useTextSelection();
+
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showHighlightPicker, setShowHighlightPicker] = useState(false);
+  const [showFontSizePicker, setShowFontSizePicker] = useState(false);
+  const [showFontPicker, setShowFontPicker] = useState(false);
+  const [showAlignPicker, setShowAlignPicker] = useState(false);
+
+  const [selectionColor, setSelectionColor] = useState("#000000");
+  const [selectionHighlight, setSelectionHighlight] = useState("#FFFF00");
+  const [selectionFontSize, setSelectionFontSize] = useState("16px");
+  const [selectedFont, setSelectedFont] = useState("Inter");
+
+  const toolbarRef = useRef<HTMLDivElement>(null);
+
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme;
+
+  // Quick color options - Text colors
+  const quickColors = [
+    theme?.colors?.text || "#0F172A",
+    theme?.colors?.primary || "#3B82F6",
+    theme?.colors?.secondary || "#F59E0B",
+    "#DC2626",
+    "#10B981",
+    "#9333EA",
+    "#CA8A04",
+    "#DB2777",
+    "#0891B2",
+    "#65A30D",
+    "#EA580C",
+    "#475569",
+  ];
+
+  // Highlight colors
+  const quickHighlights = [
+    "#FFFF00", // Yellow
+    "#90EE90", // Light Green
+    "#FFB6C1", // Light Pink
+    "#87CEEB", // Sky Blue
+    "#FFD700", // Gold
+    "#FFA500", // Orange
+    "#DDA0DD", // Plum
+    "#F0E68C", // Khaki
+    "#98FB98", // Pale Green
+    "#FFB6C1", // Light Pink
+    "#E6E6FA", // Lavender
+    "#F5F5DC", // Beige
+  ];
+
+  // Quick font size options
+  const quickFontSizes = [
+    "10px",
+    "12px",
+    "14px",
+    "16px",
+    "18px",
+    "20px",
+    "24px",
+    "28px",
+    "32px",
+    "36px",
+    "48px",
+    "60px",
+  ];
+
+  // Font options
+  const fontOptions = [
+    "Inter",
+    "Poppins",
+    "Roboto",
+    "Arial",
+    "Georgia",
+    "Times New Roman",
+    "Courier New",
+    "Verdana",
+    "Helvetica",
+    "Comic Sans MS",
+  ];
+
+  // Apply highlight/background color with better browser compatibility
+  const applyHighlight = (color: string) => {
+    if (selection?.range) {
+      const sel = window.getSelection();
+      if (sel) {
+        sel.removeAllRanges();
+        sel.addRange(selection.range.cloneRange());
+
+        // Try multiple methods for highlighting
+        try {
+          // Method 1: Using backColor command
+          document.execCommand("styleWithCSS", false, "true");
+          document.execCommand("backColor", false, color);
+
+          // Method 2: Using backgroundColor style for modern browsers
+          if (sel.rangeCount > 0) {
+            const range = sel.getRangeAt(0);
+            const span = document.createElement("span");
+            span.style.backgroundColor = color;
+
+            // Only wrap if there's selected content
+            if (!range.collapsed) {
+              try {
+                range.surroundContents(span);
+              } catch (e) {
+                // If surrounding fails, try alternative method
+                const content = range.extractContents();
+                span.appendChild(content);
+                range.insertNode(span);
+              }
+            }
+          }
+        } catch (error) {
+          console.warn("Highlight application failed:", error);
+          // Fallback: use traditional execCommand
+          document.execCommand("backColor", false, color);
+        }
+
+        sel.removeAllRanges();
+      }
+    }
+    setShowHighlightPicker(false);
+  };
+
+  // Apply font family with better compatibility
+  const applyFontFamily = (font: string) => {
+    if (selection?.range) {
+      const sel = window.getSelection();
+      sel?.removeAllRanges();
+      sel?.addRange(selection.range.cloneRange());
+
+      try {
+        document.execCommand("fontName", false, font);
+        setSelectedFont(font);
+      } catch (error) {
+        console.warn("Font family application failed:", error);
+        // Fallback: use CSS styling
+        document.execCommand("styleWithCSS", false, "true");
+        document.execCommand("fontName", false, font);
+      }
+
+      sel?.removeAllRanges();
+    }
+    setShowFontPicker(false);
+  };
+
+  // Apply text alignment
+  const applyAlignment = (
+    alignment: "left" | "center" | "right" | "justify"
+  ) => {
+    if (selection?.element) {
+      const alignCommands = {
+        left: "justifyLeft",
+        center: "justifyCenter",
+        right: "justifyRight",
+        justify: "justifyFull",
+      };
+
+      try {
+        document.execCommand(alignCommands[alignment], false);
+      } catch (error) {
+        console.warn(`Alignment ${alignment} failed:`, error);
+      }
+    }
+    setShowAlignPicker(false);
+  };
+
+  // Enhanced formatting application
+  const handleFormatting = (format: string) => {
+    if (selection?.range) {
+      const sel = window.getSelection();
+      sel?.removeAllRanges();
+      sel?.addRange(selection.range.cloneRange());
+
+      try {
+        document.execCommand(format, false);
+      } catch (error) {
+        console.warn(`Formatting ${format} failed:`, error);
+      }
+
+      sel?.removeAllRanges();
+    }
+  };
+
+  // Enhanced color application
+  const handleColorApply = (color: string) => {
+    if (selection?.range) {
+      const sel = window.getSelection();
+      sel?.removeAllRanges();
+      sel?.addRange(selection.range.cloneRange());
+
+      try {
+        document.execCommand("styleWithCSS", false, "true");
+        document.execCommand("foreColor", false, color);
+        setSelectionColor(color);
+      } catch (error) {
+        console.warn("Color application failed:", error);
+        document.execCommand("foreColor", false, color);
+      }
+
+      sel?.removeAllRanges();
+    }
+    setShowColorPicker(false);
+  };
+
+  // Enhanced font size application
+  const handleFontSizeApply = (size: string) => {
+    if (selection?.range) {
+      const sel = window.getSelection();
+      if (!sel) return;
+      sel?.removeAllRanges();
+      sel?.addRange(selection.range.cloneRange());
+
+      try {
+        document.execCommand("fontSize", false, "7"); // Clear existing size
+        document.execCommand("styleWithCSS", false, "true");
+
+        // Create a span with the desired font size
+        const span = document.createElement("span");
+        span.style.fontSize = size;
+
+        const range = sel.getRangeAt(0);
+        if (!range.collapsed) {
+          try {
+            const content = range.extractContents();
+            span.appendChild(content);
+            range.insertNode(span);
+          } catch (e) {
+            // Fallback to traditional method
+            document.execCommand("fontSize", false, "7");
+          }
+        }
+
+        setSelectionFontSize(size);
+      } catch (error) {
+        console.warn("Font size application failed:", error);
+        // Fallback
+        applyFontSize(size);
+      }
+
+      sel?.removeAllRanges();
+    }
+    setShowFontSizePicker(false);
+  };
+
+  // Reset states when selection changes
+  useEffect(() => {
+    if (!selection) {
+      setShowColorPicker(false);
+      setShowHighlightPicker(false);
+      setShowFontSizePicker(false);
+      setShowFontPicker(false);
+      setShowAlignPicker(false);
+    }
+  }, [selection]);
+
+  // Close all dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        toolbarRef.current &&
+        !toolbarRef.current.contains(event.target as Node)
+      ) {
+        setShowColorPicker(false);
+        setShowHighlightPicker(false);
+        setShowFontSizePicker(false);
+        setShowFontPicker(false);
+        setShowAlignPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Close dropdowns when another is opened
+  const closeAllDropdowns = () => {
+    setShowColorPicker(false);
+    setShowHighlightPicker(false);
+    setShowFontSizePicker(false);
+    setShowFontPicker(false);
+    setShowAlignPicker(false);
+  };
+
+  if (!selection) return null;
+
+  return (
+    <div
+      ref={toolbarRef}
+      className="animate-in slide-in-from-top fixed top-16 right-0 left-0 z-50 mx-auto w-fit border border-gray-300 bg-white shadow-xl duration-200"
+      style={{ borderRadius: "8px" }}
+    >
+      {/* Main Toolbar */}
+      <div className="flex items-center gap-1 px-3 py-2">
+        {/* Font Family Dropdown */}
+        <div className="relative">
+          <button
+            onClick={e => {
+              e.stopPropagation();
+              closeAllDropdowns();
+              setShowFontPicker(!showFontPicker);
+            }}
+            className="flex min-w-[120px] items-center gap-1 rounded border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100"
+            title="Font Family"
+          >
+            <span
+              className="max-w-[80px] truncate"
+              style={{ fontFamily: selectedFont }}
+            >
+              {selectedFont}
+            </span>
+            <ChevronDown className="h-3 w-3" />
+          </button>
+
+          {showFontPicker && (
+            <div className="absolute top-full left-0 z-50 mt-1 max-h-60 w-48 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
+              {fontOptions.map(font => (
+                <button
+                  key={font}
+                  onClick={() => applyFontFamily(font)}
+                  className="block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
+                  style={{ fontFamily: font }}
+                >
+                  {font}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="h-6 w-px bg-gray-300" />
+
+        {/* Font Size Controls */}
+        <div className="flex items-center gap-0.5">
+          <button
+            onClick={() => {
+              const current = parseInt(selectionFontSize) || 16;
+              if (current > 8) {
+                const newSize = `${current - 2}px`;
+                setSelectionFontSize(newSize);
+                handleFontSizeApply(newSize);
+              }
+            }}
+            className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100"
+            title="Decrease font size"
+          >
+            <Minus className="h-4 w-4 text-gray-700" />
+          </button>
+
+          <button
+            onClick={e => {
+              e.stopPropagation();
+              closeAllDropdowns();
+              setShowFontSizePicker(!showFontSizePicker);
+            }}
+            className="min-w-[45px] rounded border border-gray-300 px-2 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100"
+            title="Font Size"
+          >
+            {parseInt(selectionFontSize) || 16}
+          </button>
+
+          <button
+            onClick={() => {
+              const current = parseInt(selectionFontSize) || 16;
+              if (current < 96) {
+                const newSize = `${current + 2}px`;
+                setSelectionFontSize(newSize);
+                handleFontSizeApply(newSize);
+              }
+            }}
+            className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100"
+            title="Increase font size"
+          >
+            <Plus className="h-4 w-4 text-gray-700" />
+          </button>
+        </div>
+
+        {/* Font Size Dropdown */}
+        {showFontSizePicker && (
+          <div className="absolute top-full left-[180px] z-50 mt-1 max-h-60 w-32 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
+            {quickFontSizes.map(size => (
+              <button
+                key={size}
+                onClick={() => {
+                  handleFontSizeApply(size);
+                }}
+                className="block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
+                style={{ fontSize: size }}
+              >
+                {parseInt(size)}px
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="h-6 w-px bg-gray-300" />
+
+        {/* Formatting Buttons */}
+        <button
+          onClick={() => handleFormatting("bold")}
+          className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100 active:bg-gray-200"
+          title="Bold (Ctrl+B)"
+        >
+          <Bold className="h-4 w-4 text-gray-700" />
+        </button>
+
+        <button
+          onClick={() => handleFormatting("italic")}
+          className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100 active:bg-gray-200"
+          title="Italic (Ctrl+I)"
+        >
+          <Italic className="h-4 w-4 text-gray-700" />
+        </button>
+
+        <button
+          onClick={() => handleFormatting("underline")}
+          className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100 active:bg-gray-200"
+          title="Underline (Ctrl+U)"
+        >
+          <Underline className="h-4 w-4 text-gray-700" />
+        </button>
+
+        <button
+          onClick={() => handleFormatting("strikeThrough")}
+          className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100 active:bg-gray-200"
+          title="Strikethrough"
+        >
+          <Strikethrough className="h-4 w-4 text-gray-700" />
+        </button>
+
+        <div className="h-6 w-px bg-gray-300" />
+
+        {/* Color Picker */}
+        <div className="relative">
+          <button
+            onClick={e => {
+              e.stopPropagation();
+              closeAllDropdowns();
+              setShowColorPicker(!showColorPicker);
+            }}
+            className={`rounded border border-gray-300 p-1.5 transition-colors ${
+              showColorPicker ? "bg-gray-100" : "hover:bg-gray-100"
+            }`}
+            title="Text Color"
+          >
+            <div className="relative">
+              <Palette className="h-4 w-4 text-gray-700" />
+              <div
+                className="absolute right-0 -bottom-1 left-0 h-1 rounded-full border border-gray-300"
+                style={{ backgroundColor: selectionColor }}
+              />
+            </div>
+          </button>
+
+          {showColorPicker && (
+            <div className="absolute top-full left-0 z-50 mt-1 w-64 rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
+              <div className="mb-2 flex gap-2">
+                <input
+                  type="color"
+                  value={selectionColor}
+                  onChange={e => setSelectionColor(e.target.value)}
+                  className="h-8 w-10 cursor-pointer rounded border border-gray-300"
+                />
+                <input
+                  type="text"
+                  value={selectionColor}
+                  onChange={e => setSelectionColor(e.target.value)}
+                  placeholder="#000000"
+                  className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm text-black focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                />
+                <button
+                  onClick={() => handleColorApply(selectionColor)}
+                  className="rounded bg-blue-500 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-blue-600"
+                >
+                  Apply
+                </button>
+              </div>
+              <div className="grid grid-cols-6 gap-1.5">
+                {quickColors.map(color => (
+                  <button
+                    key={color}
+                    onClick={() => handleColorApply(color)}
+                    className="h-7 w-7 rounded border-2 border-gray-300 transition-all hover:scale-110 hover:border-blue-500"
+                    style={{ backgroundColor: color }}
+                    title={color}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Highlight Picker */}
+        <div className="relative">
+          <button
+            onClick={e => {
+              e.stopPropagation();
+              closeAllDropdowns();
+              setShowHighlightPicker(!showHighlightPicker);
+            }}
+            className={`rounded border border-gray-300 p-1.5 transition-colors ${
+              showHighlightPicker ? "bg-gray-100" : "hover:bg-gray-100"
+            }`}
+            title="Highlight Color"
+          >
+            <div className="relative">
+              <Highlighter className="h-4 w-4 text-gray-700" />
+              <div
+                className="absolute right-0 -bottom-1 left-0 h-1 rounded-full border border-gray-300"
+                style={{ backgroundColor: selectionHighlight }}
+              />
+            </div>
+          </button>
+
+          {showHighlightPicker && (
+            <div className="absolute top-full left-0 z-50 mt-1 w-64 rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
+              <div className="mb-2 flex gap-2">
+                <input
+                  type="color"
+                  value={selectionHighlight}
+                  onChange={e => setSelectionHighlight(e.target.value)}
+                  className="h-8 w-10 cursor-pointer rounded border border-gray-300"
+                />
+                <input
+                  type="text"
+                  value={selectionHighlight}
+                  onChange={e => setSelectionHighlight(e.target.value)}
+                  placeholder="#FFFF00"
+                  className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm text-black focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                />
+                <button
+                  onClick={() => applyHighlight(selectionHighlight)}
+                  className="rounded bg-blue-500 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-blue-600"
+                >
+                  Apply
+                </button>
+              </div>
+              <div className="grid grid-cols-6 gap-1.5">
+                {quickHighlights.map(color => (
+                  <button
+                    key={color}
+                    onClick={() => applyHighlight(color)}
+                    className="h-7 w-7 rounded border-2 border-gray-300 transition-all hover:scale-110 hover:border-blue-500"
+                    style={{ backgroundColor: color }}
+                    title={color}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="h-6 w-px bg-gray-300" />
+
+        {/* Alignment Dropdown */}
+        <div className="relative">
+          <button
+            onClick={e => {
+              e.stopPropagation();
+              closeAllDropdowns();
+              setShowAlignPicker(!showAlignPicker);
+            }}
+            className={`rounded border border-gray-300 p-1.5 transition-colors ${
+              showAlignPicker ? "bg-gray-100" : "hover:bg-gray-100"
+            }`}
+            title="Text Alignment"
+          >
+            <AlignLeft className="h-4 w-4 text-gray-700" />
+          </button>
+
+          {showAlignPicker && (
+            <div className="absolute top-full left-0 z-50 mt-1 rounded-lg border border-gray-200 bg-white shadow-lg">
+              <button
+                onClick={() => applyAlignment("left")}
+                className="flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
+              >
+                <AlignLeft className="h-4 w-4" />
+                Align Left
+              </button>
+              <button
+                onClick={() => applyAlignment("center")}
+                className="flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
+              >
+                <AlignCenter className="h-4 w-4" />
+                Align Center
+              </button>
+              <button
+                onClick={() => applyAlignment("right")}
+                className="flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
+              >
+                <AlignRight className="h-4 w-4" />
+                Align Right
+              </button>
+              <button
+                onClick={() => applyAlignment("justify")}
+                className="flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
+              >
+                <AlignJustify className="h-4 w-4" />
+                Justify
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* List Buttons */}
+
+        <div className="h-6 w-px bg-gray-300" />
+
+        {/* Close Button */}
+        <button
+          onClick={clearSelection}
+          className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-red-50 hover:text-red-600"
+          title="Close Toolbar"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+};

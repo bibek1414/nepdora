@@ -100,6 +100,7 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith("/payment") ||
       pathname.startsWith("/preview") ||
       pathname.startsWith("/location") ||
+      pathname.startsWith("/on-boarding") ||
       pathname.startsWith("/subscription")
     ) {
       return NextResponse.next();

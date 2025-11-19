@@ -242,7 +242,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           value={data.subtitle || "Introducing the UA-01"}
           onChange={handleTextUpdate("subtitle")}
           as="p"
-          className="mb-4 text-sm tracking-[0.2em] uppercase"
+          className="mb-4 tracking-[0.2em] uppercase"
           style={{
             color: "#D1D5DB", // text-gray-300 equivalent
           }}
@@ -256,7 +256,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           value={data.title}
           onChange={handleTextUpdate("title")}
           as="h1"
-          className="text-5xl leading-tight font-bold sm:text-6xl md:text-7xl"
+          className="leading-tight font-bold sm:text-6xl md:text-7xl"
           isEditable={isEditable}
           placeholder="Enter main title..."
           multiline={true}
@@ -268,7 +268,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           value={data.description}
           onChange={handleTextUpdate("description")}
           as="p"
-          className="mt-6 text-lg"
+          className="mt-6"
           isEditable={isEditable}
           placeholder="Enter description..."
           multiline={true}

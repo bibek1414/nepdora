@@ -1,3 +1,4 @@
+// components/site-owners/builder/builder-layout.tsx
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
@@ -71,6 +72,8 @@ import {
 } from "@/types/owner-site/components/policies";
 import { toast } from "sonner";
 import { componentsApi } from "@/services/api/owner-sites/components/unified";
+import { TextSelectionProvider } from "@/contexts/text-selection-context";
+import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
 
 interface BuilderLayoutProps {
   params: {
@@ -1279,126 +1282,131 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      {/* All Dialog Components */}
-      <AddSectionDialog
-        open={isAddSectionDialogOpen}
-        onOpenChange={setIsAddSectionDialogOpen}
-        onComponentClick={handleComponentClick}
-        onNavbarSelect={handleNavbarSelectFromDialog}
-        onFooterSelect={handleFooterSelectFromDialog}
-      />
-      <NavbarTemplateDialog
-        isOpen={isNavbarDialogOpen}
-        onClose={() => setIsNavbarDialogOpen(false)}
-        onSelectTemplate={handleNavbarTemplateSelect}
-      />
-      <FooterStylesDialog
-        open={isFooterDialogOpen}
-        onOpenChange={setIsFooterDialogOpen}
-        onStyleSelect={handleFooterStyleSelect}
-      />
+    <TextSelectionProvider>
+      <DndProvider backend={HTML5Backend}>
+        {/* All Dialog Components */}
+        <AddSectionDialog
+          open={isAddSectionDialogOpen}
+          onOpenChange={setIsAddSectionDialogOpen}
+          onComponentClick={handleComponentClick}
+          onNavbarSelect={handleNavbarSelectFromDialog}
+          onFooterSelect={handleFooterSelectFromDialog}
+        />
+        <NavbarTemplateDialog
+          isOpen={isNavbarDialogOpen}
+          onClose={() => setIsNavbarDialogOpen(false)}
+          onSelectTemplate={handleNavbarTemplateSelect}
+        />
+        <FooterStylesDialog
+          open={isFooterDialogOpen}
+          onOpenChange={setIsFooterDialogOpen}
+          onStyleSelect={handleFooterStyleSelect}
+        />
 
-      <TextEditorStylesDialog
-        open={isTextEditorStylesDialogOpen}
-        onOpenChange={setIsTextEditorStylesDialogOpen}
-        onStyleSelect={handleTextEditorTemplateSelect}
-      />
-      <HeroStylesDialog
-        open={isHeroStylesDialogOpen}
-        onOpenChange={setIsHeroStylesDialogOpen}
-        onStyleSelect={handleHeroTemplateSelect}
-      />
-      <AboutUsStylesDialog
-        open={isAboutUsStylesDialogOpen}
-        onOpenChange={setIsAboutUsStylesDialogOpen}
-        onStyleSelect={handleAboutUsTemplateSelect}
-      />
-      <GalleryStylesDialog
-        open={isGalleryStylesDialogOpen}
-        onOpenChange={setIsGalleryStylesDialogOpen}
-        onStyleSelect={handleGalleryTemplateSelect}
-      />
+        <TextEditorStylesDialog
+          open={isTextEditorStylesDialogOpen}
+          onOpenChange={setIsTextEditorStylesDialogOpen}
+          onStyleSelect={handleTextEditorTemplateSelect}
+        />
+        <HeroStylesDialog
+          open={isHeroStylesDialogOpen}
+          onOpenChange={setIsHeroStylesDialogOpen}
+          onStyleSelect={handleHeroTemplateSelect}
+        />
+        <AboutUsStylesDialog
+          open={isAboutUsStylesDialogOpen}
+          onOpenChange={setIsAboutUsStylesDialogOpen}
+          onStyleSelect={handleAboutUsTemplateSelect}
+        />
+        <GalleryStylesDialog
+          open={isGalleryStylesDialogOpen}
+          onOpenChange={setIsGalleryStylesDialogOpen}
+          onStyleSelect={handleGalleryTemplateSelect}
+        />
 
-      <PageTemplateDialog
-        isOpen={isPageTemplateDialogOpen}
-        onClose={() => setIsPageTemplateDialogOpen(false)}
-        onSelectTemplate={handlePageTemplateSelect}
-      />
+        <PageTemplateDialog
+          isOpen={isPageTemplateDialogOpen}
+          onClose={() => setIsPageTemplateDialogOpen(false)}
+          onSelectTemplate={handlePageTemplateSelect}
+        />
 
-      <PortfolioStylesDialog
-        open={isPortfolioStylesDialogOpen}
-        onOpenChange={setIsPortfolioStylesDialogOpen}
-        onStyleSelect={handlePortfolioTemplateSelect}
-      />
+        <PortfolioStylesDialog
+          open={isPortfolioStylesDialogOpen}
+          onOpenChange={setIsPortfolioStylesDialogOpen}
+          onStyleSelect={handlePortfolioTemplateSelect}
+        />
 
-      <BannerStylesDialog
-        open={isBannerStylesDialogOpen}
-        onOpenChange={setIsBannerStylesDialogOpen}
-        onStyleSelect={handleBannerTemplateSelect}
-      />
+        <BannerStylesDialog
+          open={isBannerStylesDialogOpen}
+          onOpenChange={setIsBannerStylesDialogOpen}
+          onStyleSelect={handleBannerTemplateSelect}
+        />
 
-      {/* Top Navigation */}
-      <TopNavigation
-        pages={pagesData}
-        currentPage={currentPage}
-        siteUser={siteUser}
-        onPageChange={handlePageChange}
-        onPageCreated={handlePageCreated}
-        onPageDeleted={handlePageDeleted}
-      />
+        {/* Top Navigation */}
+        <TopNavigation
+          pages={pagesData}
+          currentPage={currentPage}
+          siteUser={siteUser}
+          onPageChange={handlePageChange}
+          onPageCreated={handlePageCreated}
+          onPageDeleted={handlePageDeleted}
+        />
 
-      {/* Main Layout */}
-      <div className="bg-background flex min-h-screen flex-col">
-        <div className="flex flex-1">
-          <div className="flex flex-1 flex-col">
-            <div className="mt-10 flex-1 overflow-auto bg-gray-200 p-6">
-              <div className="mx-auto max-w-6xl px-5">
-                <div className="py-4">
-                  <h2 className="text-foreground text-2xl font-bold capitalize">
-                    {currentPageData?.title || currentPage} Page
-                  </h2>
+        {/* Sticky Formatting Toolbar */}
+        <StickyFormattingToolbar />
+
+        {/* Main Layout */}
+        <div className="bg-background flex min-h-screen flex-col">
+          <div className="flex flex-1">
+            <div className="flex flex-1 flex-col">
+              <div className="mt-10 flex-1 overflow-auto bg-gray-200 p-6">
+                <div className="mx-auto max-w-6xl origin-top scale-75">
+                  <div className="py-4">
+                    <h2 className="text-foreground text-2xl font-bold capitalize">
+                      {currentPageData?.title || currentPage} Page
+                    </h2>
+                  </div>
+
+                  <CanvasArea
+                    droppedComponents={droppedComponents}
+                    navbar={navbarResponse?.data}
+                    onAddNavbar={() => setIsNavbarDialogOpen(true)}
+                    footer={footerResponse?.data}
+                    onAddFooter={() => setIsFooterDialogOpen(true)}
+                    currentPageSlug={currentPage}
+                    pageComponents={pageComponents}
+                    isLoading={isPageComponentsLoading}
+                    error={pageComponentsError}
+                    onAddHero={handleAddHeroFromCanvas}
+                    onAddAboutUs={handleAddAboutUsFromCanvas}
+                    onAddProducts={handleAddProducts}
+                    onAddCategories={handleAddCategories}
+                    onAddSubCategories={handleAddSubCategories}
+                    onAddBlog={handleAddBlog}
+                    onAddServices={handleAddServices}
+                    onAddContact={handleAddContact}
+                    onAddTeam={handleAddTeam}
+                    onAddTestimonials={handleAddTestimonials}
+                    onAddFAQ={handleAddFAQ}
+                    onAddPortfolio={handleAddPortfolio}
+                    onAddBanner={handleAddBanner}
+                    onAddNewsletter={handleAddNewsletter}
+                    onAddYouTube={handleAddYouTube}
+                    onAddGallery={handleAddGallery}
+                    onAddPolicies={handleAddPolicies}
+                    onAddSection={handleAddSection}
+                  />
                 </div>
-
-                <CanvasArea
-                  droppedComponents={droppedComponents}
-                  navbar={navbarResponse?.data}
-                  onAddNavbar={() => setIsNavbarDialogOpen(true)}
-                  footer={footerResponse?.data}
-                  onAddFooter={() => setIsFooterDialogOpen(true)}
-                  currentPageSlug={currentPage}
-                  pageComponents={pageComponents}
-                  isLoading={isPageComponentsLoading}
-                  error={pageComponentsError}
-                  onAddHero={handleAddHeroFromCanvas}
-                  onAddAboutUs={handleAddAboutUsFromCanvas}
-                  onAddProducts={handleAddProducts}
-                  onAddCategories={handleAddCategories}
-                  onAddSubCategories={handleAddSubCategories}
-                  onAddBlog={handleAddBlog}
-                  onAddServices={handleAddServices}
-                  onAddContact={handleAddContact}
-                  onAddTeam={handleAddTeam}
-                  onAddTestimonials={handleAddTestimonials}
-                  onAddFAQ={handleAddFAQ}
-                  onAddPortfolio={handleAddPortfolio}
-                  onAddBanner={handleAddBanner}
-                  onAddNewsletter={handleAddNewsletter}
-                  onAddYouTube={handleAddYouTube}
-                  onAddGallery={handleAddGallery}
-                  onAddPolicies={handleAddPolicies}
-                  onAddSection={handleAddSection}
-                />
               </div>
             </div>
-          </div>
 
-          <ComponentOutlineSidebar
-            currentPageSlug={currentPage}
-            components={pageComponents}
-          />
+            <ComponentOutlineSidebar
+              currentPageSlug={currentPage}
+              components={pageComponents}
+            />
+          </div>
         </div>
-      </div>
-    </DndProvider>
+      </DndProvider>
+    </TextSelectionProvider>
   );
 };

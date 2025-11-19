@@ -3,6 +3,7 @@ import { DM_Sans, Inter } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CustomerAuthProvider } from "@/contexts/customer/AuthContext";
 import { CustomerPublishAuthProvider } from "@/contexts/publish/AuthContext";
+import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { QueryProvider } from "@/providers/query-provider";
 import TopLoader from "@/components/top-loader";
 import { Suspense } from "react";
@@ -67,19 +68,21 @@ export default function RootLayout({
           <CustomerAuthProvider>
             <CustomerPublishAuthProvider>
               <QueryProvider>
-                <CartProvider>
-                  <Suspense fallback={null}>
-                    <TopLoader />
-                  </Suspense>
-                  {children}
-                  <Analytics />
-                  <Toaster
-                    position="bottom-right"
-                    richColors
-                    closeButton
-                    duration={3000}
-                  />
-                </CartProvider>
+                <TextSelectionProvider>
+                  <CartProvider>
+                    <Suspense fallback={null}>
+                      <TopLoader />
+                    </Suspense>
+                    {children}
+                    <Analytics />
+                    <Toaster
+                      position="bottom-right"
+                      richColors
+                      closeButton
+                      duration={3000}
+                    />
+                  </CartProvider>
+                </TextSelectionProvider>
               </QueryProvider>
             </CustomerPublishAuthProvider>
           </CustomerAuthProvider>
