@@ -195,7 +195,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
           <div className="flex gap-2">
             <Button
               onClick={handleAddMember}
-              className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+              className="bg-white text-gray-800 hover:bg-white hover:text-gray-900"
             >
               <Plus className="h-4 w-4" />
               Team Member

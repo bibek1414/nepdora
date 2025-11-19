@@ -37,33 +37,22 @@ import {
 } from "@/types/owner-site/components/about";
 import { AboutUsData } from "@/types/owner-site/components/about";
 import { defaultProductsData } from "@/types/owner-site/components/products";
-import { ProductsStylesDialog } from "@/components/site-owners/builder/products/products-styles-dialog";
-import { CategoryStylesDialog } from "@/components/site-owners/builder/category/category-style-dialog";
-import { SubCategoryStylesDialog } from "@/components/site-owners/builder/sub-category/sub-category-style-dialog";
 import { Facebook, Twitter } from "lucide-react";
 import { defaultBlogData } from "@/types/owner-site/components/blog";
-import { BlogStylesDialog } from "@/components/site-owners/builder/blog/blog-style-dialog";
-import { ServicesStyleDialog } from "@/components/site-owners/builder/services/services-style-dialog";
 import { defaultServicesData } from "@/types/owner-site/components/services";
 import {
   ComponentResponse,
   ComponentTypeMap,
 } from "@/types/owner-site/components/components";
-import { ContactStylesDialog } from "@/components/site-owners/builder/contact/contact-style-dialog";
 import { defaultContactData } from "@/types/owner-site/components/contact";
-import { TeamStylesDialog } from "@/components/site-owners/builder/team-member/team-style-dialog";
 import { defaultTeamData } from "@/types/owner-site/components/team";
-import { TestimonialsStylesDialog } from "@/components/site-owners/builder/testimonials/testimonial-style-dialog";
 import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
-import { FAQStylesDialog } from "@/components/site-owners/builder/faq/faq-styles-dialog";
 import { defaultFAQData } from "@/types/owner-site/components/faq";
 import { PortfolioStylesDialog } from "@/components/site-owners/builder/portfolio/portfolio-styles-dialog";
 import { defaultPortfolioData } from "@/types/owner-site/components/portfolio";
 import { BannerStylesDialog } from "@/components/site-owners/builder/banner/banner-styles-dialog";
 import { defaultBannerData } from "@/types/owner-site/components/banner";
-import { NewsletterStylesDialog } from "@/components/site-owners/builder/newsletter/newsletter-style-dialog";
 import { defaultNewsletterData } from "@/types/owner-site/components/newsletter";
-import { YouTubeStylesDialog } from "@/components/site-owners/builder/youtube/youtube-styles-dialog";
 import { defaultYouTubeData } from "@/types/owner-site/components/youtube";
 import { heroTemplateConfigs } from "@/types/owner-site/components/hero";
 import { PageTemplateDialog } from "@/components/site-owners/builder/templates/page-template-dialog";
@@ -72,7 +61,6 @@ import { ComponentOutlineSidebar } from "@/components/site-owners/builder/builde
 import { GalleryStylesDialog } from "@/components/site-owners/builder/gallery/gallery-styles-dialog";
 import { defaultGalleryData } from "@/types/owner-site/components/gallery";
 import { useQueryClient } from "@tanstack/react-query";
-import { PoliciesStylesDialog } from "@/components/site-owners/builder/policies/policies-styles-dialog";
 import { TextEditorStylesDialog } from "../text-editor/text-editor-dialog";
 import { defaultTextEditorData } from "@/types/owner-site/components/text-editor";
 import {
@@ -249,37 +237,86 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     return names[componentType] || componentType;
   };
 
-  // Helper function to create component with insertIndex support
+  // OPTIMIZED: Create component with instant UI feedback
   const createComponentWithIndex = async (
     componentType: keyof ComponentTypeMap,
     data: ComponentTypeMap[keyof ComponentTypeMap],
     insertIndex?: number
   ) => {
+    const displayName = getComponentDisplayName(componentType);
+    const toastId = `add-${componentType}-${Date.now()}`;
+
     try {
+      // Show lightweight toast notification
+      toast.loading(`Adding ${displayName}...`, { id: toastId });
+
+      // Close dialogs immediately for better UX
+      setIsAddSectionDialogOpen(false);
+      setPendingInsertIndex(undefined);
+
+      // Create optimistic temporary component
+      const tempId = `temp-${Date.now()}`;
+      const tempComponent: ComponentResponse = {
+        id: tempId,
+        component_id: tempId,
+        component_type: componentType,
+        data,
+        order: insertIndex ?? pageComponents.length,
+        page: currentPageData?.id, // Use page ID instead of slug
+      };
+
+      // Get current components from cache
+      const currentComponents =
+        queryClient.getQueryData<ComponentResponse[]>([
+          "pageComponents",
+          currentPage,
+        ]) || pageComponents;
+
+      // Create new array with inserted component
+      const updatedComponents = [...currentComponents];
+      if (insertIndex !== undefined) {
+        updatedComponents.splice(insertIndex, 0, tempComponent);
+      } else {
+        updatedComponents.push(tempComponent);
+      }
+
+      // Recalculate order for all components
+      updatedComponents.forEach((comp, idx) => {
+        comp.order = idx;
+      });
+
+      // Optimistically update the cache immediately (instant UI feedback)
+      queryClient.setQueryData(
+        ["pageComponents", currentPage],
+        updatedComponents
+      );
+
+      // Backend sync happens in background
       await componentsApi.createComponent(
         currentPage,
         {
           component_type: componentType,
           data,
         },
-        pageComponents,
+        currentComponents,
         insertIndex
       );
 
-      queryClient.invalidateQueries({
+      // Refresh to get real data from server
+      await queryClient.invalidateQueries({
         queryKey: ["pageComponents", currentPage],
       });
-      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
 
-      // Show success toast
-      toast.success(
-        `${getComponentDisplayName(componentType)} section added successfully!`
-      );
+      toast.success(`${displayName} added successfully!`, { id: toastId });
     } catch (error) {
       console.error(`Failed to create ${componentType} component:`, error);
-      toast.error(
-        `Failed to add ${getComponentDisplayName(componentType)} section`
-      );
+
+      // Rollback optimistic update on error
+      await queryClient.invalidateQueries({
+        queryKey: ["pageComponents", currentPage],
+      });
+
+      toast.error(`Failed to add ${displayName}`, { id: toastId });
       throw error;
     }
   };
@@ -373,14 +410,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       navbarData: navbarData,
       component_id: `nav-${Date.now()}`,
     };
+
+    const toastId = "navbar-create";
+    toast.loading("Adding Navbar...", { id: toastId });
+
     createNavbarMutation.mutate(payload, {
       onSuccess: () => {
         console.log("Navbar created successfully from dialog");
-        toast.success("Navbar added successfully!");
+        toast.success("Navbar added successfully!", { id: toastId });
       },
       onError: error => {
         console.error("Failed to create navbar from dialog:", error);
-        toast.error("Failed to create navbar");
+        toast.error("Failed to create navbar", { id: toastId });
       },
     });
   };
@@ -391,13 +432,17 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       navbarData: templateData,
       component_id: `nav-${Date.now()}`,
     };
+
+    const toastId = "navbar-create";
+    toast.loading("Adding Navbar...", { id: toastId });
+
     createNavbarMutation.mutate(payload, {
       onSuccess: () => {
         setIsNavbarDialogOpen(false);
-        toast.success("Navbar added successfully!");
+        toast.success("Navbar added successfully!", { id: toastId });
       },
       onError: () => {
-        toast.error("Failed to add navbar");
+        toast.error("Failed to add navbar", { id: toastId });
       },
     });
   };
@@ -458,14 +503,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
       component_id: `footer-${Date.now()}`,
     };
+
+    const toastId = "footer-create";
+    toast.loading("Adding Footer...", { id: toastId });
+
     createFooterMutation.mutate(payload, {
       onSuccess: () => {
         console.log("Footer created successfully from dialog");
-        toast.success("Footer added successfully!");
+        toast.success("Footer added successfully!", { id: toastId });
       },
       onError: error => {
         console.error("Failed to create footer from dialog:", error);
-        toast.error("Failed to create footer");
+        toast.error("Failed to create footer", { id: toastId });
       },
     });
   };
@@ -517,13 +566,17 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
       component_id: `footer-${Date.now()}`,
     };
+
+    const toastId = "footer-create";
+    toast.loading("Adding Footer...", { id: toastId });
+
     createFooterMutation.mutate(payload, {
       onSuccess: () => {
         setIsFooterDialogOpen(false);
-        toast.success("Footer added successfully!");
+        toast.success("Footer added successfully!", { id: toastId });
       },
       onError: () => {
-        toast.error("Failed to add footer");
+        toast.error("Failed to add footer", { id: toastId });
       },
     });
   };
@@ -557,14 +610,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       showSlider: templateConfig.showSlider ?? defaultHeroData.showSlider,
     };
 
-    try {
-      await createComponentWithIndex("hero", heroData, pendingInsertIndex);
-      setIsHeroStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsHeroStylesDialogOpen(false);
+    await createComponentWithIndex("hero", heroData, pendingInsertIndex);
   };
 
   const handleAboutUsTemplateSelect = async (
@@ -608,14 +655,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         aboutUsData = defaultAboutUs1Data;
     }
 
-    try {
-      await createComponentWithIndex("about", aboutUsData, pendingInsertIndex);
-      setIsAboutUsStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsAboutUsStylesDialogOpen(false);
+    await createComponentWithIndex("about", aboutUsData, pendingInsertIndex);
   };
 
   const handleProductsTemplateSelect = async (
@@ -629,18 +670,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "product-7"
   ) => {
     const productsData = { ...defaultProductsData, style: template };
-    try {
-      await createComponentWithIndex(
-        "products",
-        productsData,
-        pendingInsertIndex
-      );
-      setIsProductsStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsProductsStylesDialogOpen(false);
+    await createComponentWithIndex(
+      "products",
+      productsData,
+      pendingInsertIndex
+    );
   };
 
   const handleCategoryTemplateSelect = async (
@@ -662,18 +697,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       showProductCount: true,
       itemsPerRow: 4,
     };
-    try {
-      await createComponentWithIndex(
-        "category",
-        categoryData,
-        pendingInsertIndex
-      );
-      setIsCategoriesStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsCategoriesStylesDialogOpen(false);
+    await createComponentWithIndex(
+      "category",
+      categoryData,
+      pendingInsertIndex
+    );
   };
 
   const handleSubCategoryTemplateSelect = async (
@@ -690,68 +719,40 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       showParentCategory: true,
       itemsPerRow: 4,
     };
-    try {
-      await createComponentWithIndex(
-        "subcategory",
-        subCategoryData,
-        pendingInsertIndex
-      );
-      setIsSubCategoriesStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsSubCategoriesStylesDialogOpen(false);
+    await createComponentWithIndex(
+      "subcategory",
+      subCategoryData,
+      pendingInsertIndex
+    );
   };
 
   const handleBlogTemplateSelect = async (
     template: "blog-1" | "blog-2" | "blog-3"
   ) => {
     const blogData = { ...defaultBlogData, style: template };
-    try {
-      await createComponentWithIndex("blog", blogData, pendingInsertIndex);
-      setIsBlogStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsBlogStylesDialogOpen(false);
+    await createComponentWithIndex("blog", blogData, pendingInsertIndex);
   };
 
   const handleServicesTemplateSelect = async (
     template: "services-1" | "services-2" | "services-3" | "services-4"
   ) => {
     const servicesData = { ...defaultServicesData, style: template };
-    try {
-      await createComponentWithIndex(
-        "services",
-        servicesData,
-        pendingInsertIndex
-      );
-      setIsServicesStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsServicesStylesDialogOpen(false);
+    await createComponentWithIndex(
+      "services",
+      servicesData,
+      pendingInsertIndex
+    );
   };
 
   const handleContactTemplateSelect = async (
     template: "contact-1" | "contact-2" | "contact-3" | "contact-4"
   ) => {
     const contactData = { ...defaultContactData, style: template };
-    try {
-      await createComponentWithIndex(
-        "contact",
-        contactData,
-        pendingInsertIndex
-      );
-      setIsContactStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsContactStylesDialogOpen(false);
+    await createComponentWithIndex("contact", contactData, pendingInsertIndex);
   };
 
   const handleTeamTemplateSelect = async (
@@ -761,14 +762,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       ...defaultTeamData,
       style: template as ComponentTypeMap["team"]["style"],
     };
-    try {
-      await createComponentWithIndex("team", teamData, pendingInsertIndex);
-      setIsTeamStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsTeamStylesDialogOpen(false);
+    await createComponentWithIndex("team", teamData, pendingInsertIndex);
   };
 
   const handleTestimonialsTemplateSelect = async (
@@ -782,100 +777,60 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "testimonial-7"
   ) => {
     const testimonialsData = { ...defaultTestimonialsData, style: template };
-    try {
-      await createComponentWithIndex(
-        "testimonials",
-        testimonialsData,
-        pendingInsertIndex
-      );
-      setIsTestimonialsStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsTestimonialsStylesDialogOpen(false);
+    await createComponentWithIndex(
+      "testimonials",
+      testimonialsData,
+      pendingInsertIndex
+    );
   };
 
   const handleFAQTemplateSelect = async (
     template: "faq-1" | "faq-2" | "faq-3" | "faq-4" | "faq-5"
   ) => {
     const faqData = { ...defaultFAQData, style: template };
-    try {
-      await createComponentWithIndex("faq", faqData, pendingInsertIndex);
-      setIsFAQStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsFAQStylesDialogOpen(false);
+    await createComponentWithIndex("faq", faqData, pendingInsertIndex);
   };
 
   const handlePortfolioTemplateSelect = async (
     template: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4"
   ) => {
     const portfolioData = { ...defaultPortfolioData, style: template };
-    try {
-      await createComponentWithIndex(
-        "portfolio",
-        portfolioData,
-        pendingInsertIndex
-      );
-      setIsPortfolioStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsPortfolioStylesDialogOpen(false);
+    await createComponentWithIndex(
+      "portfolio",
+      portfolioData,
+      pendingInsertIndex
+    );
   };
 
   const handleBannerTemplateSelect = async (
     template: "banner-1" | "banner-2" | "banner-3" | "banner-4"
   ) => {
     const bannerData = { ...defaultBannerData, template: template };
-    try {
-      await createComponentWithIndex("banner", bannerData, pendingInsertIndex);
-      setIsBannerStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsBannerStylesDialogOpen(false);
+    await createComponentWithIndex("banner", bannerData, pendingInsertIndex);
   };
 
   const handleNewsletterTemplateSelect = async (
     template: "newsletter-1" | "newsletter-2" | "newsletter-3"
   ) => {
     const newsletterData = { ...defaultNewsletterData, style: template };
-    try {
-      await createComponentWithIndex(
-        "newsletter",
-        newsletterData,
-        pendingInsertIndex
-      );
-      setIsNewsletterStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsNewsletterStylesDialogOpen(false);
+    await createComponentWithIndex(
+      "newsletter",
+      newsletterData,
+      pendingInsertIndex
+    );
   };
 
   const handleYouTubeTemplateSelect = async (
     template: "youtube-1" | "youtube-2" | "youtube-3"
   ) => {
     const youtubeData = { ...defaultYouTubeData, style: template };
-    try {
-      await createComponentWithIndex(
-        "youtube",
-        youtubeData,
-        pendingInsertIndex
-      );
-      setIsYouTubeStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsYouTubeStylesDialogOpen(false);
+    await createComponentWithIndex("youtube", youtubeData, pendingInsertIndex);
   };
 
   const handleGalleryTemplateSelect = async (
@@ -887,18 +842,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "gallery-5"
   ) => {
     const galleryData = { ...defaultGalleryData, template: template };
-    try {
-      await createComponentWithIndex(
-        "gallery",
-        galleryData,
-        pendingInsertIndex
-      );
-      setIsGalleryStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsGalleryStylesDialogOpen(false);
+    await createComponentWithIndex("gallery", galleryData, pendingInsertIndex);
   };
 
   const handlePoliciesTemplateSelect = async (
@@ -921,38 +866,26 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       default:
         policyData = defaultReturnExchangeData;
     }
-    try {
-      await createComponentWithIndex(
-        "policies",
-        policyData,
-        pendingInsertIndex
-      );
-      setIsPoliciesStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsPoliciesStylesDialogOpen(false);
+    await createComponentWithIndex("policies", policyData, pendingInsertIndex);
   };
 
   const handleTextEditorTemplateSelect = async () => {
-    try {
-      await createComponentWithIndex(
-        "text_editor",
-        defaultTextEditorData,
-        pendingInsertIndex
-      );
-      setIsTextEditorStylesDialogOpen(false);
-      setIsAddSectionDialogOpen(false);
-      setPendingInsertIndex(undefined);
-    } catch (error) {
-      // Error toast already shown in createComponentWithIndex
-    }
+    setIsTextEditorStylesDialogOpen(false);
+    await createComponentWithIndex(
+      "text_editor",
+      defaultTextEditorData,
+      pendingInsertIndex
+    );
   };
 
   // Page template handler
   const handlePageTemplateSelect = async (template: PageTemplate) => {
+    const toastId = "page-template-create";
+
     try {
+      toast.loading(`Creating ${template.name} page...`, { id: toastId });
+
       const newPage = await createPageMutation.mutateAsync({
         title: template.name,
       });
@@ -983,11 +916,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       router.push(`/builder/${siteUser}/${newPage.slug}`);
       setIsPageTemplateDialogOpen(false);
       toast.success(
-        `Page "${template.name}" created successfully with ${template.components.length} components!`
+        `Page "${template.name}" created successfully with ${template.components.length} components!`,
+        { id: toastId }
       );
     } catch (error) {
       console.error("Failed to create page from template:", error);
-      toast.error("Failed to create page from template. Please try again.");
+      toast.error("Failed to create page from template. Please try again.", {
+        id: toastId,
+      });
     }
   };
 
@@ -1390,6 +1326,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onSelectTemplate={handlePageTemplateSelect}
       />
 
+      <PortfolioStylesDialog
+        open={isPortfolioStylesDialogOpen}
+        onOpenChange={setIsPortfolioStylesDialogOpen}
+        onStyleSelect={handlePortfolioTemplateSelect}
+      />
+
+      <BannerStylesDialog
+        open={isBannerStylesDialogOpen}
+        onOpenChange={setIsBannerStylesDialogOpen}
+        onStyleSelect={handleBannerTemplateSelect}
+      />
+
       {/* Top Navigation */}
       <TopNavigation
         pages={pagesData}
@@ -1405,13 +1353,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         <div className="flex flex-1">
           <div className="flex flex-1 flex-col">
             <div className="mt-10 flex-1 overflow-auto bg-gray-200 p-6">
-              <div
-                className="mx-auto max-w-7xl px-5"
-                style={{
-                  transform: "scale(0.7)",
-                  transformOrigin: "top",
-                }}
-              >
+              <div className="mx-auto max-w-6xl px-5">
                 <div className="py-4">
                   <h2 className="text-foreground text-2xl font-bold capitalize">
                     {currentPageData?.title || currentPage} Page

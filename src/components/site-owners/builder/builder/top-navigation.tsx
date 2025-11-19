@@ -72,7 +72,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             <Button
               variant="outline"
               size="sm"
-              className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Dashboard
@@ -81,7 +81,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 
           {/* Page Management Section */}
           <div className="flex items-center gap-2 border-l pl-4">
-            <span className="text-sm font-medium text-gray-600">
+            <span className="text-xs font-medium text-gray-600">
               Page Management
             </span>
           </div>
@@ -94,7 +94,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             {visiblePages.map(page => (
               <div
                 key={page.slug}
-                className={`flex items-center gap-1 rounded-md border text-sm ${
+                className={`flex items-center gap-1 rounded-md border text-xs ${
                   currentPage === page.slug
                     ? "border-gray-600 bg-gray-600 text-white"
                     : "border-gray-200 bg-white hover:bg-gray-50"
@@ -124,7 +124,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex items-center gap-1 rounded-md border-gray-200 text-sm hover:bg-gray-50"
+                    className="flex items-center gap-1 rounded-md border-gray-200 text-xs hover:bg-gray-50"
                   >
                     Other Pages
                     <ChevronDown className="h-4 w-4" />
@@ -169,9 +169,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
-            size="sm"
             onClick={() => setIsThemeDialogOpen(true)}
-            className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+            className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
           >
             <Palette className="mr-2 h-4 w-4" />
             Theme Settings
@@ -184,8 +183,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
           >
             <Button
               variant="outline"
-              size="sm"
-              className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
             >
               Live Site
               <ExternalLink className="ml-2 h-4 w-4" />
@@ -199,8 +197,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
           >
             <Button
               variant="outline"
-              size="sm"
-              className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
             >
               Preview
               <ExternalLink className="ml-2 h-4 w-4" />
@@ -209,8 +206,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 
           <Button
             variant="outline"
-            size="sm"
-            className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+            className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
             onClick={() => publish()}
             disabled={isPending}
           >

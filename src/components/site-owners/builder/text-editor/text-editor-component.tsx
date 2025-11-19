@@ -270,7 +270,7 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
           )}
 
           {/* Delete Button */}
-          <div className="bg-background/80 absolute top-4 -right-45 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="absolute -right-5 z-30 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
             <CButton
               size="sm"
               variant="destructive"
@@ -278,6 +278,7 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
               disabled={deleteTextEditorMutation.isPending}
             >
               <Trash2 className="h-4 w-4" />
+              Delete
             </CButton>
           </div>
 

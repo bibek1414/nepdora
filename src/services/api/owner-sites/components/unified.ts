@@ -6,8 +6,8 @@ import {
   ComponentResponse,
   CreateComponentRequest,
   UpdateComponentRequest,
-  ApiResponse,
 } from "@/types/owner-site/components/components";
+
 export interface OrderUpdate {
   componentId: string;
   order: number;
@@ -16,6 +16,7 @@ export interface OrderUpdate {
 export interface BulkOrderUpdateRequest {
   orderUpdates: OrderUpdate[];
 }
+
 const API_BASE_URL = getApiBaseUrl();
 
 export const componentsApi = {
@@ -49,6 +50,7 @@ export const componentsApi = {
       );
     }
   },
+
   getPageComponentsPublished: async <
     T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
   >(
@@ -66,7 +68,6 @@ export const componentsApi = {
       await handleApiError(response);
       const data = await response.json();
 
-      // Handle both array response and object with data/components property
       if (Array.isArray(data)) {
         return data;
       }
@@ -79,47 +80,27 @@ export const componentsApi = {
     }
   },
 
+  // OPTIMIZED: Create component with better order management
   createComponent: async <T extends keyof ComponentTypeMap>(
     pageSlug: string,
     payload: CreateComponentRequest<T>,
     existingComponents?: ComponentResponse[],
-    insertIndex?: number // Add this parameter for precise insertion
+    insertIndex?: number
   ): Promise<ComponentResponse<T>> => {
     try {
-      // Calculate next order based on insertIndex or append to end
       let order = payload.order;
 
+      // Calculate order based on insertIndex
       if (order === undefined) {
         if (insertIndex !== undefined) {
-          // Insert at specific position
           order = insertIndex;
-
-          // Update orders of subsequent components
-          if (existingComponents && existingComponents.length > 0) {
-            const componentsToUpdate = existingComponents.filter(
-              comp => comp.order >= insertIndex
-            );
-
-            // Update backend orders for subsequent components
-            for (const component of componentsToUpdate) {
-              await fetch(
-                `${API_BASE_URL}/api/pages/${pageSlug}/components/${component.component_id}/`,
-                {
-                  method: "PATCH",
-                  headers: createHeaders(),
-                  body: JSON.stringify({ order: component.order + 1 }),
-                }
-              );
-            }
-          }
         } else if (existingComponents && existingComponents.length > 0) {
-          // Append to end
           const maxOrder = Math.max(
             ...existingComponents.map(c => c.order || 0)
           );
           order = maxOrder + 1;
         } else {
-          order = 0; // First component starts at 0
+          order = 0;
         }
       }
 
@@ -131,6 +112,7 @@ export const componentsApi = {
         order,
       };
 
+      // Create the new component first
       const response = await fetch(
         `${API_BASE_URL}/api/pages/${pageSlug}/components/`,
         {
@@ -142,6 +124,33 @@ export const componentsApi = {
 
       await handleApiError(response);
       const data = await response.json();
+
+      // OPTIMIZED: Update subsequent component orders in background (don't await)
+      if (
+        insertIndex !== undefined &&
+        existingComponents &&
+        existingComponents.length > 0
+      ) {
+        const componentsToUpdate = existingComponents.filter(
+          comp => comp.order >= insertIndex
+        );
+
+        // Fire and forget - update orders asynchronously
+        Promise.all(
+          componentsToUpdate.map(component =>
+            fetch(
+              `${API_BASE_URL}/api/pages/${pageSlug}/components/${component.component_id}/`,
+              {
+                method: "PATCH",
+                headers: createHeaders(),
+                body: JSON.stringify({ order: component.order + 1 }),
+              }
+            )
+          )
+        ).catch(error => {
+          console.error("Background order update failed:", error);
+        });
+      }
 
       return {
         id: data.id || data.data?.id,
@@ -247,6 +256,36 @@ export const componentsApi = {
     );
   },
 };
+
+// OPTIMIZED: Batch update component orders
+export const componentOrdersApi = {
+  updateComponentOrders: async (
+    pageSlug: string,
+    orderUpdates: OrderUpdate[]
+  ): Promise<void> => {
+    try {
+      // Process all updates in parallel instead of sequentially
+      await Promise.all(
+        orderUpdates.map(({ componentId, order }) =>
+          fetch(
+            `${API_BASE_URL}/api/pages/${pageSlug}/components/${componentId}/`,
+            {
+              method: "PATCH",
+              headers: createHeaders(),
+              body: JSON.stringify({ order }),
+            }
+          ).then(handleApiError)
+        )
+      );
+    } catch (error) {
+      throw new Error(
+        `Failed to update component orders: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  },
+};
+
+// All other component-specific APIs remain the same...
 export const portfolioComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "portfolio"),
@@ -264,7 +303,7 @@ export const portfolioComponentsApi = {
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "portfolio"),
 };
-// Specific component type APIs that use the generic service
+
 export const heroComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "hero"),
@@ -278,6 +317,7 @@ export const heroComponentsApi = {
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "hero"),
 };
+
 export const bannerComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "banner"),
@@ -291,6 +331,7 @@ export const bannerComponentsApi = {
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "banner"),
 };
+
 export const faqComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "faq"),
@@ -374,7 +415,6 @@ export const productComponentsApi = {
     componentsApi.deleteComponent(pageSlug, componentId, "products"),
 };
 
-// NEW: Category component APIs
 export const categoryComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "category"),
@@ -393,7 +433,6 @@ export const categoryComponentsApi = {
     componentsApi.deleteComponent(pageSlug, componentId, "category"),
 };
 
-// NEW: SubCategory component APIs
 export const subCategoryComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "subcategory"),
@@ -431,32 +470,6 @@ export const teamComponentsApi = {
     componentsApi.deleteComponent(pageSlug, componentId, "team"),
 };
 
-export const componentOrdersApi = {
-  updateComponentOrders: async (
-    pageSlug: string,
-    orderUpdates: OrderUpdate[]
-  ): Promise<void> => {
-    try {
-      // Process updates sequentially to avoid conflicts
-      for (const { componentId, order } of orderUpdates) {
-        const response = await fetch(
-          `${API_BASE_URL}/api/pages/${pageSlug}/components/${componentId}/`,
-          {
-            method: "PATCH",
-            headers: createHeaders(),
-            body: JSON.stringify({ order }),
-          }
-        );
-        await handleApiError(response);
-      }
-    } catch (error) {
-      throw new Error(
-        `Failed to update component orders: ${error instanceof Error ? error.message : "Unknown error"}`
-      );
-    }
-  },
-};
-
 export const newsletterComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "newsletter"),
@@ -479,6 +492,7 @@ export const newsletterComponentsApi = {
   delete: (pageSlug: string, componentId: string) =>
     componentsApi.deleteComponent(pageSlug, componentId, "newsletter"),
 };
+
 export const galleryComponentsApi = {
   getAll: (pageSlug: string) =>
     componentsApi.getComponentsByType(pageSlug, "gallery"),

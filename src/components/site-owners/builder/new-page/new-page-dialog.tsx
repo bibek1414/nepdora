@@ -82,6 +82,7 @@ export const NewPageDialog: React.FC<NewPageDialogProps> = ({
         <Button
           variant="outline"
           className="text-muted-foreground hover:text-foreground hover:border-primary border-2 border-dashed text-xs transition-colors"
+          size="sm"
         >
           <Plus className="mr-1 h-4 w-4" />
           New Page
