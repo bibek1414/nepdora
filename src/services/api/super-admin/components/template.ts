@@ -8,7 +8,6 @@ import {
   CreateTemplateResponse,
   UpdateTemplateResponse,
   DeleteTemplateResponse,
-  GetTemplatesResponse,
 } from "@/types/super-admin/components/template";
 
 export const useTemplateApi = {
@@ -33,7 +32,6 @@ export const useTemplateApi = {
     await handleApiError(response);
     const data = await response.json();
 
-    // Handle both array response and paginated response
     if (Array.isArray(data)) {
       return {
         count: data.length,
@@ -43,12 +41,10 @@ export const useTemplateApi = {
       };
     }
 
-    // Handle paginated response
     if (data.results) {
       return data;
     }
 
-    // Handle the case where data is wrapped in a data property
     if (data.data && Array.isArray(data.data)) {
       return {
         count: data.data.length,
@@ -81,6 +77,7 @@ export const useTemplateApi = {
       return json as CreateTemplateResponse;
     return { data: json as Template };
   },
+
   updateTemplate: async (
     ownerId: number | string,
     payload: UpdateTemplateRequest
@@ -90,6 +87,24 @@ export const useTemplateApi = {
     const formData = new FormData();
     if (payload.template_image) {
       formData.append("template_image", payload.template_image);
+    }
+    if (
+      payload.template_category_id !== undefined &&
+      payload.template_category_id !== null
+    ) {
+      formData.append(
+        "template_category_id",
+        payload.template_category_id.toString()
+      );
+    }
+    if (
+      payload.template_subcategory_id !== undefined &&
+      payload.template_subcategory_id !== null
+    ) {
+      formData.append(
+        "template_subcategory_id",
+        payload.template_subcategory_id.toString()
+      );
     }
 
     const response = await fetch(

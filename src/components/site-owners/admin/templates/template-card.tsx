@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,30 +14,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Search, X, Eye, Loader2 } from "lucide-react";
+import { Eye, Loader2 } from "lucide-react";
 import {
-  useGetTemplates,
   useImportTemplate,
   usePreviewTemplate,
 } from "@/hooks/owner-site/admin/use-template";
 import { Template } from "@/types/owner-site/admin/template";
-
-// Debounce hook
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
+import { useAuth } from "@/hooks/use-auth";
+import { LoadingScreen } from "@/components/on-boarding/loading-screen/loading-screen";
 
 // Template Card Component
 interface TemplateCardProps {
@@ -45,7 +29,10 @@ interface TemplateCardProps {
 }
 
 export const TemplateCard = ({ template }: TemplateCardProps) => {
+  const router = useRouter();
+  const { user } = useAuth();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const { mutate: importTemplate, isPending } = useImportTemplate();
   const { openPreview } = usePreviewTemplate();
@@ -62,12 +49,32 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
     importTemplate(template.id, {
       onSuccess: () => {
         setShowConfirmDialog(false);
+        setShowLoadingScreen(true);
+
+        // Navigate to builder after 5 seconds
+        setTimeout(() => {
+          // Use user.subDomain to navigate to builder
+          if (user?.sub_domain) {
+            router.push(`/builder/${user.sub_domain}`);
+          } else {
+            // Fallback to /builder if subDomain is not available
+            router.push("/builder");
+          }
+        }, 5000);
+      },
+      onError: error => {
+        console.error("Import failed:", error);
+        setShowConfirmDialog(false);
+        setShowLoadingScreen(false);
       },
     });
   };
 
   return (
     <>
+      {/* Loading Screen */}
+      <LoadingScreen isVisible={showLoadingScreen} />
+
       <div className="group">
         <Card className="gap-0 overflow-hidden border-gray-200 py-0 transition-all duration-300 hover:border-blue-300">
           <div

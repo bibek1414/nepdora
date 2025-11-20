@@ -54,4 +54,7 @@ export interface JWTPayload {
   domain: string;
   sub_domain: string;
   has_profile_completed: boolean;
+  is_template_account: boolean;
+  first_login?: boolean;
+  is_onboarding_complete?: boolean;
 }

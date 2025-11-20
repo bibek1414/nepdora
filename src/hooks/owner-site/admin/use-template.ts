@@ -22,8 +22,6 @@ export const useImportTemplate = () => {
       return templateAPI.importTemplate(templateId);
     },
     onSuccess: data => {
-      toast.success(data.message || "Template imported successfully!");
-
       // Invalidate relevant queries to refresh data
       queryClient.invalidateQueries({ queryKey: ["templates"] });
 

@@ -12,6 +12,8 @@ export interface User {
   subDomain: string;
   hasProfile: boolean;
   hasProfileCompleted: boolean;
+  isFirstLogin?: boolean;
+  isOnboardingComplete?: boolean;
   avatar: string;
 }
 
@@ -41,6 +43,8 @@ export async function getServerUser(): Promise<User | null> {
       subDomain: payload.sub_domain,
       hasProfile: payload.has_profile,
       hasProfileCompleted: payload.has_profile_completed,
+      isFirstLogin: payload.first_login,
+      isOnboardingComplete: payload.is_onboarding_complete,
       avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
         payload.store_name
       )}&background=3b82f6&color=ffffff&size=32&rounded=true&bold=true`,

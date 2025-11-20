@@ -11,6 +11,8 @@ export interface User {
   domain?: string;
   sub_domain?: string;
   has_profile_completed?: boolean;
+  first_login?: boolean;
+  is_onboarding_complete?: boolean;
 }
 export interface AuthTokens {
   access_token: string;

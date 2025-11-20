@@ -25,19 +25,12 @@ import { Template } from "@/types/super-admin/components/template";
 
 type TemplateItem = Template;
 
-type PaginationInfo = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: TemplateItem[];
-};
-
 export default function CreateTemplateDialog() {
   const router = useRouter();
 
   // State
   const [open, setOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false); // Add edit dialog state
+  const [editOpen, setEditOpen] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<TemplateItem | null>(
     null
   ); // Add editing template state
@@ -90,7 +83,6 @@ export default function CreateTemplateDialog() {
     setEditOpen(false);
     setEditingTemplate(null);
     fetchTemplates();
-    toast.success("Template image updated successfully");
   };
 
   // Add edit cancel handler
@@ -371,14 +363,6 @@ export default function CreateTemplateDialog() {
       {/* Create Template Account Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Create New Template</DialogTitle>
-            <DialogDescription>
-              Create a complete template account with store setup. This will
-              generate a full account that can be used as a template.
-            </DialogDescription>
-          </DialogHeader>
-
           <CreateTemplateAccountForm onSuccess={handleTemplateCreated} />
         </DialogContent>
       </Dialog>
@@ -386,13 +370,6 @@ export default function CreateTemplateDialog() {
       {/* Edit Template Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit Template</DialogTitle>
-            <DialogDescription>
-              Update the template image for &quot;{editingTemplate?.name}&quot;.
-            </DialogDescription>
-          </DialogHeader>
-
           {editingTemplate && (
             <EditTemplateForm
               template={editingTemplate}

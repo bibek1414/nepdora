@@ -32,14 +32,25 @@ export const siteConfigAPI = {
     }
   },
 
-  createSiteConfig: async (configData: FormData): Promise<SiteConfig> => {
+  createSiteConfig: async (
+    configData: FormData,
+    accessToken?: string
+  ): Promise<SiteConfig> => {
     try {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/site-config/`);
+
+      const headers: HeadersInit = {};
+
+      // Add authorization if token provided
+      if (accessToken) {
+        headers["Authorization"] = `Bearer ${accessToken}`;
+      }
+
       const response = await fetch(url.toString(), {
         method: "POST",
+        headers,
         body: configData,
-        // Don't set Content-Type header - let browser set it with boundary for FormData
       }).catch(fetchError => {
         console.error("Network error:", fetchError);
         throw new Error(
@@ -65,15 +76,24 @@ export const siteConfigAPI = {
 
   patchSiteConfig: async (
     configId: number,
-    configData: FormData
+    configData: FormData,
+    accessToken?: string
   ): Promise<SiteConfig> => {
     try {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/site-config/${configId}/`);
+
+      const headers: HeadersInit = {};
+
+      // Add authorization if token provided
+      if (accessToken) {
+        headers["Authorization"] = `Bearer ${accessToken}`;
+      }
+
       const response = await fetch(url.toString(), {
         method: "PATCH",
+        headers,
         body: configData,
-        // Don't set Content-Type header - let browser set it with boundary for FormData
       }).catch(fetchError => {
         console.error("Network error:", fetchError);
         throw new Error(
@@ -89,7 +109,7 @@ export const siteConfigAPI = {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("update site config error:", error);
+      console.error("Update site config error:", error);
       if (error instanceof Error) {
         throw error;
       }
@@ -97,12 +117,24 @@ export const siteConfigAPI = {
     }
   },
 
-  deleteSiteConfig: async (configId: number): Promise<void> => {
+  deleteSiteConfig: async (
+    configId: number,
+    accessToken?: string
+  ): Promise<void> => {
     try {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/site-config/${configId}/`);
+
+      const headers: HeadersInit = {};
+
+      // Add authorization if token provided
+      if (accessToken) {
+        headers["Authorization"] = `Bearer ${accessToken}`;
+      }
+
       const response = await fetch(url.toString(), {
         method: "DELETE",
+        headers,
       }).catch(fetchError => {
         console.error("Network error:", fetchError);
         throw new Error(

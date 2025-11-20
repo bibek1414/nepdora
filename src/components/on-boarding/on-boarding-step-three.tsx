@@ -34,6 +34,8 @@ import {
 import { Template } from "@/types/owner-site/admin/template";
 import { useRouter } from "next/navigation";
 import useDebouncer from "@/hooks/use-debouncer";
+import { LoadingScreen } from "@/components/on-boarding/loading-screen/loading-screen";
+import { useAuth } from "@/hooks/use-auth";
 
 interface OnboardingStepThreeProps {
   websiteType: string;
@@ -45,11 +47,13 @@ export const OnboardingStepThree = ({
   onBack,
 }: OnboardingStepThreeProps) => {
   const router = useRouter();
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
     null
   );
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [gridView, setGridView] = useState<"large" | "compact">("large");
 
   const debouncedSearchTerm = useDebouncer(searchTerm, 300);
@@ -77,7 +81,21 @@ export const OnboardingStepThree = ({
       importTemplate(selectedTemplate.id, {
         onSuccess: () => {
           setShowConfirmDialog(false);
-          router.push("/admin");
+          setShowLoadingScreen(true);
+
+          // Navigate to builder after 5 seconds
+          setTimeout(() => {
+            if (user?.sub_domain) {
+              router.push(`/builder/${user.sub_domain}`);
+            } else {
+              router.push("/builder");
+            }
+          }, 5000);
+        },
+        onError: error => {
+          console.error("Import failed:", error);
+          setShowConfirmDialog(false);
+          setShowLoadingScreen(false);
         },
       });
     }
@@ -89,7 +107,15 @@ export const OnboardingStepThree = ({
   };
 
   const handleStartFromScratch = () => {
-    router.push("/admin");
+    setShowLoadingScreen(true);
+
+    setTimeout(() => {
+      if (user?.sub_domain) {
+        router.push(`/builder/${user.sub_domain}`);
+      } else {
+        router.push("/builder");
+      }
+    }, 5000);
   };
 
   const clearSearch = () => {
@@ -118,6 +144,9 @@ export const OnboardingStepThree = ({
 
   return (
     <>
+      {/* Loading Screen */}
+      <LoadingScreen isVisible={showLoadingScreen} />
+
       <div className="flex min-h-screen flex-col bg-gray-50">
         {/* Header */}
         <header className="border-b bg-white px-6 py-4">

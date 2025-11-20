@@ -283,6 +283,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             domain?: string;
             sub_domain?: string;
             has_profile_completed?: boolean;
+            first_login?: boolean;
+            is_onboarding_complete?: boolean;
           })
         | null;
 
@@ -299,6 +301,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         domain: payload?.domain,
         sub_domain: payload?.sub_domain,
         has_profile_completed: payload?.has_profile_completed,
+        first_login: payload?.first_login,
+        is_onboarding_complete: payload?.is_onboarding_complete,
       };
 
       handleAuthSuccess(loggedInUser, tokens);
@@ -318,8 +322,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const currentPath = window.location.pathname;
           const isAdminRoute = currentPath.startsWith("/admin");
 
-          // Use /admin path for both dev and production if user is logging in from admin route
-          const path = isAdminRoute ? "/admin" : "/";
+          // Determine path based on first_login
+          let path: string;
+          if (loggedInUser.first_login) {
+            // First login: navigate to onboarding
+            path = "/on-boarding";
+          } else if (isAdminRoute) {
+            // Regular login from admin route: stay on admin
+            path = "/admin";
+          } else {
+            // Regular login from non-admin route: go to root
+            path = "/";
+          }
+
           let url = buildTenantFrontendUrl(sub, {
             path,
             isDev: siteConfig.isDev,
@@ -334,7 +349,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           return; // Don't set isLoading to false, keep loading state during redirect
         }
       }
-      router.push("/");
+
+      // Fallback for non-tenant scenario
+      if (loggedInUser.first_login) {
+        router.push("/on-boarding");
+      } else {
+        router.push("/");
+      }
       // Keep loading state during router navigation
     } catch (error) {
       const errorResponse = error as ErrorResponse;

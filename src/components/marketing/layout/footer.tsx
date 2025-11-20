@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="relative bg-white">
+    <footer className="relative mt-20 bg-white">
       {/* Subtle gradient overlay */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-50/30" />
 

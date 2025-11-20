@@ -5,6 +5,8 @@ export interface Template {
   name: string;
   template_image?: string;
   schema_name: string;
+  template_category?: { id: number; name: string } | null;
+  template_subcategory?: { id: number; name: string } | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -15,6 +17,8 @@ export interface CreateTemplateRequest {
 
 export interface UpdateTemplateRequest {
   template_image?: File;
+  template_category_id?: number | null;
+  template_subcategory_id?: number | null;
 }
 
 export interface CreateTemplateResponse {

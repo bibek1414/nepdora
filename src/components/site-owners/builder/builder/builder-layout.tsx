@@ -1,4 +1,3 @@
-// components/site-owners/builder/builder-layout.tsx
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
@@ -74,7 +73,8 @@ import { toast } from "sonner";
 import { componentsApi } from "@/services/api/owner-sites/components/unified";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
-
+import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
+import { useAuth } from "@/hooks/use-auth";
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -85,7 +85,7 @@ interface BuilderLayoutProps {
 export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const router = useRouter();
   const { siteUser, pageSlug } = params;
-
+  const { user } = useAuth();
   // Add Section state with pending insert index
   const [isAddSectionDialogOpen, setIsAddSectionDialogOpen] = useState(false);
   const [pendingInsertIndex, setPendingInsertIndex] = useState<
@@ -129,7 +129,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isTextEditorStylesDialogOpen, setIsTextEditorStylesDialogOpen] =
     useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
+  // Check if onboarding should be shown automatically
+  useEffect(() => {
+    if (user && !user.is_onboarding_complete) {
+      setShowOnboarding(true);
+    }
+  }, [user]);
   // Queries and Mutations
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const createNavbarMutation = useCreateNavbarMutation();
@@ -323,7 +330,19 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       throw error;
     }
   };
+  // Onboarding handlers
+  const handleCloseOnboarding = () => {
+    setShowOnboarding(false);
+  };
 
+  const handleOpenOnboarding = () => {
+    setShowOnboarding(true);
+  };
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false);
+    // Optional: Refresh user data or invalidate queries
+  };
   // Auto-create home page
   useEffect(() => {
     if (
@@ -1284,6 +1303,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   return (
     <TextSelectionProvider>
       <DndProvider backend={HTML5Backend}>
+        {showOnboarding && user && (
+          <OnboardingModal
+            userData={{
+              storeName: user.store_name || "",
+              email: user.email,
+              phoneNumber: user.phone_number || "",
+            }}
+            isOverlay={true}
+            onClose={handleCloseOnboarding}
+            onComplete={handleOnboardingComplete}
+          />
+        )}
         {/* All Dialog Components */}
         <AddSectionDialog
           open={isAddSectionDialogOpen}
@@ -1350,6 +1381,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onPageChange={handlePageChange}
           onPageCreated={handlePageCreated}
           onPageDeleted={handlePageDeleted}
+          onOpenOnboarding={handleOpenOnboarding}
+          isOnboardingComplete={user?.is_onboarding_complete}
         />
 
         {/* Sticky Formatting Toolbar */}
