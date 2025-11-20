@@ -21,6 +21,14 @@ import {
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Bold,
   Italic,
   Underline as UnderlineIcon,
@@ -46,6 +54,41 @@ import {
   Redo,
   Loader2,
 } from "lucide-react";
+
+const FontSizeExtension = TextStyle.extend({
+  addGlobalAttributes() {
+    return [
+      {
+        types: ["textStyle"],
+        attributes: {
+          fontSize: {
+            default: null,
+            parseHTML: (element: HTMLElement) => element.style.fontSize || null,
+            renderHTML: (attributes: { fontSize?: string | null }) => {
+              if (!attributes.fontSize) {
+                return {};
+              }
+              return {
+                style: `font-size: ${attributes.fontSize}`,
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+});
+
+const FONT_SIZES = [
+  "12px",
+  "14px",
+  "16px",
+  "18px",
+  "20px",
+  "24px",
+  "28px",
+  "32px",
+];
 
 // Custom Image extension with resize functionality
 const ResizableImageExtension = Image.extend({
@@ -262,6 +305,8 @@ export const TOOLBAR_CONFIGS = {
     "underline",
     "bulletList",
     "orderedList",
+    "fontSize",
+    "color",
   ],
   standard: [
     "heading",
@@ -275,6 +320,7 @@ export const TOOLBAR_CONFIGS = {
     "textAlign",
     "link",
     "image",
+    "fontSize",
   ],
   advanced: [
     "heading",
@@ -294,8 +340,18 @@ export const TOOLBAR_CONFIGS = {
     "codeBlock",
     "undo",
     "redo",
+    "fontSize",
   ],
-  minimal: ["bold", "italic", "underline", "bulletList", "orderedList", "link"],
+  minimal: [
+    "bold",
+    "italic",
+    "underline",
+    "bulletList",
+    "orderedList",
+    "link",
+    "fontSize",
+    "color",
+  ],
 };
 
 export interface ReusableQuillProps {
@@ -358,6 +414,7 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
     const [imageUploadError, setImageUploadError] = useState<string | null>(
       null
     );
+    const [customFontSize, setCustomFontSize] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
     const initialValueSet = useRef(false);
 
@@ -378,6 +435,7 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
         Superscript,
         TextStyle,
         Color,
+        FontSizeExtension,
         TextAlign.configure({
           types: ["heading", "paragraph"],
         }),
@@ -482,6 +540,42 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
       }
     };
 
+    const applyFontSize = (size?: string) => {
+      if (!editor) return;
+      const currentAttrs = editor.getAttributes("textStyle") ?? {};
+      const nextAttrs = { ...currentAttrs };
+
+      if (size) {
+        nextAttrs.fontSize = size;
+      } else {
+        delete nextAttrs.fontSize;
+      }
+
+      Object.keys(nextAttrs).forEach(key => {
+        if (
+          nextAttrs[key as keyof typeof nextAttrs] === undefined ||
+          nextAttrs[key as keyof typeof nextAttrs] === null
+        ) {
+          delete nextAttrs[key as keyof typeof nextAttrs];
+        }
+      });
+
+      if (Object.keys(nextAttrs).length > 0) {
+        editor.chain().focus().setMark("textStyle", nextAttrs).run();
+      } else {
+        editor.chain().focus().unsetMark("textStyle").run();
+      }
+    };
+
+    const handleCustomFontSizeApply = () => {
+      const sanitizedValue = parseFloat(customFontSize);
+      if (Number.isNaN(sanitizedValue) || sanitizedValue <= 0) {
+        return;
+      }
+      applyFontSize(`${sanitizedValue}px`);
+      setCustomFontSize("");
+    };
+
     const handleImageUpload = async (file: File) => {
       setImageUploadError(null);
 
@@ -532,6 +626,11 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
       if (!editor || toolbar === "none") return null;
 
       const toolbarItems = TOOLBAR_CONFIGS[toolbar];
+      const currentFontSizeAttr =
+        editor?.getAttributes("textStyle")?.fontSize || null;
+      const currentFontSizeValue = currentFontSizeAttr || "default";
+      const isCustomFontSize =
+        !!currentFontSizeAttr && !FONT_SIZES.includes(currentFontSizeAttr);
 
       return (
         <div className="flex flex-wrap gap-1 border-b border-gray-200 bg-gray-50 p-2">
@@ -681,6 +780,66 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
                 </div>
               </PopoverContent>
             </Popover>
+          )}
+
+          {toolbarItems.includes("fontSize") && (
+            <div className="flex items-center gap-2">
+              <Select
+                value={currentFontSizeValue}
+                onValueChange={value => {
+                  if (value === "default") {
+                    applyFontSize(undefined);
+                    return;
+                  }
+                  applyFontSize(value);
+                }}
+              >
+                <SelectTrigger className="h-8 w-28 text-xs">
+                  <SelectValue placeholder="Font Size" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="default">Default</SelectItem>
+                    {FONT_SIZES.map(size => (
+                      <SelectItem key={size} value={size}>
+                        {size}
+                      </SelectItem>
+                    ))}
+                    {isCustomFontSize && currentFontSizeAttr && (
+                      <SelectItem value={currentFontSizeAttr}>
+                        Custom ({currentFontSizeAttr})
+                      </SelectItem>
+                    )}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              <div className="flex items-center gap-1">
+                <Input
+                  type="number"
+                  min={8}
+                  max={96}
+                  value={customFontSize}
+                  onChange={e => setCustomFontSize(e.target.value)}
+                  placeholder="px"
+                  className="h-8 w-16 text-xs"
+                  onKeyDown={e => {
+                    if (e.key === "Enter") {
+                      handleCustomFontSizeApply();
+                    }
+                  }}
+                />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="h-8 px-2 text-xs"
+                  onClick={handleCustomFontSizeApply}
+                  disabled={!customFontSize}
+                >
+                  Set
+                </Button>
+              </div>
+            </div>
           )}
 
           {toolbarItems.includes("bulletList") && (
