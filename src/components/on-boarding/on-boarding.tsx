@@ -7,12 +7,24 @@ import { OnboardingStepThree } from "./on-boarding-step-three";
 
 type OnboardingStep = 1 | 2 | 3;
 
+interface WebsiteData {
+  type: string;
+  categoryId?: number;
+  subcategoryId?: number;
+}
+
 export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>(1);
-  const [websiteType, setWebsiteType] = useState("");
+  const [websiteData, setWebsiteData] = useState<WebsiteData>({
+    type: "",
+  });
 
-  const handleStepOneContinue = (type: string) => {
-    setWebsiteType(type);
+  const handleStepOneContinue = (
+    type: string,
+    categoryId?: number,
+    subcategoryId?: number
+  ) => {
+    setWebsiteData({ type, categoryId, subcategoryId });
     setCurrentStep(2);
   };
 
@@ -44,14 +56,16 @@ export default function OnboardingPage() {
       )}
       {currentStep === 2 && (
         <OnboardingStepTwo
-          websiteType={websiteType}
+          websiteType={websiteData.type}
           onBack={handleStepTwoBack}
           onSelectOption={handleStepTwoSelect}
         />
       )}
       {currentStep === 3 && (
         <OnboardingStepThree
-          websiteType={websiteType}
+          websiteType={websiteData.type}
+          categoryId={websiteData.categoryId}
+          subcategoryId={websiteData.subcategoryId}
           onBack={handleStepThreeBack}
         />
       )}

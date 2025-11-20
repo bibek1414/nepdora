@@ -5,10 +5,30 @@ import {
   UpdateTemplateRequest,
 } from "@/types/super-admin/components/template";
 
-export const useTemplates = (page: number = 1, pageSize: number = 10) => {
+interface UseTemplatesParams {
+  page?: number;
+  pageSize?: number;
+  category?: string;
+  search?: string;
+  subcategory?: string;
+}
+export const useTemplates = ({
+  page = 1,
+  pageSize = 10,
+  category,
+  subcategory,
+  search,
+}: UseTemplatesParams = {}) => {
   return useQuery({
-    queryKey: ["templates", page, pageSize],
-    queryFn: () => useTemplateApi.getTemplates(page, pageSize),
+    queryKey: ["templates", page, pageSize, category, search],
+    queryFn: () =>
+      useTemplateApi.getTemplates(
+        page,
+        pageSize,
+        category,
+        search,
+        subcategory
+      ),
   });
 };
 

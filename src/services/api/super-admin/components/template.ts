@@ -13,7 +13,10 @@ import {
 export const useTemplateApi = {
   getTemplates: async (
     page: number = 1,
-    pageSize: number = 10
+    pageSize: number = 10,
+    category?: string,
+    subcategory?: string,
+    search?: string
   ): Promise<{
     count: number;
     next: string | null;
@@ -21,14 +24,32 @@ export const useTemplateApi = {
     results: Template[];
   }> => {
     const API_BASE_URL = getApiBaseUrl();
+
+    // Build query parameters
+    const params = new URLSearchParams({
+      page: page.toString(),
+      page_size: pageSize.toString(),
+    });
+
+    if (category) {
+      params.append("category", category);
+    }
+    if (subcategory) {
+      params.append("subcategory", subcategory);
+    }
+    if (search) {
+      params.append("search", search);
+    }
+
     const response = await fetch(
-      `${API_BASE_URL}/api/template-tenants/?page=${page}&page_size=${pageSize}`,
+      `${API_BASE_URL}/api/template-tenants/?${params.toString()}`,
       {
         method: "GET",
         headers: createHeaders(),
         cache: "no-store",
       }
     );
+
     await handleApiError(response);
     const data = await response.json();
 

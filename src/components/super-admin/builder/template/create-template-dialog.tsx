@@ -48,7 +48,7 @@ export default function CreateTemplateDialog() {
     isLoading: loading,
     error,
     refetch: fetchTemplates,
-  } = useTemplates(page, pageSize);
+  } = useTemplates({ page, pageSize });
 
   const templates = paginationData?.results || [];
   const pagination = paginationData

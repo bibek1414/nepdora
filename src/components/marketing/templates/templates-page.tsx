@@ -20,27 +20,24 @@ const TemplatesPage = () => {
   const { data: categoriesData, isLoading: categoriesLoading } =
     useTemplateCategories();
 
-  // Fetch templates
-  const { data: templatesData, isLoading: templatesLoading } = useTemplates(
-    currentPage,
-    pageSize
-  );
+  // Fetch templates with category filter
+  const { data: templatesData, isLoading: templatesLoading } = useTemplates({
+    page: currentPage,
+    pageSize: pageSize,
+    category:
+      selectedCategory && selectedCategory !== "all"
+        ? selectedCategory
+        : undefined,
+  });
 
   // Transform API categories to UI format
   const categories: UICategory[] = [
     { key: "all", label: "All Templates" },
     ...(categoriesData || []).map(cat => ({
-      key: cat.slug, // Using slug as key, or use cat.id.toString() for ID
+      key: cat.slug,
       label: cat.name,
     })),
   ];
-
-  // Filter templates by category
-  const currentTemplates =
-    templatesData?.results?.filter(template => {
-      if (!selectedCategory || selectedCategory === "all") return true;
-      return template.template_category?.slug === selectedCategory;
-    }) || [];
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
@@ -97,9 +94,9 @@ const TemplatesPage = () => {
         )}
 
         {/* Templates Grid */}
-        {currentTemplates.length > 0 ? (
+        {templatesData?.results && templatesData.results.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8 xl:grid-cols-4">
-            {currentTemplates.map(template => (
+            {templatesData.results.map(template => (
               <TemplateCard key={template.id} template={template} />
             ))}
           </div>
@@ -107,7 +104,10 @@ const TemplatesPage = () => {
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <p className="text-lg text-gray-500">
-                No templates found in this category
+                No templates found{" "}
+                {selectedCategory && selectedCategory !== "all"
+                  ? "in this category"
+                  : ""}
               </p>
             </div>
           </div>

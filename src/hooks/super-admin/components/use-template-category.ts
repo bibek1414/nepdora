@@ -5,10 +5,10 @@ import {
   CreateTemplateSubcategoryRequest,
 } from "@/types/super-admin/components/template-category";
 
-export const useTemplateCategories = () => {
+export const useTemplateCategories = (search?: string) => {
   return useQuery({
-    queryKey: ["template-categories"],
-    queryFn: () => useTemplateCategoryApi.getCategories(),
+    queryKey: ["template-categories", search],
+    queryFn: () => useTemplateCategoryApi.getCategories(search),
   });
 };
 
@@ -32,13 +32,16 @@ export const useCreateTemplateCategory = () => {
   });
 };
 
-export const useTemplateSubcategories = (categoryId?: number) => {
+export const useTemplateSubcategories = (
+  categoryId?: number,
+  search?: string
+) => {
   return useQuery({
-    queryKey: ["template-subcategories", categoryId],
+    queryKey: ["template-subcategories", categoryId, search],
     queryFn: () =>
       categoryId
-        ? useTemplateCategoryApi.getSubcategoriesByCategory(categoryId)
-        : useTemplateCategoryApi.getSubcategories(),
+        ? useTemplateCategoryApi.getSubcategoriesByCategory(categoryId, search)
+        : useTemplateCategoryApi.getSubcategories(search),
   });
 };
 
@@ -60,4 +63,19 @@ export const useCreateTemplateSubcategory = () => {
       queryClient.invalidateQueries({ queryKey: ["template-subcategories"] });
     },
   });
+};
+
+// Search across both categories and subcategories
+export const useTemplateSearch = (search: string) => {
+  const categoriesQuery = useTemplateCategories(search);
+  const subcategoriesQuery = useTemplateSubcategories(undefined, search);
+
+  return {
+    data: {
+      categories: categoriesQuery.data || [],
+      subcategories: subcategoriesQuery.data || [],
+    },
+    isLoading: categoriesQuery.isLoading || subcategoriesQuery.isLoading,
+    error: categoriesQuery.error || subcategoriesQuery.error,
+  };
 };
