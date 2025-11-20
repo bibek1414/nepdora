@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTemplateApi } from "@/services/api/super-admin/components/template";
 import {
-  Template,
   CreateTemplateRequest,
   UpdateTemplateRequest,
 } from "@/types/super-admin/components/template";

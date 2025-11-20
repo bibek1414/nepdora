@@ -50,6 +50,7 @@ const AnimatedPricingSection = () => {
         return Zap;
     }
   };
+  ("use client");
   const calculatePrice = (monthlyPrice: string) => {
     const price = parseFloat(monthlyPrice);
 
@@ -116,26 +117,15 @@ const AnimatedPricingSection = () => {
   const sortedPlans = plans ? sortPlans(plans) : [];
 
   return (
-    <section className="relative min-h-screen px-4 py-16 transition-colors">
-      <div className="from-primary to-secondary pointer-events-none absolute top-40 -left-20 z-50 h-40 w-40 rounded-full bg-gradient-to-tr opacity-50 blur-3xl"></div>
-
-      {/* Top Right */}
-      <div className="from-primary to-secondary pointer-events-none absolute -right-20 z-50 h-40 w-40 rounded-full bg-gradient-to-tr opacity-50 blur-3xl"></div>
-
-      {/* Split Background */}
-      <div className="absolute inset-0">
-        <div className="h-[45%] bg-[#2d2e30]"></div>
-        <div className="h-[55%] bg-white"></div>
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-7xl">
+    <section className="min-h-screen bg-white px-4 py-16 transition-colors">
+      <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-16 text-center">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-4 text-2xl font-extrabold tracking-tight text-white sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
+            className="text-foreground mb-4 text-2xl font-extrabold tracking-tight sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
           >
             Pick a plan that&apos;s right for you
           </motion.h1>
@@ -143,7 +133,7 @@ const AnimatedPricingSection = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mx-auto mb-8 max-w-2xl text-lg text-white"
+            className="mx-auto mb-8 max-w-2xl text-lg text-gray-600"
           >
             All of our plans are customized to fit the needs of small and large
             teams.
@@ -156,7 +146,9 @@ const AnimatedPricingSection = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mb-12 flex items-center justify-center gap-4"
           >
-            <span className="font-medium text-white transition-colors duration-200">
+            <span
+              className={`font-medium transition-colors duration-200 ${!isYearly ? "text-gray-900" : "text-gray-500"}`}
+            >
               Monthly
             </span>
             <button
@@ -172,7 +164,9 @@ const AnimatedPricingSection = () => {
                 className="absolute top-1 left-1 h-5 w-5 rounded-full bg-white shadow-md"
               />
             </button>
-            <span className="font-medium text-white transition-colors duration-200">
+            <span
+              className={`font-medium transition-colors duration-200 ${isYearly ? "text-gray-900" : "text-gray-500"}`}
+            >
               Yearly
             </span>
             <motion.span
@@ -193,7 +187,7 @@ const AnimatedPricingSection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-wrap justify-center gap-8 text-sm text-white"
+            className="flex flex-wrap justify-center gap-8 text-sm text-gray-600"
           >
             {topFeatures.map((feature, index) => (
               <motion.div
@@ -243,8 +237,8 @@ const AnimatedPricingSection = () => {
                     transition={{ duration: 0.5, delay: 0.2 }}
                     className="absolute top-0 left-0 z-10 w-full -translate-y-1/2"
                   >
-                    <div className="bg-primary w-full px-6 py-4 text-center text-sm font-bold text-white shadow-lg">
-                      <div className="mt-10">RECOMMENDED</div>
+                    <div className="bg-primary mt-10 w-full px-6 py-2 text-center text-sm font-bold text-white shadow-lg">
+                      RECOMMENDED
                     </div>
                   </motion.div>
                 )}
@@ -255,7 +249,7 @@ const AnimatedPricingSection = () => {
                     transition={{ duration: 0.5, delay: 0.2 }}
                     className="absolute top-0 left-0 z-10 w-full -translate-y-1/2"
                   >
-                    <div className="bg-primary w-full px-6 py-2 text-center text-sm font-bold text-white shadow-lg"></div>
+                    <div className="bg-primary mt-5 w-full px-6 py-2 text-center text-sm font-bold text-white shadow-lg"></div>
                   </motion.div>
                 )}
 

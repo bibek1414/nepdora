@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import HeroSection from "@/components/marketing/hero-section/hero-section";
 import FeaturesSection from "@/components/marketing/features-section/features-section";
 import ProcessSection from "@/components/marketing/process-section/process-section";
-import PricingSection from "@/components/marketing/pricing-section/pricing-section";
+import PricingSection from "@/components/marketing/pricing-section/pricing-section-hero";
 import BuildYourWay from "@/components/marketing/build-your-way/build-your-way";
 import StatsSection from "@/components/marketing/stats-section/stats-section";
 import AISection from "@/components/marketing/ai-section/ai-section";

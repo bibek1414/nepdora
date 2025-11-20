@@ -75,6 +75,8 @@ import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
 import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
 import { useAuth } from "@/hooks/use-auth";
+import { decodeJwt } from "@/lib/utils";
+
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -86,6 +88,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const router = useRouter();
   const { siteUser, pageSlug } = params;
   const { user } = useAuth();
+
   // Add Section state with pending insert index
   const [isAddSectionDialogOpen, setIsAddSectionDialogOpen] = useState(false);
   const [pendingInsertIndex, setPendingInsertIndex] = useState<
@@ -131,11 +134,90 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
-  // Check if onboarding should be shown automatically
+  // Enhanced onboarding check that prioritizes localStorage
   useEffect(() => {
-    if (user && !user.is_onboarding_complete) {
-      setShowOnboarding(true);
+    if (!user) {
+      setShowOnboarding(false);
+      return;
     }
+
+    const checkOnboardingStatus = () => {
+      // Check multiple sources for the most current data
+      const sources = [];
+
+      // Source 1: User context
+      if (typeof user.is_onboarding_complete !== "undefined") {
+        sources.push({ source: "context", value: user.is_onboarding_complete });
+      }
+
+      // Source 2: localStorage (most up-to-date after API call)
+      try {
+        const storedUser = localStorage.getItem("authUser");
+        if (storedUser) {
+          const parsed = JSON.parse(storedUser);
+          if (typeof parsed.is_onboarding_complete !== "undefined") {
+            sources.push({
+              source: "localStorage",
+              value: parsed.is_onboarding_complete,
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Error reading localStorage:", error);
+      }
+
+      // Source 3: JWT token from authTokens
+      try {
+        const storedTokens = localStorage.getItem("authTokens");
+        if (storedTokens) {
+          const tokens = JSON.parse(storedTokens);
+          if (tokens.access_token) {
+            const payload = decodeJwt(tokens.access_token);
+            if (payload?.is_onboarding_complete !== undefined) {
+              sources.push({
+                source: "JWT",
+                value: Boolean(payload.is_onboarding_complete),
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error decoding JWT:", error);
+      }
+
+      console.log("🔍 ONBOARDING STATUS CHECK - All sources:", sources);
+
+      // Priority: localStorage > JWT > context
+      const localStorageSource = sources.find(s => s.source === "localStorage");
+      if (localStorageSource) {
+        console.log("✅ Using localStorage value:", localStorageSource.value);
+        return localStorageSource.value;
+      }
+
+      const jwtSource = sources.find(s => s.source === "JWT");
+      if (jwtSource) {
+        console.log("✅ Using JWT value:", jwtSource.value);
+        return jwtSource.value;
+      }
+
+      const contextSource = sources.find(s => s.source === "context");
+      if (contextSource) {
+        console.log("✅ Using context value:", contextSource.value);
+        return contextSource.value;
+      }
+
+      // Default to true (don't show onboarding) if we can't determine
+      console.log("✅ No sources found, defaulting to true");
+      return true;
+    };
+
+    const onboardingComplete = checkOnboardingStatus();
+    console.log(
+      "🎯 Final onboarding decision - show modal?",
+      !onboardingComplete
+    );
+
+    setShowOnboarding(!onboardingComplete);
   }, [user]);
   // Queries and Mutations
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
@@ -1039,7 +1121,41 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     setPendingInsertIndex(insertIndex);
     setIsTextEditorStylesDialogOpen(true);
   };
+  // Replace your current useEffect with this:
+  useEffect(() => {
+    const checkOnboardingStatus = () => {
+      // First, try to get from user context
+      if (user && typeof user.is_onboarding_complete !== "undefined") {
+        return user.is_onboarding_complete;
+      }
 
+      // Fallback: check localStorage directly
+      try {
+        const storedUser = localStorage.getItem("authUser");
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          // Check both possible field names
+          return (
+            parsedUser.is_onboarding_complete ?? parsedUser.onboarding_complete
+          );
+        }
+      } catch (error) {
+        console.error("Error parsing stored user:", error);
+      }
+
+      // Default to true (don't show onboarding) if we can't determine
+      return true;
+    };
+
+    const isOnboardingComplete = checkOnboardingStatus();
+    console.log("Onboarding status:", {
+      fromContext: user?.is_onboarding_complete,
+      finalResult: isOnboardingComplete,
+    });
+
+    // Only show onboarding if it's explicitly false
+    setShowOnboarding(isOnboardingComplete === false);
+  }, [user]);
   // Component click handler for Add Section Dialog
   const handleComponentClick = (componentId: string, template?: string) => {
     if (componentId === "page-templates") {

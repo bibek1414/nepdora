@@ -1,27 +1,14 @@
-export interface Template {
-  id: number;
-  name: string;
-  description: string;
-  image: string;
-  featured?: boolean;
-}
-
-export type CategoryKey =
-  | "portfolio"
-  | "business"
-  | "ecommerce"
-  | "blog"
-  | "other";
-
 export interface Category {
-  key: CategoryKey;
+  key: string;
   label: string;
 }
 
-export type TemplateCategories = Record<CategoryKey, Template[]>;
+export type CategoryKey = string;
 
-// TemplateCard.tsx
-
-// CategoryNavigation.tsx
-
-// TemplatesPage.tsx
+export interface Template {
+  id: number;
+  name: string;
+  description?: string;
+  image?: string;
+  featured?: boolean;
+}

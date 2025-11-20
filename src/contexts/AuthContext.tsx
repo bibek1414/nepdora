@@ -29,6 +29,7 @@ interface AuthContextType {
   signup: (data: SignupData) => Promise<void>;
   logout: () => void;
   updateTokens: (tokens: AuthTokens) => void;
+  updateUser: (userData: Partial<User>) => void; // NEW: Add updateUser function
   isLoading: boolean;
   isAuthenticated: boolean;
   clearAuthData: () => void;
@@ -84,6 +85,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     // Delete from base domain
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=.${baseDomain}; path=/;`;
+  };
+
+  // NEW: Add updateUser function
+  const updateUser = (userData: Partial<User>) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      const updatedUser = { ...prev, ...userData };
+
+      // Update localStorage
+      localStorage.setItem("authUser", JSON.stringify(updatedUser));
+      setCrossDomainCookie("authUser", JSON.stringify(updatedUser));
+
+      return updatedUser;
+    });
   };
 
   useEffect(() => {
@@ -221,6 +236,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       domain: userData.domain ?? undefined,
       sub_domain: userData.sub_domain ?? undefined,
       has_profile_completed: userData.has_profile_completed ?? undefined,
+      is_onboarding_complete: userData.is_onboarding_complete ?? undefined, // NEW: Include this
     };
 
     // Store in localStorage
@@ -302,7 +318,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         sub_domain: payload?.sub_domain,
         has_profile_completed: payload?.has_profile_completed,
         first_login: payload?.first_login,
-        is_onboarding_complete: payload?.is_onboarding_complete,
+        is_onboarding_complete: payload?.is_onboarding_complete, // NEW: Include this
       };
 
       handleAuthSuccess(loggedInUser, tokens);
@@ -441,6 +457,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signup,
         logout,
         updateTokens,
+        updateUser, // NEW: Include updateUser in context
         isLoading: isLoading || isRedirecting, // Keep loading true during redirect
         isAuthenticated: !!user && !!tokens?.access_token,
         clearAuthData,

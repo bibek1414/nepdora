@@ -27,6 +27,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { siteConfigAPI } from "@/services/api/owner-sites/admin/site-config";
 import { onboardingAPI } from "@/services/auth/onboarding";
 import { SiteConfig } from "@/types/owner-site/admin/site-config";
+import { decodeJwt } from "@/lib/utils";
 
 interface OnboardingModalProps {
   userData: {
@@ -103,7 +104,7 @@ export default function OnboardingModal({
   onComplete,
 }: OnboardingModalProps) {
   const router = useRouter();
-  const { tokens } = useAuth();
+  const { tokens, user, updateUser } = useAuth(); // Get updateUser from auth context
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [existingConfig, setExistingConfig] = useState<SiteConfig | null>(null);
@@ -233,6 +234,53 @@ export default function OnboardingModal({
     }
   };
 
+  // CRITICAL: Update onboarding status immediately after API call
+  const updateOnboardingStatus = () => {
+    console.log("🔄 Updating onboarding status to complete...");
+
+    // Method 1: Use updateUser from AuthContext if available
+    if (updateUser) {
+      updateUser({ is_onboarding_complete: true });
+      console.log("✅ Updated via AuthContext updateUser");
+    }
+
+    // Method 2: Update localStorage directly (immediate)
+    try {
+      const currentUser = localStorage.getItem("authUser");
+      if (currentUser) {
+        const parsedUser = JSON.parse(currentUser);
+        const updatedUser = {
+          ...parsedUser,
+          is_onboarding_complete: true,
+        };
+        localStorage.setItem("authUser", JSON.stringify(updatedUser));
+        console.log("✅ Updated localStorage with onboarding complete: true");
+      }
+    } catch (error) {
+      console.error("❌ Error updating localStorage:", error);
+    }
+
+    // Method 3: Also update authTokens if they contain user data
+    try {
+      const storedTokens = localStorage.getItem("authTokens");
+      if (storedTokens) {
+        const tokens = JSON.parse(storedTokens);
+        if (tokens.access_token) {
+          const payload = decodeJwt(tokens.access_token);
+          if (payload) {
+            const updatedPayload = {
+              ...payload,
+              is_onboarding_complete: true,
+            };
+            // Note: We can't modify the JWT directly, but we can update our stored user data
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error updating token data:", error);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!formData.email || !formData.businessName) {
       toast.error("Please fill in all required fields");
@@ -296,6 +344,9 @@ export default function OnboardingModal({
       // Complete onboarding
       await onboardingAPI.completeOnboarding(tokens.access_token);
       toast.success("Onboarding completed successfully!");
+
+      // ✅ CRITICAL: Update onboarding status immediately
+      updateOnboardingStatus();
 
       // Call the onComplete callback if provided
       if (onComplete) {

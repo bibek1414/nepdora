@@ -1,11 +1,15 @@
 "use client";
 import React from "react";
-import { Category, CategoryKey } from "./types";
+
+interface Category {
+  key: string;
+  label: string;
+}
 
 interface CategoryNavigationProps {
   categories: Category[];
-  selectedCategory: CategoryKey;
-  onCategoryChange: (category: CategoryKey) => void;
+  selectedCategory: string;
+  onCategoryChange: (category: string) => void;
 }
 
 export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
