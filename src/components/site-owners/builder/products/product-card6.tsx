@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { getProductsBySelection } from "./filter-product";
 
 interface ProductCard6Props {
   product: Product;

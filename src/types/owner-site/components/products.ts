@@ -20,6 +20,15 @@ export interface ProductsData {
   showDescription?: boolean;
   showStock?: boolean;
   order?: number;
+  selectionType?:
+    | "all"
+    | "featured"
+    | "popular"
+    | "category"
+    | "subcategory"
+    | "custom";
+  categoryId?: number;
+  subCategoryId?: number;
 }
 
 export interface ProductsComponentData {
@@ -43,4 +52,5 @@ export const defaultProductsData: ProductsData = {
   showPrice: true,
   showDescription: true,
   showStock: true,
+  selectionType: "all",
 };

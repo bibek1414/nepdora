@@ -40,6 +40,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { ProductsFilterDialog } from "./products-filter-dialog";
+import { getProductsBySelection } from "@/components/site-owners/builder/products/filter-product";
 
 interface ProductsComponentProps {
   component: ProductsComponentData;
@@ -62,6 +64,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
 }) => {
   const productFilters = useProductFilters();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -74,6 +77,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     showDescription = true,
     showStock = true,
     itemsPerRow = 4,
+    selectionType = "all",
+    categoryId,
+    subCategoryId,
   } = component.data || {};
 
   // Determine if we should show sidebar based on style
@@ -81,6 +87,19 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   const isCarouselStyle = style === "product-1" || style === "product-6";
   const isFullSectionStyle = style === "product-7";
   const currentFilters = shouldShowSidebar && !isEditable ? productFilters : {};
+
+  // Calculate base filters from component configuration
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const baseFilters: any = {};
+  if (selectionType === "featured") {
+    baseFilters.is_featured = true;
+  } else if (selectionType === "popular") {
+    baseFilters.is_popular = true;
+  } else if (selectionType === "category" && categoryId) {
+    baseFilters.category_id = categoryId;
+  } else if (selectionType === "subcategory" && subCategoryId) {
+    baseFilters.sub_category_id = subCategoryId;
+  }
 
   // Use unified mutation hooks
   const deleteProductsComponent = useDeleteComponentMutation(
@@ -96,12 +115,21 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   const { data, isLoading, error } = useProducts({
     page: currentPage,
     page_size: page_size,
+    ...baseFilters,
     ...(shouldShowSidebar && !isEditable ? currentFilters : {}),
   });
 
   // Extract products from the API response structure
-  const products = data?.results || [];
+  const rawProducts = data?.results || [];
   const pagination = data?.pagination;
+
+  // Apply client-side filtering to ensure correct products are shown
+  // This acts as a fallback/enforcement if the API filtering is not working as expected
+  const products = getProductsBySelection(rawProducts, {
+    type: selectionType,
+    categoryId,
+    subCategoryId,
+  });
 
   const handleProductClick = (product: Product) => {
     if (onProductClick && component.order !== undefined) {
@@ -178,6 +206,29 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     }
   };
 
+  const handleFilterUpdate = (
+    newData: Partial<ProductsComponentData["data"]>
+  ) => {
+    if (!pageSlug) return;
+
+    const updatedData = {
+      ...component.data,
+      ...newData,
+    };
+
+    updateProductsComponent.mutate({
+      componentId: component.component_id,
+      data: updatedData,
+    });
+
+    if (onUpdate) {
+      onUpdate(component.component_id, {
+        ...component,
+        data: updatedData,
+      });
+    }
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -238,61 +289,86 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
       <div className="group relative">
         {/* Delete Control with AlertDialog */}
         <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
-          <AlertDialog
-            open={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-          >
-            <div className="flex items-center gap-2">
-              <Link
-                href="/admin/products"
-                target="_blank"
-                onClick={e => e.stopPropagation()}
-                className="z-30"
-              >
-                <Button variant="outline" size="sm">
-                  Manage Products
-                </Button>
-              </Link>
-              <AlertDialogTrigger asChild>
+          <div className="flex flex-col gap-2">
+            <AlertDialog
+              open={isDeleteDialogOpen}
+              onOpenChange={setIsDeleteDialogOpen}
+            >
+              <div className="flex items-center gap-2">
                 <Button
-                  onClick={handleDeleteClick}
-                  variant="destructive"
+                  variant="outline"
                   size="sm"
-                  className="z-30 h-8 px-3"
-                  disabled={deleteProductsComponent.isPending}
+                  onClick={() => setIsFilterDialogOpen(true)}
+                  className="z-30"
                 >
-                  <Trash2 className="mr-1 h-4 w-4" />
-                  {deleteProductsComponent.isPending ? "Deleting..." : "Delete"}
+                  <Filter className="mr-2 h-4 w-4" />
+                  Filter
                 </Button>
-              </AlertDialogTrigger>
-            </div>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete Products Component
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to delete this products component? This
-                  action cannot be undone and will permanently remove the
-                  component from your page.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleConfirmDelete}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  disabled={deleteProductsComponent.isPending}
+                <Link
+                  href="/admin/products"
+                  target="_blank"
+                  onClick={e => e.stopPropagation()}
+                  className="z-30"
                 >
-                  {deleteProductsComponent.isPending
-                    ? "Deleting..."
-                    : "Delete Component"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                  <Button variant="outline" size="sm">
+                    Manage Products
+                  </Button>
+                </Link>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    onClick={handleDeleteClick}
+                    variant="destructive"
+                    size="sm"
+                    className="z-30 h-8 px-3"
+                    disabled={deleteProductsComponent.isPending}
+                  >
+                    <Trash2 className="mr-1 h-4 w-4" />
+                    {deleteProductsComponent.isPending
+                      ? "Deleting..."
+                      : "Delete"}
+                  </Button>
+                </AlertDialogTrigger>
+              </div>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center gap-2">
+                    <Trash2 className="text-destructive h-5 w-5" />
+                    Delete Products Component
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete this products component?
+                    This action cannot be undone and will permanently remove the
+                    component from your page.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleConfirmDelete}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    disabled={deleteProductsComponent.isPending}
+                  >
+                    {deleteProductsComponent.isPending
+                      ? "Deleting..."
+                      : "Delete Component"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
+
+        <ProductsFilterDialog
+          open={isFilterDialogOpen}
+          onOpenChange={setIsFilterDialogOpen}
+          currentSelection={{
+            selectionType,
+            categoryId,
+            subCategoryId,
+            page_size,
+          }}
+          onSave={handleFilterUpdate}
+        />
 
         {/* Products Preview with Conditional Sidebar Layout */}
         <div className="py-8">
