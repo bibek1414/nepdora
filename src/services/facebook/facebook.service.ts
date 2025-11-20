@@ -46,6 +46,15 @@ interface FacebookConversation {
   unread_count?: number;
 }
 
+interface SendMessageResult {
+  success: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any;
+  error?: string;
+  isOutsideWindow?: boolean;
+  needsApproval?: boolean;
+}
+
 export const facebookService = {
   // Get Facebook page access token
   async getPageAccessToken(userAccessToken: string, pageId: string) {
@@ -57,7 +66,6 @@ export const facebookService = {
         },
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       interface FacebookPage {
         id: string;
         access_token: string;
@@ -84,7 +92,7 @@ export const facebookService = {
           fields: "id,name,primary_page",
         },
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       interface BusinessAccount {
         id: string;
         name: string;
@@ -101,7 +109,7 @@ export const facebookService = {
     }
   },
 
-  // FIXED: Get PAGE conversations (not business conversations)
+  // Get PAGE conversations
   async getPageConversations(
     accessToken: string,
     pageId: string,
@@ -127,7 +135,6 @@ export const facebookService = {
         params.after = after;
       }
 
-      // CHANGED: Use pageId instead of businessId
       const response = await axios.get<{
         data: FacebookConversation[];
         paging?: { next?: string };
@@ -143,7 +150,7 @@ export const facebookService = {
     }
   },
 
-  // Alternative: Get conversations for a specific user/thread
+  // Get conversations for a specific user/thread
   async getConversations(
     pageAccessToken: string,
     pageId: string
@@ -157,7 +164,7 @@ export const facebookService = {
           access_token: pageAccessToken,
           fields:
             "id,participants,updated_time,unread_count,link,message_count",
-          platform: "messenger", // Only get messenger conversations
+          platform: "messenger",
         },
       });
       return response.data;
@@ -196,13 +203,134 @@ export const facebookService = {
   },
 
   /**
+   * Check if a conversation is outside the 24-hour messaging window
+   */
+  async isOutside24HourWindow(
+    conversationId: string,
+    accessToken: string
+  ): Promise<boolean> {
+    try {
+      const response = await axios.get(
+        `${FACEBOOK_GRAPH_URL}/${conversationId}/messages`,
+        {
+          params: {
+            access_token: accessToken,
+            limit: 1,
+            fields: "created_time,from",
+          },
+        }
+      );
+
+      if (!response.data.data || response.data.data.length === 0) {
+        console.log("No messages found, assuming within window");
+        return false;
+      }
+
+      const lastMessage = response.data.data[0];
+      const lastMessageTime = new Date(lastMessage.created_time);
+      const now = new Date();
+
+      const hoursDiff =
+        (now.getTime() - lastMessageTime.getTime()) / (1000 * 60 * 60);
+
+      console.log(`Last message was ${hoursDiff.toFixed(2)} hours ago`);
+
+      return hoursDiff > 24;
+    } catch (error) {
+      console.error("Error checking 24-hour window:", error);
+      return false;
+    }
+  },
+
+  /**
+   * Send a message with automatic 24-hour window detection and graceful error handling
+   */
+  async sendMessageSmart(
+    recipientId: string,
+    message: string,
+    accessToken: string,
+    conversationId: string
+  ): Promise<SendMessageResult> {
+    try {
+      // Check if we're outside the 24-hour window
+      const needsTag = await this.isOutside24HourWindow(
+        conversationId,
+        accessToken
+      );
+
+      if (needsTag) {
+        console.log(
+          "🏷️ Outside 24-hour window, attempting with HUMAN_AGENT tag"
+        );
+
+        try {
+          // Try sending with HUMAN_AGENT tag
+          const result = await this.sendMessage(
+            recipientId,
+            message,
+            accessToken,
+            "MESSAGE_TAG",
+            "HUMAN_AGENT"
+          );
+
+          return {
+            success: true,
+            data: result,
+            isOutsideWindow: true,
+            needsApproval: false,
+          };
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (tagError: any) {
+          // Check if error is due to unapproved tag
+          if (
+            tagError.message.includes("outside the allowed window") ||
+            tagError.message.includes("2018278")
+          ) {
+            console.error("❌ HUMAN_AGENT tag not approved yet!");
+
+            return {
+              success: false,
+              error:
+                "Message is outside 24-hour window and HUMAN_AGENT tag is not approved. Please request tag approval in Facebook App Settings.",
+              isOutsideWindow: true,
+              needsApproval: true,
+            };
+          }
+          throw tagError;
+        }
+      } else {
+        console.log("✅ Within 24-hour window, using standard RESPONSE");
+        const result = await this.sendMessage(
+          recipientId,
+          message,
+          accessToken,
+          "RESPONSE"
+        );
+
+        return {
+          success: true,
+          data: result,
+          isOutsideWindow: false,
+          needsApproval: false,
+        };
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error(
+        "Error in sendMessageSmart:",
+        error.response?.data || error.message
+      );
+      return {
+        success: false,
+        error: error.message,
+        isOutsideWindow: false,
+        needsApproval: false,
+      };
+    }
+  },
+
+  /**
    * Send a message to a Facebook user
-   * @param recipientId - The PSID of the message recipient
-   * @param message - The message text to send
-   * @param accessToken - Page access token with pages_messaging permission
-   * @param messagingType - Type of message (RESPONSE, UPDATE, MESSAGE_TAG)
-   * @param tag - Optional message tag for non-promotional messages
-   * @returns Promise with the API response
    */
   async sendMessage(
     recipientId: string,
@@ -234,7 +362,6 @@ export const facebookService = {
         },
       };
 
-      // Add message tag if provided (required for certain non-promotional use cases)
       if (tag) {
         payload.tag = tag;
       }
@@ -261,11 +388,28 @@ export const facebookService = {
   },
 
   /**
+   * Send a proactive follow-up within 24 hours to reset the window
+   */
+  async sendProactiveFollowUp(recipientId: string, accessToken: string) {
+    try {
+      const followUpMessage =
+        "Thank you for your message! Our support team has received your inquiry and will respond soon. " +
+        "Is there anything else we can help you with?";
+
+      return await this.sendMessage(
+        recipientId,
+        followUpMessage,
+        accessToken,
+        "RESPONSE"
+      );
+    } catch (error) {
+      console.error("Error sending proactive follow-up:", error);
+      throw error;
+    }
+  },
+
+  /**
    * Send a message with quick replies
-   * @param recipientId - The PSID of the message recipient
-   * @param message - The message text to send
-   * @param quickReplies - Array of quick reply options
-   * @param accessToken - Page access token
    */
   async sendQuickReplies(
     recipientId: string,
@@ -309,8 +453,6 @@ export const facebookService = {
 
   /**
    * Send a typing indicator
-   * @param recipientId - The PSID of the message recipient
-   * @param accessToken - Page access token
    */
   async sendTypingIndicator(recipientId: string, accessToken: string) {
     try {
@@ -329,7 +471,6 @@ export const facebookService = {
       );
     } catch (error) {
       console.error("Error sending typing indicator:", error);
-      // Don't throw error for typing indicators as they're not critical
     }
   },
 
@@ -432,7 +573,6 @@ export const facebookService = {
     period: "day" | "week" | "month" = "day"
   ) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const response = await axios.get(
         `${FACEBOOK_GRAPH_URL}/${pageId}/insights/${metric}`,
         {
