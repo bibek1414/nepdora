@@ -5,6 +5,7 @@ interface SanitizerConfig {
   allowedAttributes?: string[];
   allowedCss?: Record<string, RegExp>;
   enableListStyling?: boolean;
+  enableSpacingPreservation?: boolean;
 }
 
 const DEFAULT_CONFIG: SanitizerConfig = {
@@ -112,8 +113,16 @@ const DEFAULT_CONFIG: SanitizerConfig = {
       /^(decimal|lower-alpha|upper-alpha|lower-roman|upper-roman|disc|circle|square|none)$/,
     "margin-left": /^[\d.%px-]+$/,
     "padding-left": /^[\d.%px-]+$/,
+    // Add spacing-related CSS properties
+    "min-height": /^[\d.%px-]+$/,
+    display: /^(block|inline|inline-block|list-item|none)$/,
+    content: /^['"].*['"]$/,
+    "margin-top": /^[\d.%px-]+$/,
+    "margin-bottom": /^[\d.%px-]+$/,
+    "line-height": /^[\d.%px-]+$/,
   },
   enableListStyling: true,
+  enableSpacingPreservation: true,
 };
 
 /**
@@ -159,9 +168,13 @@ export function sanitizeHtmlContent(
   try {
     let sanitized = DOMPurify.sanitize(htmlContent, dompurifyConfig);
 
-    // Post-processing to ensure proper list styling if enabled
-    if (config.enableListStyling) {
-      sanitized = enhanceListStyling(sanitized);
+    // Post-processing to enhance list styling and spacing if enabled
+    if (config.enableListStyling || config.enableSpacingPreservation) {
+      sanitized = enhanceSpacingAndLists(
+        sanitized,
+        config.enableListStyling,
+        config.enableSpacingPreservation
+      );
     }
 
     return sanitized;
@@ -173,13 +186,22 @@ export function sanitizeHtmlContent(
 }
 
 /**
- * Enhances list styling in sanitized HTML
+ * Enhances list styling and spacing preservation in sanitized HTML
  * @param htmlContent - The sanitized HTML content
- * @returns HTML with enhanced list styling
+ * @param enableListStyling - Whether to enhance list styling
+ * @param enableSpacingPreservation - Whether to preserve spacing
+ * @returns HTML with enhanced styling and spacing
  */
-function enhanceListStyling(htmlContent: string): string {
-  return (
-    htmlContent
+function enhanceSpacingAndLists(
+  htmlContent: string,
+  enableListStyling: boolean = true,
+  enableSpacingPreservation: boolean = true
+): string {
+  let enhanced = htmlContent;
+
+  // Apply list styling enhancements
+  if (enableListStyling) {
+    enhanced = enhanced
       // Ensure ordered lists have proper styling
       .replace(
         /<ol(?![^>]*style)/g,
@@ -206,8 +228,66 @@ function enhanceListStyling(htmlContent: string): string {
       .replace(
         /<li([^>]*style="[^"]*?)"/g,
         '<li$1; margin: 0.25rem 0; display: list-item;"'
+      );
+  }
+
+  // Apply spacing preservation enhancements
+  if (enableSpacingPreservation) {
+    enhanced = enhanced
+      // Preserve empty paragraphs with proper spacing
+      .replace(
+        /<p><\/p>/g,
+        '<p style="min-height: 1.5em; margin: 0.5em 0;">&#8203;</p>'
       )
-  );
+      .replace(
+        /<p>\s*<\/p>/g,
+        '<p style="min-height: 1.5em; margin: 0.5em 0;">&#8203;</p>'
+      )
+      .replace(
+        /<p\s+style="([^"]*)">\s*<\/p>/g,
+        '<p style="$1; min-height: 1.5em; margin: 0.5em 0;">&#8203;</p>'
+      )
+      // Ensure br tags have proper display and spacing
+      .replace(
+        /<br\s*\/?>/gi,
+        "<br style=\"display: block; margin: 0.5em 0; content: ' ';\" />"
+      )
+      // Handle multiple consecutive br tags
+      .replace(/(<br[^>]*>[\s]*){2,}/gi, match => {
+        const count = (match.match(/<br/gi) || []).length;
+        return Array(count)
+          .fill(
+            "<br style=\"display: block; margin: 0.5em 0; content: ' ';\" />"
+          )
+          .join("\n");
+      })
+      // Preserve paragraphs with only whitespace
+      .replace(
+        /<p>(\s+)<\/p>/g,
+        '<p style="min-height: 1.5em; margin: 0.5em 0; white-space: pre-wrap;">$1</p>'
+      )
+      // Add spacing to empty divs
+      .replace(
+        /<div><\/div>/g,
+        '<div style="min-height: 1.5em; margin: 0.5em 0;">&#8203;</div>'
+      )
+      .replace(
+        /<div>\s*<\/div>/g,
+        '<div style="min-height: 1.5em; margin: 0.5em 0;">&#8203;</div>'
+      );
+  }
+
+  return enhanced;
+}
+
+/**
+ * Legacy function for backward compatibility
+ * Enhances list styling in sanitized HTML
+ * @param htmlContent - The sanitized HTML content
+ * @returns HTML with enhanced list styling
+ */
+function enhanceListStyling(htmlContent: string): string {
+  return enhanceSpacingAndLists(htmlContent, true, false);
 }
 
 /**
@@ -217,8 +297,8 @@ function enhanceListStyling(htmlContent: string): string {
  */
 export function sanitizeContent(blogContent: string): string {
   return sanitizeHtmlContent(blogContent, {
-    // Blog-specific customizations can go here
     enableListStyling: true,
+    enableSpacingPreservation: true,
   });
 }
 
@@ -251,6 +331,7 @@ export function sanitizeProductDescription(productDescription: string): string {
       "h6",
     ],
     enableListStyling: true,
+    enableSpacingPreservation: true,
   });
 }
 
@@ -264,5 +345,6 @@ export function sanitizeUserContent(userContent: string): string {
     allowedTags: ["p", "br", "strong", "em", "b", "i"],
     allowedAttributes: [],
     enableListStyling: false,
+    enableSpacingPreservation: true,
   });
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Slider } from "@/components/ui/slider";
 import {
   useThemeQuery,
   useCreateThemeMutation,
@@ -26,7 +25,7 @@ import {
   ThemeFonts,
   defaultThemeData,
 } from "@/types/owner-site/components/theme";
-import { Palette, Save, Check, Type, Minus, Plus } from "lucide-react";
+import { Palette, Save, Type } from "lucide-react";
 import { toast } from "sonner";
 
 interface ThemeDialogProps {
@@ -71,12 +70,227 @@ const predefinedColors = [
   "#000000",
 ];
 
-const fontSizePresets = [
-  { label: "Small", bodySize: 14, headingSize: 20 },
-  { label: "Medium", bodySize: 16, headingSize: 24 },
-  { label: "Large", bodySize: 18, headingSize: 28 },
-  { label: "Extra Large", bodySize: 20, headingSize: 32 },
-];
+// Memoized ColorPicker component to prevent unnecessary re-renders
+const ColorPicker = memo(
+  ({
+    label,
+    colorKey,
+    value,
+    description,
+    onChange,
+    previewColors,
+  }: {
+    label: string;
+    colorKey: string;
+    value: string;
+    description?: string;
+    onChange: (value: string) => void;
+    previewColors: ThemeColors;
+  }) => {
+    const [textValue, setTextValue] = useState(value);
+
+    // Sync textValue when value prop changes from outside (like preset clicks)
+    useEffect(() => {
+      setTextValue(value);
+    }, [value]);
+
+    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
+      setTextValue(newValue);
+
+      // Only update parent if it's a valid color format
+      if (
+        newValue.startsWith("#") &&
+        (newValue.length === 4 || newValue.length === 7)
+      ) {
+        onChange(newValue);
+      } else if (newValue.startsWith("#")) {
+        // Still update parent even for incomplete hex codes
+        onChange(newValue);
+      }
+    };
+
+    const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
+      setTextValue(newValue);
+      onChange(newValue);
+    };
+
+    const handlePresetClick = (color: string) => {
+      setTextValue(color);
+      onChange(color);
+    };
+
+    const getPreviewColor = () => {
+      if (colorKey.includes("Foreground")) return value;
+      if (colorKey === "background") return previewColors.text;
+      if (colorKey === "text") return previewColors.background;
+      return "#fff";
+    };
+
+    return (
+      <div className="space-y-3">
+        <div className="space-y-1">
+          <Label className="text-sm font-medium">{label}</Label>
+          {description && (
+            <p className="text-xs text-gray-500">{description}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <div
+              className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-gray-200 text-xs font-medium shadow-sm"
+              style={{
+                backgroundColor: value,
+                color: getPreviewColor(),
+              }}
+            >
+              Aa
+            </div>
+          </div>
+
+          <div className="grid grid-cols-6 gap-1">
+            {predefinedColors.map(color => (
+              <button
+                key={color}
+                type="button"
+                className="relative h-8 w-8 rounded-md border-2 border-gray-200 transition-colors hover:scale-105 hover:border-gray-400"
+                style={{ backgroundColor: color }}
+                onClick={() => handlePresetClick(color)}
+              >
+                {value === color && (
+                  <svg
+                    className="absolute inset-0 m-auto h-4 w-4 text-white drop-shadow-sm"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                )}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex gap-2">
+            <input
+              type="color"
+              value={value}
+              onChange={handleColorChange}
+              className="h-10 w-16 cursor-pointer rounded border p-1"
+            />
+            <Input
+              type="text"
+              value={textValue}
+              onChange={handleTextChange}
+              className="flex-1 font-mono text-sm"
+              placeholder="#000000"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+);
+
+ColorPicker.displayName = "ColorPicker";
+
+// Memoized FontSelector component
+const FontSelector = memo(
+  ({
+    label,
+    value,
+    onChange,
+  }: {
+    label: string;
+    value: string;
+    onChange: (value: string) => void;
+  }) => (
+    <div className="space-y-3">
+      <Label className="text-sm font-medium">{label}</Label>
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+        {fontOptions.slice(0, 4).map(font => (
+          <button
+            key={font.value}
+            type="button"
+            className={`relative rounded-lg border-2 p-3 text-left transition-all hover:shadow-md ${
+              value === font.value
+                ? "border-blue-500 bg-blue-50 shadow-sm"
+                : "border-gray-200 hover:border-gray-300"
+            }`}
+            onClick={() => onChange(font.value)}
+          >
+            <div className="space-y-1">
+              <div
+                className="text-lg font-medium"
+                style={{ fontFamily: font.value }}
+              >
+                Aa
+              </div>
+              <div className="text-xs text-gray-600">{font.label}</div>
+            </div>
+            {value === font.value && (
+              <svg
+                className="absolute top-2 right-2 h-4 w-4 text-blue-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            )}
+          </button>
+        ))}
+      </div>
+
+      <div className="max-h-32 overflow-y-auto rounded-md border">
+        {fontOptions.slice(4).map(font => (
+          <button
+            key={font.value}
+            type="button"
+            className={`w-full border-b px-3 py-2 text-left transition-colors last:border-b-0 hover:bg-gray-50 ${
+              value === font.value ? "border-blue-200 bg-blue-50" : ""
+            }`}
+            onClick={() => onChange(font.value)}
+            style={{ fontFamily: font.value }}
+          >
+            <div className="flex items-center justify-between">
+              <span>{font.label}</span>
+              {value === font.value && (
+                <svg
+                  className="h-4 w-4 text-blue-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              )}
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+);
+
+FontSelector.displayName = "FontSelector";
 
 export const ThemeDialog: React.FC<ThemeDialogProps> = ({
   open,
@@ -99,30 +313,35 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
     }
   }, [themesResponse]);
 
-  const handleColorChange = (colorKey: keyof ThemeColors, value: string) => {
-    setCurrentTheme(prev => ({
-      ...prev,
-      colors: {
-        ...prev.colors,
-        [colorKey]: value,
-      },
-    }));
-    setHasChanges(true);
-  };
+  // Memoized color change handler
+  const handleColorChange = useCallback(
+    (colorKey: keyof ThemeColors, value: string) => {
+      setCurrentTheme(prev => ({
+        ...prev,
+        colors: {
+          ...prev.colors,
+          [colorKey]: value,
+        },
+      }));
+      setHasChanges(true);
+    },
+    []
+  );
 
-  const handleFontChange = (
-    fontKey: keyof ThemeFonts,
-    value: string | number
-  ) => {
-    setCurrentTheme(prev => ({
-      ...prev,
-      fonts: {
-        ...prev.fonts,
-        [fontKey]: value,
-      },
-    }));
-    setHasChanges(true);
-  };
+  // Memoized font change handler
+  const handleFontChange = useCallback(
+    (fontKey: keyof ThemeFonts, value: string) => {
+      setCurrentTheme(prev => ({
+        ...prev,
+        fonts: {
+          ...prev.fonts,
+          [fontKey]: value,
+        },
+      }));
+      setHasChanges(true);
+    },
+    []
+  );
 
   const handleSave = () => {
     const saveOperation =
@@ -148,146 +367,6 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
       });
   };
 
-  const ColorPicker = ({
-    label,
-    colorKey,
-    value,
-    description,
-  }: {
-    label: string;
-    colorKey: keyof ThemeColors;
-    value: string;
-    description?: string;
-  }) => (
-    <div className="space-y-3">
-      <div className="space-y-1">
-        <Label className="text-sm font-medium">{label}</Label>
-        {description && <p className="text-xs text-gray-500">{description}</p>}
-      </div>
-
-      {/* Color Preview & Sample */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <div
-            className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-gray-200 text-xs font-medium shadow-sm"
-            style={{
-              backgroundColor: value,
-              color: colorKey.includes("Foreground")
-                ? value
-                : colorKey === "background"
-                  ? currentTheme.colors.text
-                  : colorKey === "text"
-                    ? currentTheme.colors.background
-                    : "#fff",
-            }}
-          >
-            {colorKey.includes("Foreground")
-              ? "Aa"
-              : colorKey === "text"
-                ? "Aa"
-                : colorKey === "background"
-                  ? "Aa"
-                  : "Aa"}
-          </div>
-        </div>
-
-        {/* Predefined Colors */}
-        <div className="grid grid-cols-6 gap-1">
-          {predefinedColors.map(color => (
-            <button
-              key={color}
-              className="relative h-8 w-8 rounded-md border-2 border-gray-200 transition-colors hover:scale-105 hover:border-gray-400"
-              style={{ backgroundColor: color }}
-              onClick={() => handleColorChange(colorKey, color)}
-            >
-              {value === color && (
-                <Check className="absolute inset-0 m-auto h-4 w-4 text-white drop-shadow-sm" />
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* Custom Color Input */}
-        <div className="flex gap-2">
-          <Input
-            type="color"
-            value={value}
-            onChange={e => handleColorChange(colorKey, e.target.value)}
-            className="h-10 w-16 cursor-pointer rounded border p-1"
-          />
-          <Input
-            type="text"
-            value={value}
-            onChange={e => handleColorChange(colorKey, e.target.value)}
-            className="flex-1 font-mono text-sm"
-            placeholder="#000000"
-          />
-        </div>
-      </div>
-    </div>
-  );
-
-  const FontSelector = ({
-    label,
-    fontKey,
-    value,
-  }: {
-    label: string;
-    fontKey: keyof ThemeFonts;
-    value: string;
-  }) => (
-    <div className="space-y-3">
-      <Label className="text-sm font-medium">{label}</Label>
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-        {fontOptions.slice(0, 4).map(font => (
-          <button
-            key={font.value}
-            className={`relative rounded-lg border-2 p-3 text-left transition-all hover:shadow-md ${
-              value === font.value
-                ? "border-blue-500 bg-blue-50 shadow-sm"
-                : "border-gray-200 hover:border-gray-300"
-            }`}
-            onClick={() => handleFontChange(fontKey, font.value)}
-          >
-            <div className="space-y-1">
-              <div
-                className="text-lg font-medium"
-                style={{ fontFamily: font.value }}
-              >
-                Aa
-              </div>
-              <div className="text-xs text-gray-600">{font.label}</div>
-            </div>
-            {value === font.value && (
-              <Check className="absolute top-2 right-2 h-4 w-4 text-blue-600" />
-            )}
-          </button>
-        ))}
-      </div>
-
-      {/* Show all fonts dropdown */}
-      <div className="max-h-32 overflow-y-auto rounded-md border">
-        {fontOptions.slice(4).map(font => (
-          <button
-            key={font.value}
-            className={`w-full border-b px-3 py-2 text-left transition-colors last:border-b-0 hover:bg-gray-50 ${
-              value === font.value ? "border-blue-200 bg-blue-50" : ""
-            }`}
-            onClick={() => handleFontChange(fontKey, font.value)}
-            style={{ fontFamily: font.value }}
-          >
-            <div className="flex items-center justify-between">
-              <span>{font.label}</span>
-              {value === font.value && (
-                <Check className="h-4 w-4 text-blue-600" />
-              )}
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
@@ -305,11 +384,9 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
         </DialogHeader>
 
         <div className="max-h-[60vh] space-y-6 overflow-auto">
-          {/* Colors Section */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Colors</h3>
             <div className="grid gap-6">
-              {/* Primary Colors */}
               <div className="space-y-4">
                 <h4 className="text-md font-medium text-gray-700">
                   Primary Colors
@@ -320,17 +397,22 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
                     colorKey="primary"
                     value={currentTheme.colors.primary}
                     description="Main brand color for buttons and highlights"
+                    onChange={value => handleColorChange("primary", value)}
+                    previewColors={currentTheme.colors}
                   />
                   <ColorPicker
                     label="Primary Text"
                     colorKey="primaryForeground"
                     value={currentTheme.colors.primaryForeground}
                     description="Text color on primary background"
+                    onChange={value =>
+                      handleColorChange("primaryForeground", value)
+                    }
+                    previewColors={currentTheme.colors}
                   />
                 </div>
               </div>
 
-              {/* Secondary Colors */}
               <div className="space-y-4">
                 <h4 className="text-md font-medium text-gray-700">
                   Secondary Colors
@@ -341,17 +423,22 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
                     colorKey="secondary"
                     value={currentTheme.colors.secondary}
                     description="Accent color for secondary elements"
+                    onChange={value => handleColorChange("secondary", value)}
+                    previewColors={currentTheme.colors}
                   />
                   <ColorPicker
                     label="Secondary Text"
                     colorKey="secondaryForeground"
                     value={currentTheme.colors.secondaryForeground}
                     description="Text color on secondary background"
+                    onChange={value =>
+                      handleColorChange("secondaryForeground", value)
+                    }
+                    previewColors={currentTheme.colors}
                   />
                 </div>
               </div>
 
-              {/* General Colors */}
               <div className="space-y-4">
                 <h4 className="text-md font-medium text-gray-700">
                   General Colors
@@ -362,12 +449,16 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
                     colorKey="text"
                     value={currentTheme.colors.text}
                     description="Main text color"
+                    onChange={value => handleColorChange("text", value)}
+                    previewColors={currentTheme.colors}
                   />
                   <ColorPicker
                     label="Background Color"
                     colorKey="background"
                     value={currentTheme.colors.background}
                     description="Main background color"
+                    onChange={value => handleColorChange("background", value)}
+                    previewColors={currentTheme.colors}
                   />
                 </div>
               </div>
@@ -376,29 +467,26 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
 
           <Separator />
 
-          {/* Typography Section */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Type className="h-5 w-5" />
               <h3 className="text-lg font-medium">Typography</h3>
             </div>
 
-            {/* Font Family */}
             <div className="grid gap-6 md:grid-cols-2">
               <FontSelector
                 label="Body Font"
-                fontKey="body"
                 value={currentTheme.fonts.body}
+                onChange={value => handleFontChange("body", value)}
               />
               <FontSelector
                 label="Heading Font"
-                fontKey="heading"
                 value={currentTheme.fonts.heading}
+                onChange={value => handleFontChange("heading", value)}
               />
             </div>
           </div>
 
-          {/* Theme Preview */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Preview</h3>
             <div
@@ -410,17 +498,13 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
             >
               <h4
                 className="mb-2 font-bold"
-                style={{
-                  fontFamily: currentTheme.fonts.heading,
-                }}
+                style={{ fontFamily: currentTheme.fonts.heading }}
               >
                 Sample Heading
               </h4>
               <p
                 className="mb-4"
-                style={{
-                  fontFamily: currentTheme.fonts.body,
-                }}
+                style={{ fontFamily: currentTheme.fonts.body }}
               >
                 This is how your content will look with the selected theme. The
                 font sizes and line height will be applied consistently across
@@ -428,6 +512,7 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
               </p>
               <div className="flex gap-2">
                 <button
+                  type="button"
                   className="rounded px-4 py-2 font-medium"
                   style={{
                     backgroundColor: currentTheme.colors.primary,
@@ -438,6 +523,7 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
                   Primary Button
                 </button>
                 <button
+                  type="button"
                   className="rounded px-4 py-2 font-medium"
                   style={{
                     backgroundColor: currentTheme.colors.secondary,

@@ -1,5 +1,3 @@
-// types/owner-site/components/text-editor.ts
-
 export interface TextEditorData {
   title: string;
   lastUpdated: string;
