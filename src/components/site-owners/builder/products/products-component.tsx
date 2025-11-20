@@ -125,11 +125,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
 
   // Apply client-side filtering to ensure correct products are shown
   // This acts as a fallback/enforcement if the API filtering is not working as expected
-  const products = getProductsBySelection(rawProducts, {
-    type: selectionType,
-    categoryId,
-    subCategoryId,
-  });
+  const products = rawProducts;
 
   const handleProductClick = (product: Product) => {
     if (onProductClick && component.order !== undefined) {
