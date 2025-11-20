@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { ProductsData } from "@/types/owner-site/components/products";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
@@ -39,6 +40,7 @@ export const ProductsFilterDialog: React.FC<ProductsFilterDialogProps> = ({
   const [subCategoryId, setSubCategoryId] = useState<number | undefined>(
     undefined
   );
+  const [limit, setLimit] = useState<number>(8);
 
   // Fetch categories and subcategories
   const { data: categoriesData } = useCategories({ page_size: 100 });
@@ -53,6 +55,7 @@ export const ProductsFilterDialog: React.FC<ProductsFilterDialogProps> = ({
       setSelectionType(currentSelection.selectionType || "all");
       setCategoryId(currentSelection.categoryId);
       setSubCategoryId(currentSelection.subCategoryId);
+      setLimit(currentSelection.page_size || 8);
     }
   }, [open, currentSelection]);
 
@@ -62,6 +65,7 @@ export const ProductsFilterDialog: React.FC<ProductsFilterDialogProps> = ({
       categoryId: selectionType === "category" ? categoryId : undefined,
       subCategoryId:
         selectionType === "subcategory" ? subCategoryId : undefined,
+      page_size: limit,
     });
     onOpenChange(false);
   };
@@ -140,6 +144,19 @@ export const ProductsFilterDialog: React.FC<ProductsFilterDialogProps> = ({
               </Select>
             </div>
           )}
+
+          <div className="grid gap-2">
+            <Label htmlFor="limit">Number of Products</Label>
+            <Input
+              id="limit"
+              type="number"
+              min={1}
+              max={50}
+              value={limit}
+              onChange={e => setLimit(parseInt(e.target.value) || 8)}
+              placeholder="Enter number of products to show"
+            />
+          </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
