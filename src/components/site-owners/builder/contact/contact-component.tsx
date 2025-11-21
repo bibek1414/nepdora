@@ -11,6 +11,7 @@ import { ContactForm1 } from "./contact-form-1";
 import { ContactForm2 } from "./contact-form-2";
 import { ContactForm3 } from "./contact-form-3";
 import { ContactForm4 } from "./contact-form-4";
+import { ContactForm5 } from "./contact-form-5";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -169,6 +170,8 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
         return <ContactForm3 {...formProps} />;
       case "contact-4":
         return <ContactForm4 {...formProps} />;
+      case "contact-5":
+        return <ContactForm5 {...formProps} />;
       case "contact-1":
       default:
         return <ContactForm1 {...formProps} />;
@@ -228,8 +231,8 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
         {/* Contact Preview */}
         <div className="py-8">
           <div className="container mx-auto px-4">
-            {/* Only show title/subtitle editing for non-form-4 styles */}
-            {style !== "contact-4" && (
+            {/* Only show title/subtitle editing for non-form-4 and non-form-5 styles */}
+            {style !== "contact-4" && style !== "contact-5" && (
               <div className="mb-8 text-center">
                 <EditableText
                   value={title}
@@ -264,8 +267,8 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
   return (
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
-        {/* Only show title/subtitle for non-form-4 styles */}
-        {style !== "contact-4" && (
+        {/* Only show title/subtitle for non-form-4 and non-form-5 styles */}
+        {style !== "contact-4" && style !== "contact-5" && (
           <div className="mb-12 text-center">
             <h2
               className="text-foreground mb-4 text-4xl font-bold tracking-tight"

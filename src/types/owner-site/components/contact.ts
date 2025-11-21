@@ -1,7 +1,7 @@
 export interface ContactData {
   component_id?: string;
   component_type: "contact";
-  style: "contact-1" | "contact-2" | "contact-3" | "contact-4";
+  style: "contact-1" | "contact-2" | "contact-3" | "contact-4" | "contact-5";
   title: string;
   subtitle?: string;
   description?: string;
@@ -95,4 +95,17 @@ export const defaultContact4Data: ContactData = {
   description: "Visit us in person or send us a message using the form below.",
   map_embed_url:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3533.1523989318835!2d85.32596447536811!3d27.681684276197256!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb192d0f057801%3A0x59809dfba777fb99!2sBaliyo%20Ventures!5e0!3m2!1sen!2snp!4v1757234557232!5m2!1sen!2snp",
+};
+
+export const defaultContact5Data: ContactData = {
+  ...defaultContactData,
+  style: "contact-5",
+  title: "Start a new<br />project?",
+  subtitle: undefined,
+  description: undefined,
+  contact_info: {
+    email: "yourmail@mail.com\ndemomail@mail.com",
+    phone: "+00 123 321 456\n+00 123 456 678",
+    address: "Write Your Address here",
+  },
 };
