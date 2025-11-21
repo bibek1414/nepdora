@@ -8,6 +8,7 @@ import {
 import { BlogCard1 } from "./blog-card1";
 import { BlogCard2 } from "./blog-card2";
 import { BlogCard3 } from "./blog-card3";
+import { BlogCard4 } from "./blog-card4";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -203,8 +204,10 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     switch (style) {
       case "blog-2":
         return <BlogCard2 {...cardProps} />;
-      case "blog-2":
+      case "blog-3":
         return <BlogCard3 {...cardProps} />;
+      case "blog-4":
+        return <BlogCard4 {...cardProps} />;
       case "blog-1":
       default:
         return <BlogCard1 {...cardProps} />;
@@ -217,6 +220,8 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
         return `grid-cols-1 sm:grid-cols-4 `;
       case "blog-3":
         return "grid-cols-1 gap-6";
+      case "blog-4":
+        return "grid-cols-1 sm:grid-cols-2 gap-6";
       case "blog-1":
       default:
         return `grid-cols-1 sm:grid-cols-4 `;

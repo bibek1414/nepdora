@@ -10,7 +10,7 @@ import Image from "next/image";
 interface BlogStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (style: "grid-1" | "grid-2" | "list-1") => void;
+  onStyleSelect: (style: "blog-1" | "blog-2" | "blog-3" | "blog-4") => void;
 }
 
 export const BlogStylesDialog: React.FC<BlogStylesDialogProps> = ({
@@ -19,25 +19,31 @@ export const BlogStylesDialog: React.FC<BlogStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | "list-1" | null
+    "blog-1" | "blog-2" | "blog-3" | "blog-4" | null
   >(null);
 
   const templates = [
     {
-      id: "grid-1" as const,
-      name: "Grid Style 1",
+      id: "blog-1" as const,
+      name: "Blog Style 1",
     },
     {
-      id: "grid-2" as const,
-      name: "Grid Style 2",
+      id: "blog-2" as const,
+      name: "Blog Style 2",
     },
     {
-      id: "list-1" as const,
-      name: "List Style",
+      id: "blog-3" as const,
+      name: "Blog Style 3",
+    },
+    {
+      id: "blog-4" as const,
+      name: "Blog Style 4",
     },
   ];
 
-  const handleSelect = (template: { id: "grid-1" | "grid-2" | "list-1" }) => {
+  const handleSelect = (template: {
+    id: "blog-1" | "blog-2" | "blog-3" | "blog-4";
+  }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
       onStyleSelect(template.id);
@@ -78,9 +84,7 @@ export const BlogStylesDialog: React.FC<BlogStylesDialogProps> = ({
                   <div className="relative w-full">
                     <Image
                       src={`/images/site-owners/blogs/blog${
-                        template.id === "list-1"
-                          ? "3"
-                          : template.id.split("-")[1]
+                        template.id.split("-")[1]
                       }.png`}
                       alt={template.name}
                       width={400}

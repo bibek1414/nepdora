@@ -40,6 +40,7 @@ import { AboutUsData } from "@/types/owner-site/components/about";
 import { defaultProductsData } from "@/types/owner-site/components/products";
 import { Facebook, Twitter } from "lucide-react";
 import { defaultBlogData } from "@/types/owner-site/components/blog";
+import { BlogStylesDialog } from "@/components/site-owners/builder/blog/blog-style-dialog";
 import { defaultServicesData } from "@/types/owner-site/components/services";
 import {
   ComponentResponse,
@@ -837,7 +838,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleBlogTemplateSelect = async (
-    template: "blog-1" | "blog-2" | "blog-3"
+    template: "blog-1" | "blog-2" | "blog-3" | "blog-4"
   ) => {
     const blogData = { ...defaultBlogData, style: template };
     setIsBlogStylesDialogOpen(false);
@@ -1502,6 +1503,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           open={isBannerStylesDialogOpen}
           onOpenChange={setIsBannerStylesDialogOpen}
           onStyleSelect={handleBannerTemplateSelect}
+        />
+
+        <BlogStylesDialog
+          open={isBlogStylesDialogOpen}
+          onOpenChange={setIsBlogStylesDialogOpen}
+          onStyleSelect={handleBlogTemplateSelect}
         />
 
         {/* Top Navigation */}
