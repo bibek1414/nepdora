@@ -8,12 +8,13 @@ export interface TestimonialsData {
     | "testimonial-4"
     | "testimonial-5"
     | "testimonial-6"
-    | "testimonial-7";
-
+    | "testimonial-7"
+    | "testimonial-8";
   title: string;
   subtitle?: string;
   page_size: number;
   order?: number;
+  backgroundImage?: string;
 }
 
 export interface TestimonialsComponentData {
@@ -32,4 +33,6 @@ export const defaultTestimonialsData: TestimonialsData = {
   subtitle:
     "Don't just take our word for it - hear from our satisfied customers",
   page_size: 6,
+  backgroundImage:
+    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1600&q=80",
 };

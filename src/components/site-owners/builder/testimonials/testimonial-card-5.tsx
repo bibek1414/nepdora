@@ -20,7 +20,12 @@ interface TestimonialCard5Props {
 export interface TestimonialsData {
   component_id?: string;
   component_type: "testimonials";
-  style: "grid-1" | "grid-2" | "list-1" | "grid-3" | "carousel-1";
+  style:
+    | "testimonial-1"
+    | "testimonial-2"
+    | "testimonial-3"
+    | "testimonial-4"
+    | "testimonial-5";
   title: string;
   subtitle?: string;
   page_size: number;

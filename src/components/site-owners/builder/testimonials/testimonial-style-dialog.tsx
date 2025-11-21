@@ -8,76 +8,65 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 
+type TestimonialStyleId =
+  | "testimonial-1"
+  | "testimonial-2"
+  | "testimonial-3"
+  | "testimonial-4"
+  | "testimonial-5"
+  | "testimonial-6"
+  | "testimonial-7"
+  | "testimonial-8";
+
 interface TestimonialsStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (
-    style:
-      | "grid-1"
-      | "grid-2"
-      | "list-1"
-      | "grid-3"
-      | "carousel-1"
-      | "stagger-1"
-      | "card-7"
-  ) => void;
+  onStyleSelect: (style: TestimonialStyleId) => void;
 }
 
 export const TestimonialsStylesDialog: React.FC<
   TestimonialsStylesDialogProps
 > = ({ open, onOpenChange, onStyleSelect }) => {
-  const [selectedStyle, setSelectedStyle] = useState<
-    | "grid-1"
-    | "grid-2"
-    | "list-1"
-    | "grid-3"
-    | "carousel-1"
-    | "stagger-1"
-    | "card-7"
-    | null
-  >(null);
+  const [selectedStyle, setSelectedStyle] = useState<TestimonialStyleId | null>(
+    null
+  );
 
   const templates = [
     {
-      id: "grid-1" as const,
-      name: "Grid Style 1",
+      id: "testimonial-1" as const,
+      name: "Grid Style",
     },
     {
-      id: "grid-2" as const,
-      name: "Grid Style 2",
+      id: "testimonial-2" as const,
+      name: "Carousel Style",
     },
     {
-      id: "list-1" as const,
-      name: "Quote Style",
+      id: "testimonial-3" as const,
+      name: "Card Style 3",
     },
     {
-      id: "grid-3" as const,
-      name: "Grid Style 3",
+      id: "testimonial-4" as const,
+      name: "Modern Cards",
     },
     {
-      id: "carousel-1" as const,
-      name: "Carousel Style 1",
+      id: "testimonial-5" as const,
+      name: "Slider Style 5",
     },
     {
-      id: "stagger-1" as const,
-      name: "Stagger Style 1",
+      id: "testimonial-6" as const,
+      name: "Stagger Layout",
     },
     {
-      id: "card-7" as const,
-      name: "Card Style 7",
+      id: "testimonial-7" as const,
+      name: "Minimal Cards",
+    },
+    {
+      id: "testimonial-8" as const,
+      name: "Premium Gradient",
     },
   ];
 
-  const handleSelect = (template: {
-    id:
-      | "grid-1"
-      | "grid-2"
-      | "list-1"
-      | "grid-3"
-      | "carousel-1"
-      | "stagger-1"
-      | "card-7";
-  }) => {
+  const handleSelect = (template: { id: TestimonialStyleId }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
       onStyleSelect(template.id);

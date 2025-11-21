@@ -41,6 +41,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import TestimonialForm from "@/components/site-owners/admin/testimonials/testimonial-form";
 import { useCreateTestimonial } from "@/hooks/owner-site/admin/use-testimonials";
 import { TestimonialCard7 } from "./testimonial-card-7";
+import { TestimonialCard8 } from "./testimonial-card-8";
 
 interface TestimonialsComponentProps {
   component: TestimonialsComponentData;
@@ -66,7 +67,8 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     page_size = 6,
     title = "What Our Clients Say",
     subtitle,
-    style = "grid-1",
+    style = "testimonial-1",
+    backgroundImage,
   } = component.data || {};
 
   // Use unified mutation hooks
@@ -176,6 +178,30 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     }
   };
 
+  const handleBackgroundImageChange = (imageUrl: string) => {
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
+      return;
+    }
+
+    const updatedData = {
+      ...component.data,
+      backgroundImage: imageUrl,
+    };
+
+    updateTestimonialsComponent.mutate({
+      componentId: component.component_id,
+      data: updatedData,
+    });
+
+    if (onUpdate) {
+      onUpdate(component.component_id, {
+        ...component,
+        data: updatedData,
+      });
+    }
+  };
+
   // Fixed renderTestimonialCard function
   const renderTestimonialCard = (testimonial: Testimonial) => {
     const cardProps = {
@@ -232,7 +258,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
       case "testimonial-5":
       case "testimonial-6":
         return "";
-      case "grid-1":
+      case "testimonial-1":
       default:
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
     }
@@ -379,6 +405,53 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
                       </div>
                     ))}
                   </div>
+                )}
+
+                {!isLoading && !error && testimonials.length === 0 && (
+                  <div className="bg-muted/50 mt-10 w-full rounded-lg py-12 text-center">
+                    <MessageSquareQuote className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+                    <h3 className="text-foreground mb-2 text-lg font-semibold">
+                      No Testimonials Found
+                    </h3>
+                    <p className="text-muted-foreground">
+                      Add testimonials to display them here.
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : style === "testimonial-8" ? (
+              <div className="mx-auto max-w-6xl px-4">
+                {isLoading && (
+                  <div className="space-y-4">
+                    <Skeleton className="mx-auto h-6 w-40" />
+                    <Skeleton className="h-[420px] w-full rounded-3xl" />
+                  </div>
+                )}
+
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error Loading Testimonials</AlertTitle>
+                    <AlertDescription>
+                      {error instanceof Error
+                        ? error.message
+                        : "Failed to load testimonials. Please check your API connection."}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {!isLoading && !error && testimonials.length > 0 && (
+                  <TestimonialCard8
+                    testimonials={testimonials.slice(0, page_size)}
+                    title={title}
+                    subtitle={subtitle}
+                    backgroundImage={backgroundImage}
+                    isEditable
+                    onTitleChange={handleTitleChange}
+                    onSubtitleChange={handleSubtitleChange}
+                    onBackgroundChange={handleBackgroundImageChange}
+                    onTestimonialClick={handleTestimonialClick}
+                  />
                 )}
 
                 {!isLoading && !error && testimonials.length === 0 && (
@@ -565,6 +638,54 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
           )}
         </section>
       </>
+    );
+  }
+
+  if (style === "testimonial-8") {
+    return (
+      <section className="bg-background py-12 md:py-16">
+        <div className="mx-auto max-w-6xl px-4">
+          {isLoading && (
+            <div className="space-y-4">
+              <Skeleton className="mx-auto h-6 w-40" />
+              <Skeleton className="h-[420px] w-full rounded-3xl" />
+            </div>
+          )}
+
+          {error && (
+            <Alert variant="destructive" className="mx-auto max-w-2xl">
+              <AlertCircle className="h-5 w-5" />
+              <AlertTitle>Unable to Load Testimonials</AlertTitle>
+              <AlertDescription className="text-base">
+                {error instanceof Error
+                  ? error.message
+                  : "We're having trouble loading testimonials. Please try refreshing the page."}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {!isLoading && !error && testimonials.length > 0 && (
+            <TestimonialCard8
+              testimonials={testimonials.slice(0, page_size)}
+              title={title}
+              subtitle={subtitle}
+              backgroundImage={backgroundImage}
+            />
+          )}
+
+          {!isLoading && !error && testimonials.length === 0 && (
+            <div className="mt-10 w-full rounded-3xl border border-dashed border-gray-300 bg-white/60 py-12 text-center">
+              <MessageSquareQuote className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+              <h3 className="text-foreground mb-2 text-xl font-semibold">
+                No Testimonials Available
+              </h3>
+              <p className="text-muted-foreground">
+                Customer testimonials will be displayed here once available.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
     );
   }
 

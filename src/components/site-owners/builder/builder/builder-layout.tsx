@@ -893,6 +893,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "testimonial-5"
       | "testimonial-6"
       | "testimonial-7"
+      | "testimonial-8"
   ) => {
     const testimonialsData = { ...defaultTestimonialsData, style: template };
     setIsTestimonialsStylesDialogOpen(false);
