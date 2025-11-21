@@ -134,6 +134,21 @@ export interface AboutUs8Data {
   }>;
 }
 
+export interface AboutUs9Data {
+  template: "about-9";
+  eyebrow: string;
+  title: string;
+  descriptionPrimary: string;
+  descriptionSecondary: string;
+  buttonText: string;
+  buttonLink: string;
+  media: {
+    type: "image" | "video";
+    url: string;
+    alt: string;
+  };
+}
+
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
@@ -143,7 +158,8 @@ export type AboutUsData =
   | AboutUs5Data
   | AboutUs6Data
   | AboutUs7Data
-  | AboutUs8Data;
+  | AboutUs8Data
+  | AboutUs9Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -184,7 +200,16 @@ export interface CreateAboutUsRequest {
 export interface UpdateAboutUsRequest {
   component_id?: string;
   component_type?: "about";
-  data: Partial<AboutUs1Data> | Partial<AboutUs3Data> | Partial<AboutUs4Data>;
+  data:
+    | Partial<AboutUs1Data>
+    | Partial<AboutUs2Data>
+    | Partial<AboutUs3Data>
+    | Partial<AboutUs4Data>
+    | Partial<AboutUs5Data>
+    | Partial<AboutUs6Data>
+    | Partial<AboutUs7Data>
+    | Partial<AboutUs8Data>
+    | Partial<AboutUs9Data>;
   order?: number;
 }
 
@@ -445,4 +470,21 @@ export const defaultAboutUs8Data: AboutUs8Data = {
       alt: "Walnut card tray filled with cards and card angled in dedicated groove.",
     },
   ],
+};
+
+export const defaultAboutUs9Data: AboutUs9Data = {
+  template: "about-9",
+  eyebrow: "About Funder",
+  title: "Funder is best business solution provider.",
+  descriptionPrimary:
+    "We are Funder Business Consultancy Agency, pioneers in business consultancy. Funder is a leading consulting company that has helped over 100 companies grow their businesses to the next level.",
+  descriptionSecondary:
+    "Funder provides all of its services with integrity and honesty. We take pride in our work because we know how much your success means to us!",
+  buttonText: "Read More",
+  buttonLink: "#",
+  media: {
+    type: "image",
+    url: "/businessman-in-office.jpg",
+    alt: "Businessman in office",
+  },
 };
