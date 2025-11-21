@@ -5,7 +5,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
-import { ImagePlus, Upload, Loader2, X } from "lucide-react";
+import { ImagePlus, Upload, Loader2, X, Info } from "lucide-react";
 import {
   uploadToCloudinary,
   optimizeCloudinaryUrl,
@@ -41,13 +41,14 @@ interface EditableImageProps {
     allowedTypes?: string[]; // MIME types
   };
   disableImageChange?: boolean;
-
   showAltEditor?: boolean;
   placeholder?: {
     width: number;
     height: number;
     text?: string;
   };
+  showDimensionGuide?: boolean; // New prop to enable/disable dimension display
+  dimensionGuideText?: string; // Custom text for dimension guide
 }
 
 export const EditableImage: React.FC<EditableImageProps> = ({
@@ -72,12 +73,20 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   disableImageChange,
   showAltEditor = false,
   placeholder,
+  showDimensionGuide = true,
+  dimensionGuideText,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isAltEditing, setIsAltEditing] = useState(false);
   const [localAlt, setLocalAlt] = useState(alt);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Calculate aspect ratio
+  const aspectRatio = (width / height).toFixed(2);
+  const dimensionText =
+    dimensionGuideText ||
+    `Recommended: ${width}×${height}px (${aspectRatio}:1 ratio)`;
 
   // Handle file selection and upload
   const handleFileSelect = async (
@@ -98,10 +107,6 @@ export const EditableImage: React.FC<EditableImageProps> = ({
       );
       return;
     }
-    const handleImageClick = () => {
-      if (!isEditable || isUploading || disableImageChange) return;
-      fileInputRef.current?.click();
-    };
 
     // Validate file size
     if (uploadValidation.maxSize && file.size > uploadValidation.maxSize) {
@@ -135,7 +140,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
 
   // Handle image change click
   const handleImageClick = () => {
-    if (!isEditable || isUploading) return;
+    if (!isEditable || isUploading || disableImageChange) return;
     fileInputRef.current?.click();
   };
 
@@ -207,6 +212,9 @@ export const EditableImage: React.FC<EditableImageProps> = ({
               <p className="text-sm">
                 {placeholder.text || "Click to add image"}
               </p>
+              {showDimensionGuide && (
+                <p className="mt-2 text-xs text-gray-400">{dimensionText}</p>
+              )}
             </div>
           </div>
         ) : (
@@ -238,13 +246,21 @@ export const EditableImage: React.FC<EditableImageProps> = ({
           !disableImageChange && (
             <div
               className={cn(
-                "absolute inset-0 z-10 flex items-center justify-center bg-black/50 transition-opacity",
+                "absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/60 transition-opacity",
                 isHovered ? "opacity-100" : "opacity-0"
               )}
             >
               <SOButton variant="default" className="gap-2">
                 <ImagePlus className="h-4 w-4" /> Change Image
               </SOButton>
+
+              {/* Dimension Guide on Hover */}
+              {showDimensionGuide && (
+                <div className="mt-3 flex items-center gap-1.5 rounded-md bg-white/95 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-lg">
+                  <Info className="h-3.5 w-3.5 text-blue-500" />
+                  <span>{dimensionText}</span>
+                </div>
+              )}
             </div>
           )}
       </div>
