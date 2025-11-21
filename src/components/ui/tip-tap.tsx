@@ -21,14 +21,6 @@ import {
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Bold,
   Italic,
   Underline as UnderlineIcon,
@@ -53,6 +45,8 @@ import {
   Undo,
   Redo,
   Loader2,
+  Minus,
+  Plus,
 } from "lucide-react";
 
 const FontSizeExtension = TextStyle.extend({
@@ -80,14 +74,21 @@ const FontSizeExtension = TextStyle.extend({
 });
 
 const FONT_SIZES = [
+  "10px",
   "12px",
   "14px",
   "16px",
   "18px",
   "20px",
+  "22px",
   "24px",
+  "26px",
   "28px",
+  "30px",
   "32px",
+  "36px",
+  "40px",
+  "48px",
 ];
 
 // Custom Image extension with resize functionality
@@ -576,6 +577,27 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
       setCustomFontSize("");
     };
 
+    const getCurrentFontSize = (): number => {
+      if (!editor) return 16;
+      const currentAttrs = editor.getAttributes("textStyle");
+      const fontSize = currentAttrs?.fontSize;
+      if (!fontSize) return 16;
+      const size = parseFloat(fontSize);
+      return Number.isNaN(size) ? 16 : size;
+    };
+
+    const incrementFontSize = () => {
+      const currentSize = getCurrentFontSize();
+      const newSize = Math.min(currentSize + 2, 96);
+      applyFontSize(`${newSize}px`);
+    };
+
+    const decrementFontSize = () => {
+      const currentSize = getCurrentFontSize();
+      const newSize = Math.max(currentSize - 2, 8);
+      applyFontSize(`${newSize}px`);
+    };
+
     const handleImageUpload = async (file: File) => {
       setImageUploadError(null);
 
@@ -628,7 +650,7 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
       const toolbarItems = TOOLBAR_CONFIGS[toolbar];
       const currentFontSizeAttr =
         editor?.getAttributes("textStyle")?.fontSize || null;
-      const currentFontSizeValue = currentFontSizeAttr || "default";
+      const currentFontSizeValue = currentFontSizeAttr || "16px";
       const isCustomFontSize =
         !!currentFontSizeAttr && !FONT_SIZES.includes(currentFontSizeAttr);
 
@@ -783,62 +805,66 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
           )}
 
           {toolbarItems.includes("fontSize") && (
-            <div className="flex items-center gap-2">
-              <Select
-                value={currentFontSizeValue}
-                onValueChange={value => {
-                  if (value === "default") {
-                    applyFontSize(undefined);
-                    return;
-                  }
-                  applyFontSize(value);
-                }}
+            <div className="flex items-center gap-1">
+              <ToolbarButton
+                onClick={decrementFontSize}
+                title="Decrease Font Size"
               >
-                <SelectTrigger className="h-8 w-28 text-xs">
-                  <SelectValue placeholder="Font Size" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="default">Default</SelectItem>
+                <Minus className="h-4 w-4" />
+              </ToolbarButton>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 w-16 border-gray-300 text-xs font-medium"
+                    title="Font Size"
+                  >
+                    {currentFontSizeAttr
+                      ? parseInt(currentFontSizeAttr).toString()
+                      : "16"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-32 p-2">
+                  <div className="space-y-1">
                     {FONT_SIZES.map(size => (
-                      <SelectItem key={size} value={size}>
+                      <button
+                        key={size}
+                        onClick={() => {
+                          applyFontSize(size);
+                        }}
+                        className={`w-full rounded px-2 py-1.5 text-left text-sm hover:bg-gray-100 ${
+                          currentFontSizeValue === size
+                            ? "bg-gray-200 font-semibold"
+                            : ""
+                        }`}
+                      >
                         {size}
-                      </SelectItem>
+                      </button>
                     ))}
                     {isCustomFontSize && currentFontSizeAttr && (
-                      <SelectItem value={currentFontSizeAttr}>
-                        Custom ({currentFontSizeAttr})
-                      </SelectItem>
+                      <button
+                        onClick={() => {
+                          applyFontSize(currentFontSizeAttr);
+                        }}
+                        className={`w-full rounded px-2 py-1.5 text-left text-sm hover:bg-gray-100 ${
+                          currentFontSizeValue === currentFontSizeAttr
+                            ? "bg-gray-200 font-semibold"
+                            : ""
+                        }`}
+                      >
+                        {currentFontSizeAttr}
+                      </button>
                     )}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-
-              <div className="flex items-center gap-1">
-                <Input
-                  type="number"
-                  min={8}
-                  max={96}
-                  value={customFontSize}
-                  onChange={e => setCustomFontSize(e.target.value)}
-                  placeholder="px"
-                  className="h-8 w-16 text-xs"
-                  onKeyDown={e => {
-                    if (e.key === "Enter") {
-                      handleCustomFontSizeApply();
-                    }
-                  }}
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="h-8 px-2 text-xs"
-                  onClick={handleCustomFontSizeApply}
-                  disabled={!customFontSize}
-                >
-                  Set
-                </Button>
-              </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+              <ToolbarButton
+                onClick={incrementFontSize}
+                title="Increase Font Size"
+              >
+                <Plus className="h-4 w-4" />
+              </ToolbarButton>
             </div>
           )}
 
