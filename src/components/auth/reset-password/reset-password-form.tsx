@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -10,7 +10,7 @@ import { AlertCircle, CheckCircle, Lock, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { resetPassword, validatePasswordResetKey } from "@/services/auth/api";
+import { resetPassword } from "@/services/auth/api";
 import { toast } from "sonner";
 
 const resetPasswordSchema = z
@@ -32,21 +32,19 @@ const resetPasswordSchema = z
 type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 interface ResetPasswordFormProps extends React.HTMLAttributes<HTMLDivElement> {
-  resetKey: string;
+  uid: string;
+  token: string;
 }
 
 export function ResetPasswordForm({
-  resetKey,
+  uid,
+  token,
   className,
   ...props
 }: ResetPasswordFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isValidatingKey, setIsValidatingKey] = useState(true);
-  const [keyValidationError, setKeyValidationError] = useState<string | null>(
-    null
-  );
 
   const {
     register,
@@ -56,37 +54,12 @@ export function ResetPasswordForm({
     resolver: zodResolver(resetPasswordSchema),
   });
 
-  // Validate the reset key when component mounts
-  useEffect(() => {
-    const validateKey = async () => {
-      try {
-        setIsValidatingKey(true);
-        await validatePasswordResetKey(resetKey);
-        setKeyValidationError(null);
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        const errorMessage =
-          error.response?.data?.errors?.[0]?.message ||
-          error.message ||
-          "Invalid or expired password reset link";
-
-        setKeyValidationError(errorMessage);
-        toast.error("Invalid Reset Link", {
-          description: errorMessage,
-        });
-      } finally {
-        setIsValidatingKey(false);
-      }
-    };
-
-    validateKey();
-  }, [resetKey]);
-
   const onSubmit = async (data: ResetPasswordFormValues) => {
     try {
       setIsLoading(true);
       await resetPassword({
-        key: resetKey,
+        uid,
+        token,
         password: data.password,
       });
 
@@ -113,50 +86,6 @@ export function ResetPasswordForm({
       setIsLoading(false);
     }
   };
-
-  // Show loading state while validating key
-  if (isValidatingKey) {
-    return (
-      <div className="min-h-screen w-full bg-white">
-        <div className="flex min-h-screen items-center justify-center p-4">
-          <div className="w-full max-w-md text-center">
-            <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-blue-600" />
-            <h1 className="mb-3 text-2xl font-semibold text-gray-900">
-              Validating reset link...
-            </h1>
-            <p className="text-sm text-gray-600">
-              Please wait while we verify your password reset link.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Show error if key validation failed
-  if (keyValidationError) {
-    return (
-      <div className="min-h-screen w-full bg-white">
-        <div className="flex min-h-screen items-center justify-center p-4">
-          <div className="w-full max-w-md text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-              <AlertCircle className="h-8 w-8 text-red-600" />
-            </div>
-            <h1 className="mb-3 text-2xl font-semibold text-gray-900">
-              Invalid Reset Link
-            </h1>
-            <p className="mb-6 text-sm text-gray-600">{keyValidationError}</p>
-            <Link
-              href="/admin/forgot-password"
-              className="inline-block rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700"
-            >
-              Request New Reset Link
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // Show success state
   if (isSuccess) {
