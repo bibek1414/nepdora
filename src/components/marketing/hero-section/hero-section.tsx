@@ -19,7 +19,7 @@ const WebsiteBuilderHero = () => {
 
             {/* Main heading */}
             <h1 className="text-foreground mb-3 text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl lg:text-5xl xl:text-6xl">
-              Build Any Website
+              Build Any Website With Nepdora
             </h1>
 
             {/* Features list */}

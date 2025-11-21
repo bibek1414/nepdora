@@ -39,7 +39,7 @@ const ProcessSection = () => {
           {/* Left Content */}
           <div className="space-y-8">
             <h2 className="text-foreground text-4xl leading-tight font-bold tracking-tight md:text-5xl">
-              3 Easy Steps
+              3 Easy Steps In Nepdora
             </h2>
 
             <div className="space-y-6">
@@ -158,7 +158,7 @@ const ProcessSection = () => {
                 <div className="bg-muted relative aspect-video overflow-hidden rounded-lg">
                   <Image
                     src={activeStepData?.image || "/images/placeholder.jpg"}
-                    alt={`Step ${activeStep}: ${activeStepData?.title}`}
+                    alt={`Step ${activeStep}: ${activeStepData?.title}  In Nepdora`}
                     fill
                     className="object-cover transition-all duration-500 ease-in-out"
                     priority={activeStep === 1}

@@ -60,7 +60,7 @@ export default function BuildYourWay() {
     <section className="mx-auto max-w-5xl px-4 py-16">
       <div className="mb-16 text-center">
         <h2 className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">
-          Build a website your way
+          Build a website your way in Nepdora
         </h2>
         <p className="mx-auto max-w-2xl text-lg text-gray-600">
           Effortlessly perfect your website with user-friendly, tools.

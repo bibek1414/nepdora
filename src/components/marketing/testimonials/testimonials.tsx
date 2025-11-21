@@ -55,7 +55,7 @@ const CustomerTestimonials = () => {
         {/* Header */}
         <div className="mb-12 text-center">
           <h2 className="text-foreground mb-2 text-3xl font-extrabold tracking-tight md:text-4xl">
-            Thousands of Satisfied Customers
+            Thousands of Nepdora Lovers
           </h2>
           <p className="text-muted-foreground mx-auto max-w-2xl text-sm">
             Don&apos;t just take our word for it – thousands of customers trust

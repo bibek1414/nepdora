@@ -21,18 +21,110 @@ export class AuthErrorHandler {
 
     const { status, data } = error.response;
 
-    // Handle specific API error responses
+    // Handle new error format with errors array
+    if (data?.errors && Array.isArray(data.errors) && data.errors.length > 0) {
+      return this.handleErrorsArray(data.errors, status);
+    }
+
+    // Handle specific API error responses (old format)
     if (data?.error) {
       return this.handleApiError(data, status);
     }
 
-    // Handle allauth flow responses - FIXED: Access flows through data.data
+    // Handle allauth flow responses
     if (data?.data?.flows) {
       return this.handleFlowError(data);
     }
 
     // Handle general HTTP status codes
     return this.handleHttpStatusError(status, data);
+  }
+
+  private static handleErrorsArray(
+    errors: Array<{ code: string; message: string; param?: string }>,
+    status: number
+  ): FormErrorState {
+    const firstError = errors[0];
+    const { code, message } = firstError;
+
+    switch (code) {
+      case "email_password_mismatch":
+        return {
+          message:
+            "Invalid email or password. Please check your credentials and try again.",
+          type: "error",
+        };
+
+      case "email_not_verified":
+      case "account_not_verified":
+        return {
+          message:
+            "Your email address is not verified yet. Please check your email and click the verification link.",
+          type: "warning",
+          action: {
+            label: "Resend verification email",
+            href: "#",
+          },
+        };
+
+      case "account_disabled":
+      case "account_suspended":
+        return {
+          message:
+            "Your account has been suspended. Please contact support for assistance.",
+          type: "error",
+        };
+
+      case "email_exists":
+        return {
+          message:
+            "An account with this email already exists. Please use a different email or try logging in.",
+          type: "error",
+          action: {
+            label: "Login instead",
+            href: "/login",
+          },
+        };
+
+      case "store_name_taken":
+        return {
+          message:
+            "This store name is already taken. Please choose a different store name.",
+          type: "error",
+        };
+
+      case "phone_invalid":
+        return {
+          message:
+            "Please enter a valid phone number (numbers only, max 15 digits).",
+          type: "error",
+        };
+
+      case "too_many_login_attempts":
+        return {
+          message:
+            "Too many attempts. Please wait a few minutes before trying again.",
+          type: "warning",
+        };
+
+      case "user_not_found":
+        return {
+          message:
+            "Account not found. Please check your email address or sign up for a new account.",
+          type: "error",
+          action: {
+            label: "Sign up instead",
+            href: "/signup",
+          },
+        };
+
+      default:
+        // Return the message from the API if available
+        return {
+          message: message || "An error occurred. Please try again.",
+          type: "error",
+        };
+    }
   }
 
   private static handleApiError(
@@ -105,7 +197,6 @@ export class AuthErrorHandler {
   }
 
   private static handleFlowError(data: ApiErrorResponse): FormErrorState {
-    // FIXED: Access flows through data.data instead of data directly
     const flows = data.data?.flows || [];
     const hasVerifyEmailFlow = flows.some(
       flow => flow.id === FlowTypes.VERIFY_EMAIL && flow.is_pending
@@ -206,6 +297,16 @@ export class AuthErrorHandler {
    * Get user-friendly error message for specific field validation
    */
   static getFieldError(field: string, error: ErrorResponse): string | null {
+    // Check new errors array format
+    const errors = error.response?.data?.errors;
+    if (errors && Array.isArray(errors)) {
+      const fieldError = errors.find(err => err.param === field);
+      if (fieldError) {
+        return fieldError.message;
+      }
+    }
+
+    // Check old format
     if (!error.response?.data?.error) return null;
 
     const { message, params } = error.response.data.error;
@@ -240,7 +341,17 @@ export class AuthErrorHandler {
    * Check if error indicates email verification is needed
    */
   static isEmailVerificationNeeded(error: ErrorResponse): boolean {
-    // FIXED: Access flows through the correct nested path
+    // Check new errors array format
+    const errors = error.response?.data?.errors;
+    if (errors && Array.isArray(errors)) {
+      return errors.some(
+        err =>
+          err.code === "email_not_verified" ||
+          err.code === "account_not_verified"
+      );
+    }
+
+    // Check flows (old format)
     const flows = error.response?.data?.data?.flows;
     return (
       flows?.some(
@@ -253,6 +364,13 @@ export class AuthErrorHandler {
    * Check if error indicates too many login attempts
    */
   static isTooManyAttempts(error: ErrorResponse): boolean {
+    // Check new errors array format
+    const errors = error.response?.data?.errors;
+    if (errors && Array.isArray(errors)) {
+      return errors.some(err => err.code === "too_many_login_attempts");
+    }
+
+    // Check old format
     const errorCode = error.response?.data?.data?.errors?.[0]?.code;
     return (
       errorCode === AuthErrorCodes.TOO_MANY_ATTEMPTS ||
