@@ -556,6 +556,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/navbars/navbar6.png",
         description: "Includes top bar for announcements",
       },
+      {
+        id: "navbar-7",
+        name: "E-commerce with Social Links",
+        image: "/images/site-owners/navbars/navbar7.png",
+        description: "Includes Social media links in top bar",
+      },
     ],
     // FOOTER TEMPLATES
     footer: [

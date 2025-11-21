@@ -388,7 +388,7 @@ export function FooterEditorDialog({
     setUploadLogoError(null);
 
     try {
-      // Upload to Cloudinary
+      // Upload to Cloudinary first for immediate preview
       const imageUrl = await uploadToCloudinary(file, {
         folder: "logos",
         resourceType: "image",
@@ -397,10 +397,13 @@ export function FooterEditorDialog({
       // Update local state immediately for better UX
       setEditingData(prev => ({ ...prev, logoImage: imageUrl }));
 
-      // Update site config in database if site config exists
+      // Update site config in database if site config exists - Send the actual FILE
       if (siteConfig?.id) {
         const formData = new FormData();
-        formData.append("logo", imageUrl);
+        formData.append("logo", file); // Send the file object, not the URL
+
+        // If your API expects the Cloudinary URL as well, you can send both:
+        formData.append("logoUrl", imageUrl);
 
         await patchSiteConfigMutation.mutateAsync({
           id: siteConfig.id,

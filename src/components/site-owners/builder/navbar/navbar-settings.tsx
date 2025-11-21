@@ -279,7 +279,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
     setUploadError(null);
 
     try {
-      // Upload to Cloudinary
+      // Upload to Cloudinary first
       const imageUrl = await uploadToCloudinary(file, {
         folder: "logos",
         resourceType: "image",
@@ -288,10 +288,14 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
       // Update local state immediately for better UX
       setNavbarData(prev => ({ ...prev, logoImage: imageUrl }));
 
-      // Update site config in database if site config exists
+      // Update site config in database - Send the actual FILE, not the URL
       if (siteConfig?.id) {
+        // Create FormData and append the file directly
         const formData = new FormData();
-        formData.append("logo", imageUrl);
+        formData.append("logo", file); // Send the file object, not the URL
+
+        // If your API expects the Cloudinary URL as well, you can send both:
+        formData.append("logoUrl", imageUrl);
 
         await patchSiteConfigMutation.mutateAsync({
           id: siteConfig.id,
