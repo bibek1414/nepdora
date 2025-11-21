@@ -9,6 +9,7 @@ import { TeamCard1 } from "./team-card-1";
 import { TeamCard2 } from "./team-card-2";
 import { TeamCard3 } from "./team-card-3";
 import { TeamCard4 } from "./team-card-4";
+import { TeamCard5 } from "./team-card-5";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -156,7 +157,16 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       onClick: () => handleMemberClick(member),
     };
 
-    const styleKey = style as string;
+    // Map old "team-X" styles to new style names for backward compatibility
+    const styleMap: Record<string, string> = {
+      "team-1": "grid-1",
+      "team-2": "grid-2",
+      "team-3": "list-1",
+      "team-4": "card-4",
+      "team-5": "card-5",
+    };
+
+    const styleKey = (styleMap[style as string] || style) as string;
     switch (styleKey) {
       case "grid-2":
         return <TeamCard2 key={member.id} {...cardProps} />;
@@ -166,13 +176,24 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
         return <TeamCard1 key={member.id} {...cardProps} />;
       case "card-4":
         return <TeamCard4 key={member.id} {...cardProps} />;
+      case "card-5":
+        return <TeamCard5 key={member.id} {...cardProps} />;
       default:
         return <TeamCard1 key={member.id} {...cardProps} />;
     }
   };
 
   const getGridClass = () => {
-    const styleKey = style as string;
+    // Map old "team-X" styles to new style names for backward compatibility
+    const styleMap: Record<string, string> = {
+      "team-1": "grid-1",
+      "team-2": "grid-2",
+      "team-3": "list-1",
+      "team-4": "card-4",
+      "team-5": "card-5",
+    };
+
+    const styleKey = (styleMap[style as string] || style) as string;
     switch (styleKey) {
       case "grid-2":
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
@@ -180,6 +201,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
         return "grid-cols-1 lg:grid-cols-2 gap-8";
       case "grid-1":
       case "card-4":
+      case "card-5":
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
       default:
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
@@ -253,24 +275,49 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
         {/* Team Preview */}
         <div className="py-8">
           <div className="container mx-auto px-4">
-            <div className="mb-8 text-center">
-              <EditableText
-                value={title}
-                onChange={handleTitleChange}
-                as="h2"
-                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-              <EditableText
-                value={subtitle || ""}
-                onChange={handleSubtitleChange}
-                as="p"
-                className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                isEditable={true}
-                placeholder="Enter subtitle..."
-                multiline={true}
-              />
+            <div
+              className={`mb-8 text-center ${style === "card-5" || style === "team-5" ? "mb-16" : ""}`}
+            >
+              {style === "card-5" || style === "team-5" ? (
+                <>
+                  <EditableText
+                    value={subtitle || "Team Members"}
+                    onChange={handleSubtitleChange}
+                    as="p"
+                    className="mb-2 text-lg font-semibold text-blue-600"
+                    isEditable={true}
+                    placeholder="Enter subtitle..."
+                  />
+                  <EditableText
+                    value={title}
+                    onChange={handleTitleChange}
+                    as="h1"
+                    className="text-5xl font-bold text-[#001a4d]"
+                    isEditable={true}
+                    placeholder="Enter title..."
+                  />
+                </>
+              ) : (
+                <>
+                  <EditableText
+                    value={title}
+                    onChange={handleTitleChange}
+                    as="h2"
+                    className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                    isEditable={true}
+                    placeholder="Enter title..."
+                  />
+                  <EditableText
+                    value={subtitle || ""}
+                    onChange={handleSubtitleChange}
+                    as="p"
+                    className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                    isEditable={true}
+                    placeholder="Enter subtitle..."
+                    multiline={true}
+                  />
+                </>
+              )}
             </div>
 
             {isLoading && (
@@ -336,16 +383,35 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
   return (
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          <h2
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></h2>
-          {subtitle && (
-            <p
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            ></p>
+        <div
+          className={`mb-12 text-center ${style === "card-5" || style === "team-5" ? "mb-16" : ""}`}
+        >
+          {style === "card-5" || style === "team-5" ? (
+            <>
+              {subtitle && (
+                <p
+                  className="mb-2 text-lg font-semibold text-blue-600"
+                  dangerouslySetInnerHTML={{ __html: subtitle }}
+                ></p>
+              )}
+              <h1
+                className="text-5xl font-bold text-[#001a4d]"
+                dangerouslySetInnerHTML={{ __html: title }}
+              ></h1>
+            </>
+          ) : (
+            <>
+              <h2
+                className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+                dangerouslySetInnerHTML={{ __html: title }}
+              ></h2>
+              {subtitle && (
+                <p
+                  className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                  dangerouslySetInnerHTML={{ __html: subtitle }}
+                ></p>
+              )}
+            </>
           )}
         </div>
 

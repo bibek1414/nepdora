@@ -865,11 +865,20 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleTeamTemplateSelect = async (
-    template: "team-1" | "team-2" | "team-3" | "team-4"
+    template: "team-1" | "team-2" | "team-3" | "team-4" | "team-5"
   ) => {
+    // Map template IDs to component styles
+    const styleMap: Record<string, ComponentTypeMap["team"]["style"]> = {
+      "team-1": "grid-1",
+      "team-2": "grid-2",
+      "team-3": "list-1",
+      "team-4": "card-4",
+      "team-5": "card-5",
+    };
+
     const teamData: ComponentTypeMap["team"] = {
       ...defaultTeamData,
-      style: template as ComponentTypeMap["team"]["style"],
+      style: styleMap[template] || "grid-1",
     };
     setIsTeamStylesDialogOpen(false);
     await createComponentWithIndex("team", teamData, pendingInsertIndex);
