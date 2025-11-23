@@ -116,7 +116,7 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
 
   return (
     <section className="relative w-full py-12 sm:py-16 md:py-20 lg:py-24">
-      <div className="relative w-full overflow-hidden bg-gray-900/60">
+      <div className="relative min-h-[600px] w-full overflow-hidden bg-gray-900/60 sm:min-h-[700px] md:min-h-[800px]">
         {/* Background */}
         <div className="absolute inset-0">
           <EditableImage
@@ -144,7 +144,7 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/90 via-white/85 to-white/92" />
         </div>
 
-        <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-12 sm:px-8 lg:px-12">
+        <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
           <div className="mb-12 text-center">
             {renderSubtitle()}
             {renderTitle()}
@@ -158,10 +158,10 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
             </div>
           ) : (
             <>
-              <div className="relative flex items-center gap-6">
+              <div className="group relative flex items-center gap-4">
                 <button
                   onClick={handlePrev}
-                  className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white shadow-lg transition hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none disabled:opacity-50"
+                  className="invisible flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white transition-all group-hover:visible hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none disabled:opacity-50"
                   aria-label="Previous testimonial"
                   disabled={!hasMultipleGroups}
                 >
@@ -183,7 +183,7 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
                             {group.map(testimonial => (
                               <div
                                 key={testimonial.id}
-                                className="cursor-pointer rounded-[28px] bg-white p-8 shadow-xl transition hover:shadow-2xl md:p-10"
+                                className="cursor-pointer rounded-[28px] bg-white p-8 transition md:p-10"
                                 onClick={() =>
                                   onTestimonialClick?.(testimonial)
                                 }
@@ -234,28 +234,12 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
 
                 <button
                   onClick={handleNext}
-                  className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white shadow-lg transition hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none disabled:opacity-50"
+                  className="invisible flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white transition-all group-hover:visible hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none disabled:opacity-50"
                   aria-label="Next testimonial"
                   disabled={!hasMultipleGroups}
                 >
                   <ChevronRight className="h-6 w-6 text-gray-600" />
                 </button>
-              </div>
-
-              <div className="mt-10 flex justify-center gap-2">
-                {slideGroups.map((_, index) => (
-                  <button
-                    key={`dot-${index}`}
-                    onClick={() => setCurrentIndex(index)}
-                    className={`h-3 rounded-full transition-all duration-300 ${
-                      index === currentIndex
-                        ? "w-10 bg-indigo-600"
-                        : "w-3 bg-gray-300 hover:bg-gray-400"
-                    }`}
-                    aria-label={`Go to testimonial set ${index + 1}`}
-                    disabled={!hasMultipleGroups}
-                  />
-                ))}
               </div>
             </>
           )}

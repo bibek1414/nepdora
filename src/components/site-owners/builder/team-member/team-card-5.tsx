@@ -102,11 +102,11 @@ export const TeamCard5: React.FC<TeamCard5Props> = ({
       {/* Image Card with offset background */}
       <div className="group relative mb-6 w-full">
         {/* Offset background layer */}
-        <div className="pointer-events-none absolute right-4 bottom-4 z-0 aspect-[3/4] w-full rounded-[32px] bg-[var(--team-card-offset-base)] transition-colors duration-300 group-hover:bg-[var(--team-card-offset-hover)]"></div>
+        <div className="pointer-events-none absolute right-4 bottom-4 z-0 aspect-[4/5] w-full rounded-[32px] bg-[var(--team-card-offset-base)] transition-colors duration-300 group-hover:bg-[var(--team-card-offset-hover)]"></div>
 
         {/* Main card container */}
         <div
-          className="relative z-10 aspect-[3/4] w-full overflow-hidden rounded-[32px] border shadow-md transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-lg"
+          className="relative z-10 aspect-[4/5] w-full overflow-hidden rounded-[32px] border shadow-md transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-lg"
           style={{
             borderColor: "var(--team-card-border)",
             backgroundColor: cardBackgroundColor,
