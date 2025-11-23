@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
@@ -7,9 +9,7 @@ import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { is } from "zod/v4/locales";
 
 interface HeroTemplate3Props {
   heroData: HeroData;
@@ -26,6 +26,11 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
 }) => {
   const [data, setData] = useState(heroData);
   const { data: themeResponse } = useThemeQuery();
+
+  // Sync with prop changes
+  useEffect(() => {
+    setData(heroData);
+  }, [heroData]);
 
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -108,7 +113,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
   const getImageUrl = () => {
     if (!data.imageUrl) return "";
     return optimizeCloudinaryUrl(convertUnsplashUrl(data.imageUrl), {
-      width: 600,
+      width: 800,
       quality: "auto",
       format: "auto",
     });
@@ -120,7 +125,13 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
       : theme.colors.text;
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-16">
+    <section
+      className="relative w-full overflow-hidden"
+      style={{
+        color: textColor,
+        fontFamily: theme.fonts.body,
+      }}
+    >
       {/* Overlay */}
       {data.backgroundType === "image" && data.showOverlay && (
         <div
@@ -131,177 +142,203 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
         />
       )}
 
-      <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-2">
-        {/* Left Content */}
-        <div className="flex flex-col gap-6">
-          {/* Subtitle Badge */}
-          {data.subtitle && (
-            <Badge
-              variant="secondary"
-              className="w-fit"
-              style={{
-                backgroundColor: theme.colors.secondary,
-                color: theme.colors.secondaryForeground,
-                fontFamily: theme.fonts.body,
-              }}
-            >
-              <EditableText
-                value={data.subtitle}
-                onChange={handleTextUpdate("subtitle")}
-                as="span"
-                isEditable={isEditable}
-                placeholder="Enter subtitle..."
-              />
-            </Badge>
-          )}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+          {/* Left Content */}
+          <div className="flex flex-col gap-4 sm:gap-6">
+            {/* Subtitle Badge */}
+            {data.subtitle && (
+              <Badge
+                variant="secondary"
+                className="w-fit"
+                style={{
+                  backgroundColor: theme.colors.secondary,
+                  color: theme.colors.secondaryForeground,
+                  fontFamily: theme.fonts.body,
+                }}
+              >
+                <EditableText
+                  value={data.subtitle}
+                  onChange={handleTextUpdate("subtitle")}
+                  as="span"
+                  className="text-xs sm:text-sm"
+                  isEditable={isEditable}
+                  placeholder="Enter subtitle..."
+                />
+              </Badge>
+            )}
 
-          {/* Title */}
-          <EditableText
-            value={data.title}
-            onChange={handleTextUpdate("title")}
-            as="h1"
-            className="text-4xl leading-tight font-bold md:text-5xl"
-            style={{ fontFamily: theme.fonts.heading }}
-            isEditable={isEditable}
-            placeholder="Enter your hero title..."
-            multiline={true}
-          />
-
-          {/* Description */}
-          {data.description && (
+            {/* Title */}
             <EditableText
-              value={data.description}
-              onChange={handleTextUpdate("description")}
-              as="p"
-              className="max-w-md text-lg opacity-90"
-              style={{ fontFamily: theme.fonts.body }}
+              value={data.title}
+              onChange={handleTextUpdate("title")}
+              as="h1"
+              className="text-3xl leading-tight font-bold sm:text-4xl md:text-5xl lg:text-6xl"
+              style={{
+                color: textColor,
+                fontFamily: theme.fonts.heading,
+              }}
               isEditable={isEditable}
-              placeholder="Enter description..."
+              placeholder="Enter your hero title..."
               multiline={true}
             />
-          )}
 
-          {/* Buttons with theme styling */}
-          {data.buttons.length > 0 && (
-            <div className="flex items-center gap-4">
-              {data.buttons.map((button, index) => (
-                <Button
-                  key={button.id}
-                  size="lg"
-                  variant={index === 0 ? "default" : "outline"}
-                  className="px-6 py-3"
-                  asChild
-                >
-                  <EditableLink
-                    text={button.text}
-                    href={button.href || "#"}
-                    onChange={(text, href) =>
-                      handleButtonUpdate(button.id, text, href)
-                    }
-                    isEditable={isEditable}
-                    siteUser={siteUser}
-                    textPlaceholder="Button text..."
-                    hrefPlaceholder="Enter button URL..."
-                    className="flex items-center gap-2"
+            {/* Description */}
+            {data.description && (
+              <EditableText
+                value={data.description}
+                onChange={handleTextUpdate("description")}
+                as="p"
+                className="max-w-lg text-base leading-relaxed opacity-90 sm:text-lg"
+                style={{
+                  color: textColor,
+                  fontFamily: theme.fonts.body,
+                }}
+                isEditable={isEditable}
+                placeholder="Enter description..."
+                multiline={true}
+              />
+            )}
+
+            {/* Buttons with theme styling */}
+            {data.buttons.length > 0 && (
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                {data.buttons.map((button, index) => (
+                  <Button
+                    key={button.id}
+                    size={index === 0 ? "lg" : "default"}
+                    variant={index === 0 ? "default" : "outline"}
+                    className="px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base"
+                    style={{
+                      backgroundColor:
+                        index === 0 ? theme.colors.primary : "transparent",
+                      color:
+                        index === 0
+                          ? theme.colors.primaryForeground
+                          : textColor,
+                      borderColor:
+                        index === 0 ? "transparent" : theme.colors.primary,
+                      fontFamily: theme.fonts.body,
+                    }}
+                    asChild
                   >
-                    {index === 1 && <Play size={18} />}
-                    <span>{button.text}</span>
-                  </EditableLink>
-                </Button>
-              ))}
-            </div>
-          )}
+                    <EditableLink
+                      text={button.text}
+                      href={button.href || "#"}
+                      onChange={(text, href) =>
+                        handleButtonUpdate(button.id, text, href)
+                      }
+                      isEditable={isEditable}
+                      siteUser={siteUser}
+                      textPlaceholder="Button text..."
+                      hrefPlaceholder="Enter button URL..."
+                      className="flex items-center gap-2"
+                    >
+                      {index === 1 && (
+                        <Play size={16} className="sm:h-[18px] sm:w-[18px]" />
+                      )}
+                      <span>{button.text}</span>
+                    </EditableLink>
+                  </Button>
+                ))}
+              </div>
+            )}
 
-          {/* Users Stats */}
-          <div className="mt-4 flex items-center gap-3">
-            <EditableText
-              value={data.statsNumber || "12k+"}
-              onChange={handleTextUpdate("statsNumber")}
-              as="span"
-              className="font-medium"
-              style={{ fontFamily: theme.fonts.body }}
-              isEditable={isEditable}
-              placeholder="Enter stats number..."
-            />
-            <EditableText
-              value={data.statsLabel || "Used by teams and professionals."}
-              onChange={handleTextUpdate("statsLabel")}
-              as="span"
-              className="font-normal opacity-75"
-              style={{ fontFamily: theme.fonts.body }}
-              isEditable={isEditable}
-              placeholder="Add stats description..."
-            />
+            {/* Users Stats */}
+            <div className="mt-2 flex flex-wrap items-center gap-2 sm:mt-4 sm:gap-3">
+              <EditableText
+                value={data.statsNumber || "12k+"}
+                onChange={handleTextUpdate("statsNumber")}
+                as="span"
+                className="text-base font-medium sm:text-lg"
+                style={{
+                  color: textColor,
+                  fontFamily: theme.fonts.body,
+                }}
+                isEditable={isEditable}
+                placeholder="Enter stats number..."
+              />
+              <EditableText
+                value={data.statsLabel || "Used by teams and professionals."}
+                onChange={handleTextUpdate("statsLabel")}
+                as="span"
+                className="text-sm font-normal opacity-75 sm:text-base"
+                style={{
+                  color: textColor,
+                  fontFamily: theme.fonts.body,
+                }}
+                isEditable={isEditable}
+                placeholder="Add stats description..."
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Right Side Image/Illustration */}
-        <div className="relative flex justify-end">
-          {data.showImage && data.imageUrl ? (
-            <div className="relative w-full max-w-md">
-              <div
-                className="rounded-2xl border shadow-xl backdrop-blur-sm"
-                style={{
-                  backgroundColor: `${theme.colors.background}1a`,
-                  borderColor: `${theme.colors.primary}33`,
-                }}
-              >
-                <EditableImage
-                  src={getImageUrl()}
-                  alt={data.imageAlt || "Hero image"}
-                  onImageChange={handleImageUpdate}
-                  onAltChange={handleAltUpdate}
-                  isEditable={isEditable}
-                  className="h-96 w-full rounded-lg object-contain"
-                  width={500}
-                  height={500}
-                  cloudinaryOptions={{
-                    folder: "hero-images",
-                    resourceType: "image",
+          {/* Right Side Image/Illustration */}
+          <div className="relative flex items-center justify-center lg:order-2 lg:justify-end">
+            {data.showImage && data.imageUrl ? (
+              <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg">
+                <div
+                  className="rounded-2xl border shadow-xl backdrop-blur-sm"
+                  style={{
+                    backgroundColor: `${theme.colors.background}1a`,
+                    borderColor: `${theme.colors.primary}33`,
                   }}
-                  showAltEditor={isEditable}
-                  placeholder={{
-                    width: 500,
-                    height: 500,
-                    text: "Upload hero image",
-                  }}
-                />
-
-                {/* Balance Badge - Editable */}
+                >
+                  <EditableImage
+                    src={getImageUrl()}
+                    alt={data.imageAlt || "Hero image"}
+                    onImageChange={handleImageUpdate}
+                    onAltChange={handleAltUpdate}
+                    isEditable={isEditable}
+                    className="h-64 w-full rounded-lg object-contain sm:h-80 md:h-96"
+                    width={800}
+                    height={800}
+                    cloudinaryOptions={{
+                      folder: "hero-images",
+                      resourceType: "image",
+                    }}
+                    showAltEditor={isEditable}
+                    placeholder={{
+                      width: 800,
+                      height: 800,
+                      text: "Upload hero image",
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="relative w-full max-w-md">
-              <div
-                className="flex h-96 items-center justify-center rounded-2xl border p-6 shadow-xl backdrop-blur-sm"
-                style={{
-                  backgroundColor: `${theme.colors.background}1a`,
-                  borderColor: `${theme.colors.primary}33`,
-                }}
-              >
-                <EditableImage
-                  src=""
-                  alt="Hero illustration"
-                  onImageChange={handleImageUpdate}
-                  onAltChange={handleAltUpdate}
-                  isEditable={isEditable}
-                  className="h-full w-full rounded-lg object-contain"
-                  width={500}
-                  height={500}
-                  cloudinaryOptions={{
-                    folder: "hero-images",
-                    resourceType: "image",
+            ) : (
+              <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg">
+                <div
+                  className="flex h-64 items-center justify-center rounded-2xl border p-4 shadow-xl backdrop-blur-sm sm:h-80 sm:p-6 md:h-96"
+                  style={{
+                    backgroundColor: `${theme.colors.background}1a`,
+                    borderColor: `${theme.colors.primary}33`,
                   }}
-                  showAltEditor={isEditable}
-                  placeholder={{
-                    width: 500,
-                    height: 500,
-                    text: "Upload hero image",
-                  }}
-                />
+                >
+                  <EditableImage
+                    src=""
+                    alt="Hero illustration"
+                    onImageChange={handleImageUpdate}
+                    onAltChange={handleAltUpdate}
+                    isEditable={isEditable}
+                    className="h-full w-full rounded-lg object-contain"
+                    width={800}
+                    height={800}
+                    cloudinaryOptions={{
+                      folder: "hero-images",
+                      resourceType: "image",
+                    }}
+                    showAltEditor={isEditable}
+                    placeholder={{
+                      width: 800,
+                      height: 800,
+                      text: "Upload hero image",
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </section>

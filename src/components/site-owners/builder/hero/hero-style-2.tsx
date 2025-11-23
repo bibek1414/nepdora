@@ -180,7 +180,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
   };
 
   const getLayoutClasses = () => {
-    let classes = "flex-1 ";
+    let classes = "";
     switch (data.layout) {
       case "text-left":
         classes += "text-left items-start";
@@ -234,7 +234,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
 
   return (
     <section
-      className="relative flex min-h-[50vh] w-full items-end p-4 sm:min-h-[60vh] sm:p-6 md:p-8 lg:p-16"
+      className="relative flex min-h-[70vh] w-full items-center p-4 sm:min-h-[80vh] sm:p-6 md:p-8 lg:p-16"
       style={{
         ...getBackgroundStyles(),
         color: textColor,
@@ -327,16 +327,16 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
       )}
 
       {/* Main Content Container */}
-      <div className="relative z-10 container mx-auto flex w-full max-w-7xl flex-col items-end gap-6 sm:gap-8 lg:flex-row">
+      <div className="relative z-10 container mx-auto flex w-full max-w-7xl flex-col gap-6 sm:gap-8 lg:flex-row lg:items-center">
         {/* Text Content */}
         <div
-          className={`flex flex-col gap-3 sm:gap-4 ${getLayoutClasses()} w-full lg:w-auto`}
+          className={`flex flex-col gap-3 sm:gap-4 ${getLayoutClasses()} w-full lg:flex-1`}
         >
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="text-3xl leading-tight font-bold sm:text-4xl md:text-5xl lg:text-6xl"
+            className="w-full text-3xl leading-tight font-bold sm:text-4xl md:text-5xl lg:text-6xl"
             style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter your hero title..."
@@ -346,7 +346,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             value={data.subtitle}
             onChange={handleTextUpdate("subtitle")}
             as="p"
-            className="max-w-2xl text-base sm:text-lg md:text-xl"
+            className="w-full text-base sm:text-lg md:text-xl"
             style={{ fontFamily: theme.fonts.body }}
             isEditable={isEditable}
             placeholder="Enter subtitle..."
@@ -357,7 +357,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="max-w-2xl text-sm opacity-90 sm:text-base"
+              className="w-full text-sm opacity-90 sm:text-base"
               style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
               placeholder="Enter description..."
@@ -366,7 +366,15 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
           )}
 
           {/* Buttons */}
-          <div className="mt-2 flex flex-wrap gap-2 sm:mt-4 sm:gap-3">
+          <div
+            className={`mt-2 flex flex-wrap gap-2 sm:mt-4 sm:gap-3 ${
+              data.layout === "text-left"
+                ? "justify-start"
+                : data.layout === "text-right"
+                  ? "justify-end"
+                  : "justify-center"
+            }`}
+          >
             {data.buttons.map(btn => (
               <Button
                 key={`btn-${componentId}-${btn.id}`}
@@ -406,7 +414,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
         {data.showSlider &&
           data.sliderImages &&
           data.sliderImages.length > 0 && (
-            <div className="relative mt-6 w-full lg:mt-0 lg:w-1/3">
+            <div className="group relative mt-6 w-full lg:mt-0 lg:w-1/2 lg:flex-shrink-0">
               <div className="relative overflow-hidden rounded-lg shadow-lg">
                 <div
                   className="flex transition-transform duration-500 ease-in-out"
@@ -439,7 +447,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                           onUpdate?.({ sliderImages: updatedSliderImages });
                         }}
                         isEditable={isEditable}
-                        className="h-48 w-full object-cover sm:h-64 md:h-80"
+                        className="h-56 w-full object-cover sm:h-72 md:h-80 lg:h-96"
                         width={600}
                         height={400}
                         cloudinaryOptions={{
@@ -464,7 +472,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                   <Button
                     variant="outline"
                     size="icon"
-                    className="bg-background/80 absolute top-1/2 left-1 z-10 h-8 w-8 -translate-y-1/2 backdrop-blur-sm sm:left-2 sm:h-10 sm:w-10"
+                    className="bg-background/80 pointer-events-none invisible absolute top-1/2 left-1 z-10 h-8 w-8 -translate-y-1/2 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 sm:left-2 sm:h-10 sm:w-10"
                     onClick={prevSlide}
                   >
                     <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -473,7 +481,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                   <Button
                     variant="outline"
                     size="icon"
-                    className="bg-background/80 absolute top-1/2 right-1 z-10 h-8 w-8 -translate-y-1/2 backdrop-blur-sm sm:right-2 sm:h-10 sm:w-10"
+                    className="bg-background/80 pointer-events-none invisible absolute top-1/2 right-1 z-10 h-8 w-8 -translate-y-1/2 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 sm:right-2 sm:h-10 sm:w-10"
                     onClick={nextSlide}
                   >
                     <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
