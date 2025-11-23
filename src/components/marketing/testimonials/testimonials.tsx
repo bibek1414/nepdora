@@ -1,42 +1,17 @@
+"use client";
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import Link from "next/link";
-
-interface Testimonial {
-  name: string;
-  role: string;
-  review: string;
-  rating: number;
-}
+import { useTestimonials } from "@/hooks/super-admin/use-testimonials"; // Adjust the import path as needed
+import Image from "next/image";
+import { Testimonial } from "@/types/owner-site/admin/testimonial";
 
 const CustomerTestimonials = () => {
-  const testimonials: Testimonial[] = [
-    {
-      name: "Sarah Martinez",
-      role: "E-commerce Owner",
-      review:
-        "Switching to Nepdora was the best decision for my online business. Their uptime is incredible and the loading speeds have improved my conversion rates by 40%. The migration process was seamless and their support team guided me through every step.",
-      rating: 5,
-    },
-    {
-      name: "David Chen",
-      role: "Full-stack Developer",
-      review:
-        "As a developer, I need reliable hosting that can handle complex applications. Nepdora's infrastructure is robust and their developer tools are top-notch. I've deployed over 50 projects here and never faced any major issues.",
-      rating: 5,
-    },
-    {
-      name: "Maria Rodriguez",
-      role: "Digital Agency CEO",
-      review:
-        "Managing multiple client websites became effortless with Nepdora. Their white-label solutions and bulk management tools have streamlined our operations. Our clients love the performance improvements they've experienced.",
-      rating: 5,
-    },
-  ];
+  const { data: testimonialsData, isLoading, error } = useTestimonials();
 
-  const renderStars = (rating: number) => {
+  const renderStars = (rating: number = 5) => {
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
@@ -48,6 +23,65 @@ const CustomerTestimonials = () => {
       />
     ));
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="bg-background px-4 py-12">
+        <div className="mx-auto max-w-5xl">
+          <div className="text-center">
+            <h2 className="text-foreground mb-2 text-3xl font-extrabold tracking-tight md:text-4xl">
+              Thousands of Nepdora Lovers
+            </h2>
+            <p className="text-muted-foreground mx-auto max-w-2xl text-sm">
+              Loading testimonials...
+            </p>
+          </div>
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {[1, 2, 3].map(item => (
+              <Card
+                key={item}
+                className="border-border bg-card transition-shadow duration-300 hover:border"
+              >
+                <CardContent className="p-6">
+                  <div className="animate-pulse">
+                    <div className="mb-4 flex items-center">
+                      <div className="mr-4 h-12 w-12 rounded-full bg-gray-300"></div>
+                      <div>
+                        <div className="mb-2 h-4 w-24 rounded bg-gray-300"></div>
+                        <div className="h-3 w-20 rounded bg-gray-300"></div>
+                      </div>
+                    </div>
+                    <div className="mb-4 h-4 w-full rounded bg-gray-300"></div>
+                    <div className="h-4 w-5/6 rounded bg-gray-300"></div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="bg-background px-4 py-12">
+        <div className="mx-auto max-w-5xl text-center">
+          <h2 className="text-foreground mb-2 text-3xl font-extrabold tracking-tight md:text-4xl">
+            Thousands of Nepdora Lovers
+          </h2>
+          <p className="text-muted-foreground">
+            Failed to load testimonials. Please try again later.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Use dynamic data or fallback to empty array
+  const testimonials: Testimonial[] = testimonialsData || [];
 
   return (
     <div className="bg-background px-4">
@@ -65,34 +99,57 @@ const CustomerTestimonials = () => {
 
         {/* Testimonials Grid */}
         <div className="mb-12 grid gap-6 md:grid-cols-3">
-          {testimonials.map((testimonial, index) => (
-            <Card
-              key={index}
-              className="border-border bg-card hover: border transition-shadow duration-300"
-            >
-              <CardContent className="p-6">
-                {/* Customer Info */}
-                <div className="mb-4">
-                  <h3 className="text-card-foreground mb-1 text-lg font-semibold">
-                    {testimonial.name}
-                  </h3>
-                  <p className="text-muted-foreground text-sm">
-                    {testimonial.role}
+          {testimonials.length > 0 ? (
+            testimonials.map(testimonial => (
+              <Card
+                key={testimonial.id}
+                className="border-border bg-card transition-shadow duration-300 hover:border"
+              >
+                <CardContent className="p-6">
+                  {/* Customer Info with Image */}
+                  <div className="mb-4 flex items-center">
+                    {testimonial.image && (
+                      <div className="mr-4 flex-shrink-0">
+                        <Image
+                          src={testimonial.image}
+                          alt={testimonial.name}
+                          width={48}
+                          height={48}
+                          className="h-12 w-12 rounded-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="text-card-foreground mb-1 text-lg font-semibold">
+                        {testimonial.name}
+                      </h3>
+                      <p className="text-muted-foreground text-sm">
+                        {testimonial.designation}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Star Rating */}
+                  <div className="mb-4 flex gap-1">
+                    {renderStars(5)}{" "}
+                    {/* Assuming 5 stars for all testimonials */}
+                  </div>
+
+                  {/* Review Text */}
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {testimonial.comment}
                   </p>
-                </div>
-
-                {/* Star Rating */}
-                <div className="mb-4 flex gap-1">
-                  {renderStars(testimonial.rating)}
-                </div>
-
-                {/* Review Text */}
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {testimonial.review}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            // Fallback when no testimonials are available
+            <div className="col-span-3 py-8 text-center">
+              <p className="text-muted-foreground">
+                No testimonials available at the moment.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* CTA Button */}

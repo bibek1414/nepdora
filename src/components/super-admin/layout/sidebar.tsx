@@ -36,6 +36,7 @@ const navigationGroups = [
       { name: "Domains", href: "/superadmin/domains", icon: Globe },
       { name: "Templates", href: "/superadmin/template", icon: Layout },
       { name: "FAQ", href: "/superadmin/faq", icon: HelpCircle },
+      { name: "Testimonials", href: "/superadmin/testimonial", icon: Shield },
     ],
   },
   {
