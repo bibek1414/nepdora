@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ArrowLeft, Sparkles, Layout, Code } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft, Sparkles, Layout } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,15 +14,25 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/use-auth";
+import { LoadingScreen } from "@/components/on-boarding/loading-screen/loading-screen";
 
 interface OnboardingStepOneProps {
   onSelectOption: (option: "template" | "ai" | "scratch") => void;
+  currentStep: number;
+  totalSteps: number;
 }
 
 export const OnboardingStepOne = ({
   onSelectOption,
+  currentStep,
+  totalSteps,
 }: OnboardingStepOneProps) => {
   const [showScratchConfirm, setShowScratchConfirm] = useState(false);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
 
   const handleOptionSelect = (option: "template" | "ai" | "scratch") => {
     if (option === "scratch") {
@@ -34,19 +44,43 @@ export const OnboardingStepOne = ({
 
   const handleConfirmScratch = () => {
     setShowScratchConfirm(false);
-    onSelectOption("scratch");
+    setShowLoadingScreen(true);
+
+    setTimeout(() => {
+      if (user?.sub_domain) {
+        router.push(`/builder/${user.sub_domain}`);
+      } else {
+        router.push("/builder");
+      }
+    }, 5000);
   };
+
+  const handleSkip = () => {
+    setShowLoadingScreen(true);
+
+    setTimeout(() => {
+      if (user?.sub_domain) {
+        router.push(`/builder/${user.sub_domain}`);
+      } else {
+        router.push("/builder");
+      }
+    }, 5000);
+  };
+
+  const progressPercentage = (currentStep / totalSteps) * 100;
 
   return (
     <>
+      <LoadingScreen isVisible={showLoadingScreen} />
+
       <div className="flex min-h-screen flex-col bg-white">
         {/* Header */}
         <header className="flex items-center justify-between px-6 py-4">
-          <img src="/fulllogo.svg" />
+          <img src="/fulllogo.svg" alt="Logo" className="h-8" />
           <Button
             variant="ghost"
             className="text-gray-600 hover:text-gray-900"
-            onClick={() => handleOptionSelect("scratch")}
+            onClick={handleSkip}
           >
             Skip
           </Button>
@@ -55,15 +89,20 @@ export const OnboardingStepOne = ({
         {/* Progress Bar */}
         <div className="px-6 pt-4">
           <div className="h-1 w-full bg-gray-200">
-            <div className="h-full w-1/3 bg-blue-600 transition-all duration-300"></div>
+            <div
+              className="bg-primary h-full transition-all duration-300"
+              style={{ width: `${progressPercentage}%` }}
+            ></div>
           </div>
-          <p className="mt-2 text-sm font-medium text-blue-600">Step 1</p>
+          <p className="text-primary mt-2 text-sm font-medium">
+            Step {currentStep} of {totalSteps}
+          </p>
         </div>
 
         {/* Main Content */}
-        <main className="flex flex-1 flex-col items-center justify-center px-6 py-12">
+        <main className="flex flex-1 flex-col items-center justify-center px-6">
           <div className="w-full max-w-4xl">
-            <h1 className="mb-4 text-center text-4xl font-bold text-gray-900 md:text-5xl">
+            <h1 className="mb-4 text-center text-3xl font-bold text-gray-900 md:text-5xl">
               Let&apos;s start building your dream website
             </h1>
             <p className="mb-12 text-center text-lg text-gray-600">
@@ -72,78 +111,89 @@ export const OnboardingStepOne = ({
 
             <div className="space-y-6">
               {/* AI Generation Option (Recommended) */}
-              <button
-                onClick={() => handleOptionSelect("ai")}
-                className="group relative w-full text-left transition-all hover:scale-[1.02]"
-              >
-                <Card className="relative overflow-hidden border-2 border-blue-500 bg-gradient-to-r from-blue-50 to-white p-6 shadow-lg">
-                  <div className="absolute top-6 right-6">
-                    <Sparkles className="h-8 w-8 text-blue-500" />
-                    <Sparkles className="absolute -top-2 -right-2 h-5 w-5 text-blue-400" />
-                    <Sparkles className="absolute -bottom-1 -left-2 h-4 w-4 text-blue-300" />
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                      <Sparkles className="h-6 w-6 text-blue-600" />
+              <Card className="group border-primary relative overflow-hidden border-2 bg-gradient-to-r from-gray-50 to-white py-0 shadow-lg transition-all hover:scale-[1.02]">
+                <CardContent
+                  className="p-6"
+                  onClick={() => handleOptionSelect("ai")}
+                >
+                  <Button
+                    variant="ghost"
+                    className="relative h-auto w-full justify-start p-0 text-left shadow-none hover:bg-transparent"
+                  >
+                    <div className="absolute top-6 right-6">
+                      <Sparkles className="text-primary h-8 w-8" />
+                      <Sparkles className="text-primary/90 absolute -top-2 -right-2 h-5 w-5" />
+                      <Sparkles className="text-primary/80 absolute -bottom-1 -left-2 h-4 w-4" />
                     </div>
-                    <div className="flex-1">
-                      <div className="mb-1 flex items-center gap-2">
-                        <span className="text-xs font-semibold text-blue-600 uppercase">
-                          AI
-                        </span>
-                        <span className="rounded-full bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">
-                          RECOMMENDED
-                        </span>
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100">
+                        <Sparkles className="text-primary h-6 w-6" />
                       </div>
-                      <h2 className="mb-2 text-2xl font-bold text-gray-900">
-                        Generate your website in seconds
-                      </h2>
-                      <p className="text-gray-600">
-                        Let AI create a website for you
-                      </p>
+                      <div className="flex-1">
+                        <div className="mb-1 flex items-center gap-2">
+                          <span className="text-primary text-xs font-semibold uppercase">
+                            AI
+                          </span>
+                          <span className="bg-primary rounded-full px-2 py-0.5 text-xs font-medium text-white">
+                            RECOMMENDED
+                          </span>
+                        </div>
+                        <h2 className="mb-2 text-2xl font-bold text-gray-900">
+                          Generate your website in seconds
+                        </h2>
+                        <p className="text-gray-600">
+                          Let AI create a website for you
+                        </p>
+                      </div>
+                      <div className="hidden md:block">
+                        <img
+                          src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop"
+                          alt="AI Website Preview"
+                          className="h-32 w-48 rounded-lg object-cover shadow-md"
+                        />
+                      </div>
                     </div>
-                    <div className="hidden md:block">
-                      <img
-                        src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop"
-                        alt="AI Website Preview"
-                        className="h-32 w-48 rounded-lg object-cover shadow-md"
-                      />
-                    </div>
-                  </div>
-                </Card>
-              </button>
+                  </Button>
+                </CardContent>
+              </Card>
 
               {/* Template Option */}
-              <button
-                onClick={() => handleOptionSelect("template")}
-                className="group w-full text-left transition-all hover:scale-[1.02]"
-              >
-                <Card className="border-2 border-gray-200 p-6 transition-colors hover:border-gray-300 hover:bg-gray-50">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100">
-                      <Layout className="h-6 w-6 text-gray-600" />
+              <Card className="group border-2 border-gray-200 transition-all hover:scale-[1.02]">
+                <CardContent
+                  className="p-6"
+                  onClick={() => handleOptionSelect("template")}
+                >
+                  <Button
+                    variant="ghost"
+                    className="h-auto w-full justify-start p-0 text-left hover:bg-transparent"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100">
+                        <Layout className="h-6 w-6 text-gray-600" />
+                      </div>
+                      <div>
+                        <h2 className="mb-1 text-xl font-bold text-gray-900">
+                          Start with a template
+                        </h2>
+                        <p className="text-gray-600">
+                          Use designer-made templates
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="mb-1 text-xl font-bold text-gray-900">
-                        Start with a template
-                      </h2>
-                      <p className="text-gray-600">
-                        Use designer-made templates
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              </button>
+                  </Button>
+                </CardContent>
+              </Card>
 
               {/* Start from Scratch */}
               <div className="pt-4 text-center">
-                <button
+                <Button
+                  variant="link"
                   onClick={() => handleOptionSelect("scratch")}
-                  className="text-gray-600 underline hover:text-gray-900"
+                  className="text-gray-600 hover:text-gray-900"
                 >
                   Know what you do?{" "}
                   <span className="font-semibold">Start from scratch</span>
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -166,10 +216,7 @@ export const OnboardingStepOne = ({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleConfirmScratch}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
+            <AlertDialogAction onClick={handleConfirmScratch}>
               Yes, Start from Scratch
             </AlertDialogAction>
           </AlertDialogFooter>

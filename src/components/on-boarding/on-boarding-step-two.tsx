@@ -1,152 +1,47 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Search, X, ChevronDown, ChevronUp } from "lucide-react";
-import {
-  useTemplateCategories,
-  useTemplateSubcategories,
-  useTemplateSearch,
-} from "@/hooks/super-admin/components/use-template-category";
-import { useDebouncer } from "@/hooks/use-debouncer";
-import { ArrowLeft } from "lucide-react";
+import { useTemplateCategories } from "@/hooks/super-admin/components/use-template-category";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface OnboardingStepTwoProps {
-  onContinue: (
-    websiteType: string,
-    categoryId?: number,
-    subcategoryId?: number
-  ) => void;
+  onContinue: (categoryId?: number) => void;
   onBack: () => void;
-  isScratchMode?: boolean;
+  currentStep: number;
+  totalSteps: number;
 }
 
 export const OnboardingStepTwo = ({
   onContinue,
   onBack,
-  isScratchMode = false,
+  currentStep,
+  totalSteps,
 }: OnboardingStepTwoProps) => {
-  const [websiteType, setWebsiteType] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<number | null>(
-    null
-  );
-  const [showSubcategories, setShowSubcategories] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Use debouncer for search query with 500ms delay
-  const debouncedSearchQuery = useDebouncer(searchQuery, 500);
+  const { data: categories = [], isLoading } = useTemplateCategories();
 
-  // Use search API only with debounced value
-  const { data: searchResults, isLoading: searchLoading } = useTemplateSearch(
-    debouncedSearchQuery.trim() ? debouncedSearchQuery : ""
-  );
-
-  const { data: categories = [], isLoading: categoriesLoading } =
-    useTemplateCategories();
-  const { data: subcategories = [], isLoading: subcategoriesLoading } =
-    useTemplateSubcategories(selectedCategory || undefined);
-
-  // Update search input when category/subcategory is selected
-  useEffect(() => {
-    if (selectedCategory) {
-      const category = categories.find(cat => cat.id === selectedCategory);
-      if (category) {
-        if (selectedSubcategory) {
-          const subcategory = subcategories.find(
-            sub => sub.id === selectedSubcategory
-          );
-          if (subcategory) {
-            setWebsiteType(`${category.name} - ${subcategory.name}`);
-          }
-        } else {
-          setWebsiteType(category.name);
-        }
-      }
-    }
-  }, [selectedCategory, selectedSubcategory, categories, subcategories]);
-
-  const handleContinue = () => {
-    if (websiteType.trim() || selectedCategory) {
-      onContinue(
-        websiteType.trim(),
-        selectedCategory || undefined,
-        selectedSubcategory || undefined
-      );
-    }
-  };
-
-  const handleSkip = () => {
-    onContinue("", undefined, undefined);
-  };
-
-  const handleClear = () => {
-    setWebsiteType("");
-    setSearchQuery("");
-    setSelectedCategory(null);
-    setSelectedSubcategory(null);
-    setShowSubcategories(false);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && (websiteType.trim() || selectedCategory)) {
-      handleContinue();
-    }
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setWebsiteType(value);
-    setSearchQuery(value);
-
-    // Clear selections when user starts typing
-    if (value && (selectedCategory || selectedSubcategory)) {
-      setSelectedCategory(null);
-      setSelectedSubcategory(null);
-      setShowSubcategories(false);
-    }
-  };
-
-  const handleCategorySelect = (categoryId: number, categoryName: string) => {
+  const handleCategorySelect = (categoryId: number) => {
     setSelectedCategory(categoryId);
-    setSelectedSubcategory(null);
-    setShowSubcategories(true);
-    setWebsiteType(categoryName);
-    setSearchQuery(""); // Clear search query when selecting from categories
+    // Auto-continue to next step after selection
+    setTimeout(() => {
+      onContinue(categoryId);
+    }, 300); // Small delay for better UX
   };
 
-  const handleSubcategorySelect = (
-    subcategoryId: number,
-    subcategoryName: string
-  ) => {
-    setSelectedSubcategory(subcategoryId);
-    if (selectedCategory) {
-      const category = categories.find(cat => cat.id === selectedCategory);
-      if (category) {
-        setWebsiteType(`${category.name} - ${subcategoryName}`);
-      }
-    }
-    setSearchQuery(""); // Clear search query when selecting from subcategories
+  const clearSearch = () => {
+    setSearchTerm("");
   };
 
-  const getSelectedCategoryName = () => {
-    if (selectedCategory) {
-      const category = categories.find(cat => cat.id === selectedCategory);
-      return category?.name;
-    }
-    return "";
-  };
+  const filteredCategories = categories.filter(category =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const getSelectedSubcategoryName = () => {
-    if (selectedSubcategory) {
-      const subcategory = subcategories.find(
-        sub => sub.id === selectedSubcategory
-      );
-      return subcategory?.name;
-    }
-    return "";
-  };
+  const progressPercentage = (currentStep / totalSteps) * 100;
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
@@ -159,269 +54,106 @@ export const OnboardingStepTwo = ({
           <ArrowLeft className="h-5 w-5" />
           <span className="font-medium">Back</span>
         </button>
-        <img src="/fulllogo.svg" />
-        <Button
-          variant="ghost"
+        <img src="/fulllogo.svg" alt="Logo" className="h-8" />
+        <button
           className="text-gray-600 hover:text-gray-900"
-          onClick={handleSkip}
+          onClick={() => onContinue()}
         >
           Skip
-        </Button>
+        </button>
       </header>
 
       {/* Progress Bar */}
       <div className="px-6 pt-4">
         <div className="h-1 w-full bg-gray-200">
-          <div className="h-full w-2/3 bg-blue-600 transition-all duration-300"></div>
+          <div
+            className="bg-primary h-full transition-all duration-300"
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
         </div>
-        <p className="mt-2 text-sm font-medium text-blue-600">Step 2</p>
+        <p className="text-primary mt-2 text-sm font-medium">
+          Step {currentStep} of {totalSteps}
+        </p>
       </div>
 
       {/* Main Content */}
-      <main className="flex flex-1 flex-col items-center justify-center px-6 py-12">
-        <div className="w-full max-w-2xl">
-          <h1 className="mb-8 text-center text-4xl font-bold text-gray-900 md:text-5xl">
-            {isScratchMode
-              ? "What type of website are you creating from scratch?"
-              : "What type of website do you want to create?"}
-          </h1>
+      <main className="flex flex-1 flex-col px-6 py-8">
+        <div className="mx-auto w-full max-w-6xl">
+          <div className="mb-8 text-center">
+            <h1 className="mb-2 text-3xl font-bold text-gray-900 md:text-4xl">
+              What type of website are you building?
+            </h1>
+            <p className="text-gray-600">Select a category to continue</p>
+          </div>
 
-          {/* Search Input */}
-          <div className="mb-8 flex items-center gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-gray-400" />
+          {/* Search */}
+          <div className="mb-8">
+            <div className="relative mx-auto max-w-md">
+              <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-gray-400" />
               <Input
                 type="text"
-                placeholder="Search for website type or browse categories..."
-                value={websiteType}
-                onChange={handleSearchChange}
-                onKeyPress={handleKeyPress}
-                className="h-14 pr-12 pl-12 text-base"
+                placeholder="Search categories..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className="h-12 pr-10 pl-10 placeholder:text-gray-400"
               />
-              {websiteType && (
+              {searchTerm && (
                 <button
-                  onClick={handleClear}
-                  className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  onClick={clearSearch}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   <X className="h-5 w-5" />
                 </button>
               )}
             </div>
-            <Button
-              onClick={handleContinue}
-              disabled={!websiteType.trim() && !selectedCategory}
-              className="h-14 bg-blue-600 px-8 text-base font-medium hover:bg-blue-700"
-            >
-              {isScratchMode ? "Start Building" : "Continue"}
-            </Button>
           </div>
 
-          {/* Search Results from API - Now using debounced search */}
-          {debouncedSearchQuery && (
-            <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-              <p className="mb-3 text-sm font-medium text-gray-600">
-                Search Results for &apos;{debouncedSearchQuery}&apos;:
-              </p>
-
-              {searchLoading ? (
-                <div className="space-y-2">
-                  {[...Array(3)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="h-8 animate-pulse rounded-md bg-gray-200"
-                    ></div>
-                  ))}
-                </div>
-              ) : (
-                <>
-                  {/* Categories Results from API */}
-                  {searchResults?.categories &&
-                    searchResults.categories.length > 0 && (
-                      <div className="mb-4">
-                        <p className="mb-2 text-sm text-gray-500">
-                          Categories:
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {searchResults.categories.map(category => (
-                            <button
-                              key={category.id}
-                              onClick={() =>
-                                handleCategorySelect(category.id, category.name)
-                              }
-                              className="rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100"
-                            >
-                              {category.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                  {/* Subcategories Results from API */}
-                  {searchResults?.subcategories &&
-                    searchResults.subcategories.length > 0 && (
-                      <div>
-                        <p className="mb-2 text-sm text-gray-500">
-                          Subcategories:
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {searchResults.subcategories.map(subcategory => (
-                            <button
-                              key={subcategory.id}
-                              onClick={() =>
-                                handleSubcategorySelect(
-                                  subcategory.id,
-                                  subcategory.name
-                                )
-                              }
-                              className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700 transition-colors hover:border-green-300 hover:bg-green-100"
-                            >
-                              {subcategory.name}
-                              <span className="ml-1 text-xs text-green-500">
-                                (
-                                {
-                                  categories.find(
-                                    cat => cat.id === subcategory.category
-                                  )?.name
-                                }
-                                )
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                  {/* No Results */}
-                  {(!searchResults?.categories ||
-                    searchResults.categories.length === 0) &&
-                    (!searchResults?.subcategories ||
-                      searchResults.subcategories.length === 0) && (
-                      <p className="text-sm text-gray-500">
-                        No results found. Try a different search term.
-                      </p>
-                    )}
-                </>
-              )}
+          {/* Categories Grid */}
+          {isLoading ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <Card key={i} className="overflow-hidden">
+                  <CardContent className="p-6">
+                    <Skeleton className="mb-4 h-48 w-full" />
+                    <Skeleton className="h-6 w-3/4" />
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          )}
-
-          {/* Categories Section - Show when not searching */}
-          {!debouncedSearchQuery && (
-            <div className="mb-6">
-              <div className="mb-4">
-                <p className="text-sm font-medium text-gray-600">
-                  Browse Categories:
-                </p>
-              </div>
-
-              {/* Categories List */}
-              <div className="mb-4">
-                {categoriesLoading ? (
-                  <div className="flex flex-wrap gap-3">
-                    {[...Array(6)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="h-10 w-32 animate-pulse rounded-md bg-gray-200"
-                      ></div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap gap-3">
-                    {categories.map(category => (
-                      <button
-                        key={category.id}
-                        onClick={() =>
-                          handleCategorySelect(category.id, category.name)
-                        }
-                        className={`rounded-md border px-4 py-2 text-sm transition-colors ${
-                          selectedCategory === category.id
-                            ? "border-blue-500 bg-blue-50 text-blue-700"
-                            : "border-gray-300 bg-white text-gray-700 hover:border-blue-400 hover:bg-blue-50"
-                        }`}
-                      >
+          ) : (
+            <>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredCategories.map(category => (
+                  <Card
+                    key={category.id}
+                    className={`cursor-pointer overflow-hidden border-2 py-0 transition-all hover:scale-105 ${
+                      selectedCategory === category.id
+                        ? "border-primary bg-gray-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                    onClick={() => handleCategorySelect(category.id)}
+                  >
+                    <CardContent className="p-6">
+                      <h3 className="text-lg font-semibold text-gray-900">
                         {category.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                      </h3>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
 
-              {/* Selected Category Display */}
-              {selectedCategory && (
-                <div className="mb-4">
-                  <p className="mb-2 text-sm text-gray-600">
-                    Selected Category:
+              {filteredCategories.length === 0 && (
+                <div className="py-16 text-center">
+                  <div className="mb-4 text-6xl">🔍</div>
+                  <h2 className="mb-2 text-2xl font-semibold text-gray-900">
+                    No categories found
+                  </h2>
+                  <p className="text-gray-600">
+                    Try adjusting your search terms
                   </p>
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-md bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
-                      {getSelectedCategoryName()}
-                    </span>
-                    {selectedSubcategory && (
-                      <>
-                        <span className="text-gray-400">→</span>
-                        <span className="rounded-md bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
-                          {getSelectedSubcategoryName()}
-                        </span>
-                      </>
-                    )}
-                    <button
-                      onClick={handleClear}
-                      className="ml-2 text-sm text-gray-500 hover:text-gray-700"
-                    >
-                      Clear
-                    </button>
-                  </div>
                 </div>
               )}
-
-              {/* Subcategories - Auto-show when category is selected */}
-              {selectedCategory && showSubcategories && (
-                <div className="mt-4">
-                  <div className="mb-2 flex items-center justify-between">
-                    <p className="text-sm text-gray-600">Subcategories:</p>
-                    <button
-                      onClick={() => setShowSubcategories(false)}
-                      className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
-                    >
-                      <ChevronUp className="h-4 w-4" />
-                      Hide
-                    </button>
-                  </div>
-                  {subcategoriesLoading ? (
-                    <div className="flex flex-wrap gap-3">
-                      {[...Array(4)].map((_, i) => (
-                        <div
-                          key={i}
-                          className="h-8 w-24 animate-pulse rounded-md bg-gray-200"
-                        ></div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex flex-wrap gap-3">
-                      {subcategories.map(subcategory => (
-                        <button
-                          key={subcategory.id}
-                          onClick={() =>
-                            handleSubcategorySelect(
-                              subcategory.id,
-                              subcategory.name
-                            )
-                          }
-                          className={`rounded-md border px-3 py-1 text-sm transition-colors ${
-                            selectedSubcategory === subcategory.id
-                              ? "border-green-500 bg-green-50 text-green-700"
-                              : "border-gray-300 bg-white text-gray-700 hover:border-green-400 hover:bg-green-50"
-                          }`}
-                        >
-                          {subcategory.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+            </>
           )}
         </div>
       </main>
