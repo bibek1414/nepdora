@@ -22,7 +22,11 @@ import {
 } from "@/hooks/owner-site/components/use-footer";
 import { FooterStylesDialog } from "@/components/site-owners/builder/footer/footer-styles-dialog";
 import { HeroStylesDialog } from "@/components/site-owners/builder/hero/hero-styles-dialog";
-import { defaultHeroData } from "@/types/owner-site/components/hero";
+import {
+  defaultHeroData,
+  heroTemplateConfigs,
+  heroTemplateContent,
+} from "@/types/owner-site/components/hero";
 import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-unified";
 import { AboutUsStylesDialog } from "@/components/site-owners/builder/about/about-styles-dialog";
 import {
@@ -56,7 +60,6 @@ import { BannerStylesDialog } from "@/components/site-owners/builder/banner/bann
 import { defaultBannerData } from "@/types/owner-site/components/banner";
 import { defaultNewsletterData } from "@/types/owner-site/components/newsletter";
 import { defaultYouTubeData } from "@/types/owner-site/components/youtube";
-import { heroTemplateConfigs } from "@/types/owner-site/components/hero";
 import { PageTemplateDialog } from "@/components/site-owners/builder/templates/page-template-dialog";
 import { PageTemplate } from "@/types/owner-site/components/page-template";
 import { ComponentOutlineSidebar } from "@/components/site-owners/builder/builder/component-outline-sidebar";
@@ -703,8 +706,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "hero-11"
   ) => {
     const templateConfig = heroTemplateConfigs[template];
+    const templateContent = heroTemplateContent[template] || {};
     const heroData = {
       ...defaultHeroData,
+      ...templateContent,
       template: template,
       backgroundType: templateConfig.backgroundType,
       backgroundColor:
@@ -874,18 +879,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleTeamTemplateSelect = async (
     template: "team-1" | "team-2" | "team-3" | "team-4" | "team-5"
   ) => {
-    // Map template IDs to component styles
-    const styleMap: Record<string, ComponentTypeMap["team"]["style"]> = {
-      "team-1": "grid-1",
-      "team-2": "grid-2",
-      "team-3": "list-1",
-      "team-4": "card-4",
-      "team-5": "card-5",
-    };
-
     const teamData: ComponentTypeMap["team"] = {
       ...defaultTeamData,
-      style: styleMap[template] || "grid-1",
+      style: template as ComponentTypeMap["team"]["style"],
     };
     setIsTeamStylesDialogOpen(false);
     await createComponentWithIndex("team", teamData, pendingInsertIndex);
@@ -1509,12 +1505,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           open={isBannerStylesDialogOpen}
           onOpenChange={setIsBannerStylesDialogOpen}
           onStyleSelect={handleBannerTemplateSelect}
-        />
-
-        <BlogStylesDialog
-          open={isBlogStylesDialogOpen}
-          onOpenChange={setIsBlogStylesDialogOpen}
-          onStyleSelect={handleBlogTemplateSelect}
         />
 
         {/* Top Navigation */}

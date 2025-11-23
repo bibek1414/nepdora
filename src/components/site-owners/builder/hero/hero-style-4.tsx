@@ -73,7 +73,6 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
 
   return (
     <div
-      className="min-h-screen"
       style={{
         background: `linear-gradient(135deg, ${theme.colors.background} 0%, #f8fafc 100%)`,
         fontFamily: theme.fonts.body,

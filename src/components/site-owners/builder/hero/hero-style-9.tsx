@@ -16,6 +16,30 @@ interface HeroTemplate9Props {
   onUpdate?: (updatedData: Partial<HeroData>) => void;
 }
 
+// Default collage images - moved outside the component to avoid recreation
+const defaultCollageImages = [
+  {
+    id: "1",
+    url: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=500&fit=crop",
+    alt: "Community member 1",
+  },
+  {
+    id: "2",
+    url: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=400&h=500&fit=crop",
+    alt: "Community member 2",
+  },
+  {
+    id: "3",
+    url: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&h=500&fit=crop",
+    alt: "Community member 3",
+  },
+  {
+    id: "4",
+    url: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=500&fit=crop",
+    alt: "Community member 4",
+  },
+];
+
 export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
   heroData,
   siteUser,
@@ -24,19 +48,33 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
 }) => {
   const componentId = React.useId();
 
-  const [data, setData] = useState<HeroData>(() => ({
-    ...heroData,
-    buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-    sliderImages: heroData.sliderImages?.map(img => ({ ...img })) || [],
-  }));
+  const [data, setData] = useState<HeroData>(() => {
+    // Ensure we have proper sliderImages data structure
+    const initialSliderImages =
+      heroData.sliderImages && heroData.sliderImages.length > 0
+        ? heroData.sliderImages
+        : defaultCollageImages;
+
+    return {
+      ...heroData,
+      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
+      sliderImages: initialSliderImages.map(img => ({ ...img })), // Ensure deep copy
+    };
+  });
 
   const { data: themeResponse } = useThemeQuery();
 
   useEffect(() => {
+    // Update data when heroData changes, ensuring sliderImages is properly handled
+    const updatedSliderImages =
+      heroData.sliderImages && heroData.sliderImages.length > 0
+        ? heroData.sliderImages
+        : defaultCollageImages;
+
     setData({
       ...heroData,
       buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-      sliderImages: heroData.sliderImages?.map(img => ({ ...img })) || [],
+      sliderImages: updatedSliderImages.map(img => ({ ...img })),
     });
   }, [heroData]);
 
@@ -55,45 +93,31 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
     },
   };
 
-  // Default collage images
-  const defaultCollageImages = [
-    {
-      id: "1",
-      url: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=500&fit=crop",
-      alt: "Community member 1",
-    },
-    {
-      id: "2",
-      url: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=400&h=500&fit=crop",
-      alt: "Community member 2",
-    },
-    {
-      id: "3",
-      url: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&h=500&fit=crop",
-      alt: "Community member 3",
-    },
-    {
-      id: "4",
-      url: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=500&fit=crop",
-      alt: "Community member 4",
-    },
-  ];
+  // Get collage images - ensure we always have exactly 4 images
+  const getCollageImages = () => {
+    console.log("Current sliderImages:", data.sliderImages);
 
-  const collageImages =
-    data.sliderImages && data.sliderImages.length > 0
-      ? data.sliderImages.slice(0, 4)
-      : defaultCollageImages;
+    // Start with existing slider images
+    const images = [...(data.sliderImages || [])];
+    console.log("Initial images:", images.length);
 
-  // Ensure we have exactly 4 images
-  while (collageImages.length < 4) {
-    collageImages.push({
-      id: `default-${collageImages.length}`,
-      url: defaultCollageImages[
-        collageImages.length % defaultCollageImages.length
-      ].url,
-      alt: `Community member ${collageImages.length + 1}`,
-    });
-  }
+    // Fill with default images if we don't have enough
+    for (let i = images.length; i < 4; i++) {
+      const defaultIndex = i % defaultCollageImages.length;
+      const defaultImage = {
+        ...defaultCollageImages[defaultIndex],
+        id: `default-${i}`,
+      };
+      console.log(`Adding default image ${i}:`, defaultImage);
+      images.push(defaultImage);
+    }
+
+    console.log("Final collage images:", images.length, images);
+    // Return only first 4 images
+    return images.slice(0, 4);
+  };
+
+  const collageImages = getCollageImages();
 
   const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
     const updatedData = { ...data, [field]: value };
@@ -106,15 +130,17 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
     altText?: string,
     index?: number
   ) => {
-    const updatedSliderImages = [...collageImages];
-
-    if (index !== undefined && index < updatedSliderImages.length) {
-      updatedSliderImages[index] = {
-        ...updatedSliderImages[index],
-        url: imageUrl,
-        alt: altText || updatedSliderImages[index].alt,
-      };
+    if (index === undefined || index < 0 || index >= collageImages.length) {
+      console.error("Invalid image index:", index);
+      return;
     }
+
+    const updatedSliderImages = [...collageImages];
+    updatedSliderImages[index] = {
+      ...updatedSliderImages[index],
+      url: imageUrl,
+      alt: altText || updatedSliderImages[index].alt,
+    };
 
     const updatedData = { ...data, sliderImages: updatedSliderImages };
     setData(updatedData);

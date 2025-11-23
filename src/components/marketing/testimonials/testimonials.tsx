@@ -50,7 +50,7 @@ const CustomerTestimonials = () => {
   };
 
   return (
-    <div className="bg-background px-4 py-16">
+    <div className="bg-background px-4">
       <div className="mx-auto max-w-5xl">
         {/* Header */}
         <div className="mb-12 text-center">

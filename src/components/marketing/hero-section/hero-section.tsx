@@ -54,19 +54,21 @@ const WebsiteBuilderHero = () => {
             </div>
           </div>
 
-          {/* Right side image - FIXED ASPECT RATIO */}
-          <div className="relative order-first lg:order-last">
-            <div className="ml-auto w-full max-w-lg lg:max-w-none">
-              <Image
-                src="/nepdora.jpg"
-                alt="Website builder interface showing drag and drop functionality"
-                width={500}
-                height={100}
-                className="ml-auto h-auto w-[70%] rounded-lg"
-                style={{ objectFit: "contain" }}
-                priority
-                quality={85}
-              />
+          {/* Right side image - CENTERED ON MOBILE, RIGHT ON DESKTOP */}
+          <div className="relative order-first mb-8 lg:order-last lg:mb-0">
+            <div className="mx-auto w-full max-w-lg lg:ml-auto lg:max-w-none">
+              <div className="flex justify-center lg:justify-end">
+                <Image
+                  src="/nepdora.jpg"
+                  alt="Website builder interface showing drag and drop functionality"
+                  width={500}
+                  height={300}
+                  className="h-auto w-[70%] rounded-lg lg:w-[80%]"
+                  style={{ objectFit: "contain" }}
+                  priority
+                  quality={85}
+                />
+              </div>
             </div>
           </div>
         </div>

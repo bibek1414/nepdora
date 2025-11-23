@@ -156,6 +156,7 @@ export interface GetPageComponentsResponse {
 }
 
 // Simplified default hero data
+// Default hero data configurations for different templates
 export const defaultHeroData: HeroData = {
   title: "Welcome to Our Platform",
   subtitle: "Build Something Great",
@@ -167,7 +168,7 @@ export const defaultHeroData: HeroData = {
   ],
   layout: "text-center",
   backgroundType: "color",
-  backgroundColor: "#3B82F6", // Use primary color from theme
+  backgroundColor: "#3B82F6",
   backgroundImageUrl:
     "https://images.unsplash.com/photo-1542382257-80dedb725088?q=80&w=2070&auto=format&fit=crop",
   showOverlay: true,
@@ -176,20 +177,154 @@ export const defaultHeroData: HeroData = {
   sliderImages: [
     {
       id: "1",
-      url: "https://images.unsplash.com/photo-1753010835776-3fd4bf38ef3c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Hero image 1",
+      url: "https://images.unsplash.com/photo-1753109910060-ba1fa8fbd094?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 1",
     },
     {
       id: "2",
-      url: "https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070&auto=format&fit=crop",
-      alt: "Hero image 2",
+      url: "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 2",
+    },
+    {
+      id: "3",
+      url: "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 3",
+    },
+    {
+      id: "4",
+      url: "https://images.unsplash.com/photo-1756134904044-1cf7868cb9de?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 4",
+    },
+    {
+      id: "5",
+      url: "https://plus.unsplash.com/premium_photo-1710849581742-f2151607c745?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 2",
+    },
+    {
+      id: "6",
+      url: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 3",
+    },
+    {
+      id: "7",
+      url: "https://images.unsplash.com/photo-1762112800040-b0d01696cb92?q=80&w=681&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 4",
     },
   ],
   showImage: true,
   imageUrl:
-    "https://plus.unsplash.com/premium_photo-1686944233139-b3f34be2ac2f?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1706708709028-9ed38f34115f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   imageAlt: "Hero image",
   template: "hero-1",
+};
+
+// Hero template-specific content
+export const heroTemplateContent: Record<string, Partial<HeroData>> = {
+  "hero-1": {
+    title: "Transform Your Digital Presence",
+    subtitle: "Modern Solutions for Growing Businesses",
+    description:
+      "Empower your brand with cutting-edge technology and innovative design that drives real results.",
+    buttons: [
+      { id: "1", text: "Start Free Trial", variant: "primary", href: "#" },
+      { id: "2", text: "View Demo", variant: "secondary", href: "#" },
+    ],
+  },
+  "hero-2": {
+    title: "Discover Premium Quality Products",
+    subtitle: "Curated Collections for Every Style",
+    description:
+      "Shop our exclusive range of handpicked items designed to elevate your lifestyle and exceed expectations.",
+    buttons: [
+      { id: "1", text: "Shop Now", variant: "primary", href: "#" },
+      { id: "2", text: "View Catalog", variant: "outline", href: "#" },
+    ],
+  },
+  "hero-3": {
+    title: "Unlock Your Financial Freedom",
+    subtitle: "Smart Banking for Modern Life",
+    description:
+      "Experience seamless banking with zero fees, instant transfers, and rewards that actually matter.",
+    buttons: [
+      { id: "1", text: "Open Account", variant: "primary", href: "#" },
+      { id: "2", text: "Learn More", variant: "secondary", href: "#" },
+    ],
+  },
+  "hero-4": {
+    title: "Learn from Industry Experts",
+    subtitle: "Master New Skills Online",
+    description:
+      "Access thousands of courses taught by professionals. Start learning today and advance your career.",
+    buttons: [
+      { id: "1", text: "Browse Courses", variant: "primary", href: "#" },
+      { id: "2", text: "Free Preview", variant: "outline", href: "#" },
+    ],
+  },
+  "hero-5": {
+    title: "Your Dream Home Awaits",
+    subtitle: "Find the Perfect Property",
+    description:
+      "Explore premium real estate listings with virtual tours, expert guidance, and transparent pricing.",
+    buttons: [
+      { id: "1", text: "Search Properties", variant: "primary", href: "#" },
+      { id: "2", text: "Talk to Agent", variant: "secondary", href: "#" },
+    ],
+  },
+  "hero-6": {
+    title: "Elevate Your Fitness Journey",
+    subtitle: "Personal Training Redefined",
+    description:
+      "Get customized workout plans, nutrition guidance, and 24/7 support from certified trainers.",
+    buttons: [
+      { id: "1", text: "Start Training", variant: "primary", href: "#" },
+      { id: "2", text: "See Plans", variant: "outline", href: "#" },
+    ],
+  },
+  "hero-7": {
+    title: "Travel the World Your Way",
+    subtitle: "Unforgettable Adventures Begin Here",
+    description:
+      "Book exclusive travel experiences, from luxury resorts to authentic local stays worldwide.",
+    buttons: [
+      { id: "1", text: "Plan Trip", variant: "primary", href: "#" },
+      {
+        id: "2",
+        text: "Explore Destinations",
+        variant: "secondary",
+        href: "#",
+      },
+    ],
+  },
+  "hero-8": {
+    title: "Taste Perfection Delivered",
+    subtitle: "Artisan Food & Beverages",
+    description:
+      "Savor gourmet meals crafted by award-winning chefs, delivered fresh to your doorstep.",
+    buttons: [
+      { id: "1", text: "Order Now", variant: "primary", href: "#" },
+      { id: "2", text: "View Menu", variant: "outline", href: "#" },
+    ],
+  },
+  "hero-9": {
+    title: "Innovation Meets Elegance",
+    subtitle: "Next-Gen Technology Solutions",
+    description:
+      "Experience the future with AI-powered tools designed to simplify complex business operations.",
+    buttons: [
+      { id: "1", text: "Get Started", variant: "primary", href: "#" },
+      { id: "2", text: "Watch Demo", variant: "secondary", href: "#" },
+    ],
+  },
+  "hero-10": {
+    title: "Create Lasting Memories",
+    subtitle: "Professional Event Planning",
+    description:
+      "From weddings to corporate events, we transform your vision into extraordinary celebrations.",
+    buttons: [
+      { id: "1", text: "Book Consultation", variant: "primary", href: "#" },
+      { id: "2", text: "View Portfolio", variant: "outline", href: "#" },
+    ],
+  },
 };
 
 // Simplified template configurations
@@ -243,7 +378,7 @@ export const heroTemplateConfigs: Record<string, HeroTemplateConfig> = {
     template: "hero-5",
     backgroundType: "image",
     backgroundImageUrl:
-      "https://images.unsplash.com/photo-1559827291-72ee739d0d95?q=80&w=1974&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1762430259780-28ffac74916c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     showOverlay: true,
     overlayOpacity: 0.4,
   },

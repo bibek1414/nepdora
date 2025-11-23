@@ -49,7 +49,7 @@ const FAQSection: React.FC = () => {
   ];
 
   return (
-    <section className="bg-background py-40">
+    <section className="bg-background py-16">
       <div className="mx-auto max-w-4xl px-6">
         <div className="mb-16 text-center">
           <div className="mb-2 text-5xl font-extrabold tracking-tight md:text-4xl">

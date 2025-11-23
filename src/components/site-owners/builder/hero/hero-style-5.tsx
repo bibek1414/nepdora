@@ -139,6 +139,18 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
     <div
       className="relative flex min-h-screen items-center justify-center text-center text-white"
       data-component-id={componentId}
+      style={{
+        ...(data.backgroundType === "image" && data.backgroundImageUrl
+          ? {
+              backgroundImage: `url(${data.backgroundImageUrl})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }
+          : {
+              backgroundColor: data.backgroundColor || theme.colors.background,
+            }),
+      }}
     >
       {/* Background Change Button - Only visible when editable */}
       {isEditable && (
@@ -179,62 +191,48 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
         </div>
       )}
 
-      {/* Background Image */}
-      {data.backgroundType === "image" && data.backgroundImageUrl ? (
-        <>
-          {/* Direct image background */}
-          <div
-            className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url(${data.backgroundImageUrl})`,
-            }}
-          />
-          <EditableImage
-            key={`bg-${componentId}-${data.backgroundImageUrl}`} // Unique key
-            src={data.backgroundImageUrl}
-            alt={data.imageAlt || "Background image"}
-            onImageChange={handleImageUpdate}
-            isEditable={isEditable}
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
-            priority
-            cloudinaryOptions={{
-              folder: "hero-backgrounds",
-              resourceType: "image",
-            }}
-            imageOptimization={{
-              width: 1920,
-              height: 1080,
-              quality: "auto",
-              format: "auto",
-              crop: "fill",
-            }}
-            placeholder={{
-              width: 1920,
-              height: 1080,
-              text: "Upload background image",
-            }}
-          />
-          {/* Overlay */}
-          {data.showOverlay && (
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundColor: `rgba(0, 0, 0, ${data.overlayOpacity || 0.7})`,
+      {/* Hidden EditableImage for upload functionality only */}
+      {data.backgroundType === "image" &&
+        data.backgroundImageUrl &&
+        isEditable && (
+          <div className="hidden">
+            <EditableImage
+              key={`bg-edit-${componentId}`}
+              src={data.backgroundImageUrl}
+              alt={data.imageAlt || "Background image"}
+              onImageChange={handleImageUpdate}
+              isEditable={true}
+              cloudinaryOptions={{
+                folder: "hero-backgrounds",
+                resourceType: "image",
+              }}
+              imageOptimization={{
+                width: 1920,
+                height: 1080,
+                quality: "auto",
+                format: "auto",
+                crop: "fill",
+              }}
+              placeholder={{
+                width: 1920,
+                height: 1080,
+                text: "Upload background image",
               }}
             />
-          )}
-        </>
-      ) : (
-        /* Default/Color Background */
+          </div>
+        )}
+
+      {/* Overlay - Only show if image background with overlay enabled */}
+      {data.backgroundType === "image" && data.showOverlay && (
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 z-[1]"
           style={{
-            backgroundColor: data.backgroundColor || theme.colors.background,
+            backgroundColor: `rgba(0, 0, 0, ${data.overlayOpacity || 0.7})`,
           }}
         />
       )}
 
-      {/* Content */}
+      {/* Content - Make sure it's above the overlay */}
       <div className="relative z-10 max-w-3xl px-6">
         {/* Badge/Subtitle */}
         <EditableText
@@ -252,11 +250,11 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
 
         {/* Main Title */}
         <EditableText
-          key={`title-${componentId}`} // Unique key
+          key={`title-${componentId}`}
           value={data.title}
           onChange={handleTextUpdate("title")}
           as="h1"
-          className="leading-tight font-bold sm:text-6xl md:text-7xl"
+          className="text-4xl leading-tight font-bold sm:text-6xl md:text-7xl"
           isEditable={isEditable}
           placeholder="Enter main title..."
           multiline={true}
@@ -264,7 +262,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
 
         {/* Description */}
         <EditableText
-          key={`description-${componentId}`} // Unique key
+          key={`description-${componentId}`}
           value={data.description}
           onChange={handleTextUpdate("description")}
           as="p"
@@ -274,11 +272,11 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           multiline={true}
         />
 
-        {/* Buttons with unique keys */}
+        {/* Buttons */}
         <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
           {data.buttons.length > 0 && (
             <EditableLink
-              key={`button-1-${componentId}`} // Unique key
+              key={`button-1-${componentId}`}
               text={data.buttons[0]?.text || "Discover More"}
               href={data.buttons[0]?.href || "#"}
               onChange={(text, href) =>
@@ -299,7 +297,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
 
           {data.buttons.length > 1 && (
             <EditableLink
-              key={`button-2-${componentId}`} // Unique key
+              key={`button-2-${componentId}`}
               text={data.buttons[1]?.text || "Explore Collection"}
               href={data.buttons[1]?.href || "#"}
               onChange={(text, href) =>
