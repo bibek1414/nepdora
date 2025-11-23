@@ -19,30 +19,32 @@ export default function OnboardingPage() {
     type: "",
   });
 
-  const handleStepOneContinue = (
-    type: string,
-    categoryId?: number,
-    subcategoryId?: number
-  ) => {
-    setWebsiteData({ type, categoryId, subcategoryId });
-    setCurrentStep(2);
-  };
-
-  const handleStepTwoBack = () => {
-    setCurrentStep(1);
-  };
-
-  const handleStepTwoSelect = (option: "template" | "ai" | "scratch") => {
+  // Step 1 is now the method selection
+  const handleStepOneSelect = (option: "template" | "ai" | "scratch") => {
     if (option === "template") {
-      setCurrentStep(3);
+      setCurrentStep(2); // Go to template selection (formerly step 3)
     } else if (option === "ai") {
       // Handle AI generation flow
       console.log("AI generation selected");
       // You can add AI generation logic here
     } else if (option === "scratch") {
-      // Navigate to admin without template
-      window.location.href = "/admin";
+      // This will be handled in StepTwo component with confirmation dialog
+      setCurrentStep(2); // Go to website type selection for scratch
     }
+  };
+
+  // Step 2 is now the website type selection (formerly step 1)
+  const handleStepTwoContinue = (
+    type: string,
+    categoryId?: number,
+    subcategoryId?: number
+  ) => {
+    setWebsiteData({ type, categoryId, subcategoryId });
+    setCurrentStep(3); // Go to template selection
+  };
+
+  const handleStepTwoBack = () => {
+    setCurrentStep(1);
   };
 
   const handleStepThreeBack = () => {
@@ -52,13 +54,13 @@ export default function OnboardingPage() {
   return (
     <>
       {currentStep === 1 && (
-        <OnboardingStepOne onContinue={handleStepOneContinue} />
+        <OnboardingStepOne onSelectOption={handleStepOneSelect} />
       )}
       {currentStep === 2 && (
         <OnboardingStepTwo
-          websiteType={websiteData.type}
+          onContinue={handleStepTwoContinue}
           onBack={handleStepTwoBack}
-          onSelectOption={handleStepTwoSelect}
+          isScratchMode={true}
         />
       )}
       {currentStep === 3 && (

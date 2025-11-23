@@ -1527,7 +1527,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           <div className="flex flex-1">
             <div className="flex flex-1 flex-col">
               <div className="mt-10 flex-1 overflow-auto bg-gray-200 p-6">
-                <div className="mx-auto max-w-6xl origin-top scale-75">
+                <div className="mx-auto max-w-7xl origin-top scale-75">
                   <div className="py-4">
                     <h2 className="text-foreground text-2xl font-bold capitalize">
                       {currentPageData?.title || currentPage} Page

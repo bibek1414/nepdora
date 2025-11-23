@@ -261,7 +261,7 @@ export function SignupForm({
                   </Link>{" "}
                   and{" "}
                   <Link
-                    href="/privacy"
+                    href="/privacy-policy"
                     className="text-primary hover:text-primary font-medium transition-colors duration-200"
                     style={{
                       color: theme.colors.primary,

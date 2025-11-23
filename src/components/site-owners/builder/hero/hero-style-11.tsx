@@ -116,7 +116,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
   const imageUrl = data.imageUrl || defaultImageUrl;
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-white">
+    <section className="relative w-full overflow-hidden bg-white">
       {/* Background Stripes */}
       <div className="pointer-events-none absolute inset-0 z-0 h-full w-full">
         <div className="grid h-full w-full grid-cols-6 gap-0 md:grid-cols-12">

@@ -22,6 +22,7 @@ import {
   Linkedin,
   Youtube,
   Music2,
+  Upload,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { siteConfigAPI } from "@/services/api/owner-sites/admin/site-config";
@@ -104,7 +105,7 @@ export default function OnboardingModal({
   onComplete,
 }: OnboardingModalProps) {
   const router = useRouter();
-  const { tokens, user, updateUser } = useAuth(); // Get updateUser from auth context
+  const { tokens, user, updateUser } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [existingConfig, setExistingConfig] = useState<SiteConfig | null>(null);
@@ -136,7 +137,6 @@ export default function OnboardingModal({
         setExistingConfig(config);
 
         if (config) {
-          // Populate form with existing data
           setFormData(prev => ({
             ...prev,
             businessName: config.business_name || userData.storeName || "",
@@ -150,13 +150,11 @@ export default function OnboardingModal({
             ),
           }));
 
-          // Set previews for existing images
           if (config.logo) setLogoPreview(config.logo);
           if (config.favicon) setFaviconPreview(config.favicon);
         }
       } catch (error) {
         console.error("Error loading existing config:", error);
-        // Don't show error toast here as it's expected to not have config
       } finally {
         setIsLoading(false);
       }
@@ -225,6 +223,12 @@ export default function OnboardingModal({
     setCurrentStep(prev => Math.max(prev - 1, 1));
   };
 
+  // NEW: Handle step click
+  const handleStepClick = (stepNumber: number) => {
+    // Allow navigation to any step
+    setCurrentStep(stepNumber);
+  };
+
   const handleClose = () => {
     setIsOpen(false);
     if (isOverlay && onClose) {
@@ -234,17 +238,14 @@ export default function OnboardingModal({
     }
   };
 
-  // CRITICAL: Update onboarding status immediately after API call
   const updateOnboardingStatus = () => {
     console.log("🔄 Updating onboarding status to complete...");
 
-    // Method 1: Use updateUser from AuthContext if available
     if (updateUser) {
       updateUser({ is_onboarding_complete: true });
       console.log("✅ Updated via AuthContext updateUser");
     }
 
-    // Method 2: Update localStorage directly (immediate)
     try {
       const currentUser = localStorage.getItem("authUser");
       if (currentUser) {
@@ -260,7 +261,6 @@ export default function OnboardingModal({
       console.error("❌ Error updating localStorage:", error);
     }
 
-    // Method 3: Also update authTokens if they contain user data
     try {
       const storedTokens = localStorage.getItem("authTokens");
       if (storedTokens) {
@@ -272,7 +272,6 @@ export default function OnboardingModal({
               ...payload,
               is_onboarding_complete: true,
             };
-            // Note: We can't modify the JWT directly, but we can update our stored user data
           }
         }
       }
@@ -315,7 +314,6 @@ export default function OnboardingModal({
         siteConfigFormData.append("favicon", formData.favicon);
       }
 
-      // Add social media URLs with proper field mapping
       formData.socialLinks.forEach((link, index) => {
         if (link.trim()) {
           const platform = socialPlatforms[index];
@@ -325,7 +323,6 @@ export default function OnboardingModal({
 
       let siteConfigResponse;
       if (existingConfig && existingConfig.id) {
-        // Update existing config
         siteConfigResponse = await siteConfigAPI.patchSiteConfig(
           existingConfig.id,
           siteConfigFormData,
@@ -333,7 +330,6 @@ export default function OnboardingModal({
         );
         toast.success("Site configuration updated successfully!");
       } else {
-        // Create new config
         siteConfigResponse = await siteConfigAPI.createSiteConfig(
           siteConfigFormData,
           tokens.access_token
@@ -341,19 +337,15 @@ export default function OnboardingModal({
         toast.success("Site configuration created successfully!");
       }
 
-      // Complete onboarding
       await onboardingAPI.completeOnboarding(tokens.access_token);
       toast.success("Onboarding completed successfully!");
 
-      // ✅ CRITICAL: Update onboarding status immediately
       updateOnboardingStatus();
 
-      // Call the onComplete callback if provided
       if (onComplete) {
         onComplete();
       }
 
-      // Close the dialog
       handleClose();
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -413,40 +405,34 @@ export default function OnboardingModal({
 
             <div className="space-y-4">
               {steps.map(step => (
-                <div key={step.number} className="flex items-center space-x-3">
+                <button
+                  key={step.number}
+                  onClick={() => handleStepClick(step.number)}
+                  className="flex w-full cursor-pointer items-center space-x-3 text-left transition-all hover:translate-x-1"
+                >
                   <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                    className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-all ${
                       currentStep === step.number
-                        ? "border-2 border-blue-600 bg-white text-blue-600"
+                        ? "border-2 border-blue-600 bg-white text-blue-600 shadow-sm"
                         : currentStep > step.number
                           ? "bg-blue-600 text-white"
-                          : "border-2 border-gray-300 bg-white text-gray-400"
+                          : "border-2 border-gray-300 bg-white text-gray-400 hover:border-gray-400"
                     }`}
                   >
                     {currentStep > step.number ? "✓" : step.number}
                   </div>
                   <span
-                    className={
+                    className={`transition-colors ${
                       currentStep >= step.number
                         ? "font-medium text-gray-900"
-                        : "text-gray-400"
-                    }
+                        : "text-gray-400 hover:text-gray-600"
+                    }`}
                   >
                     {step.label}
                   </span>
-                </div>
+                </button>
               ))}
             </div>
-
-            {/* Show existing config status */}
-            {existingConfig && (
-              <div className="mt-8 rounded-lg bg-blue-50 p-4">
-                <p className="text-sm text-blue-700">
-                  ✓ Site configuration found. You can update your existing
-                  settings.
-                </p>
-              </div>
-            )}
           </div>
 
           {/* Right content area */}
@@ -497,85 +483,74 @@ export default function OnboardingModal({
                     {/* Logo Section */}
                     <div>
                       <Label>Logo</Label>
-
-                      <div className="flex items-center space-x-4">
-                        <div className="flex h-40 w-64 items-center justify-center rounded border-2 border-dashed border-gray-300 bg-gray-50">
-                          {logoPreview ? (
-                            <img
-                              src={logoPreview}
-                              alt="Logo preview"
-                              className="max-h-full max-w-full object-contain"
-                            />
-                          ) : (
-                            <span className="text-gray-400">
+                      <input
+                        type="file"
+                        id="logo"
+                        accept="image/*"
+                        onChange={handleLogoChange}
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => document.getElementById("logo")?.click()}
+                        className="mt-2 flex h-40 w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition-all hover:border-blue-400 hover:bg-blue-50"
+                      >
+                        {logoPreview ? (
+                          <img
+                            src={logoPreview}
+                            alt="Logo preview"
+                            className="max-h-full max-w-full object-contain p-4"
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center space-y-2 text-gray-400">
+                            <Upload className="h-8 w-8" />
+                            <span className="text-sm">
                               {existingConfig?.logo
-                                ? "Keep current or upload new"
-                                : "No logo uploaded"}
+                                ? "Click to change logo"
+                                : "Click to upload logo"}
                             </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="mt-4">
-                        <input
-                          type="file"
-                          id="logo"
-                          accept="image/*"
-                          onChange={handleLogoChange}
-                          className="hidden"
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() =>
-                            document.getElementById("logo")?.click()
-                          }
-                        >
-                          {existingConfig?.logo ? "Change Logo" : "Upload Logo"}
-                        </Button>
-                      </div>
+                          </div>
+                        )}
+                      </button>
+                      <p className="mt-2 text-sm text-gray-500">
+                        Recommended: PNG or SVG format
+                      </p>
                     </div>
 
                     {/* Favicon Section */}
                     <div>
                       <Label>Favicon</Label>
-
-                      <div className="flex items-center space-x-4">
-                        <div className="flex h-40 w-64 items-center justify-center rounded border-2 border-dashed border-gray-300 bg-gray-50">
-                          {faviconPreview ? (
-                            <img
-                              src={faviconPreview}
-                              alt="Favicon preview"
-                              className="max-h-16 max-w-full object-contain"
-                            />
-                          ) : (
-                            <span className="text-gray-400">
+                      <input
+                        type="file"
+                        id="favicon"
+                        accept="image/*"
+                        onChange={handleFaviconChange}
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          document.getElementById("favicon")?.click()
+                        }
+                        className="mt-2 flex h-40 w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition-all hover:border-blue-400 hover:bg-blue-50"
+                      >
+                        {faviconPreview ? (
+                          <img
+                            src={faviconPreview}
+                            alt="Favicon preview"
+                            className="max-h-16 max-w-16 object-contain"
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center space-y-2 text-gray-400">
+                            <Upload className="h-8 w-8" />
+                            <span className="text-sm">
                               {existingConfig?.favicon
-                                ? "Keep current or upload new"
-                                : "No favicon uploaded"}
+                                ? "Click to change favicon"
+                                : "Click to upload favicon"}
                             </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="mt-4">
-                        <input
-                          type="file"
-                          id="favicon"
-                          accept="image/*"
-                          onChange={handleFaviconChange}
-                          className="hidden"
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() =>
-                            document.getElementById("favicon")?.click()
-                          }
-                        >
-                          {existingConfig?.favicon
-                            ? "Change Favicon"
-                            : "Upload Favicon"}
-                        </Button>
-                      </div>
+                          </div>
+                        )}
+                      </button>
                       <p className="mt-2 text-sm text-gray-500">
                         Recommended size: 16x16 or 32x32 pixels
                       </p>
@@ -661,9 +636,6 @@ export default function OnboardingModal({
                   <div className="space-y-4">
                     {socialPlatforms.map((platform, index) => {
                       const IconComponent = platform.icon;
-                      const currentValue = existingConfig?.[
-                        platform.field as keyof SiteConfig
-                      ] as string;
 
                       return (
                         <div
@@ -703,14 +675,6 @@ export default function OnboardingModal({
                   </p>
 
                   <div className="space-y-6">
-                    <div className="rounded-lg bg-blue-50 p-4">
-                      <p className="font-medium text-blue-700">
-                        {existingConfig
-                          ? "Updating existing site configuration"
-                          : "Creating new site configuration"}
-                      </p>
-                    </div>
-
                     <div>
                       <p className="text-sm text-gray-500">Business Name</p>
                       <p className="font-medium">{formData.businessName}</p>

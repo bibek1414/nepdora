@@ -4,21 +4,34 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
-import { AlertCircle, CheckCircle, Info } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle,
+  Info,
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  Phone,
+} from "lucide-react";
 import Link from "next/link";
 import { signupSchema, SignupFormValues } from "@/schemas/signup.form";
 import { AuthErrorHandler } from "@/utils/auth/error.utils";
 import { ErrorResponse, FormErrorState } from "@/types/auth/error.types";
-
+import {
+  FloatingInput,
+  FloatingLabel,
+} from "@/components/ui/floating-label-input";
+import { useAuth } from "@/hooks/use-auth";
 export function SignupForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   const { signup, isLoading } = useAuth();
   const [formError, setFormError] = useState<FormErrorState | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -118,28 +131,84 @@ export function SignupForm({
     };
 
   return (
-    <div className="bg-card flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      {/* Top Left */}
-      <div className="from-primary to-secondary pointer-events-none absolute -top-20 -left-20 h-72 w-72 rounded-full bg-gradient-to-tr opacity-50 blur-3xl"></div>
+    <div className="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+      {/* Floating Icons */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          className="absolute top-20 left-10 animate-bounce text-4xl text-gray-400 opacity-20"
+          style={{ animationDelay: "0s", animationDuration: "3s" }}
+        >
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <div
+          className="absolute top-40 right-20 animate-bounce text-4xl text-yellow-400 opacity-20"
+          style={{ animationDelay: "1s", animationDuration: "4s" }}
+        >
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L1 21h22L12 2zm0 4l7.53 13H4.47L12 6z"></path>
+          </svg>
+        </div>
+        <div
+          className="absolute bottom-32 left-32 animate-bounce text-4xl text-gray-400 opacity-20"
+          style={{ animationDelay: "2s", animationDuration: "5s" }}
+        >
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+          </svg>
+        </div>
+        <div
+          className="absolute right-10 bottom-20 animate-bounce text-4xl text-gray-500 opacity-20"
+          style={{ animationDelay: "1.5s", animationDuration: "4.5s" }}
+        >
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13 7.5h5v2h-5zm0 7h5v2h-5zM19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM11 6H6v5h5V6zm-1 4H7V7h3v3zm1 3H6v5h5v-5zm-1 4H7v-3h3v3z"></path>
+          </svg>
+        </div>
+      </div>
 
-      {/* Top Right */}
-      <div className="from-primary to-secondary pointer-events-none absolute -top-20 -right-20 h-72 w-72 rounded-full bg-gradient-to-tr opacity-50 blur-3xl"></div>
+      <div className="relative z-10 flex w-full flex-col items-center gap-8 md:flex-row">
+        {/* Left Side - Illustration */}
+        <div className="flex w-full flex-col items-center justify-center p-8 md:w-1/2">
+          <div className="mt-8 text-center">
+            <h2 className="mb-2 text-3xl font-bold text-gray-800">
+              Build and manage websites
+            </h2>
+            <p className="text-sm text-gray-600">
+              Create, customize, and grow your online presence with smart tools.
+            </p>
+          </div>
+          <div className="relative w-full max-w-md">
+            <img
+              src="/images/illustration-dashboard-login.webp"
+              alt="Dashboard"
+              className="h-auto w-full drop-shadow-2xl"
+            />
+          </div>
+        </div>
 
-      {/* Bottom Left */}
-      <div className="from-primary to-secondary pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-gradient-to-tr opacity-50 blur-3xl"></div>
+        {/* Right Side - Form */}
+        <div className="w-full max-w-md md:w-1/3">
+          <div className="rounded-2xl bg-white p-8 shadow-2xl">
+            <div className="mb-6">
+              <h3 className="mb-2 text-2xl font-bold text-gray-900">
+                Get started absolutely free
+              </h3>
+              <p className="text-sm text-gray-600">
+                Already have an account?{" "}
+                <Link
+                  href="/admin/login"
+                  className="font-medium text-emerald-600 hover:text-emerald-700"
+                >
+                  Sign in
+                </Link>
+              </p>
+            </div>
 
-      {/* Bottom Right */}
-      <div className="from-primary to-secondary pointer-events-none absolute -right-20 -bottom-20 h-72 w-72 rounded-full bg-gradient-to-tr opacity-50 blur-3xl"></div>
-
-      <div className="relative w-full max-w-md">
-        <div className="rounded-lg bg-white p-8">
-          <div className={cn("grid gap-6", className)} {...props}>
             {formError && (
               <div
-                className={cn(
-                  "mb-4 flex items-start rounded-lg border p-4 text-sm",
-                  getErrorStyles(formError.type)
-                )}
+                className={`mb-4 flex items-start rounded-lg border p-4 text-sm ${getErrorStyles(formError.type)}`}
               >
                 {getErrorIcon(formError.type)}
                 <div className="flex-1">
@@ -158,31 +227,24 @@ export function SignupForm({
               </div>
             )}
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="mb-8 text-center">
-                <h2 className="text-3xl font-bold text-gray-900">
-                  Create New Account
-                </h2>
-                <p className="mt-2 text-gray-600">
-                  Enter your details to create an account.
-                </p>
-              </div>
-
-              <div>
-                <Input
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="relative">
+                <FloatingInput
                   id="store_name"
                   type="text"
-                  label="Store Name"
-                  placeholder="Enter your store name"
                   disabled={isLoading}
                   className={cn(
-                    errors.store_name
-                      ? "border-red-300 focus:ring-red-500"
-                      : "focus:ring-primary border-gray-300"
+                    "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
+                    errors.store_name &&
+                      "border-red-300 focus:border-red-500 focus:ring-red-500"
                   )}
                   {...register("store_name")}
                   onChange={handleInputChange("store_name")}
                 />
+                <FloatingLabel htmlFor="store_name">
+                  <User className="mr-2 h-4 w-4" />
+                  Store Name
+                </FloatingLabel>
                 {errors.store_name && (
                   <p className="mt-2 flex items-center text-sm font-medium text-red-500">
                     <AlertCircle className="mr-1 h-4 w-4" />
@@ -191,22 +253,24 @@ export function SignupForm({
                 )}
               </div>
 
-              <div>
-                <Input
+              <div className="relative">
+                <FloatingInput
                   id="email"
                   type="email"
-                  label="Email Address"
-                  placeholder="Enter your email address"
                   autoComplete="email"
                   disabled={isLoading}
                   className={cn(
-                    errors.email
-                      ? "border-red-300 focus:ring-red-500"
-                      : "focus:ring-primary border-gray-300"
+                    "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
+                    errors.email &&
+                      "border-red-300 focus:border-red-500 focus:ring-red-500"
                   )}
                   {...register("email")}
                   onChange={handleInputChange("email")}
                 />
+                <FloatingLabel htmlFor="email">
+                  <Mail className="mr-2 h-4 w-4" />
+                  Email Address
+                </FloatingLabel>
                 {errors.email && (
                   <p className="mt-2 flex items-center text-sm font-medium text-red-500">
                     <AlertCircle className="mr-1 h-4 w-4" />
@@ -215,21 +279,23 @@ export function SignupForm({
                 )}
               </div>
 
-              <div>
-                <Input
+              <div className="relative">
+                <FloatingInput
                   id="phone"
                   type="tel"
-                  label="Phone Number"
-                  placeholder="1234567890"
                   disabled={isLoading}
                   className={cn(
-                    errors.phone
-                      ? "border-red-300 focus:ring-red-500"
-                      : "focus:ring-primary border-gray-300"
+                    "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
+                    errors.phone &&
+                      "border-red-300 focus:border-red-500 focus:ring-red-500"
                   )}
                   {...register("phone")}
                   onChange={handleInputChange("phone")}
                 />
+                <FloatingLabel htmlFor="phone">
+                  <Phone className="mr-2 h-4 w-4" />
+                  Phone Number
+                </FloatingLabel>
                 {errors.phone && (
                   <p className="mt-2 flex items-center text-sm font-medium text-red-500">
                     <AlertCircle className="mr-1 h-4 w-4" />
@@ -238,22 +304,37 @@ export function SignupForm({
                 )}
               </div>
 
-              <div>
-                <Input
-                  id="password"
-                  type="password"
-                  label="Password"
-                  placeholder="Create a strong password"
-                  autoComplete="new-password"
-                  disabled={isLoading}
-                  className={cn(
-                    errors.password
-                      ? "border-red-300 focus:ring-red-500"
-                      : "focus:ring-primary border-gray-300"
-                  )}
-                  {...register("password")}
-                  onChange={handleInputChange("password")}
-                />
+              <div className="relative">
+                <div className="relative">
+                  <FloatingInput
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    disabled={isLoading}
+                    className={cn(
+                      "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 pr-12 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
+                      errors.password &&
+                        "border-red-300 focus:border-red-500 focus:ring-red-500"
+                    )}
+                    {...register("password")}
+                    onChange={handleInputChange("password")}
+                  />
+                  <FloatingLabel htmlFor="password">
+                    <Lock className="mr-2 h-4 w-4" />
+                    Password
+                  </FloatingLabel>
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff size={18} className="transition-colors" />
+                    ) : (
+                      <Eye size={18} className="transition-colors" />
+                    )}
+                  </button>
+                </div>
                 {errors.password && (
                   <p className="mt-2 flex items-center text-sm font-medium text-red-500">
                     <AlertCircle className="mr-1 h-4 w-4" />
@@ -338,22 +419,24 @@ export function SignupForm({
                 )}
               </div>
 
-              <div>
-                <Input
+              <div className="relative">
+                <FloatingInput
                   id="confirmPassword"
                   type="password"
-                  label="Confirm Password"
-                  placeholder="Confirm your password"
                   autoComplete="new-password"
                   disabled={isLoading}
                   className={cn(
-                    errors.confirmPassword
-                      ? "border-red-300 focus:ring-red-500"
-                      : "focus:ring-primary border-gray-300"
+                    "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
+                    errors.confirmPassword &&
+                      "border-red-300 focus:border-red-500 focus:ring-red-500"
                   )}
                   {...register("confirmPassword")}
                   onChange={handleInputChange("confirmPassword")}
                 />
+                <FloatingLabel htmlFor="confirmPassword">
+                  <Lock className="mr-2 h-4 w-4" />
+                  Confirm Password
+                </FloatingLabel>
                 {errors.confirmPassword && (
                   <p className="mt-2 flex items-center text-sm font-medium text-red-500">
                     <AlertCircle className="mr-1 h-4 w-4" />
@@ -380,30 +463,46 @@ export function SignupForm({
                   )}
               </div>
 
-              <div>
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className={cn(
-                    "w-full rounded-lg px-4 py-3 font-medium text-white transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none",
-                    isLoading
-                      ? "cursor-not-allowed bg-gray-400"
-                      : "bg-primary hover:bg-primary focus:ring-primary"
-                  )}
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center">
-                      <div className="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
-                      Creating Account...
-                    </div>
-                  ) : (
-                    "Create Account"
-                  )}
-                </Button>
-              </div>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className={cn(
+                  "w-full rounded-lg bg-gray-900 px-4 py-3 font-semibold text-white transition-colors duration-200 hover:bg-gray-800",
+                  isLoading ? "cursor-not-allowed opacity-50" : ""
+                )}
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center">
+                    <svg
+                      className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Creating Account...
+                  </div>
+                ) : (
+                  "Create Account"
+                )}
+              </Button>
+
               <button
                 type="button"
-                className="flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-gray-50"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-gray-50"
               >
                 <svg
                   className="h-5 w-5"
@@ -430,35 +529,22 @@ export function SignupForm({
                 </svg>
                 Sign up with Google
               </button>
-              <div className="text-center">
-                <p className="text-sm text-gray-600">
-                  Already have an account?{" "}
-                  <Link
-                    href="/admin/login"
-                    className="text-primary hover:text-primary font-medium"
-                  >
-                    Login
-                  </Link>
-                </p>
-              </div>
 
-              <div className="text-center">
-                <p className="text-xs text-gray-500">
-                  By creating an account, you agree to our{" "}
-                  <Link
-                    href="/terms"
-                    className="text-primary hover:text-primary font-medium transition-colors duration-200"
-                  >
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
-                  <Link
-                    href="/privacy"
-                    className="text-primary hover:text-primary font-medium transition-colors duration-200"
-                  >
-                    Privacy Policy
-                  </Link>
-                </p>
+              <div className="text-center text-sm text-gray-600">
+                By creating an account, you agree to our{" "}
+                <Link
+                  href="/terms"
+                  className="font-medium text-gray-900 hover:underline"
+                >
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/privacy-policy"
+                  className="font-medium text-gray-900 hover:underline"
+                >
+                  Privacy Policy
+                </Link>
               </div>
             </form>
           </div>
