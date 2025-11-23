@@ -131,6 +131,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 10",
         image: "/images/site-owners/hero/hero10.png",
       },
+      {
+        id: "hero-11",
+        name: "Hero Style 11",
+        image: "/images/site-owners/hero/hero11.png",
+      },
     ],
     about: [
       {
@@ -280,6 +285,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "services-4",
         name: "Services Style 4",
         image: "/images/site-owners/services/services-4.png",
+      },
+      {
+        id: "services-5",
+        name: "Services Style 5",
+        image: "/images/site-owners/services/services-5.png",
       },
     ],
     contact: [
@@ -475,6 +485,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "FAQ Style 5",
         image: "/images/site-owners/faq/faq-5.png",
       },
+      {
+        id: "faq-6",
+        name: "FAQ Style 6",
+        image: "/images/site-owners/faq/faq-6.png",
+      },
     ],
     portfolio: [
       {
@@ -641,6 +656,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     "hero-1",
     "about-1",
     "services-1",
+    "services-5",
     "contact-1",
     "policies-1",
     "text-editor-1",

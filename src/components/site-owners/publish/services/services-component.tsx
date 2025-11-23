@@ -9,6 +9,7 @@ import { ServicesCard1 } from "./services-card1";
 import { ServicesCard2 } from "./services-card2";
 import { ServicesCard3 } from "./services-card3";
 import { ServicesCard4 } from "./services-card4";
+import { ServicesCard5 } from "./services-card5";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -53,7 +54,6 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
     title = "Latest Services",
     subtitle,
     style = "services-1",
-    showDate = true,
   } = component.data || {};
 
   // Delete and update mutation hooks - changed from 'blog' to 'services'
@@ -186,38 +186,41 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
     setIsDeleteDialogOpen(false);
   };
 
-  const renderServiceCard = (service: ServicesPost) => {
-    const cardProps = {
+  const renderServiceCard = (service: ServicesPost, index: number) => {
+    const commonProps = {
       services: service,
       siteUser: isEditable ? undefined : siteUser,
-      showDate,
       onClick: () => handleServiceClick(service),
     };
 
     switch (style) {
       case "services-2":
-        return <ServicesCard2 {...cardProps} />;
+        return <ServicesCard2 {...commonProps} />;
       case "services-3":
-        return <ServicesCard3 {...cardProps} />;
+        return <ServicesCard3 {...commonProps} index={index} />;
       case "services-4":
-        return <ServicesCard4 {...cardProps} />;
+        return <ServicesCard4 {...commonProps} index={index} />;
+      case "services-5":
+        return <ServicesCard5 {...commonProps} index={index} />;
       case "services-1":
       default:
-        return <ServicesCard1 {...cardProps} />;
+        return <ServicesCard1 {...commonProps} />;
     }
   };
 
   const getGridClass = () => {
     switch (style) {
       case "services-2":
-        return `grid-cols-1 sm:grid-cols-4 sm:grid-cols-1`;
+        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
       case "services-3":
         return "grid-cols-1 gap-6";
       case "services-4":
-        return `grid-cols-1 lg:grid-cols-4 sm:grid-cols-1 `;
+        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+      case "services-5":
+        return "grid-cols-1 gap-8 md:grid-cols-3";
       case "services-1":
       default:
-        return `grid-cols-1 sm:grid-cols-4 sm:grid-cols-1`;
+        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
     }
   };
 
@@ -331,16 +334,18 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
 
             {!isLoading && !error && services.length > 0 && (
               <div className={`grid ${getGridClass()} gap-6`}>
-                {services.slice(0, Math.min(page_size, 6)).map(service => (
-                  <div
-                    key={service.id}
-                    className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
-                  >
-                    {/* Overlay to prevent clicks in builder mode */}
-                    <div className="absolute inset-0 z-10 bg-transparent" />
-                    {renderServiceCard(service)}
-                  </div>
-                ))}
+                {services
+                  .slice(0, Math.min(page_size, 6))
+                  .map((service, index) => (
+                    <div
+                      key={service.id}
+                      className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
+                    >
+                      {/* Overlay to prevent clicks in builder mode */}
+                      <div className="absolute inset-0 z-10 bg-transparent" />
+                      {renderServiceCard(service, index)}
+                    </div>
+                  ))}
               </div>
             )}
 
@@ -415,9 +420,9 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
 
         {!isLoading && !error && services.length > 0 && (
           <div className={`grid ${getGridClass()} gap-8`}>
-            {services.slice(0, page_size).map(service => (
+            {services.slice(0, page_size).map((service, index) => (
               <div key={service.id} className="flex-shrink-0">
-                {renderServiceCard(service)}
+                {renderServiceCard(service, index)}
               </div>
             ))}
           </div>

@@ -700,6 +700,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "hero-8"
       | "hero-9"
       | "hero-10"
+      | "hero-11"
   ) => {
     const templateConfig = heroTemplateConfigs[template];
     const heroData = {
@@ -846,7 +847,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleServicesTemplateSelect = async (
-    template: "services-1" | "services-2" | "services-3" | "services-4"
+    template:
+      | "services-1"
+      | "services-2"
+      | "services-3"
+      | "services-4"
+      | "services-5"
   ) => {
     const servicesData = { ...defaultServicesData, style: template };
     setIsServicesStylesDialogOpen(false);
@@ -906,7 +912,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleFAQTemplateSelect = async (
-    template: "faq-1" | "faq-2" | "faq-3" | "faq-4" | "faq-5"
+    template: "faq-1" | "faq-2" | "faq-3" | "faq-4" | "faq-5" | "faq-6"
   ) => {
     const faqData = { ...defaultFAQData, style: template };
     setIsFAQStylesDialogOpen(false);

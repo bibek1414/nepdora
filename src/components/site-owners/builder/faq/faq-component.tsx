@@ -10,6 +10,7 @@ import { FAQCard2 } from "./faq-card-2";
 import { FAQCard3 } from "./faq-card-3";
 import { FAQCard4 } from "./faq-card-4";
 import { FAQCard5 } from "./faq-card-5";
+import { FaqCard6 } from "./faq-card-6";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -134,20 +135,57 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   };
 
   const renderFAQCard = () => {
-    const cardProps = { faqs };
+    const {
+      title = "Frequently Asked Questions",
+      subtitle,
+      leftImage,
+    } = component.data || {};
+
+    const baseCardProps = { faqs };
 
     switch (style) {
       case "faq-4":
-        return <FAQCard4 {...cardProps} />;
+        return <FAQCard4 {...baseCardProps} />;
       case "faq-5":
-        return <FAQCard5 {...cardProps} />;
+        return <FAQCard5 {...baseCardProps} />;
+      case "faq-6":
+        return (
+          <FaqCard6
+            {...baseCardProps}
+            title={title}
+            subtitle={subtitle}
+            leftImage={leftImage}
+            isEditable={isEditable}
+            onTitleChange={handleTitleChange}
+            onSubtitleChange={handleSubtitleChange}
+            onLeftImageChange={url => {
+              if (!pageSlug) return;
+              updateFAQComponent.mutate({
+                componentId: component.component_id,
+                data: {
+                  ...component.data,
+                  leftImage: url,
+                },
+              });
+              if (onUpdate) {
+                onUpdate(component.component_id, {
+                  ...component,
+                  data: {
+                    ...component.data,
+                    leftImage: url,
+                  },
+                });
+              }
+            }}
+          />
+        );
       case "faq-2":
-        return <FAQCard2 {...cardProps} />;
+        return <FAQCard2 {...baseCardProps} />;
       case "faq-3":
-        return <FAQCard3 {...cardProps} />;
+        return <FAQCard3 {...baseCardProps} />;
       case "faq-1":
       default:
-        return <FAQCard1 {...cardProps} />;
+        return <FAQCard1 {...baseCardProps} />;
     }
   };
 
@@ -217,27 +255,30 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
         {/* FAQ Preview */}
         <div className="py-8">
           <div className="container mx-auto px-4">
-            <div className="mb-8 text-center">
-              <EditableText
-                value={title}
-                onChange={handleTitleChange}
-                as="h2"
-                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-              <EditableText
-                value={subtitle || ""}
-                onChange={handleSubtitleChange}
-                as="p"
-                className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                isEditable={true}
-                placeholder="Enter subtitle..."
-                multiline={true}
-              />
-            </div>
+            {/* Only show separate title/subtitle for styles that don't have built-in titles */}
+            {style !== "faq-6" && (
+              <div className="mb-8 text-center">
+                <EditableText
+                  value={title}
+                  onChange={handleTitleChange}
+                  as="h2"
+                  className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                  isEditable={true}
+                  placeholder="Enter title..."
+                />
+                <EditableText
+                  value={subtitle || ""}
+                  onChange={handleSubtitleChange}
+                  as="p"
+                  className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                  isEditable={true}
+                  placeholder="Enter subtitle..."
+                  multiline={true}
+                />
+              </div>
+            )}
 
-            <div className="mx-auto max-w-4xl">
+            <div className={style === "faq-6" ? "w-full" : "mx-auto max-w-4xl"}>
               {isLoading && (
                 <div className="space-y-4">
                   {Array.from({ length: 6 }).map((_, index) => (
@@ -289,20 +330,23 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   return (
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-6xl px-4">
-        <div className="mb-12 text-center">
-          <h2
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></h2>
-          {subtitle && (
-            <p
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            ></p>
-          )}
-        </div>
+        {/* Only show separate title/subtitle for styles that don't have built-in titles */}
+        {style !== "faq-6" && (
+          <div className="mb-12 text-center">
+            <h2
+              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+              dangerouslySetInnerHTML={{ __html: title }}
+            ></h2>
+            {subtitle && (
+              <p
+                className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
+            )}
+          </div>
+        )}
 
-        <div className="mx-auto max-w-4xl">
+        <div className={style === "faq-6" ? "w-full" : "mx-auto max-w-4xl"}>
           {isLoading && (
             <div className="space-y-6">
               {Array.from({ length: 8 }).map((_, index) => (

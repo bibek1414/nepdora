@@ -10,40 +10,56 @@ import Image from "next/image";
 interface ServicesStyleDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (style: "grid-1" | "grid-2" | "list-1" | "grid-3") => void;
+  onStyleSelect: (
+    style:
+      | "services-1"
+      | "services-2"
+      | "services-3"
+      | "services-4"
+      | "services-5"
+  ) => void;
 }
+
+type ServicesTemplateId =
+  | "services-1"
+  | "services-2"
+  | "services-3"
+  | "services-4"
+  | "services-5";
 
 export const ServicesStyleDialog: React.FC<ServicesStyleDialogProps> = ({
   open,
   onOpenChange,
   onStyleSelect,
 }) => {
-  const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | "list-1" | "grid-3" | null
-  >(null);
+  const [selectedStyle, setSelectedStyle] = useState<ServicesTemplateId | null>(
+    null
+  );
 
-  const templates = [
+  const templates: Array<{ id: ServicesTemplateId; name: string }> = [
     {
-      id: "grid-1" as const,
+      id: "services-1",
       name: "Grid Style 1",
     },
     {
-      id: "grid-2" as const,
+      id: "services-2",
       name: "Grid Style 2",
     },
     {
-      id: "list-1" as const,
+      id: "services-3",
       name: "List Style",
     },
     {
-      id: "grid-3" as const,
-      name: "Grid Style 3",
+      id: "services-4",
+      name: "Grid Style 4",
+    },
+    {
+      id: "services-5",
+      name: "Modern Cards",
     },
   ];
 
-  const handleSelect = (template: {
-    id: "grid-1" | "grid-2" | "list-1" | "grid-3";
-  }) => {
+  const handleSelect = (template: { id: ServicesTemplateId }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
       onStyleSelect(template.id);
@@ -84,11 +100,7 @@ export const ServicesStyleDialog: React.FC<ServicesStyleDialogProps> = ({
                 <div className="p-3">
                   <div className="relative w-full">
                     <Image
-                      src={`/images/site-owners/services/services-${
-                        template.id === "list-1"
-                          ? "3"
-                          : template.id.split("-")[1]
-                      }.png`}
+                      src={`/images/site-owners/services/${template.id}.png`}
                       alt={template.name}
                       width={400}
                       height={300}
