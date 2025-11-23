@@ -167,7 +167,7 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
 
   return (
     <div className="w-full space-y-2 sm:space-y-4">
-      <div className="bg-gray-100">
+      <div className="py-4 sm:py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:max-w-none">
             {displayImages.length > 0 ? (
