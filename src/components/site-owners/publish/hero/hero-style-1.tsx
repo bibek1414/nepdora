@@ -82,7 +82,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
 
   const getButtonClasses = (variant: string) => {
     const baseClasses =
-      "inline-block px-6 py-3 rounded-lg font-medium transition-colors min-w-[120px] text-center";
+      "inline-block px-4 py-2.5 sm:px-6 sm:py-3 font-bold transition-colors min-w-[100px] sm:min-w-[120px] text-center text-sm sm:text-base";
 
     const buttonStyles = {
       backgroundColor:
@@ -99,6 +99,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
             : theme.colors.text,
       border:
         variant === "outline" ? `1px solid ${theme.colors.primary}` : "none",
+      borderRadius: "9999px",
       fontFamily: theme.fonts.body,
     };
 
@@ -149,7 +150,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
       : theme.colors.text;
 
   return (
-    <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden px-4 py-20">
+    <section className="relative flex min-h-[50vh] items-center justify-center overflow-hidden px-4 py-12 sm:min-h-[60vh] sm:px-6 sm:py-16 md:py-20 lg:px-8">
       {/* Overlay */}
       {data.backgroundType === "image" && data.showOverlay && (
         <div
@@ -160,39 +161,44 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
         />
       )}
 
-      <div className="relative z-10 container mx-auto max-w-6xl">
-        <div className={`flex flex-col ${getLayoutClasses()} gap-6`}>
+      <div className="relative z-10 container mx-auto w-full max-w-6xl">
+        <div className={`flex flex-col ${getLayoutClasses()} gap-4 sm:gap-6`}>
           {/* Hero Image */}
           {data.showImage && data.imageUrl && (
-            <div className="mb-6">
-              <EditableImage
-                src={getImageUrl()}
-                alt={data.imageAlt || "Modern furniture piece"}
-                onImageChange={handleImageUpdate}
-                onAltChange={handleAltUpdate}
-                isEditable={isEditable}
-                className="mx-auto max-w-md rounded-lg"
-                width={600}
-                height={400}
-                cloudinaryOptions={{
-                  folder: "hero-images",
-                  resourceType: "image",
-                }}
-                showAltEditor={isEditable}
-                placeholder={{
-                  width: 600,
-                  height: 400,
-                  text: "Upload hero image",
-                }}
-              />
+            <div className="mb-4 w-full sm:mb-6">
+              <div className="mx-auto h-[350px] max-w-full overflow-hidden rounded-lg sm:max-w-md">
+                <EditableImage
+                  src={getImageUrl()}
+                  alt={data.imageAlt || "Modern furniture piece"}
+                  onImageChange={handleImageUpdate}
+                  onAltChange={handleAltUpdate}
+                  isEditable={isEditable}
+                  className="h-90 w-full object-cover"
+                  width={600}
+                  height={400}
+                  cloudinaryOptions={{
+                    folder: "hero-images",
+                    resourceType: "image",
+                  }}
+                  showAltEditor={isEditable}
+                  placeholder={{
+                    width: 600,
+                    height: 400,
+                    text: "Upload hero image",
+                  }}
+                />
+              </div>
             </div>
           )}
 
           {/* Subtitle Badge */}
           {data.subtitle && (
-            <div className="w-fit">
+            <div
+              className={`w-fit ${data.layout === "text-center" ? "mx-auto" : ""}`}
+            >
               <Badge
                 variant="secondary"
+                className="text-xs sm:text-sm"
                 style={{
                   backgroundColor: theme.colors.secondary,
                   color: theme.colors.secondaryForeground,
@@ -215,7 +221,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="text-4xl leading-tight font-bold md:text-6xl"
+            className="text-3xl leading-tight font-bold sm:text-4xl md:text-5xl lg:text-6xl"
             style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter your hero title..."
@@ -227,7 +233,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="mx-auto max-w-2xl text-lg leading-relaxed opacity-90 md:text-xl"
+              className="mx-auto max-w-2xl text-base leading-relaxed opacity-90 sm:text-lg md:text-xl"
               style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
               placeholder="Enter description..."
@@ -237,7 +243,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
 
           {/* Buttons */}
           {data.buttons.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-4">
+            <div className="mt-2 flex flex-wrap justify-center gap-3 font-semibold sm:mt-4 sm:justify-start sm:gap-4">
               {data.buttons.map(button => {
                 const buttonClass = getButtonClasses(button.variant);
                 return (

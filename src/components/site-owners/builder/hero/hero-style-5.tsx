@@ -305,12 +305,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
               }
               isEditable={isEditable}
               siteUser={siteUser}
-              className="rounded-full border px-8 py-3 transition hover:bg-white/10"
-              style={{
-                borderColor: theme.colors.text,
-                color: theme.colors.text,
-                fontFamily: theme.fonts.body,
-              }}
+              className="rounded-full border px-8 py-3 transition"
               textPlaceholder="Secondary button text..."
               hrefPlaceholder="Enter URL..."
             />

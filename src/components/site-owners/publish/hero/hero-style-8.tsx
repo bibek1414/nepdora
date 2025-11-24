@@ -222,265 +222,367 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
 
   return (
     <section
-      className="relative overflow-hidden"
+      className="relative overflow-hidden bg-white"
       data-component-id={componentId}
     >
       {/* Desktop Layout */}
-      <div className="mx-auto max-w-7xl">
-        <div className="relative h-[400px] md:h-[500px] lg:h-[591px]">
-          {/* Left Rug Image - Desktop */}
-          <div className="absolute top-0 left-0 hidden h-full w-[200px] md:block md:w-[280px] lg:w-[405px]">
-            <div
-              className="relative h-full w-full cursor-pointer"
-              onMouseEnter={() => setHoveredImage("leftImage")}
-              onMouseLeave={() => setHoveredImage(null)}
-            >
-              <Image
-                src={leftImageUrl}
-                alt={data.leftImageAlt || "Hand knotted rug left"}
-                width={405}
-                height={591}
-                className="h-full w-full object-cover"
-                priority
+      <div className="">
+        <div className="relative min-h-[500px] md:min-h-[600px] lg:min-h-[700px]">
+          {/* Desktop: Three Column Layout */}
+          <div className="hidden md:grid md:h-full md:min-h-[600px] md:grid-cols-3 lg:min-h-[700px]">
+            {/* Left Image Column */}
+            <div className="relative h-full min-h-[600px] lg:min-h-[700px]">
+              <div
+                className="relative h-full w-full cursor-pointer overflow-hidden"
+                onMouseEnter={() => setHoveredImage("leftImage")}
+                onMouseLeave={() => setHoveredImage(null)}
+              >
+                <Image
+                  src={leftImageUrl}
+                  alt={data.leftImageAlt || "Left image"}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+
+                {isEditable && (
+                  <>
+                    {/* Hover Overlay - Only shows when left image is hovered */}
+                    <div
+                      className={`absolute inset-0 z-15 flex items-center justify-center bg-black/50 transition-opacity duration-200 ${
+                        hoveredImage === "leftImage"
+                          ? "opacity-100"
+                          : "opacity-0"
+                      }`}
+                    >
+                      <Button
+                        variant="secondary"
+                        className="gap-2 bg-white/90 text-black hover:bg-white"
+                        onClick={() =>
+                          document
+                            .getElementById(`left-image-upload-${componentId}`)
+                            ?.click()
+                        }
+                      >
+                        <ImagePlus className="h-4 w-4" /> Change Left Image
+                      </Button>
+                    </div>
+
+                    {/* Hidden File Input */}
+                    <input
+                      id={`left-image-upload-${componentId}`}
+                      type="file"
+                      accept="image/*"
+                      onChange={e => handleImageUpload(e, "leftImage")}
+                      className="hidden"
+                    />
+                  </>
+                )}
+
+                {/* Upload Loading */}
+                {isUploading === "leftImage" && (
+                  <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
+                    <div className="flex flex-col items-center gap-2 text-white">
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                      <p className="text-sm font-medium">Uploading...</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Center Content Column */}
+            <div className="relative flex h-full min-h-[600px] flex-col items-center justify-center px-6 py-12 lg:min-h-[700px] lg:px-8">
+              {/* Main Heading */}
+              <EditableText
+                value={data.title || "Premium Nepali Hand Knotted Rugs"}
+                onChange={handleTextUpdate("title")}
+                as="h1"
+                className="mb-4 w-full text-center text-3xl leading-tight font-bold md:text-4xl lg:mb-6 lg:text-5xl"
+                isEditable={isEditable}
+                placeholder="Enter main title..."
+                multiline={true}
+                style={{
+                  fontFamily: theme.fonts.heading,
+                  color: theme.colors.primary,
+                }}
               />
 
-              {isEditable && (
-                <>
-                  {/* Hover Overlay - Only shows when left image is hovered */}
-                  <div
-                    className={`absolute inset-0 z-15 flex items-center justify-center bg-black/50 transition-opacity duration-200 ${
-                      hoveredImage === "leftImage" ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <Button
-                      variant="secondary"
-                      className="gap-2 bg-white/90 text-black hover:bg-white"
-                      onClick={() =>
-                        document
-                          .getElementById(`left-image-upload-${componentId}`)
-                          ?.click()
-                      }
-                    >
-                      <ImagePlus className="h-4 w-4" /> Change Left Image
-                    </Button>
-                  </div>
-
-                  {/* Hidden File Input */}
-                  <input
-                    id={`left-image-upload-${componentId}`}
-                    type="file"
-                    accept="image/*"
-                    onChange={e => handleImageUpload(e, "leftImage")}
-                    className="hidden"
-                  />
-                </>
-              )}
-
-              {/* Upload Loading */}
-              {isUploading === "leftImage" && (
-                <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
-                  <div className="flex flex-col items-center gap-2 text-white">
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                    <p className="text-sm font-medium">Uploading...</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Right Rug Image - Desktop */}
-          <div className="absolute top-0 right-0 hidden h-full w-[200px] md:block md:w-[280px] lg:w-[404px]">
-            <div
-              className="relative h-full w-full cursor-pointer"
-              onMouseEnter={() => setHoveredImage("rightImage")}
-              onMouseLeave={() => setHoveredImage(null)}
-            >
-              <Image
-                src={rightImageUrl}
-                alt={data.rightImageAlt || "Hand knotted rug right"}
-                width={404}
-                height={591}
-                className="h-full w-full object-cover"
-                priority
+              {/* Description */}
+              <EditableText
+                value={
+                  data.description ||
+                  "Experience the timeless beauty of authentic Nepali craftsmanship. Each rug tells a story of tradition, patience, and unparalleled artistry passed down through generations."
+                }
+                onChange={handleTextUpdate("description")}
+                as="p"
+                className="mb-8 w-full text-center text-sm leading-relaxed md:mb-10 md:text-base lg:mb-12 lg:text-lg"
+                isEditable={isEditable}
+                placeholder="Enter description..."
+                multiline={true}
+                style={{
+                  fontFamily: theme.fonts.body,
+                  color: theme.colors.text,
+                }}
               />
 
-              {isEditable && (
-                <>
-                  {/* Hover Overlay - Only shows when right image is hovered */}
-                  <div
-                    className={`absolute inset-0 z-20 flex items-center justify-center bg-black/50 transition-opacity duration-200 ${
-                      hoveredImage === "rightImage"
-                        ? "opacity-100"
-                        : "opacity-0"
-                    }`}
-                  >
-                    <Button
-                      variant="secondary"
-                      className="gap-2 bg-white/90 text-black hover:bg-white"
-                      onClick={() =>
-                        document
-                          .getElementById(`right-image-upload-${componentId}`)
-                          ?.click()
-                      }
-                    >
-                      <ImagePlus className="h-4 w-4" /> Change Right Image
-                    </Button>
-                  </div>
-
-                  {/* Hidden File Input */}
-                  <input
-                    id={`right-image-upload-${componentId}`}
-                    type="file"
-                    accept="image/*"
-                    onChange={e => handleImageUpload(e, "rightImage")}
-                    className="hidden"
+              {/* Action Buttons */}
+              <div className="flex w-full flex-col gap-4 sm:flex-row sm:justify-center sm:gap-6">
+                {data.buttons.length > 1 && (
+                  <EditableLink
+                    text={data.buttons[1]?.text || "View Menu"}
+                    href={data.buttons[1]?.href || "#"}
+                    onChange={(text, href) =>
+                      handleButtonUpdate(data.buttons[1]?.id || "2", text, href)
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    className="h-10 w-full rounded-lg border-2 bg-transparent px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-gray-50 sm:w-auto sm:min-w-[140px] lg:h-12 lg:px-6 lg:text-base"
+                    style={{
+                      borderColor: theme.colors.primary,
+                      color: theme.colors.primary,
+                      fontFamily: theme.fonts.body,
+                    }}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter URL..."
                   />
-                </>
-              )}
+                )}
 
-              {/* Upload Loading */}
-              {isUploading === "rightImage" && (
-                <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
-                  <div className="flex flex-col items-center gap-2 text-white">
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                    <p className="text-sm font-medium">Uploading...</p>
+                {data.buttons.length > 0 && (
+                  <EditableLink
+                    text={data.buttons[0]?.text || "Order Now"}
+                    href={data.buttons[0]?.href || "#"}
+                    onChange={(text, href) =>
+                      handleButtonUpdate(data.buttons[0]?.id || "1", text, href)
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    className="h-10 w-full rounded-lg px-5 py-2.5 text-sm font-medium shadow-lg transition-all duration-200 hover:shadow-xl sm:w-auto sm:min-w-[140px] lg:h-12 lg:px-6 lg:text-base"
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                      fontFamily: theme.fonts.body,
+                      boxShadow: `0 10px 25px ${theme.colors.primary}20`,
+                    }}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter URL..."
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Right Image Column */}
+            <div className="relative h-full min-h-[600px] lg:min-h-[700px]">
+              <div
+                className="relative h-full w-full cursor-pointer overflow-hidden"
+                onMouseEnter={() => setHoveredImage("rightImage")}
+                onMouseLeave={() => setHoveredImage(null)}
+              >
+                <Image
+                  src={rightImageUrl}
+                  alt={data.rightImageAlt || "Right image"}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+
+                {isEditable && (
+                  <>
+                    {/* Hover Overlay - Only shows when right image is hovered */}
+                    <div
+                      className={`absolute inset-0 z-20 flex items-center justify-center bg-black/50 transition-opacity duration-200 ${
+                        hoveredImage === "rightImage"
+                          ? "opacity-100"
+                          : "opacity-0"
+                      }`}
+                    >
+                      <Button
+                        variant="secondary"
+                        className="gap-2 bg-white/90 text-black hover:bg-white"
+                        onClick={() =>
+                          document
+                            .getElementById(`right-image-upload-${componentId}`)
+                            ?.click()
+                        }
+                      >
+                        <ImagePlus className="h-4 w-4" /> Change Right Image
+                      </Button>
+                    </div>
+
+                    {/* Hidden File Input */}
+                    <input
+                      id={`right-image-upload-${componentId}`}
+                      type="file"
+                      accept="image/*"
+                      onChange={e => handleImageUpload(e, "rightImage")}
+                      className="hidden"
+                    />
+                  </>
+                )}
+
+                {/* Upload Loading */}
+                {isUploading === "rightImage" && (
+                  <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
+                    <div className="flex flex-col items-center gap-2 text-white">
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                      <p className="text-sm font-medium">Uploading...</p>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Mobile Background Image */}
-          <div className="absolute inset-0 md:hidden">
-            <div
-              className="relative h-full w-full cursor-pointer"
-              onMouseEnter={() => setHoveredImage("mobileImage")}
-              onMouseLeave={() => setHoveredImage(null)}
-            >
-              {isEditable && (
-                <>
-                  {/* Hover Overlay - Only shows when mobile image is hovered */}
-                  <div
-                    className={`absolute inset-0 z-20 flex items-center justify-center bg-black/50 transition-opacity duration-200 ${
-                      hoveredImage === "mobileImage"
-                        ? "opacity-100"
-                        : "opacity-0"
-                    }`}
-                  >
-                    <Button
-                      variant="secondary"
-                      className="gap-2 bg-white/90 text-black hover:bg-white"
-                      onClick={() =>
-                        document
-                          .getElementById(`mobile-image-upload-${componentId}`)
-                          ?.click()
-                      }
+          {/* Mobile Layout */}
+          <div className="relative min-h-[500px] md:hidden">
+            {/* Mobile Background Image */}
+            {data.mobileImageUrl && (
+              <div
+                className="absolute inset-0 cursor-pointer"
+                onMouseEnter={() => setHoveredImage("mobileImage")}
+                onMouseLeave={() => setHoveredImage(null)}
+              >
+                <Image
+                  src={data.mobileImageUrl}
+                  alt={data.mobileImageAlt || "Mobile background"}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="100vw"
+                />
+
+                {isEditable && (
+                  <>
+                    {/* Hover Overlay */}
+                    <div
+                      className={`absolute inset-0 z-20 flex items-center justify-center bg-black/50 transition-opacity duration-200 ${
+                        hoveredImage === "mobileImage"
+                          ? "opacity-100"
+                          : "opacity-0"
+                      }`}
                     >
-                      <ImagePlus className="h-4 w-4" /> Change Background
-                    </Button>
-                  </div>
+                      <Button
+                        variant="secondary"
+                        className="gap-2 bg-white/90 text-black hover:bg-white"
+                        onClick={() =>
+                          document
+                            .getElementById(
+                              `mobile-image-upload-${componentId}`
+                            )
+                            ?.click()
+                        }
+                      >
+                        <ImagePlus className="h-4 w-4" /> Change Background
+                      </Button>
+                    </div>
 
-                  {/* Hidden File Input */}
-                  <input
-                    id={`mobile-image-upload-${componentId}`}
-                    type="file"
-                    accept="image/*"
-                    onChange={e => handleImageUpload(e, "mobileImage")}
-                    className="hidden"
+                    {/* Hidden File Input */}
+                    <input
+                      id={`mobile-image-upload-${componentId}`}
+                      type="file"
+                      accept="image/*"
+                      onChange={e => handleImageUpload(e, "mobileImage")}
+                      className="hidden"
+                    />
+                  </>
+                )}
+
+                {/* Upload Loading */}
+                {isUploading === "mobileImage" && (
+                  <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
+                    <div className="flex flex-col items-center gap-2 text-white">
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                      <p className="text-sm font-medium">Uploading...</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Mobile Content Overlay */}
+            <div className="relative z-10 flex min-h-[500px] flex-col items-center justify-center px-6 py-12">
+              {/* Main Heading */}
+              <EditableText
+                value={data.title || "Premium Nepali Hand Knotted Rugs"}
+                onChange={handleTextUpdate("title")}
+                as="h1"
+                className="mb-4 w-full text-center text-3xl leading-tight font-bold"
+                isEditable={isEditable}
+                placeholder="Enter main title..."
+                multiline={true}
+                style={{
+                  fontFamily: theme.fonts.heading,
+                  color: data.mobileImageUrl ? "#FFFFFF" : theme.colors.primary,
+                }}
+              />
+
+              {/* Description */}
+              <EditableText
+                value={
+                  data.description ||
+                  "Experience the timeless beauty of authentic Nepali craftsmanship. Each rug tells a story of tradition, patience, and unparalleled artistry passed down through generations."
+                }
+                onChange={handleTextUpdate("description")}
+                as="p"
+                className="mb-8 w-full text-center text-sm leading-relaxed md:text-base"
+                isEditable={isEditable}
+                placeholder="Enter description..."
+                multiline={true}
+                style={{
+                  fontFamily: theme.fonts.body,
+                  color: data.mobileImageUrl ? "#FFFFFF" : theme.colors.text,
+                }}
+              />
+
+              {/* Action Buttons */}
+              <div className="flex w-full flex-col gap-4">
+                {data.buttons.length > 1 && (
+                  <EditableLink
+                    text={data.buttons[1]?.text || "View Menu"}
+                    href={data.buttons[1]?.href || "#"}
+                    onChange={(text, href) =>
+                      handleButtonUpdate(data.buttons[1]?.id || "2", text, href)
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    className="h-10 w-full rounded-lg border-2 bg-transparent px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-white/10"
+                    style={{
+                      borderColor: data.mobileImageUrl
+                        ? "#FFFFFF"
+                        : theme.colors.primary,
+                      color: data.mobileImageUrl
+                        ? "#FFFFFF"
+                        : theme.colors.primary,
+                      fontFamily: theme.fonts.body,
+                    }}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter URL..."
                   />
-                </>
-              )}
+                )}
 
-              {/* Upload Loading */}
-              {isUploading === "mobileImage" && (
-                <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
-                  <div className="flex flex-col items-center gap-2 text-white">
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                    <p className="text-sm font-medium">Uploading...</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Gradient Overlays - Desktop only */}
-          <div className="absolute top-0 left-[150px] hidden h-full w-[120px] bg-gradient-to-r from-transparent to-white/80 md:left-[200px] md:block md:w-[150px] lg:left-[280px] lg:w-[196px]" />
-          <div className="absolute top-0 right-[150px] hidden h-full w-[120px] bg-gradient-to-l from-transparent to-white/80 md:right-[200px] md:block md:w-[150px] lg:right-[404px] lg:w-[196px]" />
-
-          {/* Central Content */}
-          <div className="relative z-10 flex h-full flex-col items-center justify-center px-4">
-            {/* Main Heading */}
-            <EditableText
-              value={data.title || "Premium Nepali Hand Knotted Rugs"}
-              onChange={handleTextUpdate("title")}
-              as="h1"
-              className="mx-auto mb-4 max-w-[320px] text-center text-[28px] leading-[1.15] font-bold sm:max-w-[400px] sm:text-[36px] md:mb-6 md:max-w-[500px] md:text-[42px] lg:max-w-[593px] lg:text-[54px]"
-              isEditable={isEditable}
-              placeholder="Enter main title..."
-              multiline={true}
-              style={{
-                fontFamily: theme.fonts.heading,
-                color: theme.colors.primary,
-              }}
-            />
-
-            {/* Description */}
-            <EditableText
-              value={
-                data.description ||
-                "Experience the timeless beauty of authentic Nepali craftsmanship. Each rug tells a story of tradition, patience, and unparalleled artistry passed down through generations."
-              }
-              onChange={handleTextUpdate("description")}
-              as="p"
-              className="mx-auto mb-8 max-w-[320px] text-center text-[14px] leading-[1.5] sm:max-w-[380px] sm:text-[16px] md:mb-12 md:max-w-[450px] lg:max-w-[460px] lg:text-[18px]"
-              isEditable={isEditable}
-              placeholder="Enter description..."
-              multiline={true}
-              style={{ fontFamily: theme.fonts.body }}
-            />
-
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
-              {data.buttons.length > 1 && (
-                <EditableLink
-                  text={data.buttons[1]?.text || "Watch Craft"}
-                  href={data.buttons[1]?.href || "#"}
-                  onChange={(text, href) =>
-                    handleButtonUpdate(data.buttons[1]?.id || "2", text, href)
-                  }
-                  isEditable={isEditable}
-                  siteUser={siteUser}
-                  className="h-[50px] w-full rounded-lg border-2 bg-transparent px-6 py-3 text-[16px] leading-[1.5] transition-all duration-200 sm:h-[59px] sm:w-[180px] sm:px-8 sm:py-4 lg:w-[207px] lg:text-[18px] xl:text-[20px]"
-                  style={{
-                    borderColor: theme.colors.primary,
-                    color: theme.colors.primary,
-                    fontFamily: theme.fonts.body,
-                  }}
-                  textPlaceholder="Button text..."
-                  hrefPlaceholder="Enter URL..."
-                />
-              )}
-
-              {data.buttons.length > 0 && (
-                <EditableLink
-                  text={data.buttons[0]?.text || "Shop Now"}
-                  href={data.buttons[0]?.href || "#"}
-                  onChange={(text, href) =>
-                    handleButtonUpdate(data.buttons[0]?.id || "1", text, href)
-                  }
-                  isEditable={isEditable}
-                  siteUser={siteUser}
-                  className="h-[50px] w-full rounded-lg px-6 py-3 text-[16px] leading-[1.5] shadow-lg transition-all duration-200 sm:h-[59px] sm:w-[180px] sm:px-8 sm:py-4 lg:w-[207px] lg:text-[18px] xl:text-[20px]"
-                  style={{
-                    backgroundColor: theme.colors.primary,
-                    color: theme.colors.primaryForeground,
-                    fontFamily: theme.fonts.body,
-                    boxShadow: `0 10px 25px ${theme.colors.primary}20`,
-                  }}
-                  textPlaceholder="Button text..."
-                  hrefPlaceholder="Enter URL..."
-                />
-              )}
+                {data.buttons.length > 0 && (
+                  <EditableLink
+                    text={data.buttons[0]?.text || "Order Now"}
+                    href={data.buttons[0]?.href || "#"}
+                    onChange={(text, href) =>
+                      handleButtonUpdate(data.buttons[0]?.id || "1", text, href)
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    className="h-10 w-full rounded-lg px-5 py-2.5 text-sm font-medium shadow-lg transition-all duration-200 hover:shadow-xl"
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                      fontFamily: theme.fonts.body,
+                      boxShadow: `0 10px 25px ${theme.colors.primary}20`,
+                    }}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter URL..."
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>

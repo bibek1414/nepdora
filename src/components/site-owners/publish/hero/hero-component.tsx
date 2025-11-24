@@ -30,8 +30,8 @@ import {
 } from "@/hooks/owner-site/components/use-unified";
 import { HeroTemplate8 } from "./hero-style-8";
 import { HeroTemplate9 } from "./hero-style-9";
-import { HeroTemplate10 } from "../../builder/hero/hero-style-10";
-import { HeroTemplate11 } from "../../builder/hero/hero-style-11";
+import { HeroTemplate10 } from "./hero-style-10";
+import { HeroTemplate11 } from "./hero-style-11";
 
 interface HeroComponentProps {
   component: HeroComponentData;
@@ -163,15 +163,15 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
       {/* Edit Controls - Only show when editable */}
       {isEditable && (
         <>
-          <div className="bg-background/80 absolute top-4 -right-45 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="bg-background/80 absolute -right-5 z-30 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
             <Button
               size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
               disabled={deleteHeroMutation.isPending}
-              className=""
             >
               <Trash2 className="h-4 w-4" />
+              Delete
             </Button>
           </div>
 
