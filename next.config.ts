@@ -8,7 +8,6 @@ const nextConfig: NextConfig = {
   images: {
     // Image formats
     formats: ["image/avif", "image/webp"],
-
     // SVG support
     dangerouslyAllowSVG: true,
 
@@ -20,6 +19,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "nepdora.baliyoventures.com",
+      },
+      {
+        protocol: "http",
         hostname: "nepdora.baliyoventures.com",
       },
       {

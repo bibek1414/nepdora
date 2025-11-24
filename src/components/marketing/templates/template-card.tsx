@@ -35,13 +35,6 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
             alt={template.name}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          {template.template_category && (
-            <div className="absolute top-3 left-3">
-              <span className="rounded-full bg-purple-600 px-3 py-1 text-xs font-semibold text-white">
-                {template.template_category.name}
-              </span>
-            </div>
-          )}
 
           {/* Hover Overlay with Preview Button */}
           <div
@@ -60,14 +53,10 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
         </div>
 
         <div className="p-4">
-          <div className="mb-2 text-lg font-semibold text-gray-900 transition-colors duration-200 group-hover:text-purple-600">
+          <div className="mb-2 text-lg font-semibold text-gray-900 capitalize transition-colors duration-200">
             {template.name}
           </div>
-          {template.template_subcategory && (
-            <p className="mb-4 text-sm leading-relaxed text-gray-600">
-              {template.template_subcategory.name}
-            </p>
-          )}
+
           <Link href={"/admin/signup"}>
             <Button
               variant="outline"

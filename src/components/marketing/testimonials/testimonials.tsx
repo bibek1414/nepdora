@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import Link from "next/link";
-import { useTestimonials } from "@/hooks/super-admin/use-testimonials"; // Adjust the import path as needed
+import { useTestimonials } from "@/hooks/super-admin/use-testimonials";
 import Image from "next/image";
 import { Testimonial } from "@/types/owner-site/admin/testimonial";
 
@@ -28,7 +28,7 @@ const CustomerTestimonials = () => {
   if (isLoading) {
     return (
       <div className="bg-background px-4 py-12">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-7xl">
           <div className="text-center">
             <h2 className="text-foreground mb-2 text-3xl font-extrabold tracking-tight md:text-4xl">
               Thousands of Nepdora Lovers
@@ -37,7 +37,7 @@ const CustomerTestimonials = () => {
               Loading testimonials...
             </p>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <div className="mt-12 grid gap-6 md:grid-cols-4">
             {[1, 2, 3].map(item => (
               <Card
                 key={item}
@@ -98,7 +98,7 @@ const CustomerTestimonials = () => {
         </div>
 
         {/* Testimonials Grid */}
-        <div className="mb-12 grid gap-6 md:grid-cols-3">
+        <div className="mb-12 grid gap-6 md:grid-cols-4">
           {testimonials.length > 0 ? (
             testimonials.map(testimonial => (
               <Card
@@ -110,7 +110,7 @@ const CustomerTestimonials = () => {
                   <div className="mb-4 flex items-center">
                     {testimonial.image && (
                       <div className="mr-4 flex-shrink-0">
-                        <Image
+                        <img
                           src={testimonial.image}
                           alt={testimonial.name}
                           width={48}
