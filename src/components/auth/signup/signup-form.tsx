@@ -42,6 +42,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+type GoogleWebsiteType = "ecommerce" | "service";
+
 export function SignupForm({
   className,
   ...props
@@ -56,7 +58,13 @@ export function SignupForm({
   const [googleStoreError, setGoogleStoreError] = useState<string | null>(null);
   const [googlePhone, setGooglePhone] = useState("");
   const [googlePhoneError, setGooglePhoneError] = useState<string | null>(null);
+  const [googleWebsiteType, setGoogleWebsiteType] =
+    useState<GoogleWebsiteType>("ecommerce");
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
+  const websiteTypeOptions: { value: GoogleWebsiteType; label: string }[] = [
+    { value: "ecommerce", label: "E-commerce" },
+    { value: "service", label: "Service" },
+  ];
 
   const {
     register,
@@ -225,7 +233,11 @@ export function SignupForm({
     setGooglePhoneError(null);
   };
 
-  const persistGoogleSignupMetadata = (storeName: string, phone?: string) => {
+  const persistGoogleSignupMetadata = (
+    storeName: string,
+    phone?: string,
+    websiteType: GoogleWebsiteType = googleWebsiteType
+  ) => {
     if (typeof document === "undefined") {
       return;
     }
@@ -243,6 +255,11 @@ export function SignupForm({
         0
       ).toUTCString()}; path=/; SameSite=Lax`;
     }
+
+    const websiteTypeValue = websiteType || googleWebsiteType;
+    document.cookie = `google_website_type=${encodeURIComponent(
+      websiteTypeValue
+    )}; expires=${expires}; path=/; SameSite=Lax`;
   };
 
   const handleGoogleDialogSubmit = async (
@@ -274,7 +291,11 @@ export function SignupForm({
     setIsGoogleSubmitting(true);
 
     try {
-      persistGoogleSignupMetadata(validationResult.data, trimmedPhone);
+      persistGoogleSignupMetadata(
+        validationResult.data,
+        trimmedPhone,
+        googleWebsiteType
+      );
       await signIn("google", {
         callbackUrl: "/admin",
         store_name: validationResult.data,
@@ -768,6 +789,37 @@ export function SignupForm({
                   {googlePhoneError}
                 </p>
               )}
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-sm font-semibold text-gray-900">
+                Website type
+              </p>
+              <p className="text-xs text-gray-500">
+                Choose the experience that fits your business.
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                {websiteTypeOptions.map(option => {
+                  const isSelected = googleWebsiteType === option.value;
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      aria-pressed={isSelected}
+                      className={cn(
+                        "rounded-lg border px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500",
+                        isSelected
+                          ? "border-gray-900 bg-gray-900 text-white"
+                          : "border-gray-300 bg-white text-gray-700 hover:border-gray-400"
+                      )}
+                      onClick={() => setGoogleWebsiteType(option.value)}
+                      disabled={isGoogleSubmitting}
+                    >
+                      {option.label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <DialogFooter className="gap-3 sm:flex-row">

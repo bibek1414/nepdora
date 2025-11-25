@@ -30,17 +30,23 @@ interface DecodedToken extends JwtPayload {
 
 const GOOGLE_STORE_NAME_COOKIE = "google_store_name";
 const GOOGLE_PHONE_NUMBER_COOKIE = "google_phone_number";
+const GOOGLE_WEBSITE_TYPE_COOKIE = "google_website_type";
 
 const getPendingGoogleSignupMetadata = async () => {
   try {
     const cookieStore = await cookies();
     const storeName = cookieStore.get(GOOGLE_STORE_NAME_COOKIE)?.value;
     const phoneNumber = cookieStore.get(GOOGLE_PHONE_NUMBER_COOKIE)?.value;
+    const websiteType = cookieStore.get(GOOGLE_WEBSITE_TYPE_COOKIE)?.value;
 
-    return { storeName, phoneNumber };
+    return { storeName, phoneNumber, websiteType };
   } catch (error) {
     console.error("Failed to read Google signup metadata:", error);
-    return { storeName: undefined, phoneNumber: undefined };
+    return {
+      storeName: undefined,
+      phoneNumber: undefined,
+      websiteType: undefined,
+    };
   }
 };
 
@@ -134,10 +140,11 @@ const nextAuthOptions: NextAuthOptions = {
         if (account.provider === "google") {
           try {
             // Fetch the pending signup metadata: store_name and phone
-            const { storeName, phoneNumber } =
+            const { storeName, phoneNumber, websiteType } =
               await getPendingGoogleSignupMetadata();
             console.log("[Google Auth] Store name:", storeName);
             console.log("[Google Auth] Phone number:", phoneNumber);
+            console.log("[Google Auth] Website type:", websiteType);
 
             // ⭐ FIXED: backend expects "phone", not "phone_number"
             const requestBody = {
@@ -153,6 +160,7 @@ const nextAuthOptions: NextAuthOptions = {
                 app: {
                   store_name: storeName || null,
                   phone: phoneNumber || null,
+                  website_type: websiteType || "ecommerce",
                 },
               },
             };
