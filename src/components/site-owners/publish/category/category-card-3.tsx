@@ -17,7 +17,6 @@ export const CategoryCard3: React.FC<CategoryCard3Props> = ({
   category,
   siteUser,
   onClick,
-  index = 0,
 }) => {
   // Theme
   const { data: themeResponse } = useThemeQuery();

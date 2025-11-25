@@ -12,7 +12,7 @@ export const useFooterQuery = () => {
   return useQuery({
     queryKey: FOOTER_QUERY_KEY,
     queryFn: useFooterApi.getFooter,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
     retry: 2,
   });
 };
@@ -21,7 +21,7 @@ export const useFooterQueryPublished = () => {
   return useQuery({
     queryKey: FOOTER_QUERY_KEY,
     queryFn: useFooterApi.getFooterPublished,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
     retry: 2,
   });
 };
@@ -31,76 +31,30 @@ export const useCreateFooterMutation = () => {
 
   return useMutation({
     mutationFn: async (data: CreateFooterRequest) => {
+      // First, fetch existing footer to get its ID
+      let existingFooter;
       try {
-        // Try to create the footer
-        return await useFooterApi.createFooter(data);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        // Check if footer already exists - error.data.detail is the correct path
-        const errorDetail =
-          error?.data?.detail ||
-          error?.detail ||
-          error?.response?.data?.detail ||
-          "";
-        const errorMessage = error?.message || "";
-        const errorString = typeof error === "string" ? error : "";
-
-        const isFooterExists =
-          errorDetail === "Footer already exists" ||
-          errorMessage === "Footer already exists" ||
-          errorString === "Footer already exists" ||
-          errorDetail.includes("Footer already exists") ||
-          errorMessage.includes("Footer already exists") ||
-          (error?.status === 400 && errorDetail.includes("already exists"));
-
-        if (isFooterExists) {
-          // Get the existing footer from cache or fetch it
-          let existingFooter = queryClient.getQueryData(
-            FOOTER_QUERY_KEY
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ) as any;
-
-          // If not in cache, fetch it
-          if (!existingFooter || !existingFooter.data?.id) {
-            try {
-              existingFooter = await useFooterApi.getFooter();
-            } catch (fetchError) {
-              throw new Error("Could not fetch existing footer to replace it");
-            }
-          }
-
-          // Extract the footer ID - try multiple possible locations
-          const footerId =
-            existingFooter?.data?.id ||
-            existingFooter?.id ||
-            existingFooter?.data?.[0]?.id;
-
-          if (footerId) {
-            try {
-              // Delete the existing footer
-              await useFooterApi.deleteFooter(footerId);
-
-              // Wait a brief moment to ensure deletion is complete
-              await new Promise(resolve => setTimeout(resolve, 300));
-
-              // Create the new footer
-              const result = await useFooterApi.createFooter(data);
-
-              // Show info toast about replacement
-              toast.info("Previous footer replaced with new design");
-
-              return result;
-            } catch (deleteError) {
-              throw new Error("Failed to replace existing footer");
-            }
-          } else {
-            throw new Error("Could not find existing footer ID");
-          }
-        }
-
-        // Re-throw if it's a different error
-        throw error;
+        existingFooter = await useFooterApi.getFooter();
+      } catch (error) {
+        // No existing footer, proceed with creation
+        existingFooter = null;
       }
+
+      // If footer exists, delete it first
+      if (existingFooter?.data?.id) {
+        try {
+          await useFooterApi.deleteFooter(existingFooter.data.id);
+          // Wait briefly to ensure deletion completes
+          await new Promise(resolve => setTimeout(resolve, 300));
+          toast.info("Previous footer replaced with new design");
+        } catch (deleteError) {
+          console.error("Failed to delete existing footer:", deleteError);
+          throw new Error("Failed to replace existing footer");
+        }
+      }
+
+      // Now create the new footer
+      return await useFooterApi.createFooter(data);
     },
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
@@ -126,7 +80,6 @@ export const useUpdateFooterMutation = () => {
     mutationFn: async (data: UpdateFooterRequest) => {
       console.log("🔧 UPDATE FOOTER MUTATION CALLED:", data);
 
-      // Ensure we have the ID
       if (!data.id) {
         throw new Error("Footer ID is required for update");
       }
@@ -140,7 +93,7 @@ export const useUpdateFooterMutation = () => {
       queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
       toast.success(data.message || "Footer updated successfully");
     },
-    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       console.error("❌ UPDATE ERROR:", error);
       toast.error(error.message || "Failed to update footer");
@@ -152,10 +105,9 @@ export const useDeleteFooterMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => {
-      // Get footer ID from cache
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const existingFooter = queryClient.getQueryData(FOOTER_QUERY_KEY) as any;
+    mutationFn: async () => {
+      // Get footer from API (not cache) to ensure we have the latest
+      const existingFooter = await useFooterApi.getFooter();
       const footerId = existingFooter?.data?.id;
 
       if (!footerId) {

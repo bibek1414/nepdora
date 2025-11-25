@@ -81,7 +81,7 @@ import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
 import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
 import { useAuth } from "@/hooks/use-auth";
 import { decodeJwt } from "@/lib/utils";
-
+import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/use-unified";
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -234,7 +234,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
   const createPageMutation = useCreatePage();
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
-
   const {
     data: pageComponentsResponse,
     isLoading: isPageComponentsLoading,
@@ -247,6 +246,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   const currentPage = pageSlug;
   const queryClient = useQueryClient();
+  const updateOrderMutation = useUpdateComponentOrderMutation(currentPage);
 
   // Process page components
   const pageComponents = React.useMemo(() => {
@@ -334,7 +334,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     return names[componentType] || componentType;
   };
 
-  // OPTIMIZED: Create component with instant UI feedback
   const createComponentWithIndex = async (
     componentType: keyof ComponentTypeMap,
     data: ComponentTypeMap[keyof ComponentTypeMap],
@@ -344,62 +343,29 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     const toastId = `add-${componentType}-${Date.now()}`;
 
     try {
-      // Show lightweight toast notification
       toast.loading(`Adding ${displayName}...`, { id: toastId });
 
-      // Close dialogs immediately for better UX
       setIsAddSectionDialogOpen(false);
       setPendingInsertIndex(undefined);
 
-      // Create optimistic temporary component
-      const tempId = `temp-${Date.now()}`;
-      const tempComponent: ComponentResponse = {
-        id: tempId,
-        component_id: tempId,
-        component_type: componentType,
-        data,
-        order: insertIndex ?? pageComponents.length,
-        page: currentPageData?.id, // Use page ID instead of slug
-      };
-
-      // Get current components from cache
       const currentComponents =
         queryClient.getQueryData<ComponentResponse[]>([
           "pageComponents",
           currentPage,
         ]) || pageComponents;
 
-      // Create new array with inserted component
-      const updatedComponents = [...currentComponents];
-      if (insertIndex !== undefined) {
-        updatedComponents.splice(insertIndex, 0, tempComponent);
-      } else {
-        updatedComponents.push(tempComponent);
-      }
-
-      // Recalculate order for all components
-      updatedComponents.forEach((comp, idx) => {
-        comp.order = idx;
-      });
-
-      // Optimistically update the cache immediately (instant UI feedback)
-      queryClient.setQueryData(
-        ["pageComponents", currentPage],
-        updatedComponents
-      );
-
-      // Backend sync happens in background
+      // The API now handles order updates internally
       await componentsApi.createComponent(
         currentPage,
         {
           component_type: componentType,
           data,
+          order: insertIndex ?? currentComponents.length,
         },
         currentComponents,
         insertIndex
       );
 
-      // Refresh to get real data from server
       await queryClient.invalidateQueries({
         queryKey: ["pageComponents", currentPage],
       });
@@ -408,7 +374,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     } catch (error) {
       console.error(`Failed to create ${componentType} component:`, error);
 
-      // Rollback optimistic update on error
       await queryClient.invalidateQueries({
         queryKey: ["pageComponents", currentPage],
       });
@@ -521,12 +486,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     };
 
     const toastId = "navbar-create";
-    toast.loading("Adding Navbar...", { id: toastId });
 
     createNavbarMutation.mutate(payload, {
       onSuccess: () => {
         console.log("Navbar created successfully from dialog");
-        toast.success("Navbar added successfully!", { id: toastId });
       },
       onError: error => {
         console.error("Failed to create navbar from dialog:", error);
@@ -543,7 +506,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     };
 
     const toastId = "navbar-create";
-    toast.loading("Adding Navbar...", { id: toastId });
 
     createNavbarMutation.mutate(payload, {
       onSuccess: () => {
@@ -614,7 +576,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     };
 
     const toastId = "footer-create";
-    toast.loading("Adding Footer...", { id: toastId });
 
     createFooterMutation.mutate(payload, {
       onSuccess: () => {
@@ -677,7 +638,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     };
 
     const toastId = "footer-create";
-    toast.loading("Adding Footer...", { id: toastId });
 
     createFooterMutation.mutate(payload, {
       onSuccess: () => {

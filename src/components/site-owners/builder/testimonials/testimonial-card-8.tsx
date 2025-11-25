@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Testimonial } from "@/types/owner-site/admin/testimonial";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
+import { uploadToCloudinary } from "@/utils/cloudinary";
+import { toast } from "sonner";
 
 const DEFAULT_BACKGROUND =
   "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1800&q=80";
@@ -32,8 +34,11 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
   onTestimonialClick,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const slides = useMemo(() => testimonials || [], [testimonials]);
   const chunkSize = 2;
+  const componentId = React.useId();
+
   const slideGroups = useMemo(() => {
     if (!slides.length) return [];
     const groups: Testimonial[][] = [];
@@ -64,6 +69,49 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
   const handleNext = () => {
     if (slideGroups.length === 0) return;
     setCurrentIndex(prev => (prev + 1) % slideGroups.length);
+  };
+
+  const handleBackgroundFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(
+        `Please select a valid image file (${allowedTypes.join(", ")})`
+      );
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    setIsUploadingBackground(true);
+
+    try {
+      const timestamp = Date.now();
+      const randomId = Math.random().toString(36).substr(2, 9);
+      const uniqueFilename = `testimonial_bg_${timestamp}_${randomId}_${file.name}`;
+
+      const imageUrl = await uploadToCloudinary(file, {
+        folder: "testimonial-backgrounds",
+        resourceType: "image",
+      });
+
+      onBackgroundChange?.(imageUrl);
+      toast.success("Background image uploaded successfully!");
+    } catch (error) {
+      console.error("Background upload failed:", error);
+      toast.error("Failed to upload background image. Please try again.");
+    } finally {
+      setIsUploadingBackground(false);
+      event.target.value = "";
+    }
   };
 
   const backgroundSrc = backgroundImage || DEFAULT_BACKGROUND;
@@ -117,6 +165,51 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
   return (
     <section className="relative w-full py-12 sm:py-16 md:py-20 lg:py-24">
       <div className="relative min-h-[600px] w-full overflow-hidden bg-gray-900/60 sm:min-h-[700px] md:min-h-[800px]">
+        {/* Background Change Button */}
+        {isEditable && (
+          <div className="absolute top-3 right-3 z-30 sm:top-4 sm:right-4 md:top-6 md:right-6">
+            <label
+              htmlFor={`testimonial-background-upload-${componentId}`}
+              className={`cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-3 py-1.5 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white sm:px-4 sm:py-2 sm:text-sm ${
+                isUploadingBackground ? "pointer-events-none opacity-50" : ""
+              }`}
+            >
+              {isUploadingBackground ? (
+                <span className="flex items-center gap-1 sm:gap-2">
+                  <Loader2 className="h-3 w-3 animate-spin sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Uploading...</span>
+                  <span className="sm:hidden">...</span>
+                </span>
+              ) : (
+                <>
+                  <span className="hidden sm:inline">Change Background</span>
+                  <span className="sm:hidden">Change BG</span>
+                </>
+              )}
+            </label>
+            <input
+              id={`testimonial-background-upload-${componentId}`}
+              type="file"
+              accept="image/*"
+              onChange={handleBackgroundFileChange}
+              className="hidden"
+              disabled={isUploadingBackground}
+            />
+          </div>
+        )}
+
+        {/* Background Upload Loading Overlay */}
+        {isUploadingBackground && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50">
+            <div className="flex flex-col items-center gap-2 text-white">
+              <Loader2 className="h-6 w-6 animate-spin sm:h-8 sm:w-8" />
+              <p className="px-4 text-center text-xs font-medium sm:text-sm">
+                Uploading background...
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Background */}
         <div className="absolute inset-0">
           <EditableImage
@@ -139,6 +232,10 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
               quality: "auto",
               format: "auto",
               crop: "fill",
+            }}
+            cloudinaryOptions={{
+              folder: "testimonial-backgrounds",
+              resourceType: "image",
             }}
           />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/90 via-white/85 to-white/92" />

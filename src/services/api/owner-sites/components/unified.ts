@@ -104,6 +104,33 @@ export const componentsApi = {
         }
       }
 
+      // FIXED: If inserting at a specific index, update existing components FIRST
+      if (
+        insertIndex !== undefined &&
+        existingComponents &&
+        existingComponents.length > 0
+      ) {
+        const componentsToUpdate = existingComponents.filter(
+          comp => (comp.order ?? 0) >= insertIndex
+        );
+
+        if (componentsToUpdate.length > 0) {
+          // Update orders in parallel
+          await Promise.all(
+            componentsToUpdate.map(comp =>
+              fetch(
+                `${API_BASE_URL}/api/pages/${pageSlug}/components/${comp.component_id}/`,
+                {
+                  method: "PATCH",
+                  headers: createHeaders(),
+                  body: JSON.stringify({ order: (comp.order ?? 0) + 1 }),
+                }
+              ).then(handleApiError)
+            )
+          );
+        }
+      }
+
       const componentPayload = {
         component_id:
           payload.component_id || `${payload.component_type}-${Date.now()}`,
@@ -112,7 +139,7 @@ export const componentsApi = {
         order,
       };
 
-      // Create the new component first
+      // Now create the new component at the correct position
       const response = await fetch(
         `${API_BASE_URL}/api/pages/${pageSlug}/components/`,
         {
@@ -124,33 +151,6 @@ export const componentsApi = {
 
       await handleApiError(response);
       const data = await response.json();
-
-      // OPTIMIZED: Update subsequent component orders in background (don't await)
-      if (
-        insertIndex !== undefined &&
-        existingComponents &&
-        existingComponents.length > 0
-      ) {
-        const componentsToUpdate = existingComponents.filter(
-          comp => comp.order >= insertIndex
-        );
-
-        // Fire and forget - update orders asynchronously
-        Promise.all(
-          componentsToUpdate.map(component =>
-            fetch(
-              `${API_BASE_URL}/api/pages/${pageSlug}/components/${component.component_id}/`,
-              {
-                method: "PATCH",
-                headers: createHeaders(),
-                body: JSON.stringify({ order: component.order + 1 }),
-              }
-            )
-          )
-        ).catch(error => {
-          console.error("Background order update failed:", error);
-        });
-      }
 
       return {
         id: data.id || data.data?.id,

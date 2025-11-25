@@ -130,9 +130,6 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
             value={data.sectionTag}
             onChange={handleTextUpdate("sectionTag")}
             as="div"
-            style={{
-              color: theme.colors.secondary,
-            }}
             className="mb-6 text-xl tracking-widest uppercase"
             isEditable={isEditable}
             placeholder="Our Story"
@@ -146,10 +143,6 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
                 value={data.mainTitle}
                 onChange={handleTextUpdate("mainTitle")}
                 as="h2"
-                style={{
-                  color: theme.colors.text,
-                  fontFamily: theme.fonts.heading,
-                }}
                 className="mb-8 text-4xl leading-tight font-bold md:text-5xl"
                 isEditable={isEditable}
                 placeholder="Your Vision Our Expertise Your Success Get Noticed Generate Leads Dominate."
@@ -161,7 +154,7 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
             <div className="grid grid-cols-2 gap-4">
               {/* Image 1 */}
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-gray-800">
-                <div className="absolute top-4 right-4 z-10">
+                <div className="absolute top-4 right-4 z-50">
                   <span className="rounded-full bg-black/80 px-3 py-2 text-xs text-white backdrop-blur-sm">
                     <EditableText
                       value={data.image1Tag}
@@ -195,7 +188,7 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
 
               {/* Image 2 */}
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-gray-800">
-                <div className="absolute top-4 right-4 z-10">
+                <div className="absolute top-4 right-4 z-50">
                   <span className="rounded-full bg-black/80 px-3 py-2 text-xs text-white backdrop-blur-sm">
                     <EditableText
                       value={data.image2Tag}

@@ -49,10 +49,11 @@ export function SignupForm({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   const { signup, isLoading } = useAuth();
-  const { isRedirecting, isLoading: isCheckingAuth } =
-    useAuthRedirect("/admin");
   const [formError, setFormError] = useState<FormErrorState | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedWebsiteType, setSelectedWebsiteType] = useState<
+    "ecommerce" | "service" | null
+  >(null);
   const [isGoogleDialogOpen, setIsGoogleDialogOpen] = useState(false);
   const [googleStoreName, setGoogleStoreName] = useState("");
   const [googleStoreError, setGoogleStoreError] = useState<string | null>(null);
@@ -79,37 +80,6 @@ export function SignupForm({
 
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
-
-  // Show loading state while checking authentication
-  if (isCheckingAuth || isRedirecting) {
-    return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
-        <div className="flex flex-col items-center gap-4">
-          <svg
-            className="h-12 w-12 animate-spin text-gray-900"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-          <p className="text-sm text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
 
   const getErrorIcon = (type: FormErrorState["type"]) => {
     switch (type) {
@@ -483,7 +453,219 @@ export function SignupForm({
                     </p>
                   )}
                 </div>
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-gray-500">
+                    Website Type
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* E-commerce Option */}
+                    <label
+                      className={cn(
+                        "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-4 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50",
+                        selectedWebsiteType === "ecommerce"
+                          ? "border-emerald-500 bg-emerald-50"
+                          : "border-gray-300 bg-white"
+                      )}
+                    >
+                      <input
+                        type="radio"
+                        value="ecommerce"
+                        {...register("website_type")}
+                        className="hidden"
+                        onChange={e => {
+                          setSelectedWebsiteType("ecommerce");
+                          handleInputChange("website_type")(e);
+                        }}
+                      />
+                      <span
+                        className={cn(
+                          "text-sm font-medium",
+                          selectedWebsiteType === "ecommerce"
+                            ? "text-emerald-700"
+                            : "text-gray-700"
+                        )}
+                      >
+                        E-commerce
+                      </span>
+                    </label>
 
+                    {/* Service Option */}
+                    <label
+                      className={cn(
+                        "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-4 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50",
+                        selectedWebsiteType === "service"
+                          ? "border-emerald-500 bg-emerald-50"
+                          : "border-gray-300 bg-white"
+                      )}
+                    >
+                      <input
+                        type="radio"
+                        value="service"
+                        {...register("website_type")}
+                        className="hidden"
+                        onChange={e => {
+                          setSelectedWebsiteType("service");
+                          handleInputChange("website_type")(e);
+                        }}
+                      />
+                      <span
+                        className={cn(
+                          "text-sm font-medium",
+                          selectedWebsiteType === "service"
+                            ? "text-emerald-700"
+                            : "text-gray-700"
+                        )}
+                      >
+                        Service
+                      </span>
+                    </label>
+                  </div>
+                  <div className="relative">
+                    <FloatingInput
+                      id="phone"
+                      type="tel"
+                      disabled={isLoading}
+                      className={cn(
+                        "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
+                        errors.phone &&
+                          "border-red-300 focus:border-red-500 focus:ring-red-500"
+                      )}
+                      {...register("phone")}
+                      onChange={handleInputChange("phone")}
+                    />
+                    <FloatingLabel htmlFor="phone">
+                      <Phone className="mr-2 h-4 w-4" />
+                      Phone Number
+                    </FloatingLabel>
+                    {errors.phone && (
+                      <p className="mt-2 flex items-center text-sm font-medium text-red-500">
+                        <AlertCircle className="mr-1 h-4 w-4" />
+                        {errors.phone.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {errors.website_type && (
+                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
+                      <AlertCircle className="mr-1 h-4 w-4" />
+                      {errors.website_type.message}
+                    </p>
+                  )}
+                </div>
+                <div className="relative">
+                  <div className="relative">
+                    <FloatingInput
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      disabled={isLoading}
+                      className={cn(
+                        "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 pr-12 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
+                        errors.password &&
+                          "border-red-300 focus:border-red-500 focus:ring-red-500"
+                      )}
+                      {...register("password")}
+                      onChange={handleInputChange("password")}
+                    />
+                    <FloatingLabel htmlFor="password">
+                      <Lock className="mr-2 h-4 w-4" />
+                      Password
+                    </FloatingLabel>
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff size={18} className="transition-colors" />
+                      ) : (
+                        <Eye size={18} className="transition-colors" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
+                      <AlertCircle className="mr-1 h-4 w-4" />
+                      {errors.password.message}
+                    </p>
+                  )}
+                  {password && password.length > 0 && !errors.password && (
+                    <div className="mt-2 space-y-1 text-xs">
+                      <div
+                        className={cn(
+                          "flex items-center",
+                          password.length >= 8
+                            ? "text-green-600"
+                            : "text-gray-500"
+                        )}
+                      >
+                        <CheckCircle
+                          className={cn(
+                            "mr-1 h-3 w-3",
+                            password.length >= 8
+                              ? "text-green-600"
+                              : "text-gray-400"
+                          )}
+                        />
+                        At least 8 characters
+                      </div>
+                      <div
+                        className={cn(
+                          "flex items-center",
+                          /[a-z]/.test(password)
+                            ? "text-green-600"
+                            : "text-gray-500"
+                        )}
+                      >
+                        <CheckCircle
+                          className={cn(
+                            "mr-1 h-3 w-3",
+                            /[a-z]/.test(password)
+                              ? "text-green-600"
+                              : "text-gray-400"
+                          )}
+                        />
+                        One lowercase letter
+                      </div>
+                      <div
+                        className={cn(
+                          "flex items-center",
+                          /[A-Z]/.test(password)
+                            ? "text-green-600"
+                            : "text-gray-500"
+                        )}
+                      >
+                        <CheckCircle
+                          className={cn(
+                            "mr-1 h-3 w-3",
+                            /[A-Z]/.test(password)
+                              ? "text-green-600"
+                              : "text-gray-400"
+                          )}
+                        />
+                        One uppercase letter
+                      </div>
+                      <div
+                        className={cn(
+                          "flex items-center",
+                          /[0-9]/.test(password)
+                            ? "text-green-600"
+                            : "text-gray-500"
+                        )}
+                      >
+                        <CheckCircle
+                          className={cn(
+                            "mr-1 h-3 w-3",
+                            /[0-9]/.test(password)
+                              ? "text-green-600"
+                              : "text-gray-400"
+                          )}
+                        />
+                        One number
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <div className="relative">
                   <div className="relative">
                     <FloatingInput

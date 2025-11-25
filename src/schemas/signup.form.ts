@@ -1,5 +1,7 @@
 import * as z from "zod";
 
+export const websiteTypeEnum = z.enum(["ecommerce", "service"]);
+
 export const storeNameSchema = z
   .string()
   .min(1, { message: "Store name is required." })
@@ -40,6 +42,8 @@ export const baseSignupSchema = z
     confirmPassword: z
       .string()
       .min(1, { message: "Please confirm your password." }),
+
+    website_type: websiteTypeEnum,
     store_name: storeNameSchema,
   })
   .refine(data => data.password === data.confirmPassword, {

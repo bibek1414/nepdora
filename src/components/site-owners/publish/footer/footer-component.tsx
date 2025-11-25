@@ -28,10 +28,7 @@ import { FooterStyle3 } from "./footer-style3";
 import { FooterStyle4 } from "./footer-style4";
 import { FooterStyle5 } from "./footer-style5";
 import { FooterEditorDialog } from "@/components/site-owners/builder/footer/footer-editor-dialog";
-import {
-  FooterData,
-  Footer as FooterType,
-} from "@/types/owner-site/components/footer";
+import { FooterData } from "@/types/owner-site/components/footer";
 import {
   useUpdateFooterMutation,
   useCreateFooterMutation,

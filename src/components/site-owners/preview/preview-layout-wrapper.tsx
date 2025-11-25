@@ -15,26 +15,8 @@ export function PreviewLayoutWrapper({
   children,
   siteUser,
 }: PreviewLayoutWrapperProps) {
-  const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
-  const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
-  const { data: themeResponse } = useThemeQuery();
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
-
-  const isLoading = isNavbarLoading || isFooterLoading;
+  const { data: navbarResponse } = useNavbarQuery();
+  const { data: footerResponse } = useFooterQuery();
 
   return (
     <div className="bg-background min-h-screen">

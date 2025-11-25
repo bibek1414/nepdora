@@ -17,22 +17,8 @@ export function AboutUsTemplate1({
   onUpdate,
 }: AboutUsTemplate1Props) {
   const [data, setData] = useState(aboutUsData);
-  const { data: themeResponse } = useThemeQuery();
   // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
+
   // Handle text field updates
   const handleTextUpdate = (field: keyof AboutUs1Data) => (value: string) => {
     const updatedData = { ...data, [field]: value };
@@ -74,7 +60,7 @@ export function AboutUsTemplate1({
 
   return (
     <section className="bg-background py-16">
-      <div className="container mx-auto max-w-7xl px-4">
+      <div className="container mx-auto max-w-7xl px-8">
         <div
           className={`grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-16 ${
             data.layout === "image-left" ? "md:grid-flow-col-dense" : ""
@@ -88,10 +74,6 @@ export function AboutUsTemplate1({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h2"
-              style={{
-                color: theme.colors.primary,
-                fontFamily: theme.fonts.heading,
-              }}
               className="text-foreground mb-3 text-3xl font-bold md:text-4xl"
               isEditable={isEditable}
               placeholder="Enter main title..."
@@ -101,11 +83,7 @@ export function AboutUsTemplate1({
               value={data.subtitle}
               onChange={handleTextUpdate("subtitle")}
               as="p"
-              style={{
-                color: theme.colors.secondary,
-                fontFamily: theme.fonts.heading,
-              }}
-              className="text-primary mb-4 text-lg font-semibold"
+              className="mb-4 text-lg font-semibold"
               isEditable={isEditable}
               placeholder="Enter subtitle..."
             />
@@ -128,11 +106,7 @@ export function AboutUsTemplate1({
                     value={stat.value}
                     onChange={handleStatsUpdate(stat.id, "value")}
                     as="p"
-                    style={{
-                      color: theme.colors.primary,
-                      fontFamily: theme.fonts.heading,
-                    }}
-                    className="text-primary text-4xl font-bold"
+                    className="text-4xl font-bold"
                     isEditable={isEditable}
                     placeholder="Value"
                   />

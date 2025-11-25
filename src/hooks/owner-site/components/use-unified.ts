@@ -701,10 +701,9 @@ export const useUpdateComponentOrderMutation = (pageSlug: string) => {
     mutationFn: ({ orderUpdates }: BulkOrderUpdateRequest) =>
       componentOrdersApi.updateComponentOrders(pageSlug, orderUpdates),
     onSuccess: () => {
-      // Invalidate and refetch page components to get updated order
+      // Silently invalidate and refetch - no toast for background order updates
       queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
-      toast.success("Component order updated successfully!");
     },
     onError: (error: unknown) => {
       const errorMessage =
@@ -712,6 +711,7 @@ export const useUpdateComponentOrderMutation = (pageSlug: string) => {
           ? error.message
           : "Failed to update component order";
       console.error("Order update error:", error);
+      // Only show toast on actual errors
       toast.error(errorMessage);
     },
   });

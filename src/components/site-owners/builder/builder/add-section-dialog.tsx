@@ -28,11 +28,8 @@ import {
   Navigation,
   Square,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NavbarData } from "@/types/owner-site/components/navbar";
-import { FooterData } from "@/types/owner-site/components/footer";
 
 interface AddSectionDialogProps {
   open: boolean;
@@ -606,6 +603,18 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "E-commerce with Social Links",
         image: "/images/site-owners/navbars/navbar7.png",
         description: "Includes Social media links in top bar",
+      },
+      {
+        id: "navbar-8",
+        name: "Navbar without Cart",
+        image: "/images/site-owners/navbars/navbar8.png",
+        description: "Includes search functionality",
+      },
+      {
+        id: "navbar-9",
+        name: "Minimal Navbar",
+        image: "/images/site-owners/navbars/navbar9.png",
+        description: "Clean and minimal navbar design",
       },
     ],
     // FOOTER TEMPLATES

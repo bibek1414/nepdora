@@ -1,4 +1,4 @@
-import { SiteConfigForm } from "@/components/site-owners/admin/site-config/site-config-form";
+import { SiteConfigForm } from "@/components/site-owners/admin/settings/site-config/site-config-form";
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 
@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 function SiteConfigPage() {
   return (
-    <div className="container mx-auto p-6">
+    <div className="mx-auto">
       <SiteConfigForm />
     </div>
   );
