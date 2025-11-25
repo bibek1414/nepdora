@@ -29,7 +29,15 @@ export function GoogleAuthRedirectHandler() {
   useEffect(() => {
     // Prevent multiple executions
     if (hasProcessed.current || isRedirecting) return;
-    if (status === "loading" || typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
+
+    const hasGoogleAuthCookies =
+      document.cookie.includes("google_auth_sub_domain=") ||
+      document.cookie.includes("google_auth_token=") ||
+      document.cookie.includes("google_auth_refresh_token=") ||
+      document.cookie.includes("google_auth_user=");
+
+    if (status === "loading" && !hasGoogleAuthCookies) return;
 
     const processRedirect = async () => {
       // Mark as processed immediately
@@ -71,6 +79,36 @@ export function GoogleAuthRedirectHandler() {
         currentPath: window.location.pathname,
       });
 
+      const getFirstLoginFromToken = (
+        token: string | undefined | null
+      ): boolean | null => {
+        if (!token) return null;
+        try {
+          const [, payload] = token.split(".");
+          if (!payload) return null;
+          const decoded = JSON.parse(
+            decodeURIComponent(
+              atob(payload)
+                .split("")
+                .map(char => {
+                  return (
+                    "%" + ("00" + char.charCodeAt(0).toString(16)).slice(-2)
+                  );
+                })
+                .join("")
+            )
+          );
+          if (typeof decoded?.first_login === "boolean")
+            return decoded.first_login;
+          if (typeof decoded?.firstLogin === "boolean")
+            return decoded.firstLogin;
+          return null;
+        } catch (error) {
+          console.warn("Failed to decode token for first_login:", error);
+          return null;
+        }
+      };
+
       // Parse user data
       let userData: GoogleAuthUser | null = null;
       if (userDataStr) {
@@ -90,9 +128,12 @@ export function GoogleAuthRedirectHandler() {
       const tokenToUse = authToken || session?.user?.accessToken;
       const refreshTokenToUse = refreshToken || session?.user?.refreshToken;
 
-      // Get first_login status from userData or session
+      // Get first_login status preferring token payload to avoid late redirects
       const firstLogin =
-        userData?.first_login ?? session?.user?.first_login ?? true;
+        getFirstLoginFromToken(tokenToUse) ??
+        userData?.first_login ??
+        session?.user?.first_login ??
+        true;
 
       console.log(
         "[GoogleAuthRedirectHandler] First login status:",
@@ -114,12 +155,9 @@ export function GoogleAuthRedirectHandler() {
         if (firstLogin) {
           // First login: always go to onboarding
           path = "/on-boarding";
-        } else if (isAdminRoute) {
-          // Regular login from admin route: stay on admin
-          path = "/admin";
         } else {
           // Regular login from non-admin route: go to root
-          path = "/";
+          path = "/admin";
         }
 
         console.log("[GoogleAuthRedirectHandler] Determined path:", path);

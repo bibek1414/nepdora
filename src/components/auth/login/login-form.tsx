@@ -205,7 +205,7 @@ export function LoginForm({
   const showSecurityMessage = attemptCount >= 3;
 
   const handleGoogleLogin = () => {
-    signIn("google", { callbackUrl: "/admin" });
+    signIn("google", { callbackUrl: "/auth/google/callback" });
   };
 
   return (
