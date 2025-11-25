@@ -21,6 +21,7 @@ import {
   Unplug,
   Facebook,
   LayoutPanelTop,
+  Settings,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -85,7 +86,7 @@ const navigationGroups = [
       {
         name: "Settings",
         href: "/admin/settings/delivery-charge",
-        icon: Edit3,
+        icon: Settings,
       },
     ],
   },

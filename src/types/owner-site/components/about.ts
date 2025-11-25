@@ -484,7 +484,7 @@ export const defaultAboutUs9Data: AboutUs9Data = {
   buttonLink: "#",
   media: {
     type: "image",
-    url: "/businessman-in-office.jpg",
+    url: "https://images.unsplash.com/photo-1542372147193-a7aca54189cd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     alt: "Businessman in office",
   },
 };

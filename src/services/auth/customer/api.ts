@@ -8,6 +8,7 @@ interface SignupData {
   last_name: string;
   phone?: string;
   address?: string;
+  website_type: "ecommerce" | "service";
 }
 
 interface LoginData {

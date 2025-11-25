@@ -52,4 +52,5 @@ export interface SignupResponse {
   username: string;
   store_name: string;
   role: Role;
+  website_type: "ecommerce" | "service";
 }

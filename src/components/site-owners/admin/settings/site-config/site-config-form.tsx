@@ -16,6 +16,7 @@ import {
   Save,
   Image as ImageIcon,
   Link as LinkIcon,
+  X,
 } from "lucide-react";
 import { ImageUploader } from "@/components/ui/image-uploader";
 
@@ -113,6 +114,32 @@ export const SiteConfigForm: React.FC = () => {
     if (!isCreateMode) {
       setModifiedFields(prev => new Set(prev).add("logo"));
     }
+  };
+
+  const handleCancel = () => {
+    // Reset form to original state
+    if (siteConfig) {
+      setFormData({
+        instagram_url: siteConfig.instagram_url || "",
+        facebook_url: siteConfig.facebook_url || "",
+        twitter_url: siteConfig.twitter_url || "",
+        linkedin_url: siteConfig.linkedin_url || "",
+        youtube_url: siteConfig.youtube_url || "",
+        tiktok_url: siteConfig.tiktok_url || "",
+      });
+
+      // Reset image files to existing URLs
+      setFaviconUrl(siteConfig.favicon || null);
+      setLogoUrl(siteConfig.logo || null);
+      setFaviconFile(null);
+      setLogoFile(null);
+    }
+
+    // Clear field errors and modified fields
+    setFieldErrors({});
+    setModifiedFields(new Set());
+
+    toast.info("Changes discarded");
   };
 
   const validateSocialUrls = (): { valid: boolean; errors: FieldErrors } => {
@@ -268,7 +295,9 @@ export const SiteConfigForm: React.FC = () => {
   const hasModifications = isCreateMode || modifiedFields.size > 0;
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
+    <div className="space-y-6 p-6 pb-24">
+      {" "}
+      {/* Added padding bottom for sticky button */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="mb-2 text-3xl font-bold">Site Configuration</h1>
@@ -279,7 +308,6 @@ export const SiteConfigForm: React.FC = () => {
           </p>
         </div>
       </div>
-
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Branding Section */}
         <Card>
@@ -290,64 +318,67 @@ export const SiteConfigForm: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Favicon */}
-            <div className="space-y-4">
-              <Label>Favicon (16x16 or 32x32 recommended)</Label>
+            {/* Favicon and Logo side by side */}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {/* Favicon */}
+              <div className="space-y-4">
+                <Label>Favicon (16x16 or 32x32 recommended)</Label>
 
-              {/* Show existing favicon if no new file is selected */}
-              {!faviconFile && faviconUrl && (
-                <div className="bg-muted/50 mb-2 rounded-lg border p-4">
-                  <p className="text-muted-foreground mb-2 text-sm">
-                    Current favicon:
-                  </p>
-                  <img
-                    src={faviconUrl}
-                    alt="Current favicon"
-                    className="h-8 w-8 rounded border bg-white object-contain"
-                  />
-                </div>
-              )}
+                {/* Show existing favicon if no new file is selected */}
+                {!faviconFile && faviconUrl && (
+                  <div className="bg-muted/50 mb-2 rounded-lg border p-4">
+                    <p className="text-muted-foreground mb-2 text-sm">
+                      Current favicon:
+                    </p>
+                    <img
+                      src={faviconUrl}
+                      alt="Current favicon"
+                      className="h-8 w-8 rounded border bg-white object-contain"
+                    />
+                  </div>
+                )}
 
-              <ImageUploader
-                value={faviconFile}
-                onChange={handleFaviconChange}
-                disabled={isSaving}
-                multiple={false}
-                maxFileSize={5 * 1024 * 1024}
-              />
-              <p className="text-muted-foreground text-sm">
-                The favicon appears in browser tabs and bookmarks
-              </p>
-            </div>
+                <ImageUploader
+                  value={faviconFile}
+                  onChange={handleFaviconChange}
+                  disabled={isSaving}
+                  multiple={false}
+                  maxFileSize={5 * 1024 * 1024}
+                />
+                <p className="text-muted-foreground text-sm">
+                  The favicon appears in browser tabs and bookmarks
+                </p>
+              </div>
 
-            {/* Logo */}
-            <div className="space-y-4">
-              <Label>Logo</Label>
+              {/* Logo */}
+              <div className="space-y-4">
+                <Label>Logo</Label>
 
-              {/* Show existing logo if no new file is selected */}
-              {!logoFile && logoUrl && (
-                <div className="bg-muted/50 mb-2 rounded-lg border p-4">
-                  <p className="text-muted-foreground mb-2 text-sm">
-                    Current logo:
-                  </p>
-                  <img
-                    src={logoUrl}
-                    alt="Current logo"
-                    className="max-h-20 rounded border bg-white object-contain"
-                  />
-                </div>
-              )}
+                {/* Show existing logo if no new file is selected */}
+                {!logoFile && logoUrl && (
+                  <div className="bg-muted/50 mb-2 rounded-lg border p-4">
+                    <p className="text-muted-foreground mb-2 text-sm">
+                      Current logo:
+                    </p>
+                    <img
+                      src={logoUrl}
+                      alt="Current logo"
+                      className="max-h-20 rounded border bg-white object-contain"
+                    />
+                  </div>
+                )}
 
-              <ImageUploader
-                value={logoFile}
-                onChange={handleLogoChange}
-                disabled={isSaving}
-                multiple={false}
-                maxFileSize={5 * 1024 * 1024}
-              />
-              <p className="text-muted-foreground text-sm">
-                Your site logo displayed in the header
-              </p>
+                <ImageUploader
+                  value={logoFile}
+                  onChange={handleLogoChange}
+                  disabled={isSaving}
+                  multiple={false}
+                  maxFileSize={5 * 1024 * 1024}
+                />
+                <p className="text-muted-foreground text-sm">
+                  Your site logo displayed in the header
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -467,31 +498,74 @@ export const SiteConfigForm: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Submit Button */}
-        <div className="flex justify-end gap-3">
-          <Button
-            type="submit"
-            disabled={isSaving || !hasModifications}
-            size="lg"
-          >
-            {isSaving ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <Save className="mr-2 h-4 w-4" />
-                {isCreateMode ? "Create Configuration" : "Save Changes"}
-              </>
-            )}
-          </Button>
-        </div>
+        {/* Sticky Save Button */}
+        {hasModifications && (
+          <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 transform">
+            <div className="bg-background/95 border-border rounded-lg border p-4 shadow-lg backdrop-blur-sm">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500"></div>
+                  <span className="text-sm font-medium">
+                    {modifiedFields.size} unsaved change
+                    {modifiedFields.size !== 1 ? "s" : ""}
+                  </span>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleCancel}
+                    disabled={isSaving}
+                    size="lg"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={isSaving}
+                    size="lg"
+                    className="min-w-[140px]"
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Changes
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
-        {!isCreateMode && hasModifications && (
-          <p className="text-muted-foreground text-right text-sm">
-            {modifiedFields.size} field(s) modified
-          </p>
+        {/* Regular Submit Button (hidden when sticky is shown) */}
+        {!hasModifications && (
+          <div className="flex justify-end gap-3">
+            <Button
+              type="submit"
+              disabled={isSaving || !hasModifications}
+              size="lg"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  {isCreateMode ? "Create Configuration" : "Save Changes"}
+                </>
+              )}
+            </Button>
+          </div>
         )}
       </form>
     </div>

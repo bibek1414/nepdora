@@ -247,7 +247,7 @@ export const AboutUsTemplate9: React.FC<AboutUsTemplate9Props> = ({
                       type="button"
                       onClick={triggerMediaUpload}
                       disabled={isUploading}
-                      className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-semibold text-gray-700 shadow-md transition hover:shadow-lg disabled:opacity-60"
+                      className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 cursor-pointer items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-semibold text-gray-700 shadow-md transition hover:shadow-lg disabled:opacity-60"
                     >
                       {isUploading ? (
                         <>

@@ -6,8 +6,6 @@ import {
   Phone,
   MapPin,
   Heart,
-  Edit,
-  Trash2,
   Facebook,
   Twitter,
   Youtube,

@@ -315,7 +315,11 @@ export const RecentOrders = () => {
                         {getPaymentTypeBadge(order.payment_type)}
                       </TableCell>
                       <TableCell className="font-medium">
-                        Rs.{parseFloat(order.total_amount).toFixed(2)}
+                        Rs.
+                        {Number(order.total_amount).toLocaleString("en-IN", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
                       </TableCell>
                       <TableCell>
                         <div ref={dropdownRef}>

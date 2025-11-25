@@ -166,7 +166,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
           {/* Hero Image */}
           {data.showImage && data.imageUrl && (
             <div className="mb-4 w-full sm:mb-6">
-              <div className="mx-auto h-[350px] max-w-full overflow-hidden rounded-lg sm:max-w-md">
+              <div className="mx-auto h-[300px] max-w-full overflow-hidden rounded-lg sm:max-w-md">
                 <EditableImage
                   src={getImageUrl()}
                   alt={data.imageAlt || "Modern furniture piece"}

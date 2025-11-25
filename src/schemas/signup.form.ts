@@ -1,4 +1,7 @@
+// schemas/signup.form.ts
 import * as z from "zod";
+
+export const websiteTypeEnum = z.enum(["ecommerce", "service"]);
 
 export const signupSchema = z
   .object({
@@ -36,6 +39,7 @@ export const signupSchema = z
         message:
           "Store name can only contain letters, numbers, spaces, hyphens, and underscores.",
       }),
+    website_type: websiteTypeEnum,
   })
   .refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",

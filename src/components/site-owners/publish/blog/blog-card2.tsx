@@ -25,7 +25,6 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
   showTags = true,
   showReadTime = true,
   onClick,
-  variant = "standard",
 }) => {
   const blogImage =
     blog.thumbnail_image ||

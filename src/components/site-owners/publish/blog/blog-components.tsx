@@ -57,7 +57,6 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     showDate = true,
     showTags = true,
     showReadTime = true,
-    itemsPerRow = 0,
   } = component.data || {};
 
   // Delete and update mutation hooks

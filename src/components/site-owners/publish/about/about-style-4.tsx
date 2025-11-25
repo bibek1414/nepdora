@@ -17,22 +17,7 @@ export const AboutUsTemplate4: React.FC<AboutUsTemplate4Props> = ({
   onUpdate,
 }) => {
   const [data, setData] = useState(aboutUsData);
-  const { data: themeResponse } = useThemeQuery();
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
+
   // Handle text field updates
   const handleTextUpdate = (field: keyof AboutUs4Data) => (value: string) => {
     const updatedData = { ...data, [field]: value };
@@ -95,11 +80,7 @@ export const AboutUsTemplate4: React.FC<AboutUsTemplate4Props> = ({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="p"
-              style={{
-                color: theme.colors.secondary,
-                fontFamily: theme.fonts.heading,
-              }}
-              className="text-base leading-7 font-semibold text-blue-600"
+              className="text-base leading-7 font-semibold"
               isEditable={isEditable}
               placeholder="Enter section title..."
             />
@@ -108,10 +89,6 @@ export const AboutUsTemplate4: React.FC<AboutUsTemplate4Props> = ({
               value={data.subtitle}
               onChange={handleTextUpdate("subtitle")}
               as="h2"
-              style={{
-                color: theme.colors.primary,
-                fontFamily: theme.fonts.heading,
-              }}
               className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
               isEditable={isEditable}
               placeholder="Enter main heading..."
