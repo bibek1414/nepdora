@@ -19,7 +19,8 @@ export function GoogleAuthRedirectHandler() {
       for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
         while (c.charAt(0) === " ") c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        if (c.indexOf(nameEQ) === 0)
+          return c.substring(nameEQ.length, c.length);
       }
       return null;
     };
@@ -112,11 +113,13 @@ export function GoogleAuthRedirectHandler() {
         )}&refresh_token=${encodeURIComponent(refreshTokenToUse)}`;
       }
 
-      console.log("[GoogleAuthRedirectHandler] Redirecting using session:", tenantUrl);
+      console.log(
+        "[GoogleAuthRedirectHandler] Redirecting using session:",
+        tenantUrl
+      );
       window.location.href = tenantUrl;
     }
   }, [session, status]);
 
   return null; // This component doesn't render anything
 }
-
