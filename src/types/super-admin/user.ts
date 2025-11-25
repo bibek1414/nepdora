@@ -11,6 +11,7 @@ export interface User {
   email: string;
   role: string;
   stores: Store[];
+  schema_name: string;
 }
 
 export interface PaginatedResponse<T> {

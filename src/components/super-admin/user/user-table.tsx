@@ -1,5 +1,5 @@
 import { User } from "@/types/super-admin/user";
-import { Trash2, Mail, Store } from "lucide-react";
+import { Trash2, Mail, MapPin, Phone } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -24,19 +24,27 @@ export default function UserTable({
 }: UserTableProps) {
   if (isLoading) {
     return (
-      <div className="rounded-lg bg-white shadow">
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>User</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Stores</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+            <TableRow className="border-b border-gray-200 bg-gray-50">
+              <TableHead className="text-left font-semibold text-gray-700">
+                User
+              </TableHead>
+              <TableHead className="text-left font-semibold text-gray-700">
+                Role
+              </TableHead>
+              <TableHead className="text-left font-semibold text-gray-700">
+                Associated Stores
+              </TableHead>
+              <TableHead className="text-left font-semibold text-gray-700">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell colSpan={4} className="h-24 text-center">
+              <TableCell colSpan={4} className="h-32 text-center text-gray-400">
                 Loading users...
               </TableCell>
             </TableRow>
@@ -47,61 +55,115 @@ export default function UserTable({
   }
 
   return (
-    <div className="rounded-lg bg-white shadow">
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>User</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Stores</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+          <TableRow className="border-b border-gray-200 bg-gray-50">
+            <TableHead className="text-left font-semibold text-gray-700">
+              User
+            </TableHead>
+            <TableHead className="text-left font-semibold text-gray-700">
+              Role
+            </TableHead>
+            <TableHead className="text-left font-semibold text-gray-700">
+              Associated Stores
+            </TableHead>
+            <TableHead className="text-left font-semibold text-gray-700">
+              Domains
+            </TableHead>
+            <TableHead className="text-left font-semibold text-gray-700">
+              Actions
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {users.length > 0 ? (
             users.map(user => (
-              <TableRow key={user.id} className="hover:bg-gray-50">
-                <TableCell>
+              <TableRow
+                key={user.id}
+                className="border-b border-gray-100 transition-colors hover:bg-gray-50/50"
+              >
+                <TableCell className="py-4 text-left">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
-                      <Mail size={18} className="text-blue-600" />
-                    </div>
                     <div>
-                      <p className="font-medium text-gray-900">{user.email}</p>
-                      <p className="text-sm text-gray-500">ID: {user.id}</p>
+                      <p className="px-2 font-medium text-gray-900">
+                        {user.email}
+                      </p>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="py-4 text-left">
                   <Badge
                     variant={user.role === "owner" ? "default" : "secondary"}
-                    className="capitalize"
+                    className="font-medium capitalize"
                   >
                     {user.role}
                   </Badge>
                 </TableCell>
-                <TableCell>
-                  <div className="space-y-1">
-                    {user.stores.map(store => (
-                      <div
-                        key={store.id}
-                        className="flex items-center gap-2 text-sm"
-                      >
-                        <Store size={14} className="text-gray-400" />
-                        <span className="text-gray-700">
-                          {store.store_name}
-                        </span>
-                        <Badge variant="outline" className="text-xs capitalize">
-                          {store.role}
-                        </Badge>
-                      </div>
-                    ))}
-                    {user.stores.length === 0 && (
-                      <span className="text-sm text-gray-500">No stores</span>
-                    )}
-                  </div>
+                <TableCell className="py-4 text-left">
+                  {user.stores.length > 0 ? (
+                    <div className="space-y-2">
+                      {user.stores.map(store => (
+                        <div
+                          key={store.id}
+                          className="flex flex-col gap-1 rounded-lg p-2"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-900">
+                              {store.store_name}
+                            </span>
+                          </div>
+                          {(store.store_address || store.store_number) && (
+                            <div className="flex flex-col gap-0.5 text-xs text-gray-500">
+                              {store.store_address && (
+                                <div className="flex items-center gap-1.5">
+                                  <MapPin size={12} className="text-gray-400" />
+                                  <span>{store.store_address}</span>
+                                </div>
+                              )}
+                              {store.store_number && (
+                                <div className="flex items-center gap-1.5">
+                                  <Phone size={12} className="text-gray-400" />
+                                  <span>{store.store_number}</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-sm text-gray-400 italic">
+                      No stores assigned
+                    </span>
+                  )}
                 </TableCell>
-                <TableCell className="text-right">
+                <TableCell className="py-4 text-left">
+                  {user.stores.length > 0 ? (
+                    <div className="space-y-2">
+                      {user.stores.map(store => (
+                        <div
+                          key={store.id}
+                          className="flex flex-col gap-1 rounded-lg p-2"
+                        >
+                          <a
+                            href={`https://${user.schema_name}.nepdora.com`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-blue-600 hover:underline"
+                          >
+                            {user.schema_name}.nepdora.com
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-sm text-gray-400 italic">
+                      No domains available
+                    </span>
+                  )}
+                </TableCell>
+                <TableCell className="py-4 text-left">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -109,7 +171,7 @@ export default function UserTable({
                       e.stopPropagation();
                       onDelete(user.id);
                     }}
-                    className="h-8 w-8 p-0 text-red-600 hover:bg-red-100 hover:text-red-700"
+                    className="h-9 w-9 p-0 text-red-600 transition-colors hover:bg-red-50 hover:text-red-700"
                     title="Delete User"
                   >
                     <Trash2 size={16} />
@@ -119,8 +181,13 @@ export default function UserTable({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={4} className="h-24 text-center text-gray-500">
-                No users available
+              <TableCell colSpan={5} className="h-32 text-center">
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <Mail size={40} className="text-gray-300" />
+                  <p className="font-medium text-gray-400">
+                    No users available
+                  </p>
+                </div>
               </TableCell>
             </TableRow>
           )}
