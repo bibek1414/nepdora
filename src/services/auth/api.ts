@@ -9,6 +9,7 @@ interface SignupData {
   password: string;
   phone: string;
   store_name: string;
+  phone_number?: string;
 }
 
 interface CreateTemplateAccountData {

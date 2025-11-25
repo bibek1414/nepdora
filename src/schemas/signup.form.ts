@@ -1,17 +1,30 @@
 import * as z from "zod";
 
-export const signupSchema = z
+export const storeNameSchema = z
+  .string()
+  .min(1, { message: "Store name is required." })
+  .min(3, { message: "Store name must be at least 3 characters long." })
+  .max(50, { message: "Store name cannot exceed 50 characters." })
+  .regex(/^[a-zA-Z0-9\s_-]+$/, {
+    message:
+      "Store name can only contain letters, numbers, spaces, hyphens, and underscores.",
+  });
+
+export const phoneNumberSchema = z
+  .string()
+  .min(1, { message: "Phone number is required." })
+  .regex(/^\d+$/, { message: "Phone number should contain only numbers." })
+  .min(10, { message: "Phone number must be at least 10 digits." })
+  .max(15, { message: "Phone number cannot exceed 15 digits." });
+
+export const baseSignupSchema = z
   .object({
     email: z
       .string()
       .min(1, { message: "Email is required." })
       .email({ message: "Please enter a valid email address." }),
-    phone: z
-      .string()
-      .min(1, { message: "Phone number is required." })
-      .regex(/^\d+$/, { message: "Phone number should contain only numbers." })
-      .min(10, { message: "Phone number must be at least 10 digits." })
-      .max(15, { message: "Phone number cannot exceed 15 digits." }),
+    phone: phoneNumberSchema,
+    phone_number: phoneNumberSchema.optional(),
     password: z
       .string()
       .min(8, { message: "Password must be at least 8 characters long." })
@@ -27,19 +40,13 @@ export const signupSchema = z
     confirmPassword: z
       .string()
       .min(1, { message: "Please confirm your password." }),
-    store_name: z
-      .string()
-      .min(1, { message: "Store name is required." })
-      .min(3, { message: "Store name must be at least 3 characters long." })
-      .max(50, { message: "Store name cannot exceed 50 characters." })
-      .regex(/^[a-zA-Z0-9\s_-]+$/, {
-        message:
-          "Store name can only contain letters, numbers, spaces, hyphens, and underscores.",
-      }),
+    store_name: storeNameSchema,
   })
   .refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
+
+export const signupSchema = baseSignupSchema;
 
 export type SignupFormValues = z.infer<typeof signupSchema>;

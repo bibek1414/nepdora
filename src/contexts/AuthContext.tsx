@@ -20,6 +20,7 @@ interface SignupData {
   password: string;
   phone: string;
   store_name: string;
+  phone_number?: string;
 }
 
 interface AuthContextType {
@@ -398,6 +399,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         password: data.password,
         store_name: data.store_name,
         phone: data.phone,
+        phone_number: data.phone_number ?? data.phone,
       };
 
       const response = await signupUser(signupData);
