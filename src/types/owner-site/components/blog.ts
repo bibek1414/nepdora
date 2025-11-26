@@ -1,7 +1,7 @@
 export interface BlogData {
   component_id?: string;
   component_type: "blog";
-  style: "blog-1" | "blog-2" | "blog-3" | "blog-4";
+  style: "blog-1" | "blog-2" | "blog-3" | "blog-4" | "blog-5";
   title: string;
   subtitle?: string;
   page_size: number;

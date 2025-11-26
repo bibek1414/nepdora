@@ -9,6 +9,7 @@ import { BlogCard1 } from "./blog-card1";
 import { BlogCard2 } from "./blog-card2";
 import { BlogCard3 } from "./blog-card3";
 import { BlogCard4 } from "./blog-card4";
+import { BlogCard5 } from "./blog-card5";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -207,6 +208,8 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
         return <BlogCard3 {...cardProps} />;
       case "blog-4":
         return <BlogCard4 {...cardProps} />;
+      case "blog-5":
+        return <BlogCard5 {...cardProps} />;
       case "blog-1":
       default:
         return <BlogCard1 {...cardProps} />;
