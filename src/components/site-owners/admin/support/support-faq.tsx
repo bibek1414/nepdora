@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Mail, MessageCircle, Phone, Plus, Minus } from "lucide-react";
 import {
   Accordion,
@@ -15,7 +15,7 @@ import {
 } from "@/hooks/super-admin/use-faq-category";
 
 const SupportFAQ: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   // Fetch FAQs and Categories from API
   const {
@@ -26,27 +26,26 @@ const SupportFAQ: React.FC = () => {
   const { data: categoriesData, isLoading: categoriesLoading } =
     useFAQCategories();
 
+  // Set default category to first available category
+  useEffect(() => {
+    if (categoriesData && categoriesData.length > 0 && !selectedCategory) {
+      setSelectedCategory(categoriesData[0].id.toString());
+    }
+  }, [categoriesData, selectedCategory]);
+
   // Process categories for sidebar
   const categories = useMemo(() => {
-    const allCategory = { id: "all", name: "All", icon: "📚" };
+    if (!categoriesData) return [];
 
-    if (!categoriesData) return [allCategory];
-
-    const apiCategories = categoriesData.map(cat => ({
+    return categoriesData.map(cat => ({
       id: cat.id.toString(),
       name: cat.name,
     }));
-
-    return [allCategory, ...apiCategories];
   }, [categoriesData]);
 
   // Filter FAQs based on selected category
   const filteredFAQs = useMemo(() => {
-    if (!faqsData) return [];
-
-    if (selectedCategory === "all") {
-      return faqsData;
-    }
+    if (!faqsData || !selectedCategory) return [];
 
     return faqsData.filter(
       faq => faq.category?.id.toString() === selectedCategory
@@ -56,7 +55,7 @@ const SupportFAQ: React.FC = () => {
   // Loading state
   if (faqsLoading || categoriesLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="flex items-center justify-center bg-white">
         <div className="text-center">
           <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
           <p className="mt-4 text-gray-600">Loading FAQs...</p>
@@ -68,7 +67,7 @@ const SupportFAQ: React.FC = () => {
   // Error state
   if (faqsError) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="flex items-center justify-center bg-white">
         <div className="text-center">
           <p className="text-red-600">
             Failed to load FAQs. Please try again later.
@@ -79,7 +78,7 @@ const SupportFAQ: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid gap-8 lg:grid-cols-4">
           {/* Sidebar */}
@@ -91,9 +90,9 @@ const SupportFAQ: React.FC = () => {
                     <button
                       key={category.id}
                       onClick={() => setSelectedCategory(category.id)}
-                      className={`relative flex w-full cursor-pointer items-center gap-3 py-1 pr-6 pl-4 text-left transition-all ${
+                      className={`relative flex w-full cursor-pointer items-center gap-3 py-2 pr-6 pl-4 text-left transition-all ${
                         selectedCategory === category.id
-                          ? "bg-primary font-medium text-white capitalize"
+                          ? "bg-primary rounded-lg font-medium text-white capitalize"
                           : "text-gray-500 capitalize hover:text-gray-900"
                       }`}
                     >
@@ -132,9 +131,9 @@ const SupportFAQ: React.FC = () => {
                     className="w-full justify-start gap-3"
                     asChild
                   >
-                    <a href="tel:9860425440">
+                    <a href="tel:9866316114">
                       <Phone className="text-primary h-5 w-5" />
-                      <span className="text-primary">9860425440</span>
+                      <span className="text-primary">9866316114</span>
                     </a>
                   </Button>
                 </div>
