@@ -173,6 +173,32 @@ export interface AboutUs11Data {
   ctaLink: string;
 }
 
+export interface AboutUs13Tab {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl?: string;
+  imageAlt?: string;
+}
+
+export interface AboutUs13Data {
+  template: "about-13";
+  heading: string;
+  description: string;
+  highlightValue: string;
+  highlightLabel: string;
+  imageUrl: string;
+  imageAlt: string;
+  ctaText: string;
+  ctaLink: string;
+  tabs: AboutUs13Tab[];
+  tabDescription: string;
+  cardTitle: string;
+  cardDescription: string;
+  buttonText: string;
+  buttonLink: string;
+}
+
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
@@ -184,7 +210,8 @@ export type AboutUsData =
   | AboutUs7Data
   | AboutUs8Data
   | AboutUs9Data
-  | AboutUs11Data;
+  | AboutUs11Data
+  | AboutUs13Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -235,7 +262,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs7Data>
     | Partial<AboutUs8Data>
     | Partial<AboutUs9Data>
-    | Partial<AboutUs11Data>;
+    | Partial<AboutUs11Data>
+    | Partial<AboutUs13Data>;
   order?: number;
 }
 
@@ -567,4 +595,51 @@ export const defaultAboutUs11Data: AboutUs11Data = {
   ],
   ctaText: "Book a Free Call",
   ctaLink: "#",
+};
+
+export const defaultAboutUs13Data: AboutUs13Data = {
+  template: "about-13",
+  heading:
+    'The Value Behind Our <span class="font-serif italic font-normal">Partnership</span>',
+  description:
+    "At Optimo, Our partnership goes beyond delivering solutions—it's about building trust, aligning with your goals. We go beyond consulting to become your strategic partner—delivering tailored solutions, expert insight, and measurable results.",
+  highlightValue: "150+",
+  highlightLabel: "Successful Projects Delivered",
+  imageUrl: "https://picsum.photos/seed/creative/800/800",
+  imageAlt: "Creative Partnership",
+  ctaText: "Get In Touch",
+  ctaLink: "#",
+  tabs: [
+    {
+      id: "tab-1",
+      title: "Deep Collaboration",
+      description:
+        "We work as an extension of your team—immersing ourselves in your goals, challenges, and vision to ensure aligned outcomes.",
+      imageUrl: "https://picsum.photos/seed/creative/800/800",
+      imageAlt: "Deep Collaboration",
+    },
+    {
+      id: "tab-2",
+      title: "Expertise",
+      description:
+        "Our multidisciplinary team brings decades of experience across strategy, design, and technology.",
+      imageUrl: "https://picsum.photos/seed/expertise/800/800",
+      imageAlt: "Expertise discussion",
+    },
+    {
+      id: "tab-3",
+      title: "Tailored Solutions",
+      description:
+        "Every engagement is customized to deliver the right mix of insights, execution, and long-term support.",
+      imageUrl: "https://picsum.photos/seed/solutions/800/800",
+      imageAlt: "Tailored solutions workshop",
+    },
+  ],
+  tabDescription:
+    "We believe great results come from working closely together. From discovery to delivery, we stay synced with your objectives.",
+  cardTitle: "What to Know What's Possible",
+  cardDescription:
+    "We help teams uncover opportunities and execute bold ideas with confidence.",
+  buttonText: "Get In Touch",
+  buttonLink: "#",
 };

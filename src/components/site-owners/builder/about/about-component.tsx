@@ -25,6 +25,7 @@ import {
   AboutUs8Data,
   AboutUs9Data,
   AboutUs11Data,
+  AboutUs13Data,
   UpdateAboutUsRequest,
 } from "@/types/owner-site/components/about";
 import { AboutUsTemplate1 } from "./about-style-1";
@@ -42,6 +43,7 @@ import { AboutUsTemplate7 } from "./about-style-7";
 import { AboutUsTemplate8 } from "./about-style-8";
 import { AboutUsTemplate9 } from "./about-style-9";
 import { AboutUsTemplate11 } from "./about-style-11";
+import { AboutUsTemplate13 } from "./about-style-13";
 
 interface AboutUsComponentProps {
   component: AboutUsComponentData;
@@ -173,6 +175,14 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
         return (
           <AboutUsTemplate11
             aboutUsData={component.data as AboutUs11Data}
+            isEditable={isEditable}
+            onUpdate={handleUpdate}
+          />
+        );
+      case "about-13":
+        return (
+          <AboutUsTemplate13
+            aboutUsData={component.data as AboutUs13Data}
             isEditable={isEditable}
             onUpdate={handleUpdate}
           />
