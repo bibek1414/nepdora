@@ -105,7 +105,7 @@ export function AboutUsTemplate10({
 
   return (
     <div
-      className="px-4 sm:px-6 lg:px-12 py-16"
+      className="px-4 py-16 sm:px-6 lg:px-12"
       style={{
         backgroundColor: theme.colors.background,
         color: theme.colors.text,
@@ -137,7 +137,7 @@ export function AboutUsTemplate10({
 
           {/* Badge */}
           <div
-            className="absolute top-8 right-8 flex h-32 w-32 cursor-default flex-col items-center justify-center rounded-2xl p-6 text-center shadow-lg transition-transform hover:rotate-0 sm:transform sm:rotate-3"
+            className="absolute top-8 right-8 flex h-32 w-32 cursor-default flex-col items-center justify-center rounded-2xl p-6 text-center shadow-lg transition-transform hover:rotate-0 sm:rotate-3 sm:transform"
             style={{
               backgroundColor: theme.colors.primary,
               color: theme.colors.primaryForeground,
@@ -147,7 +147,7 @@ export function AboutUsTemplate10({
               value={data.badgeCount}
               onChange={handleTextUpdate("badgeCount")}
               as="span"
-              className="block text-4xl font-extrabold leading-none"
+              className="block text-4xl leading-none font-extrabold"
               isEditable={isEditable}
               placeholder="25"
             />
@@ -155,7 +155,7 @@ export function AboutUsTemplate10({
               value={data.badgeText}
               onChange={handleTextUpdate("badgeText")}
               as="span"
-              className="mt-1 text-xs font-medium leading-tight"
+              className="mt-1 text-xs leading-tight font-medium"
               isEditable={isEditable}
               placeholder="Years Of experience"
             />
@@ -180,7 +180,7 @@ export function AboutUsTemplate10({
                   fill="transparent"
                 />
                 <text
-                  className="text-[10px] font-bold uppercase tracking-widest"
+                  className="text-[10px] font-bold tracking-widest uppercase"
                   style={{ fill: theme.colors.secondary }}
                 >
                   <textPath href="#curve">
@@ -220,7 +220,7 @@ export function AboutUsTemplate10({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h2"
-            className="text-4xl font-bold leading-tight lg:text-5xl"
+            className="text-4xl leading-tight font-bold lg:text-5xl"
             style={{
               color: theme.colors.secondary,
               fontFamily: theme.fonts.heading,
@@ -243,7 +243,7 @@ export function AboutUsTemplate10({
             {data.features.map((feature, index) => (
               <div
                 key={feature.id}
-                className="hover:shadow-md rounded-2xl p-6 transition-all"
+                className="rounded-2xl p-6 transition-all hover:shadow-md"
                 style={{
                   backgroundColor: hexToRgba(theme.colors.primary, 0.05),
                 }}
@@ -340,11 +340,11 @@ export function AboutUsTemplate10({
                 color: theme.colors.secondary,
                 borderColor: theme.colors.secondary,
               }}
-              onMouseEnter={(e) => {
+              onMouseEnter={e => {
                 e.currentTarget.style.backgroundColor = theme.colors.secondary;
                 e.currentTarget.style.color = theme.colors.secondaryForeground;
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={e => {
                 e.currentTarget.style.backgroundColor = "transparent";
                 e.currentTarget.style.color = theme.colors.secondary;
               }}
