@@ -117,11 +117,11 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
     if (isEditable || disableClicks) return "#";
 
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
+      return `/publish/${siteUser}`;
     }
 
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
+    return `/publish/${siteUser}/${cleanHref}`;
   };
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
