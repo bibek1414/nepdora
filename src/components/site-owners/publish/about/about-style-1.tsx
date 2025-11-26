@@ -74,12 +74,11 @@ export function AboutUsTemplate1({
             {/* Subtitle with accent */}
             {data.subtitle && (
               <div className="flex items-center gap-3">
-                <div className="bg-primary h-0.5 w-8" />
                 <EditableText
                   value={data.subtitle}
                   onChange={handleTextUpdate("subtitle")}
                   as="p"
-                  className="text-primary text-sm font-semibold tracking-wider uppercase"
+                  className="text-sm font-semibold tracking-wider uppercase"
                   isEditable={isEditable}
                   placeholder="Enter subtitle..."
                 />
@@ -172,9 +171,6 @@ export function AboutUsTemplate1({
                 }}
               />
             </div>
-
-            {/* Decorative element */}
-            <div className="bg-primary/5 absolute -right-4 -bottom-4 -z-10 h-full w-full rounded-2xl" />
           </div>
         </div>
       </div>

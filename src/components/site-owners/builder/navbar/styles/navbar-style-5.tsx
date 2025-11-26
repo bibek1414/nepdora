@@ -203,9 +203,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                               href={link.href}
                               onClick={e => e.preventDefault()}
                               className="mt-6 flex items-center text-sm font-medium hover:text-gray-800"
-                              style={{
-                                color: theme.colors.text,
-                              }}
                             >
                               {link.text}
                             </a>
@@ -219,9 +216,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                                 ? "cursor-default opacity-60"
                                 : "cursor-pointer"
                             }`}
-                            style={{
-                              color: theme.colors.text,
-                            }}
                           >
                             {link.text}
                           </a>
@@ -244,9 +238,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                             href={button.href}
                             onClick={e => e.preventDefault()}
                             className="cursor-pointer text-sm font-medium hover:text-gray-800"
-                            style={{
-                              color: theme.colors.text,
-                            }}
                           >
                             {button.text}
                           </a>
@@ -261,9 +252,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                               ? "cursor-default opacity-60"
                               : "cursor-pointer"
                           }`}
-                          style={{
-                            color: theme.colors.text,
-                          }}
                         >
                           {button.text}
                         </a>

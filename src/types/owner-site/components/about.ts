@@ -149,6 +149,26 @@ export interface AboutUs9Data {
   };
 }
 
+export interface AboutUs10Data {
+  template: "about-10";
+  badgeCount: string;
+  badgeText: string;
+  sectionTag: string;
+  title: string;
+  description: string;
+  features: Array<{
+    id: string;
+    title: string;
+    items: string[];
+  }>;
+  buttonText: string;
+  supportText: string;
+  supportNumber: string;
+  imageUrl: string;
+  imageAlt: string;
+  circularStampText: string;
+}
+
 export interface AboutUs11Stat {
   id: string;
   icon: string;
@@ -171,6 +191,19 @@ export interface AboutUs11Data {
   stats: AboutUs11Stat[];
   ctaText: string;
   ctaLink: string;
+}
+
+export interface AboutUs12Data {
+  template: "about-12";
+  sectionTag: string;
+  title: string;
+  teamMembers: Array<{
+    id: string;
+    name: string;
+    role: string;
+  }>;
+  imageUrl: string;
+  imageAlt: string;
 }
 
 export interface AboutUs13Tab {
@@ -210,7 +243,9 @@ export type AboutUsData =
   | AboutUs7Data
   | AboutUs8Data
   | AboutUs9Data
+  | AboutUs10Data
   | AboutUs11Data
+  | AboutUs12Data
   | AboutUs13Data;
 
 export interface AboutUs4Data {
@@ -262,7 +297,9 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs7Data>
     | Partial<AboutUs8Data>
     | Partial<AboutUs9Data>
+    | Partial<AboutUs10Data>
     | Partial<AboutUs11Data>
+    | Partial<AboutUs12Data>
     | Partial<AboutUs13Data>;
   order?: number;
 }
@@ -543,6 +580,35 @@ export const defaultAboutUs9Data: AboutUs9Data = {
   },
 };
 
+export const defaultAboutUs10Data: AboutUs10Data = {
+  template: "about-10",
+  badgeCount: "25",
+  badgeText: "Years Of experience",
+  sectionTag: "WHY CHOOSE US",
+  title: "Where Wanderlust Meets Dream Destinations",
+  description:
+    "Et purus duis sollicitudin dignissim habitant. Egestas nulla quis venenatis cras sed eu massa Et purus duis sollicitudin dignissim habitant. Egestas nulla quis venenatis cras sed eu massa Et purus duis sollicitudin dignissim habitant. Egestas nulla",
+  features: [
+    {
+      id: "1",
+      title: "Passport Plus",
+      items: ["Beyond Border Immigration", "Worldwide Visa Assistance"],
+    },
+    {
+      id: "2",
+      title: "Global Entry",
+      items: ["GlobeTrot Visa Services", "Infinity Visa Solutions"],
+    },
+  ],
+  buttonText: "Read More",
+  supportText: "Need help?",
+  supportNumber: "(808) 555-0111",
+  imageUrl:
+    "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=2874&auto=format&fit=crop",
+  imageAlt: "Traveler with backpack",
+  circularStampText: "World Wide Access • Immigration Agency •",
+};
+
 export const defaultAboutUs11Data: AboutUs11Data = {
   template: "about-11",
   headline:
@@ -595,6 +661,20 @@ export const defaultAboutUs11Data: AboutUs11Data = {
   ],
   ctaText: "Book a Free Call",
   ctaLink: "#",
+};
+
+export const defaultAboutUs12Data: AboutUs12Data = {
+  template: "about-12",
+  sectionTag: "OUR COACHING",
+  title: "Exploring the Unknown Voyages of Wonder",
+  teamMembers: [
+    { id: "1", name: "Courtney Henry", role: "Medical Assistant" },
+    { id: "2", name: "Courtney Henry", role: "Marketing Coordinator" },
+    { id: "3", name: "Albert Flores", role: "Web Designer" },
+  ],
+  imageUrl:
+    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2776&auto=format&fit=crop",
+  imageAlt: "Professional Team Member",
 };
 
 export const defaultAboutUs13Data: AboutUs13Data = {

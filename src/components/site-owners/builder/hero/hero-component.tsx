@@ -32,7 +32,7 @@ import { HeroTemplate8 } from "./hero-style-8";
 import { HeroTemplate9 } from "./hero-style-9";
 import { HeroTemplate10 } from "./hero-style-10";
 import { HeroTemplate11 } from "./hero-style-11";
-import { HeroTemplate13 } from "./hero-style-13";
+import { HeroTemplate12 } from "./hero-style-12";
 
 interface HeroComponentProps {
   component: HeroComponentData;
@@ -143,8 +143,8 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
         return <HeroTemplate10 {...props} />;
       case "hero-11":
         return <HeroTemplate11 {...props} />;
-      case "hero-13":
-        return <HeroTemplate13 {...props} />;
+      case "hero-12":
+        return <HeroTemplate12 {...props} />;
       default:
         return (
           <div className="flex min-h-[60vh] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-20">

@@ -1,7 +1,13 @@
 export interface ContactData {
   component_id?: string;
   component_type: "contact";
-  style: "contact-1" | "contact-2" | "contact-3" | "contact-4" | "contact-5";
+  style:
+    | "contact-1"
+    | "contact-2"
+    | "contact-3"
+    | "contact-4"
+    | "contact-5"
+    | "contact-6";
   title: string;
   subtitle?: string;
   description?: string;
@@ -20,6 +26,10 @@ export interface ContactData {
   };
   map_embed_url?: string;
   order?: number;
+  image_url?: string;
+  image_alt?: string;
+  cta_title?: string;
+  cta_subtitle?: string;
 }
 
 export interface ContactComponentData {
@@ -108,4 +118,32 @@ export const defaultContact5Data: ContactData = {
     phone: "+00 123 321 456\n+00 123 456 678",
     address: "Write Your Address here",
   },
+};
+
+export const defaultContact6Data: ContactData = {
+  component_type: "contact",
+  style: "contact-6",
+  title: "Let Your Wanderlust Guide You",
+  subtitle: "Contact Information",
+  description:
+    "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standard dummy text for decades. Reach out and let's make your next move seamless.",
+  showPhone: true,
+  showEmail: true,
+  required_fields: {
+    name: true,
+    email: true,
+    phone: false,
+    message: true,
+  },
+  contact_info: {
+    email: "hello@yourcompany.com",
+    phone: "+1 (555) 123-4567",
+    address: "123 Business St, City, State 12345",
+  },
+  image_url:
+    "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2940&auto=format&fit=crop",
+  image_alt: "Traveler smiling",
+  cta_title: "Let's Do Great!",
+  cta_subtitle:
+    "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standard dummy.",
 };

@@ -52,6 +52,7 @@ export interface HeroData {
     | "hero-9"
     | "hero-10"
     | "hero-11"
+    | "hero-12"
     | "hero-13";
 
   // Hero 3 specific fields
@@ -76,6 +77,7 @@ export interface HeroData {
   mobileImageUrl?: string;
   mobileImageAlt?: string;
 }
+
 export interface HeroFeature {
   id: string;
   text: string;
@@ -87,6 +89,7 @@ export interface HeroTrustIndicators {
   features: string[];
   customerText: string;
 }
+
 // Updated interface to match API response structure
 export interface HeroComponentData {
   id: string | number;
@@ -97,6 +100,7 @@ export interface HeroComponentData {
   order: number;
   page?: number;
 }
+
 export interface HeroCollection {
   id: string;
   title: string;
@@ -107,6 +111,7 @@ export interface HeroCollection {
   buttonText: string;
   buttonHref: string;
 }
+
 // API response interface that matches your actual data structure
 export interface ApiHeroComponentResponse {
   id: number;
@@ -206,14 +211,13 @@ export const defaultHeroData: HeroData = {
       url: "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 3",
     },
-
     {
       id: "7",
       url: "https://images.unsplash.com/photo-1762112800040-b0d01696cb92?q=80&w=681&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 4",
     },
     {
-      id: "7",
+      id: "8",
       url: "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 3",
     },
@@ -332,6 +336,27 @@ export const heroTemplateContent: Record<string, Partial<HeroData>> = {
       { id: "2", text: "View Portfolio", variant: "outline", href: "#" },
     ],
   },
+  "hero-11": {
+    title: "Best Solution For Your Business Strategy",
+    subtitle: "Started From - 1998",
+    description: "Whole-Life Business Coaching for committed entrepreneurs",
+    buttons: [
+      { id: "1", text: "Get started today", variant: "primary", href: "#" },
+    ],
+  },
+  "hero-12": {
+    title: "Visa Made Easy\nDreams Made\nPossible",
+    subtitle: "",
+    description: "",
+    buttons: [
+      { id: "1", text: "Read More", variant: "primary", href: "#" },
+      { id: "2", text: "Watch Our Videos", variant: "secondary", href: "#" },
+    ],
+    imageUrl:
+      "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=2940&auto=format&fit=crop",
+    imageAlt: "Happy traveler in Paris",
+    showImage: true,
+  },
 };
 
 // Simplified template configurations
@@ -348,6 +373,7 @@ export interface HeroTemplateConfig {
     | "hero-7"
     | "hero-10"
     | "hero-11"
+    | "hero-12"
     | "hero-13";
   backgroundType: "color" | "gradient" | "image";
   backgroundColor?: string;
@@ -428,6 +454,12 @@ export const heroTemplateConfigs: Record<string, HeroTemplateConfig> = {
     template: "hero-11",
     backgroundType: "color",
     backgroundColor: "#FFFFFF",
+    showOverlay: false,
+  },
+  "hero-12": {
+    template: "hero-12",
+    backgroundType: "color",
+    backgroundColor: "#013D2F",
     showOverlay: false,
   },
   "hero-13": {

@@ -39,7 +39,9 @@ import {
   defaultAboutUs7Data,
   defaultAboutUs8Data,
   defaultAboutUs9Data,
+  defaultAboutUs10Data,
   defaultAboutUs11Data,
+  defaultAboutUs12Data,
   defaultAboutUs13Data,
 } from "@/types/owner-site/components/about";
 import { AboutUsData } from "@/types/owner-site/components/about";
@@ -52,7 +54,15 @@ import {
   ComponentResponse,
   ComponentTypeMap,
 } from "@/types/owner-site/components/components";
-import { defaultContactData } from "@/types/owner-site/components/contact";
+import {
+  ContactData,
+  defaultContact1Data,
+  defaultContact2Data,
+  defaultContact3Data,
+  defaultContact4Data,
+  defaultContact5Data,
+  defaultContact6Data,
+} from "@/types/owner-site/components/contact";
 import { defaultTeamData } from "@/types/owner-site/components/team";
 import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
 import { defaultFAQData } from "@/types/owner-site/components/faq";
@@ -529,6 +539,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "style-4"
       | "style-5"
       | "style-6"
+      | "style-7"
   ) => {
     const payload = {
       content: "footer content",
@@ -666,6 +677,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "hero-9"
       | "hero-10"
       | "hero-11"
+      | "hero-12"
   ) => {
     const templateConfig = heroTemplateConfigs[template];
     const templateContent = heroTemplateContent[template] || {};
@@ -699,7 +711,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "about-7"
       | "about-8"
       | "about-9"
+      | "about-10"
       | "about-11"
+      | "about-12"
       | "about-13"
   ) => {
     let aboutUsData: AboutUsData;
@@ -731,8 +745,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       case "about-9":
         aboutUsData = defaultAboutUs9Data;
         break;
+      case "about-10":
+        aboutUsData = defaultAboutUs10Data;
+        break;
       case "about-11":
         aboutUsData = defaultAboutUs11Data;
+        break;
+      case "about-12":
+        aboutUsData = defaultAboutUs12Data;
         break;
       case "about-13":
         aboutUsData = defaultAboutUs13Data;
@@ -814,7 +834,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleBlogTemplateSelect = async (
-    template: "blog-1" | "blog-2" | "blog-3" | "blog-4"
+    template: "blog-1" | "blog-2" | "blog-3" | "blog-4" | "blog-5"
   ) => {
     const blogData = { ...defaultBlogData, style: template };
     setIsBlogStylesDialogOpen(false);
@@ -837,11 +857,19 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       pendingInsertIndex
     );
   };
+  const defaultContactMap: Record<ContactData["style"], ContactData> = {
+    "contact-1": defaultContact1Data,
+    "contact-2": defaultContact2Data,
+    "contact-3": defaultContact3Data,
+    "contact-4": defaultContact4Data,
+    "contact-5": defaultContact5Data,
+    "contact-6": defaultContact6Data,
+  };
 
   const handleContactTemplateSelect = async (
-    template: "contact-1" | "contact-2" | "contact-3" | "contact-4"
+    template: ContactData["style"]
   ) => {
-    const contactData = { ...defaultContactData, style: template };
+    const contactData = defaultContactMap[template];
     setIsContactStylesDialogOpen(false);
     await createComponentWithIndex("contact", contactData, pendingInsertIndex);
   };

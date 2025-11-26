@@ -11,6 +11,7 @@ import { TestimonialCard3 } from "./testimonial-card-3";
 import { TestimonialCard4 } from "./testimonial-card-4";
 import { TestimonialCard5 } from "./testimonial-card-5";
 import { TestimonialCard6 } from "./testimonial-card-6"; // Add this import
+import { TestimonialCard9 } from "./testimonial-card-9";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -244,6 +245,15 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
       );
     }
 
+    if (style === "testimonial-9") {
+      return (
+        <TestimonialCard9
+          testimonials={testimonials.slice(0, page_size)}
+          onClick={handleTestimonialClick}
+        />
+      );
+    }
+
     return null;
   };
 
@@ -257,6 +267,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6";
       case "testimonial-5":
       case "testimonial-6":
+      case "testimonial-9":
         return "";
       case "testimonial-1":
       default:
@@ -491,12 +502,16 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
                 {isLoading && (
                   <div
                     className={
-                      style === "testimonial-5" || style === "testimonial-6"
+                      style === "testimonial-5" ||
+                      style === "testimonial-6" ||
+                      style === "testimonial-9"
                         ? ""
                         : `grid ${getGridClass()} gap-6`
                     }
                   >
-                    {style === "testimonial-5" || style === "testimonial-6" ? (
+                    {style === "testimonial-5" ||
+                    style === "testimonial-6" ||
+                    style === "testimonial-9" ? (
                       <div className="flex gap-4 overflow-hidden">
                         {Array.from({ length: 3 }).map((_, index) => (
                           <div key={index} className="w-80 flex-shrink-0">
@@ -538,7 +553,9 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
                 {!isLoading && !error && testimonials.length > 0 && (
                   <>
-                    {style === "testimonial-5" || style === "testimonial-6" ? (
+                    {style === "testimonial-5" ||
+                    style === "testimonial-6" ||
+                    style === "testimonial-9" ? (
                       renderCarouselOrStagger()
                     ) : (
                       <div className={`grid ${getGridClass()} gap-6`}>
@@ -677,6 +694,64 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
             <div className="mt-10 w-full rounded-3xl border border-dashed border-gray-300 bg-white/60 py-12 text-center">
               <MessageSquareQuote className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
               <h3 className="text-foreground mb-2 text-xl font-semibold">
+                No Testimonials Available
+              </h3>
+              <p className="text-muted-foreground">
+                Customer testimonials will be displayed here once available.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  }
+
+  if (style === "testimonial-9") {
+    return (
+      <section className="bg-background py-12 md:py-16">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="mb-12 text-center">
+            <h2
+              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+              dangerouslySetInnerHTML={{ __html: title }}
+            ></h2>
+            {subtitle && (
+              <p
+                className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
+            )}
+          </div>
+
+          {isLoading && (
+            <div className="mx-auto max-w-7xl">
+              <Skeleton className="h-[400px] w-full rounded-[40px]" />
+            </div>
+          )}
+
+          {error && (
+            <Alert variant="destructive" className="mx-auto max-w-2xl">
+              <AlertCircle className="h-5 w-5" />
+              <AlertTitle>Unable to Load Testimonials</AlertTitle>
+              <AlertDescription className="text-base">
+                {error instanceof Error
+                  ? error.message
+                  : "We're having trouble loading testimonials. Please try refreshing the page."}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {!isLoading && !error && testimonials.length > 0 && (
+            <TestimonialCard9
+              testimonials={testimonials.slice(0, page_size)}
+              onClick={handleTestimonialClick}
+            />
+          )}
+
+          {!isLoading && !error && testimonials.length === 0 && (
+            <div className="bg-muted/50 mt-10 w-full rounded-lg py-12 text-center">
+              <MessageSquareQuote className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+              <h3 className="text-foreground mb-2 text-lg font-semibold">
                 No Testimonials Available
               </h3>
               <p className="text-muted-foreground">
