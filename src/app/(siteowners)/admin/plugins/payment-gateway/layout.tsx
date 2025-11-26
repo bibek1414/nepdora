@@ -2,7 +2,7 @@ import React from "react";
 import TabsNavigation from "@/components/site-owners/admin/plugins/payment-gateway/tab-navigations";
 import PaymentPageHeader from "@/components/site-owners/admin/plugins/payment-gateway/payment-page-header";
 
-export default function SettingsLayout({
+export default function PaymentGatewayLayout({
   children,
 }: {
   children: React.ReactNode;

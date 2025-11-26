@@ -8,7 +8,6 @@ import {
   LayoutDashboard,
   Package,
   FileText,
-  Edit3,
   Bug,
   MessageSquare,
   User,
@@ -36,6 +35,7 @@ interface User {
   subDomain: string;
   hasProfile: boolean;
   hasProfileCompleted: boolean;
+  websiteType?: string;
   avatar: string;
 }
 
@@ -54,11 +54,13 @@ const navigationGroups = [
   },
   {
     items: [{ name: "Products", href: "/admin/products", icon: Package }],
+    hideForService: true,
   },
   {
     items: [
       { name: "Order Management", href: "/admin/orders", icon: FileText },
     ],
+    hideForService: true,
   },
   {
     items: [
@@ -80,12 +82,13 @@ const navigationGroups = [
       { name: "Facebook", href: "/admin/facebook", icon: Facebook },
       { name: "Messenger", href: "/admin/messenger", icon: MessageSquare },
     ],
+    hideForService: true,
   },
   {
     items: [
       {
         name: "Settings",
-        href: "/admin/settings/delivery-charge",
+        href: "/admin/settings/site-config",
         icon: Settings,
       },
     ],
@@ -98,6 +101,7 @@ const navigationGroups = [
         icon: Wallet,
       },
     ],
+    hideForService: true,
   },
   {
     items: [{ name: "Plugins", href: "/admin/plugins", icon: Unplug }],
@@ -107,6 +111,15 @@ const navigationGroups = [
 export default function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+
+  // Filter navigation groups based on website type
+  const filteredNavigationGroups = navigationGroups.filter(group => {
+    // If user's website type is 'service' and this group should be hidden for service, filter it out
+    if (user.websiteType === "service" && group.hideForService) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <div
@@ -158,7 +171,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       {/* Navigation */}
       <div className="scrollbar-hide flex-1 overflow-y-auto py-4">
         <nav className="grid gap-1 px-2">
-          {navigationGroups.map((group, groupIndex) => (
+          {filteredNavigationGroups.map((group, groupIndex) => (
             <div key={groupIndex}>
               {/* Group Items */}
               <div className="grid gap-1">
@@ -194,7 +207,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
               {/* Divider for collapsed state */}
               {collapsed &&
                 groupIndex > 0 &&
-                groupIndex < navigationGroups.length - 1 && (
+                groupIndex < filteredNavigationGroups.length - 1 && (
                   <div className="border-border my-2 border-t" />
                 )}
             </div>

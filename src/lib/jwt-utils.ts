@@ -1,3 +1,5 @@
+// lib/jwt-utils.ts
+
 export function base64UrlDecode(str: string): string {
   str = str.replace(/-/g, "+").replace(/_/g, "/");
   while (str.length % 4) {
@@ -39,7 +41,7 @@ export function isTokenExpired(exp: number): boolean {
   return currentTime >= exp;
 }
 
-// Define the JWTPayload interface here since it's used by decodeJWT
+// Define the JWTPayload interface with website_type
 export interface JWTPayload {
   token_type: string;
   exp: number;
@@ -57,4 +59,5 @@ export interface JWTPayload {
   is_template_account: boolean;
   first_login?: boolean;
   is_onboarding_complete?: boolean;
+  website_type?: string;
 }

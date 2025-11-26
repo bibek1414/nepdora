@@ -13,6 +13,7 @@ export interface User {
   has_profile_completed?: boolean;
   first_login?: boolean;
   is_onboarding_complete?: boolean;
+  website_type?: string;
 }
 export interface AuthTokens {
   access_token: string;

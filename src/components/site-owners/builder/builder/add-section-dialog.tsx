@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -45,6 +45,7 @@ interface AddSectionDialogProps {
       | "style-5"
       | "style-6"
   ) => void;
+  websiteType?: string;
 }
 
 type ComponentItem = {
@@ -57,6 +58,8 @@ type ComponentItem = {
   templates?: TemplateItem[];
   popular?: boolean;
   type?: "section" | "navbar" | "footer";
+  hideForService?: boolean;
+  showForWebsiteTypes?: string[];
 };
 
 type TemplateItem = {
@@ -72,6 +75,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
   onComponentClick,
   onNavbarSelect,
   onFooterSelect,
+  websiteType = "ecommerce", // Default to ecommerce for backward compatibility
 }) => {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -658,23 +662,36 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     ],
   };
 
-  // Define which templates to show in the "All Templates" view
-  const default_templates = [
-    "newsletter-3",
-    "youtube-1",
-    "hero-1",
-    "about-1",
-    "services-1",
-    "services-5",
-    "contact-1",
-    "policies-1",
-    "text-editor-1",
-    "navbar-1", // Add navbar to featured
-    "footer-1", // Add footer to featured
-  ];
+  // Define which templates to show in the "All Templates" view based on website type
+  const getDefaultTemplates = () => {
+    const baseTemplates = [
+      "newsletter-3",
+      "youtube-1",
+      "hero-1",
+      "about-1",
+      "contact-1",
+      "policies-1",
+      "text-editor-1",
+      "navbar-1",
+      "footer-1",
+    ];
+
+    // Add website-type specific templates
+    switch (websiteType) {
+      case "ecommerce":
+        return [...baseTemplates, "products-1", "category-1", "testimonials-1"];
+      case "service":
+        return [...baseTemplates, "services-1", "team-1", "testimonials-1"];
+
+      default:
+        return baseTemplates;
+    }
+  };
+
+  const default_templates = getDefaultTemplates();
 
   const components: ComponentItem[] = [
-    // NAVBAR COMPONENT
+    // NAVBAR COMPONENT - Always available
     {
       id: "navbar-sections",
       label: "Navbar",
@@ -686,12 +703,102 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       type: "navbar",
     },
 
-    // EXISTING SECTIONS
+    // E-COMMERCE SPECIFIC COMPONENTS
+    {
+      id: "products-sections",
+      label: "Products",
+      icon: Package,
+      keywords: ["catalog", "shop", "items", "store"],
+      hasTemplates: true,
+      templates: templates.products,
+      popular: true,
+      type: "section",
+      hideForService: true,
+    },
+    {
+      id: "categories-sections",
+      label: "Categories",
+      icon: FolderOpen,
+      keywords: ["category", "taxonomy", "organization", "groups"],
+      hasTemplates: true,
+      templates: templates.category,
+      type: "section",
+      showForWebsiteTypes: ["ecommerce"],
+    },
+    {
+      id: "subcategories-sections",
+      label: "SubCategories",
+      icon: Tag,
+      keywords: ["subcategory", "nested", "subgroups"],
+      hasTemplates: true,
+      templates: templates.subcategory,
+      type: "section",
+      showForWebsiteTypes: ["ecommerce"],
+    },
+
+    // SERVICE SPECIFIC COMPONENTS
+    {
+      id: "services-sections",
+      label: "Services",
+      icon: Menu,
+      keywords: ["what we do", "features", "offerings", "service"],
+      hasTemplates: true,
+      templates: templates.services,
+      popular: true,
+      type: "section",
+      showForWebsiteTypes: ["service"],
+    },
+    {
+      id: "team-members-sections",
+      label: "Team Members",
+      icon: Crown,
+      keywords: ["employees", "staff", "team", "people"],
+      hasTemplates: true,
+      templates: templates.team,
+      type: "section",
+      showForWebsiteTypes: ["service", "portfolio"],
+    },
+
+    // PORTFOLIO SPECIFIC COMPONENTS
+    {
+      id: "portfolio-sections",
+      label: "Portfolio",
+      icon: FolderOpen,
+      keywords: ["projects", "work", "showcase", "gallery"],
+      hasTemplates: true,
+      templates: templates.portfolio,
+      type: "section",
+      showForWebsiteTypes: ["service"],
+    },
+    {
+      id: "gallery-sections",
+      label: "Gallery",
+      icon: ImageIcon,
+      keywords: ["images", "photos", "media", "pictures"],
+      hasTemplates: true,
+      templates: templates.gallery,
+      type: "section",
+      showForWebsiteTypes: ["portfolio", "service"],
+    },
+
+    // BLOG SPECIFIC COMPONENTS
+    {
+      id: "blog-sections",
+      label: "Blog",
+      icon: FileText,
+      keywords: ["articles", "posts", "news", "updates"],
+      hasTemplates: true,
+      templates: templates.blog,
+      type: "section",
+      showForWebsiteTypes: ["service"],
+    },
+
+    // UNIVERSAL COMPONENTS (available for all website types)
     {
       id: "about-sections",
       label: "About Us",
       icon: Info,
-      keywords: ["company", "who we are"],
+      keywords: ["company", "who we are", "story", "mission"],
       hasTemplates: true,
       templates: templates.about,
       popular: true,
@@ -701,34 +808,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       id: "banner-sections",
       label: "Banner",
       icon: ImageIcon,
-      keywords: ["banner", "slider"],
+      keywords: ["banner", "slider", "promotion", "ad"],
       hasTemplates: true,
       templates: templates.banner,
-      type: "section",
-    },
-    {
-      id: "blog-sections",
-      label: "Blog",
-      icon: FileText,
-      keywords: ["articles", "posts"],
-      hasTemplates: true,
-      templates: templates.blog,
-      type: "section",
-    },
-    {
-      id: "categories-sections",
-      label: "Categories",
-      icon: FolderOpen,
-      keywords: ["category", "taxonomy", "organization"],
-      hasTemplates: true,
-      templates: templates.category,
       type: "section",
     },
     {
       id: "contact-sections",
       label: "Contact",
       icon: Mail,
-      keywords: ["form", "email"],
+      keywords: ["form", "email", "reach", "message"],
       hasTemplates: true,
       templates: templates.contact,
       type: "section",
@@ -737,25 +826,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       id: "faq-sections",
       label: "FAQ",
       icon: Info,
-      keywords: ["questions", "help"],
+      keywords: ["questions", "help", "support", "answers"],
       hasTemplates: true,
       templates: templates.faq,
-      type: "section",
-    },
-    {
-      id: "gallery-sections",
-      label: "Gallery",
-      icon: ImageIcon,
-      keywords: ["images", "photos"],
-      hasTemplates: true,
-      templates: templates.gallery,
       type: "section",
     },
     {
       id: "hero-sections",
       label: "Hero Section",
       icon: Crown,
-      keywords: ["banner", "top section", "intro"],
+      keywords: ["banner", "top section", "intro", "welcome"],
       hasTemplates: true,
       templates: templates.hero,
       popular: true,
@@ -765,7 +845,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       id: "newsletter-sections",
       label: "Newsletter",
       icon: Mail,
-      keywords: ["subscribe", "email"],
+      keywords: ["subscribe", "email", "updates", "mailing"],
       hasTemplates: true,
       templates: templates.newsletter,
       type: "section",
@@ -781,57 +861,10 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       type: "section",
     },
     {
-      id: "portfolio-sections",
-      label: "Portfolio",
-      icon: FolderOpen,
-      keywords: ["projects", "work"],
-      hasTemplates: true,
-      templates: templates.portfolio,
-      type: "section",
-    },
-    {
-      id: "products-sections",
-      label: "Products",
-      icon: Package,
-      keywords: ["catalog", "shop"],
-      hasTemplates: true,
-      templates: templates.products,
-      popular: true,
-      type: "section",
-    },
-    {
-      id: "services-sections",
-      label: "Services",
-      icon: Menu,
-      keywords: ["what we do", "features"],
-      hasTemplates: true,
-      templates: templates.services,
-      popular: true,
-      type: "section",
-    },
-    {
-      id: "subcategories-sections",
-      label: "SubCategories",
-      icon: Tag,
-      keywords: ["subcategory", "nested"],
-      hasTemplates: true,
-      templates: templates.subcategory,
-      type: "section",
-    },
-    {
-      id: "team-members-sections",
-      label: "Team Members",
-      icon: Crown,
-      keywords: ["employees", "staff"],
-      hasTemplates: true,
-      templates: templates.team,
-      type: "section",
-    },
-    {
       id: "testimonials-sections",
       label: "Testimonials",
       icon: Quote,
-      keywords: ["reviews", "clients"],
+      keywords: ["reviews", "clients", "feedback", "ratings"],
       hasTemplates: true,
       templates: templates.testimonials,
       type: "section",
@@ -850,13 +883,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       id: "youtube-sections",
       label: "YouTube",
       icon: ImageIcon,
-      keywords: ["video", "embed"],
+      keywords: ["video", "embed", "media", "youtube"],
       hasTemplates: true,
       templates: templates.youtube,
       type: "section",
     },
 
-    // FOOTER COMPONENT
+    // FOOTER COMPONENT - Always available
     {
       id: "footer-sections",
       label: "Footer",
@@ -870,16 +903,32 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     },
   ];
 
-  const popularComponents = components.filter(comp => comp.popular);
+  // Filter components based on website type
+  const filteredComponents = useMemo(() => {
+    return components.filter(component => {
+      // If showForWebsiteTypes is defined, only show for those specific types
+      if (component.showForWebsiteTypes) {
+        return component.showForWebsiteTypes.includes(websiteType);
+      }
 
-  const filtered = React.useMemo(() => {
+      // If hideForService is true and websiteType is "service", hide it
+      if (component.hideForService && websiteType === "service") {
+        return false;
+      }
+
+      // Otherwise, show the component
+      return true;
+    });
+  }, [websiteType]);
+
+  const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return components;
-    return components.filter(({ label, id, keywords }) => {
+    if (!q) return filteredComponents;
+    return filteredComponents.filter(({ label, id, keywords }) => {
       const haystack = [label, id, ...(keywords ?? [])].join(" ").toLowerCase();
       return haystack.includes(q);
     });
-  }, [query]);
+  }, [query, filteredComponents]);
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
@@ -932,7 +981,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
   const getCurrentTemplates = () => {
     if (!selectedCategory) {
       // Show only default templates in the main view
-      const allTemplates = components.flatMap(
+      const allTemplates = filteredComponents.flatMap(
         component =>
           component.templates?.map(template => ({
             component,
@@ -947,7 +996,9 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     }
 
     // Show all templates for selected category (when a category is selected)
-    const component = components.find(comp => comp.id === selectedCategory);
+    const component = filteredComponents.find(
+      comp => comp.id === selectedCategory
+    );
     if (component?.templates) {
       return component.templates.map(template => ({
         component,
@@ -1122,6 +1173,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
                   <h2 className="text-2xl font-bold text-gray-900">
                     Featured Templates
                   </h2>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Website Type:{" "}
+                    <span className="font-medium capitalize">
+                      {websiteType}
+                    </span>
+                  </p>
                 </div>
               ) : (
                 <div className="flex items-center gap-3">

@@ -9,6 +9,7 @@ export interface Plugin {
   type: PluginType;
   status?: "beta" | "active";
   is_enabled: boolean;
+  hideForService?: boolean;
 }
 
 export interface PluginConfig {

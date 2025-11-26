@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -17,12 +17,7 @@ import {
   Phone,
 } from "lucide-react";
 import Link from "next/link";
-import {
-  signupSchema,
-  SignupFormValues,
-  storeNameSchema,
-  phoneNumberSchema,
-} from "@/schemas/signup.form";
+import { signupSchema, SignupFormValues } from "@/schemas/signup.form";
 import { AuthErrorHandler } from "@/utils/auth/error.utils";
 import { ErrorResponse, FormErrorState } from "@/types/auth/error.types";
 import {
@@ -30,19 +25,8 @@ import {
   FloatingLabel,
 } from "@/components/ui/floating-label-input";
 import { useAuth } from "@/hooks/use-auth";
-import { useAuthRedirect } from "@/hooks/use-auth-redirect";
-import { signIn } from "next-auth/react";
 import GoogleLoginButton from "@/components/ui/GoogleLoginButton";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-
-type GoogleWebsiteType = "ecommerce" | "service";
+import { GoogleSignupDialog } from "@/components/auth/signup/google-signup-form-dialog";
 
 export function SignupForm({
   className,
@@ -55,17 +39,6 @@ export function SignupForm({
     "ecommerce" | "service" | null
   >(null);
   const [isGoogleDialogOpen, setIsGoogleDialogOpen] = useState(false);
-  const [googleStoreName, setGoogleStoreName] = useState("");
-  const [googleStoreError, setGoogleStoreError] = useState<string | null>(null);
-  const [googlePhone, setGooglePhone] = useState("");
-  const [googlePhoneError, setGooglePhoneError] = useState<string | null>(null);
-  const [googleWebsiteType, setGoogleWebsiteType] =
-    useState<GoogleWebsiteType>("ecommerce");
-  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
-  const websiteTypeOptions: { value: GoogleWebsiteType; label: string }[] = [
-    { value: "ecommerce", label: "E-commerce" },
-    { value: "service", label: "Service" },
-  ];
 
   const {
     register,
@@ -164,118 +137,10 @@ export function SignupForm({
       }
     };
 
-  const handleGoogleDialogOpenChange = (open: boolean) => {
-    if (isGoogleSubmitting) {
-      return;
-    }
-    if (!open) {
-      setGoogleStoreError(null);
-      setGooglePhoneError(null);
-    }
-    setIsGoogleDialogOpen(open);
-  };
-
   const handleGoogleSignup = () => {
     const existingStoreName = watch("store_name");
-    setGoogleStoreName(existingStoreName || "");
     const existingPhone = watch("phone");
-    setGooglePhone(existingPhone || "");
-    setGoogleStoreError(null);
-    setGooglePhoneError(null);
     setIsGoogleDialogOpen(true);
-  };
-
-  const handleGoogleStoreNameChange = (
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
-    if (googleStoreError) {
-      setGoogleStoreError(null);
-    }
-    setGoogleStoreName(event.target.value);
-  };
-
-  const closeGoogleDialog = () => {
-    if (isGoogleSubmitting) {
-      return;
-    }
-    setIsGoogleDialogOpen(false);
-    setGoogleStoreError(null);
-    setGooglePhoneError(null);
-  };
-
-  const persistGoogleSignupMetadata = (
-    storeName: string,
-    phone?: string,
-    websiteType: GoogleWebsiteType = googleWebsiteType
-  ) => {
-    if (typeof document === "undefined") {
-      return;
-    }
-
-    const expires = new Date(Date.now() + 10 * 60 * 1000).toUTCString();
-    document.cookie = `google_store_name=${encodeURIComponent(storeName)}; expires=${expires}; path=/; SameSite=Lax`;
-
-    const phoneValue = phone ?? watch("phone");
-    if (phoneValue) {
-      document.cookie = `google_phone_number=${encodeURIComponent(
-        phoneValue
-      )}; expires=${expires}; path=/; SameSite=Lax`;
-    } else {
-      document.cookie = `google_phone_number=; expires=${new Date(
-        0
-      ).toUTCString()}; path=/; SameSite=Lax`;
-    }
-
-    const websiteTypeValue = websiteType || googleWebsiteType;
-    document.cookie = `google_website_type=${encodeURIComponent(
-      websiteTypeValue
-    )}; expires=${expires}; path=/; SameSite=Lax`;
-  };
-
-  const handleGoogleDialogSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
-    const trimmedStoreName = googleStoreName.trim();
-    const validationResult = storeNameSchema.safeParse(trimmedStoreName);
-    const trimmedPhone = googlePhone.trim();
-    const phoneValidationResult = phoneNumberSchema.safeParse(trimmedPhone);
-
-    if (!validationResult.success) {
-      setGoogleStoreError(
-        validationResult.error.issues[0]?.message || "Invalid store name."
-      );
-      return;
-    }
-
-    if (!phoneValidationResult.success) {
-      setGooglePhoneError(
-        phoneValidationResult.error.issues[0]?.message ||
-          "Invalid phone number."
-      );
-      return;
-    }
-
-    setGoogleStoreError(null);
-    setGooglePhoneError(null);
-    setIsGoogleSubmitting(true);
-
-    try {
-      persistGoogleSignupMetadata(
-        validationResult.data,
-        trimmedPhone,
-        googleWebsiteType
-      );
-      await signIn("google", {
-        callbackUrl: "/admin",
-        store_name: validationResult.data,
-      });
-    } catch (error) {
-      console.error("Google signup error:", error);
-      setGoogleStoreError("Something went wrong. Please try again.");
-    } finally {
-      setIsGoogleSubmitting(false);
-    }
   };
 
   return (
@@ -378,6 +243,7 @@ export function SignupForm({
               )}
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                {/* ... rest of your form fields remain the same ... */}
                 <div className="relative">
                   <FloatingInput
                     id="store_name"
@@ -453,15 +319,15 @@ export function SignupForm({
                     </p>
                   )}
                 </div>
-                <div className="space-y-3">
-                  <label className="text-sm font-medium text-gray-500">
+
+                <div className="">
+                  <label className="text-xs font-medium text-gray-500">
                     Website Type
                   </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {/* E-commerce Option */}
+                  <div className="grid grid-cols-2 gap-3 py-0">
                     <label
                       className={cn(
-                        "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-4 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50",
+                        "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-2 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50",
                         selectedWebsiteType === "ecommerce"
                           ? "border-emerald-500 bg-emerald-50"
                           : "border-gray-300 bg-white"
@@ -489,10 +355,9 @@ export function SignupForm({
                       </span>
                     </label>
 
-                    {/* Service Option */}
                     <label
                       className={cn(
-                        "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-4 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50",
+                        "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-2 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50",
                         selectedWebsiteType === "service"
                           ? "border-emerald-500 bg-emerald-50"
                           : "border-gray-300 bg-white"
@@ -520,30 +385,6 @@ export function SignupForm({
                       </span>
                     </label>
                   </div>
-                  <div className="relative">
-                    <FloatingInput
-                      id="phone"
-                      type="tel"
-                      disabled={isLoading}
-                      className={cn(
-                        "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                        errors.phone &&
-                          "border-red-300 focus:border-red-500 focus:ring-red-500"
-                      )}
-                      {...register("phone")}
-                      onChange={handleInputChange("phone")}
-                    />
-                    <FloatingLabel htmlFor="phone">
-                      <Phone className="mr-2 h-4 w-4" />
-                      Phone Number
-                    </FloatingLabel>
-                    {errors.phone && (
-                      <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                        <AlertCircle className="mr-1 h-4 w-4" />
-                        {errors.phone.message}
-                      </p>
-                    )}
-                  </div>
 
                   {errors.website_type && (
                     <p className="mt-2 flex items-center text-sm font-medium text-red-500">
@@ -552,120 +393,7 @@ export function SignupForm({
                     </p>
                   )}
                 </div>
-                <div className="relative">
-                  <div className="relative">
-                    <FloatingInput
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="new-password"
-                      disabled={isLoading}
-                      className={cn(
-                        "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 pr-12 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                        errors.password &&
-                          "border-red-300 focus:border-red-500 focus:ring-red-500"
-                      )}
-                      {...register("password")}
-                      onChange={handleInputChange("password")}
-                    />
-                    <FloatingLabel htmlFor="password">
-                      <Lock className="mr-2 h-4 w-4" />
-                      Password
-                    </FloatingLabel>
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff size={18} className="transition-colors" />
-                      ) : (
-                        <Eye size={18} className="transition-colors" />
-                      )}
-                    </button>
-                  </div>
-                  {errors.password && (
-                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {errors.password.message}
-                    </p>
-                  )}
-                  {password && password.length > 0 && !errors.password && (
-                    <div className="mt-2 space-y-1 text-xs">
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          password.length >= 8
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            password.length >= 8
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        At least 8 characters
-                      </div>
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          /[a-z]/.test(password)
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            /[a-z]/.test(password)
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        One lowercase letter
-                      </div>
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          /[A-Z]/.test(password)
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            /[A-Z]/.test(password)
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        One uppercase letter
-                      </div>
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          /[0-9]/.test(password)
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            /[0-9]/.test(password)
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        One number
-                      </div>
-                    </div>
-                  )}
-                </div>
+
                 <div className="relative">
                   <div className="relative">
                     <FloatingInput
@@ -897,163 +625,12 @@ export function SignupForm({
         </div>
       </div>
 
-      <Dialog
-        open={isGoogleDialogOpen}
-        onOpenChange={handleGoogleDialogOpenChange}
-      >
-        <DialogContent
-          className="rounded-2xl bg-white p-6 shadow-2xl sm:max-w-lg sm:p-8"
-          showCloseButton={!isGoogleSubmitting}
-        >
-          <DialogHeader className="space-y-1 text-left">
-            <DialogTitle className="text-2xl font-bold text-gray-900">
-              Add your store name
-            </DialogTitle>
-            <DialogDescription className="text-sm text-gray-600">
-              We use this to personalize your workspace before connecting your
-              Google account.
-            </DialogDescription>
-          </DialogHeader>
-
-          <form onSubmit={handleGoogleDialogSubmit} className="space-y-5">
-            <div className="relative">
-              <FloatingInput
-                id="google_store_name"
-                type="text"
-                value={googleStoreName}
-                autoComplete="organization"
-                disabled={isGoogleSubmitting}
-                onChange={handleGoogleStoreNameChange}
-                className={cn(
-                  "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                  googleStoreError &&
-                    "border-red-300 focus:border-red-500 focus:ring-red-500"
-                )}
-              />
-              <FloatingLabel htmlFor="google_store_name">
-                <User className="mr-2 h-4 w-4" />
-                Store Name
-              </FloatingLabel>
-              {googleStoreError && (
-                <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                  <AlertCircle className="mr-1 h-4 w-4" />
-                  {googleStoreError}
-                </p>
-              )}
-            </div>
-
-            <div className="relative">
-              <FloatingInput
-                id="google_phone"
-                type="tel"
-                value={googlePhone}
-                autoComplete="tel"
-                disabled={isGoogleSubmitting}
-                onChange={event => {
-                  if (googlePhoneError) {
-                    setGooglePhoneError(null);
-                  }
-                  setGooglePhone(event.target.value);
-                }}
-                className={cn(
-                  "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                  googlePhoneError &&
-                    "border-red-300 focus:border-red-500 focus:ring-red-500"
-                )}
-              />
-              <FloatingLabel htmlFor="google_phone">
-                <Phone className="mr-2 h-4 w-4" />
-                Phone Number
-              </FloatingLabel>
-              {googlePhoneError && (
-                <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                  <AlertCircle className="mr-1 h-4 w-4" />
-                  {googlePhoneError}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <p className="text-sm font-semibold text-gray-900">
-                Website type
-              </p>
-              <p className="text-xs text-gray-500">
-                Choose the experience that fits your business.
-              </p>
-              <div className="grid grid-cols-2 gap-3">
-                {websiteTypeOptions.map(option => {
-                  const isSelected = googleWebsiteType === option.value;
-                  return (
-                    <button
-                      key={option.value}
-                      type="button"
-                      aria-pressed={isSelected}
-                      className={cn(
-                        "rounded-lg border px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500",
-                        isSelected
-                          ? "border-gray-900 bg-gray-900 text-white"
-                          : "border-gray-300 bg-white text-gray-700 hover:border-gray-400"
-                      )}
-                      onClick={() => setGoogleWebsiteType(option.value)}
-                      disabled={isGoogleSubmitting}
-                    >
-                      {option.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <DialogFooter className="gap-3 sm:flex-row">
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full sm:w-auto"
-                onClick={closeGoogleDialog}
-                disabled={isGoogleSubmitting}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className={cn(
-                  "w-full rounded-lg bg-gray-900 px-4 py-3 font-semibold text-white transition-colors duration-200 hover:bg-gray-800 sm:w-auto",
-                  isGoogleSubmitting ? "cursor-not-allowed opacity-80" : ""
-                )}
-                disabled={isGoogleSubmitting}
-              >
-                {isGoogleSubmitting ? (
-                  <div className="flex items-center justify-center">
-                    <svg
-                      className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Connecting...
-                  </div>
-                ) : (
-                  "Continue with Google"
-                )}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <GoogleSignupDialog
+        isOpen={isGoogleDialogOpen}
+        onOpenChange={setIsGoogleDialogOpen}
+        initialStoreName={watch("store_name")}
+        initialPhone={watch("phone")}
+      />
     </>
   );
 }
