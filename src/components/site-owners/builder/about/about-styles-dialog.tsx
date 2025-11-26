@@ -23,6 +23,7 @@ interface AboutUsStylesDialogProps {
       | "about-7"
       | "about-8"
       | "about-9"
+      | "about-10"
   ) => void;
 }
 
@@ -41,6 +42,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
     | "about-7"
     | "about-8"
     | "about-9"
+    | "about-10"
     | null
   >(null);
 
@@ -54,6 +56,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
     { id: "about-7" as const, name: "Training Focused" },
     { id: "about-8" as const, name: "Technical Specifications" },
     { id: "about-9" as const, name: "Funder Media Spotlight" },
+    { id: "about-10" as const, name: "Unique Design" },
   ];
 
   const handleSelect = (
@@ -67,6 +70,7 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
       | "about-7"
       | "about-8"
       | "about-9"
+      | "about-10"
   ) => {
     setSelectedStyle(templateId);
     setTimeout(() => {

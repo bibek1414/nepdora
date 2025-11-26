@@ -149,6 +149,26 @@ export interface AboutUs9Data {
   };
 }
 
+export interface AboutUs10Data {
+  template: "about-10";
+  badgeCount: string;
+  badgeText: string;
+  sectionTag: string;
+  title: string;
+  description: string;
+  features: Array<{
+    id: string;
+    title: string;
+    items: string[];
+  }>;
+  buttonText: string;
+  supportText: string;
+  supportNumber: string;
+  imageUrl: string;
+  imageAlt: string;
+  circularStampText: string;
+}
+
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
@@ -159,7 +179,8 @@ export type AboutUsData =
   | AboutUs6Data
   | AboutUs7Data
   | AboutUs8Data
-  | AboutUs9Data;
+  | AboutUs9Data
+  | AboutUs10Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -209,7 +230,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs6Data>
     | Partial<AboutUs7Data>
     | Partial<AboutUs8Data>
-    | Partial<AboutUs9Data>;
+    | Partial<AboutUs9Data>
+    | Partial<AboutUs10Data>;
   order?: number;
 }
 
@@ -487,4 +509,33 @@ export const defaultAboutUs9Data: AboutUs9Data = {
     url: "https://images.unsplash.com/photo-1542372147193-a7aca54189cd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     alt: "Businessman in office",
   },
+};
+
+export const defaultAboutUs10Data: AboutUs10Data = {
+  template: "about-10",
+  badgeCount: "25",
+  badgeText: "Years Of experience",
+  sectionTag: "WHY CHOOSE US",
+  title: "Where Wanderlust Meets Dream Destinations",
+  description:
+    "Et purus duis sollicitudin dignissim habitant. Egestas nulla quis venenatis cras sed eu massa Et purus duis sollicitudin dignissim habitant. Egestas nulla quis venenatis cras sed eu massa Et purus duis sollicitudin dignissim habitant. Egestas nulla",
+  features: [
+    {
+      id: "1",
+      title: "Passport Plus",
+      items: ["Beyond Border Immigration", "Worldwide Visa Assistance"],
+    },
+    {
+      id: "2",
+      title: "Global Entry",
+      items: ["GlobeTrot Visa Services", "Infinity Visa Solutions"],
+    },
+  ],
+  buttonText: "Read More",
+  supportText: "Need help?",
+  supportNumber: "(808) 555-0111",
+  imageUrl:
+    "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=2874&auto=format&fit=crop",
+  imageAlt: "Traveler with backpack",
+  circularStampText: "World Wide Access • Immigration Agency •",
 };
