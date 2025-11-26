@@ -101,6 +101,7 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith("/preview") ||
       pathname.startsWith("/location") ||
       pathname.startsWith("/on-boarding") ||
+      pathname.startsWith("/test") ||
       pathname.startsWith("/subscription")
     ) {
       return NextResponse.next();

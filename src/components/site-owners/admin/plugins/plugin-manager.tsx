@@ -62,7 +62,7 @@ const Modal = ({
 };
 
 // Hook for plugin management with real API integration
-const usePlugins = () => {
+const usePlugins = (websiteType?: string) => {
   const {
     data: whatsapps = [],
     isLoading: isLoadingWhatsApp,
@@ -113,6 +113,7 @@ const usePlugins = () => {
         icon: "/images/icons/whatsapp-icon.png",
         type: "whatsapp",
         is_enabled: whatsappConfig?.is_enabled || false,
+        hideForService: true,
       },
       {
         id: "dash",
@@ -122,6 +123,7 @@ const usePlugins = () => {
         icon: "/images/icons/dash-logistics.png",
         type: "dash",
         is_enabled: dashConfig?.is_enabled || false,
+        hideForService: true,
       },
       {
         id: "ydm",
@@ -131,6 +133,7 @@ const usePlugins = () => {
         icon: "/images/icons/ydm-logistics.png",
         type: "ydm",
         is_enabled: ydmConfig?.is_enabled || false,
+        hideForService: true,
       },
       {
         id: "google-analytics",
@@ -143,8 +146,16 @@ const usePlugins = () => {
       },
     ];
 
-    setPlugins(pluginsList);
-  }, [whatsapps, dashLogistics, ydmLogistics, analyticsConfigs]);
+    // Filter plugins based on website type
+    const filteredPlugins = pluginsList.filter(plugin => {
+      if (websiteType === "service" && plugin.hideForService) {
+        return false;
+      }
+      return true;
+    });
+
+    setPlugins(filteredPlugins);
+  }, [whatsapps, dashLogistics, ydmLogistics, analyticsConfigs, websiteType]);
 
   const togglePlugin = async (
     pluginId: string,
@@ -252,12 +263,16 @@ const usePlugins = () => {
   return { plugins, isLoading, togglePlugin };
 };
 
-export default function PluginManager() {
+interface PluginManagerProps {
+  websiteType?: string;
+}
+
+export default function PluginManager({ websiteType }: PluginManagerProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPlugin, setSelectedPlugin] = useState<Plugin | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { plugins, isLoading, togglePlugin } = usePlugins();
+  const { plugins, isLoading, togglePlugin } = usePlugins(websiteType);
 
   const filteredPlugins = plugins.filter(
     plugin =>

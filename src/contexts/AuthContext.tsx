@@ -30,7 +30,7 @@ interface AuthContextType {
   signup: (data: SignupData) => Promise<void>;
   logout: () => void;
   updateTokens: (tokens: AuthTokens) => void;
-  updateUser: (userData: Partial<User>) => void; // NEW: Add updateUser function
+  updateUser: (userData: Partial<User>) => void;
   isLoading: boolean;
   isAuthenticated: boolean;
   clearAuthData: () => void;
@@ -237,7 +237,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       domain: userData.domain ?? undefined,
       sub_domain: userData.sub_domain ?? undefined,
       has_profile_completed: userData.has_profile_completed ?? undefined,
-      is_onboarding_complete: userData.is_onboarding_complete ?? undefined, // NEW: Include this
+      is_onboarding_complete: userData.is_onboarding_complete ?? undefined,
+      first_login: userData.first_login ?? undefined,
+      website_type: userData.website_type ?? undefined,
     };
 
     // Store in localStorage

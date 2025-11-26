@@ -1,6 +1,7 @@
 import PluginManager from "@/components/site-owners/admin/plugins/plugin-manager";
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
+import { getServerUser } from "@/hooks/use-jwt-server";
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateAdminPageMetadata({
@@ -11,6 +12,8 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function PluginManagementPage() {
-  return <PluginManager />;
+export default async function PluginManagementPage() {
+  const user = await getServerUser();
+
+  return <PluginManager websiteType={user?.websiteType} />;
 }

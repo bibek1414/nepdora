@@ -1416,7 +1416,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onComponentClick={handleComponentClick}
           onNavbarSelect={handleNavbarSelectFromDialog}
           onFooterSelect={handleFooterSelectFromDialog}
+          websiteType={user?.website_type || "ecommerce"}
         />
+
         <NavbarTemplateDialog
           isOpen={isNavbarDialogOpen}
           onClose={() => setIsNavbarDialogOpen(false)}

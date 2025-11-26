@@ -2,7 +2,7 @@ import "./globals.css";
 import { DM_Sans, Inter } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CustomerAuthProvider } from "@/contexts/customer/AuthContext";
-import { CustomerPublishAuthProvider } from "@/contexts/publish/AuthContext";
+import { CustomerPublishAuthProvider } from "@/contexts/customer/publish/AuthContext";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { QueryProvider } from "@/providers/query-provider";
 import TopLoader from "@/components/top-loader";

@@ -2,7 +2,6 @@
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquare, Globe, CreditCard, Truck } from "lucide-react";
 
 interface PaymentGateway {
   id: string;
@@ -26,7 +25,7 @@ const settingsItems: PaymentGateway[] = [
   },
 ];
 
-export default function SettingsLayout({
+export default function LogisticsLayout({
   children,
 }: {
   children: React.ReactNode;
