@@ -169,6 +169,19 @@ export interface AboutUs10Data {
   circularStampText: string;
 }
 
+export interface AboutUs12Data {
+  template: "about-12";
+  sectionTag: string;
+  title: string;
+  teamMembers: Array<{
+    id: string;
+    name: string;
+    role: string;
+  }>;
+  imageUrl: string;
+  imageAlt: string;
+}
+
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
@@ -180,7 +193,8 @@ export type AboutUsData =
   | AboutUs7Data
   | AboutUs8Data
   | AboutUs9Data
-  | AboutUs10Data;
+  | AboutUs10Data
+  | AboutUs12Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -231,7 +245,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs7Data>
     | Partial<AboutUs8Data>
     | Partial<AboutUs9Data>
-    | Partial<AboutUs10Data>;
+    | Partial<AboutUs10Data>
+    | Partial<AboutUs12Data>;
   order?: number;
 }
 
@@ -538,4 +553,18 @@ export const defaultAboutUs10Data: AboutUs10Data = {
     "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=2874&auto=format&fit=crop",
   imageAlt: "Traveler with backpack",
   circularStampText: "World Wide Access • Immigration Agency •",
+};
+
+export const defaultAboutUs12Data: AboutUs12Data = {
+  template: "about-12",
+  sectionTag: "OUR COACHING",
+  title: "Exploring the Unknown Voyages of Wonder",
+  teamMembers: [
+    { id: "1", name: "Courtney Henry", role: "Medical Assistant" },
+    { id: "2", name: "Courtney Henry", role: "Marketing Coordinator" },
+    { id: "3", name: "Albert Flores", role: "Web Designer" },
+  ],
+  imageUrl:
+    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2776&auto=format&fit=crop",
+  imageAlt: "Professional Team Member",
 };
