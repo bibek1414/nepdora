@@ -67,6 +67,7 @@ type TemplateItem = {
   name: string;
   image: string;
   description?: string;
+  showForWebsiteTypes?: string[];
 };
 
 export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
@@ -136,6 +137,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "hero-11",
         name: "Hero Style 11",
         image: "/images/site-owners/hero/hero11.png",
+      },
+      {
+        id: "hero-12",
+        name: "Hero Style 12",
+        image: "/images/site-owners/hero/hero12.png",
       },
     ],
     about: [
@@ -328,6 +334,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "contact-5",
         name: "Contact Form 5",
         image: "/images/site-owners/contact/contact5.png",
+      },
+      {
+        id: "contact-6",
+        name: "Contact Form 6",
+        image: "/images/site-owners/contact/contact6.png",
       },
     ],
     testimonials: [
@@ -586,46 +597,53 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Navbar Style 1",
         image: "/images/site-owners/navbars/navbar1.png",
         description: "Simple navbar with logo and navigation links",
+        showForWebsiteTypes: ["ecommerce"],
       },
       {
         id: "navbar-2",
         name: "Navbar Centered Logo",
         image: "/images/site-owners/navbars/navbar2.png",
         description: "Centered logo with navigation on sides",
+        showForWebsiteTypes: ["ecommerce"],
       },
       {
         id: "navbar-3",
         name: "Navbar with Search",
         image: "/images/site-owners/navbars/navbar3.png",
         description: "Includes search functionality",
+        showForWebsiteTypes: ["ecommerce"],
       },
       {
         id: "navbar-4",
         name: "Navbar with Categories",
         image: "/images/site-owners/navbars/navbar4.png",
         description: "Dropdown categories for e-commerce",
+        showForWebsiteTypes: ["ecommerce"],
       },
       {
         id: "navbar-5",
         name: "E-commerce Navbar",
         image: "/images/site-owners/navbars/navbar5.png",
         description: "Full e-commerce navigation with cart",
+        showForWebsiteTypes: ["ecommerce"],
       },
       {
         id: "navbar-6",
         name: "E-commerce with Top Bar",
         image: "/images/site-owners/navbars/navbar6.png",
         description: "Includes top bar for announcements",
+        showForWebsiteTypes: ["ecommerce"],
       },
       {
         id: "navbar-7",
         name: "E-commerce with Social Links",
         image: "/images/site-owners/navbars/navbar7.png",
         description: "Includes Social media links in top bar",
+        showForWebsiteTypes: ["ecommerce"],
       },
       {
         id: "navbar-8",
-        name: "Navbar without Cart",
+        name: "Navbar with social links",
         image: "/images/site-owners/navbars/navbar8.png",
         description: "Includes search functionality",
       },
@@ -673,6 +691,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Footer Style 6",
         image: "/images/site-owners/footers/footer6.png",
         description: "Complex footer with multiple sections",
+      },
+      {
+        id: "footer-7",
+        name: "Footer Style 7",
+        image: "/images/site-owners/footers/footer7.png",
+        description: "Footer with social media links",
       },
     ],
   };
@@ -761,7 +785,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       templates: templates.services,
       popular: true,
       type: "section",
-      showForWebsiteTypes: ["service"],
     },
     {
       id: "team-members-sections",
@@ -771,7 +794,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.team,
       type: "section",
-      showForWebsiteTypes: ["service", "portfolio"],
     },
 
     // PORTFOLIO SPECIFIC COMPONENTS
@@ -783,7 +805,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.portfolio,
       type: "section",
-      showForWebsiteTypes: ["service"],
     },
     {
       id: "gallery-sections",
@@ -793,7 +814,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.gallery,
       type: "section",
-      showForWebsiteTypes: ["portfolio", "service"],
     },
 
     // BLOG SPECIFIC COMPONENTS
@@ -805,7 +825,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.blog,
       type: "section",
-      showForWebsiteTypes: ["service"],
     },
 
     // UNIVERSAL COMPONENTS (available for all website types)
@@ -998,10 +1017,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       // Show only default templates in the main view
       const allTemplates = filteredComponents.flatMap(
         component =>
-          component.templates?.map(template => ({
-            component,
-            template: { ...template, componentId: component.id },
-          })) || []
+          component.templates
+            ?.filter(
+              template =>
+                !template.showForWebsiteTypes ||
+                template.showForWebsiteTypes.includes(websiteType)
+            )
+            .map(template => ({
+              component,
+              template: { ...template, componentId: component.id },
+            })) || []
       );
 
       // Filter to only show templates that are in default_templates array
@@ -1015,10 +1040,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       comp => comp.id === selectedCategory
     );
     if (component?.templates) {
-      return component.templates.map(template => ({
-        component,
-        template: { ...template, componentId: component.id },
-      }));
+      return component.templates
+        .filter(
+          template =>
+            !template.showForWebsiteTypes ||
+            template.showForWebsiteTypes.includes(websiteType)
+        )
+        .map(template => ({
+          component,
+          template: { ...template, componentId: component.id },
+        }));
     }
 
     return [];
@@ -1115,8 +1146,8 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
           topBarItems: [
             {
               id: "1",
-              text: "Customer Service: +977-9866316114",
-              href: "tel:+9779866316114",
+              text: "Customer Service: +977-9860425440",
+              href: "tel:+9779860425440",
             },
           ],
         };

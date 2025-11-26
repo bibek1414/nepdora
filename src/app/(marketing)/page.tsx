@@ -192,7 +192,7 @@ export default function Marketing() {
         <AISection />
         <TemplatesPage />
         <TestimonialsSection />
-        <PricingSection />
+        {/* <PricingSection /> */}
         <ContactSection />
         <FAQSection />
         <BuildGrowShowcase />

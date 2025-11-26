@@ -12,6 +12,7 @@ import { ContactForm2 } from "./contact-form-2";
 import { ContactForm3 } from "./contact-form-3";
 import { ContactForm4 } from "./contact-form-4";
 import { ContactForm5 } from "./contact-form-5";
+import { ContactForm6 } from "./contact-form-6";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -173,6 +174,8 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
       case "contact-5":
         return <ContactForm5 {...formProps} />;
       case "contact-1":
+      case "contact-6":
+        return <ContactForm6 {...formProps} />;
       default:
         return <ContactForm1 {...formProps} />;
     }

@@ -24,6 +24,7 @@ interface HeroStylesDialogProps {
       | "hero-9"
       | "hero-10"
       | "hero-11"
+      | "hero-12"
   ) => void;
 }
 
@@ -44,6 +45,7 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
     | "hero-9"
     | "hero-10"
     | "hero-11"
+    | "hero-12"
     | null
   >(null);
 

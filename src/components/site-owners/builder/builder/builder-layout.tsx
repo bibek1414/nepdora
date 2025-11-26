@@ -52,7 +52,15 @@ import {
   ComponentResponse,
   ComponentTypeMap,
 } from "@/types/owner-site/components/components";
-import { defaultContactData } from "@/types/owner-site/components/contact";
+import {
+  ContactData,
+  defaultContact1Data,
+  defaultContact2Data,
+  defaultContact3Data,
+  defaultContact4Data,
+  defaultContact5Data,
+  defaultContact6Data,
+} from "@/types/owner-site/components/contact";
 import { defaultTeamData } from "@/types/owner-site/components/team";
 import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
 import { defaultFAQData } from "@/types/owner-site/components/faq";
@@ -529,6 +537,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "style-4"
       | "style-5"
       | "style-6"
+      | "style-7"
   ) => {
     const payload = {
       content: "footer content",
@@ -666,6 +675,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "hero-9"
       | "hero-10"
       | "hero-11"
+      | "hero-12"
   ) => {
     const templateConfig = heroTemplateConfigs[template];
     const templateContent = heroTemplateContent[template] || {};
@@ -837,11 +847,19 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       pendingInsertIndex
     );
   };
+  const defaultContactMap: Record<ContactData["style"], ContactData> = {
+    "contact-1": defaultContact1Data,
+    "contact-2": defaultContact2Data,
+    "contact-3": defaultContact3Data,
+    "contact-4": defaultContact4Data,
+    "contact-5": defaultContact5Data,
+    "contact-6": defaultContact6Data,
+  };
 
   const handleContactTemplateSelect = async (
-    template: "contact-1" | "contact-2" | "contact-3" | "contact-4"
+    template: ContactData["style"]
   ) => {
-    const contactData = { ...defaultContactData, style: template };
+    const contactData = defaultContactMap[template];
     setIsContactStylesDialogOpen(false);
     await createComponentWithIndex("contact", contactData, pendingInsertIndex);
   };
