@@ -149,6 +149,30 @@ export interface AboutUs9Data {
   };
 }
 
+export interface AboutUs11Stat {
+  id: string;
+  icon: string;
+  value: string;
+  label: string;
+  sublabel: string;
+}
+
+export interface AboutUs11Data {
+  template: "about-11";
+  headline: string;
+  description: string;
+  featuredStatValue: string;
+  featuredStatLabel: string;
+  imageUrl: string;
+  imageAlt: string;
+  bulletPoints: Array<{ id: string; text: string }>;
+  supportingTitle: string;
+  supportingDescription: string;
+  stats: AboutUs11Stat[];
+  ctaText: string;
+  ctaLink: string;
+}
+
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
@@ -159,7 +183,8 @@ export type AboutUsData =
   | AboutUs6Data
   | AboutUs7Data
   | AboutUs8Data
-  | AboutUs9Data;
+  | AboutUs9Data
+  | AboutUs11Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -209,7 +234,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs6Data>
     | Partial<AboutUs7Data>
     | Partial<AboutUs8Data>
-    | Partial<AboutUs9Data>;
+    | Partial<AboutUs9Data>
+    | Partial<AboutUs11Data>;
   order?: number;
 }
 
@@ -487,4 +513,58 @@ export const defaultAboutUs9Data: AboutUs9Data = {
     url: "https://images.unsplash.com/photo-1542372147193-a7aca54189cd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     alt: "Businessman in office",
   },
+};
+
+export const defaultAboutUs11Data: AboutUs11Data = {
+  template: "about-11",
+  headline:
+    'Since 2016, we\'re a team of all in all <span class="font-serif italic font-normal">experienced</span> consultations, combine for strategic instant.',
+  description:
+    "At Optimo, We help businesses navigate complexity unlock to growth achieve lasting transformation with a team of experienced consultations, We can combine for strategic instant.",
+  featuredStatValue: "150+",
+  featuredStatLabel: "Successful Projects Delivered",
+  imageUrl: "https://picsum.photos/seed/team1/1200/900",
+  imageAlt: "Team collaborating",
+  bulletPoints: [
+    { id: "bp-1", text: "Strategic Planning" },
+    { id: "bp-2", text: "Operational Excellence" },
+    { id: "bp-3", text: "Market Expansion" },
+    { id: "bp-4", text: "Risk Management" },
+  ],
+  supportingTitle:
+    'With a 98% client <span class="font-serif italic text-gray-600">satisfaction</span>, our strategies have led to <span class="font-bold">$50M+ in revenue</span>',
+  supportingDescription:
+    "Our strategic approach is designed to align with your business goals, helping you scale faster.",
+  stats: [
+    {
+      id: "stat-1",
+      icon: "folder",
+      value: "250+",
+      label: "Over 300+ clients complete",
+      sublabel: "high-impact projects.",
+    },
+    {
+      id: "stat-2",
+      icon: "sun",
+      value: "98%",
+      label: "Trusted by hundreds of clients",
+      sublabel: "who rate our work highly.",
+    },
+    {
+      id: "stat-3",
+      icon: "users",
+      value: "50+",
+      label: "Our ability to adapt and deliver",
+      sublabel: "impactful solutions across.",
+    },
+    {
+      id: "stat-4",
+      icon: "lightbulb",
+      value: "20+",
+      label: "Building on years of experience,",
+      sublabel: "we provide trusted guidance.",
+    },
+  ],
+  ctaText: "Book a Free Call",
+  ctaLink: "#",
 };
