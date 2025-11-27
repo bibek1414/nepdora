@@ -14,19 +14,7 @@ export default async function AdminLayout({
 }) {
   const user = await getServerUser();
 
-  console.log("[AdminLayout] User check:", {
-    hasUser: !!user,
-    user: user
-      ? {
-          id: user.id,
-          email: user.email,
-          subDomain: user.subDomain,
-        }
-      : null,
-  });
-
   if (!user) {
-    console.log("[AdminLayout] No user, redirecting to login");
     redirect("/admin/login");
   }
 

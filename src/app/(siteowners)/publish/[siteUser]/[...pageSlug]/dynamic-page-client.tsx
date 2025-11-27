@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/site-owners/button";
 import { usePagePublished } from "@/hooks/publish/use-page-publish";
 import { useDomains } from "@/hooks/super-admin/use-domain";
 import { PageComponentRenderer } from "@/components/site-owners/publish/page-component-render";
-import { LoadingSpinner } from "@/components/site-owners/publish/loading-spinner";
 
 interface DynamicPageClientProps {
   siteUser: string;
@@ -16,6 +16,7 @@ export default function DynamicPageClient({
   siteUser,
   currentPageSlug,
 }: DynamicPageClientProps) {
+  const router = useRouter();
   const { data: domainsData, isLoading: isDomainsLoading } = useDomains(1, 100);
 
   const {
@@ -30,17 +31,22 @@ export default function DynamicPageClient({
     handleComponentUpdate,
   } = usePagePublished(siteUser, currentPageSlug);
 
-  if (isComponentsLoading || isDomainsLoading) {
-    return <LoadingSpinner message={`Loading ${currentPageSlug} page...`} />;
-  }
-
   const hasContent = pageComponents.length > 0;
   const domainExists = domainsData?.results?.some(
     domain => domain.tenant.schema_name === siteUser
   );
 
+  // Prefetch common routes for faster navigation
+  React.useEffect(() => {
+    router.prefetch(`/${siteUser}/home`);
+    router.prefetch(`/${siteUser}/products`);
+    router.prefetch(`/${siteUser}/services`);
+    router.prefetch(`/${siteUser}/blog`);
+    router.prefetch(`/${siteUser}/contact`);
+  }, [router, siteUser]);
+
   // Show error if domain doesn't exist
-  if (!domainExists) {
+  if (!domainExists && !isDomainsLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center p-8">
         <div className="text-center">
@@ -60,20 +66,28 @@ export default function DynamicPageClient({
 
   return (
     <>
-      <PageComponentRenderer
-        components={pageComponents}
-        siteUser={siteUser}
-        pageSlug={currentPageSlug}
-        onProductClick={handleProductClick}
-        onBlogClick={handleBlogClick}
-        onComponentUpdate={handleComponentUpdate}
-        onServiceClick={handleServiceClick}
-        onCategoryClick={handleCategoryClick}
-        onSubCategoryClick={handleSubCategoryClick}
-      />
+      {/* Show minimal skeleton during loading to prevent white flash */}
+      {(isComponentsLoading || isDomainsLoading) &&
+      pageComponents.length === 0 ? (
+        <div className="bg-background min-h-screen">
+          {/* Empty div to prevent white flash - NProgress handles visual feedback */}
+        </div>
+      ) : (
+        <PageComponentRenderer
+          components={pageComponents}
+          siteUser={siteUser}
+          pageSlug={currentPageSlug}
+          onProductClick={handleProductClick}
+          onBlogClick={handleBlogClick}
+          onComponentUpdate={handleComponentUpdate}
+          onServiceClick={handleServiceClick}
+          onCategoryClick={handleCategoryClick}
+          onSubCategoryClick={handleSubCategoryClick}
+        />
+      )}
 
       <div className="p-8">
-        {!hasContent ? (
+        {!hasContent && !isComponentsLoading ? (
           <div className="py-20 text-center">
             <h1 className="text-6xl font-bold text-gray-800">404</h1>
             <h3 className="text-foreground mb-2 text-xl font-semibold">

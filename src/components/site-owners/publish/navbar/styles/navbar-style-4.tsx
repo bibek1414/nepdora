@@ -36,7 +36,7 @@ import {
 import { SearchBar } from "@/components/site-owners/publish/search-bar/search-bar";
 import { useRouter } from "next/navigation";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-
+import Link from "next/link";
 const EditableItem: React.FC<{
   onEdit: () => void;
   onDelete?: () => void;
@@ -268,9 +268,10 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                   onEdit={() => onEditLink(link)}
                   onDelete={() => onDeleteLink(link.id)}
                 >
-                  <a
+                  <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
+                    prefetch={true}
                     className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium transition-colors"
                     style={{
                       color: theme.colors.primary,
@@ -278,12 +279,13 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                     }}
                   >
                     {link.text}
-                  </a>
+                  </Link>
                 </EditableItem>
               ) : (
-                <a
+                <Link
                   key={link.id}
                   href={generateLinkHref(link.href)}
+                  prefetch={true}
                   onClick={e => handleLinkClick(e, link.href)}
                   className={`text-sm font-medium transition-colors ${
                     disableClicks
@@ -292,7 +294,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                   }`}
                 >
                   {link.text}
-                </a>
+                </Link>
               )
             )}
 
@@ -431,7 +433,9 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                 {disableClicks ? (
                   button.text
                 ) : (
-                  <a href={generateLinkHref(button.href)}>{button.text}</a>
+                  <Link href={generateLinkHref(button.href)}>
+                    {button.text}
+                  </Link>
                 )}
               </Button>
             )

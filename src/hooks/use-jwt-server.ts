@@ -94,7 +94,7 @@ export async function getServerUser(): Promise<User | null> {
           tokenPayload?.is_onboarding_complete ??
           false,
         websiteType:
-          userData.website_type || tokenPayload?.website_type || "ecommerce", // Add website_type
+          userData.website_type || tokenPayload?.website_type || "ecommerce",
         avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
           userData.store_name || tokenPayload?.store_name || "User"
         )}&background=3b82f6&color=ffffff&size=32&rounded=true&bold=true`,

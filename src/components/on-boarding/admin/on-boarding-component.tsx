@@ -680,26 +680,45 @@ export default function OnboardingModal({
                       <p className="font-medium">{formData.businessName}</p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-6">
+                      {/* Logo Preview */}
                       <div>
-                        <p className="text-sm text-gray-500">Logo</p>
-                        <p className="font-medium">
-                          {logoPreview
-                            ? "New logo uploaded"
-                            : existingConfig?.logo
-                              ? "Keep current logo"
-                              : "No logo"}
-                        </p>
+                        <p className="mb-2 text-sm text-gray-500">Logo</p>
+                        {logoPreview ? (
+                          <div className="flex h-32 w-full items-center justify-center rounded-lg border-2 border-gray-200 bg-gray-50 p-4">
+                            <img
+                              src={logoPreview}
+                              alt="Logo"
+                              className="max-h-full max-w-full object-contain"
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex h-32 w-full items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
+                            <p className="text-sm text-gray-400">
+                              No logo uploaded
+                            </p>
+                          </div>
+                        )}
                       </div>
+
+                      {/* Favicon Preview */}
                       <div>
-                        <p className="text-sm text-gray-500">Favicon</p>
-                        <p className="font-medium">
-                          {faviconPreview
-                            ? "New favicon uploaded"
-                            : existingConfig?.favicon
-                              ? "Keep current favicon"
-                              : "No favicon"}
-                        </p>
+                        <p className="mb-2 text-sm text-gray-500">Favicon</p>
+                        {faviconPreview ? (
+                          <div className="flex h-32 w-full items-center justify-center rounded-lg border-2 border-gray-200 bg-gray-50 p-4">
+                            <img
+                              src={faviconPreview}
+                              alt="Favicon"
+                              className="max-h-16 max-w-16 object-contain"
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex h-32 w-full items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
+                            <p className="text-sm text-gray-400">
+                              No favicon uploaded
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
 

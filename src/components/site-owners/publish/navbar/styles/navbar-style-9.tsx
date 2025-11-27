@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -13,15 +14,7 @@ import {
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
 import { getButtonVariant } from "@/lib/utils";
-import {
-  Plus,
-  Edit,
-  Trash2,
-  Menu,
-  X,
-  Search,
-  ShoppingCart,
-} from "lucide-react";
+import { Menu } from "lucide-react";
 import { NavbarLogo } from "../navbar-logo";
 
 const EditableItem: React.FC<{
@@ -58,9 +51,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
   onDeleteButton,
   disableClicks = false,
 }) => {
-  const { links, buttons, showCart } = navbarData;
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const { links, buttons } = navbarData;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -72,14 +63,14 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
     if (isEditable || !siteUser || disableClicks) return "#";
 
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
+      return `/publish/${siteUser}`;
     }
 
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
+    return `/publish/${siteUser}/${cleanHref}`;
   };
 
-  const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
+  const handleLinkClick = (e: React.MouseEvent) => {
     if (disableClicks || isEditable) {
       e.preventDefault();
       return;
@@ -128,27 +119,28 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   onEdit={() => onEditLink(link)}
                   onDelete={() => onDeleteLink(link.id)}
                 >
-                  <a
+                  <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
                     className="text-muted-foreground hover:text-foreground cursor-pointer text-base font-medium whitespace-nowrap transition-colors"
                   >
                     {link.text}
-                  </a>
+                  </Link>
                 </EditableItem>
               ) : (
-                <a
+                <Link
                   key={link.id}
                   href={generateLinkHref(link.href)}
-                  onClick={e => handleLinkClick(e, link.href)}
+                  onClick={handleLinkClick}
                   className={`text-base font-medium whitespace-nowrap transition-colors ${
                     disableClicks
                       ? "cursor-default opacity-60"
                       : "cursor-pointer hover:opacity-80"
                   }`}
+                  prefetch={true}
                 >
                   {link.text}
-                </a>
+                </Link>
               )
             )}
           </div>
@@ -187,7 +179,9 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   {disableClicks ? (
                     button.text
                   ) : (
-                    <a href={generateLinkHref(button.href)}>{button.text}</a>
+                    <Link href={generateLinkHref(button.href)} prefetch={true}>
+                      {button.text}
+                    </Link>
                   )}
                 </Button>
               )
@@ -195,11 +189,8 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
           </div>
         </div>
 
-        {/* Mobile Header Right Side - Menu Button & Cart */}
+        {/* Mobile Header Right Side - Menu Button */}
         <div className="flex items-center gap-2 lg:hidden">
-          {/* Cart Icon - Mobile */}
-
-          {/* Mobile Menu Button */}
           <Button
             variant="ghost"
             size="icon"
@@ -243,15 +234,16 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                       className="hover:bg-accent h-12 w-full justify-start px-4 text-lg font-normal"
                       asChild={!disableClicks}
                     >
-                      <a
+                      <Link
                         href={generateLinkHref(link.href)}
-                        onClick={e => handleLinkClick(e, link.href)}
+                        onClick={handleLinkClick}
                         className={`w-full text-left ${
                           disableClicks ? "pointer-events-none opacity-60" : ""
                         }`}
+                        prefetch={true}
                       >
                         {link.text}
-                      </a>
+                      </Link>
                     </Button>
                   </SheetClose>
                 )
@@ -294,12 +286,13 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                       {disableClicks ? (
                         <span>{button.text}</span>
                       ) : (
-                        <a
+                        <Link
                           href={generateLinkHref(button.href)}
                           className="w-full text-center"
+                          prefetch={true}
                         >
                           {button.text}
-                        </a>
+                        </Link>
                       )}
                     </Button>
                   </SheetClose>

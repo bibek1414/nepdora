@@ -22,6 +22,7 @@ import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
+import Link from "next/link";
 
 interface FooterStyle4Props {
   footerData: FooterData;
@@ -148,31 +149,6 @@ export function FooterStyle4({
     return `/publish/${siteUser}/${cleanHref}`;
   };
 
-  const handleLinkClick = (href: string | undefined, e: React.MouseEvent) => {
-    if (!href) {
-      e.preventDefault();
-      return;
-    }
-
-    if (isEditable) {
-      e.preventDefault();
-      return;
-    }
-
-    if (
-      href.includes("/preview?") ||
-      href.startsWith("http") ||
-      href.startsWith("mailto:") ||
-      href.startsWith("tel:")
-    ) {
-      return;
-    }
-
-    e.preventDefault();
-    const generatedHref = generateLinkHref(href);
-    window.location.href = generatedHref;
-  };
-
   const handleDelete = () => {
     deleteFooterMutation.mutate();
   };
@@ -277,17 +253,19 @@ export function FooterStyle4({
                       {isEditable ? (
                         <button
                           className="text-left text-white/80 transition-all hover:translate-x-1 hover:text-white"
-                          onClick={e => handleLinkClick(link.href, e)}
+                          onClick={
+                            isEditable ? e => e.preventDefault() : undefined
+                          }
                         >
                           {link.text}
                         </button>
                       ) : (
-                        <a
+                        <Link
                           href={generateLinkHref(link.href || "")}
                           className="block text-white/80 transition-all hover:translate-x-1 hover:text-white"
                         >
                           {link.text}
-                        </a>
+                        </Link>
                       )}
                     </li>
                   ))}
@@ -370,22 +348,21 @@ export function FooterStyle4({
             {/* Social Links */}
             <div className="flex items-center space-x-4">
               {footerData.socialLinks.map(social => (
-                <Button
+                <Link
                   key={social.id}
-                  variant="ghost"
-                  size="sm"
-                  className="rounded-full bg-white/10 p-3 text-white/80 backdrop-blur-sm transition-all hover:bg-white/20 hover:text-white hover:shadow-lg"
-                  onClick={e => handleLinkClick(social.href, e)}
-                  {...(!isEditable &&
-                    social.href && {
-                      as: "a",
-                      href: social.href.startsWith("http")
-                        ? social.href
-                        : generateLinkHref(social.href),
-                    })}
+                  href={social.href || "#"}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
+                  target={
+                    social.href?.startsWith("http") ? "_blank" : undefined
+                  }
+                  rel={
+                    social.href?.startsWith("http")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
                 >
                   {renderSocialIcon(social)}
-                </Button>
+                </Link>
               ))}
             </div>
           </div>

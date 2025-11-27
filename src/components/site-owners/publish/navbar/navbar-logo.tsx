@@ -1,6 +1,7 @@
 import React from "react";
 import { NavbarData } from "@/types/owner-site/components/navbar";
 import { optimizeCloudinaryUrl } from "@/utils/cloudinary";
+import Link from "next/link";
 
 interface NavbarLogoProps {
   data: NavbarData;
@@ -81,9 +82,9 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
         {renderLogo()}
       </span>
     ) : (
-      <a href={`/publish/${siteUser}`} className={className}>
+      <Link href={`/publish/${siteUser}`} className={className}>
         {renderLogo()}
-      </a>
+      </Link>
     );
 
   return logoElement;

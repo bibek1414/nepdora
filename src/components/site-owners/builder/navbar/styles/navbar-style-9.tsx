@@ -23,7 +23,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { NavbarLogo } from "../navbar-logo";
-
+import Link from "next/link";
 const EditableItem: React.FC<{
   onEdit: () => void;
   onDelete?: () => void;
@@ -128,16 +128,16 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   onEdit={() => onEditLink(link)}
                   onDelete={() => onDeleteLink(link.id)}
                 >
-                  <a
+                  <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
                     className="text-muted-foreground hover:text-foreground cursor-pointer text-base font-medium whitespace-nowrap transition-colors"
                   >
                     {link.text}
-                  </a>
+                  </Link>
                 </EditableItem>
               ) : (
-                <a
+                <Link
                   key={link.id}
                   href={generateLinkHref(link.href)}
                   onClick={e => handleLinkClick(e, link.href)}
@@ -148,7 +148,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   }`}
                 >
                   {link.text}
-                </a>
+                </Link>
               )
             )}
           </div>
@@ -187,7 +187,9 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   {disableClicks ? (
                     button.text
                   ) : (
-                    <a href={generateLinkHref(button.href)}>{button.text}</a>
+                    <Link href={generateLinkHref(button.href)}>
+                      {button.text}
+                    </Link>
                   )}
                 </Button>
               )
@@ -243,7 +245,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                       className="hover:bg-accent h-12 w-full justify-start px-4 text-lg font-normal"
                       asChild={!disableClicks}
                     >
-                      <a
+                      <Link
                         href={generateLinkHref(link.href)}
                         onClick={e => handleLinkClick(e, link.href)}
                         className={`w-full text-left ${
@@ -251,7 +253,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                         }`}
                       >
                         {link.text}
-                      </a>
+                      </Link>
                     </Button>
                   </SheetClose>
                 )
@@ -294,12 +296,12 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                       {disableClicks ? (
                         <span>{button.text}</span>
                       ) : (
-                        <a
+                        <Link
                           href={generateLinkHref(button.href)}
                           className="w-full text-center"
                         >
                           {button.text}
-                        </a>
+                        </Link>
                       )}
                     </Button>
                   </SheetClose>

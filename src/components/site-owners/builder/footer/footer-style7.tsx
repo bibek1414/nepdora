@@ -21,6 +21,7 @@ import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-foote
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import { EditableText } from "@/components/ui/editable-text";
+import Link from "next/link";
 
 interface FooterStyle7Props {
   footerData: FooterData;
@@ -181,31 +182,6 @@ export function FooterStyle7({
 
     const cleanHref = originalHref.replace(/^[#/]+/, "");
     return `/preview/${siteUser}/${cleanHref}`;
-  };
-
-  const handleLinkClick = (href: string | undefined, e: React.MouseEvent) => {
-    if (!href) {
-      e.preventDefault();
-      return;
-    }
-
-    if (isEditable) {
-      e.preventDefault();
-      return;
-    }
-
-    if (
-      href.includes("/preview?") ||
-      href.startsWith("http") ||
-      href.startsWith("mailto:") ||
-      href.startsWith("tel:")
-    ) {
-      return;
-    }
-
-    e.preventDefault();
-    const generatedHref = generateLinkHref(href);
-    window.location.href = generatedHref;
   };
 
   const handleDelete = () => {
@@ -369,18 +345,21 @@ export function FooterStyle7({
             </p>
             <div className="flex gap-4">
               {footerData.socialLinks.map(social => (
-                <a
+                <Link
                   key={social.id}
                   href={social.href || "#"}
                   className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
-                  style={{
-                    backgroundColor: `${primaryForeground}15`,
-                    color: primaryForeground,
-                  }}
-                  onClick={e => handleLinkClick(social.href, e)}
+                  target={
+                    social.href?.startsWith("http") ? "_blank" : undefined
+                  }
+                  rel={
+                    social.href?.startsWith("http")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
                 >
                   {renderSocialIcon(social)}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -403,7 +382,7 @@ export function FooterStyle7({
                   }
                 >
                   <span style={{ color: secondaryColor }}>✓</span>
-                  <a
+                  <Link
                     href={generateLinkHref(link.href || "")}
                     className="transition-colors hover:text-inherit"
                     style={
@@ -411,10 +390,10 @@ export function FooterStyle7({
                         "--hover-color": secondaryColor,
                       } as React.CSSProperties
                     }
-                    onClick={e => handleLinkClick(link.href, e)}
+                    onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -438,7 +417,7 @@ export function FooterStyle7({
                   }
                 >
                   <span style={{ color: secondaryColor }}>&gt;</span>
-                  <a
+                  <Link
                     href={generateLinkHref(link.href || "")}
                     className="transition-colors hover:text-inherit"
                     style={
@@ -446,10 +425,10 @@ export function FooterStyle7({
                         "--hover-color": secondaryColor,
                       } as React.CSSProperties
                     }
-                    onClick={e => handleLinkClick(link.href, e)}
+                    onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -521,15 +500,15 @@ export function FooterStyle7({
           <p>{footerData.copyright}</p>
           <div className="mt-4 flex gap-8 md:mt-0">
             {(legalSection?.links || []).map(link => (
-              <a
+              <Link
                 key={link.id}
                 href={generateLinkHref(link.href || "")}
                 className="transition-colors hover:text-white"
                 style={{ color: "inherit" }}
-                onClick={e => handleLinkClick(link.href, e)}
+                onClick={isEditable ? e => e.preventDefault() : undefined}
               >
                 {link.text}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

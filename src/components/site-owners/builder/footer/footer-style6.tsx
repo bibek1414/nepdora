@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import Link from "next/link";
 
 interface FooterStyle6Props {
   footerData: FooterData;
@@ -151,31 +152,6 @@ export function FooterStyle6({
     return `/preview/${siteUser}/${cleanHref}`;
   };
 
-  const handleLinkClick = (href: string | undefined, e: React.MouseEvent) => {
-    if (!href) {
-      e.preventDefault();
-      return;
-    }
-
-    if (isEditable) {
-      e.preventDefault();
-      return;
-    }
-
-    if (
-      href.includes("/preview?") ||
-      href.startsWith("http") ||
-      href.startsWith("mailto:") ||
-      href.startsWith("tel:")
-    ) {
-      return;
-    }
-
-    e.preventDefault();
-    const generatedHref = generateLinkHref(href);
-    window.location.href = generatedHref;
-  };
-
   // Get copyright text or generate default
   const copyrightText =
     footerData.copyright ||
@@ -208,20 +184,19 @@ export function FooterStyle6({
         {/* Social Links */}
         <div className="mt-5 flex items-center gap-4">
           {footerData.socialLinks.map(social => (
-            <a
+            <Link
               key={social.id}
-              href={
-                isEditable
-                  ? "#"
-                  : social.href?.startsWith("http")
-                    ? social.href
-                    : generateLinkHref(social.href || "#")
+              href={social.href || "#"}
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
+              target={social.href?.startsWith("http") ? "_blank" : undefined}
+              rel={
+                social.href?.startsWith("http")
+                  ? "noopener noreferrer"
+                  : undefined
               }
-              onClick={e => handleLinkClick(social.href, e)}
-              className="text-white/50 transition-all duration-300 hover:-translate-y-0.5 hover:text-white/70"
             >
               {renderSocialIcon(social)}
-            </a>
+            </Link>
           ))}
         </div>
       </footer>

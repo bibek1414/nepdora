@@ -11,7 +11,7 @@ import { CartIcon } from "@/components/site-owners/builder/cart/cart-icon";
 import SideCart from "@/components/site-owners/publish/cart/side-cart";
 import { NavbarLogo } from "../navbar-logo";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-
+import Link from "next/link";
 const EditableItem: React.FC<{
   onEdit: () => void;
   onDelete?: () => void;
@@ -147,7 +147,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                   onEdit={() => onEditLink(link)}
                   onDelete={() => onDeleteLink(link.id)}
                 >
-                  <a
+                  <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
                     className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium transition-colors"
@@ -157,10 +157,10 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                     }}
                   >
                     {link.text}
-                  </a>
+                  </Link>
                 </EditableItem>
               ) : (
-                <a
+                <Link
                   key={link.id}
                   href={generateLinkHref(link.href)}
                   onClick={e => handleLinkClick(e, link.href)}
@@ -171,7 +171,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                   }`}
                 >
                   {link.text}
-                </a>
+                </Link>
               )
             )}
             {isEditable && onAddLink && (
@@ -226,7 +226,9 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                 {disableClicks ? (
                   button.text
                 ) : (
-                  <a href={generateLinkHref(button.href)}>{button.text}</a>
+                  <Link href={generateLinkHref(button.href)}>
+                    {button.text}
+                  </Link>
                 )}
               </Button>
             )

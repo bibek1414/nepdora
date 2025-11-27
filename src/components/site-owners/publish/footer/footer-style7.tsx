@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 import {
   Edit,
   Trash2,
@@ -30,7 +31,7 @@ interface FooterStyle7Props {
   siteUser?: string;
 }
 
-// Icon mapping to resolve serialized icons
+// Icon mapping
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Facebook,
   Twitter,
@@ -44,52 +45,41 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Globe,
 };
 
-// Helper function to render social icons with proper fallback
 const renderSocialIcon = (social: SocialLink) => {
   const IconFromMap = iconMap[social.platform];
   if (IconFromMap) {
     return <IconFromMap className="h-4 w-4" />;
   }
-
   if (typeof social.icon === "function") {
     const IconComponent = social.icon;
     return <IconComponent className="h-4 w-4" />;
   }
-
   return <Facebook className="h-4 w-4" />;
 };
 
-// Logo component
 const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
   const { logoType, logoImage, logoText, companyName } = footerData;
 
   if (logoType === "text") {
     return (
-      <div className="flex items-center">
-        <span className="text-xl font-bold text-white">
-          {logoText || companyName}
-        </span>
-      </div>
+      <span className="text-xl font-bold text-white">
+        {logoText || companyName}
+      </span>
     );
   }
 
   if (logoType === "image") {
     return logoImage ? (
-      <div className="flex items-center">
-        <img
-          src={logoImage}
-          alt={companyName}
-          className="h-8 w-auto object-contain"
-        />
-      </div>
+      <img
+        src={logoImage}
+        alt={companyName}
+        className="h-8 w-auto object-contain"
+      />
     ) : (
-      <div className="flex items-center">
-        <span className="text-xl font-bold text-white">{companyName}</span>
-      </div>
+      <span className="text-xl font-bold text-white">{companyName}</span>
     );
   }
 
-  // logoType === "both"
   return (
     <div className="flex items-center gap-3">
       {logoImage && (
@@ -132,33 +122,25 @@ export function FooterStyle7({
       secondaryForeground: "#1F2937",
       background: "#FFFFFF",
     },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
   };
 
-  // Get colors from theme with fallbacks
   const primaryColor = theme.colors?.primary || "#3B82F6";
   const secondaryColor = theme.colors?.secondary || "#F59E0B";
   const primaryForeground = theme.colors?.primaryForeground || "#FFFFFF";
   const secondaryForeground = theme.colors?.secondaryForeground || "#1F2937";
   const backgroundColor = theme.colors?.background || "#FFFFFF";
 
-  // Extended FooterData with CTA fields
   type ExtendedFooterData = FooterData & {
     ctaText1?: string;
     ctaText2?: string;
   };
 
-  // Extract CTA text from footer data or use defaults
   const extendedFooterData = footerData as ExtendedFooterData;
   const ctaText1 =
     extendedFooterData.ctaText1 || "Need Any Support For\nTour And Visa?";
   const ctaText2 =
     extendedFooterData.ctaText2 || "Are You Ready For Get\nStarted Travelling?";
 
-  // Handle CTA text updates - ONLY THESE TWO FIELDS ARE INLINE EDITABLE
   const handleCtaText1Update = (value: string) => {
     if (onUpdate) {
       onUpdate({ ctaText1: value } as Partial<FooterData>);
@@ -171,41 +153,25 @@ export function FooterStyle7({
     }
   };
 
-  // Function to generate the correct href for links
+  // Generate href for links - NO MORE window.location.href!
   const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref;
+    if (isEditable) return "#";
 
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
+      return `/publish/${siteUser}`;
+    }
+
+    // Handle external links
+    if (
+      originalHref.startsWith("http") ||
+      originalHref.startsWith("mailto:") ||
+      originalHref.startsWith("tel:")
+    ) {
+      return originalHref;
     }
 
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
-
-  const handleLinkClick = (href: string | undefined, e: React.MouseEvent) => {
-    if (!href) {
-      e.preventDefault();
-      return;
-    }
-
-    if (isEditable) {
-      e.preventDefault();
-      return;
-    }
-
-    if (
-      href.includes("/preview?") ||
-      href.startsWith("http") ||
-      href.startsWith("mailto:") ||
-      href.startsWith("tel:")
-    ) {
-      return;
-    }
-
-    e.preventDefault();
-    const generatedHref = generateLinkHref(href);
-    window.location.href = generatedHref;
+    return `/publish/${siteUser}/${cleanHref}`;
   };
 
   const handleDelete = () => {
@@ -251,7 +217,6 @@ export function FooterStyle7({
     }
   };
 
-  // Find sections by title
   const servicesSection = footerData.sections.find(
     section =>
       section.title.toLowerCase().includes("service") ||
@@ -369,7 +334,7 @@ export function FooterStyle7({
             </p>
             <div className="flex gap-4">
               {footerData.socialLinks.map(social => (
-                <a
+                <Link
                   key={social.id}
                   href={social.href || "#"}
                   className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
@@ -377,10 +342,17 @@ export function FooterStyle7({
                     backgroundColor: `${primaryForeground}15`,
                     color: primaryForeground,
                   }}
-                  onClick={e => handleLinkClick(social.href, e)}
+                  target={
+                    social.href?.startsWith("http") ? "_blank" : undefined
+                  }
+                  rel={
+                    social.href?.startsWith("http")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
                 >
                   {renderSocialIcon(social)}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -394,27 +366,17 @@ export function FooterStyle7({
               {(servicesSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex cursor-pointer items-center gap-2 transition-colors hover:text-white"
-                  style={
-                    {
-                      color: `${primaryForeground}80`,
-                      "--hover-color": primaryForeground,
-                    } as React.CSSProperties
-                  }
+                  className="flex items-center gap-2"
+                  style={{ color: `${primaryForeground}80` }}
                 >
                   <span style={{ color: secondaryColor }}>✓</span>
-                  <a
+                  <Link
                     href={generateLinkHref(link.href || "")}
-                    className="transition-colors hover:text-inherit"
-                    style={
-                      {
-                        "--hover-color": secondaryColor,
-                      } as React.CSSProperties
-                    }
-                    onClick={e => handleLinkClick(link.href, e)}
+                    className="transition-colors hover:text-white"
+                    onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -429,27 +391,17 @@ export function FooterStyle7({
               {(usefulLinksSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex cursor-pointer items-center gap-2 transition-colors hover:text-white"
-                  style={
-                    {
-                      color: `${primaryForeground}80`,
-                      "--hover-color": primaryForeground,
-                    } as React.CSSProperties
-                  }
+                  className="flex items-center gap-2"
+                  style={{ color: `${primaryForeground}80` }}
                 >
                   <span style={{ color: secondaryColor }}>&gt;</span>
-                  <a
+                  <Link
                     href={generateLinkHref(link.href || "")}
-                    className="transition-colors hover:text-inherit"
-                    style={
-                      {
-                        "--hover-color": secondaryColor,
-                      } as React.CSSProperties
-                    }
-                    onClick={e => handleLinkClick(link.href, e)}
+                    className="transition-colors hover:text-white"
+                    onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -521,20 +473,19 @@ export function FooterStyle7({
           <p>{footerData.copyright}</p>
           <div className="mt-4 flex gap-8 md:mt-0">
             {(legalSection?.links || []).map(link => (
-              <a
+              <Link
                 key={link.id}
                 href={generateLinkHref(link.href || "")}
                 className="transition-colors hover:text-white"
                 style={{ color: "inherit" }}
-                onClick={e => handleLinkClick(link.href, e)}
+                onClick={isEditable ? e => e.preventDefault() : undefined}
               >
                 {link.text}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
 
-        {/* Edit/Delete buttons for editable mode */}
         {isEditable && (
           <div className="absolute top-4 right-4 flex gap-2">
             <Button

@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
+import Link from "next/link";
 interface EditableLinkProps {
   text: string;
   href: string;
@@ -383,7 +384,7 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
 
   return (
     <div className="group relative inline-block" ref={containerRef}>
-      <a
+      <Link
         href={finalHref}
         target={isExternal ? "_blank" : target}
         style={style}
@@ -406,7 +407,7 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
             )}
           </>
         )}
-      </a>
+      </Link>
 
       {/* Page Selector Dropdown */}
       {showPageSelector && isEditable && (

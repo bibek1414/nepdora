@@ -17,7 +17,7 @@ import { NavbarLogo } from "../navbar-logo";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableLink } from "@/components/ui/navbar/editable-link";
 import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
-
+import Link from "next/link";
 const EditableItem: React.FC<{
   onEdit: () => void;
   onDelete?: () => void;
@@ -165,7 +165,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                         />
                       </EditableItem>
                     ) : (
-                      <a
+                      <Link
                         href={generateLinkHref(link.href)}
                         onClick={e => handleLinkClick(e, link.href)}
                         className={`hover:text-primary font-medium text-gray-700 ${
@@ -175,7 +175,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                         }`}
                       >
                         {link.text}
-                      </a>
+                      </Link>
                     )}
                   </React.Fragment>
                 ))}
@@ -204,7 +204,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                       ] as string;
 
                       return (
-                        <a
+                        <Link
                           key={social.key}
                           href={disableClicks ? "#" : url}
                           target="_blank"
@@ -221,7 +221,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                             className="h-5 w-5"
                             style={{ color: theme.colors.primary }}
                           />
-                        </a>
+                        </Link>
                       );
                     })}
                   </div>

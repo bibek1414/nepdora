@@ -35,7 +35,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import Link from "next/link";
 const EditableItem: React.FC<{
   onEdit: () => void;
   onDelete?: () => void;
@@ -246,7 +246,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                       />
                     </EditableItem>
                   ) : (
-                    <a
+                    <Link
                       href={generateLinkHref(link.href)}
                       onClick={e => handleLinkClick(e, link.href)}
                       className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
@@ -256,7 +256,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                       }`}
                     >
                       {link.text}
-                    </a>
+                    </Link>
                   )}
 
                   {/* Add separator between links except after the last one */}
@@ -304,7 +304,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                       </Button>
                     </div>
                   ) : (
-                    <a
+                    <Link
                       href={
                         item.href && !disableClicks
                           ? item.href.startsWith("tel:") ||
@@ -326,7 +326,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                         className="mx-auto max-w-3xl text-sm"
                         dangerouslySetInnerHTML={{ __html: item.text }}
                       ></span>
-                    </a>
+                    </Link>
                   )}
 
                   {/* Add separator between items except after the last one */}

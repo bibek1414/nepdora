@@ -17,6 +17,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import Link from "next/link";
 
 const EditableItem: React.FC<{
   onEdit: () => void;
@@ -199,16 +200,16 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                             onEdit={() => onEditLink(link)}
                             onDelete={() => onDeleteLink(link.id)}
                           >
-                            <a
+                            <Link
                               href={link.href}
                               onClick={e => e.preventDefault()}
                               className="mt-6 flex items-center text-sm font-medium hover:text-gray-800"
                             >
                               {link.text}
-                            </a>
+                            </Link>
                           </EditableItem>
                         ) : (
-                          <a
+                          <Link
                             href={generateLinkHref(link.href)}
                             onClick={e => handleLinkClick(e, link.href)}
                             className={`flex items-center text-sm font-medium hover:text-gray-800 ${
@@ -218,7 +219,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                             }`}
                           >
                             {link.text}
-                          </a>
+                          </Link>
                         )}
                       </div>
                     ))}
@@ -234,16 +235,16 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                           onEdit={() => onEditButton(button)}
                           onDelete={() => onDeleteButton(button.id)}
                         >
-                          <a
+                          <Link
                             href={button.href}
                             onClick={e => e.preventDefault()}
                             className="cursor-pointer text-sm font-medium hover:text-gray-800"
                           >
                             {button.text}
-                          </a>
+                          </Link>
                         </EditableItem>
                       ) : (
-                        <a
+                        <Link
                           key={button.id}
                           href={generateLinkHref(button.href)}
                           onClick={e => handleLinkClick(e, button.href)}
@@ -254,7 +255,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                           }`}
                         >
                           {button.text}
-                        </a>
+                        </Link>
                       )
                     )}
                     {buttons.length > 0 && (
@@ -266,7 +267,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                   </div>
 
                   <div className="flex lg:ml-6">
-                    <a
+                    <Link
                       href="#"
                       onClick={e => {
                         e.preventDefault();
@@ -280,7 +281,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                     >
                       <span className="sr-only">Search</span>
                       <Search className="h-6 w-6" />
-                    </a>
+                    </Link>
                   </div>
 
                   {showCart && (
@@ -331,24 +332,24 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                     onDelete={() => onDeleteLink(link.id)}
                   >
                     <div className="flow-root">
-                      <a
+                      <Link
                         href={link.href}
                         onClick={e => e.preventDefault()}
                         className="-m-2 block cursor-pointer p-2 font-medium text-gray-900"
                       >
                         {link.text}
-                      </a>
+                      </Link>
                     </div>
                   </EditableItem>
                 ) : (
                   <div className="flow-root" key={link.id}>
-                    <a
+                    <Link
                       href={generateLinkHref(link.href)}
                       onClick={e => handleLinkClick(e, link.href)}
                       className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
                     >
                       {link.text}
-                    </a>
+                    </Link>
                   </div>
                 )
               )}
@@ -365,24 +366,24 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                       onDelete={() => onDeleteButton(button.id)}
                     >
                       <div className="flow-root">
-                        <a
+                        <Link
                           href={button.href}
                           onClick={e => e.preventDefault()}
                           className="-m-2 block cursor-pointer p-2 font-medium text-gray-900"
                         >
                           {button.text}
-                        </a>
+                        </Link>
                       </div>
                     </EditableItem>
                   ) : (
                     <div className="flow-root" key={button.id}>
-                      <a
+                      <Link
                         href={generateLinkHref(button.href)}
                         onClick={e => handleLinkClick(e, button.href)}
                         className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
                       >
                         {button.text}
-                      </a>
+                      </Link>
                     </div>
                   )
                 )}

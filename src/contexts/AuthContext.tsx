@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from "react";
 import { useRouter } from "next/navigation";
 import { User, AuthTokens, LoginResponse } from "@/types/auth/auth";
 import { loginUser, signupUser } from "@/services/auth/api";
@@ -48,25 +54,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const router = useRouter();
 
-  // Enhanced cookie utilities for cross-domain support
-  const setCrossDomainCookie = (
+  // Simple cookie utility - sets cookie with expiration from JWT
+  const setCookieWithExpiration = (
     name: string,
     value: string,
-    days: number = 7
+    token: string
   ) => {
     const baseDomain = siteConfig.baseDomain;
-    const expires = new Date();
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
 
-    // Set cookie for current host
-    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax${
-      process.env.NODE_ENV === "production" ? "; Secure" : ""
-    }`;
+    // Extract expiration from JWT
+    let expiresStr = "";
+    try {
+      const decoded = decodeJwt(token) as { exp?: number } | null;
+      if (decoded?.exp) {
+        const expires = new Date(decoded.exp * 1000);
+        expiresStr = `; expires=${expires.toUTCString()}`;
+      }
+    } catch {
+      // If can't decode, set default 7 days
+      const expires = new Date();
+      expires.setTime(expires.getTime() + 7 * 24 * 60 * 60 * 1000);
+      expiresStr = `; expires=${expires.toUTCString()}`;
+    }
 
-    // Additionally set cookie scoped to base domain (effective in production domains)
-    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; domain=.${baseDomain}; path=/; SameSite=Lax${
-      process.env.NODE_ENV === "production" ? "; Secure" : ""
-    }`;
+    const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
+
+    // Set for current domain
+    document.cookie = `${name}=${value}${expiresStr}; path=/; SameSite=Lax${secure}`;
+
+    // Set for base domain
+    document.cookie = `${name}=${value}${expiresStr}; domain=.${baseDomain}; path=/; SameSite=Lax${secure}`;
   };
 
   const getCookie = (name: string): string | null => {
@@ -80,45 +97,156 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return null;
   };
 
-  const deleteCrossDomainCookie = (name: string) => {
+  const deleteCookie = (name: string) => {
     const baseDomain = siteConfig.baseDomain;
-    // Delete from current domain
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    // Delete from base domain
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=.${baseDomain}; path=/;`;
   };
 
-  // NEW: Add updateUser function
+  // Check if token is expired
+  const isTokenExpired = (token: string): boolean => {
+    try {
+      const decoded = decodeJwt(token) as { exp?: number } | null;
+      if (!decoded?.exp) return true;
+      return Date.now() >= decoded.exp * 1000;
+    } catch {
+      return true;
+    }
+  };
+
+  // Refresh token when needed
+  const refreshAccessToken = useCallback(async (): Promise<boolean> => {
+    const storedTokens = localStorage.getItem("authTokens");
+    if (!storedTokens) return false;
+
+    try {
+      const parsedTokens: AuthTokens = JSON.parse(storedTokens);
+
+      // Check if refresh token is valid
+      if (
+        !parsedTokens.refresh_token ||
+        isTokenExpired(parsedTokens.refresh_token)
+      ) {
+        clearAuthData();
+        return false;
+      }
+
+      // Call your refresh API
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh_token: parsedTokens.refresh_token }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Refresh failed");
+
+      const data = await response.json();
+      const newTokens: AuthTokens = {
+        access_token: data.access_token,
+        refresh_token: data.refresh_token || parsedTokens.refresh_token,
+      };
+
+      updateTokens(newTokens);
+      return true;
+    } catch (error) {
+      console.error("Token refresh failed:", error);
+      clearAuthData();
+      toast.error("Session expired", { description: "Please log in again" });
+      router.push("/account/login");
+      return false;
+    }
+  }, [router]);
+
   const updateUser = (userData: Partial<User>) => {
     setUser(prev => {
       if (!prev) return prev;
       const updatedUser = { ...prev, ...userData };
-
-      // Update localStorage
       localStorage.setItem("authUser", JSON.stringify(updatedUser));
-      setCrossDomainCookie("authUser", JSON.stringify(updatedUser));
+
+      // Update cookie with access token expiration
+      const storedTokens = localStorage.getItem("authTokens");
+      if (storedTokens) {
+        const { access_token } = JSON.parse(storedTokens);
+        setCookieWithExpiration(
+          "authUser",
+          JSON.stringify(updatedUser),
+          access_token
+        );
+      }
 
       return updatedUser;
     });
   };
 
-  useEffect(() => {
-    // Check URL parameters first (for cross-domain auth)
-    const urlParams = new URLSearchParams(window.location.search);
-    const authTokenFromUrl = urlParams.get("auth_token");
-    const refreshTokenFromUrl = urlParams.get("refresh_token");
+  const updateTokens = (newTokens: AuthTokens) => {
+    setTokens(newTokens);
+    localStorage.setItem("authTokens", JSON.stringify(newTokens));
 
-    if (authTokenFromUrl) {
-      try {
+    // Set cookies with JWT expiration
+    setCookieWithExpiration(
+      "authToken",
+      newTokens.access_token,
+      newTokens.access_token
+    );
+    if (newTokens.refresh_token) {
+      setCookieWithExpiration(
+        "refreshToken",
+        newTokens.refresh_token,
+        newTokens.refresh_token
+      );
+    }
+
+    // Update user cookie too
+    const storedUser = localStorage.getItem("authUser");
+    if (storedUser) {
+      setCookieWithExpiration("authUser", storedUser, newTokens.access_token);
+    }
+  };
+
+  const clearAuthData = () => {
+    setUser(null);
+    setTokens(null);
+
+    localStorage.removeItem("authTokens");
+    localStorage.removeItem("authUser");
+    localStorage.removeItem("verificationEmail");
+
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("redirectAfterLogin");
+    }
+
+    deleteCookie("authToken");
+    deleteCookie("authUser");
+    deleteCookie("refreshToken");
+  };
+
+  // Initialize auth on mount
+  useEffect(() => {
+    const initAuth = async () => {
+      // Check URL params first (cross-domain auth)
+      const urlParams = new URLSearchParams(window.location.search);
+      const authTokenFromUrl = urlParams.get("auth_token");
+      const refreshTokenFromUrl = urlParams.get("refresh_token");
+
+      if (authTokenFromUrl) {
+        // Check if expired
+        if (isTokenExpired(authTokenFromUrl)) {
+          clearAuthData();
+          setIsLoading(false);
+          return;
+        }
+
         const decoded = decodeJwt(
           authTokenFromUrl
         ) as unknown as Partial<User> | null;
-        const tokenData: AuthTokens = {
-          access_token: authTokenFromUrl,
-          refresh_token: refreshTokenFromUrl || getCookie("refreshToken") || "",
-        };
-
         if (decoded) {
+          const tokenData: AuthTokens = {
+            access_token: authTokenFromUrl,
+            refresh_token: refreshTokenFromUrl || "",
+          };
           handleAuthSuccess(decoded as User, tokenData);
         }
 
@@ -130,161 +258,121 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setIsLoading(false);
         return;
-      } catch (error) {
-        console.error("Failed to parse URL auth data:", error);
       }
-    }
 
-    // Check localStorage
-    const storedTokens = localStorage.getItem("authTokens");
-    const storedUser = localStorage.getItem("authUser");
+      // Check localStorage
+      const storedTokens = localStorage.getItem("authTokens");
+      const storedUser = localStorage.getItem("authUser");
 
-    // Check cookies as fallback
-    const cookieToken = getCookie("authToken");
-    const cookieUser = getCookie("authUser");
+      if (storedTokens) {
+        try {
+          const parsedTokens: AuthTokens = JSON.parse(storedTokens);
 
-    if (storedTokens && storedUser) {
-      try {
-        const parsedTokens: AuthTokens = JSON.parse(storedTokens);
-        const parsedUser: User = JSON.parse(storedUser);
-
-        const hasUserIdentifier = Boolean(
-          (parsedUser as unknown as { user_id?: number | string }).user_id ??
-            (parsedUser as unknown as { id?: number | string }).id
-        );
-
-        if (parsedTokens.access_token && hasUserIdentifier) {
-          setTokens(parsedTokens);
-          setUser(parsedUser);
-
-          // Also set cross-domain cookies
-          setCrossDomainCookie("authToken", parsedTokens.access_token);
-          setCrossDomainCookie("authUser", JSON.stringify(parsedUser));
-        } else {
-          // Try to recover by decoding the token
-          const decoded = decodeJwt(
-            parsedTokens.access_token
-          ) as Partial<User> | null;
-          if (decoded) {
-            setTokens(parsedTokens);
-            setUser(decoded as User);
-            setCrossDomainCookie("authToken", parsedTokens.access_token);
-            setCrossDomainCookie("authUser", JSON.stringify(decoded));
-            localStorage.setItem("authUser", JSON.stringify(decoded));
+          // If access token expired, try refresh
+          if (isTokenExpired(parsedTokens.access_token)) {
+            const refreshed = await refreshAccessToken();
+            if (!refreshed) {
+              setIsLoading(false);
+              return;
+            }
+            // After refresh, re-read from storage
+            const newTokens = localStorage.getItem("authTokens");
+            const newUser = localStorage.getItem("authUser");
+            if (newTokens && newUser) {
+              setTokens(JSON.parse(newTokens));
+              setUser(JSON.parse(newUser));
+            }
           } else {
-            clearAuthData();
+            // Token still valid
+            setTokens(parsedTokens);
+
+            if (storedUser) {
+              setUser(JSON.parse(storedUser));
+            } else {
+              // Decode token to get user
+              const decoded = decodeJwt(
+                parsedTokens.access_token
+              ) as unknown as Partial<User> | null;
+              if (decoded) {
+                setUser(decoded as User);
+                localStorage.setItem("authUser", JSON.stringify(decoded));
+              }
+            }
+
+            // Sync cookies
+            setCookieWithExpiration(
+              "authToken",
+              parsedTokens.access_token,
+              parsedTokens.access_token
+            );
+            if (storedUser) {
+              setCookieWithExpiration(
+                "authUser",
+                storedUser,
+                parsedTokens.access_token
+              );
+            }
           }
+        } catch (error) {
+          console.error("Auth init error:", error);
+          clearAuthData();
         }
-      } catch (error) {
-        console.error("Failed to parse stored auth data:", error);
-        clearAuthData();
       }
-    } else if (storedTokens && !storedUser) {
-      try {
-        const parsedTokens: AuthTokens = JSON.parse(storedTokens);
-        const decoded = decodeJwt(
-          parsedTokens.access_token
-        ) as unknown as Partial<User> | null;
-        if (decoded) {
-          setTokens(parsedTokens);
-          setUser(decoded as User);
-          setCrossDomainCookie("authToken", parsedTokens.access_token);
-          setCrossDomainCookie("authUser", JSON.stringify(decoded));
-          localStorage.setItem("authUser", JSON.stringify(decoded));
-        }
-      } catch (error) {
-        console.error("Failed to decode stored token:", error);
-        clearAuthData();
-      }
-    } else if (cookieToken && cookieUser) {
-      // Fallback to cookies
-      try {
-        const parsedUser: User = JSON.parse(cookieUser);
-        const tokenData: AuthTokens = {
-          access_token: cookieToken,
-          refresh_token: "", // You might want to store this in a separate cookie
-        };
 
-        setTokens(tokenData);
-        setUser(parsedUser);
+      setIsLoading(false);
+    };
 
-        // Sync to localStorage
-        localStorage.setItem("authTokens", JSON.stringify(tokenData));
-        localStorage.setItem("authUser", cookieUser);
-      } catch (error) {
-        console.error("Failed to parse cookie auth data:", error);
-        clearAuthData();
-      }
-    }
-
-    setIsLoading(false);
-  }, []);
+    initAuth();
+  }, [refreshAccessToken]);
 
   const handleAuthSuccess = (userData: User, tokenData: AuthTokens) => {
-    setUser(userData);
-    setTokens(tokenData);
-
-    // Persist only required fields in authUser key
     const persistedUser = {
       user_id:
         userData.user_id ??
         (typeof userData.id === "number" ? userData.id : undefined),
       email: userData.email,
       store_name: userData.store_name,
-      has_profile: userData.has_profile ?? undefined,
-      role: userData.role ?? undefined,
-      phone_number: userData.phone_number ?? undefined,
-      domain: userData.domain ?? undefined,
-      sub_domain: userData.sub_domain ?? undefined,
-      has_profile_completed: userData.has_profile_completed ?? undefined,
-      is_onboarding_complete: userData.is_onboarding_complete ?? undefined,
-      first_login: userData.first_login ?? undefined,
-      website_type: userData.website_type ?? undefined,
+      has_profile: userData.has_profile,
+      role: userData.role,
+      phone_number: userData.phone_number,
+      domain: userData.domain,
+      sub_domain: userData.sub_domain,
+      has_profile_completed: userData.has_profile_completed,
+      is_onboarding_complete: userData.is_onboarding_complete,
+      first_login: userData.first_login,
+      website_type: userData.website_type,
     };
 
-    // Store in localStorage
+    setUser(userData);
+    setTokens(tokenData);
+
     localStorage.setItem("authTokens", JSON.stringify(tokenData));
     localStorage.setItem("authUser", JSON.stringify(persistedUser));
 
-    // Store in cross-domain cookies (prod only for security)
-    setCrossDomainCookie("authToken", tokenData.access_token);
-    setCrossDomainCookie("authUser", JSON.stringify(persistedUser));
+    // Set cookies with JWT expiration
+    setCookieWithExpiration(
+      "authToken",
+      tokenData.access_token,
+      tokenData.access_token
+    );
+    setCookieWithExpiration(
+      "authUser",
+      JSON.stringify(persistedUser),
+      tokenData.access_token
+    );
     if (tokenData.refresh_token) {
-      setCrossDomainCookie("refreshToken", tokenData.refresh_token);
+      setCookieWithExpiration(
+        "refreshToken",
+        tokenData.refresh_token,
+        tokenData.refresh_token
+      );
     }
-  };
-
-  const updateTokens = (newTokens: AuthTokens) => {
-    setTokens(newTokens);
-    localStorage.setItem("authTokens", JSON.stringify(newTokens));
-    setCrossDomainCookie("authToken", newTokens.access_token);
-  };
-
-  const clearAuthData = () => {
-    setUser(null);
-    setTokens(null);
-
-    // Clear localStorage
-    localStorage.removeItem("authTokens");
-    localStorage.removeItem("authUser");
-    localStorage.removeItem("verificationEmail");
-
-    // Clear sessionStorage
-    if (typeof window !== "undefined") {
-      sessionStorage.removeItem("redirectAfterLogin");
-    }
-
-    // Clear cross-domain cookies
-    deleteCrossDomainCookie("authToken");
-    deleteCrossDomainCookie("authUser");
-    deleteCrossDomainCookie("refreshToken");
   };
 
   const login = async (data: LoginData) => {
     setIsLoading(true);
     try {
       const response: LoginResponse = await loginUser(data);
-
       const userData = response.data.user;
       const tokens: AuthTokens = {
         access_token: userData.access_token,
@@ -321,7 +409,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         sub_domain: payload?.sub_domain,
         has_profile_completed: payload?.has_profile_completed,
         first_login: payload?.first_login,
-        is_onboarding_complete: payload?.is_onboarding_complete, // NEW: Include this
+        is_onboarding_complete: payload?.is_onboarding_complete,
       };
 
       handleAuthSuccess(loggedInUser, tokens);
@@ -330,27 +418,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         description: "Welcome back!",
       });
 
-      // Set redirecting state to keep loading spinner visible
       setIsRedirecting(true);
 
-      // Environment-based tenant redirect
       if (typeof window !== "undefined") {
         const sub = loggedInUser.sub_domain;
         if (sub) {
-          // Check if user is already on /admin route
           const currentPath = window.location.pathname;
           const isAdminRoute = currentPath.startsWith("/admin");
 
-          // Determine path based on first_login
           let path: string;
           if (loggedInUser.first_login) {
-            // First login: navigate to onboarding
             path = "/on-boarding";
           } else if (isAdminRoute) {
-            // Regular login from admin route: stay on admin
             path = "/admin";
           } else {
-            // Regular login from non-admin route: go to root
             path = "/";
           }
 
@@ -365,17 +446,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             tokens.access_token
           )}&refresh_token=${encodeURIComponent(tokens.refresh_token)}`;
           window.location.href = url;
-          return; // Don't set isLoading to false, keep loading state during redirect
+          return;
         }
       }
 
-      // Fallback for non-tenant scenario
       if (loggedInUser.first_login) {
         router.push("/on-boarding");
       } else {
         router.push("/");
       }
-      // Keep loading state during router navigation
     } catch (error) {
       const errorResponse = error as ErrorResponse;
       const parsedError = AuthErrorHandler.parseAuthError(errorResponse);
@@ -386,11 +465,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       console.error("Login error:", error);
       clearAuthData();
-      setIsLoading(false); // Only set to false on error
+      setIsLoading(false);
       setIsRedirecting(false);
       throw error;
     }
-    // Don't set isLoading to false here - let it stay true during redirect
   };
 
   const signup = async (data: SignupData) => {
@@ -439,12 +517,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const hostname = window.location.hostname;
 
       if (hostname.includes("localhost")) {
-        // Redirect to localhost logout handler
         window.location.href = "http://localhost:3000/logout";
         return;
       }
 
-      // Production
       const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
       const protocol = process.env.NEXT_PUBLIC_PROTOCOL || "https";
       const logoutUrl = `${protocol}://${baseDomain}/logout`;
@@ -461,8 +537,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signup,
         logout,
         updateTokens,
-        updateUser, // NEW: Include updateUser in context
-        isLoading: isLoading || isRedirecting, // Keep loading true during redirect
+        updateUser,
+        isLoading: isLoading || isRedirecting,
         isAuthenticated: !!user && !!tokens?.access_token,
         clearAuthData,
       }}

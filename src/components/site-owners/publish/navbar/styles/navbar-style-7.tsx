@@ -36,7 +36,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import Link from "next/link";
 const EditableItem: React.FC<{
   onEdit: () => void;
   onDelete?: () => void;
@@ -111,11 +111,11 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
     if (isEditable || disableClicks) return "#";
 
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
+      return `/publish/${siteUser}`;
     }
 
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
+    return `/publish/${siteUser}/${cleanHref}`;
   };
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
@@ -130,24 +130,24 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
 
     switch (action) {
       case "profile":
-        router.push(`/preview/${siteUser}/profile`);
+        router.push(`/publish/${siteUser}/profile`);
         break;
       case "wishlist":
-        router.push(`/preview/${siteUser}/wishlist`);
+        router.push(`/publish/${siteUser}/wishlist`);
         break;
       case "orders":
-        router.push(`/preview/${siteUser}/orders`);
+        router.push(`/publish/${siteUser}/orders`);
         break;
       case "logout":
         logout();
-        router.push(`/preview/${siteUser}`);
+        router.push(`/publish/${siteUser}`);
         break;
     }
   };
 
   const handleLoginClick = () => {
     if (isEditable || disableClicks) return;
-    router.push(`/preview/${siteUser}/login`);
+    router.push(`/publish/${siteUser}/login`);
   };
 
   // Social media icon mapping
@@ -225,7 +225,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                         />
                       </EditableItem>
                     ) : (
-                      <a
+                      <Link
                         href={generateLinkHref(link.href)}
                         onClick={e => handleLinkClick(e, link.href)}
                         className={`hover:text-primary font-medium text-gray-700 ${
@@ -235,7 +235,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                         }`}
                       >
                         {link.text}
-                      </a>
+                      </Link>
                     )}
                   </React.Fragment>
                 ))}
@@ -264,7 +264,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                       ] as string;
 
                       return (
-                        <a
+                        <Link
                           key={social.key}
                           href={disableClicks ? "#" : url}
                           target="_blank"
@@ -281,7 +281,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                             className="h-5 w-5"
                             style={{ color: theme.colors.primary }}
                           />
-                        </a>
+                        </Link>
                       );
                     })}
                   </div>
@@ -294,7 +294,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                     size="sm"
                     onClick={() =>
                       !disableClicks &&
-                      router.push(`/preview/${siteUser}/wishlist`)
+                      router.push(`/publish/${siteUser}/wishlist`)
                     }
                     className={`relative flex items-center gap-1 ${
                       disableClicks
