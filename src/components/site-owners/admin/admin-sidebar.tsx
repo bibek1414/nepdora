@@ -21,6 +21,7 @@ import {
   Facebook,
   LayoutPanelTop,
   Settings,
+  Calendar,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -102,6 +103,15 @@ const navigationGroups = [
       },
     ],
     hideForService: true,
+  },
+  {
+    items: [
+      {
+        name: "Appointment",
+        href: "/admin/appointments",
+        icon: Calendar,
+      },
+    ],
   },
   {
     items: [{ name: "Plugins", href: "/admin/plugins", icon: Unplug }],

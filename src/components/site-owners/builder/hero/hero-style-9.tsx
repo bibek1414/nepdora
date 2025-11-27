@@ -4,39 +4,37 @@ import React, { useState, useEffect } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { HeroTemplate9Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
 
 interface HeroTemplate9Props {
-  heroData: HeroData;
+  heroData: HeroTemplate9Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate9Data>) => void;
 }
 
 // Default collage images - moved outside the component to avoid recreation
 const defaultCollageImages = [
   {
     id: "1",
-    url: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=500&fit=crop",
-    alt: "Community member 1",
+    url: "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    alt: "Images 1",
   },
   {
     id: "2",
-    url: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=400&h=500&fit=crop",
-    alt: "Community member 2",
+    url: "https://plus.unsplash.com/premium_photo-1710849581742-f2151607c745?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    alt: "Images 2",
   },
   {
     id: "3",
-    url: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&h=500&fit=crop",
-    alt: "Community member 3",
+    url: "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    alt: "Images 2",
   },
   {
     id: "4",
-    url: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=500&fit=crop",
-    alt: "Community member 4",
+    url: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    alt: "Images 3",
   },
 ];
 
@@ -48,7 +46,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
 }) => {
   const componentId = React.useId();
 
-  const [data, setData] = useState<HeroData>(() => {
+  const [data, setData] = useState<HeroTemplate9Data>(() => {
     // Ensure we have proper sliderImages data structure
     const initialSliderImages =
       heroData.sliderImages && heroData.sliderImages.length > 0
@@ -114,11 +112,12 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
 
   const collageImages = getCollageImages();
 
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  const handleTextUpdate =
+    (field: keyof HeroTemplate9Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate9Data>);
+    };
 
   const handleImageUpdate = (
     imageUrl: string,
@@ -155,7 +154,6 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
     <div
       className="relative flex min-h-screen items-center justify-center bg-white px-2 py-8 sm:px-4 sm:py-12 md:px-6 md:py-16 lg:px-8 lg:py-20"
       data-component-id={componentId}
-      style={{ backgroundColor: theme.colors.background }}
     >
       <div className="relative w-full max-w-7xl">
         {/* Image collage with centered text and button */}

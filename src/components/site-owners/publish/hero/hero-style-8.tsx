@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { EditableText } from "@/components/ui/editable-text";
-import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/publish/editable-link";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { HeroTemplate8Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
@@ -13,10 +12,10 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 interface HeroTemplate8Props {
-  heroData: HeroData;
+  heroData: HeroTemplate8Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate8Data>) => void;
 }
 
 export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
@@ -42,7 +41,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
     customerText: "Trusted by 1000+ customers worldwide",
   };
 
-  const [data, setData] = useState<HeroData>(() => ({
+  const [data, setData] = useState<HeroTemplate8Data>(() => ({
     ...heroData,
     buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
     features: heroData.features || defaultFeatures,
@@ -79,11 +78,12 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
   };
 
   // Handle text field updates
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  const handleTextUpdate =
+    (field: keyof HeroTemplate8Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate8Data>);
+    };
 
   // Handle button updates
   const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
@@ -303,10 +303,6 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 isEditable={isEditable}
                 placeholder="Enter main title..."
                 multiline={true}
-                style={{
-                  fontFamily: theme.fonts.heading,
-                  color: theme.colors.primary,
-                }}
               />
 
               {/* Description */}
@@ -321,10 +317,6 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
-                style={{
-                  fontFamily: theme.fonts.body,
-                  color: theme.colors.text,
-                }}
               />
 
               {/* Action Buttons */}

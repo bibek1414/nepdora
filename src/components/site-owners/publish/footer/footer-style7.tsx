@@ -158,7 +158,7 @@ export function FooterStyle7({
     if (isEditable) return "#";
 
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/publish/${siteUser}`;
+      return ``;
     }
 
     // Handle external links
@@ -171,7 +171,7 @@ export function FooterStyle7({
     }
 
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/publish/${siteUser}/${cleanHref}`;
+    return `/${cleanHref}`;
   };
 
   const handleDelete = () => {

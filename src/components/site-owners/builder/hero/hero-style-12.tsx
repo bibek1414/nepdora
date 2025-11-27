@@ -5,16 +5,16 @@ import { ArrowRight, Play } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { HeroTemplate12Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import EiffelTowerBg from "../../../ui/eiffle-tower-bg";
 
 interface HeroTemplate12Props {
-  heroData: HeroData;
+  heroData: HeroTemplate12Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate12Data>) => void;
 }
 
 export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
@@ -23,7 +23,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState<HeroData>(() => ({
+  const [data, setData] = useState<HeroTemplate12Data>(() => ({
     ...heroData,
     buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
   }));
@@ -54,11 +54,12 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
   };
 
   // Handle text field updates
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  const handleTextUpdate =
+    (field: keyof HeroTemplate12Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate12Data>);
+    };
 
   // Handle image updates
   const handleImageUpdate = (imageUrl: string, altText?: string) => {
@@ -167,13 +168,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
               }}
               isEditable={isEditable}
               siteUser={siteUser}
-              className="group flex items-center gap-3 rounded-full border border-white/40 px-6 py-3 font-semibold transition-all duration-300 hover:shadow-lg md:px-9 md:py-4"
-              style={{
-                backgroundColor: "transparent",
-                color: theme.colors.text,
-                borderColor: "rgba(255,255,255,0.4)",
-                fontFamily: theme.fonts.body,
-              }}
+              className="group flex items-center gap-3 rounded-full border border-white/40 px-6 py-3 font-semibold text-white transition-all duration-300 hover:shadow-lg md:px-9 md:py-4"
               textPlaceholder="Button text..."
               hrefPlaceholder="Enter URL..."
             >
@@ -207,10 +202,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                   style={{ color: theme.colors.secondaryForeground }}
                 />
               </div>
-              <span
-                className="text-base font-medium md:text-lg"
-                style={{ color: theme.colors.text }}
-              >
+              <span className="text-base font-medium md:text-lg">
                 {secondaryButton.text}
               </span>
             </EditableLink>

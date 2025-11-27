@@ -15,11 +15,24 @@ import {
 import { toast } from "sonner";
 import {
   HeroData,
-  HeroComponentData,
+  isHeroTemplate1,
+  isHeroTemplate2,
+  isHeroTemplate3,
+  isHeroTemplate4,
+  isHeroTemplate5,
+  isHeroTemplate6,
+  isHeroTemplate7,
+  isHeroTemplate8,
+  isHeroTemplate9,
+  isHeroTemplate10,
+  isHeroTemplate11,
+  isHeroTemplate12,
+  isHeroTemplate13,
 } from "@/types/owner-site/components/hero";
 import { HeroTemplate1 } from "./hero-style-1";
 import { HeroTemplate2 } from "./hero-style-2";
 import { HeroTemplate3 } from "./hero-style-3";
+
 import { HeroTemplate4 } from "./hero-style-4";
 import { HeroTemplate5 } from "./hero-style-5";
 import { HeroTemplate6 } from "./hero-style-6";
@@ -33,6 +46,17 @@ import { HeroTemplate9 } from "./hero-style-9";
 import { HeroTemplate10 } from "./hero-style-10";
 import { HeroTemplate11 } from "./hero-style-11";
 import { HeroTemplate12 } from "./hero-style-12";
+import { HeroTemplate13 } from "./hero-style-13";
+
+interface HeroComponentData {
+  id: string | number;
+  component_id?: string;
+  component_type?: "hero";
+  data: HeroData;
+  type?: "hero";
+  order: number;
+  page?: number;
+}
 
 interface HeroComponentProps {
   component: HeroComponentData;
@@ -72,8 +96,6 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
-
-    // Show loading toast
     const loadingToast = toast.loading("Deleting hero section...");
 
     deleteHeroMutation.mutate(componentId, {
@@ -93,9 +115,7 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
   };
 
   const renderHeroTemplate = () => {
-    // Check if component data exists
     if (!component.data) {
-      console.error("Hero component data is missing:", component);
       return (
         <div className="flex min-h-[60vh] items-center justify-center border border-red-200 bg-red-50 px-4 py-20">
           <div className="text-center">
@@ -108,62 +128,72 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
       );
     }
 
-    const props = {
-      heroData: component.data,
+    const commonProps = {
       isEditable,
       siteUser,
       onUpdate: handleUpdate,
     };
 
-    // Get template from data, default to hero-1 if not specified
-    const template = component.data.template || "hero-1";
-
-    console.log("Rendering template:", template);
-
-    switch (template) {
-      case "hero-1":
-        return <HeroTemplate1 {...props} />;
-      case "hero-2":
-        return <HeroTemplate2 {...props} />;
-      case "hero-3":
-        return <HeroTemplate3 {...props} />;
-      case "hero-4":
-        return <HeroTemplate4 {...props} />;
-      case "hero-5":
-        return <HeroTemplate5 {...props} />;
-      case "hero-6":
-        return <HeroTemplate6 {...props} />;
-      case "hero-7":
-        return <HeroTemplate7 {...props} />;
-      case "hero-8":
-        return <HeroTemplate8 {...props} />;
-      case "hero-9":
-        return <HeroTemplate9 {...props} />;
-      case "hero-10":
-        return <HeroTemplate10 {...props} />;
-      case "hero-11":
-        return <HeroTemplate11 {...props} />;
-      case "hero-12":
-        return <HeroTemplate12 {...props} />;
-      default:
-        return (
-          <div className="flex min-h-[60vh] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-20">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-yellow-700">
-                Unknown Hero Template: {template}
-              </h2>
-              <p className="mt-2 text-yellow-600">
-                Please select a valid template in settings.
-              </p>
-            </div>
-          </div>
-        );
+    // Type-safe template rendering using type guards
+    if (isHeroTemplate1(component.data)) {
+      return <HeroTemplate1 heroData={component.data} {...commonProps} />;
     }
+
+    if (isHeroTemplate2(component.data)) {
+      return <HeroTemplate2 heroData={component.data} {...commonProps} />;
+    }
+
+    if (isHeroTemplate3(component.data)) {
+      return <HeroTemplate3 heroData={component.data} {...commonProps} />;
+    }
+    if (isHeroTemplate4(component.data)) {
+      return <HeroTemplate4 heroData={component.data} {...commonProps} />;
+    }
+    if (isHeroTemplate5(component.data)) {
+      return <HeroTemplate5 heroData={component.data} {...commonProps} />;
+    }
+    if (isHeroTemplate6(component.data)) {
+      return <HeroTemplate6 heroData={component.data} {...commonProps} />;
+    }
+    if (isHeroTemplate7(component.data)) {
+      return <HeroTemplate7 heroData={component.data} {...commonProps} />;
+    }
+    if (isHeroTemplate8(component.data)) {
+      return <HeroTemplate8 heroData={component.data} {...commonProps} />;
+    }
+    if (isHeroTemplate9(component.data)) {
+      return <HeroTemplate9 heroData={component.data} {...commonProps} />;
+    }
+    if (isHeroTemplate10(component.data)) {
+      return <HeroTemplate10 heroData={component.data} {...commonProps} />;
+    }
+    if (isHeroTemplate11(component.data)) {
+      return <HeroTemplate11 heroData={component.data} {...commonProps} />;
+    }
+    if (isHeroTemplate12(component.data)) {
+      return <HeroTemplate12 heroData={component.data} {...commonProps} />;
+    }
+    if (isHeroTemplate13(component.data)) {
+      return <HeroTemplate13 heroData={component.data} {...commonProps} />;
+    }
+
+    // Fallback for unknown templates
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-20">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-yellow-700">
+            Unknown Hero Template: {component.data.template}
+          </h2>
+          <p className="mt-2 text-yellow-600">
+            Please select a valid template in settings.
+          </p>
+        </div>
+      </div>
+    );
   };
 
   return (
     <div className="group relative">
-      {/* Edit Controls - Only show when editable */}
       {isEditable && (
         <>
           <div className="bg-background/80 absolute -right-5 z-30 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
@@ -178,7 +208,6 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
             </Button>
           </div>
 
-          {/* Delete Confirmation Dialog */}
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
@@ -206,7 +235,6 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
         </>
       )}
 
-      {/* Hero Template Render */}
       {renderHeroTemplate()}
     </div>
   );

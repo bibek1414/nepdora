@@ -16,6 +16,7 @@ import {
   ComponentResponse,
   ApiListResponse,
 } from "@/types/owner-site/components/components";
+import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
@@ -42,6 +43,7 @@ interface PageComponent {
     | "testimonials"
     | "category"
     | "portfolio"
+    | "appointment"
     | "banner"
     | "gallery"
     | "newsletter"
@@ -57,6 +59,7 @@ interface PageComponent {
     | ServicesComponentData["data"]
     | ContactComponentData["data"]
     | FAQComponentData["data"]
+    | AppointmentComponentData["data"]
     | TeamComponentData["data"]
     | GalleryComponentData["data"]
     | TestimonialsComponentData["data"]
@@ -110,6 +113,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
           "newsletter",
           "subcategory",
           "portfolio",
+          "appointment",
           "youtube",
           "banner",
           "gallery",
@@ -171,6 +175,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | YouTubeComponentData
       | GalleryComponentData
       | PolicyComponentData
+      | AppointmentComponentData
       | TextEditorComponentData
   ) => {
     console.log("Component update in preview (not applied):", {

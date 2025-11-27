@@ -74,9 +74,7 @@ const PublishOrderConfirmationPage: React.FC<
           <p className="mb-8 text-gray-600">
             We couldn&apos;t find the order you&apos;re looking for.
           </p>
-          <Button onClick={() => router.push(`/publish/${siteUser}`)}>
-            Continue Shopping
-          </Button>
+          <Button onClick={() => router.push(``)}>Continue Shopping</Button>
         </div>
       </div>
     );
@@ -373,7 +371,7 @@ const PublishOrderConfirmationPage: React.FC<
         {/* Action Buttons */}
         <div className="flex flex-col justify-center gap-4 sm:flex-row">
           <Button
-            onClick={() => router.push(`/publish/${siteUser}`)}
+            onClick={() => router.push(``)}
             variant="outline"
             className="px-8"
             style={outlineButtonStyle}

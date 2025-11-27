@@ -22,7 +22,7 @@ export const ServicesCard1: React.FC<ServicesCard1Props> = ({
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/publish/${siteUser}/servicess/${services.slug}`;
+      return `/servicess/${services.slug}`;
     } else {
       return `/servicess/${services.slug}`;
     }

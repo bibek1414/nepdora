@@ -235,9 +235,7 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
     setHoveredSubcategory(null);
 
     if (!isEditable) {
-      const productsUrl = siteUser
-        ? `/publish/${siteUser}/collections`
-        : `/collections`;
+      const productsUrl = siteUser ? `/collections` : `/collections`;
       router.push(productsUrl);
     }
   };

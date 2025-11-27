@@ -6,6 +6,7 @@ import { CategoryData } from "./category";
 import { SubCategoryData } from "./sub-category";
 import { ContactData } from "./contact";
 import { TeamData } from "./team";
+import { AppointmentData } from "./appointment";
 import { TestimonialsData } from "./testimonials";
 import { FAQData } from "./faq";
 import { PortfolioData } from "./portfolio";
@@ -27,6 +28,7 @@ export type ComponentData =
   | SubCategoryData
   | TeamData
   | ContactData
+  | AppointmentData
   | FAQData
   | TextEditorData
   | PortfolioData
@@ -47,6 +49,7 @@ export interface ComponentTypeMap {
   category: CategoryData;
   subcategory: SubCategoryData;
   contact: ContactData;
+  appointment: AppointmentData;
   team: TeamData;
   testimonials: TestimonialsData;
   portfolio: PortfolioData;
@@ -151,7 +154,10 @@ export const isContactComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"contact"> =>
   component.component_type === "contact";
-
+export const isAppointmentComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"appointment"> =>
+  component.component_type === "appointment";
 export const isTeamComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"team"> =>

@@ -8,12 +8,10 @@ import {
   Users,
   Camera,
 } from "lucide-react";
-import { defaultHeroData } from "@/types/owner-site/components/hero";
+import { defaultHeroTemplate12Data } from "@/types/owner-site/components/hero";
 import { defaultContactData } from "@/types/owner-site/components/contact";
 import { defaultAboutUs1Data } from "@/types/owner-site/components/about";
 import { defaultProductsData } from "@/types/owner-site/components/products";
-import { defaultCategoryData } from "@/types/owner-site/components/category";
-import { defaultFAQData } from "@/types/owner-site/components/faq";
 import { defaultTeamData } from "@/types/owner-site/components/team";
 import { defaultBlogData } from "@/types/owner-site/components/blog";
 import { defaultPortfolioData } from "@/types/owner-site/components/portfolio";
@@ -30,7 +28,7 @@ export const pageTemplates: PageTemplate[] = [
         type: "hero",
         order: 0,
         defaultData: {
-          ...defaultHeroData,
+          ...defaultHeroTemplate12Data,
           title: "Welcome to Our Company",
           subtitle: "Your Success is Our Mission",
           description:
@@ -89,7 +87,7 @@ export const pageTemplates: PageTemplate[] = [
         type: "hero",
         order: 0,
         defaultData: {
-          ...defaultHeroData,
+          ...defaultHeroTemplate12Data,
           title: "About Our Company",
           subtitle: "Our Story, Mission & Values",
           description:
@@ -138,7 +136,7 @@ export const pageTemplates: PageTemplate[] = [
         type: "hero",
         order: 0,
         defaultData: {
-          ...defaultHeroData,
+          ...defaultHeroTemplate12Data,
           title: "Contact Us",
           subtitle: "Get in Touch Today",
           description:
@@ -178,7 +176,7 @@ export const pageTemplates: PageTemplate[] = [
         type: "hero",
         order: 0,
         defaultData: {
-          ...defaultHeroData,
+          ...defaultHeroTemplate12Data,
           title: "Our Services",
           subtitle: "Professional Solutions for Your Business",
           description:
@@ -227,7 +225,7 @@ export const pageTemplates: PageTemplate[] = [
         type: "hero",
         order: 0,
         defaultData: {
-          ...defaultHeroData,
+          ...defaultHeroTemplate12Data,
           title: "Shop Our Products",
           subtitle: "Quality Products at Great Prices",
           description:
@@ -281,7 +279,7 @@ export const pageTemplates: PageTemplate[] = [
         type: "hero",
         order: 0,
         defaultData: {
-          ...defaultHeroData,
+          ...defaultHeroTemplate12Data,
           title: "Our Blog",
           subtitle: "Insights, Tips & Industry News",
           description:
@@ -321,7 +319,7 @@ export const pageTemplates: PageTemplate[] = [
         type: "hero",
         order: 0,
         defaultData: {
-          ...defaultHeroData,
+          ...defaultHeroTemplate12Data,
           title: "Our Portfolio",
           subtitle: "Showcasing Our Best Work",
           description:

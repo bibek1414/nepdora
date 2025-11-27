@@ -4,15 +4,15 @@ import React, { useState, useEffect } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/publish/editable-link";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { HeroTemplate11Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 
 interface HeroTemplate11Props {
-  heroData: HeroData;
+  heroData: HeroTemplate11Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate11Data>) => void;
 }
 
 export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
@@ -21,7 +21,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState<HeroData>(() => ({
+  const [data, setData] = useState<HeroTemplate11Data>(() => ({
     ...heroData,
     buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
   }));
@@ -52,11 +52,12 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
   };
 
   // Handle text field updates
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  const handleTextUpdate =
+    (field: keyof HeroTemplate11Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate11Data>);
+    };
 
   // Handle image updates
   const handleImageUpdate = (imageUrl: string, altText?: string) => {

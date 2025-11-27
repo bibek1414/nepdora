@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { HeroTemplate7Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
@@ -12,10 +12,10 @@ import { Loader2 } from "lucide-react";
 import Image from "next/image";
 
 interface HeroTemplate7Props {
-  heroData: HeroData;
+  heroData: HeroTemplate7Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate7Data>) => void;
 }
 
 export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
@@ -50,7 +50,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
       buttonHref: "#",
     },
   ];
-  const [data, setData] = useState<HeroData>(() => ({
+  const [data, setData] = useState<HeroTemplate7Data>(() => ({
     ...heroData,
     buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
     collections: heroData.collections || defaultCollections,
@@ -88,11 +88,12 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
   const collections = data.collections || defaultCollections;
 
   // Handle text field updates
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  const handleTextUpdate =
+    (field: keyof HeroTemplate7Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate7Data>);
+    };
 
   // Handle collection updates
   const handleCollectionUpdate = (

@@ -248,11 +248,11 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
       originalHref === "" ||
       originalHref === "home"
     ) {
-      return `/publish/${siteUser}`;
+      return ``;
     }
 
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/publish/${siteUser}/${cleanHref}`;
+    return `/${cleanHref}`;
   };
 
   // Handle page selection from dropdown

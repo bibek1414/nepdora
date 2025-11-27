@@ -72,7 +72,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   // Generate product URL
   const getProductUrl = (product: Product): string => {
-    return `/publish/${siteUser}/products/${product.slug}`;
+    return `/products/${product.slug}`;
   };
 
   // Handle product click navigation

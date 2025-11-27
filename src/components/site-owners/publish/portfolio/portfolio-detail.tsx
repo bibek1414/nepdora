@@ -92,10 +92,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link
-                    href={`/publish/${siteUser}/home`}
-                    className="flex items-center gap-2"
-                  >
+                  <Link href={`/home`} className="flex items-center gap-2">
                     <Home className="h-4 w-4" />
                     Home
                   </Link>
@@ -104,7 +101,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href={`/publish/${siteUser}/portfolio`}>Portfolio</Link>
+                  <Link href={`/portfolio`}>Portfolio</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
@@ -137,10 +134,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link
-                  href={`/publish/${siteUser}/home`}
-                  className="flex items-center gap-2"
-                >
+                <Link href={`/home`} className="flex items-center gap-2">
                   <Home className="h-4 w-4" />
                   Home
                 </Link>
@@ -149,7 +143,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/publish/${siteUser}/portfolio`}>Portfolio</Link>
+                <Link href={`/portfolio`}>Portfolio</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

@@ -16,6 +16,7 @@ import {
   ComponentResponse,
   ApiListResponse,
 } from "@/types/owner-site/components/components";
+import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
@@ -40,6 +41,7 @@ interface PageComponent {
     | "faq"
     | "gallery"
     | "testimonials"
+    | "appointment"
     | "category"
     | "portfolio"
     | "banner"
@@ -55,6 +57,7 @@ interface PageComponent {
     | BlogComponentData["data"]
     | ServicesComponentData["data"]
     | ContactComponentData["data"]
+    | AppointmentComponentData["data"]
     | FAQComponentData["data"]
     | TeamComponentData["data"]
     | TestimonialsComponentData["data"]
@@ -100,6 +103,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
           "about",
           "products",
           "blog",
+          "appointment",
           "services",
           "contact",
           "team",
@@ -121,30 +125,30 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
 
   // Navigation handlers
   const handleBacktoHome = () => {
-    router.push(`/publish/${siteUser}`);
+    router.push(``);
   };
 
   const handleProductClick = (productId: number, order: number) => {
     console.log("Product clicked in publish:", { productId, order });
-    router.push(`/publish/${siteUser}/products/${productId}`);
+    router.push(`/products/${productId}`);
   };
 
   const handleBlogClick = (blogSlug: string, order: number) => {
     console.log("Blog clicked in publish:", { blogSlug, order });
-    router.push(`/publish/${siteUser}/blog/${blogSlug}`);
+    router.push(`/blog/${blogSlug}`);
   };
   const handleServiceClick = (serviceSlug: string, order: number) => {
     console.log("Service clicked in publish:", { serviceSlug, order });
-    router.push(`/publish/${siteUser}/services/${serviceSlug}`);
+    router.push(`/services/${serviceSlug}`);
   };
   const handleCategoryClick = (categoryId: number, order: number) => {
     console.log("Category clicked in publish:", { categoryId, order });
-    router.push(`/publish/${siteUser}/categories/${categoryId}`);
+    router.push(`/categories/${categoryId}`);
   };
 
   const handleSubCategoryClick = (subcategoryId: number, order: number) => {
     console.log("SubCategory clicked in publish:", { subcategoryId, order });
-    router.push(`/publish/${siteUser}/subcategories/${subcategoryId}`);
+    router.push(`/subcategories/${subcategoryId}`);
   };
 
   // Component update handlers (not used in preview mode)
@@ -161,6 +165,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
       | FAQComponentData
       | TestimonialsComponentData
       | CategoryComponentData
+      | AppointmentComponentData
       | SubCategoryComponentData
       | NewsletterComponentData
       | PortfolioComponentData

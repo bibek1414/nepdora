@@ -48,7 +48,7 @@ export const BlogCard4: React.FC<BlogCard4Props> = ({
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/publish/${siteUser}/blogs/${blog.slug}`;
+      return `/blogs/${blog.slug}`;
     } else {
       return `/blogs/${blog.slug}`;
     }

@@ -6,6 +6,7 @@ import { AboutUsComponent } from "@/components/site-owners/publish/about/about-c
 import { ProductsComponent } from "@/components/site-owners/publish/product/products-component";
 import { BlogComponent } from "@/components/site-owners/publish/blog/blog-components";
 import { ServicesComponent } from "@/components/site-owners/publish/services/services-component";
+import { AppointmentComponent } from "@/components/site-owners/builder/appointment/appointment-component";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
 import { CategoryComponent } from "@/components/site-owners/publish/category/category-component";
 import { SubCategoryComponent } from "@/components/site-owners/publish/sub-category/sub-category-component";
@@ -37,6 +38,7 @@ import { GalleryComponent } from "../builder/gallery/gallery-component";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
+import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -57,6 +59,7 @@ interface PageComponent {
     | "youtube"
     | "gallery"
     | "subcategory"
+    | "appointment"
     | "text_editor"
     | "policies";
   data:
@@ -69,6 +72,7 @@ interface PageComponent {
     | FAQComponentData["data"]
     | TestimonialsComponentData["data"]
     | TeamComponentData["data"]
+    | AppointmentComponentData["data"]
     | CategoryComponentData["data"]
     | GalleryComponentData["data"]
     | PortfolioComponentData["data"]
@@ -99,6 +103,7 @@ interface PageComponentRendererProps {
       | ContactComponentData
       | TeamComponentData
       | FAQComponentData
+      | AppointmentComponentData
       | HeroComponentData
       | AboutUsComponentData
       | TestimonialsComponentData
@@ -290,6 +295,22 @@ export function PageComponentRenderer({
               onComponentUpdate(componentId, newData as CategoryComponentData)
             }
             onCategoryClick={onCategoryClick}
+          />
+        );
+      case "appointment":
+        return (
+          <AppointmentComponent
+            key={component.id}
+            component={component as AppointmentComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(
+                componentId,
+                newData as AppointmentComponentData
+              )
+            }
           />
         );
       case "subcategory":

@@ -2,19 +2,18 @@
 
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { HeroTemplate1Data } from "@/types/owner-site/components/hero";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
-// Updated HeroTemplate1 with theme integration and mobile responsiveness
 interface HeroTemplate1Props {
-  heroData: HeroData;
+  heroData: HeroTemplate1Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate1Data>) => void;
 }
 
 export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
@@ -26,7 +25,6 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
   const [data, setData] = useState(heroData);
   const { data: themeResponse } = useThemeQuery();
 
-  // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
       text: "#0F172A",
@@ -42,14 +40,14 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  // Type-safe handlers - only update fields that exist in HeroTemplate1Data
+  const handleTextUpdate =
+    (field: keyof HeroTemplate1Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate1Data>);
+    };
 
-  // Handle image updates
   const handleImageUpdate = (imageUrl: string, altText?: string) => {
     const updatedData = {
       ...data,
@@ -63,14 +61,12 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
     });
   };
 
-  // Handle alt text updates
   const handleAltUpdate = (altText: string) => {
     const updatedData = { ...data, imageAlt: altText };
     setData(updatedData);
     onUpdate?.({ imageAlt: altText });
   };
 
-  // Handle button text updates
   const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
     const updatedButtons = data.buttons.map(btn =>
       btn.id === buttonId ? { ...btn, text, href } : btn
@@ -106,24 +102,6 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
     return { className: baseClasses, style: buttonStyles };
   };
 
-  const getBackgroundStyles = (): React.CSSProperties => {
-    if (data.backgroundType === "image" && data.backgroundImageUrl) {
-      const imageUrl = optimizeCloudinaryUrl(
-        convertUnsplashUrl(data.backgroundImageUrl),
-        { width: 1920, quality: "auto", format: "auto" }
-      );
-      return {
-        backgroundImage: `url(${imageUrl})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      };
-    }
-    if (data.backgroundType === "gradient") {
-      return {};
-    }
-    return { backgroundColor: data.backgroundColor || theme.colors.background };
-  };
-
   const getLayoutClasses = () => {
     switch (data.layout) {
       case "text-left":
@@ -144,23 +122,8 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
     });
   };
 
-  const textColor =
-    data.backgroundType === "image" || data.backgroundColor === "#000000"
-      ? "#FFFFFF"
-      : theme.colors.text;
-
   return (
     <section className="relative flex min-h-[50vh] items-center justify-center overflow-hidden px-4 py-12 sm:min-h-[60vh] sm:px-6 sm:py-16 md:py-20 lg:px-8">
-      {/* Overlay */}
-      {data.backgroundType === "image" && data.showOverlay && (
-        <div
-          className="absolute inset-0 z-0"
-          style={{
-            opacity: data.overlayOpacity || 0.5,
-          }}
-        />
-      )}
-
       <div className="relative z-10 container mx-auto w-full max-w-6xl">
         <div className={`flex flex-col ${getLayoutClasses()} gap-4 sm:gap-6`}>
           {/* Hero Image */}
@@ -169,11 +132,11 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
               <div className="mx-auto h-[300px] max-w-full overflow-hidden rounded-lg sm:max-w-md">
                 <EditableImage
                   src={getImageUrl()}
-                  alt={data.imageAlt || "Modern furniture piece"}
+                  alt={data.imageAlt || "Hero image"}
                   onImageChange={handleImageUpdate}
                   onAltChange={handleAltUpdate}
                   isEditable={isEditable}
-                  className="h-90 w-full object-cover"
+                  className="h-full w-full object-cover"
                   width={600}
                   height={400}
                   cloudinaryOptions={{
@@ -222,7 +185,6 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
             onChange={handleTextUpdate("title")}
             as="h1"
             className="text-3xl leading-tight font-bold sm:text-4xl md:text-5xl lg:text-6xl"
-            style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter your hero title..."
           />
@@ -234,7 +196,6 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
               onChange={handleTextUpdate("description")}
               as="p"
               className="mx-auto max-w-2xl text-base leading-relaxed opacity-90 sm:text-lg md:text-xl"
-              style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}
@@ -259,7 +220,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                     className={buttonClass.className}
                     style={buttonClass.style}
                     textPlaceholder="Button text..."
-                    hrefPlaceholder="Enter URL (e.g., about-us, contact)..."
+                    hrefPlaceholder="Enter URL..."
                   />
                 );
               })}

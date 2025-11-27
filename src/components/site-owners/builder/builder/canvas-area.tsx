@@ -18,6 +18,7 @@ import { BlogComponent } from "@/components/site-owners/builder/blog/blog-compon
 import { ServicesComponent } from "@/components/site-owners/builder/services/services-component";
 import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
+import { AppointmentComponent } from "@/components/site-owners/builder/appointment/appointment-component";
 import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
 import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
@@ -35,6 +36,7 @@ import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
+import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
@@ -79,6 +81,7 @@ interface CanvasAreaProps {
   onAddBlog?: (insertIndex?: number) => void;
   onAddServices?: (insertIndex?: number) => void;
   onAddContact?: (insertIndex?: number) => void;
+  onAddAppointment?: (insertIndex?: number) => void;
   onAddTeam?: (insertIndex?: number) => void;
   onAddTestimonials?: (insertIndex?: number) => void;
   onAddFAQ?: (insertIndex?: number) => void;
@@ -95,25 +98,12 @@ interface CanvasAreaProps {
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
   droppedComponents,
   navbar,
-  onAddNavbar,
   footer,
-  onAddFooter,
   currentPageSlug,
   pageComponents: initialPageComponents,
   isLoading,
   error,
   onAddSection,
-  onAddHero,
-  onAddAboutUs,
-  onAddProducts,
-  onAddPolicies,
-  onAddCategories,
-  onAddSubCategories,
-  onAddBlog,
-  onAddContact,
-  onAddTeam,
-  onAddTestimonials,
-  onAddFAQ,
 }) => {
   // Local state to manage component order optimistically
   const [pageComponents, setPageComponents] = useState<ComponentResponse[]>(
@@ -340,6 +330,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           />
         );
         break;
+      case "appointment":
+        componentElement = (
+          <AppointmentComponent
+            key={`appointment-${component.id}`}
+            component={component as AppointmentComponentData}
+            onUpdate={() => {}}
+            {...commonProps}
+          />
+        );
+        break;
       case "team":
         componentElement = (
           <TeamComponent
@@ -554,6 +554,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const hasBlog = pageComponents.some(c => c.component_type === "blog");
   const hasServices = pageComponents.some(c => c.component_type === "services");
   const hasContact = pageComponents.some(c => c.component_type === "contact");
+  const hasAppointment = pageComponents.some(
+    c => c.component_type === "appointment"
+  );
   const hasTeam = pageComponents.some(c => c.component_type === "team");
   const hasTestimonials = pageComponents.some(
     c => c.component_type === "testimonials"

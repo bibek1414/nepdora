@@ -142,11 +142,11 @@ export function FooterStyle4({
     if (isEditable) return originalHref;
 
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/publish/${siteUser}`;
+      return ``;
     }
 
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/publish/${siteUser}/${cleanHref}`;
+    return `/${cleanHref}`;
   };
 
   const handleDelete = () => {

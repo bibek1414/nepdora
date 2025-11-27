@@ -2,14 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Play,
-  ArrowRight,
-  Loader2,
-} from "lucide-react";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { HeroTemplate2Data } from "@/types/owner-site/components/hero";
 import {
   convertUnsplashUrl,
   optimizeCloudinaryUrl,
@@ -22,9 +16,9 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { toast } from "sonner";
 
 interface HeroTemplate2Props {
-  heroData: HeroData;
+  heroData: HeroTemplate2Data;
   isEditable?: boolean;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate2Data>) => void;
   siteUser?: string;
 }
 
@@ -35,7 +29,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
   siteUser,
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [data, setData] = useState<HeroData>(() => ({
+  const [data, setData] = useState<HeroTemplate2Data>(() => ({
     ...heroData,
     buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
     sliderImages: heroData.sliderImages?.map(img => ({ ...img })) || [],
@@ -70,11 +64,12 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
   const componentId = React.useId();
 
   // Handle text field updates
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  const handleTextUpdate =
+    (field: keyof HeroTemplate2Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate2Data>);
+    };
 
   // Handle button text and href updates
   const handleButtonUpdate = (
@@ -336,7 +331,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="w-full text-3xl leading-tight font-bold sm:text-4xl md:text-5xl lg:text-6xl"
+            className="!sm:text-4xl !md:text-5xl !lg:text-6xl w-full !text-3xl leading-tight font-bold"
             style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter your hero title..."
@@ -346,7 +341,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             value={data.subtitle}
             onChange={handleTextUpdate("subtitle")}
             as="p"
-            className="w-full text-base sm:text-lg md:text-xl"
+            className="w-full !text-base sm:text-lg md:text-xl"
             style={{ fontFamily: theme.fonts.body }}
             isEditable={isEditable}
             placeholder="Enter subtitle..."
@@ -357,7 +352,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="w-full text-sm opacity-90 sm:text-base"
+              className="w-full !text-sm opacity-90 sm:text-base"
               style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
               placeholder="Enter description..."

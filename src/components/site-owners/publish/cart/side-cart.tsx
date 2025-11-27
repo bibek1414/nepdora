@@ -44,7 +44,7 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
   }, 0);
 
   // Generate checkout URL with siteUser for publish
-  const checkoutUrl = `/publish/${siteUser}/checkout`;
+  const checkoutUrl = `/checkout`;
 
   const subtlePrimaryBg = `${theme.colors.primary}0D`;
 

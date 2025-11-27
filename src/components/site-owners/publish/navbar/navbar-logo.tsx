@@ -82,7 +82,7 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
         {renderLogo()}
       </span>
     ) : (
-      <Link href={`/publish/${siteUser}`} className={className}>
+      <Link href={``} className={className}>
         {renderLogo()}
       </Link>
     );
