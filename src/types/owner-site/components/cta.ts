@@ -5,6 +5,11 @@ export interface CTAButton {
   href?: string;
 }
 
+export interface CTATemplate4Feature {
+  id: string;
+  text: string;
+}
+
 // Template-specific interfaces
 export interface CTATemplate1Data {
   template: "cta-1";
@@ -44,8 +49,27 @@ export interface CTATemplate3Data {
   featureIcons?: string[];
 }
 
+export interface CTATemplate4Data {
+  template: "cta-4";
+  eyebrow: string;
+  title: string;
+  highlightText: string;
+  button: CTAButton;
+  features: CTATemplate4Feature[];
+  imageUrl: string;
+  imageAlt?: string;
+  backgroundColor?: string;
+  showOverlay?: boolean;
+  overlayColor?: string;
+  overlayOpacity?: number;
+}
+
 // Union type for all CTA templates
-export type CTAData = CTATemplate1Data | CTATemplate2Data | CTATemplate3Data;
+export type CTAData =
+  | CTATemplate1Data
+  | CTATemplate2Data
+  | CTATemplate3Data
+  | CTATemplate4Data;
 
 // Component and API interfaces
 export interface CTAComponentData {
@@ -143,6 +167,33 @@ export const defaultCTATemplate3Data: CTATemplate3Data = {
   featureIcons: ["✓", "✓", "✓"],
 };
 
+export const defaultCTATemplate4Data: CTATemplate4Data = {
+  template: "cta-4",
+  eyebrow: "[CTA]",
+  title: "Work with Experts to <br/> Grow Faster & Run <br/>",
+  highlightText: "Smarter",
+  button: {
+    id: "cta-4-btn-1",
+    text: "Get Started",
+    variant: "primary",
+    href: "#",
+  },
+  features: [
+    { id: "cta-4-feature-1", text: "Schedule a Free Consultation" },
+    { id: "cta-4-feature-2", text: "Discover Custom Solutions" },
+    {
+      id: "cta-4-feature-3",
+      text: "Start Building Your Competitive Advantage",
+    },
+  ],
+  imageUrl: "https://picsum.photos/id/1011/800/800",
+  imageAlt: "Working together",
+  backgroundColor: "#1D4ED8",
+  showOverlay: true,
+  overlayColor: "#0F172A",
+  overlayOpacity: 0.2,
+};
+
 // Helper functions
 export const getDefaultCTAData = (template: CTAData["template"]): CTAData => {
   switch (template) {
@@ -152,6 +203,8 @@ export const getDefaultCTAData = (template: CTAData["template"]): CTAData => {
       return defaultCTATemplate2Data;
     case "cta-3":
       return defaultCTATemplate3Data;
+    case "cta-4":
+      return defaultCTATemplate4Data;
     default:
       return defaultCTATemplate1Data;
   }
@@ -166,3 +219,6 @@ export const isCTATemplate2 = (data: CTAData): data is CTATemplate2Data =>
 
 export const isCTATemplate3 = (data: CTAData): data is CTATemplate3Data =>
   data.template === "cta-3";
+
+export const isCTATemplate4 = (data: CTAData): data is CTATemplate4Data =>
+  data.template === "cta-4";

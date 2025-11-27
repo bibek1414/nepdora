@@ -66,6 +66,7 @@ import {
   defaultCTATemplate1Data,
   defaultCTATemplate2Data,
   defaultCTATemplate3Data,
+  defaultCTATemplate4Data,
 } from "@/types/owner-site/components/cta";
 import { defaultAppointmentData } from "@/types/owner-site/components/appointment";
 import { defaultTeamData } from "@/types/owner-site/components/team";
@@ -552,6 +553,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         break;
       case "cta-3":
         ctaData = defaultCTATemplate3Data;
+        break;
+      case "cta-4":
+        ctaData = defaultCTATemplate4Data;
         break;
       default:
         ctaData = defaultCTATemplate1Data;
