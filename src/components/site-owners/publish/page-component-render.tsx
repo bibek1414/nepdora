@@ -7,7 +7,7 @@ import { ProductsComponent } from "@/components/site-owners/publish/product/prod
 import { BlogComponent } from "@/components/site-owners/publish/blog/blog-components";
 import { ServicesComponent } from "@/components/site-owners/publish/services/services-component";
 import { AppointmentComponent } from "@/components/site-owners/builder/appointment/appointment-component";
-import { CTAComponent } from "@/components/site-owners/builder/cta/cta-component";
+import { CTAComponent } from "@/components/site-owners/publish/cta/cta-component";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
 import { CategoryComponent } from "@/components/site-owners/publish/category/category-component";
 import { SubCategoryComponent } from "@/components/site-owners/publish/sub-category/sub-category-component";
