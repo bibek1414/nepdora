@@ -52,7 +52,8 @@ export interface HeroData {
     | "hero-9"
     | "hero-10"
     | "hero-11"
-    | "hero-12"; // Added hero-12
+    | "hero-12"
+    | "hero-13";
 
   // Hero 3 specific fields
   balanceLabel?: string;
@@ -372,7 +373,8 @@ export interface HeroTemplateConfig {
     | "hero-7"
     | "hero-10"
     | "hero-11"
-    | "hero-12"; // Added hero-12
+    | "hero-12"
+    | "hero-13";
   backgroundType: "color" | "gradient" | "image";
   backgroundColor?: string;
   backgroundImageUrl?: string;
@@ -459,5 +461,14 @@ export const heroTemplateConfigs: Record<string, HeroTemplateConfig> = {
     backgroundType: "color",
     backgroundColor: "#013D2F",
     showOverlay: false,
+  },
+  "hero-13": {
+    template: "hero-13",
+    backgroundType: "image",
+    backgroundImageUrl:
+      "https://images.unsplash.com/photo-1542382257-80dedb725088?q=80&w=2070&auto=format&fit=crop",
+    showOverlay: true,
+    overlayOpacity: 0.6,
+    showSlider: true,
   },
 };

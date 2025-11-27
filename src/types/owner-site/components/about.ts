@@ -169,6 +169,30 @@ export interface AboutUs10Data {
   circularStampText: string;
 }
 
+export interface AboutUs11Stat {
+  id: string;
+  icon: string;
+  value: string;
+  label: string;
+  sublabel: string;
+}
+
+export interface AboutUs11Data {
+  template: "about-11";
+  headline: string;
+  description: string;
+  featuredStatValue: string;
+  featuredStatLabel: string;
+  imageUrl: string;
+  imageAlt: string;
+  bulletPoints: Array<{ id: string; text: string }>;
+  supportingTitle: string;
+  supportingDescription: string;
+  stats: AboutUs11Stat[];
+  ctaText: string;
+  ctaLink: string;
+}
+
 export interface AboutUs12Data {
   template: "about-12";
   sectionTag: string;
@@ -180,6 +204,32 @@ export interface AboutUs12Data {
   }>;
   imageUrl: string;
   imageAlt: string;
+}
+
+export interface AboutUs13Tab {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl?: string;
+  imageAlt?: string;
+}
+
+export interface AboutUs13Data {
+  template: "about-13";
+  heading: string;
+  description: string;
+  highlightValue: string;
+  highlightLabel: string;
+  imageUrl: string;
+  imageAlt: string;
+  ctaText: string;
+  ctaLink: string;
+  tabs: AboutUs13Tab[];
+  tabDescription: string;
+  cardTitle: string;
+  cardDescription: string;
+  buttonText: string;
+  buttonLink: string;
 }
 
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
@@ -194,7 +244,9 @@ export type AboutUsData =
   | AboutUs8Data
   | AboutUs9Data
   | AboutUs10Data
-  | AboutUs12Data;
+  | AboutUs11Data
+  | AboutUs12Data
+  | AboutUs13Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -246,7 +298,9 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs8Data>
     | Partial<AboutUs9Data>
     | Partial<AboutUs10Data>
-    | Partial<AboutUs12Data>;
+    | Partial<AboutUs11Data>
+    | Partial<AboutUs12Data>
+    | Partial<AboutUs13Data>;
   order?: number;
 }
 
@@ -555,6 +609,60 @@ export const defaultAboutUs10Data: AboutUs10Data = {
   circularStampText: "World Wide Access • Immigration Agency •",
 };
 
+export const defaultAboutUs11Data: AboutUs11Data = {
+  template: "about-11",
+  headline:
+    'Since 2016, we\'re a team of all in all <span class="font-serif italic font-normal">experienced</span> consultations, combine for strategic instant.',
+  description:
+    "At Optimo, We help businesses navigate complexity unlock to growth achieve lasting transformation with a team of experienced consultations, We can combine for strategic instant.",
+  featuredStatValue: "150+",
+  featuredStatLabel: "Successful Projects Delivered",
+  imageUrl: "https://picsum.photos/seed/team1/1200/900",
+  imageAlt: "Team collaborating",
+  bulletPoints: [
+    { id: "bp-1", text: "Strategic Planning" },
+    { id: "bp-2", text: "Operational Excellence" },
+    { id: "bp-3", text: "Market Expansion" },
+    { id: "bp-4", text: "Risk Management" },
+  ],
+  supportingTitle:
+    'With a 98% client <span class="font-serif italic text-gray-600">satisfaction</span>, our strategies have led to <span class="font-bold">$50M+ in revenue</span>',
+  supportingDescription:
+    "Our strategic approach is designed to align with your business goals, helping you scale faster.",
+  stats: [
+    {
+      id: "stat-1",
+      icon: "folder",
+      value: "250+",
+      label: "Over 300+ clients complete",
+      sublabel: "high-impact projects.",
+    },
+    {
+      id: "stat-2",
+      icon: "sun",
+      value: "98%",
+      label: "Trusted by hundreds of clients",
+      sublabel: "who rate our work highly.",
+    },
+    {
+      id: "stat-3",
+      icon: "users",
+      value: "50+",
+      label: "Our ability to adapt and deliver",
+      sublabel: "impactful solutions across.",
+    },
+    {
+      id: "stat-4",
+      icon: "lightbulb",
+      value: "20+",
+      label: "Building on years of experience,",
+      sublabel: "we provide trusted guidance.",
+    },
+  ],
+  ctaText: "Book a Free Call",
+  ctaLink: "#",
+};
+
 export const defaultAboutUs12Data: AboutUs12Data = {
   template: "about-12",
   sectionTag: "OUR COACHING",
@@ -567,4 +675,51 @@ export const defaultAboutUs12Data: AboutUs12Data = {
   imageUrl:
     "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2776&auto=format&fit=crop",
   imageAlt: "Professional Team Member",
+};
+
+export const defaultAboutUs13Data: AboutUs13Data = {
+  template: "about-13",
+  heading:
+    'The Value Behind Our <span class="font-serif italic font-normal">Partnership</span>',
+  description:
+    "At Optimo, Our partnership goes beyond delivering solutions—it's about building trust, aligning with your goals. We go beyond consulting to become your strategic partner—delivering tailored solutions, expert insight, and measurable results.",
+  highlightValue: "150+",
+  highlightLabel: "Successful Projects Delivered",
+  imageUrl: "https://picsum.photos/seed/creative/800/800",
+  imageAlt: "Creative Partnership",
+  ctaText: "Get In Touch",
+  ctaLink: "#",
+  tabs: [
+    {
+      id: "tab-1",
+      title: "Deep Collaboration",
+      description:
+        "We work as an extension of your team—immersing ourselves in your goals, challenges, and vision to ensure aligned outcomes.",
+      imageUrl: "https://picsum.photos/seed/creative/800/800",
+      imageAlt: "Deep Collaboration",
+    },
+    {
+      id: "tab-2",
+      title: "Expertise",
+      description:
+        "Our multidisciplinary team brings decades of experience across strategy, design, and technology.",
+      imageUrl: "https://picsum.photos/seed/expertise/800/800",
+      imageAlt: "Expertise discussion",
+    },
+    {
+      id: "tab-3",
+      title: "Tailored Solutions",
+      description:
+        "Every engagement is customized to deliver the right mix of insights, execution, and long-term support.",
+      imageUrl: "https://picsum.photos/seed/solutions/800/800",
+      imageAlt: "Tailored solutions workshop",
+    },
+  ],
+  tabDescription:
+    "We believe great results come from working closely together. From discovery to delivery, we stay synced with your objectives.",
+  cardTitle: "What to Know What's Possible",
+  cardDescription:
+    "We help teams uncover opportunities and execute bold ideas with confidence.",
+  buttonText: "Get In Touch",
+  buttonLink: "#",
 };
