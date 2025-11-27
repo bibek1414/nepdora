@@ -232,6 +232,22 @@ export interface AboutUs13Data {
   buttonLink: string;
 }
 
+export interface AboutUs14Service {
+  id: string;
+  title: string;
+  description: string;
+  points: string[];
+  image: string;
+}
+
+export interface AboutUs14Data {
+  template: "about-14";
+  title: string;
+  italicWord: string;
+  buttonText: string;
+  services: AboutUs14Service[];
+}
+
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
@@ -246,7 +262,8 @@ export type AboutUsData =
   | AboutUs10Data
   | AboutUs11Data
   | AboutUs12Data
-  | AboutUs13Data;
+  | AboutUs13Data
+  | AboutUs14Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -300,7 +317,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs10Data>
     | Partial<AboutUs11Data>
     | Partial<AboutUs12Data>
-    | Partial<AboutUs13Data>;
+    | Partial<AboutUs13Data>
+    | Partial<AboutUs14Data>;
   order?: number;
 }
 
@@ -722,4 +740,57 @@ export const defaultAboutUs13Data: AboutUs13Data = {
     "We help teams uncover opportunities and execute bold ideas with confidence.",
   buttonText: "Get In Touch",
   buttonLink: "#",
+};
+
+export const defaultAboutUs14Data: AboutUs14Data = {
+  template: "about-14",
+  title: "Driving Growth Through Strategic Excellence",
+  italicWord: "Excellence",
+  buttonText: "Contact Us",
+  services: [
+    {
+      id: "01",
+      title: "Strategy Consulting",
+      description:
+        "Guiding individuals and businesses with smart financial planning, investment advice, and long-term wealth strategies.",
+      points: [
+        "Personalized Financial Planning",
+        "Investment & Portfolio Guidance",
+        "Risk Management & Wealth Protection",
+      ],
+      image: "https://picsum.photos/id/1059/800/800",
+    },
+    {
+      id: "02",
+      title: "Market Insights and Analysis",
+      description:
+        "Deep dive analysis into market trends to position your business ahead of the curve.",
+      points: [
+        "Competitor Benchmarking",
+        "Consumer Behavior Analysis",
+        "Trend Forecasting",
+      ],
+      image: "https://picsum.photos/id/1060/800/800",
+    },
+    {
+      id: "03",
+      title: "Wealth & Finance Advisory",
+      description:
+        "Comprehensive financial structures to optimize tax efficiency and capital allocation.",
+      points: ["Capital Allocation", "Tax Optimization", "M&A Advisory"],
+      image: "https://picsum.photos/id/1070/800/800",
+    },
+    {
+      id: "04",
+      title: "Digital Transformation",
+      description:
+        "Leveraging technology to streamline operations and enhance customer experiences.",
+      points: [
+        "Tech Stack Audit",
+        "Digital Workflow Integration",
+        "Data Security",
+      ],
+      image: "https://picsum.photos/id/118/800/800",
+    },
+  ],
 };
