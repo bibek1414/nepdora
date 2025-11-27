@@ -906,7 +906,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleFAQTemplateSelect = async (
-    template: "faq-1" | "faq-2" | "faq-3" | "faq-4" | "faq-5" | "faq-6"
+    template:
+      | "faq-1"
+      | "faq-2"
+      | "faq-3"
+      | "faq-4"
+      | "faq-5"
+      | "faq-6"
+      | "faq-7"
   ) => {
     const faqData = { ...defaultFAQData, style: template };
     setIsFAQStylesDialogOpen(false);

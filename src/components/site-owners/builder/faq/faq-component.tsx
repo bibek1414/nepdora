@@ -11,6 +11,7 @@ import { FAQCard3 } from "./faq-card-3";
 import { FAQCard4 } from "./faq-card-4";
 import { FAQCard5 } from "./faq-card-5";
 import { FaqCard6 } from "./faq-card-6";
+import { FaqCard7 } from "./faq-card-7";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -134,11 +135,115 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     }
   };
 
+  const handleTitleItalicChange = (newTitleItalic: string) => {
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
+      return;
+    }
+
+    updateFAQComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        titleItalic: newTitleItalic,
+      },
+    });
+
+    if (onUpdate) {
+      onUpdate(component.component_id, {
+        ...component,
+        data: {
+          ...component.data,
+          titleItalic: newTitleItalic,
+        },
+      });
+    }
+  };
+
+  const handleContactTitleChange = (newContactTitle: string) => {
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
+      return;
+    }
+
+    updateFAQComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        contactTitle: newContactTitle,
+      },
+    });
+
+    if (onUpdate) {
+      onUpdate(component.component_id, {
+        ...component,
+        data: {
+          ...component.data,
+          contactTitle: newContactTitle,
+        },
+      });
+    }
+  };
+
+  const handleContactDescriptionChange = (newContactDescription: string) => {
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
+      return;
+    }
+
+    updateFAQComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        contactDescription: newContactDescription,
+      },
+    });
+
+    if (onUpdate) {
+      onUpdate(component.component_id, {
+        ...component,
+        data: {
+          ...component.data,
+          contactDescription: newContactDescription,
+        },
+      });
+    }
+  };
+
+  const handleButtonTextChange = (newButtonText: string) => {
+    if (!pageSlug) {
+      console.error("pageSlug is required for updating component");
+      return;
+    }
+
+    updateFAQComponent.mutate({
+      componentId: component.component_id,
+      data: {
+        ...component.data,
+        buttonText: newButtonText,
+      },
+    });
+
+    if (onUpdate) {
+      onUpdate(component.component_id, {
+        ...component,
+        data: {
+          ...component.data,
+          buttonText: newButtonText,
+        },
+      });
+    }
+  };
+
   const renderFAQCard = () => {
     const {
       title = "Frequently Asked Questions",
       subtitle,
       leftImage,
+      titleItalic,
+      contactTitle,
+      contactDescription,
+      buttonText,
     } = component.data || {};
 
     const baseCardProps = { faqs };
@@ -177,6 +282,23 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
                 });
               }
             }}
+          />
+        );
+      case "faq-7":
+        return (
+          <FaqCard7
+            {...baseCardProps}
+            title={title}
+            titleItalic={titleItalic}
+            contactTitle={contactTitle}
+            contactDescription={contactDescription}
+            buttonText={buttonText}
+            isEditable={isEditable}
+            onTitleChange={handleTitleChange}
+            onTitleItalicChange={handleTitleItalicChange}
+            onContactTitleChange={handleContactTitleChange}
+            onContactDescriptionChange={handleContactDescriptionChange}
+            onButtonTextChange={handleButtonTextChange}
           />
         );
       case "faq-2":
@@ -256,7 +378,7 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
         <div className="py-8">
           <div className="container mx-auto px-4">
             {/* Only show separate title/subtitle for styles that don't have built-in titles */}
-            {style !== "faq-6" && (
+            {style !== "faq-6" && style !== "faq-7" && (
               <div className="mb-8 text-center">
                 <EditableText
                   value={title}
@@ -278,7 +400,13 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
               </div>
             )}
 
-            <div className={style === "faq-6" ? "w-full" : "mx-auto max-w-4xl"}>
+            <div
+              className={
+                style === "faq-6" || style === "faq-7"
+                  ? "w-full"
+                  : "mx-auto max-w-4xl"
+              }
+            >
               {isLoading && (
                 <div className="space-y-4">
                   {Array.from({ length: 6 }).map((_, index) => (
@@ -331,7 +459,7 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-6xl px-4">
         {/* Only show separate title/subtitle for styles that don't have built-in titles */}
-        {style !== "faq-6" && (
+        {style !== "faq-6" && style !== "faq-7" && (
           <div className="mb-12 text-center">
             <h2
               className="text-foreground mb-4 text-4xl font-bold tracking-tight"
@@ -346,7 +474,13 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
           </div>
         )}
 
-        <div className={style === "faq-6" ? "w-full" : "mx-auto max-w-4xl"}>
+        <div
+          className={
+            style === "faq-6" || style === "faq-7"
+              ? "w-full"
+              : "mx-auto max-w-4xl"
+          }
+        >
           {isLoading && (
             <div className="space-y-6">
               {Array.from({ length: 8 }).map((_, index) => (

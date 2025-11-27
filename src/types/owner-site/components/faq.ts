@@ -1,13 +1,18 @@
 export interface FAQData {
   component_id?: string;
   component_type: "faq";
-  style: "faq-1" | "faq-2" | "faq-3" | "faq-4" | "faq-5" | "faq-6";
+  style: "faq-1" | "faq-2" | "faq-3" | "faq-4" | "faq-5" | "faq-6" | "faq-7";
 
   title: string;
   subtitle?: string;
   order?: number;
   // Additional props for FAQ Card 6
   leftImage?: string;
+  // Additional props for FAQ Card 7
+  titleItalic?: string;
+  contactTitle?: string;
+  contactDescription?: string;
+  buttonText?: string;
 }
 
 export interface FAQComponentData {
