@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 export default function AISection() {
   return (
     <section className="relative mx-auto max-w-7xl overflow-hidden">
-      <div className="container mx-auto px-4 py-20 lg:py-32">
+      <div className="container mx-auto py-20 lg:py-32">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           {/* Left side - Image FIXED */}
           <div className="relative order-2 lg:order-1">
