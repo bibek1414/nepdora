@@ -4,17 +4,17 @@ import React, { useState, useEffect } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/publish/editable-link";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { HeroTemplate5Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 interface HeroTemplate5Props {
-  heroData: HeroData;
+  heroData: HeroTemplate5Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate5Data>) => void;
 }
 
 export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
@@ -26,7 +26,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
   // Generate unique component ID to prevent conflicts
   const componentId = React.useId();
 
-  const [data, setData] = useState<HeroData>(() => ({
+  const [data, setData] = useState<HeroTemplate5Data>(() => ({
     ...heroData,
     buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
   }));
@@ -57,11 +57,12 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
   };
 
   // Handle text field updates
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  const handleTextUpdate =
+    (field: keyof HeroTemplate5Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate5Data>);
+    };
 
   const handleImageUpdate = (imageUrl: string, altText?: string) => {
     const updatedData = {
@@ -239,7 +240,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           key={`subtitle-${componentId}`}
           value={data.subtitle || "Introducing the UA-01"}
           onChange={handleTextUpdate("subtitle")}
-          as="p"
+          as="h1"
           className="mb-4 tracking-[0.2em] uppercase"
           style={{
             color: "#D1D5DB", // text-gray-300 equivalent
@@ -253,7 +254,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           key={`title-${componentId}`}
           value={data.title}
           onChange={handleTextUpdate("title")}
-          as="h1"
+          as="h2"
           className="text-4xl leading-tight font-bold sm:text-6xl md:text-7xl"
           isEditable={isEditable}
           placeholder="Enter main title..."

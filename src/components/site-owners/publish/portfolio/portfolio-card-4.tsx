@@ -46,7 +46,7 @@ export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
 
   // ✅ Generate portfolio details URL
   const detailsUrl = siteUser
-    ? `/publish/${siteUser}/portfolio/${portfolio.slug}`
+    ? `/portfolio/${portfolio.slug}`
     : `/portfolio/${portfolio.slug}`;
 
   // ✅ Click handler

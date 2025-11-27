@@ -32,7 +32,7 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/publish/${siteUser}/blogs/${blog.slug}`;
+      return `/blogs/${blog.slug}`;
     } else {
       return `/blogs/${blog.slug}`;
     }

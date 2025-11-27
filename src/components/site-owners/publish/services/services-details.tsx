@@ -107,10 +107,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link
-                  href={`/publish/${siteUser}/home`}
-                  className="flex items-center gap-2"
-                >
+                <Link href={`/home`} className="flex items-center gap-2">
                   <Home className="h-4 w-4" />
                   Home
                 </Link>
@@ -119,7 +116,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/publish/${siteUser}/services`}>Services</Link>
+                <Link href={`/services`}>Services</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

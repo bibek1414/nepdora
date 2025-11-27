@@ -111,11 +111,11 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
     if (isEditable || disableClicks) return "#";
 
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/publish/${siteUser}`;
+      return ``;
     }
 
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/publish/${siteUser}/${cleanHref}`;
+    return `/${cleanHref}`;
   };
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
@@ -130,24 +130,24 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
 
     switch (action) {
       case "profile":
-        router.push(`/publish/${siteUser}/profile`);
+        router.push(`/profile`);
         break;
       case "wishlist":
-        router.push(`/publish/${siteUser}/wishlist`);
+        router.push(`/wishlist`);
         break;
       case "orders":
-        router.push(`/publish/${siteUser}/orders`);
+        router.push(`/orders`);
         break;
       case "logout":
         logout();
-        router.push(`/publish/${siteUser}`);
+        router.push(``);
         break;
     }
   };
 
   const handleLoginClick = () => {
     if (isEditable || disableClicks) return;
-    router.push(`/publish/${siteUser}/login`);
+    router.push(`/login`);
   };
 
   // Social media icon mapping
@@ -292,10 +292,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() =>
-                      !disableClicks &&
-                      router.push(`/publish/${siteUser}/wishlist`)
-                    }
+                    onClick={() => !disableClicks && router.push(`/wishlist`)}
                     className={`relative flex items-center gap-1 ${
                       disableClicks
                         ? "pointer-events-auto cursor-default opacity-60"

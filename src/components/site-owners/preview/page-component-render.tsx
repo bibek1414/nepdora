@@ -7,7 +7,9 @@ import { ProductsComponent } from "@/components/site-owners/builder/products/pro
 import { BlogComponent } from "@/components/site-owners/builder/blog/blog-components";
 import { ServicesComponent } from "@/components/site-owners/builder/services/services-component";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
+import { AppointmentComponent } from "@/components/site-owners/builder/appointment/appointment-component";
 import { CategoryComponent } from "@/components/site-owners/builder/category/category-component";
+
 import { SubCategoryComponent } from "@/components/site-owners/builder/sub-category/sub-category-component";
 import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
 import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
@@ -25,6 +27,7 @@ import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
+import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
 import { TeamComponentData } from "@/types/owner-site/components/team";
@@ -48,6 +51,7 @@ interface PageComponent {
     | "blog"
     | "services"
     | "contact"
+    | "appointment"
     | "team"
     | "faq"
     | "gallery"
@@ -67,6 +71,7 @@ interface PageComponent {
     | BlogComponentData["data"]
     | ServicesComponentData["data"]
     | ContactComponentData["data"]
+    | AppointmentComponentData["data"]
     | FAQComponentData["data"]
     | TestimonialsComponentData["data"]
     | TeamComponentData["data"]
@@ -98,6 +103,7 @@ interface PageComponentRendererProps {
       | BlogComponentData
       | ServicesComponentData
       | ContactComponentData
+      | AppointmentComponentData
       | TeamComponentData
       | FAQComponentData
       | HeroComponentData
@@ -211,6 +217,22 @@ export function PageComponentRenderer({
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as ContactComponentData)
+            }
+          />
+        );
+      case "appointment":
+        return (
+          <AppointmentComponent
+            key={component.id}
+            component={component as AppointmentComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(
+                componentId,
+                newData as AppointmentComponentData
+              )
             }
           />
         );

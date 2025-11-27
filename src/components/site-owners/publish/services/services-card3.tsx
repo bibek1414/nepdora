@@ -23,7 +23,7 @@ export const ServicesCard3: React.FC<ServicesPost3Props> = ({
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/publish/${siteUser}/services/${services.slug}`;
+      return `/services/${services.slug}`;
     } else {
       return `/services/${services.slug}`;
     }

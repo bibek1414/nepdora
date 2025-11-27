@@ -28,6 +28,72 @@ interface TextStyle {
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cn = (...classes: any[]) => classes.filter(Boolean).join(" ");
 
+// Default font sizes for different heading levels
+const getDefaultFontSize = (tag: string): string => {
+  switch (tag) {
+    case "h1":
+      return "2.5rem"; // ~40px
+    case "h2":
+      return "2rem"; // ~32px
+    case "h3":
+      return "1.75rem"; // ~28px
+    case "h4":
+      return "1.5rem"; // ~24px
+    case "h5":
+      return "1.25rem"; // ~20px
+    case "h6":
+      return "1rem"; // ~16px
+    case "p":
+      return "1rem"; // 16px
+    case "div":
+      return "1rem"; // 16px
+    case "span":
+      return "inherit";
+    default:
+      return "1rem";
+  }
+};
+
+// Default line heights for different heading levels
+const getDefaultLineHeight = (tag: string): string => {
+  switch (tag) {
+    case "h1":
+      return "1.1";
+    case "h2":
+      return "1.2";
+    case "h3":
+      return "1.3";
+    case "h4":
+      return "1.3";
+    case "h5":
+      return "1.4";
+    case "h6":
+      return "1.4";
+    default:
+      return "1.5";
+  }
+};
+
+// Default font weights for different heading levels
+const getDefaultFontWeight = (tag: string): string => {
+  switch (tag) {
+    case "h1":
+      return "bold";
+    case "h2":
+      return "bold";
+    case "h3":
+      return "bold";
+    case "h4":
+      return "600";
+    case "h5":
+      return "600";
+    case "h6":
+      return "600";
+    default:
+      return "normal";
+  }
+};
+
 export const EditableText: React.FC<EditableTextProps> = ({
   value,
   onChange,
@@ -57,7 +123,11 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const [selectedFont, setSelectedFont] = useState(
     currentFontFamily || style?.fontFamily || defaultFont
   );
-  const [selectedFontSize, setSelectedFontSize] = useState("16px");
+
+  // Set initial font size based on tag type
+  const [selectedFontSize, setSelectedFontSize] = useState(
+    style?.fontSize || getDefaultFontSize(Tag)
+  );
 
   const textRef = useRef<HTMLElement>(null);
 
@@ -67,6 +137,13 @@ export const EditableText: React.FC<EditableTextProps> = ({
       setSelectedFont(defaultFont);
     }
   }, [defaultFont, currentFontFamily, style?.fontFamily]);
+
+  // Update font size when tag changes
+  useEffect(() => {
+    if (!style?.fontSize) {
+      setSelectedFontSize(getDefaultFontSize(Tag));
+    }
+  }, [Tag, style?.fontSize]);
 
   // Set initial HTML content with preserved inline styles
   useEffect(() => {
@@ -159,6 +236,8 @@ export const EditableText: React.FC<EditableTextProps> = ({
       position: "relative" as const,
       fontFamily: `var(${isHeading || useHeadingFont ? "--font-heading" : "--font-body"}, ${selectedFont})`,
       fontSize: selectedFontSize,
+      lineHeight: getDefaultLineHeight(Tag),
+      fontWeight: getDefaultFontWeight(Tag),
       ...style,
     },
   };

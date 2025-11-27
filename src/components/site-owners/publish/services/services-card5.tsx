@@ -75,7 +75,7 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/publish/${siteUser}/services/${services.slug}`;
+      return `/services/${services.slug}`;
     }
     return `/services/${services.slug}`;
   };

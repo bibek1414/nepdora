@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { HeroTemplate3Data } from "@/types/owner-site/components/hero";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
@@ -12,9 +12,9 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface HeroTemplate3Props {
-  heroData: HeroData;
+  heroData: HeroTemplate3Data;
   isEditable?: boolean;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate3Data>) => void;
   siteUser?: string;
 }
 
@@ -49,11 +49,12 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
   };
 
   // Handle text field updates
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  const handleTextUpdate =
+    (field: keyof HeroTemplate3Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate3Data>);
+    };
 
   // Handle image updates
   const handleImageUpdate = (imageUrl: string, altText?: string) => {
@@ -92,24 +93,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
     onUpdate?.({ buttons: updatedButtons });
   };
 
-  const getBackgroundStyles = (): React.CSSProperties => {
-    if (data.backgroundType === "image" && data.backgroundImageUrl) {
-      const imageUrl = optimizeCloudinaryUrl(
-        convertUnsplashUrl(data.backgroundImageUrl),
-        { width: 1920, quality: "auto", format: "auto" }
-      );
-      return {
-        backgroundImage: `url(${imageUrl})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      };
-    }
-    // Use theme background color as default, or data.backgroundColor if specified
-    return {
-      backgroundColor: data.backgroundColor || theme.colors.background,
-    };
-  };
-
   const getImageUrl = () => {
     if (!data.imageUrl) return "";
     return optimizeCloudinaryUrl(convertUnsplashUrl(data.imageUrl), {
@@ -119,29 +102,8 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
     });
   };
 
-  const textColor =
-    data.backgroundType === "image" || data.backgroundColor === "#000000"
-      ? "#FFFFFF"
-      : theme.colors.text;
-
   return (
-    <section
-      className="relative w-full overflow-hidden"
-      style={{
-        color: textColor,
-        fontFamily: theme.fonts.body,
-      }}
-    >
-      {/* Overlay */}
-      {data.backgroundType === "image" && data.showOverlay && (
-        <div
-          className="absolute inset-0 z-0 bg-black"
-          style={{
-            opacity: data.overlayOpacity || 0.5,
-          }}
-        />
-      )}
-
+    <section className="relative w-full overflow-hidden">
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
           {/* Left Content */}
@@ -173,11 +135,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-3xl leading-tight font-bold sm:text-4xl md:text-5xl lg:text-6xl"
-              style={{
-                color: textColor,
-                fontFamily: theme.fonts.heading,
-              }}
+              className="!sm:text-4xl !md:text-5xl !lg:text-6xl !text-3xl leading-tight font-bold"
               isEditable={isEditable}
               placeholder="Enter your hero title..."
               multiline={true}
@@ -190,10 +148,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                 onChange={handleTextUpdate("description")}
                 as="p"
                 className="max-w-lg text-base leading-relaxed opacity-90 sm:text-lg"
-                style={{
-                  color: textColor,
-                  fontFamily: theme.fonts.body,
-                }}
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -209,17 +163,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                     size={index === 0 ? "lg" : "default"}
                     variant={index === 0 ? "default" : "outline"}
                     className="px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base"
-                    style={{
-                      backgroundColor:
-                        index === 0 ? theme.colors.primary : "transparent",
-                      color:
-                        index === 0
-                          ? theme.colors.primaryForeground
-                          : textColor,
-                      borderColor:
-                        index === 0 ? "transparent" : theme.colors.primary,
-                      fontFamily: theme.fonts.body,
-                    }}
                     asChild
                   >
                     <EditableLink
@@ -251,10 +194,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                 onChange={handleTextUpdate("statsNumber")}
                 as="span"
                 className="text-base font-medium sm:text-lg"
-                style={{
-                  color: textColor,
-                  fontFamily: theme.fonts.body,
-                }}
                 isEditable={isEditable}
                 placeholder="Enter stats number..."
               />
@@ -263,10 +202,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                 onChange={handleTextUpdate("statsLabel")}
                 as="span"
                 className="text-sm font-normal opacity-75 sm:text-base"
-                style={{
-                  color: textColor,
-                  fontFamily: theme.fonts.body,
-                }}
                 isEditable={isEditable}
                 placeholder="Add stats description..."
               />

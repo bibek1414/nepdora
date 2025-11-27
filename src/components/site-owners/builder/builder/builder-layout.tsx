@@ -23,9 +23,8 @@ import {
 import { FooterStylesDialog } from "@/components/site-owners/builder/footer/footer-styles-dialog";
 import { HeroStylesDialog } from "@/components/site-owners/builder/hero/hero-styles-dialog";
 import {
-  defaultHeroData,
-  heroTemplateConfigs,
-  heroTemplateContent,
+  getDefaultHeroData,
+  HeroData,
 } from "@/types/owner-site/components/hero";
 import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-unified";
 import { AboutUsStylesDialog } from "@/components/site-owners/builder/about/about-styles-dialog";
@@ -64,6 +63,7 @@ import {
   defaultContact5Data,
   defaultContact6Data,
 } from "@/types/owner-site/components/contact";
+import { defaultAppointmentData } from "@/types/owner-site/components/appointment";
 import { defaultTeamData } from "@/types/owner-site/components/team";
 import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
 import { defaultFAQData } from "@/types/owner-site/components/faq";
@@ -131,6 +131,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isServicesStylesDialogOpen, setIsServicesStylesDialogOpen] =
     useState(false);
   const [isContactStylesDialogOpen, setIsContactStylesDialogOpen] =
+    useState(false);
+  const [isAppointmentStylesDialogOpen, setIsAppointmentStylesDialogOpen] =
     useState(false);
   const [isTeamStylesDialogOpen, setIsTeamStylesDialogOpen] = useState(false);
   const [isTestimonialsStylesDialogOpen, setIsTestimonialsStylesDialogOpen] =
@@ -294,6 +296,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "blog",
             "services",
             "contact",
+            "appointment",
             "team",
             "testimonials",
             "faq",
@@ -333,6 +336,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       blog: "Blog",
       services: "Services",
       contact: "Contact",
+      appointment: "Appointment",
       team: "Team",
       testimonials: "Testimonials",
       faq: "FAQ",
@@ -665,39 +669,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   // Template selection handlers with insertIndex support
-  const handleHeroTemplateSelect = async (
-    template:
-      | "hero-1"
-      | "hero-2"
-      | "hero-3"
-      | "hero-4"
-      | "hero-5"
-      | "hero-6"
-      | "hero-7"
-      | "hero-8"
-      | "hero-9"
-      | "hero-10"
-      | "hero-11"
-      | "hero-12"
-  ) => {
-    const templateConfig = heroTemplateConfigs[template];
-    const templateContent = heroTemplateContent[template] || {};
-    const heroData = {
-      ...defaultHeroData,
-      ...templateContent,
-      template: template,
-      backgroundType: templateConfig.backgroundType,
-      backgroundColor:
-        templateConfig.backgroundColor || defaultHeroData.backgroundColor,
-      backgroundImageUrl:
-        templateConfig.backgroundImageUrl || defaultHeroData.backgroundImageUrl,
-      showOverlay: templateConfig.showOverlay ?? defaultHeroData.showOverlay,
-      overlayOpacity:
-        templateConfig.overlayOpacity ?? defaultHeroData.overlayOpacity,
-      showSlider: templateConfig.showSlider ?? defaultHeroData.showSlider,
-    };
+  const handleHeroTemplateSelect = async (template: HeroData["template"]) => {
+    // Get ONLY the data needed for this specific template
+    const heroData = getDefaultHeroData(template);
 
     setIsHeroStylesDialogOpen(false);
+
+    // This will now send only the necessary fields for the selected template
     await createComponentWithIndex("hero", heroData, pendingInsertIndex);
   };
 
@@ -888,6 +866,20 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     };
     setIsTeamStylesDialogOpen(false);
     await createComponentWithIndex("team", teamData, pendingInsertIndex);
+  };
+  const handleAppointmentTemplateSelect = async (
+    template: "appointment-1" | "appointment-2" | "appointment-3"
+  ) => {
+    const appointmentData: ComponentTypeMap["appointment"] = {
+      ...defaultAppointmentData,
+      style: template as ComponentTypeMap["appointment"]["style"],
+    };
+    setIsAppointmentStylesDialogOpen(false);
+    await createComponentWithIndex(
+      "appointment",
+      appointmentData,
+      pendingInsertIndex
+    );
   };
 
   const handleTestimonialsTemplateSelect = async (
@@ -1100,6 +1092,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     setPendingInsertIndex(insertIndex);
     setIsContactStylesDialogOpen(true);
   };
+  const handleAddAppointment = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsAppointmentStylesDialogOpen(true);
+  };
 
   const handleAddTeam = (insertIndex?: number) => {
     setPendingInsertIndex(insertIndex);
@@ -1238,6 +1234,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       } else {
         setIsContactStylesDialogOpen(true);
       }
+    } else if (componentId === "appointment-sections") {
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleAppointmentTemplateSelect(template as any);
+      } else {
+        setIsAppointmentStylesDialogOpen(true);
+      }
     } else if (componentId === "team-members-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1353,6 +1356,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         case "contact-sections":
           componentType = "contact";
           break;
+        case "appointment-sections":
+          componentType = "appointment";
+          break;
         case "team-members-sections":
           componentType = "team";
           break;
@@ -1391,6 +1397,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               "blog",
               "services",
               "contact",
+              "appointment",
               "team",
               "testimonials",
               "faq",
@@ -1486,11 +1493,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onOpenChange={setIsTextEditorStylesDialogOpen}
           onStyleSelect={handleTextEditorTemplateSelect}
         />
-        <HeroStylesDialog
-          open={isHeroStylesDialogOpen}
-          onOpenChange={setIsHeroStylesDialogOpen}
-          onStyleSelect={handleHeroTemplateSelect}
-        />
+
         <AboutUsStylesDialog
           open={isAboutUsStylesDialogOpen}
           onOpenChange={setIsAboutUsStylesDialogOpen}
@@ -1565,6 +1568,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                     onAddBlog={handleAddBlog}
                     onAddServices={handleAddServices}
                     onAddContact={handleAddContact}
+                    onAddAppointment={handleAddAppointment}
                     onAddTeam={handleAddTeam}
                     onAddTestimonials={handleAddTestimonials}
                     onAddFAQ={handleAddFAQ}

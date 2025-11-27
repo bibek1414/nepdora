@@ -136,11 +136,11 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     if (isEditable || disableClicks) return "#";
 
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/publish/${siteUser}`;
+      return ``;
     }
 
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/publish/${siteUser}/${cleanHref}`;
+    return `/${cleanHref}`;
   };
 
   const handleCategoryFilter = (categorySlug: string, categoryName: string) => {
@@ -172,12 +172,12 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
 
   const generateCategoryHref = (categorySlug: string) => {
     if (isEditable || disableClicks) return "#";
-    return `/publish/${siteUser}/category/${categorySlug}`;
+    return `/category/${categorySlug}`;
   };
 
   const generateSubCategoryHref = (subCategorySlug: string) => {
     if (isEditable || disableClicks) return "#";
-    return `/publish/${siteUser}/subcategory/${subCategorySlug}`;
+    return `/subcategory/${subCategorySlug}`;
   };
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
@@ -189,7 +189,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
 
   const handleLoginClick = () => {
     if (isEditable || disableClicks) return;
-    router.push(`/publish/${siteUser}/login`);
+    router.push(`/login`);
   };
 
   const handleProfileAction = (action: string) => {
@@ -197,17 +197,17 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
 
     switch (action) {
       case "profile":
-        router.push(`/publish/${siteUser}/profile`);
+        router.push(`/profile`);
         break;
       case "wishlist":
-        router.push(`/publish/${siteUser}/wishlist`);
+        router.push(`/wishlist`);
         break;
       case "orders":
-        router.push(`/publish/${siteUser}/orders`);
+        router.push(`/orders`);
         break;
       case "logout":
         logout();
-        router.push(`/publish/${siteUser}`);
+        router.push(``);
         break;
     }
   };

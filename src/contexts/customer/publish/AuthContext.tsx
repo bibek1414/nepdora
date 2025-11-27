@@ -250,10 +250,10 @@ export const CustomerPublishAuthProvider = ({
               const homePageExists = await checkPageExists(siteUser, "home");
 
               if (homePageExists) {
-                router.push(`/publish/${siteUser}/home`);
+                router.push(`/home`);
               } else {
                 // Fallback to base publish URL
-                router.push(`/publish/${siteUser}`);
+                router.push(``);
               }
             } catch (error) {
               console.warn(
@@ -261,7 +261,7 @@ export const CustomerPublishAuthProvider = ({
                 error
               );
               // If page check fails, try home first
-              router.push(`/publish/${siteUser}/home`);
+              router.push(`/home`);
             }
           }
         }
@@ -319,7 +319,7 @@ export const CustomerPublishAuthProvider = ({
         }
 
         if (siteUser) {
-          router.push(`/publish/${siteUser}/login`);
+          router.push(`/login`);
         } else {
           // Fallback to general login page if siteUser cannot be determined
           router.push("/login");

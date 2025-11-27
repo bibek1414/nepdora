@@ -113,10 +113,7 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link
-                  href={`/publish/${siteUser}/home`}
-                  className="flex items-center gap-2"
-                >
+                <Link href={`/home`} className="flex items-center gap-2">
                   <Home className="h-4 w-4" />
                   Home
                 </Link>
@@ -125,7 +122,7 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/publish/${siteUser}/blogs`}>Blogs</Link>
+                <Link href={`/blogs`}>Blogs</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
@@ -243,7 +240,7 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
                 ].map((post, index) => (
                   <li key={index}>
                     <Link
-                      href={`/publish/${siteUser}/${post.slug}`}
+                      href={`/${post.slug}`}
                       className="text-foreground hover:text-primary text-base transition-colors"
                     >
                       {post.title}

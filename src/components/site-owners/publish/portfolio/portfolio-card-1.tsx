@@ -27,7 +27,7 @@ export const PortfolioCard1: React.FC<PortfolioCard1Props> = ({
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/publish/${siteUser}/portfolio/${portfolio.slug}`;
+      return `/portfolio/${portfolio.slug}`;
     } else {
       return `/portfolio/${portfolio.slug}`;
     }

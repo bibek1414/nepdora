@@ -27,6 +27,7 @@ import {
   Type,
   Navigation,
   Square,
+  Calendar,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NavbarData } from "@/types/owner-site/components/navbar";
@@ -147,6 +148,28 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "hero-13",
         name: "Hero Style 13",
         image: "/images/site-owners/hero/hero13.png",
+      },
+      {
+        id: "hero-14",
+        name: "Hero Style 14",
+        image: "/images/site-owners/hero/hero14.png",
+      },
+    ],
+    appointment: [
+      {
+        id: "appointment-1",
+        name: "Appointment Style 1",
+        image: "/images/site-owners/appointment/appointment1.png",
+      },
+      {
+        id: "appointment-2",
+        name: "Appointment Style 2",
+        image: "/images/site-owners/appointment/appointment2.png",
+      },
+      {
+        id: "appointment-3",
+        name: "Appointment Style 3",
+        image: "/images/site-owners/appointment/appointment3.png",
       },
     ],
     about: [
@@ -891,6 +914,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       templates: templates.contact,
       type: "section",
     },
+    {
+      id: "appointment-sections",
+      label: "Appointment",
+      icon: Calendar,
+      keywords: ["form", "email", "reach", "message"],
+      hasTemplates: true,
+      templates: templates.appointment,
+      type: "section",
+    },
+
     {
       id: "faq-sections",
       label: "FAQ",

@@ -118,7 +118,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/publish/${siteUser}/products/${product.slug}`;
+      return `/products/${product.slug}`;
     } else {
       return `/publish/products/${product.slug}`;
     }

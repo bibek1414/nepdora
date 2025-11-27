@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/publish/editable-link";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { HeroTemplate6Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
@@ -18,10 +18,10 @@ import {
 import { cn } from "@/lib/utils";
 
 interface HeroTemplate6Props {
-  heroData: HeroData;
+  heroData: HeroTemplate6Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate6Data>) => void;
 }
 
 export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
@@ -33,7 +33,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
   // Generate unique component ID to prevent conflicts
   const componentId = React.useId();
 
-  const [data, setData] = useState<HeroData>(() => ({
+  const [data, setData] = useState<HeroTemplate6Data>(() => ({
     ...heroData,
     buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
     sliderImages: heroData.sliderImages?.map(img => ({ ...img })) || [],
@@ -117,11 +117,12 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
       : defaultSlides;
 
   // Handle text field updates
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  const handleTextUpdate =
+    (field: keyof HeroTemplate6Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate6Data>);
+    };
 
   // Handle slider image updates
   const handleSliderImageUpdate = (

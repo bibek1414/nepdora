@@ -4,15 +4,15 @@ import React, { useState, useEffect } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { HeroData } from "@/types/owner-site/components/hero";
+import { HeroTemplate10Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 
 interface HeroTemplate10Props {
-  heroData: HeroData;
+  heroData: HeroTemplate10Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate10Data>) => void;
 }
 
 export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
@@ -23,7 +23,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
 }) => {
   const componentId = React.useId();
 
-  const [data, setData] = useState<HeroData>(() => ({
+  const [data, setData] = useState<HeroTemplate10Data>(() => ({
     ...heroData,
     buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
     sliderImages: heroData.sliderImages?.map(img => ({ ...img })) || [],
@@ -112,11 +112,12 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
   }
 
   // Handle text field updates
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  const handleTextUpdate =
+    (field: keyof HeroTemplate10Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate10Data>);
+    };
 
   // Handle grid image updates
   const handleGridImageUpdate = (

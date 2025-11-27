@@ -25,7 +25,7 @@ export const ServicesCard4: React.FC<ServicesPost4Props> = ({
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/publish/${siteUser}/services/${services.slug}`;
+      return `/services/${services.slug}`;
     } else {
       return `/services/${services.slug}`;
     }

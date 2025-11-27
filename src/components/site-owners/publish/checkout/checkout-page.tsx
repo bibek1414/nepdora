@@ -306,7 +306,7 @@ const PublishCheckoutPage = () => {
   };
 
   const handleContinueShopping = () => {
-    router.push(`/publish/${siteUser}`);
+    router.push(``);
   };
 
   // Order Summary Component (shared between mobile and desktop)

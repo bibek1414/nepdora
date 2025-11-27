@@ -2,7 +2,10 @@
 
 import React, { useEffect, useId, useMemo, useState } from "react";
 import { ArrowUpRight, Loader2 } from "lucide-react";
-import { HeroButton, HeroData } from "@/types/owner-site/components/hero";
+import {
+  HeroTemplate13Data,
+  HeroButton,
+} from "@/types/owner-site/components/hero";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
@@ -14,10 +17,10 @@ import {
 import { toast } from "sonner";
 
 interface HeroTemplate13Props {
-  heroData: HeroData;
+  heroData: HeroTemplate13Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<HeroData>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate13Data>) => void;
 }
 
 type CTAButtonVariant = "primary" | "white" | "outline";
@@ -51,7 +54,9 @@ const DEFAULT_BUTTON: HeroButton = {
   href: "#",
 };
 
-const createInitialData = (incoming: HeroData): HeroData => ({
+const createInitialData = (
+  incoming: HeroTemplate13Data
+): HeroTemplate13Data => ({
   ...incoming,
   buttons:
     incoming.buttons?.length && incoming.buttons[0]
@@ -66,7 +71,9 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
   onUpdate,
 }) => {
   const componentId = useId();
-  const [data, setData] = useState<HeroData>(() => createInitialData(heroData));
+  const [data, setData] = useState<HeroTemplate13Data>(() =>
+    createInitialData(heroData)
+  );
   const [isUploadingBackground, setIsUploadingBackground] = useState(false);
 
   useEffect(() => {
@@ -88,11 +95,12 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
     });
   }, [resolvedBackground]);
 
-  const handleTextUpdate = (field: keyof HeroData) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<HeroData>);
-  };
+  const handleTextUpdate =
+    (field: keyof HeroTemplate13Data) => (value: string) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<HeroTemplate13Data>);
+    };
 
   const handlePrimaryButtonUpdate = (text: string, href: string) => {
     const existingButton = data.buttons[0] || DEFAULT_BUTTON;
