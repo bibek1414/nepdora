@@ -17,7 +17,7 @@ import { ServicesData } from "./services";
 import { GalleryData } from "./gallery";
 import { PolicyData } from "./policies";
 import { TextEditorData } from "./text-editor";
-
+import { CTAData } from "./cta";
 // Union type for all component data types
 export type ComponentData =
   | HeroData
@@ -33,6 +33,7 @@ export type ComponentData =
   | TextEditorData
   | PortfolioData
   | BannerData
+  | CTAData
   | NewsletterData
   | YouTubeData
   | ServicesData
@@ -54,6 +55,7 @@ export interface ComponentTypeMap {
   testimonials: TestimonialsData;
   portfolio: PortfolioData;
   faq: FAQData;
+  cta: CTAData;
   gallery: GalleryData;
   newsletter: NewsletterData;
   banner: BannerData;
@@ -115,6 +117,10 @@ export const isHeroComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"hero"> =>
   component.component_type === "hero";
+
+export const isCTAComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"cta"> => component.component_type === "cta";
 
 export const isAboutComponent = (
   component: ComponentResponse

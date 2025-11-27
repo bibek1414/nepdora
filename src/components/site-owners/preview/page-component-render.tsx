@@ -8,6 +8,7 @@ import { BlogComponent } from "@/components/site-owners/builder/blog/blog-compon
 import { ServicesComponent } from "@/components/site-owners/builder/services/services-component";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
 import { AppointmentComponent } from "@/components/site-owners/builder/appointment/appointment-component";
+import { CTAComponent } from "@/components/site-owners/builder/cta/cta-component";
 import { CategoryComponent } from "@/components/site-owners/builder/category/category-component";
 
 import { SubCategoryComponent } from "@/components/site-owners/builder/sub-category/sub-category-component";
@@ -28,6 +29,7 @@ import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
 import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
+import { CTAComponentData } from "@/types/owner-site/components/cta";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
 import { TeamComponentData } from "@/types/owner-site/components/team";
@@ -52,6 +54,7 @@ interface PageComponent {
     | "services"
     | "contact"
     | "appointment"
+    | "cta"
     | "team"
     | "faq"
     | "gallery"
@@ -72,6 +75,7 @@ interface PageComponent {
     | ServicesComponentData["data"]
     | ContactComponentData["data"]
     | AppointmentComponentData["data"]
+    | CTAComponentData["data"]
     | FAQComponentData["data"]
     | TestimonialsComponentData["data"]
     | TeamComponentData["data"]
@@ -104,6 +108,7 @@ interface PageComponentRendererProps {
       | ServicesComponentData
       | ContactComponentData
       | AppointmentComponentData
+      | CTAComponentData
       | TeamComponentData
       | FAQComponentData
       | HeroComponentData
@@ -190,6 +195,19 @@ export function PageComponentRenderer({
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
               onComponentUpdate(componentId, newData as GalleryComponentData)
+            }
+          />
+        );
+      case "cta":
+        return (
+          <CTAComponent
+            key={component.id}
+            component={component as CTAComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as CTAComponentData)
             }
           />
         );

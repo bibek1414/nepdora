@@ -20,6 +20,8 @@ import { TeamComponent } from "@/components/site-owners/builder/team-member/team
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
 import { AppointmentComponent } from "@/components/site-owners/builder/appointment/appointment-component";
 import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
+import { CTAComponent } from "@/components/site-owners/builder/cta/cta-component";
+import { CTAComponentData } from "@/types/owner-site/components/cta";
 import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
 import { NewsletterComponent } from "@/components/site-owners/builder/newsletter/newsletter-component";
@@ -74,6 +76,7 @@ interface CanvasAreaProps {
   isLoading: boolean;
   error: Error | null;
   onAddHero?: (insertIndex?: number) => void;
+  onAddCTA?: (insertIndex?: number) => void;
   onAddAboutUs?: (insertIndex?: number) => void;
   onAddProducts?: (insertIndex?: number) => void;
   onAddCategories?: (insertIndex?: number) => void;
@@ -336,6 +339,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`appointment-${component.id}`}
             component={component as AppointmentComponentData}
             onUpdate={() => {}}
+            {...commonProps}
+          />
+        );
+        break;
+      case "cta":
+        componentElement = (
+          <CTAComponent
+            key={`cta-${component.id}`}
+            component={component as CTAComponentData}
+            siteUser=""
             {...commonProps}
           />
         );

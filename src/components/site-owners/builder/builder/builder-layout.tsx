@@ -11,6 +11,7 @@ import {
   useNavbarQuery,
   useCreateNavbarMutation,
 } from "@/hooks/owner-site/components/use-navbar";
+import { CTAData } from "@/types/owner-site/components/cta";
 import { NavbarData } from "@/types/owner-site/components/navbar";
 import { NavbarTemplateDialog } from "@/components/site-owners/builder/navbar/navbar-template-dialog";
 import { usePages } from "@/hooks/owner-site/use-page";
@@ -21,7 +22,6 @@ import {
   useCreateFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
 import { FooterStylesDialog } from "@/components/site-owners/builder/footer/footer-styles-dialog";
-import { HeroStylesDialog } from "@/components/site-owners/builder/hero/hero-styles-dialog";
 import {
   getDefaultHeroData,
   HeroData,
@@ -48,7 +48,6 @@ import { AboutUsData } from "@/types/owner-site/components/about";
 import { defaultProductsData } from "@/types/owner-site/components/products";
 import { Facebook, Twitter } from "lucide-react";
 import { defaultBlogData } from "@/types/owner-site/components/blog";
-import { BlogStylesDialog } from "@/components/site-owners/builder/blog/blog-style-dialog";
 import { defaultServicesData } from "@/types/owner-site/components/services";
 import {
   ComponentResponse,
@@ -63,6 +62,11 @@ import {
   defaultContact5Data,
   defaultContact6Data,
 } from "@/types/owner-site/components/contact";
+import {
+  defaultCTATemplate1Data,
+  defaultCTATemplate2Data,
+  defaultCTATemplate3Data,
+} from "@/types/owner-site/components/cta";
 import { defaultAppointmentData } from "@/types/owner-site/components/appointment";
 import { defaultTeamData } from "@/types/owner-site/components/team";
 import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
@@ -134,6 +138,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useState(false);
   const [isAppointmentStylesDialogOpen, setIsAppointmentStylesDialogOpen] =
     useState(false);
+  const [isCTAStylesDialogOpen, setIsCTAStylesDialogOpen] = useState(false);
   const [isTeamStylesDialogOpen, setIsTeamStylesDialogOpen] = useState(false);
   const [isTestimonialsStylesDialogOpen, setIsTestimonialsStylesDialogOpen] =
     useState(false);
@@ -297,6 +302,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "services",
             "contact",
             "appointment",
+            "cta",
             "team",
             "testimonials",
             "faq",
@@ -336,6 +342,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       blog: "Blog",
       services: "Services",
       contact: "Contact",
+      cta: "CTA",
       appointment: "Appointment",
       team: "Team",
       testimonials: "Testimonials",
@@ -534,7 +541,31 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
+  const handleCTATemplateSelect = async (template: CTAData["template"]) => {
+    let ctaData: CTAData;
+    switch (template) {
+      case "cta-1":
+        ctaData = defaultCTATemplate1Data;
+        break;
+      case "cta-2":
+        ctaData = defaultCTATemplate2Data;
+        break;
+      case "cta-3":
+        ctaData = defaultCTATemplate3Data;
+        break;
+      default:
+        ctaData = defaultCTATemplate1Data;
+    }
 
+    setIsCTAStylesDialogOpen(false);
+    await createComponentWithIndex("cta", ctaData, pendingInsertIndex);
+  };
+
+  // Add handler for opening CTA dialog
+  const handleAddCTA = (insertIndex?: number) => {
+    setPendingInsertIndex(insertIndex);
+    setIsCTAStylesDialogOpen(true);
+  };
   // Footer handlers
   const handleFooterSelectFromDialog = (
     footerStyle:
@@ -1199,6 +1230,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       } else {
         setIsAboutUsStylesDialogOpen(true);
       }
+    } else if (componentId === "cta-sections") {
+      if (template) {
+        handleCTATemplateSelect(template as CTAData["template"]);
+      } else {
+        setIsCTAStylesDialogOpen(true);
+      }
     } else if (componentId === "products-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1358,6 +1395,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           break;
         case "appointment-sections":
           componentType = "appointment";
+          break;
+        case "cta-sections":
+          componentType = "cta";
           break;
         case "team-members-sections":
           componentType = "team";

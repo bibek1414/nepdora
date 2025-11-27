@@ -155,6 +155,26 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/hero/hero14.png",
       },
     ],
+    cta: [
+      {
+        id: "cta-1",
+        name: "CTA Style 1",
+        image: "/images/site-owners/cta/cta1.png",
+        description: "Clean and modern CTA with centered layout",
+      },
+      {
+        id: "cta-2",
+        name: "CTA Style 2",
+        image: "/images/site-owners/cta/cta2.png",
+        description: "Gradient background with badge",
+      },
+      {
+        id: "cta-3",
+        name: "CTA Style 3",
+        image: "/images/site-owners/cta/cta3.png",
+        description: "Card-style CTA with feature icons",
+      },
+    ],
     appointment: [
       {
         id: "appointment-1",
@@ -940,6 +960,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["banner", "top section", "intro", "welcome"],
       hasTemplates: true,
       templates: templates.hero,
+      popular: true,
+      type: "section",
+    },
+    {
+      id: "cta-sections",
+      label: "Call to Action",
+      icon: Type,
+      keywords: ["cta", "call to action", "button", "action", "conversion"],
+      hasTemplates: true,
+      templates: templates.cta,
       popular: true,
       type: "section",
     },

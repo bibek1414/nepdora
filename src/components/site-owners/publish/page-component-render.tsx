@@ -7,6 +7,7 @@ import { ProductsComponent } from "@/components/site-owners/publish/product/prod
 import { BlogComponent } from "@/components/site-owners/publish/blog/blog-components";
 import { ServicesComponent } from "@/components/site-owners/publish/services/services-component";
 import { AppointmentComponent } from "@/components/site-owners/builder/appointment/appointment-component";
+import { CTAComponent } from "@/components/site-owners/builder/cta/cta-component";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
 import { CategoryComponent } from "@/components/site-owners/publish/category/category-component";
 import { SubCategoryComponent } from "@/components/site-owners/publish/sub-category/sub-category-component";
@@ -39,6 +40,7 @@ import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
+import { CTAComponentData } from "@/types/owner-site/components/cta";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -56,6 +58,7 @@ interface PageComponent {
     | "portfolio"
     | "banner"
     | "newsletter"
+    | "cta"
     | "youtube"
     | "gallery"
     | "subcategory"
@@ -73,6 +76,7 @@ interface PageComponent {
     | TestimonialsComponentData["data"]
     | TeamComponentData["data"]
     | AppointmentComponentData["data"]
+    | CTAComponentData["data"]
     | CategoryComponentData["data"]
     | GalleryComponentData["data"]
     | PortfolioComponentData["data"]
@@ -104,6 +108,7 @@ interface PageComponentRendererProps {
       | TeamComponentData
       | FAQComponentData
       | AppointmentComponentData
+      | CTAComponentData
       | HeroComponentData
       | AboutUsComponentData
       | TestimonialsComponentData
@@ -176,6 +181,19 @@ export function PageComponentRenderer({
               onComponentUpdate(componentId, newData as BlogComponentData)
             }
             onBlogClick={onBlogClick}
+          />
+        );
+      case "cta":
+        return (
+          <CTAComponent
+            key={component.id}
+            component={component as CTAComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as CTAComponentData)
+            }
           />
         );
       case "services":

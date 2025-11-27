@@ -27,6 +27,7 @@ import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
+import { CTAComponentData } from "@/types/owner-site/components/cta";
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -45,6 +46,7 @@ interface PageComponent {
     | "category"
     | "portfolio"
     | "banner"
+    | "cta"
     | "newsletter"
     | "youtube"
     | "policies"
@@ -57,6 +59,7 @@ interface PageComponent {
     | BlogComponentData["data"]
     | ServicesComponentData["data"]
     | ContactComponentData["data"]
+    | CTAComponentData["data"]
     | AppointmentComponentData["data"]
     | FAQComponentData["data"]
     | TeamComponentData["data"]
@@ -114,6 +117,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
           "subcategory",
           "portfolio",
           "youtube",
+          "cta",
           "text_editor",
           "banner",
           "gallery",
@@ -163,6 +167,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
       | ContactComponentData
       | TeamComponentData
       | FAQComponentData
+      | CTAComponentData
       | TestimonialsComponentData
       | CategoryComponentData
       | AppointmentComponentData
