@@ -17,6 +17,7 @@ interface GalleryStylesDialogProps {
       | "gallery-3"
       | "gallery-4"
       | "gallery-5"
+      | "gallery-6"
   ) => void;
 }
 
@@ -26,7 +27,13 @@ export const GalleryStylesDialog: React.FC<GalleryStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "gallery-1" | "gallery-2" | "gallery-3" | "gallery-4" | "gallery-5" | null
+    | "gallery-1"
+    | "gallery-2"
+    | "gallery-3"
+    | "gallery-4"
+    | "gallery-5"
+    | "gallery-6"
+    | null
   >(null);
 
   const templates = [
@@ -57,10 +64,22 @@ export const GalleryStylesDialog: React.FC<GalleryStylesDialogProps> = ({
       description:
         "A visual collection of our most recent works - each piece crafted with intention, emotion, and style.",
     },
+    {
+      id: "gallery-6" as const,
+      name: "Case Study Carousel",
+      description:
+        "Horizontal story cards with bold imagery and floating detail cards.",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "gallery-1" | "gallery-2" | "gallery-3" | "gallery-4" | "gallery-5";
+    id:
+      | "gallery-1"
+      | "gallery-2"
+      | "gallery-3"
+      | "gallery-4"
+      | "gallery-5"
+      | "gallery-6";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {

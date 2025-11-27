@@ -967,6 +967,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "gallery-3"
       | "gallery-4"
       | "gallery-5"
+      | "gallery-6"
   ) => {
     const galleryData = { ...defaultGalleryData, template: template };
     setIsGalleryStylesDialogOpen(false);
