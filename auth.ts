@@ -1,11 +1,9 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import { type JWT } from "next-auth/jwt";
-import Credentials from "next-auth/providers/credentials";
 import { jwtDecode, type JwtPayload } from "jwt-decode";
 import Google from "next-auth/providers/google";
 import { oauth_google } from "./google-config";
 import { cookies } from "next/headers";
-import { buildTenantFrontendUrl } from "./src/lib/utils";
 import { siteConfig } from "./src/config/site";
 
 interface DecodedToken extends JwtPayload {
@@ -31,6 +29,7 @@ interface DecodedToken extends JwtPayload {
 const GOOGLE_STORE_NAME_COOKIE = "google_store_name";
 const GOOGLE_PHONE_NUMBER_COOKIE = "google_phone_number";
 const GOOGLE_WEBSITE_TYPE_COOKIE = "google_website_type";
+const GOOGLE_AUTH_ERROR_COOKIE = "google_auth_error";
 
 const getPendingGoogleSignupMetadata = async () => {
   try {
@@ -47,6 +46,43 @@ const getPendingGoogleSignupMetadata = async () => {
       phoneNumber: undefined,
       websiteType: undefined,
     };
+  }
+};
+
+const persistGoogleAuthError = async (
+  message: string,
+  options?: { force?: boolean }
+) => {
+  try {
+    const cookieStore = await cookies();
+    if (!options?.force && cookieStore.get(GOOGLE_AUTH_ERROR_COOKIE)?.value) {
+      return;
+    }
+
+    cookieStore.set(GOOGLE_AUTH_ERROR_COOKIE, message, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      expires: new Date(Date.now() + 5 * 60 * 1000),
+      path: "/",
+    });
+  } catch (error) {
+    console.error("Failed to persist Google auth error:", error);
+  }
+};
+
+const clearGoogleAuthError = async () => {
+  try {
+    const cookieStore = await cookies();
+    cookieStore.set(GOOGLE_AUTH_ERROR_COOKIE, "", {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      expires: new Date(0),
+      path: "/",
+    });
+  } catch (error) {
+    console.error("Failed to clear Google auth error:", error);
   }
 };
 
@@ -132,7 +168,7 @@ const nextAuthOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/login",
+    signIn: "/admin/signup",
   },
   callbacks: {
     async jwt({ token, user, account }) {
@@ -177,8 +213,26 @@ const nextAuthOptions: NextAuthOptions = {
             if (!response.ok) {
               const errorText = await response.text();
               console.error("Error response body:", errorText);
+              let backendErrorMessage =
+                "We couldn't sign you in with Google. Please try again or use email login.";
+              try {
+                const parsed = JSON.parse(errorText);
+                backendErrorMessage =
+                  parsed?.errors?.[0]?.message ||
+                  parsed?.error ||
+                  parsed?.message ||
+                  backendErrorMessage;
+              } catch (parseError) {
+                console.warn(
+                  "Failed to parse Google auth error response:",
+                  parseError
+                );
+              }
+              await persistGoogleAuthError(backendErrorMessage, {
+                force: true,
+              });
               throw new Error(
-                `Failed to authenticate with backend: ${response.status} ${response.statusText}`
+                `GoogleAuthBackendError(${response.status}): ${backendErrorMessage}`
               );
             }
 
@@ -189,6 +243,14 @@ const nextAuthOptions: NextAuthOptions = {
             );
 
             console.log("[Google Auth] Decoded token:", decodedToken);
+
+            if (!decodedToken.sub_domain) {
+              await persistGoogleAuthError(
+                "We couldn't find a workspace connected to this Google account. Please contact support or complete your signup.",
+                { force: true }
+              );
+              throw new Error("GoogleAuthMissingSubdomain");
+            }
 
             // Store sub_domain and tokens in cookies for redirect callback
             // Use same cookie format as AuthContext for consistency
@@ -265,6 +327,8 @@ const nextAuthOptions: NextAuthOptions = {
               );
             }
 
+            await clearGoogleAuthError();
+
             return {
               ...token,
               // Core user fields from backend response and decoded token
@@ -306,8 +370,11 @@ const nextAuthOptions: NextAuthOptions = {
             } as JWT;
           } catch (error) {
             console.error("Google auth error:", error);
-            // Return token with error instead of null to satisfy type requirements
-            return { ...token, error: "GoogleAuthError" } as JWT;
+            await persistGoogleAuthError(
+              "Google sign-in failed. Please try again in a moment.",
+              { force: false }
+            );
+            throw error;
           }
         }
         // This is for credentials provider

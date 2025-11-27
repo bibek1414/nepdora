@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -27,12 +27,17 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import GoogleLoginButton from "@/components/ui/GoogleLoginButton";
 import { GoogleSignupDialog } from "@/components/auth/signup/google-signup-form-dialog";
+import { useSearchParams } from "next/navigation";
+
+const GOOGLE_AUTH_ERROR_COOKIE = "google_auth_error";
 
 export function SignupForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   const { signup, isLoading } = useAuth();
+  const searchParams = useSearchParams();
+  const oauthErrorParam = searchParams?.get("error");
   const [formError, setFormError] = useState<FormErrorState | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [selectedWebsiteType, setSelectedWebsiteType] = useState<
@@ -53,6 +58,56 @@ export function SignupForm({
 
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const getCookieValue = (name: string): string | null => {
+      const cookies = document.cookie?.split(";") ?? [];
+      for (const cookie of cookies) {
+        const trimmed = cookie.trim();
+        if (trimmed.startsWith(`${name}=`)) {
+          return trimmed.substring(name.length + 1);
+        }
+      }
+      return null;
+    };
+
+    const decodeMessage = (value: string) => {
+      let result = value.replace(/\+/g, " ");
+      for (let i = 0; i < 2; i += 1) {
+        try {
+          const decoded = decodeURIComponent(result);
+          if (decoded === result) {
+            break;
+          }
+          result = decoded;
+        } catch {
+          break;
+        }
+      }
+      return result;
+    };
+
+    const googleAuthError = getCookieValue(GOOGLE_AUTH_ERROR_COOKIE);
+
+    if (googleAuthError) {
+      setFormError({
+        message: decodeMessage(googleAuthError),
+        type: "error",
+      });
+      document.cookie = `${GOOGLE_AUTH_ERROR_COOKIE}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      return;
+    }
+
+    if (oauthErrorParam === "OAuthCallback") {
+      setFormError({
+        message:
+          "Google sign-in failed. Please try again or complete your email signup first.",
+        type: "error",
+      });
+    }
+  }, [oauthErrorParam, setFormError]);
 
   const getErrorIcon = (type: FormErrorState["type"]) => {
     switch (type) {

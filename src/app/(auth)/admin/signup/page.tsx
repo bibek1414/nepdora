@@ -1,5 +1,7 @@
 import { SignupForm } from "@/components/auth/signup/signup-form";
 import type { Metadata } from "next";
+import { Suspense } from "react";
+
 export const metadata: Metadata = {
   title: "Create an Account | Nepdora Signup",
   description:
@@ -7,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function SignupPage() {
-  return <SignupForm />;
+  return (
+    <Suspense fallback={null}>
+      <SignupForm />
+    </Suspense>
+  );
 }

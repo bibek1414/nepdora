@@ -1,5 +1,7 @@
 import { LoginForm } from "@/components/auth/login/login-form";
 import type { Metadata } from "next";
+import { Suspense } from "react";
+
 export const metadata: Metadata = {
   title: "Sign In to Nepdora | Access Your Dashboard",
   description:
@@ -7,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
-  return <LoginForm />;
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
 }
