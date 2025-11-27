@@ -29,6 +29,7 @@ const typeToLabel: Record<string, string> = {
   team: "Team",
   testimonials: "Testimonials",
   faq: "FAQ",
+  cta: "CTA",
   portfolio: "Portfolio",
   banner: "Banner",
   newsletter: "Newsletter",
