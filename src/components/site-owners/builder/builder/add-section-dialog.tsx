@@ -813,105 +813,30 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
 
   const default_templates = getDefaultTemplates();
 
-  const components: ComponentItem[] = [
-    // NAVBAR COMPONENT - Always available
-    {
-      id: "navbar-sections",
-      label: "Navbar",
-      icon: Navigation,
-      keywords: ["header", "navigation", "menu", "nav"],
-      hasTemplates: true,
-      templates: templates.navbar,
-      popular: true,
-      type: "navbar",
-    },
+  const navbarComponent: ComponentItem = {
+    id: "navbar-sections",
+    label: "Navbar",
+    icon: Navigation,
+    keywords: ["header", "navigation", "menu", "nav"],
+    hasTemplates: true,
+    templates: templates.navbar,
+    popular: true,
+    type: "navbar",
+  };
 
-    // E-COMMERCE SPECIFIC COMPONENTS
-    {
-      id: "products-sections",
-      label: "Products",
-      icon: Package,
-      keywords: ["catalog", "shop", "items", "store"],
-      hasTemplates: true,
-      templates: templates.products,
-      popular: true,
-      type: "section",
-      hideForService: true,
-    },
-    {
-      id: "categories-sections",
-      label: "Categories",
-      icon: FolderOpen,
-      keywords: ["category", "taxonomy", "organization", "groups"],
-      hasTemplates: true,
-      templates: templates.category,
-      type: "section",
-      showForWebsiteTypes: ["ecommerce"],
-    },
-    {
-      id: "subcategories-sections",
-      label: "SubCategories",
-      icon: Tag,
-      keywords: ["subcategory", "nested", "subgroups"],
-      hasTemplates: true,
-      templates: templates.subcategory,
-      type: "section",
-      showForWebsiteTypes: ["ecommerce"],
-    },
+  const footerComponent: ComponentItem = {
+    id: "footer-sections",
+    label: "Footer",
+    icon: Square,
+    keywords: ["bottom", "links", "copyright", "social"],
+    description: "Site footer with multiple layout options",
+    hasTemplates: true,
+    templates: templates.footer,
+    popular: true,
+    type: "footer",
+  };
 
-    // SERVICE SPECIFIC COMPONENTS
-    {
-      id: "services-sections",
-      label: "Services",
-      icon: Menu,
-      keywords: ["what we do", "features", "offerings", "service"],
-      hasTemplates: true,
-      templates: templates.services,
-      popular: true,
-      type: "section",
-    },
-    {
-      id: "team-members-sections",
-      label: "Team Members",
-      icon: Crown,
-      keywords: ["employees", "staff", "team", "people"],
-      hasTemplates: true,
-      templates: templates.team,
-      type: "section",
-    },
-
-    // PORTFOLIO SPECIFIC COMPONENTS
-    {
-      id: "portfolio-sections",
-      label: "Portfolio",
-      icon: FolderOpen,
-      keywords: ["projects", "work", "showcase", "gallery"],
-      hasTemplates: true,
-      templates: templates.portfolio,
-      type: "section",
-    },
-    {
-      id: "gallery-sections",
-      label: "Gallery",
-      icon: ImageIcon,
-      keywords: ["images", "photos", "media", "pictures"],
-      hasTemplates: true,
-      templates: templates.gallery,
-      type: "section",
-    },
-
-    // BLOG SPECIFIC COMPONENTS
-    {
-      id: "blog-sections",
-      label: "Blog",
-      icon: FileText,
-      keywords: ["articles", "posts", "news", "updates"],
-      hasTemplates: true,
-      templates: templates.blog,
-      type: "section",
-    },
-
-    // UNIVERSAL COMPONENTS (available for all website types)
+  const baseComponents: ComponentItem[] = [
     {
       id: "about-sections",
       label: "About Us",
@@ -920,6 +845,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.about,
       popular: true,
+      type: "section",
+    },
+    {
+      id: "appointment-sections",
+      label: "Appointment",
+      icon: Calendar,
+      keywords: ["form", "email", "reach", "message"],
+      hasTemplates: true,
+      templates: templates.appointment,
       type: "section",
     },
     {
@@ -932,6 +866,35 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       type: "section",
     },
     {
+      id: "blog-sections",
+      label: "Blog",
+      icon: FileText,
+      keywords: ["articles", "posts", "news", "updates"],
+      hasTemplates: true,
+      templates: templates.blog,
+      type: "section",
+    },
+    {
+      id: "cta-sections",
+      label: "Call to Action",
+      icon: Type,
+      keywords: ["cta", "call to action", "button", "action", "conversion"],
+      hasTemplates: true,
+      templates: templates.cta,
+      popular: true,
+      type: "section",
+    },
+    {
+      id: "categories-sections",
+      label: "Categories",
+      icon: FolderOpen,
+      keywords: ["category", "taxonomy", "organization", "groups"],
+      hasTemplates: true,
+      templates: templates.category,
+      type: "section",
+      showForWebsiteTypes: ["ecommerce"],
+    },
+    {
       id: "contact-sections",
       label: "Contact",
       icon: Mail,
@@ -940,16 +903,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       templates: templates.contact,
       type: "section",
     },
-    {
-      id: "appointment-sections",
-      label: "Appointment",
-      icon: Calendar,
-      keywords: ["form", "email", "reach", "message"],
-      hasTemplates: true,
-      templates: templates.appointment,
-      type: "section",
-    },
-
     {
       id: "faq-sections",
       label: "FAQ",
@@ -960,22 +913,21 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       type: "section",
     },
     {
+      id: "gallery-sections",
+      label: "Gallery",
+      icon: ImageIcon,
+      keywords: ["images", "photos", "media", "pictures"],
+      hasTemplates: true,
+      templates: templates.gallery,
+      type: "section",
+    },
+    {
       id: "hero-sections",
       label: "Hero Section",
       icon: Crown,
       keywords: ["banner", "top section", "intro", "welcome"],
       hasTemplates: true,
       templates: templates.hero,
-      popular: true,
-      type: "section",
-    },
-    {
-      id: "cta-sections",
-      label: "Call to Action",
-      icon: Type,
-      keywords: ["cta", "call to action", "button", "action", "conversion"],
-      hasTemplates: true,
-      templates: templates.cta,
       popular: true,
       type: "section",
     },
@@ -996,6 +948,55 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.policies,
       popular: true,
+      type: "section",
+    },
+    {
+      id: "portfolio-sections",
+      label: "Portfolio",
+      icon: FolderOpen,
+      keywords: ["projects", "work", "showcase", "gallery"],
+      hasTemplates: true,
+      templates: templates.portfolio,
+      type: "section",
+    },
+    {
+      id: "products-sections",
+      label: "Products",
+      icon: Package,
+      keywords: ["catalog", "shop", "items", "store"],
+      hasTemplates: true,
+      templates: templates.products,
+      popular: true,
+      type: "section",
+      hideForService: true,
+    },
+    {
+      id: "services-sections",
+      label: "Services",
+      icon: Menu,
+      keywords: ["what we do", "features", "offerings", "service"],
+      hasTemplates: true,
+      templates: templates.services,
+      popular: true,
+      type: "section",
+    },
+    {
+      id: "subcategories-sections",
+      label: "SubCategories",
+      icon: Tag,
+      keywords: ["subcategory", "nested", "subgroups"],
+      hasTemplates: true,
+      templates: templates.subcategory,
+      type: "section",
+      showForWebsiteTypes: ["ecommerce"],
+    },
+    {
+      id: "team-members-sections",
+      label: "Team Members",
+      icon: Crown,
+      keywords: ["employees", "staff", "team", "people"],
+      hasTemplates: true,
+      templates: templates.team,
       type: "section",
     },
     {
@@ -1026,19 +1027,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       templates: templates.youtube,
       type: "section",
     },
+  ];
 
-    // FOOTER COMPONENT - Always available
-    {
-      id: "footer-sections",
-      label: "Footer",
-      icon: Square,
-      keywords: ["bottom", "links", "copyright", "social"],
-      description: "Site footer with multiple layout options",
-      hasTemplates: true,
-      templates: templates.footer,
-      popular: true,
-      type: "footer",
-    },
+  const components: ComponentItem[] = [
+    navbarComponent,
+    ...[...baseComponents].sort((a, b) => a.label.localeCompare(b.label)),
+    footerComponent,
   ];
 
   // Filter components based on website type
@@ -1286,6 +1280,23 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
                 Components
               </DialogTitle>
             </DialogHeader>
+
+            <div className="border-b px-4 py-3">
+              <label htmlFor="component-search" className="sr-only">
+                Search components
+              </label>
+              <div className="relative">
+                <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+                <input
+                  id="component-search"
+                  type="text"
+                  value={query}
+                  onChange={event => setQuery(event.target.value)}
+                  placeholder="Search components..."
+                  className="border-muted focus-visible:ring-ring focus-visible:ring-offset-background w-full rounded-md border bg-white py-2 pr-3 pl-9 text-sm outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                />
+              </div>
+            </div>
 
             {/* Components List */}
             <ScrollArea className="flex-1 overflow-auto">
