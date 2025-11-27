@@ -26,6 +26,7 @@ import {
 } from "@/hooks/owner-site/components/use-unified";
 import { GalleryTemplate4 } from "./gallery-template-4";
 import { GalleryTemplate5 } from "./gallery-template-5";
+import { GalleryTemplate6 } from "./gallery-template-6";
 
 interface GalleryComponentProps {
   component: GalleryComponentData;
@@ -130,6 +131,8 @@ export const GalleryComponent: React.FC<GalleryComponentProps> = ({
         return <GalleryTemplate4 {...props} />;
       case "gallery-5":
         return <GalleryTemplate5 {...props} />;
+      case "gallery-6":
+        return <GalleryTemplate6 {...props} />;
       default:
         return (
           <div className="flex min-h-[200px] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-8">
