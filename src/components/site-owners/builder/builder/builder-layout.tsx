@@ -59,7 +59,7 @@ import {
 } from "@/types/owner-site/components/about";
 import { defaultProductsData } from "@/types/owner-site/components/products";
 import { defaultBlogData } from "@/types/owner-site/components/blog";
-
+import { defaultOurClientsData } from "@/types/owner-site/components/our-client";
 import { defaultServicesData } from "@/types/owner-site/components/services";
 import { defaultAppointmentData } from "@/types/owner-site/components/appointment";
 import { defaultTeamData } from "@/types/owner-site/components/team";
@@ -76,7 +76,7 @@ import { componentsApi } from "@/services/api/owner-sites/components/unified";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
 import { useAuth } from "@/hooks/use-auth";
-import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/use-unified";
+
 import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
 interface BuilderLayoutProps {
   params: {
@@ -158,6 +158,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "services",
             "contact",
             "appointment",
+            "our_clients",
             "cta",
             "team",
             "testimonials",
@@ -201,6 +202,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       contact: "Contact",
       cta: "CTA",
       appointment: "Appointment",
+      our_clients: "Our Clients",
       team: "Team",
       testimonials: "Testimonials",
       faq: "FAQ",
@@ -490,6 +492,17 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     await createComponentWithIndex("blog", blogData, pendingInsertIndex);
   };
 
+  const handleOurClientsTemplateSelect = async (
+    template: "our-clients-1" | "our-clients-2" | "our-clients-3"
+  ) => {
+    const ourClientsData = { ...defaultOurClientsData, style: template };
+
+    await createComponentWithIndex(
+      "our_clients",
+      ourClientsData,
+      pendingInsertIndex
+    );
+  };
   const handleServicesTemplateSelect = async (
     template:
       | "services-1"
@@ -784,6 +797,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleServicesTemplateSelect(template as any);
       }
+    } else if (componentId === "our-clients-sections") {
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleOurClientsTemplateSelect(template as any);
+      }
     } else if (componentId === "contact-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -850,117 +868,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       }
     }
   };
-
-  // Drop handler
-  const handleDrop = useCallback(
-    (item: { type: string; id?: string }) => {
-      if (item.type === "navbar" || item.type === "footer") return;
-
-      let componentType: keyof ComponentTypeMap;
-      switch (item.type) {
-        case "hero-sections":
-          componentType = "hero";
-          break;
-        case "about-sections":
-          componentType = "about";
-          break;
-        case "products-sections":
-          componentType = "products";
-          break;
-        case "categories-sections":
-          componentType = "category";
-          break;
-        case "subcategories-sections":
-          componentType = "subcategory";
-          break;
-        case "text-editor-sections":
-          componentType = "text_editor";
-          break;
-        case "blog-sections":
-          componentType = "blog";
-          break;
-        case "services-sections":
-          componentType = "services";
-          break;
-        case "contact-sections":
-          componentType = "contact";
-          break;
-        case "appointment-sections":
-          componentType = "appointment";
-          break;
-        case "cta-sections":
-          componentType = "cta";
-          break;
-        case "team-members-sections":
-          componentType = "team";
-          break;
-        case "testimonials-sections":
-          componentType = "testimonials";
-          break;
-        case "policies-sections":
-          componentType = "policies";
-          break;
-        case "portfolio-sections":
-          componentType = "portfolio";
-          break;
-        case "faq-sections":
-          componentType = "faq";
-          break;
-        case "banner-sections":
-          componentType = "banner";
-          break;
-        case "gallery-sections":
-          componentType = "gallery";
-          break;
-        case "newsletter-sections":
-          componentType = "newsletter";
-          break;
-        case "videos-sections":
-          componentType = "videos";
-          break;
-        default:
-          if (
-            [
-              "hero",
-              "about",
-              "products",
-              "category",
-              "subcategory",
-              "blog",
-              "services",
-              "contact",
-              "appointment",
-              "team",
-              "testimonials",
-              "faq",
-              "portfolio",
-              "banner",
-              "newsletter",
-              "videos",
-              "text_editor",
-              "gallery",
-              "policies",
-            ].includes(item.type)
-          ) {
-            componentType = item.type as keyof ComponentTypeMap;
-          } else {
-            console.warn(`Unknown component type: ${item.type}`);
-            return;
-          }
-      }
-
-      const newComponent: ComponentResponse = {
-        id: `${componentType}-${Date.now()}`,
-        component_id: item.id || `${componentType}-${Date.now()}`,
-        component_type: componentType,
-        data: {} as ComponentTypeMap[keyof ComponentTypeMap],
-        order: pageComponents.length,
-      };
-
-      setDroppedComponents(prev => [...prev, newComponent]);
-    },
-    [pageComponents]
-  );
 
   const isLoading =
     isNavbarLoading ||

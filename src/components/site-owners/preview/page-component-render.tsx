@@ -8,6 +8,7 @@ import { BlogComponent } from "@/components/site-owners/builder/blog/blog-compon
 import { ServicesComponent } from "@/components/site-owners/builder/services/services-component";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
 import { AppointmentComponent } from "@/components/site-owners/builder/appointment/appointment-component";
+import { OurClientsComponent } from "@/components/site-owners/builder/our-clients/our-clients-component";
 import { CTAComponent } from "@/components/site-owners/builder/cta/cta-component";
 import { CategoryComponent } from "@/components/site-owners/builder/category/category-component";
 
@@ -31,6 +32,7 @@ import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { ContactComponentData } from "@/types/owner-site/components/contact";
 import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
+import { OurClientsComponentData } from "@/types/owner-site/components/our-client";
 import { CTAComponentData } from "@/types/owner-site/components/cta";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
@@ -57,6 +59,7 @@ interface PageComponent {
     | "services"
     | "contact"
     | "appointment"
+    | "our_clients"
     | "cta"
     | "team"
     | "faq"
@@ -81,6 +84,7 @@ interface PageComponent {
     | ServicesComponentData["data"]
     | ContactComponentData["data"]
     | AppointmentComponentData["data"]
+    | OurClientsComponentData["data"]
     | CTAComponentData["data"]
     | FAQComponentData["data"]
     | TestimonialsComponentData["data"]
@@ -117,6 +121,7 @@ interface PageComponentRendererProps {
       | ServicesComponentData
       | ContactComponentData
       | AppointmentComponentData
+      | OurClientsComponentData
       | CTAComponentData
       | TeamComponentData
       | FAQComponentData
@@ -233,6 +238,19 @@ export function PageComponentRenderer({
               onComponentUpdate(componentId, newData as ServicesComponentData)
             }
             onServiceClick={onServiceClick}
+          />
+        );
+      case "our_clients":
+        return (
+          <OurClientsComponent
+            key={component.id}
+            component={component as OurClientsComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as OurClientsComponentData)
+            }
           />
         );
       case "contact":

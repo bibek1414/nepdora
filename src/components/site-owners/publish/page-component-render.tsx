@@ -7,6 +7,7 @@ import { ProductsComponent } from "@/components/site-owners/publish/product/prod
 import { BlogComponent } from "@/components/site-owners/publish/blog/blog-components";
 import { ServicesComponent } from "@/components/site-owners/publish/services/services-component";
 import { AppointmentComponent } from "@/components/site-owners/builder/appointment/appointment-component";
+import { OurClientsComponent } from "@/components/site-owners/builder/our-clients/our-clients-component";
 import { CTAComponent } from "@/components/site-owners/publish/cta/cta-component";
 import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
 import { CategoryComponent } from "@/components/site-owners/publish/category/category-component";
@@ -42,6 +43,7 @@ import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
+import { OurClientsComponentData } from "@/types/owner-site/components/our-client";
 import { CTAComponentData } from "@/types/owner-site/components/cta";
 import { PricingComponentData } from "@/types/owner-site/components/pricing";
 
@@ -67,6 +69,7 @@ interface PageComponent {
     | "gallery"
     | "subcategory"
     | "appointment"
+    | "our_clients"
     | "text_editor"
     | "pricing"
     | "policies";
@@ -82,6 +85,7 @@ interface PageComponent {
     | TestimonialsComponentData["data"]
     | TeamComponentData["data"]
     | AppointmentComponentData["data"]
+    | OurClientsComponentData["data"]
     | CTAComponentData["data"]
     | CategoryComponentData["data"]
     | GalleryComponentData["data"]
@@ -116,6 +120,7 @@ interface PageComponentRendererProps {
       | TeamComponentData
       | FAQComponentData
       | AppointmentComponentData
+      | OurClientsComponentData
       | CTAComponentData
       | HeroComponentData
       | AboutUsComponentData
@@ -190,6 +195,19 @@ export function PageComponentRenderer({
               onComponentUpdate(componentId, newData as BlogComponentData)
             }
             onBlogClick={onBlogClick}
+          />
+        );
+      case "our_clients":
+        return (
+          <OurClientsComponent
+            key={component.id}
+            component={component as OurClientsComponentData}
+            isEditable={false}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as OurClientsComponentData)
+            }
           />
         );
       case "cta":

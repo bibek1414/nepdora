@@ -29,6 +29,7 @@ import {
   Square,
   Calendar,
   DollarSign,
+  Users,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NavbarData } from "@/types/owner-site/components/navbar";
@@ -154,6 +155,23 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "hero-14",
         name: "Hero Style 14",
         image: "/images/site-owners/hero/hero14.png",
+      },
+    ],
+    our_clients: [
+      {
+        id: "our-clients-1",
+        name: "Our Clients Style 1",
+        image: "/images/site-owners/our-clients/our-clients-1.png",
+      },
+      {
+        id: "our-clients-2",
+        name: "Our Clients Style 2",
+        image: "/images/site-owners/our-clients/our-clients-2.png",
+      },
+      {
+        id: "our-clients-3",
+        name: "Our Clients Style 3",
+        image: "/images/site-owners/our-clients/our-clients-3.png",
       },
     ],
     cta: [
@@ -874,6 +892,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["form", "email", "reach", "message"],
       hasTemplates: true,
       templates: templates.appointment,
+      type: "section",
+    },
+    {
+      id: "our-clients-sections",
+      label: "Our Clients",
+      icon: Users,
+      keywords: ["clients", "partners", "logos", "brands"],
+      hasTemplates: true,
+      templates: templates.our_clients,
       type: "section",
     },
     {

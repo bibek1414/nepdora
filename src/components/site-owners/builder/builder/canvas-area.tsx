@@ -59,6 +59,8 @@ import { TextEditorComponentData } from "@/types/owner-site/components/text-edit
 import { TextEditorComponent } from "@/components/site-owners/builder/text-editor/text-editor-component";
 import { PricingComponent } from "@/components/site-owners/builder/pricing/pricing-component";
 import { PricingComponentData } from "@/types/owner-site/components/pricing";
+import { OurClientsComponent } from "@/components/site-owners/builder/our-clients/our-clients-component";
+import { OurClientsComponentData } from "@/types/owner-site/components/our-client";
 
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
@@ -288,6 +290,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           />
         );
         break;
+      case "our_clients":
+        componentElement = (
+          <OurClientsComponent
+            key={`our-clients-${component.id}`}
+            component={component as OurClientsComponentData}
+            onUpdate={() => {}}
+            {...commonProps}
+          />
+        );
+        break;
       case "services":
         componentElement = (
           <ServicesComponent
@@ -366,6 +378,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             component={component as PricingComponentData}
             onUpdate={() => {}}
             onPricingClick={() => {}}
+            {...commonProps}
+          />
+        );
+        break;
+      case "our_clients":
+        componentElement = (
+          <OurClientsComponent
+            key={`our_clients-${component.id}`}
+            component={component as OurClientsComponentData}
+            onUpdate={() => {}}
             {...commonProps}
           />
         );
@@ -565,6 +587,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     c => c.component_type === "newsletter"
   );
   const hasPricing = pageComponents.some(c => c.component_type === "pricing");
+  const hasOurClients = pageComponents.some(
+    c => c.component_type === "our_clients"
+  );
 
   return (
     <div className="rounded-lg border-2 border-dashed bg-white transition-colors">

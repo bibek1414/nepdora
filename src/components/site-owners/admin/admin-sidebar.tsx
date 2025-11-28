@@ -16,11 +16,11 @@ import {
   PanelLeft,
   MessageCircle,
   Wallet,
-  Truck,
   Unplug,
   Facebook,
   LayoutPanelTop,
   Settings,
+  GalleryHorizontal,
   Calendar,
   IndianRupee,
 } from "lucide-react";
@@ -75,6 +75,15 @@ const navigationGroups = [
   },
   {
     items: [{ name: "Inquiries", href: "/admin/inquiries", icon: Mail }],
+  },
+  {
+    items: [
+      {
+        name: "Our Clients",
+        href: "/admin/our-clients",
+        icon: GalleryHorizontal,
+      },
+    ],
   },
   {
     items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
