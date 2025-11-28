@@ -26,6 +26,7 @@ const typeToLabel: Record<string, string> = {
   services: "Services",
   contact: "Contact",
   appointment: "Appointment",
+  our_clients: "Our Clients",
   team: "Team",
   testimonials: "Testimonials",
   faq: "FAQ",

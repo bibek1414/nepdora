@@ -17,6 +17,7 @@ import {
   ApiListResponse,
 } from "@/types/owner-site/components/components";
 import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
+import { OurClientsComponentData } from "@/types/owner-site/components/our-client";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
@@ -45,6 +46,7 @@ interface PageComponent {
     | "gallery"
     | "testimonials"
     | "appointment"
+    | "our_clients"
     | "category"
     | "portfolio"
     | "banner"
@@ -65,6 +67,7 @@ interface PageComponent {
     | ContactComponentData["data"]
     | CTAComponentData["data"]
     | AppointmentComponentData["data"]
+    | OurClientsComponentData["data"]
     | FAQComponentData["data"]
     | TeamComponentData["data"]
     | TestimonialsComponentData["data"]
@@ -114,6 +117,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
           "blog",
           "appointment",
           "services",
+          "our_clients",
           "contact",
           "team",
           "faq",
@@ -174,6 +178,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
       | ContactComponentData
       | TeamComponentData
       | FAQComponentData
+      | OurClientsComponentData
       | CTAComponentData
       | TestimonialsComponentData
       | CategoryComponentData

@@ -19,6 +19,7 @@ import { PolicyData } from "./policies";
 import { TextEditorData } from "./text-editor";
 import { CTAData } from "./cta";
 import { PricingData } from "./pricing";
+import { OurClientsData } from "./our-client";
 
 // Union type for all component data types
 export type ComponentData =
@@ -42,7 +43,8 @@ export type ComponentData =
   | GalleryData
   | PolicyData
   | TestimonialsData
-  | PricingData;
+  | PricingData
+  | OurClientsData;
 
 // Component type mapping for better type safety
 export interface ComponentTypeMap {
@@ -67,6 +69,7 @@ export interface ComponentTypeMap {
   policies: PolicyData;
   text_editor: TextEditorData;
   pricing: PricingData;
+  our_clients: OurClientsData;
 }
 
 // Generic interfaces
@@ -215,6 +218,11 @@ export const isPricingComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"pricing"> =>
   component.component_type === "pricing";
+
+export const isOurClientsComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"our_clients"> =>
+  component.component_type === "our_clients";
 
 export interface ApiListResponse<T> {
   data?: T[];

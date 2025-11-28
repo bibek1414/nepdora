@@ -27,14 +27,17 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <img
-            src={
-              template.template_image ||
-              `https://via.placeholder.com/400x300/f3f4f6/6b7280?text=${encodeURIComponent(template.name)}`
-            }
-            alt={template.name}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          {template.template_image ? (
+            <img
+              src={template.template_image}
+              alt={template.name}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+              <span className="text-4xl text-gray-400">📄</span>
+            </div>
+          )}
 
           {/* Hover Overlay with Preview Button */}
           <div
