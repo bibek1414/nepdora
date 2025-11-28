@@ -523,7 +523,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleTeamTemplateSelect = async (
-    template: "team-1" | "team-2" | "team-3" | "team-4" | "team-5"
+    template: "team-1" | "team-2" | "team-3" | "team-4" | "team-5" | "team-6"
   ) => {
     const teamData: ComponentTypeMap["team"] = {
       ...defaultTeamData,

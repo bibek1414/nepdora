@@ -7,11 +7,13 @@ export interface TeamData {
     | "team-3"
     | "team-4"
     | "team-5"
+    | "team-6"
     | "grid-1"
     | "grid-2"
     | "list-1"
     | "card-4"
-    | "card-5";
+    | "card-5"
+    | "card-6";
 
   title: string;
   subtitle?: string;

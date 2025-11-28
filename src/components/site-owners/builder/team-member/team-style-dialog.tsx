@@ -11,7 +11,7 @@ interface TeamStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
-    style: "grid-1" | "grid-2" | "list-1" | "card-4" | "card-5"
+    style: "grid-1" | "grid-2" | "list-1" | "card-4" | "card-5" | "card-6"
   ) => void;
 }
 
@@ -21,7 +21,7 @@ export const TeamStylesDialog: React.FC<TeamStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | "list-1" | "card-4" | "card-5" | null
+    "grid-1" | "grid-2" | "list-1" | "card-4" | "card-5" | "card-6" | null
   >(null);
 
   const templates = [
@@ -45,10 +45,14 @@ export const TeamStylesDialog: React.FC<TeamStylesDialogProps> = ({
       id: "card-5" as const,
       name: "Card Style 5",
     },
+    {
+      id: "card-6" as const,
+      name: "Card Style 6",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "grid-1" | "grid-2" | "list-1" | "card-4" | "card-5";
+    id: "grid-1" | "grid-2" | "list-1" | "card-4" | "card-5" | "card-6";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
@@ -94,7 +98,9 @@ export const TeamStylesDialog: React.FC<TeamStylesDialogProps> = ({
                           ? "3"
                           : template.id === "card-5"
                             ? "5"
-                            : template.id.split("-")[1]
+                            : template.id === "card-6"
+                              ? "6"
+                              : template.id.split("-")[1]
                       }.png`}
                       alt={template.name}
                       width={400}

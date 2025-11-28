@@ -10,6 +10,7 @@ import { TeamCard2 } from "./team-card-2";
 import { TeamCard3 } from "./team-card-3";
 import { TeamCard4 } from "./team-card-4";
 import { TeamCard5 } from "./team-card-5";
+import { TeamCard6 } from "./team-card-6";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -28,6 +29,11 @@ import { TEAM } from "@/types/owner-site/admin/team-member";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
 import { TeamMemberDialog } from "../../admin/ourteam/our-team-form";
+import { defaultTeamData } from "@/types/owner-site/components/team";
+
+const CARD6_TITLE_FALLBACK =
+  'Meet the Beautiful team behind <span class="text-indigo-500 italic">Optimo</span>';
+const CARD6_SUBTITLE_FALLBACK = "[Team Member]";
 interface TeamComponentProps {
   component: TeamComponentData;
   isEditable?: boolean;
@@ -58,10 +64,42 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
 
   const {
     page_size = 8,
-    title = "Meet Our Team",
-    subtitle,
+    title: rawTitle,
+    subtitle: rawSubtitle,
     style = "grid-1",
   } = component.data || {};
+  const title = rawTitle ?? "Meet Our Team";
+  const subtitle = rawSubtitle;
+
+  const isCard5Style = style === "card-5" || style === "team-5";
+  const isCard6Style = style === "card-6" || style === "team-6";
+  const shouldUseCard6TitleFallback =
+    isCard6Style &&
+    (rawTitle === undefined ||
+      rawTitle === null ||
+      rawTitle === defaultTeamData.title);
+  const shouldUseCard6SubtitleFallback =
+    isCard6Style &&
+    (rawSubtitle === undefined ||
+      rawSubtitle === null ||
+      rawSubtitle === defaultTeamData.subtitle);
+
+  const resolvedTitle = shouldUseCard6TitleFallback
+    ? CARD6_TITLE_FALLBACK
+    : title;
+  const resolvedSubtitle = shouldUseCard6SubtitleFallback
+    ? CARD6_SUBTITLE_FALLBACK
+    : subtitle;
+  const sectionClassName = isCard6Style
+    ? "bg-white py-20"
+    : "bg-background py-12 md:py-16";
+  const liveContainerClassName = isCard6Style
+    ? "container mx-auto px-4 md:px-8"
+    : "container mx-auto max-w-7xl px-4";
+  const builderContainerClassName = isCard6Style
+    ? "container mx-auto px-4 md:px-8"
+    : "container mx-auto px-4";
+  const builderGridGapClass = isCard6Style ? "gap-8" : "gap-6";
 
   // Use unified mutation hooks
   const deleteTeamComponent = useDeleteComponentMutation(
@@ -164,6 +202,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       "team-3": "list-1",
       "team-4": "card-4",
       "team-5": "card-5",
+      "team-6": "card-6",
     };
 
     const styleKey = (styleMap[style as string] || style) as string;
@@ -178,6 +217,8 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
         return <TeamCard4 key={member.id} {...cardProps} />;
       case "card-5":
         return <TeamCard5 key={member.id} {...cardProps} />;
+      case "card-6":
+        return <TeamCard6 key={member.id} {...cardProps} />;
       default:
         return <TeamCard1 key={member.id} {...cardProps} />;
     }
@@ -191,6 +232,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       "team-3": "list-1",
       "team-4": "card-4",
       "team-5": "card-5",
+      "team-6": "card-6",
     };
 
     const styleKey = (styleMap[style as string] || style) as string;
@@ -203,6 +245,8 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       case "card-4":
       case "card-5":
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+      case "card-6":
+        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
       default:
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
     }
@@ -274,11 +318,11 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
         />
         {/* Team Preview */}
         <div className="py-8">
-          <div className="container mx-auto px-4">
+          <div className={builderContainerClassName}>
             <div
-              className={`mb-8 text-center ${style === "card-5" || style === "team-5" ? "mb-16" : ""}`}
+              className={`mb-8 text-center ${isCard5Style || isCard6Style ? "mb-16" : ""}`}
             >
-              {style === "card-5" || style === "team-5" ? (
+              {isCard5Style ? (
                 <>
                   <EditableText
                     value={subtitle || "Team Members"}
@@ -297,10 +341,30 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
                     placeholder="Enter title..."
                   />
                 </>
+              ) : isCard6Style ? (
+                <div className="flex flex-col items-center gap-6 text-center">
+                  <EditableText
+                    value={resolvedSubtitle || ""}
+                    onChange={handleSubtitleChange}
+                    as="p"
+                    className="inline-flex w-auto items-center rounded-full border border-slate-200 px-4 py-1 text-xs font-semibold tracking-[0.35em] text-slate-500 uppercase"
+                    isEditable={true}
+                    placeholder="[Team Member]"
+                  />
+                  <EditableText
+                    value={resolvedTitle || ""}
+                    onChange={handleTitleChange}
+                    as="h2"
+                    className="text-4xl leading-tight font-semibold text-slate-900 sm:text-5xl"
+                    isEditable={true}
+                    placeholder="Meet the Beautiful team behind Optimo"
+                    multiline={true}
+                  />
+                </div>
               ) : (
                 <>
                   <EditableText
-                    value={title}
+                    value={resolvedTitle}
                     onChange={handleTitleChange}
                     as="h2"
                     className="text-foreground mb-2 text-3xl font-bold tracking-tight"
@@ -308,7 +372,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
                     placeholder="Enter title..."
                   />
                   <EditableText
-                    value={subtitle || ""}
+                    value={resolvedSubtitle || ""}
                     onChange={handleSubtitleChange}
                     as="p"
                     className="text-muted-foreground mx-auto max-w-2xl text-lg"
@@ -321,7 +385,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
             </div>
 
             {isLoading && (
-              <div className={`grid ${getGridClass()} gap-6`}>
+              <div className={`grid ${getGridClass()} ${builderGridGapClass}`}>
                 {Array.from({ length: Math.min(page_size, 8) }).map(
                   (_, index) => (
                     <div key={index} className="flex flex-col space-y-3">
@@ -349,7 +413,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
             )}
 
             {!isLoading && !error && members.length > 0 && (
-              <div className={`grid ${getGridClass()} gap-6`}>
+              <div className={`grid ${getGridClass()} ${builderGridGapClass}`}>
                 {members.map(member => (
                   <div
                     key={member.id}
@@ -381,12 +445,12 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
 
   // Live site rendering
   return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
+    <section className={sectionClassName}>
+      <div className={liveContainerClassName}>
         <div
-          className={`mb-12 text-center ${style === "card-5" || style === "team-5" ? "mb-16" : ""}`}
+          className={`mb-12 text-center ${isCard5Style || isCard6Style ? "mb-16" : ""}`}
         >
-          {style === "card-5" || style === "team-5" ? (
+          {isCard5Style ? (
             <>
               {subtitle && (
                 <p
@@ -396,19 +460,32 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
               )}
               <h1
                 className="text-5xl font-bold text-[#001a4d]"
-                dangerouslySetInnerHTML={{ __html: title }}
+                dangerouslySetInnerHTML={{ __html: resolvedTitle }}
               ></h1>
+            </>
+          ) : isCard6Style ? (
+            <>
+              {resolvedSubtitle && (
+                <p
+                  className="mx-auto mb-4 inline-flex rounded-full border border-slate-200 px-4 py-1 text-xs font-semibold tracking-[0.35em] text-slate-500 uppercase"
+                  dangerouslySetInnerHTML={{ __html: resolvedSubtitle }}
+                ></p>
+              )}
+              <h2
+                className="mx-auto max-w-3xl text-4xl leading-tight font-semibold text-slate-900 sm:text-5xl"
+                dangerouslySetInnerHTML={{ __html: resolvedTitle || "" }}
+              ></h2>
             </>
           ) : (
             <>
               <h2
                 className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-                dangerouslySetInnerHTML={{ __html: title }}
+                dangerouslySetInnerHTML={{ __html: resolvedTitle }}
               ></h2>
               {subtitle && (
                 <p
                   className="text-muted-foreground mx-auto max-w-3xl text-xl"
-                  dangerouslySetInnerHTML={{ __html: subtitle }}
+                  dangerouslySetInnerHTML={{ __html: resolvedSubtitle || "" }}
                 ></p>
               )}
             </>
