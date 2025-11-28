@@ -137,14 +137,6 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
                 style={{ color: textColor }}
                 multiline
               />
-              <EditableText
-                value={data.highlightText}
-                onChange={handleFieldUpdate("highlightText")}
-                as="span"
-                className="block font-serif font-normal italic"
-                isEditable={isEditable}
-                style={{ color: textColor }}
-              />
             </h2>
 
             <EditableLink

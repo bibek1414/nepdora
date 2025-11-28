@@ -1,27 +1,51 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   AboutUs14Data,
   AboutUs14Service,
 } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
-import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { EditableLink } from "@/components/ui/editable-link";
+import { Check, ArrowUpRight } from "lucide-react";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface AboutUsTemplate14Props {
   aboutUsData: AboutUs14Data;
   isEditable?: boolean;
   onUpdate?: (updatedData: Partial<AboutUs14Data>) => void;
+  siteUser?: string;
 }
 
 export function AboutUsTemplate14({
   aboutUsData,
   isEditable = false,
   onUpdate,
+  siteUser,
 }: AboutUsTemplate14Props) {
   const [data, setData] = useState(aboutUsData);
   const [activeService, setActiveService] = useState(0);
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with fallback to defaults
+  const theme = useMemo(
+    () =>
+      themeResponse?.data?.[0]?.data?.theme || {
+        colors: {
+          text: "#0F172A",
+          primary: "#3C32E7",
+          primaryForeground: "#FFFFFF",
+          secondary: "#F59E0B",
+          secondaryForeground: "#1F2937",
+          background: "#FFFFFF",
+        },
+        fonts: {
+          body: "Inter",
+          heading: "Poppins",
+        },
+      },
+    [themeResponse]
+  );
 
   // Handle text field updates
   const handleTextUpdate = (field: keyof AboutUs14Data) => (value: string) => {
@@ -60,6 +84,20 @@ export function AboutUsTemplate14({
     onUpdate?.({ services: updatedServices });
   };
 
+  // Handle button link updates
+  const handleButtonLinkUpdate = (text: string, href: string) => {
+    const updatedData = {
+      ...data,
+      buttonText: text,
+      buttonLink: href,
+    };
+    setData(updatedData);
+    onUpdate?.({
+      buttonText: text,
+      buttonLink: href,
+    });
+  };
+
   return (
     <section id="services" className="bg-white py-20">
       <div className="container mx-auto px-4 md:px-8">
@@ -73,28 +111,35 @@ export function AboutUsTemplate14({
                 isEditable={isEditable}
                 placeholder="Enter title..."
               />
-              <EditableText
-                value={data.italicWord}
-                onChange={handleTextUpdate("italicWord")}
-                as="span"
-                className="font-serif text-blue-600 italic"
-                isEditable={isEditable}
-                placeholder="Italic word"
-              />
             </div>
           </div>
-          <Button className="hidden md:inline-flex">
-            <EditableText
-              value={data.buttonText}
-              onChange={handleTextUpdate("buttonText")}
-              as="span"
-              isEditable={isEditable}
-              placeholder="Button Text"
-            />
-          </Button>
+          <EditableLink
+            text={data.buttonText}
+            href={data.buttonLink || "#"}
+            onChange={handleButtonLinkUpdate}
+            style={{
+              backgroundColor: theme.colors.primary,
+              fontFamily: theme.fonts.body,
+            }}
+            className="group flex w-full items-center justify-between rounded-full py-2 pr-2 pl-8 text-[15px] font-medium text-white shadow-lg shadow-blue-900/10 transition-colors hover:opacity-90 md:w-auto md:min-w-[180px]"
+            textPlaceholder="Button Text"
+            hrefPlaceholder="#"
+            isEditable={isEditable}
+            siteUser={siteUser}
+          >
+            <>
+              <span>{data.buttonText || "Button Text"}</span>
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:rotate-45">
+                <ArrowUpRight
+                  className="h-5 w-5"
+                  style={{ color: theme.colors.primary }}
+                />
+              </span>
+            </>
+          </EditableLink>
         </div>
 
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-24">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Accordion List */}
           <div className="space-y-6">
             {data.services.map((service, idx) => (
@@ -110,12 +155,12 @@ export function AboutUsTemplate14({
                     [{service.id}]
                   </span>
                   <div
-                    className={`text-2xl font-medium ${activeService === idx ? "text-gray-900" : "text-gray-400 group-hover:text-gray-600"}`}
+                    className={`text-lg ${activeService === idx ? "text-gray-900" : "text-gray-400 group-hover:text-gray-600"}`}
                   >
                     <EditableText
                       value={service.title}
                       onChange={handleServiceUpdate(service.id, "title")}
-                      as="h3"
+                      as="h4"
                       isEditable={isEditable}
                       placeholder="Service Title"
                     />
@@ -167,7 +212,7 @@ export function AboutUsTemplate14({
           </div>
 
           {/* Right Image */}
-          <div className="relative h-[600px] overflow-hidden rounded-2xl shadow-2xl">
+          <div className="relative h-[550px] overflow-hidden rounded-2xl shadow-2xl">
             {data.services[activeService] && (
               <EditableImage
                 src={data.services[activeService].image}

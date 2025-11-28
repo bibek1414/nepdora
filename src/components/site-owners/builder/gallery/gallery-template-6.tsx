@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   GalleryData,
   GalleryImage,
@@ -17,7 +17,8 @@ const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
     image: "https://picsum.photos/id/1033/400/600",
     image_alt_description: "Revive & Rise showcase",
     title: "Revive & Rise",
-    description: "",
+    description:
+      "We step in to assess what’s holding you back, reshape your strategy, and breathe.",
     is_active: true,
   },
   {
@@ -25,7 +26,8 @@ const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
     image: "https://picsum.photos/id/101/400/600",
     image_alt_description: "Scaling Made Simple showcase",
     title: "Scaling Made Simple",
-    description: "",
+    description:
+      "We simplify the scaling process by identifying what’s working, removing what’s not, and building systems...",
     is_active: true,
   },
   {
@@ -33,7 +35,8 @@ const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
     image: "https://picsum.photos/id/1031/400/600",
     image_alt_description: "Fast-Track Growth showcase",
     title: "Fast-Track Growth",
-    description: "",
+    description:
+      "When time is critical and growth is essential, our focused strategies help you accelerate progress with...",
     is_active: true,
   },
   {
@@ -41,7 +44,8 @@ const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
     image: "https://picsum.photos/id/1029/400/600",
     image_alt_description: "Future-Proofing showcase",
     title: "Future-Proofing",
-    description: "",
+    description:
+      "We help organizations future-proof their operations with adaptable strategies, smart technologies.",
     is_active: true,
   },
 ];
@@ -88,6 +92,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
   );
   const [isUploading, setIsUploading] = useState(false);
   const componentId = React.useId();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleTitleUpdate = (newTitle: string) => {
     const updatedData = { ...data, title: newTitle };
@@ -206,6 +211,30 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
 
   const filteredImages = data.images.filter(image => image.is_active);
 
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      // Scroll by approximately one card width (300px mobile, 350px desktop) + gap
+      const scrollAmount = window.innerWidth >= 768 ? 374 : 324; // 350 + 24 or 300 + 24
+      container.scrollBy({
+        left: -scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      // Scroll by approximately one card width (300px mobile, 350px desktop) + gap
+      const scrollAmount = window.innerWidth >= 768 ? 374 : 324; // 350 + 24 or 300 + 24
+      container.scrollBy({
+        left: scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <section className="overflow-hidden bg-white py-20">
       <div className="container mx-auto px-4 md:px-8">
@@ -233,6 +262,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
 
           <div className="flex gap-2">
             <button
+              onClick={scrollLeft}
               className="rounded-full bg-gray-100 p-3 text-gray-700 transition-colors hover:bg-gray-200"
               type="button"
               aria-label="Scroll left"
@@ -240,6 +270,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
               <ArrowLeft size={18} />
             </button>
             <button
+              onClick={scrollRight}
               className="rounded-full bg-gray-100 p-3 text-gray-700 transition-colors hover:bg-gray-200"
               type="button"
               aria-label="Scroll right"
@@ -258,7 +289,10 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
           </div>
         )}
 
-        <div className="no-scrollbar -mx-4 flex gap-6 overflow-x-auto px-4 pb-8 md:mx-0 md:px-0">
+        <div
+          ref={scrollContainerRef}
+          className="scrollbar-hide -mx-4 flex gap-6 overflow-x-auto px-4 pb-8 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden"
+        >
           {filteredImages.map(image => {
             const actualIndex = data.images.findIndex(
               img => img.id === image.id
@@ -326,26 +360,34 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                 )}
 
                 <div className="absolute inset-x-6 bottom-6 z-10">
-                  <div className="flex translate-y-2 items-center justify-between rounded-xl bg-white p-4 shadow-lg transition-transform duration-300 group-hover/card:translate-y-0 group-hover/card:shadow-xl">
-                    <EditableText
-                      value={image.title || "Case Study"}
-                      onChange={newValue =>
-                        handleImageTitleUpdate(actualIndex, newValue)
-                      }
-                      isEditable={isEditable}
-                      className="font-semibold text-gray-900"
-                    />
-                    {(image.description || isEditable) && (
+                  <div className="translate-y-2 rounded-xl bg-white p-4 shadow-lg transition-all duration-300 group-hover/card:translate-y-0 group-hover/card:scale-105 group-hover/card:shadow-xl">
+                    <div className="flex flex-col gap-2">
                       <EditableText
-                        value={image.description || ""}
+                        value={image.title || "Case Study"}
                         onChange={newValue =>
-                          handleImageDescriptionUpdate(actualIndex, newValue)
+                          handleImageTitleUpdate(actualIndex, newValue)
                         }
                         isEditable={isEditable}
-                        className="mt-1 text-sm text-gray-500"
-                        placeholder="Add description"
+                        className="font-semibold text-gray-900"
                       />
-                    )}
+                      <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-300 group-hover/card:max-h-40 group-hover/card:opacity-100">
+                        {(image.description || isEditable) && (
+                          <EditableText
+                            value={image.description || ""}
+                            onChange={newValue =>
+                              handleImageDescriptionUpdate(
+                                actualIndex,
+                                newValue
+                              )
+                            }
+                            isEditable={isEditable}
+                            className="text-[11px] leading-relaxed text-gray-600"
+                            placeholder="Add description"
+                            multiline
+                          />
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -245,6 +245,7 @@ export interface AboutUs14Data {
   title: string;
   italicWord: string;
   buttonText: string;
+  buttonLink: string;
   services: AboutUs14Service[];
 }
 
@@ -747,6 +748,7 @@ export const defaultAboutUs14Data: AboutUs14Data = {
   title: "Driving Growth Through Strategic Excellence",
   italicWord: "Excellence",
   buttonText: "Contact Us",
+  buttonLink: "#",
   services: [
     {
       id: "01",

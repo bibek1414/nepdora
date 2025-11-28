@@ -28,11 +28,21 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
   );
   const { data: themeResponse } = useThemeQuery();
 
+  // Get theme colors with fallback to defaults
   const theme = useMemo(
     () =>
       themeResponse?.data?.[0]?.data?.theme || {
         colors: {
+          text: "#0F172A",
           primary: "#3C32E7",
+          primaryForeground: "#FFFFFF",
+          secondary: "#F59E0B",
+          secondaryForeground: "#1F2937",
+          background: "#F8F8F6",
+        },
+        fonts: {
+          body: "Inter",
+          heading: "Poppins",
         },
       },
     [themeResponse]
@@ -112,7 +122,10 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
   const activeImageAlt = activeTabData?.imageAlt || data.imageAlt;
 
   return (
-    <section className="bg-[#f8f8f6] py-16 md:py-24">
+    <section
+      className="py-16 md:py-24"
+      style={{ backgroundColor: theme.colors.background }}
+    >
       <div className="mx-auto max-w-[1400px] px-6 py-8 md:px-16 lg:px-24">
         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
           <div className="relative h-[500px] overflow-hidden rounded-2xl shadow-lg">
@@ -150,6 +163,10 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
                 value={data.cardTitle}
                 onChange={handleTextUpdate("cardTitle")}
                 as="h3"
+                style={{
+                  color: "#FFFFFF",
+                  fontFamily: theme.fonts.heading,
+                }}
                 className="text-2xl font-bold"
                 isEditable={isEditable}
                 placeholder="Card title"
@@ -159,7 +176,11 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
                 value={data.cardDescription}
                 onChange={handleTextUpdate("cardDescription")}
                 as="p"
-                className="mt-2 text-sm text-white/90"
+                style={{
+                  color: "#FFFFFF",
+                  fontFamily: theme.fonts.body,
+                }}
+                className="mt-2 text-sm opacity-90"
                 isEditable={isEditable}
                 placeholder="Card description"
                 multiline
@@ -169,7 +190,12 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
                   text={data.ctaText}
                   href={data.ctaLink}
                   onChange={handleOverlayLinkUpdate}
-                  className="mt-4 inline-flex items-center rounded-full bg-white/90 px-6 py-2 text-sm font-medium text-gray-900 shadow-lg transition-colors hover:bg-white"
+                  style={{
+                    backgroundColor: theme.colors.primaryForeground + "E6",
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.body,
+                  }}
+                  className="mt-4 inline-flex items-center rounded-full px-6 py-2 text-sm font-medium shadow-lg transition-colors hover:opacity-100"
                   textPlaceholder="Get In Touch"
                   hrefPlaceholder="#"
                   isEditable={isEditable}
@@ -189,7 +215,11 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               value={data.heading}
               onChange={handleTextUpdate("heading")}
               as="h2"
-              className="mb-6 text-4xl leading-tight font-semibold text-gray-900 md:text-5xl"
+              style={{
+                color: theme.colors.text,
+                fontFamily: theme.fonts.heading,
+              }}
+              className="mb-6 text-4xl leading-tight font-semibold md:text-5xl"
               isEditable={isEditable}
               placeholder="Heading"
               multiline
@@ -198,26 +228,41 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="mb-10 text-gray-600"
+              style={{
+                color: theme.colors.text,
+                fontFamily: theme.fonts.body,
+              }}
+              className="mb-10 opacity-80"
               isEditable={isEditable}
               placeholder="Description"
               multiline
             />
 
-            <div className="mb-8 border-b border-gray-200">
+            <div
+              className="mb-8 border-b"
+              style={{ borderColor: theme.colors.text + "33" }}
+            >
               <div className="flex gap-8 overflow-x-auto pb-4">
                 {data.tabs.map(tab => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
+                    style={{
+                      color:
+                        activeTab === tab.id
+                          ? theme.colors.text
+                          : theme.colors.text + "66",
+                      fontFamily: theme.fonts.body,
+                    }}
                     className={`flex items-center gap-2 text-sm font-medium whitespace-nowrap transition-colors ${
-                      activeTab === tab.id
-                        ? "text-gray-900"
-                        : "text-gray-400 hover:text-gray-700"
+                      activeTab === tab.id ? "" : "hover:opacity-80"
                     }`}
                   >
                     {activeTab === tab.id && (
-                      <span className="bg-primary h-2 w-2 rounded-full" />
+                      <span
+                        className="h-2 w-2 rounded-full"
+                        style={{ backgroundColor: theme.colors.primary }}
+                      />
                     )}
                     <EditableText
                       value={tab.title}
@@ -236,7 +281,11 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               value={activeTabData?.description || ""}
               onChange={handleTabDescriptionUpdate(activeTabData?.id || "")}
               as="div"
-              className="text-sm leading-loose text-gray-600"
+              style={{
+                color: theme.colors.text,
+                fontFamily: theme.fonts.body,
+              }}
+              className="text-sm leading-loose opacity-80"
               isEditable={isEditable}
               placeholder="Tab description"
               multiline

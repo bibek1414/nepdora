@@ -53,7 +53,6 @@ export interface CTATemplate4Data {
   template: "cta-4";
   eyebrow: string;
   title: string;
-  highlightText: string;
   button: CTAButton;
   features: CTATemplate4Feature[];
   imageUrl: string;
@@ -170,8 +169,7 @@ export const defaultCTATemplate3Data: CTATemplate3Data = {
 export const defaultCTATemplate4Data: CTATemplate4Data = {
   template: "cta-4",
   eyebrow: "[CTA]",
-  title: "Work with Experts to <br/> Grow Faster & Run <br/>",
-  highlightText: "Smarter",
+  title: "Work with Experts to Grow Faster & Run Smarter",
   button: {
     id: "cta-4-btn-1",
     text: "Get Started",
