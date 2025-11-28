@@ -39,8 +39,8 @@ const contentItems: ContentItem[] = [
     description: "Manage blog posts and articles",
   },
   {
-    name: "YouTube Videos",
-    href: "/admin/youtube",
+    name: " Videos",
+    href: "/admin/videos",
     icon: Youtube,
     description: "Manage video content",
   },

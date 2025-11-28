@@ -524,18 +524,17 @@ export const galleryComponentsApi = {
 
 export const youtubeComponentApi = {
   getAll: (pageSlug: string) =>
-    componentsApi.getComponentsByType(pageSlug, "youtube"),
-  create: (pageSlug: string, data: ComponentTypeMap["youtube"]) =>
+    componentsApi.getComponentsByType(pageSlug, "videos"),
+  create: (pageSlug: string, data: ComponentTypeMap["videos"]) =>
     componentsApi.createComponent(pageSlug, {
-      component_type: "youtube",
+      component_type: "videos",
       data,
     }),
   update: (
     pageSlug: string,
     componentId: string,
-    data: Partial<ComponentTypeMap["youtube"]>
-  ) =>
-    componentsApi.updateComponent(pageSlug, componentId, { data }, "youtube"),
+    data: Partial<ComponentTypeMap["videos"]>
+  ) => componentsApi.updateComponent(pageSlug, componentId, { data }, "videos"),
   delete: (pageSlug: string, componentId: string) =>
-    componentsApi.deleteComponent(pageSlug, componentId, "youtube"),
+    componentsApi.deleteComponent(pageSlug, componentId, "videos"),
 };

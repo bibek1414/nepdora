@@ -24,22 +24,26 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Plus, Edit, Youtube } from "lucide-react";
 import {
-  useCreateYouTubeVideo,
-  useUpdateYouTubeVideo,
-} from "@/hooks/owner-site/admin/use-youtube";
-import { YouTubeVideo } from "@/types/owner-site/admin/youtube";
+  useCreateVideo,
+  useUpdateVideo,
+} from "@/hooks/owner-site/admin/use-videos";
+import { Video } from "@/types/owner-site/admin/videos";
 
-const youtubeSchema = z.object({
+import { extractVideoInfo, VideoPlatform } from "@/lib/video-utils";
+
+const videoSchema = z.object({
   url: z
     .string()
-    .min(1, "YouTube URL is required")
+    .min(1, "Video URL is required")
     .url("Please enter a valid URL")
     .refine(
       url => {
-        return url.includes("youtube.com") || url.includes("youtu.be");
+        const { platform } = extractVideoInfo(url);
+        return platform !== "other";
       },
       {
-        message: "Please enter a valid YouTube URL",
+        message:
+          "Please enter a valid URL from YouTube, Facebook, Instagram, or TikTok",
       }
     ),
   title: z
@@ -52,12 +56,12 @@ const youtubeSchema = z.object({
     .optional(),
 });
 
-type YouTubeFormData = z.infer<typeof youtubeSchema>;
+type VideoFormData = z.infer<typeof videoSchema>;
 
-interface YouTubeFormProps {
+interface VideoFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  video?: YouTubeVideo;
+  video?: Video;
   mode: "create" | "edit";
 }
 
@@ -66,18 +70,31 @@ export function YouTubeForm({
   onOpenChange,
   video,
   mode,
-}: YouTubeFormProps) {
-  const createVideo = useCreateYouTubeVideo();
-  const updateVideo = useUpdateYouTubeVideo();
+}: VideoFormProps) {
+  const createVideo = useCreateVideo();
+  const updateVideo = useUpdateVideo();
+  const [detectedPlatform, setDetectedPlatform] =
+    useState<VideoPlatform>("other");
 
-  const form = useForm<YouTubeFormData>({
-    resolver: zodResolver(youtubeSchema),
+  const form = useForm<VideoFormData>({
+    resolver: zodResolver(videoSchema),
     defaultValues: {
       url: "",
       title: "",
       description: "",
     },
   });
+
+  // Watch URL for platform detection
+  const url = form.watch("url");
+  useEffect(() => {
+    if (url) {
+      const { platform } = extractVideoInfo(url);
+      setDetectedPlatform(platform);
+    } else {
+      setDetectedPlatform("other");
+    }
+  }, [url]);
 
   // Reset form when dialog opens/closes or video changes
   useEffect(() => {
@@ -88,12 +105,15 @@ export function YouTubeForm({
           title: video.title || "",
           description: video.description || "",
         });
+        const { platform } = extractVideoInfo(video.url);
+        setDetectedPlatform(platform);
       } else {
         form.reset({
           url: "",
           title: "",
           description: "",
         });
+        setDetectedPlatform("other");
       }
     }
   }, [open, mode, video, form]);
@@ -103,12 +123,15 @@ export function YouTubeForm({
     onOpenChange(false);
   };
 
-  const onSubmit = async (data: YouTubeFormData) => {
+  const onSubmit = async (data: VideoFormData) => {
     try {
+      const { platform } = extractVideoInfo(data.url);
+      const videoData = { ...data, platform };
+
       if (mode === "create") {
-        await createVideo.mutateAsync(data);
+        await createVideo.mutateAsync(videoData);
       } else if (mode === "edit" && video) {
-        await updateVideo.mutateAsync({ id: video.id, data });
+        await updateVideo.mutateAsync({ id: video.id, data: videoData });
       }
       handleClose();
     } catch (error) {
@@ -118,6 +141,37 @@ export function YouTubeForm({
 
   const isLoading = createVideo.isPending || updateVideo.isPending;
 
+  const getPlatformIcon = () => {
+    switch (detectedPlatform) {
+      case "youtube":
+        return (
+          <Youtube className="absolute top-3 left-3 h-4 w-4 text-red-500" />
+        );
+      case "facebook":
+        return (
+          <div className="absolute top-3 left-3 flex h-4 w-4 items-center justify-center font-bold text-blue-600">
+            f
+          </div>
+        );
+      case "instagram":
+        return (
+          <div className="absolute top-3 left-3 flex h-4 w-4 items-center justify-center font-bold text-pink-600">
+            IG
+          </div>
+        );
+      case "tiktok":
+        return (
+          <div className="absolute top-3 left-3 flex h-4 w-4 items-center justify-center font-bold text-black">
+            TT
+          </div>
+        );
+      default:
+        return (
+          <Youtube className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
+        );
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
@@ -126,19 +180,19 @@ export function YouTubeForm({
             {mode === "create" ? (
               <>
                 <Plus className="h-5 w-5" />
-                Add YouTube Video
+                Add Video
               </>
             ) : (
               <>
                 <Edit className="h-5 w-5" />
-                Edit YouTube Video
+                Edit Video
               </>
             )}
           </DialogTitle>
           <DialogDescription>
             {mode === "create"
-              ? "Add a new YouTube video to your collection."
-              : "Update the selected YouTube video information."}
+              ? "Add a new video from YouTube, Facebook, Instagram, or TikTok."
+              : "Update the selected video information."}
           </DialogDescription>
         </DialogHeader>
 
@@ -149,12 +203,12 @@ export function YouTubeForm({
               name="url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>YouTube URL</FormLabel>
+                  <FormLabel>Video URL</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Youtube className="absolute top-3 left-3 h-4 w-4 text-red-500" />
+                      {getPlatformIcon()}
                       <Input
-                        placeholder="https://www.youtube.com/watch?v=..."
+                        placeholder="Paste video URL here..."
                         {...field}
                         disabled={isLoading}
                         className="pl-10"
@@ -226,7 +280,7 @@ export function YouTubeForm({
 
 // YouTube Form Trigger Component
 interface YouTubeFormTriggerProps {
-  video?: YouTubeVideo;
+  video?: Video;
   mode: "create" | "edit";
   children?: React.ReactNode;
 }

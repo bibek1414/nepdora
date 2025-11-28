@@ -29,38 +29,57 @@ import {
   Loader2,
   ExternalLink,
 } from "lucide-react";
-import {
-  useYouTubeVideos,
-  useDeleteYouTubeVideo,
-} from "@/hooks/owner-site/admin/use-youtube";
-import { YouTubeFormTrigger } from "./youtube-form";
-import { YouTubeVideo } from "@/types/owner-site/admin/youtube";
+import { useVideos, useDeleteVideo } from "@/hooks/owner-site/admin/use-videos";
+import { YouTubeFormTrigger } from "./videos-form";
+import { Video } from "@/types/owner-site/admin/videos";
 import { toast } from "sonner";
 
-// Helper function to extract YouTube video ID
-const getYouTubeVideoId = (url: string): string | null => {
-  const regExp =
-    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-  const match = url.match(regExp);
-  return match && match[7].length === 11 ? match[7] : null;
-};
+import {
+  extractVideoInfo,
+  getVideoThumbnail,
+  VideoPlatform,
+} from "@/lib/video-utils";
 
-// Helper function to get YouTube thumbnail
-const getYouTubeThumbnail = (url: string): string => {
-  const videoId = getYouTubeVideoId(url);
-  return videoId
-    ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
-    : "/placeholder-video.jpg";
+// Helper function to get platform icon
+const PlatformIcon = ({ platform }: { platform: VideoPlatform }) => {
+  switch (platform) {
+    case "youtube":
+      return <Youtube className="h-4 w-4 text-red-600" />;
+    case "facebook":
+      return (
+        <div className="flex h-4 w-4 items-center justify-center text-[10px] font-bold text-blue-600">
+          f
+        </div>
+      );
+    case "instagram":
+      return (
+        <div className="flex h-4 w-4 items-center justify-center text-[10px] font-bold text-pink-600">
+          IG
+        </div>
+      );
+    case "tiktok":
+      return (
+        <div className="flex h-4 w-4 items-center justify-center text-[10px] font-bold text-black">
+          TT
+        </div>
+      );
+    default:
+      return (
+        <div className="flex h-4 w-4 items-center justify-center text-[10px] font-bold text-gray-400">
+          ?
+        </div>
+      );
+  }
 };
 
 export function YouTubeList() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [videoToDelete, setVideoToDelete] = useState<YouTubeVideo | null>(null);
+  const [videoToDelete, setVideoToDelete] = useState<Video | null>(null);
 
-  const { data, isLoading, error } = useYouTubeVideos();
-  const deleteVideo = useDeleteYouTubeVideo();
+  const { data, isLoading, error } = useVideos();
+  const deleteVideo = useDeleteVideo();
 
-  const handleDeleteClick = (video: YouTubeVideo, e: React.MouseEvent) => {
+  const handleDeleteClick = (video: Video, e: React.MouseEvent) => {
     e.stopPropagation();
     setVideoToDelete(video);
     setDeleteDialogOpen(true);
@@ -78,7 +97,7 @@ export function YouTubeList() {
     }
   };
 
-  const handleRowClick = (video: YouTubeVideo, e: React.MouseEvent) => {
+  const handleRowClick = (video: Video, e: React.MouseEvent) => {
     // Don't open edit dialog if clicking on action buttons or dialog elements
     const target = e.target as HTMLElement;
     if (
@@ -103,7 +122,7 @@ export function YouTubeList() {
           <div className="text-center">
             <Youtube className="mx-auto mb-4 h-12 w-12 text-red-400" />
             <p className="text-destructive mb-2 text-lg font-medium">
-              Error loading YouTube videos
+              Error loading videos
             </p>
             <p className="text-muted-foreground text-sm">
               Please try refreshing the page
@@ -121,16 +140,14 @@ export function YouTubeList() {
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900">
             <Youtube className="h-7 w-7 text-red-600" />
-            YouTube Videos
+            Videos
           </h1>
-          <p className="mt-1 text-gray-600">
-            Manage your YouTube video collection
-          </p>
+          <p className="mt-1 text-gray-600">Manage your video collection</p>
         </div>
         <YouTubeFormTrigger mode="create">
           <Button className="bg-red-600 text-white hover:bg-red-700">
             <Plus className="mr-2 h-4 w-4" />
-            Add YouTube Video
+            Add Video
           </Button>
         </YouTubeFormTrigger>
       </div>
@@ -170,82 +187,97 @@ export function YouTubeList() {
                 </TableRow>
               ))
             ) : data && data.length > 0 ? (
-              data.map(video => (
-                <TableRow
-                  key={video.id}
-                  className="cursor-pointer hover:bg-gray-50"
-                  onClick={e => handleRowClick(video, e)}
-                >
-                  <TableCell>
-                    <img
-                      src={getYouTubeThumbnail(video.url)}
-                      alt="Video thumbnail"
-                      className="h-20 w-28 rounded-md border object-cover"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1">
-                      {video.title && (
-                        <p className="line-clamp-2 text-sm font-medium text-gray-900">
-                          {video.title}
-                        </p>
+              data.map(video => {
+                const { platform, id } = extractVideoInfo(video.url);
+                const thumbnail = getVideoThumbnail(platform, id);
+
+                return (
+                  <TableRow
+                    key={video.id}
+                    className="cursor-pointer hover:bg-gray-50"
+                    onClick={e => handleRowClick(video, e)}
+                  >
+                    <TableCell>
+                      {thumbnail ? (
+                        <img
+                          src={thumbnail}
+                          alt="Video thumbnail"
+                          className="h-20 w-28 rounded-md border object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-20 w-28 items-center justify-center rounded-md border bg-gray-100">
+                          <PlatformIcon platform={platform} />
+                        </div>
                       )}
-                      <p className="text-xs break-all text-blue-600">
-                        {video.url}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Added {new Date(video.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2" data-action-button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={e => {
-                          e.stopPropagation();
-                          window.open(video.url, "_blank");
-                        }}
-                        className="text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                        title="Open video"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </Button>
-                      <YouTubeFormTrigger mode="edit" video={video}>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        {video.title && (
+                          <p className="line-clamp-2 text-sm font-medium text-gray-900">
+                            {video.title}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-2">
+                          <PlatformIcon platform={platform} />
+                          <p className="text-xs break-all text-blue-600">
+                            {video.url}
+                          </p>
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          Added{" "}
+                          {new Date(video.created_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2" data-action-button>
                         <Button
                           variant="ghost"
                           size="sm"
+                          onClick={e => {
+                            e.stopPropagation();
+                            window.open(video.url, "_blank");
+                          }}
                           className="text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                          title="Edit video"
-                          data-edit-trigger
+                          title="Open video"
                         >
-                          <Edit className="h-4 w-4" />
+                          <ExternalLink className="h-4 w-4" />
                         </Button>
-                      </YouTubeFormTrigger>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={e => handleDeleteClick(video, e)}
-                        className="text-red-600 hover:bg-red-50 hover:text-red-700"
-                        title="Delete video"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
+                        <YouTubeFormTrigger mode="edit" video={video}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                            title="Edit video"
+                            data-edit-trigger
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </YouTubeFormTrigger>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={e => handleDeleteClick(video, e)}
+                          className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                          title="Delete video"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             ) : (
               <TableRow>
                 <TableCell colSpan={3}>
                   <div className="py-12 text-center">
                     <Youtube className="mx-auto mb-4 h-12 w-12 text-red-400" />
                     <h3 className="mb-2 text-lg font-medium text-gray-900">
-                      No YouTube videos yet
+                      No videos yet
                     </h3>
                     <p className="mb-4 text-gray-600">
-                      Get started by adding your first YouTube video
+                      Get started by adding your first video
                     </p>
                     <YouTubeFormTrigger mode="create">
                       <Button className="bg-red-600 text-white hover:bg-red-700">
@@ -267,7 +299,7 @@ export function YouTubeList() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the YouTube video
+              This will permanently delete the video
               {videoToDelete?.title && ` "${videoToDelete.title}"`}. This action
               cannot be undone.
             </AlertDialogDescription>

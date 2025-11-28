@@ -12,7 +12,7 @@ import { FAQData } from "./faq";
 import { PortfolioData } from "./portfolio";
 import { BannerData } from "./banner";
 import { NewsletterData } from "./newsletter";
-import { YouTubeData } from "./youtube";
+import { VideosData } from "./videos";
 import { ServicesData } from "./services";
 import { GalleryData } from "./gallery";
 import { PolicyData } from "./policies";
@@ -37,7 +37,7 @@ export type ComponentData =
   | BannerData
   | CTAData
   | NewsletterData
-  | YouTubeData
+  | VideosData
   | ServicesData
   | GalleryData
   | PolicyData
@@ -63,7 +63,7 @@ export interface ComponentTypeMap {
   newsletter: NewsletterData;
   banner: BannerData;
   services: ServicesData;
-  youtube: YouTubeData;
+  videos: VideosData;
   policies: PolicyData;
   text_editor: TextEditorData;
   pricing: PricingData;
@@ -201,10 +201,10 @@ export const isServicesComponent = (
 ): component is ComponentResponse<"services"> =>
   component.component_type === "services";
 
-export const isYouTubeComponent = (
+export const isVideosComponent = (
   component: ComponentResponse
-): component is ComponentResponse<"youtube"> =>
-  component.component_type === "youtube";
+): component is ComponentResponse<"videos"> =>
+  component.component_type === "videos";
 
 export const isGalleryComponent = (
   component: ComponentResponse

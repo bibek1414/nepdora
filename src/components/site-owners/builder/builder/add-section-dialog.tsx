@@ -642,21 +642,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/newsletter/newsletter3.png",
       },
     ],
-    youtube: [
+    videos: [
       {
-        id: "youtube-1",
-        name: "YouTube Style 1",
-        image: "/images/site-owners/youtube/youtube-1.png",
-      },
-      {
-        id: "youtube-2",
-        name: "YouTube Style 2",
-        image: "/images/site-owners/youtube/youtube-2.png",
-      },
-      {
-        id: "youtube-3",
-        name: "YouTube Style 3",
-        image: "/images/site-owners/youtube/youtube-3.png",
+        id: "videos-1",
+        name: "Videos Style 1",
+        image: "/images/site-owners/videos/videos-1.png",
       },
     ],
     policies: [
@@ -807,7 +797,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
   const getDefaultTemplates = () => {
     const baseTemplates = [
       "newsletter-3",
-      "youtube-1",
+      "videos-1",
       "hero-1",
       "about-1",
       "contact-1",
@@ -1049,12 +1039,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       type: "section",
     },
     {
-      id: "youtube-sections",
-      label: "YouTube",
+      id: "videos-sections",
+      label: "Videos",
       icon: ImageIcon,
       keywords: ["video", "embed", "media", "youtube"],
       hasTemplates: true,
-      templates: templates.youtube,
+      templates: templates.videos,
       type: "section",
     },
   ];

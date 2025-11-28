@@ -857,14 +857,14 @@ export const useDeleteNewsletterComponentMutation = () => {
   });
 };
 export const useYouTubeComponents = (pageSlug: string) => ({
-  query: useComponentsByTypeQuery(pageSlug, "youtube"),
-  create: useCreateComponentMutation(pageSlug, "youtube"),
-  update: useUpdateComponentMutation(pageSlug, "youtube"),
-  delete: useDeleteComponentMutation(pageSlug, "youtube"),
+  query: useComponentsByTypeQuery(pageSlug, "videos"),
+  create: useCreateComponentMutation(pageSlug, "videos"),
+  update: useUpdateComponentMutation(pageSlug, "videos"),
+  delete: useDeleteComponentMutation(pageSlug, "videos"),
 });
 
 export const useCreateYouTubeComponentMutation = (pageSlug: string) =>
-  useCreateComponentMutation(pageSlug, "youtube");
+  useCreateComponentMutation(pageSlug, "videos");
 
 export const useUpdateYouTubeComponentMutation = () => {
   const queryClient = useQueryClient();
@@ -877,9 +877,9 @@ export const useUpdateYouTubeComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-      data: Partial<ComponentTypeMap["youtube"]>;
+      data: Partial<ComponentTypeMap["videos"]>;
     }) =>
-      componentsApi.updateComponent(pageSlug, componentId, { data }, "youtube"),
+      componentsApi.updateComponent(pageSlug, componentId, { data }, "videos"),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
@@ -907,7 +907,7 @@ export const useDeleteYouTubeComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "youtube"),
+    }) => componentsApi.deleteComponent(pageSlug, componentId, "videos"),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({

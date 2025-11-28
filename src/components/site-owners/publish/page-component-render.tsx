@@ -35,8 +35,8 @@ import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
 import { NewsletterComponent } from "@/components/site-owners/builder/newsletter/newsletter-component";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
-import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
-import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
+import { VidoesComponent } from "@/components/site-owners/builder/videos/videos-component";
+import { VideosComponentData } from "@/types/owner-site/components/videos";
 import { GalleryComponent } from "../builder/gallery/gallery-component";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
@@ -63,7 +63,7 @@ interface PageComponent {
     | "banner"
     | "newsletter"
     | "cta"
-    | "youtube"
+    | "videos"
     | "gallery"
     | "subcategory"
     | "appointment"
@@ -87,7 +87,7 @@ interface PageComponent {
     | GalleryComponentData["data"]
     | PortfolioComponentData["data"]
     | NewsletterComponentData["data"]
-    | YouTubeComponentData["data"]
+    | VideosComponentData["data"]
     | BannerComponentData["data"]
     | SubCategoryComponentData["data"]
     | TextEditorComponentData["data"]
@@ -129,7 +129,7 @@ interface PageComponentRendererProps {
       | NewsletterComponentData
       | PolicyComponentData
       | PricingComponentData
-      | YouTubeComponentData
+      | VideosComponentData
   ) => void;
 }
 
@@ -383,16 +383,16 @@ export function PageComponentRenderer({
             }
           />
         );
-      case "youtube":
+      case "videos":
         return (
-          <YouTubeComponent
+          <VidoesComponent
             key={component.id}
-            component={component as YouTubeComponentData}
+            component={component as VideosComponentData}
             isEditable={false}
             siteUser={siteUser}
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
-              onComponentUpdate(componentId, newData as YouTubeComponentData)
+              onComponentUpdate(componentId, newData as VideosComponentData)
             }
           />
         );

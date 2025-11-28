@@ -1,16 +1,16 @@
 import { getApiBaseUrl } from "@/config/site";
 import {
-  YouTubeVideo,
-  YouTubeVideos,
-  CreateYouTubeVideoData,
-  UpdateYouTubeVideoData,
-} from "@/types/owner-site/admin/youtube";
+  Video,
+  Videos,
+  CreateVideoData,
+  UpdateVideoData,
+} from "@/types/owner-site/admin/videos";
 
-export const youtubeAPI = {
+export const videosAPI = {
   // Get all videos
-  getVideos: async (): Promise<YouTubeVideos> => {
+  getVideos: async (): Promise<Videos> => {
     const BASE_API_URL = getApiBaseUrl();
-    const url = new URL(`${BASE_API_URL}/api/youtube/`);
+    const url = new URL(`${BASE_API_URL}/api/videos/`);
 
     const response = await fetch(url.toString(), {
       method: "GET",
@@ -18,7 +18,7 @@ export const youtubeAPI = {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch YouTube videos: ${response.status}`);
+      throw new Error(`Failed to fetch  videos: ${response.status}`);
     }
 
     const data = await response.json();
@@ -26,9 +26,9 @@ export const youtubeAPI = {
   },
 
   // Create new video
-  createVideo: async (data: CreateYouTubeVideoData): Promise<YouTubeVideo> => {
+  createVideo: async (data: CreateVideoData): Promise<Video> => {
     const BASE_API_URL = getApiBaseUrl();
-    const url = new URL(`${BASE_API_URL}/api/youtube/`);
+    const url = new URL(`${BASE_API_URL}/api/videos/`);
 
     const response = await fetch(url.toString(), {
       method: "POST",
@@ -37,7 +37,7 @@ export const youtubeAPI = {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to create YouTube video: ${response.status}`);
+      throw new Error(`Failed to create  video: ${response.status}`);
     }
 
     const video = await response.json();
@@ -45,12 +45,9 @@ export const youtubeAPI = {
   },
 
   // Update video
-  updateVideo: async (
-    id: number,
-    data: UpdateYouTubeVideoData
-  ): Promise<YouTubeVideo> => {
+  updateVideo: async (id: number, data: UpdateVideoData): Promise<Video> => {
     const BASE_API_URL = getApiBaseUrl();
-    const url = new URL(`${BASE_API_URL}/api/youtube/${id}/`);
+    const url = new URL(`${BASE_API_URL}/api/videos/${id}/`);
 
     const response = await fetch(url.toString(), {
       method: "PUT",
@@ -59,7 +56,7 @@ export const youtubeAPI = {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to update YouTube video: ${response.status}`);
+      throw new Error(`Failed to update  video: ${response.status}`);
     }
 
     const video = await response.json();
@@ -69,7 +66,7 @@ export const youtubeAPI = {
   // Delete video
   deleteVideo: async (id: number): Promise<void> => {
     const BASE_API_URL = getApiBaseUrl();
-    const url = new URL(`${BASE_API_URL}/api/youtube/${id}/`);
+    const url = new URL(`${BASE_API_URL}/api/videos/${id}/`);
 
     const response = await fetch(url.toString(), {
       method: "DELETE",
@@ -77,7 +74,7 @@ export const youtubeAPI = {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to delete YouTube video: ${response.status}`);
+      throw new Error(`Failed to delete  video: ${response.status}`);
     }
   },
 };

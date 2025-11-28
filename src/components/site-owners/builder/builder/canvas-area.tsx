@@ -46,18 +46,11 @@ import { NewsletterComponentData } from "@/types/owner-site/components/newslette
 import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/use-unified";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
-import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
-import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
+import { VidoesComponent } from "@/components/site-owners/builder/videos/videos-component";
+import { VideosComponentData } from "@/types/owner-site/components/videos";
 import { GalleryComponent } from "@/components/site-owners/builder/gallery/gallery-component";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
-import {
-  Plus,
-  Navigation,
-  GripVertical,
-  FileText,
-  ChevronUp,
-  ChevronDown,
-} from "lucide-react";
+import { Plus, ChevronUp, ChevronDown } from "lucide-react";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Button } from "@/components/ui/site-owners/button";
 import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
@@ -377,11 +370,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           />
         );
         break;
-      case "youtube":
+      case "videos":
         componentElement = (
-          <YouTubeComponent
-            key={`youtube-${component.id}`}
-            component={component as YouTubeComponentData}
+          <VidoesComponent
+            key={`videos-${component.id}`}
+            component={component as VideosComponentData}
             onUpdate={() => {}}
             {...commonProps}
           />

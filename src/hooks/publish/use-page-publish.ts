@@ -23,7 +23,7 @@ import { TestimonialsComponentData } from "@/types/owner-site/components/testimo
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
-import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
+import { VideosComponentData } from "@/types/owner-site/components/videos";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
@@ -50,7 +50,7 @@ interface PageComponent {
     | "banner"
     | "cta"
     | "newsletter"
-    | "youtube"
+    | "videos"
     | "policies"
     | "text_editor"
     | "subcategory"
@@ -74,7 +74,7 @@ interface PageComponent {
     | GalleryComponentData["data"]
     | TextEditorComponentData["data"]
     | BannerComponentData["data"]
-    | YouTubeComponentData["data"]
+    | VideosComponentData["data"]
     | SubCategoryComponentData["data"]
     | PolicyComponentData["data"]
     | PricingComponentData["data"];
@@ -122,7 +122,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
           "newsletter",
           "subcategory",
           "portfolio",
-          "youtube",
+          "videos",
           "cta",
           "text_editor",
           "banner",
@@ -182,7 +182,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
       | NewsletterComponentData
       | PortfolioComponentData
       | BannerComponentData
-      | YouTubeComponentData
+      | VideosComponentData
       | TextEditorComponentData
       | PolicyComponentData
       | GalleryComponentData

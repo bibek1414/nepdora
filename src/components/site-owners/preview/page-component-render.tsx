@@ -18,7 +18,7 @@ import { TestimonialsComponent } from "@/components/site-owners/builder/testimon
 import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
 import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
 import { NewsletterComponent } from "@/components/site-owners/builder/newsletter/newsletter-component";
-import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtube-component";
+import { VidoesComponent } from "@/components/site-owners/builder/videos/videos-component";
 import { GalleryComponent } from "../builder/gallery/gallery-component";
 import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
 import { TextEditorComponent } from "@/components/site-owners/builder/text-editor/text-editor-component";
@@ -40,7 +40,7 @@ import { TestimonialsComponentData } from "@/types/owner-site/components/testimo
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
-import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
+import { VideosComponentData } from "@/types/owner-site/components/videos";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
@@ -66,7 +66,7 @@ interface PageComponent {
     | "portfolio"
     | "banner"
     | "newsletter"
-    | "youtube"
+    | "videos"
     | "subcategory"
     | "subcategory"
     | "text_editor"
@@ -89,7 +89,7 @@ interface PageComponent {
     | PortfolioComponentData["data"]
     | GalleryComponentData["data"]
     | NewsletterComponentData["data"]
-    | YouTubeComponentData["data"]
+    | VideosComponentData["data"]
     | BannerComponentData["data"]
     | SubCategoryComponentData["data"]
     | SubCategoryComponentData["data"]
@@ -129,7 +129,7 @@ interface PageComponentRendererProps {
       | PortfolioComponentData
       | BannerComponentData
       | NewsletterComponentData
-      | YouTubeComponentData
+      | VideosComponentData
       | TextEditorComponentData
       | PricingComponentData
       | PolicyComponentData
@@ -376,16 +376,16 @@ export function PageComponentRenderer({
             }
           />
         );
-      case "youtube":
+      case "videos":
         return (
-          <YouTubeComponent
+          <VidoesComponent
             key={component.id}
-            component={component as YouTubeComponentData}
+            component={component as VideosComponentData}
             isEditable={false}
             siteUser={siteUser}
             pageSlug={pageSlug}
             onUpdate={(componentId, newData) =>
-              onComponentUpdate(componentId, newData as YouTubeComponentData)
+              onComponentUpdate(componentId, newData as VideosComponentData)
             }
           />
         );

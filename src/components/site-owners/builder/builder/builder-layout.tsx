@@ -67,7 +67,7 @@ import { defaultFAQData } from "@/types/owner-site/components/faq";
 import { defaultPortfolioData } from "@/types/owner-site/components/portfolio";
 import { defaultBannerData } from "@/types/owner-site/components/banner";
 import { defaultNewsletterData } from "@/types/owner-site/components/newsletter";
-import { defaultYouTubeData } from "@/types/owner-site/components/youtube";
+import { defaultVideosData } from "@/types/owner-site/components/videos";
 import { PageTemplateDialog } from "@/components/site-owners/builder/templates/page-template-dialog";
 import { PageTemplate } from "@/types/owner-site/components/page-template";
 import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-unified";
@@ -164,7 +164,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "portfolio",
             "banner",
             "newsletter",
-            "youtube",
+            "videos",
             "gallery",
             "policies",
             "pricing",
@@ -206,7 +206,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       portfolio: "Portfolio",
       banner: "Banner",
       newsletter: "Newsletter",
-      youtube: "YouTube",
+      videos: "Videos",
       gallery: "Gallery",
       policies: "Policies",
       pricing: "Pricing",
@@ -614,12 +614,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     );
   };
 
-  const handleYouTubeTemplateSelect = async (
-    template: "youtube-1" | "youtube-2" | "youtube-3"
+  const handlevideosTemplateSelect = async (
+    template: "videos-1" | "videos-2" | "videos-3"
   ) => {
-    const youtubeData = { ...defaultYouTubeData, style: template };
+    const videosData = { ...defaultVideosData, style: template };
 
-    await createComponentWithIndex("youtube", youtubeData, pendingInsertIndex);
+    await createComponentWithIndex("videos", videosData, pendingInsertIndex);
   };
 
   const handleGalleryTemplateSelect = async (
@@ -827,10 +827,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleBannerTemplateSelect(template as any);
       }
-    } else if (componentId === "youtube-sections") {
+    } else if (componentId === "videos-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleYouTubeTemplateSelect(template as any);
+        handlevideosTemplateSelect(template as any);
       }
     } else if (componentId === "newsletter-sections") {
       if (template) {
@@ -913,8 +913,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         case "newsletter-sections":
           componentType = "newsletter";
           break;
-        case "youtube-sections":
-          componentType = "youtube";
+        case "videos-sections":
+          componentType = "videos";
           break;
         default:
           if (
@@ -934,7 +934,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               "portfolio",
               "banner",
               "newsletter",
-              "youtube",
+              "videos",
               "text_editor",
               "gallery",
               "policies",

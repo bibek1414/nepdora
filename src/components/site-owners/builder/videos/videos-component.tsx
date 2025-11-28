@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
-import { useYouTubeVideos } from "@/hooks/owner-site/admin/use-youtube";
+import { VideosComponentData } from "@/types/owner-site/components/videos";
+import { useVideos } from "@/hooks/owner-site/admin/use-videos";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { YouTubeCard1 } from "./youtube-card-1";
-import { YouTubeCard2 } from "./youtube-card-2";
-import { YouTubeCard3 } from "./youtube-card-3";
+import { VideosCard1 } from "./videos-card-1";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -24,17 +22,17 @@ import {
 import { AlertCircle, Trash2, Play, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
-import { YouTubeFormTrigger } from "../../admin/youtube/youtube-form";
+import { YouTubeFormTrigger } from "../../admin/videos/videos-form";
 
-interface YouTubeComponentProps {
-  component: YouTubeComponentData;
+interface VideosComponentProps {
+  component: VideosComponentData;
   isEditable?: boolean;
   siteUser?: string;
   pageSlug?: string;
-  onUpdate?: (componentId: string, newData: YouTubeComponentData) => void;
+  onUpdate?: (componentId: string, newData: VideosComponentData) => void;
 }
 
-export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
+export const VidoesComponent: React.FC<VideosComponentProps> = ({
   component,
   isEditable = false,
   siteUser,
@@ -46,21 +44,21 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
   const {
     title = "Our Videos",
     subtitle,
-    style = "grid",
+    style = "videos-1",
   } = component.data || {};
 
   // Use unified mutation hooks
-  const deleteYouTubeComponent = useDeleteComponentMutation(
+  const deleteVideosComponent = useDeleteComponentMutation(
     pageSlug || "",
-    "youtube"
+    "videos"
   );
-  const updateYouTubeComponent = useUpdateComponentMutation(
+  const updateVideosComponent = useUpdateComponentMutation(
     pageSlug || "",
-    "youtube"
+    "videos"
   );
 
-  // Get YouTube video data
-  const { data: videos = [], isLoading, error } = useYouTubeVideos();
+  // Get video data
+  const { data: videos = [], isLoading, error } = useVideos();
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -77,7 +75,7 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
       return;
     }
 
-    deleteYouTubeComponent.mutate(component.component_id);
+    deleteVideosComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
@@ -87,7 +85,7 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
       return;
     }
 
-    updateYouTubeComponent.mutate({
+    updateVideosComponent.mutate({
       componentId: component.component_id,
       data: {
         ...component.data,
@@ -112,7 +110,7 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
       return;
     }
 
-    updateYouTubeComponent.mutate({
+    updateVideosComponent.mutate({
       componentId: component.component_id,
       data: {
         ...component.data,
@@ -135,13 +133,9 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
     const cardProps = { videos };
 
     switch (style) {
-      case "youtube-2":
-        return <YouTubeCard2 {...cardProps} />;
-      case "youtube-3":
-        return <YouTubeCard3 {...cardProps} />;
-      case "youtube-1":
+      case "videos-1":
       default:
-        return <YouTubeCard1 {...cardProps} />;
+        return <VideosCard1 {...cardProps} />;
     }
   };
 
@@ -155,7 +149,7 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
             <YouTubeFormTrigger mode="create">
               <Button className="bg-white text-gray-800 hover:bg-white hover:text-gray-900">
                 <Plus className="mr-2 h-4 w-4" />
-                Add YouTube Video
+                Add Video
               </Button>
             </YouTubeFormTrigger>
             <AlertDialog
@@ -168,10 +162,10 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
                   variant="destructive"
                   size="sm"
                   className="h-8 px-3"
-                  disabled={deleteYouTubeComponent.isPending}
+                  disabled={deleteVideosComponent.isPending}
                 >
                   <Trash2 className="mr-1 h-4 w-4" />
-                  {deleteYouTubeComponent.isPending ? "Deleting..." : "Delete"}
+                  {deleteVideosComponent.isPending ? "Deleting..." : "Delete"}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -191,9 +185,9 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
                   <AlertDialogAction
                     onClick={handleConfirmDelete}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    disabled={deleteYouTubeComponent.isPending}
+                    disabled={deleteVideosComponent.isPending}
                   >
-                    {deleteYouTubeComponent.isPending
+                    {deleteVideosComponent.isPending
                       ? "Deleting..."
                       : "Delete Component"}
                   </AlertDialogAction>
@@ -264,7 +258,7 @@ export const YouTubeComponent: React.FC<YouTubeComponentProps> = ({
                     No Videos Found
                   </h3>
                   <p className="text-muted-foreground">
-                    Add YouTube videos to display them here.
+                    Add videos to display them here.
                   </p>
                 </div>
               )}

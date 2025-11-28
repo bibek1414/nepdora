@@ -1,21 +1,24 @@
-export interface YouTubeVideo {
+import { VideoPlatform } from "@/lib/video-utils";
+
+export interface Video {
   id: number;
   url: string;
   title?: string;
   description?: string;
+  platform?: VideoPlatform;
   created_at: string;
   updated_at: string;
 }
 
-export type YouTubeVideos = YouTubeVideo[];
+export type Videos = Video[];
 
-export interface CreateYouTubeVideoData {
+export interface CreateVideoData {
   url: string;
   title?: string;
   description?: string;
 }
 
-export interface UpdateYouTubeVideoData {
+export interface UpdateVideoData {
   url?: string;
   title?: string;
   description?: string;

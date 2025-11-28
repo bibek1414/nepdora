@@ -24,7 +24,7 @@ import { TestimonialsComponentData } from "@/types/owner-site/components/testimo
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { BannerComponentData } from "@/types/owner-site/components/banner";
 import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
-import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
+import { VideosComponentData } from "@/types/owner-site/components/videos";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
@@ -50,7 +50,7 @@ interface PageComponent {
     | "banner"
     | "gallery"
     | "newsletter"
-    | "youtube"
+    | "videos"
     | "text_editor"
     | "subcategory"
     | "subcategory"
@@ -75,7 +75,7 @@ interface PageComponent {
     | CategoryComponentData["data"]
     | TextEditorComponentData["data"]
     | BannerComponentData["data"]
-    | YouTubeComponentData["data"]
+    | VideosComponentData["data"]
     | SubCategoryComponentData["data"]
     | SubCategoryComponentData["data"]
     | PolicyComponentData["data"]
@@ -125,7 +125,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
           "portfolio",
           "appointment",
           "cta",
-          "youtube",
+          "videos",
           "banner",
           "gallery",
           "policies",
@@ -184,7 +184,7 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | NewsletterComponentData
       | PortfolioComponentData
       | BannerComponentData
-      | YouTubeComponentData
+      | VideosComponentData
       | CTAComponentData
       | GalleryComponentData
       | PolicyComponentData
