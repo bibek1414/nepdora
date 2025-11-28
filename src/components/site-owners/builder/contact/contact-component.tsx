@@ -13,6 +13,7 @@ import { ContactForm3 } from "./contact-form-3";
 import { ContactForm4 } from "./contact-form-4";
 import { ContactForm5 } from "./contact-form-5";
 import { ContactForm6 } from "./contact-form-6";
+import { ContactForm7 } from "./contact-form-7";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -173,6 +174,8 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
         return <ContactForm4 {...formProps} />;
       case "contact-5":
         return <ContactForm5 {...formProps} />;
+      case "contact-7":
+        return <ContactForm7 {...formProps} />;
       case "contact-1":
       case "contact-6":
         return <ContactForm6 {...formProps} />;
@@ -235,29 +238,31 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
         <div className="py-8">
           <div className="container mx-auto px-4">
             {/* Only show title/subtitle editing for non-form-4 and non-form-5 styles */}
-            {style !== "contact-4" && style !== "contact-5" && (
-              <div className="mb-8 text-center">
-                <EditableText
-                  value={title}
-                  onChange={handleTitleChange}
-                  as="h2"
-                  className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                  isEditable={true}
-                  placeholder="Enter title..."
-                />
-                {subtitle !== undefined && (
+            {style !== "contact-4" &&
+              style !== "contact-5" &&
+              style !== "contact-7" && (
+                <div className="mb-8 text-center">
                   <EditableText
-                    value={subtitle || ""}
-                    onChange={handleSubtitleChange}
-                    as="p"
-                    className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                    value={title}
+                    onChange={handleTitleChange}
+                    as="h2"
+                    className="text-foreground mb-2 text-3xl font-bold tracking-tight"
                     isEditable={true}
-                    placeholder="Enter subtitle..."
-                    multiline={true}
+                    placeholder="Enter title..."
                   />
-                )}
-              </div>
-            )}
+                  {subtitle !== undefined && (
+                    <EditableText
+                      value={subtitle || ""}
+                      onChange={handleSubtitleChange}
+                      as="p"
+                      className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                      isEditable={true}
+                      placeholder="Enter subtitle..."
+                      multiline={true}
+                    />
+                  )}
+                </div>
+              )}
 
             <div className="relative">{renderContactForm()}</div>
           </div>
@@ -271,20 +276,22 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
         {/* Only show title/subtitle for non-form-4 and non-form-5 styles */}
-        {style !== "contact-4" && style !== "contact-5" && (
-          <div className="mb-12 text-center">
-            <h2
-              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-              dangerouslySetInnerHTML={{ __html: title }}
-            ></h2>
-            {subtitle && (
-              <p
-                className="text-muted-foreground mx-auto max-w-3xl text-xl"
-                dangerouslySetInnerHTML={{ __html: subtitle }}
-              ></p>
-            )}
-          </div>
-        )}
+        {style !== "contact-4" &&
+          style !== "contact-5" &&
+          style !== "contact-7" && (
+            <div className="mb-12 text-center">
+              <h2
+                className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+                dangerouslySetInnerHTML={{ __html: title }}
+              ></h2>
+              {subtitle && (
+                <p
+                  className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                  dangerouslySetInnerHTML={{ __html: subtitle }}
+                ></p>
+              )}
+            </div>
+          )}
 
         {renderContactForm()}
       </div>

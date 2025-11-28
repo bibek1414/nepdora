@@ -1,3 +1,16 @@
+export interface ContactLocationCard {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface ContactLocationGalleryItem {
+  id: string;
+  label: string;
+  image_url: string;
+  image_alt?: string;
+}
+
 export interface ContactData {
   component_id?: string;
   component_type: "contact";
@@ -7,10 +20,12 @@ export interface ContactData {
     | "contact-3"
     | "contact-4"
     | "contact-5"
-    | "contact-6";
+    | "contact-6"
+    | "contact-7";
   title: string;
   subtitle?: string;
   description?: string;
+  contact_tag?: string;
   required_fields: {
     name: boolean;
     email: boolean;
@@ -28,6 +43,9 @@ export interface ContactData {
   image_alt?: string;
   cta_title?: string;
   cta_subtitle?: string;
+  button_label?: string;
+  location_cards?: ContactLocationCard[];
+  location_gallery?: ContactLocationGalleryItem[];
 }
 
 export interface ContactComponentData {
@@ -168,4 +186,61 @@ export const defaultContactData6: ContactData = {
   cta_title: "Let's Do Great!",
   cta_subtitle:
     "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standard dummy.",
+};
+
+export const defaultContactData7: ContactData = {
+  component_type: "contact",
+  style: "contact-7",
+  title: "Office <em>Location</em>",
+  subtitle: "[Visit Us]",
+  description:
+    "Our office is conveniently located in the heart of these cities, providing easy access for clients and partners.",
+  contact_tag: "[Contact]",
+  cta_title: "Drop Us a Message",
+  cta_subtitle:
+    "We're always happy to hear from you and will get back to you as soon as possible.",
+  button_label: "Send Message",
+  required_fields: {
+    name: true,
+    email: true,
+    phone: false,
+    message: true,
+  },
+  contact_info: {
+    email: "contactinfo@gmail.com",
+    phone: "+99 1234 5478",
+    address: "See on Google Map",
+  },
+  location_cards: [
+    {
+      id: "usa-hq",
+      title: "USA Headquarter",
+      description: "Los Angeles, CA 90017<br/>United States",
+    },
+    {
+      id: "eu-hq",
+      title: "Europe Headquarter",
+      description: "Ireland, County Dublin D02<br/>ABC1",
+    },
+  ],
+  location_gallery: [
+    {
+      id: "dublin",
+      label: "Dublin",
+      image_url:
+        "https://images.unsplash.com/photo-1549918864-48ac978761a4?auto=format&fit=crop&w=800&q=80",
+    },
+    {
+      id: "los-angeles",
+      label: "Los Angeles",
+      image_url:
+        "https://images.unsplash.com/photo-1534237710431-e2fc698436d0?auto=format&fit=crop&w=800&q=80",
+    },
+    {
+      id: "remote",
+      label: "Remote",
+      image_url:
+        "https://images.unsplash.com/photo-1593642532400-2682810df593?auto=format&fit=crop&w=1600&q=80",
+    },
+  ],
 };

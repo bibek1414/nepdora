@@ -46,6 +46,7 @@ import {
   defaultContactData4,
   defaultContactData5,
   defaultContactData6,
+  defaultContactData7,
 } from "@/types/owner-site/components/contact";
 import { getDefaultCTAData } from "@/types/owner-site/components/cta";
 import {
@@ -512,6 +513,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     "contact-4": defaultContactData4,
     "contact-5": defaultContactData5,
     "contact-6": defaultContactData6,
+    "contact-7": defaultContactData7,
   };
 
   const handleContactTemplateSelect = async (
