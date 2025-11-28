@@ -73,14 +73,6 @@ export function AboutUsTemplate14({
                 isEditable={isEditable}
                 placeholder="Enter title..."
               />
-              <EditableText
-                value={data.italicWord}
-                onChange={handleTextUpdate("italicWord")}
-                as="span"
-                className="font-serif text-blue-600 italic"
-                isEditable={isEditable}
-                placeholder="Italic word"
-              />
             </div>
           </div>
           <Button className="hidden md:inline-flex">
@@ -115,7 +107,7 @@ export function AboutUsTemplate14({
                     <EditableText
                       value={service.title}
                       onChange={handleServiceUpdate(service.id, "title")}
-                      as="h3"
+                      as="h4"
                       isEditable={isEditable}
                       placeholder="Service Title"
                     />
@@ -167,7 +159,7 @@ export function AboutUsTemplate14({
           </div>
 
           {/* Right Image */}
-          <div className="relative h-[600px] overflow-hidden rounded-2xl shadow-2xl">
+          <div className="relative h-[550px] overflow-hidden rounded-2xl shadow-2xl">
             {data.services[activeService] && (
               <EditableImage
                 src={data.services[activeService].image}

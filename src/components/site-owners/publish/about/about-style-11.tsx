@@ -143,37 +143,37 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
         color: theme.colors.text,
       }}
     >
-      <div className="mx-auto max-w-6xl px-6 py-12 md:px-12 lg:px-24">
-        <div className="mb-16">
+      <div className="mx-auto min-h-screen max-w-[1400px] px-6 py-16 md:px-16 lg:px-24">
+        <div className="mb-20 max-w-5xl">
           <EditableText
             value={data.headline}
             onChange={handleTextUpdate("headline")}
             as="h1"
-            className="text-4xl leading-[1.1] font-semibold tracking-tight text-gray-900 md:text-5xl lg:text-6xl"
+            className="text-5xl leading-[1.1] font-semibold tracking-tight text-[#111] md:text-6xl lg:text-[68px]"
             isEditable={isEditable}
             placeholder="Add your headline"
             multiline
           />
         </div>
 
-        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12">
-          <div className="flex h-full flex-col gap-10 lg:col-span-3">
+        <div className="mb-32 flex flex-col items-start gap-8 lg:flex-row">
+          <div className="flex h-full flex-col justify-between pt-2 lg:w-[22%]">
             <EditableText
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="text-sm leading-relaxed text-gray-600"
+              className="mb-12 text-[13px] leading-[1.6] text-gray-600 lg:mb-[180px]"
               isEditable={isEditable}
               placeholder="Add supporting description"
               multiline
             />
 
-            <div className="border-l-2 border-[#5B55E7] pl-4">
+            <div className="border-l-[3px] border-[#3C32E7] py-1 pl-5">
               <EditableText
                 value={data.featuredStatValue}
                 onChange={handleTextUpdate("featuredStatValue")}
                 as="p"
-                className="text-5xl font-bold text-gray-900"
+                className="text-5xl font-bold tracking-tight text-[#111]"
                 isEditable={isEditable}
                 placeholder="150+"
               />
@@ -181,44 +181,47 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
                 value={data.featuredStatLabel}
                 onChange={handleTextUpdate("featuredStatLabel")}
                 as="p"
-                className="text-xs font-medium tracking-wide text-gray-500 uppercase"
+                className="text-[11px] font-semibold tracking-wide text-gray-500 uppercase"
                 isEditable={isEditable}
                 placeholder="Successful Projects Delivered"
               />
             </div>
           </div>
 
-          <div className="relative h-[400px] w-full lg:col-span-6">
-            <div className="relative h-full w-full overflow-hidden rounded-2xl">
+          <div className="px-2 lg:w-[46%] lg:max-w-[520px]">
+            <div
+              className="relative w-full overflow-hidden rounded-3xl shadow-sm"
+              style={{ aspectRatio: "4 / 3.8" }}
+            >
               <EditableImage
                 src={data.imageUrl}
                 alt={data.imageAlt}
                 onImageChange={handleImageUpdate}
                 onAltChange={handleAltUpdate}
                 isEditable={isEditable}
-                className="h-full w-full object-cover grayscale transition-all duration-500 hover:grayscale-0"
-                width={900}
-                height={600}
+                className="h-full w-full object-cover"
+                width={1000}
+                height={700}
                 cloudinaryOptions={{
                   folder: "about-us-images",
                   resourceType: "image",
                 }}
                 showAltEditor={isEditable}
                 placeholder={{
-                  width: 900,
-                  height: 600,
+                  width: 1000,
+                  height: 700,
                   text: "Upload about section image",
                 }}
               />
             </div>
           </div>
 
-          <div className="flex flex-col gap-8 lg:col-span-3">
-            <div className="rounded-2xl bg-white p-6 shadow-sm">
-              <div className="mb-4">
-                <Pin className="h-5 w-5 rotate-45 text-blue-600" />
+          <div className="flex flex-col gap-6 pt-2 lg:w-[28%] lg:pl-6">
+            <div className="min-h-[200px] rounded-2xl bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+              <div className="mb-6">
+                <Pin className="h-5 w-5 rotate-45 text-[#3C32E7]" />
               </div>
-              <div className="space-y-3 text-sm font-medium text-gray-800">
+              <div className="space-y-3.5 text-[15px] font-medium text-[#1A1A1A]">
                 {data.bulletPoints.map(point => (
                   <EditableText
                     key={point.id}
@@ -237,7 +240,7 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
               text={data.ctaText}
               href={data.ctaLink}
               onChange={handleButtonUpdate}
-              className="group flex w-full items-center justify-between rounded-full bg-[#3C32E7] px-5 py-3 text-sm font-medium text-white shadow-lg transition-colors hover:bg-blue-800"
+              className="group flex w-full items-center justify-between rounded-full bg-[#3C32E7] py-2 pr-2 pl-6 text-[15px] font-medium text-white shadow-lg shadow-blue-900/10 transition-colors hover:bg-[#322ac4]"
               isEditable={isEditable}
               textPlaceholder="Book a Free Call"
               hrefPlaceholder="#"
@@ -245,20 +248,20 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
             >
               <>
                 <span>{data.ctaText || "Book a Free Call"}</span>
-                <span className="rounded-full bg-white/20 p-1 transition-transform duration-300 group-hover:rotate-45">
-                  <ArrowUpRight className="h-4 w-4 text-white" />
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:rotate-45">
+                  <ArrowUpRight className="h-5 w-5 text-[#3C32E7]" />
                 </span>
               </>
             </EditableLink>
           </div>
         </div>
 
-        <div className="mx-auto mt-24 max-w-3xl text-center">
+        <div className="mx-auto mb-20 max-w-4xl text-center">
           <EditableText
             value={data.supportingTitle}
             onChange={handleTextUpdate("supportingTitle")}
             as="h2"
-            className="text-3xl leading-tight font-medium text-gray-700 md:text-4xl lg:text-5xl"
+            className="text-4xl leading-[1.15] font-medium text-[#1A1A1A] md:text-5xl lg:text-[56px]"
             isEditable={isEditable}
             placeholder="Add supporting title"
             multiline
@@ -267,22 +270,22 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
             value={data.supportingDescription}
             onChange={handleTextUpdate("supportingDescription")}
             as="p"
-            className="mt-6 text-sm text-gray-500 md:text-base"
+            className="mt-8 text-sm text-gray-500 md:text-[15px]"
             isEditable={isEditable}
             placeholder="Add a brief description"
             multiline
           />
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {data.stats.map(stat => {
             const Icon = getIcon(stat.icon);
             return (
               <div
                 key={stat.id}
-                className="flex flex-col items-start gap-6 rounded-2xl bg-white p-8 shadow-sm transition-shadow hover:shadow-md"
+                className="flex h-full flex-col items-start gap-6 rounded-2xl bg-white p-7 shadow-[0_2px_15px_rgba(0,0,0,0.03)]"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EEF0FF]">
                   <Icon
                     className="h-5 w-5"
                     style={{ color: theme.colors.primary || "#3C32E7" }}
@@ -293,7 +296,7 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
                     value={stat.value}
                     onChange={handleStatUpdate(stat.id, "value")}
                     as="h4"
-                    className="mb-2 text-4xl font-bold text-gray-900"
+                    className="mb-3 text-[32px] font-bold text-[#111]"
                     isEditable={isEditable}
                     placeholder="Value"
                   />
@@ -301,7 +304,7 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
                     value={stat.label}
                     onChange={handleStatUpdate(stat.id, "label")}
                     as="p"
-                    className="text-xs font-medium tracking-wide text-gray-600 uppercase"
+                    className="text-[13px] text-gray-600"
                     isEditable={isEditable}
                     placeholder="Add label"
                     multiline
@@ -310,7 +313,7 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
                     value={stat.sublabel}
                     onChange={handleStatUpdate(stat.id, "sublabel")}
                     as="p"
-                    className="mt-2 text-xs leading-relaxed text-gray-500"
+                    className="text-[13px] text-gray-500"
                     isEditable={isEditable}
                     placeholder="Add sublabel"
                     multiline

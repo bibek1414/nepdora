@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   GalleryData,
   GalleryImage,
@@ -93,6 +93,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const componentId = React.useId();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showRightFade, setShowRightFade] = useState(false);
 
   const handleTitleUpdate = (newTitle: string) => {
     const updatedData = { ...data, title: newTitle };
@@ -211,29 +212,45 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
 
   const filteredImages = data.images.filter(image => image.is_active);
 
+  const updateFadeVisibility = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const needsScroll = container.scrollWidth - 1 > container.clientWidth;
+    const atEnd =
+      container.scrollLeft + container.clientWidth >= container.scrollWidth - 4;
+    setShowRightFade(needsScroll && !atEnd);
+  }, []);
+
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
-      // Scroll by approximately one card width (300px mobile, 350px desktop) + gap
-      const scrollAmount = window.innerWidth >= 768 ? 374 : 324; // 350 + 24 or 300 + 24
+      const scrollAmount = window.innerWidth >= 768 ? 374 : 324;
       container.scrollBy({
         left: -scrollAmount,
         behavior: "smooth",
       });
+      requestAnimationFrame(updateFadeVisibility);
     }
   };
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
-      // Scroll by approximately one card width (300px mobile, 350px desktop) + gap
-      const scrollAmount = window.innerWidth >= 768 ? 374 : 324; // 350 + 24 or 300 + 24
+      const scrollAmount = window.innerWidth >= 768 ? 374 : 324;
       container.scrollBy({
         left: scrollAmount,
         behavior: "smooth",
       });
+      requestAnimationFrame(updateFadeVisibility);
     }
   };
+
+  useEffect(() => {
+    updateFadeVisibility();
+    const handleResize = () => updateFadeVisibility();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [updateFadeVisibility]);
 
   return (
     <section className="overflow-hidden bg-white py-20">
@@ -289,129 +306,136 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
           </div>
         )}
 
-        <div
-          ref={scrollContainerRef}
-          className="scrollbar-hide -mx-4 flex gap-6 overflow-x-auto px-4 pb-8 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden"
-        >
-          {filteredImages.map(image => {
-            const actualIndex = data.images.findIndex(
-              img => img.id === image.id
-            );
-            return (
-              <div
-                key={image.id}
-                className="group/card relative h-[450px] min-w-[300px] cursor-pointer overflow-hidden rounded-2xl md:min-w-[350px]"
-              >
-                <div className="h-full w-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:transition-transform [&_img]:duration-700 group-hover/card:[&_img]:scale-110 hover:[&_img]:scale-110">
-                  <EditableImage
-                    src={getImageUrl(image.image)}
-                    alt={image.image_alt_description}
-                    onImageChange={(imageUrl, altText) =>
-                      handleImageUpdate(actualIndex, imageUrl, altText)
-                    }
-                    isEditable={isEditable}
-                    className="h-full w-full"
-                    width={800}
-                    height={1000}
-                    imageOptimization={{
-                      width: 800,
-                      height: 1000,
-                      quality: "auto",
-                      format: "auto",
-                      crop: "fill",
-                    }}
-                    cloudinaryOptions={{
-                      folder: "gallery-images",
-                      resourceType: "image",
-                    }}
-                    disableImageChange={true}
-                    showAltEditor={false}
-                  />
-                </div>
-
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-60" />
-
-                {isEditable && (
-                  <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover/card:opacity-100">
-                    <label
-                      htmlFor={`gallery6-upload-${componentId}-${actualIndex}`}
-                      className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-gray-900 shadow hover:bg-white"
-                    >
-                      Change
-                    </label>
-                    <input
-                      id={`gallery6-upload-${componentId}-${actualIndex}`}
-                      type="file"
-                      accept="image/*"
-                      onChange={event =>
-                        handleImageFileChange(event, actualIndex)
+        <div className="relative">
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-white via-white/60 to-transparent transition-opacity duration-300"
+            style={{ opacity: showRightFade ? 1 : 0 }}
+          />
+          <div
+            ref={scrollContainerRef}
+            onScroll={updateFadeVisibility}
+            className="scrollbar-hide -mx-4 flex gap-6 overflow-x-auto px-4 pb-8 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden"
+          >
+            {filteredImages.map(image => {
+              const actualIndex = data.images.findIndex(
+                img => img.id === image.id
+              );
+              return (
+                <div
+                  key={image.id}
+                  className="group/card relative h-[450px] min-w-[300px] cursor-pointer overflow-hidden rounded-2xl md:min-w-[350px]"
+                >
+                  <div className="h-full w-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:transition-transform [&_img]:duration-700 group-hover/card:[&_img]:scale-110 hover:[&_img]:scale-110">
+                    <EditableImage
+                      src={getImageUrl(image.image)}
+                      alt={image.image_alt_description}
+                      onImageChange={(imageUrl, altText) =>
+                        handleImageUpdate(actualIndex, imageUrl, altText)
                       }
-                      className="hidden"
+                      isEditable={isEditable}
+                      className="h-full w-full"
+                      width={800}
+                      height={1000}
+                      imageOptimization={{
+                        width: 800,
+                        height: 1000,
+                        quality: "auto",
+                        format: "auto",
+                        crop: "fill",
+                      }}
+                      cloudinaryOptions={{
+                        folder: "gallery-images",
+                        resourceType: "image",
+                      }}
+                      disableImageChange={true}
+                      showAltEditor={false}
                     />
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => handleRemoveImage(actualIndex)}
-                      className="h-6 px-2"
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
                   </div>
-                )}
 
-                <div className="absolute inset-x-6 bottom-6 z-10">
-                  <div className="translate-y-2 rounded-xl bg-white p-4 shadow-lg transition-all duration-300 group-hover/card:translate-y-0 group-hover/card:scale-105 group-hover/card:shadow-xl">
-                    <div className="flex flex-col gap-2">
-                      <EditableText
-                        value={image.title || "Case Study"}
-                        onChange={newValue =>
-                          handleImageTitleUpdate(actualIndex, newValue)
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-60" />
+
+                  {isEditable && (
+                    <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover/card:opacity-100">
+                      <label
+                        htmlFor={`gallery6-upload-${componentId}-${actualIndex}`}
+                        className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-gray-900 shadow hover:bg-white"
+                      >
+                        Change
+                      </label>
+                      <input
+                        id={`gallery6-upload-${componentId}-${actualIndex}`}
+                        type="file"
+                        accept="image/*"
+                        onChange={event =>
+                          handleImageFileChange(event, actualIndex)
                         }
-                        isEditable={isEditable}
-                        className="font-semibold text-gray-900"
+                        className="hidden"
                       />
-                      <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-300 group-hover/card:max-h-40 group-hover/card:opacity-100">
-                        {(image.description || isEditable) && (
-                          <EditableText
-                            value={image.description || ""}
-                            onChange={newValue =>
-                              handleImageDescriptionUpdate(
-                                actualIndex,
-                                newValue
-                              )
-                            }
-                            isEditable={isEditable}
-                            className="text-[11px] leading-relaxed text-gray-600"
-                            placeholder="Add description"
-                            multiline
-                          />
-                        )}
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleRemoveImage(actualIndex)}
+                        className="h-6 px-2"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
+
+                  <div className="absolute inset-x-6 bottom-6 z-10">
+                    <div className="translate-y-2 rounded-xl bg-white p-4 shadow-lg transition-all duration-300 group-hover/card:translate-y-0 group-hover/card:scale-105 group-hover/card:shadow-xl">
+                      <div className="flex flex-col gap-2">
+                        <EditableText
+                          value={image.title || "Case Study"}
+                          onChange={newValue =>
+                            handleImageTitleUpdate(actualIndex, newValue)
+                          }
+                          isEditable={isEditable}
+                          className="font-semibold text-gray-900"
+                        />
+                        <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-300 group-hover/card:max-h-40 group-hover/card:opacity-100">
+                          {(image.description || isEditable) && (
+                            <EditableText
+                              value={image.description || ""}
+                              onChange={newValue =>
+                                handleImageDescriptionUpdate(
+                                  actualIndex,
+                                  newValue
+                                )
+                              }
+                              isEditable={isEditable}
+                              className="text-[11px] leading-relaxed text-gray-600"
+                              placeholder="Add description"
+                              multiline
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
 
-          {isEditable && (
-            <div className="flex h-[450px] min-w-[300px] items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 md:min-w-[350px]">
-              <label
-                htmlFor={`gallery6-add-${componentId}`}
-                className="flex cursor-pointer flex-col items-center gap-2 text-gray-500"
-              >
-                <Plus className="h-8 w-8" />
-                <span className="text-sm font-medium">Add Case Study</span>
-                <input
-                  id={`gallery6-add-${componentId}`}
-                  type="file"
-                  accept="image/*"
-                  onChange={event => handleImageFileChange(event)}
-                  className="hidden"
-                />
-              </label>
-            </div>
-          )}
+            {isEditable && (
+              <div className="flex h-[450px] min-w-[300px] items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 md:min-w-[350px]">
+                <label
+                  htmlFor={`gallery6-add-${componentId}`}
+                  className="flex cursor-pointer flex-col items-center gap-2 text-gray-500"
+                >
+                  <Plus className="h-8 w-8" />
+                  <span className="text-sm font-medium">Add Case Study</span>
+                  <input
+                    id={`gallery6-add-${componentId}`}
+                    type="file"
+                    accept="image/*"
+                    onChange={event => handleImageFileChange(event)}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>
