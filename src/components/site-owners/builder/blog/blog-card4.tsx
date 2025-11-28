@@ -10,20 +10,12 @@ import { Button } from "@/components/ui/button";
 interface BlogCard4Props {
   blog: BlogPost;
   siteUser?: string;
-  showAuthor?: boolean;
-  showDate?: boolean;
-  showTags?: boolean;
-  showReadTime?: boolean;
   onClick?: () => void;
 }
 
 export const BlogCard4: React.FC<BlogCard4Props> = ({
   blog,
   siteUser,
-  showAuthor = true,
-  showDate = true,
-  showTags = true,
-  showReadTime = true,
   onClick,
 }) => {
   const blogImage =
@@ -90,17 +82,15 @@ export const BlogCard4: React.FC<BlogCard4Props> = ({
         <div className="flex flex-1 flex-col justify-between">
           <div>
             {/* Date with Calendar Icon */}
-            {showDate && (
-              <div className="mb-3 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <Calendar
-                  className="h-5 w-5"
-                  style={{
-                    color: theme.colors.primary || "#2563EB",
-                  }}
-                />
-                <span>{formatDate(blog.created_at)}</span>
-              </div>
-            )}
+            <div className="mb-3 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <Calendar
+                className="h-5 w-5"
+                style={{
+                  color: theme.colors.primary || "#2563EB",
+                }}
+              />
+              <span>{formatDate(blog.created_at)}</span>
+            </div>
 
             {/* Title */}
             <h2

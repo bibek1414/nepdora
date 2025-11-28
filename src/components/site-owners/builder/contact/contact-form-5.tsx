@@ -274,53 +274,49 @@ export const ContactForm5: React.FC<ContactForm5Props> = ({
               />
             </div>
 
-            {data.showEmail && (
-              <div className="mb-8">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Enter your email*"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required={data.required_fields.email}
-                  className="w-full border-b bg-transparent px-0 py-3 transition focus:outline-none [&::placeholder]:opacity-60"
-                  style={{
-                    borderColor: `${textOnLight}33`,
-                    color: textOnLight,
-                  }}
-                  onFocus={e => {
-                    e.target.style.borderColor = theme.colors.primary;
-                  }}
-                  onBlur={e => {
-                    e.target.style.borderColor = `${textOnLight}33`;
-                  }}
-                />
-              </div>
-            )}
+            <div className="mb-8">
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email*"
+                value={formData.email}
+                onChange={handleInputChange}
+                required={data.required_fields.email}
+                className="w-full border-b bg-transparent px-0 py-3 transition focus:outline-none [&::placeholder]:opacity-60"
+                style={{
+                  borderColor: `${textOnLight}33`,
+                  color: textOnLight,
+                }}
+                onFocus={e => {
+                  e.target.style.borderColor = theme.colors.primary;
+                }}
+                onBlur={e => {
+                  e.target.style.borderColor = `${textOnLight}33`;
+                }}
+              />
+            </div>
 
-            {data.showPhone && (
-              <div className="mb-8">
-                <input
-                  type="tel"
-                  name="phone_number"
-                  placeholder="Mobile phone number"
-                  value={formData.phone_number}
-                  onChange={handleInputChange}
-                  required={data.required_fields.phone}
-                  className="w-full border-b bg-transparent px-0 py-3 transition focus:outline-none [&::placeholder]:opacity-60"
-                  style={{
-                    borderColor: `${textOnLight}33`,
-                    color: textOnLight,
-                  }}
-                  onFocus={e => {
-                    e.target.style.borderColor = theme.colors.primary;
-                  }}
-                  onBlur={e => {
-                    e.target.style.borderColor = `${textOnLight}33`;
-                  }}
-                />
-              </div>
-            )}
+            <div className="mb-8">
+              <input
+                type="tel"
+                name="phone_number"
+                placeholder="Mobile phone number"
+                value={formData.phone_number}
+                onChange={handleInputChange}
+                required={data.required_fields.phone}
+                className="w-full border-b bg-transparent px-0 py-3 transition focus:outline-none [&::placeholder]:opacity-60"
+                style={{
+                  borderColor: `${textOnLight}33`,
+                  color: textOnLight,
+                }}
+                onFocus={e => {
+                  e.target.style.borderColor = theme.colors.primary;
+                }}
+                onBlur={e => {
+                  e.target.style.borderColor = `${textOnLight}33`;
+                }}
+              />
+            </div>
 
             <div className="mb-12">
               <textarea

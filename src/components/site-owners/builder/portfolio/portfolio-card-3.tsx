@@ -10,16 +10,12 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface PortfolioCard3Props {
   portfolio: Portfolio;
   siteUser?: string;
-  showTechnologies?: boolean;
-  showCategories?: boolean;
   onClick?: () => void;
 }
 
 export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
   portfolio,
   siteUser,
-  showTechnologies = true,
-  showCategories = true,
   onClick,
 }) => {
   const portfolioImage =
@@ -87,7 +83,7 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
         <div className="flex flex-1 flex-col justify-between gap-3 sm:gap-4">
           <div>
             {/* Category */}
-            {showCategories && portfolio.category && (
+            {portfolio.category && (
               <Badge
                 className="mb-2 text-xs sm:mb-3 sm:text-sm"
                 style={{
@@ -123,24 +119,22 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
             />
 
             {/* Technologies */}
-            {showTechnologies &&
-              portfolio.tags &&
-              portfolio.tags.length > 0 && (
-                <div className="mb-3 flex flex-wrap gap-1.5 sm:mb-4 sm:gap-2">
-                  {portfolio.tags.map(tag => (
-                    <Badge
-                      key={tag.id}
-                      variant="outline"
-                      className="text-xs sm:text-sm"
-                    >
-                      <Tag className="mr-1 h-2.5 w-2.5 sm:h-3 sm:w-3" />
-                      <span className="max-w-[80px] truncate sm:max-w-none">
-                        {tag.name}
-                      </span>
-                    </Badge>
-                  ))}
-                </div>
-              )}
+            {portfolio.tags && portfolio.tags.length > 0 && (
+              <div className="mb-3 flex flex-wrap gap-1.5 sm:mb-4 sm:gap-2">
+                {portfolio.tags.map(tag => (
+                  <Badge
+                    key={tag.id}
+                    variant="outline"
+                    className="text-xs sm:text-sm"
+                  >
+                    <Tag className="mr-1 h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                    <span className="max-w-[80px] truncate sm:max-w-none">
+                      {tag.name}
+                    </span>
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Actions */}

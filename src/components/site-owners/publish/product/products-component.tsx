@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
@@ -11,6 +12,7 @@ import { ProductCard3 } from "./product-card3";
 import { ProductCard4 } from "./product-card4";
 import { ProductCard5 } from "./product-card5";
 import { ProductCard6 } from "./product-card6";
+import { ProductCard7 } from "./product-card7";
 import ProductFilterSidebar from "./products-filter/product-filter-sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -61,25 +63,33 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
 }) => {
   const productFilters = useProductFilters();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const {
-    page_size = 8,
     title = "Our Products",
     subtitle,
     style = "grid-1",
-    showPrice = true,
-    showDescription = true,
-    showStock = true,
-    itemsPerRow = 4,
+    categoryId,
+    subCategoryId,
   } = component.data || {};
 
   // Determine if we should show sidebar based on style
   const shouldShowSidebar = showSidebar && style === "product-4";
   const isCarouselStyle = style === "product-1" || style === "product-6";
-
+  const isFullSectionStyle = style === "product-7";
   const currentFilters = shouldShowSidebar && !isEditable ? productFilters : {};
+
+  // Calculate base filters from component configuration
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const baseFilters: any = {};
+  if (categoryId) {
+    baseFilters.category_id = categoryId;
+  }
+  if (subCategoryId) {
+    baseFilters.sub_category_id = subCategoryId;
+  }
 
   // Use unified mutation hooks
   const deleteProductsComponent = useDeleteComponentMutation(
@@ -94,13 +104,17 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   // Get products with pagination and conditionally apply filters
   const { data, isLoading, error } = useProducts({
     page: currentPage,
-    page_size: page_size,
+    ...baseFilters,
     ...(shouldShowSidebar && !isEditable ? currentFilters : {}),
   });
 
   // Extract products from the API response structure
-  const products = data?.results || [];
+  const rawProducts = data?.results || [];
   const pagination = data?.pagination;
+
+  // Apply client-side filtering to ensure correct products are shown
+  // This acts as a fallback/enforcement if the API filtering is not working as expected
+  const products = rawProducts;
 
   const handleProductClick = (product: Product) => {
     if (onProductClick && component.order !== undefined) {
@@ -177,6 +191,29 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     }
   };
 
+  const handleFilterUpdate = (
+    newData: Partial<ProductsComponentData["data"]>
+  ) => {
+    if (!pageSlug) return;
+
+    const updatedData = {
+      ...component.data,
+      ...newData,
+    };
+
+    updateProductsComponent.mutate({
+      componentId: component.component_id,
+      data: updatedData,
+    });
+
+    if (onUpdate) {
+      onUpdate(component.component_id, {
+        ...component,
+        data: updatedData,
+      });
+    }
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -185,9 +222,6 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     const cardProps = {
       product,
       siteUser: isEditable ? undefined : siteUser,
-      showPrice,
-      showDescription,
-      showStock,
       onClick: () => handleProductClick(product),
     };
 
@@ -204,7 +238,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
         return <ProductCard4 key={product.id} {...cardProps} />;
       case "product-5":
         return <ProductCard5 key={product.id} {...cardProps} />;
-      case "product-1":
+      case "product-7":
+        return <ProductCard7 key={product.id} {...cardProps} />;
+      case "grid-1":
       default:
         return <ProductCard1 key={product.id} {...cardProps} />;
     }
@@ -213,17 +249,19 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   const getGridClass = () => {
     switch (style) {
       case "product-2":
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 3)}`;
+        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`;
       case "product-3":
         return "grid-cols-1 lg:grid-cols-2 gap-8";
+      case "product-7":
+        return "";
       case "product-1":
       case "product-6":
         return "";
       case "product-4":
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 4)}`;
+        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`;
       case "grid-1":
       default:
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 4)}`;
+        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`;
     }
   };
 
@@ -232,86 +270,92 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     return (
       <div className="group relative">
         {/* Delete Control with AlertDialog */}
-        <div className="absolute top-4 right-4 z-50 opacity-0 transition-opacity group-hover:opacity-100">
-          <AlertDialog
-            open={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-          >
-            <div className="flex items-center gap-2">
-              <Link
-                href="/admin/products"
-                target="_blank"
-                onClick={e => e.stopPropagation()}
-                className="z-30"
-              >
-                <Button variant="outline" size="sm">
-                  Manage Products
-                </Button>
-              </Link>
-              <AlertDialogTrigger asChild>
-                <Button
-                  onClick={handleDeleteClick}
-                  variant="destructive"
-                  size="sm"
-                  className="z-30 h-8 px-3"
-                  disabled={deleteProductsComponent.isPending}
+        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
+          <div className="flex flex-col gap-2">
+            <AlertDialog
+              open={isDeleteDialogOpen}
+              onOpenChange={setIsDeleteDialogOpen}
+            >
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/admin/products"
+                  target="_blank"
+                  onClick={e => e.stopPropagation()}
+                  className="z-30"
                 >
-                  <Trash2 className="mr-1 h-4 w-4" />
-                  {deleteProductsComponent.isPending ? "Deleting..." : "Delete"}
-                </Button>
-              </AlertDialogTrigger>
-            </div>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete Products Component
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to delete this products component? This
-                  action cannot be undone and will permanently remove the
-                  component from your page.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleConfirmDelete}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  disabled={deleteProductsComponent.isPending}
-                >
-                  {deleteProductsComponent.isPending
-                    ? "Deleting..."
-                    : "Delete Component"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                  <Button variant="outline" size="sm">
+                    Manage Products
+                  </Button>
+                </Link>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    onClick={handleDeleteClick}
+                    variant="destructive"
+                    size="sm"
+                    className="z-30 h-8 px-3"
+                    disabled={deleteProductsComponent.isPending}
+                  >
+                    <Trash2 className="mr-1 h-4 w-4" />
+                    {deleteProductsComponent.isPending
+                      ? "Deleting..."
+                      : "Delete"}
+                  </Button>
+                </AlertDialogTrigger>
+              </div>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center gap-2">
+                    <Trash2 className="text-destructive h-5 w-5" />
+                    Delete Products Component
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete this products component?
+                    This action cannot be undone and will permanently remove the
+                    component from your page.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleConfirmDelete}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    disabled={deleteProductsComponent.isPending}
+                  >
+                    {deleteProductsComponent.isPending
+                      ? "Deleting..."
+                      : "Delete Component"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
 
         {/* Products Preview with Conditional Sidebar Layout */}
         <div className="py-8">
           <div className="container mx-auto px-4">
-            {/* Header */}
-            <div className="mb-8 text-center">
-              <EditableText
-                value={title}
-                onChange={handleTitleChange}
-                as="h2"
-                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-              <EditableText
-                value={subtitle || ""}
-                onChange={handleSubtitleChange}
-                as="p"
-                className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                isEditable={true}
-                placeholder="Enter subtitle..."
-                multiline={true}
-              />
-            </div>
+            {/* Header - Hide for product-7 as it has its own header */}
+            {!isFullSectionStyle && (
+              <div className="mb-8 text-center">
+                <EditableText
+                  value={title}
+                  onChange={handleTitleChange}
+                  as="h2"
+                  className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                  isEditable={true}
+                  placeholder="Enter title..."
+                />
+                <EditableText
+                  value={subtitle || ""}
+                  onChange={handleSubtitleChange}
+                  as="p"
+                  className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                  isEditable={true}
+                  placeholder="Enter subtitle..."
+                  multiline={true}
+                />
+              </div>
+            )}
 
             <div className={shouldShowSidebar ? "relative flex gap-6" : ""}>
               {/* Sidebar - Only show for ProductCard4 (product-4) */}
@@ -355,21 +399,21 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                 {isLoading && (
                   <div
                     className={
-                      isCarouselStyle ? "" : `grid ${getGridClass()} gap-6`
+                      isCarouselStyle || isFullSectionStyle
+                        ? ""
+                        : `grid ${getGridClass()} gap-6`
                     }
                   >
-                    {Array.from({ length: Math.min(page_size, 8) }).map(
-                      (_, index) => (
-                        <div key={index} className="flex flex-col space-y-3">
-                          <Skeleton className="h-[250px] w-full rounded-xl" />
-                          <div className="space-y-2">
-                            <Skeleton className="h-5 w-3/4" />
-                            <Skeleton className="h-4 w-1/2" />
-                            <Skeleton className="h-6 w-1/3" />
-                          </div>
+                    {Array.from({ length: 8 }).map((_, index) => (
+                      <div key={index} className="flex flex-col space-y-3">
+                        <Skeleton className="h-[250px] w-full rounded-xl" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-5 w-3/4" />
+                          <Skeleton className="h-4 w-1/2" />
+                          <Skeleton className="h-6 w-1/3" />
                         </div>
-                      )
-                    )}
+                      </div>
+                    ))}
                   </div>
                 )}
 
@@ -389,7 +433,15 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                 {/* Products Grid/Carousel */}
                 {!isLoading && !error && products.length > 0 && (
                   <>
-                    {isCarouselStyle ? (
+                    {isFullSectionStyle ? (
+                      // ProductCard7 is a complete section, render it once with all products
+                      <ProductCard7
+                        products={products}
+                        siteUser={isEditable ? undefined : siteUser}
+                        title={title}
+                        subtitle={subtitle}
+                      />
+                    ) : isCarouselStyle ? (
                       <Carousel
                         opts={{
                           align: "start",
@@ -429,8 +481,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                       </div>
                     )}
 
-                    {/* Pagination - Hide for carousel */}
+                    {/* Pagination - Hide for carousel and full section styles */}
                     {!isCarouselStyle &&
+                      !isFullSectionStyle &&
                       pagination &&
                       pagination.totalPages > 1 && (
                         <div className="mt-8">
@@ -468,19 +521,21 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   return (
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h2
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></h2>
-          {subtitle && (
-            <p
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            ></p>
-          )}
-        </div>
+        {/* Header - Hide for product-7 as it has its own header */}
+        {!isFullSectionStyle && (
+          <div className="mb-12 text-center">
+            <h2
+              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+              dangerouslySetInnerHTML={{ __html: title }}
+            ></h2>
+            {subtitle && (
+              <p
+                className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
+            )}
+          </div>
+        )}
 
         {/* Conditional Layout: Sidebar + Products OR Just Products */}
         <div className={shouldShowSidebar ? "flex gap-8" : ""}>
@@ -525,10 +580,12 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
             {isLoading && (
               <div
                 className={
-                  isCarouselStyle ? "" : `grid ${getGridClass()} gap-8`
+                  isCarouselStyle || isFullSectionStyle
+                    ? ""
+                    : `grid ${getGridClass()} gap-8`
                 }
               >
-                {Array.from({ length: page_size }).map((_, index) => (
+                {Array.from({ length: 8 }).map((_, index) => (
                   <div key={index} className="flex flex-col space-y-4">
                     <Skeleton className="h-[280px] w-full rounded-lg" />
                     <div className="space-y-3">
@@ -557,7 +614,14 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
             {/* Products Grid/Carousel */}
             {!isLoading && !error && products.length > 0 && (
               <>
-                {isCarouselStyle ? (
+                {isFullSectionStyle ? (
+                  <ProductCard7
+                    products={products}
+                    siteUser={siteUser}
+                    title={title}
+                    subtitle={subtitle}
+                  />
+                ) : isCarouselStyle ? (
                   <Carousel
                     opts={{
                       align: "start",
@@ -588,8 +652,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                   </div>
                 )}
 
-                {/* Pagination - Hide for carousel */}
+                {/* Pagination - Hide for carousel and full section styles */}
                 {!isCarouselStyle &&
+                  !isFullSectionStyle &&
                   pagination &&
                   pagination.totalPages > 1 && (
                     <div className="mt-12">

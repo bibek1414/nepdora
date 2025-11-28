@@ -7,10 +7,6 @@ import { formatDate } from "@/utils/date";
 interface BlogCard3Props {
   blog: BlogPost;
   siteUser?: string;
-  showAuthor?: boolean;
-  showDate?: boolean;
-  showTags?: boolean;
-  showReadTime?: boolean;
   onClick?: () => void;
   index?: number;
 }
@@ -51,10 +47,6 @@ const getAuthorInitials = (author: {
 export const BlogCard3: React.FC<BlogCard3Props> = ({
   blog,
   siteUser,
-  showAuthor = true,
-  showDate = true,
-  showTags = true,
-  showReadTime = true,
   onClick,
   index = 0,
 }) => {
@@ -113,18 +105,16 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
         {/* Content */}
         <div className="md:w-2/3">
           {/* Date and Category */}
-          {showDate && (
-            <div className="flex items-center gap-4 text-sm">
-              <time className="text-gray-500 dark:text-gray-400">
-                {formatDate(blog.created_at)}
-              </time>
-              {showTags && firstTag && (
-                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                  {firstTag.name}
-                </span>
-              )}
-            </div>
-          )}
+          <div className="flex items-center gap-4 text-sm">
+            <time className="text-gray-500 dark:text-gray-400">
+              {formatDate(blog.created_at)}
+            </time>
+            {firstTag && (
+              <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                {firstTag.name}
+              </span>
+            )}
+          </div>
 
           {/* Title */}
           <h3 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">
@@ -150,7 +140,7 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
           )}
 
           {/* Author Section */}
-          {showAuthor && blog.author && (
+          {blog.author && (
             <div className="mt-6 flex items-center gap-4">
               <div className="relative h-12 w-12 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
                 {blog.author.first_name || blog.author.last_name ? (

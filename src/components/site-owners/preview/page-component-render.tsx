@@ -22,6 +22,8 @@ import { YouTubeComponent } from "@/components/site-owners/builder/youtube/youtu
 import { GalleryComponent } from "../builder/gallery/gallery-component";
 import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
 import { TextEditorComponent } from "@/components/site-owners/builder/text-editor/text-editor-component";
+import { PricingComponent } from "@/components/site-owners/builder/pricing/pricing-component";
+
 import { HeroComponentData } from "@/types/owner-site/components/hero";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
@@ -42,6 +44,7 @@ import { YouTubeComponentData } from "@/types/owner-site/components/youtube";
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
+import { PricingComponentData } from "@/types/owner-site/components/pricing";
 
 interface PageComponent {
   id: string | number;
@@ -65,8 +68,11 @@ interface PageComponent {
     | "newsletter"
     | "youtube"
     | "subcategory"
+    | "subcategory"
     | "text_editor"
+    | "pricing"
     | "policies";
+
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
@@ -86,8 +92,11 @@ interface PageComponent {
     | YouTubeComponentData["data"]
     | BannerComponentData["data"]
     | SubCategoryComponentData["data"]
+    | SubCategoryComponentData["data"]
     | TextEditorComponentData["data"]
+    | PricingComponentData["data"]
     | PolicyComponentData["data"];
+
   order: number;
 }
 
@@ -122,6 +131,7 @@ interface PageComponentRendererProps {
       | NewsletterComponentData
       | YouTubeComponentData
       | TextEditorComponentData
+      | PricingComponentData
       | PolicyComponentData
   ) => void;
 }
@@ -397,6 +407,18 @@ export function PageComponentRenderer({
             isEditable={false}
             siteUser={siteUser}
             pageSlug={pageSlug}
+          />
+        );
+      case "pricing":
+        return (
+          <PricingComponent
+            key={component.id}
+            component={component as PricingComponentData}
+            isEditable={false}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as PricingComponentData)
+            }
           />
         );
       default:

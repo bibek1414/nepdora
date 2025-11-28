@@ -261,7 +261,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
         </div>
       </div>
 
-      {data.enableLightbox && selectedImage && (
+      {selectedImage && (
         <Dialog
           open={!!selectedImage}
           onOpenChange={() => setSelectedImage(null)}

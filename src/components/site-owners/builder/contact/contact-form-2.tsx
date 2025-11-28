@@ -84,54 +84,50 @@ export const ContactForm2: React.FC<ContactForm2Props> = ({
             />
           </div>
 
-          {data.showEmail && (
-            <div>
-              <Label
-                htmlFor="email"
-                className="text-foreground text-sm font-medium"
-              >
-                Email{" "}
-                {data.required_fields.email && (
-                  <span className="text-red-500">*</span>
-                )}
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required={data.required_fields.email}
-                className="mt-1 bg-white"
-                placeholder="your.email@example.com"
-              />
-            </div>
-          )}
-        </div>
-
-        {data.showPhone && (
           <div>
             <Label
-              htmlFor="phone_number"
+              htmlFor="email"
               className="text-foreground text-sm font-medium"
             >
-              Phone{" "}
-              {data.required_fields.phone && (
+              Email{" "}
+              {data.required_fields.email && (
                 <span className="text-red-500">*</span>
               )}
             </Label>
             <Input
-              id="phone_number"
-              name="phone_number"
-              type="tel"
-              value={formData.phone_number}
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
               onChange={handleInputChange}
-              required={data.required_fields.phone}
+              required={data.required_fields.email}
               className="mt-1 bg-white"
-              placeholder="+1 (555) 123-4567"
+              placeholder="your.email@example.com"
             />
           </div>
-        )}
+        </div>
+
+        <div>
+          <Label
+            htmlFor="phone_number"
+            className="text-foreground text-sm font-medium"
+          >
+            Phone{" "}
+            {data.required_fields.phone && (
+              <span className="text-red-500">*</span>
+            )}
+          </Label>
+          <Input
+            id="phone_number"
+            name="phone_number"
+            type="tel"
+            value={formData.phone_number}
+            onChange={handleInputChange}
+            required={data.required_fields.phone}
+            className="mt-1 bg-white"
+            placeholder="+1 (555) 123-4567"
+          />
+        </div>
 
         <div>
           <Label

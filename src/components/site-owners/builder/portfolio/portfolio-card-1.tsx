@@ -9,16 +9,12 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface PortfolioCard1Props {
   portfolio: Portfolio;
   siteUser?: string;
-  showTechnologies?: boolean;
-  showCategories?: boolean;
   onClick?: () => void;
 }
 
 export const PortfolioCard1: React.FC<PortfolioCard1Props> = ({
   portfolio,
   siteUser,
-  showTechnologies = true,
-  showCategories = true,
   onClick,
 }) => {
   const portfolioImage =
@@ -111,7 +107,7 @@ export const PortfolioCard1: React.FC<PortfolioCard1Props> = ({
         {/* Content */}
         <div className="p-6">
           {/* Category Badge */}
-          {showCategories && portfolio.category && (
+          {portfolio.category && (
             <Badge
               className="mb-3"
               style={{
@@ -147,7 +143,7 @@ export const PortfolioCard1: React.FC<PortfolioCard1Props> = ({
           />
 
           {/* Technologies */}
-          {showTechnologies && portfolio.tags && portfolio.tags.length > 0 && (
+          {portfolio.tags && portfolio.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {portfolio.tags.slice(0, 3).map(tag => (
                 <Badge key={tag.id} variant="outline" className="text-xs">

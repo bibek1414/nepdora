@@ -50,11 +50,12 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
-    page_size = 6,
     title = "Latest Services",
     subtitle,
     style = "services-1",
   } = component.data || {};
+
+  const page_size = 6;
 
   // Delete and update mutation hooks - changed from 'blog' to 'services'
   const deleteServicesComponent = useDeleteComponentMutation(

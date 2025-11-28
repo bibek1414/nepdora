@@ -23,6 +23,8 @@ import { TeamComponent } from "@/components/site-owners/builder/team-member/team
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
 import { TextEditorComponent } from "../builder/text-editor/text-editor-component";
+import { PricingComponent } from "@/components/site-owners/builder/pricing/pricing-component";
+
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
@@ -41,6 +43,8 @@ import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
 import { CTAComponentData } from "@/types/owner-site/components/cta";
+import { PricingComponentData } from "@/types/owner-site/components/pricing";
+
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -64,7 +68,9 @@ interface PageComponent {
     | "subcategory"
     | "appointment"
     | "text_editor"
+    | "pricing"
     | "policies";
+
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
@@ -85,7 +91,9 @@ interface PageComponent {
     | BannerComponentData["data"]
     | SubCategoryComponentData["data"]
     | TextEditorComponentData["data"]
+    | PricingComponentData["data"]
     | PolicyComponentData["data"];
+
   order: number;
 }
 
@@ -120,6 +128,7 @@ interface PageComponentRendererProps {
       | BannerComponentData
       | NewsletterComponentData
       | PolicyComponentData
+      | PricingComponentData
       | YouTubeComponentData
   ) => void;
 }
@@ -395,6 +404,18 @@ export function PageComponentRenderer({
             isEditable={false}
             siteUser={siteUser}
             pageSlug={pageSlug}
+          />
+        );
+      case "pricing":
+        return (
+          <PricingComponent
+            key={component.id}
+            component={component as PricingComponentData}
+            isEditable={false}
+            pageSlug={pageSlug}
+            onUpdate={(componentId, newData) =>
+              onComponentUpdate(componentId, newData as PricingComponentData)
+            }
           />
         );
       default:

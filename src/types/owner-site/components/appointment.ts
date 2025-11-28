@@ -5,9 +5,6 @@ export interface AppointmentData {
   title: string;
   subtitle?: string;
   description?: string;
-  showDate?: boolean;
-  showTime?: boolean;
-  showReason?: boolean;
   required_fields: {
     full_name: boolean;
     email: boolean;
@@ -49,9 +46,6 @@ export const defaultAppointmentData: AppointmentData = {
   title: "Book an Appointment",
   subtitle: "Schedule your visit with us",
   description: "Choose a convenient time and we'll be ready to assist you.",
-  showDate: true,
-  showTime: true,
-  showReason: true,
   required_fields: {
     full_name: true,
     email: true,

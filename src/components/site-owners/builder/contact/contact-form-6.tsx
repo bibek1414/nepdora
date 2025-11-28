@@ -154,15 +154,6 @@ export const ContactForm6: React.FC<ContactForm6Props> = ({
     }
   };
 
-  const toggleShowField = (field: "showEmail" | "showPhone") => {
-    if (onDataChange) {
-      onDataChange({
-        ...data,
-        [field]: !data[field],
-      });
-    }
-  };
-
   // Use theme colors with fallbacks
   const primaryColor = theme.colors.primary || "#034833";
   const secondaryColor = theme.colors.secondary || "#83CD20";
@@ -304,52 +295,48 @@ export const ContactForm6: React.FC<ContactForm6Props> = ({
                   </div>
                 </label>
 
-                {data.showEmail && (
-                  <label className="flex flex-col gap-2">
-                    <span
-                      className="text-sm font-semibold"
-                      style={{ color: primaryColor }}
-                    >
-                      Your Email {data.required_fields.email && "*"}
-                    </span>
-                    <div className="flex items-center gap-3 rounded-full border px-5 py-3">
-                      <input
-                        type="email"
-                        name="email"
-                        placeholder="name@email.com"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required={data.required_fields.email}
-                        className="w-full text-sm placeholder:opacity-50 focus:outline-none"
-                      />
-                    </div>
-                  </label>
-                )}
+                <label className="flex flex-col gap-2">
+                  <span
+                    className="text-sm font-semibold"
+                    style={{ color: primaryColor }}
+                  >
+                    Your Email {data.required_fields.email && "*"}
+                  </span>
+                  <div className="flex items-center gap-3 rounded-full border px-5 py-3">
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="name@email.com"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required={data.required_fields.email}
+                      className="w-full text-sm placeholder:opacity-50 focus:outline-none"
+                    />
+                  </div>
+                </label>
               </div>
 
               {/* Second row */}
               <div className="grid gap-6 md:grid-cols-2">
-                {data.showPhone && (
-                  <label className="flex flex-col gap-2">
-                    <span
-                      className="text-sm font-semibold"
-                      style={{ color: primaryColor }}
-                    >
-                      Your Phone {data.required_fields.phone && "*"}
-                    </span>
-                    <div className="flex items-center gap-3 rounded-full border px-5 py-3">
-                      <input
-                        type="tel"
-                        name="phone_number"
-                        placeholder="+977 0000000000"
-                        value={formData.phone_number}
-                        onChange={handleInputChange}
-                        required={data.required_fields.phone}
-                        className="w-full text-sm placeholder:opacity-50 focus:outline-none"
-                      />
-                    </div>
-                  </label>
-                )}
+                <label className="flex flex-col gap-2">
+                  <span
+                    className="text-sm font-semibold"
+                    style={{ color: primaryColor }}
+                  >
+                    Your Phone {data.required_fields.phone && "*"}
+                  </span>
+                  <div className="flex items-center gap-3 rounded-full border px-5 py-3">
+                    <input
+                      type="tel"
+                      name="phone_number"
+                      placeholder="+977 0000000000"
+                      value={formData.phone_number}
+                      onChange={handleInputChange}
+                      required={data.required_fields.phone}
+                      className="w-full text-sm placeholder:opacity-50 focus:outline-none"
+                    />
+                  </div>
+                </label>
 
                 <label className="flex flex-col gap-2">
                   <span

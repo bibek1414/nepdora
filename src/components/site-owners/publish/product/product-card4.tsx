@@ -20,9 +20,6 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface ProductCard4Props {
   product: Product;
   siteUser?: string;
-  showPrice?: boolean;
-  showDescription?: boolean;
-  showStock?: boolean;
   onClick?: () => void;
   onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
 }
@@ -30,9 +27,6 @@ interface ProductCard4Props {
 export const ProductCard4: React.FC<ProductCard4Props> = ({
   product,
   siteUser,
-  showPrice = true,
-  showDescription = true,
-  showStock = true,
   onClick,
   onWishlistToggle,
 }) => {
@@ -254,14 +248,14 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
             )}
 
             {/* Description */}
-            {showDescription && product.description && (
+            {product.description && (
               <p className="line-clamp-2 text-[10px] leading-relaxed text-gray-500">
                 {product.description}
               </p>
             )}
 
             {/* Stock Info */}
-            {showStock && product.stock > 0 && (
+            {product.stock > 0 && (
               <div className="flex items-center gap-1">
                 <div
                   className={`h-1.5 w-1.5 rounded-full ${
@@ -279,30 +273,28 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
             )}
 
             {/* Price Section */}
-            {showPrice && (
-              <div className="space-y-1">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-base font-bold text-gray-900">
-                    Rs.{Number(discountedPrice).toLocaleString("en-IN")}
-                  </span>
+            <div className="space-y-1">
+              <div className="flex items-center gap-1.5">
+                <span className="text-base font-bold text-gray-900">
+                  Rs.{Number(discountedPrice).toLocaleString("en-IN")}
+                </span>
 
-                  {marketPrice && discountPercentage > 0 && (
-                    <span className="text-xs text-gray-400 line-through">
-                      Rs.{Number(marketPrice).toLocaleString("en-IN")}
-                    </span>
-                  )}
-                </div>
-                {discountPercentage > 0 && marketPrice !== null && (
-                  <p className="text-[10px] font-medium text-green-600">
-                    Save Rs.
-                    {Number(marketPrice - price).toLocaleString("en-IN", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </p>
+                {marketPrice && discountPercentage > 0 && (
+                  <span className="text-xs text-gray-400 line-through">
+                    Rs.{Number(marketPrice).toLocaleString("en-IN")}
+                  </span>
                 )}
               </div>
-            )}
+              {discountPercentage > 0 && marketPrice !== null && (
+                <p className="text-[10px] font-medium text-green-600">
+                  Save Rs.
+                  {Number(marketPrice - price).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </p>
+              )}
+            </div>
 
             {/* Add to Cart Button */}
             <SOButton

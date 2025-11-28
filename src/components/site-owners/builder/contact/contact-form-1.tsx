@@ -113,37 +113,33 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
                 />
               </div>
 
-              {data.showEmail && (
-                <div>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    label="Email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required={data.required_fields.email}
-                    className="mt-1"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-              )}
+              <div>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  label="Email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required={data.required_fields.email}
+                  className="mt-1"
+                  placeholder="your.email@example.com"
+                />
+              </div>
 
-              {data.showPhone && (
-                <div>
-                  <Input
-                    id="phone_number"
-                    name="phone_number"
-                    type="tel"
-                    label="Phone Number"
-                    value={formData.phone_number}
-                    onChange={handleInputChange}
-                    required={data.required_fields.phone}
-                    className="mt-1"
-                    placeholder="+1 (555) 123-4567"
-                  />
-                </div>
-              )}
+              <div>
+                <Input
+                  id="phone_number"
+                  name="phone_number"
+                  type="tel"
+                  label="Phone Number"
+                  value={formData.phone_number}
+                  onChange={handleInputChange}
+                  required={data.required_fields.phone}
+                  className="mt-1"
+                  placeholder="+1 (555) 123-4567"
+                />
+              </div>
 
               <div>
                 <Textarea

@@ -140,7 +140,8 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
 
   const filteredImages = data.images.filter(img => img.is_active);
 
-  const gridClass = `grid gap-${data.spacing === "tight" ? "2" : data.spacing === "wide" ? "6" : "4"} grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-${data.columns}`;
+  const gridClass =
+    "grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
 
   return (
     <div className="w-full space-y-8 py-16">
@@ -205,7 +206,7 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <div className="flex h-full items-center justify-center">
-                      {data.enableLightbox && !isEditable && (
+                      {!isEditable && (
                         <Button
                           variant="ghost"
                           size="icon"
@@ -247,25 +248,23 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
                 </div>
 
                 {/* Image Info */}
-                {(data.showTitles || data.showDescriptions) && (
-                  <div className="p-4">
-                    {data.showTitles && image.title && (
-                      <EditableText
-                        value={image.title}
-                        onChange={newTitle =>
-                          handleImageTitleUpdate(actualIndex, newTitle)
-                        }
-                        isEditable={isEditable}
-                        className="font-semibold text-gray-900"
-                      />
-                    )}
-                    {data.showDescriptions && image.description && (
-                      <p className="mt-1 text-sm text-gray-600">
-                        {image.description}
-                      </p>
-                    )}
-                  </div>
-                )}
+                <div className="p-4">
+                  {image.title && (
+                    <EditableText
+                      value={image.title}
+                      onChange={newTitle =>
+                        handleImageTitleUpdate(actualIndex, newTitle)
+                      }
+                      isEditable={isEditable}
+                      className="font-semibold text-gray-900"
+                    />
+                  )}
+                  {image.description && (
+                    <p className="mt-1 text-sm text-gray-600">
+                      {image.description}
+                    </p>
+                  )}
+                </div>
               </div>
             );
           })}
@@ -293,7 +292,7 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
       </div>
 
       {/* Lightbox Dialog */}
-      {data.enableLightbox && selectedImage && (
+      {selectedImage && (
         <Dialog
           open={!!selectedImage}
           onOpenChange={() => setSelectedImage(null)}

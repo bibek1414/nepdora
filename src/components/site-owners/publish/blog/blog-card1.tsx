@@ -7,20 +7,12 @@ import { BlogPost } from "@/types/owner-site/admin/blog";
 interface BlogCard1Props {
   blog: BlogPost;
   siteUser?: string;
-  showAuthor?: boolean;
-  showDate?: boolean;
-  showTags?: boolean;
-  showReadTime?: boolean;
   onClick?: () => void;
 }
 
 export const BlogCard1: React.FC<BlogCard1Props> = ({
   blog,
   siteUser,
-  showAuthor = true,
-  showDate = true,
-  showTags = true,
-  showReadTime = true,
   onClick,
 }) => {
   const blogImage =
@@ -71,14 +63,9 @@ export const BlogCard1: React.FC<BlogCard1Props> = ({
           </h2>
 
           <div className="mb-3 text-sm text-zinc-500 dark:text-zinc-400">
-            {showDate && (
-              <span className="mr-3">{formatDate(blog.created_at)}</span>
-            )}
-            {showAuthor && blog.author && (
+            <span className="mr-3">{formatDate(blog.created_at)}</span>
+            {blog.author && (
               <span className="mr-3">{blog.author.username}</span>
-            )}
-            {showReadTime && blog.time_to_read && (
-              <span>{blog.time_to_read} min read</span>
             )}
           </div>
         </div>

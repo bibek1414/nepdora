@@ -18,9 +18,6 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface ProductCard6Props {
   product: Product;
   siteUser?: string;
-  showPrice?: boolean;
-  showDescription?: boolean;
-  showStock?: boolean;
   onClick?: () => void;
   onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
 }
@@ -28,9 +25,6 @@ interface ProductCard6Props {
 export const ProductCard6: React.FC<ProductCard6Props> = ({
   product,
   siteUser,
-  showPrice = true,
-  showDescription = true,
-  showStock = true,
   onClick,
   onWishlistToggle,
 }) => {
@@ -236,30 +230,27 @@ export const ProductCard6: React.FC<ProductCard6Props> = ({
           </h3>
 
           {/* Price */}
-          {showPrice && (
-            <div className="mb-2 flex items-baseline gap-2">
-              <span
-                className="text-2xl font-bold"
-                style={{
-                  color: theme.colors.primary,
-                  fontFamily: theme.fonts.heading,
-                }}
-              >
-                Rs. {Number(discountedPrice).toLocaleString("en-IN")}
-              </span>
-              {marketPrice && discountPercentage > 0 && (
-                <>
-                  <span className="text-sm text-gray-400 line-through">
-                    Rs. {Number(marketPrice).toLocaleString("en-IN")}
-                  </span>
-                  <span className="text-sm font-medium text-orange-500">
-                    Save Rs.{" "}
-                    {Number(marketPrice - price).toLocaleString("en-IN")}
-                  </span>
-                </>
-              )}
-            </div>
-          )}
+          <div className="mb-2 flex items-baseline gap-2">
+            <span
+              className="text-2xl font-bold"
+              style={{
+                color: theme.colors.primary,
+                fontFamily: theme.fonts.heading,
+              }}
+            >
+              Rs. {Number(discountedPrice).toLocaleString("en-IN")}
+            </span>
+            {marketPrice && discountPercentage > 0 && (
+              <>
+                <span className="text-sm text-gray-400 line-through">
+                  Rs. {Number(marketPrice).toLocaleString("en-IN")}
+                </span>
+                <span className="text-sm font-medium text-orange-500">
+                  Save Rs. {Number(marketPrice - price).toLocaleString("en-IN")}
+                </span>
+              </>
+            )}
+          </div>
 
           {/* Rating */}
           <div className="mb-2 flex items-center gap-1">
@@ -275,23 +266,19 @@ export const ProductCard6: React.FC<ProductCard6Props> = ({
           </div>
 
           {/* Stock Information */}
-          {showStock && (
-            <div className="mb-3">
-              {product.stock === 0 ? (
-                <span className="text-sm font-medium text-red-500">
-                  Sold Out
-                </span>
-              ) : product.stock <= 5 ? (
-                <span className="text-sm font-medium text-orange-500">
-                  Only {product.stock} left
-                </span>
-              ) : (
-                <span className="text-sm font-medium text-green-500">
-                  In Stock
-                </span>
-              )}
-            </div>
-          )}
+          <div className="mb-3">
+            {product.stock === 0 ? (
+              <span className="text-sm font-medium text-red-500">Sold Out</span>
+            ) : product.stock <= 5 ? (
+              <span className="text-sm font-medium text-orange-500">
+                Only {product.stock} left
+              </span>
+            ) : (
+              <span className="text-sm font-medium text-green-500">
+                In Stock
+              </span>
+            )}
+          </div>
 
           {/* Add to Cart button */}
           <SOButton

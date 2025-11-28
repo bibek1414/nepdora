@@ -4,14 +4,7 @@ export interface BannerData {
   subtitle?: string;
   bannerType: "Slider" | "Sidebar" | "Banner";
   images: BannerImage[];
-  autoplay: boolean;
-  autoplayDelay: number;
-  showArrows: boolean;
-  showDots: boolean;
   template: "banner-1" | "banner-2" | "banner-3" | "banner-4";
-  backgroundColor: string;
-  textColor: string;
-  overlayOpacity: number;
 }
 
 export interface BannerComponentData {
@@ -49,12 +42,5 @@ export const defaultBannerData: BannerData = {
       is_active: true,
     },
   ],
-  autoplay: true,
-  autoplayDelay: 5000,
-  showArrows: true,
-  showDots: true,
   template: "banner-1",
-  backgroundColor: "#000000",
-  textColor: "#FFFFFF",
-  overlayOpacity: 0.4,
 };

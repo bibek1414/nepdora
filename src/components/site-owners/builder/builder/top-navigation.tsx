@@ -18,6 +18,7 @@ import {
   ExternalLink,
   ChevronDown,
   FileCheck,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
@@ -47,6 +48,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 }) => {
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [pageToDelete, setPageToDelete] = useState<Page | null>(null);
   const { mutate: publish, isPending } = usePublishSite();
 
   // Find current page object
@@ -151,11 +153,13 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
                     >
                       <span>{page.title}</span>
                       {pages.length > 1 && (
-                        <div onClick={e => e.stopPropagation()}>
-                          <DeletePageDialog
-                            page={page}
-                            onPageDeleted={onPageDeleted}
-                          />
+                        <div
+                          onClick={e => {
+                            e.stopPropagation();
+                            setPageToDelete(page);
+                          }}
+                        >
+                          <X className="text-muted-foreground hover:text-destructive mr-1 h-4 w-4 cursor-pointer transition-colors" />
                         </div>
                       )}
                     </DropdownMenuItem>
@@ -194,11 +198,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             Theme Settings
           </Button>
 
-          <Link
-            href={`/publish/${siteUser}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <Link href={`/`} target="_blank" rel="noopener noreferrer">
             <Button
               variant="outline"
               className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
@@ -239,6 +239,19 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         open={isThemeDialogOpen}
         onOpenChange={setIsThemeDialogOpen}
       />
+
+      {/* Delete Page Dialog (Controlled) */}
+      {pageToDelete && (
+        <DeletePageDialog
+          page={pageToDelete}
+          open={true}
+          onOpenChange={open => {
+            if (!open) setPageToDelete(null);
+          }}
+          showTrigger={false}
+          onPageDeleted={onPageDeleted}
+        />
+      )}
     </header>
   );
 };

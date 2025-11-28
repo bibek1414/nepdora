@@ -10,16 +10,11 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface SubCategoryCard2Props {
   subcategory: SubCategory;
   siteUser?: string;
-  showDescription?: boolean;
-  showProductCount?: boolean;
-  showParentCategory?: boolean;
   onClick?: () => void;
 }
 export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
   subcategory,
   siteUser,
-  showDescription = true,
-  showParentCategory = true,
   onClick,
 }) => {
   // Theme
@@ -110,19 +105,6 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
 
-          {/* Parent Category Badge */}
-          {showParentCategory && (
-            <div className="absolute top-3 left-3">
-              <Badge
-                className="bg-white/90 text-xs text-black"
-                style={{ fontFamily: theme.fonts.body }}
-              >
-                <Tag className="mr-1 h-3 w-3" />
-                {categoryName}
-              </Badge>
-            </div>
-          )}
-
           {/* Gradient Overlay */}
           <div
             className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-80"
@@ -160,7 +142,7 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
             />
           </div>
 
-          {showDescription && subcategory.description && (
+          {subcategory.description && (
             <p className="mb-4 line-clamp-2 text-sm">
               {subcategory.description}
             </p>

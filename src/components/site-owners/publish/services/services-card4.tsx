@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/site-owners/button";
 interface ServicesPost4Props {
   services: ServicesPost;
   siteUser?: string;
-  showDate?: boolean;
+
   onClick?: () => void;
   index?: number;
 }
@@ -15,7 +15,6 @@ interface ServicesPost4Props {
 export const ServicesCard4: React.FC<ServicesPost4Props> = ({
   services,
   siteUser,
-  showDate = true,
   onClick,
   index = 0,
 }) => {

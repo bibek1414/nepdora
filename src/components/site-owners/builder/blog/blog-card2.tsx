@@ -8,10 +8,6 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface BlogCard2Props {
   blog: BlogPost;
   siteUser?: string;
-  showAuthor?: boolean;
-  showDate?: boolean;
-  showTags?: boolean;
-  showReadTime?: boolean;
   onClick?: () => void;
   variant?: "featured" | "standard";
 }
@@ -31,10 +27,6 @@ const getAuthorInitials = (author: {
 export const BlogCard2: React.FC<BlogCard2Props> = ({
   blog,
   siteUser,
-  showAuthor = true,
-  showDate = true,
-  showTags = true,
-  showReadTime = true,
   onClick,
   variant = "standard",
 }) => {
@@ -110,15 +102,13 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
           <div className="absolute right-0 bottom-0 left-0 p-6 text-white">
             {/* Date and Author row */}
             <div className="flex items-center gap-x-4 text-xs">
-              {showDate && (
-                <time dateTime={blog.created_at}>
-                  {formatDate(blog.created_at)}
-                </time>
-              )}
-              {showAuthor && blog.author && (
+              <time dateTime={blog.created_at}>
+                {formatDate(blog.created_at)}
+              </time>
+              {blog.author && (
                 <div className="flex items-center gap-x-2">
                   <div
-                    className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-50 text-[10px] font-bold"
+                    className="bg-gray-5 flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold"
                     style={{
                       backgroundColor: `${theme.colors.primary}20`,
                       color: theme.colors.primaryForeground || "#FFFFFF",

@@ -166,58 +166,52 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
             </div>
 
             {/* Date & Time Row */}
-            {(data.showDate || data.showTime) && (
-              <div className="grid gap-4 md:grid-cols-2">
-                {data.showDate && (
-                  <div>
-                    <Label htmlFor="date" className="text-sm font-medium">
-                      Preferred Date{" "}
-                      {data.required_fields.date && (
-                        <span className="text-red-500">*</span>
-                      )}
-                    </Label>
-                    <div className="relative mt-1">
-                      <Calendar className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        id="date"
-                        name="date"
-                        type="date"
-                        value={formData.date}
-                        onChange={handleInputChange}
-                        required={data.required_fields.date}
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {data.showTime && (
-                  <div>
-                    <Label htmlFor="time" className="text-sm font-medium">
-                      Preferred Time{" "}
-                      {data.required_fields.time && (
-                        <span className="text-red-500">*</span>
-                      )}
-                    </Label>
-                    <div className="relative mt-1">
-                      <Clock className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        id="time"
-                        name="time"
-                        type="time"
-                        value={formData.time}
-                        onChange={handleInputChange}
-                        required={data.required_fields.time}
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-                )}
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <Label htmlFor="date" className="text-sm font-medium">
+                  Preferred Date{" "}
+                  {data.required_fields.date && (
+                    <span className="text-red-500">*</span>
+                  )}
+                </Label>
+                <div className="relative mt-1">
+                  <Calendar className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="date"
+                    name="date"
+                    type="date"
+                    value={formData.date}
+                    onChange={handleInputChange}
+                    required={data.required_fields.date}
+                    className="pl-10"
+                  />
+                </div>
               </div>
-            )}
+
+              <div>
+                <Label htmlFor="time" className="text-sm font-medium">
+                  Preferred Time{" "}
+                  {data.required_fields.time && (
+                    <span className="text-red-500">*</span>
+                  )}
+                </Label>
+                <div className="relative mt-1">
+                  <Clock className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="time"
+                    name="time"
+                    type="time"
+                    value={formData.time}
+                    onChange={handleInputChange}
+                    required={data.required_fields.time}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* Reason */}
-            {data.showReason && reasonsData && reasonsData.length > 0 && (
+            {reasonsData && reasonsData.length > 0 && (
               <div>
                 <Label htmlFor="reason" className="text-sm font-medium">
                   Reason for Appointment{" "}

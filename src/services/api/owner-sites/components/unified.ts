@@ -80,7 +80,6 @@ export const componentsApi = {
     }
   },
 
-  // OPTIMIZED: Create component with better order management
   createComponent: async <T extends keyof ComponentTypeMap>(
     pageSlug: string,
     payload: CreateComponentRequest<T>,
@@ -90,7 +89,6 @@ export const componentsApi = {
     try {
       let order = payload.order;
 
-      // Calculate order based on insertIndex
       if (order === undefined) {
         if (insertIndex !== undefined) {
           order = insertIndex;
@@ -104,7 +102,7 @@ export const componentsApi = {
         }
       }
 
-      // FIXED: If inserting at a specific index, update existing components FIRST
+      // OPTIMIZED: Batch order updates in a single request
       if (
         insertIndex !== undefined &&
         existingComponents &&
@@ -115,22 +113,20 @@ export const componentsApi = {
         );
 
         if (componentsToUpdate.length > 0) {
-          // Update orders in parallel
-          await Promise.all(
-            componentsToUpdate.map(comp =>
-              fetch(
-                `${API_BASE_URL}/api/pages/${pageSlug}/components/${comp.component_id}/`,
-                {
-                  method: "PATCH",
-                  headers: createHeaders(),
-                  body: JSON.stringify({ order: (comp.order ?? 0) + 1 }),
-                }
-              ).then(handleApiError)
-            )
+          // Use your existing bulk update endpoint
+          const orderUpdates = componentsToUpdate.map(comp => ({
+            componentId: comp.component_id,
+            order: (comp.order ?? 0) + 1,
+          }));
+
+          await componentOrdersApi.updateComponentOrders(
+            pageSlug,
+            orderUpdates
           );
         }
       }
 
+      // Create the new component
       const componentPayload = {
         component_id:
           payload.component_id || `${payload.component_type}-${Date.now()}`,
@@ -139,7 +135,6 @@ export const componentsApi = {
         order,
       };
 
-      // Now create the new component at the correct position
       const response = await fetch(
         `${API_BASE_URL}/api/pages/${pageSlug}/components/`,
         {
@@ -166,7 +161,6 @@ export const componentsApi = {
       );
     }
   },
-
   // Update an existing component
   updateComponent: async <T extends keyof ComponentTypeMap>(
     pageSlug: string,
@@ -264,19 +258,36 @@ export const componentOrdersApi = {
     orderUpdates: OrderUpdate[]
   ): Promise<void> => {
     try {
-      // Process all updates in parallel instead of sequentially
-      await Promise.all(
-        orderUpdates.map(({ componentId, order }) =>
-          fetch(
-            `${API_BASE_URL}/api/pages/${pageSlug}/components/${componentId}/`,
-            {
-              method: "PATCH",
-              headers: createHeaders(),
-              body: JSON.stringify({ order }),
-            }
-          ).then(handleApiError)
+      // Limit concurrency to prevent overwhelming the server/browser
+      const CONCURRENCY_LIMIT = 3;
+      const results: Promise<void>[] = [];
+      const executing: Promise<void>[] = [];
+
+      for (const update of orderUpdates) {
+        const p = fetch(
+          `${API_BASE_URL}/api/pages/${pageSlug}/components/${update.componentId}/`,
+          {
+            method: "PATCH",
+            headers: createHeaders(),
+            body: JSON.stringify({ order: update.order }),
+          }
         )
-      );
+          .then(handleApiError)
+          .then(() => {});
+
+        results.push(p);
+
+        const e: Promise<void> = p.then(() => {
+          executing.splice(executing.indexOf(e), 1);
+        });
+        executing.push(e);
+
+        if (executing.length >= CONCURRENCY_LIMIT) {
+          await Promise.race(executing);
+        }
+      }
+
+      await Promise.all(results);
     } catch (error) {
       throw new Error(
         `Failed to update component orders: ${error instanceof Error ? error.message : "Unknown error"}`

@@ -15,21 +15,21 @@ import {
 import {
   AboutUsComponentData,
   AboutUsData,
-  AboutUs1Data,
-  AboutUs2Data,
-  AboutUs3Data,
-  AboutUs4Data,
-  AboutUs5Data,
-  AboutUs6Data,
-  AboutUs7Data,
-  AboutUs8Data,
-  AboutUs9Data,
-  AboutUs10Data,
-  AboutUs11Data,
-  AboutUs12Data,
-  AboutUs13Data,
-  AboutUs14Data,
   UpdateAboutUsRequest,
+  isAboutUsTemplate1,
+  isAboutUsTemplate2,
+  isAboutUsTemplate3,
+  isAboutUsTemplate4,
+  isAboutUsTemplate5,
+  isAboutUsTemplate6,
+  isAboutUsTemplate7,
+  isAboutUsTemplate8,
+  isAboutUsTemplate9,
+  isAboutUsTemplate10,
+  isAboutUsTemplate11,
+  isAboutUsTemplate12,
+  isAboutUsTemplate13,
+  isAboutUsTemplate14,
 } from "@/types/owner-site/components/about";
 import { AboutUsTemplate1 } from "./about-style-1";
 import { AboutUsTemplate2 } from "./about-style-2";
@@ -102,129 +102,70 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
       );
     }
 
-    switch (component.data.template) {
-      case "about-1":
-        return (
-          <AboutUsTemplate1
-            aboutUsData={component.data as AboutUs1Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
+    const commonProps = {
+      isEditable,
+      onUpdate: handleUpdate,
+    };
 
-      case "about-2":
-        return (
-          <AboutUsTemplate2
-            aboutUsData={component.data as AboutUs2Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-
-      case "about-3":
-        return (
-          <AboutUsTemplate3
-            aboutUsData={component.data as AboutUs3Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "about-4":
-        return (
-          <AboutUsTemplate4
-            aboutUsData={component.data as AboutUs4Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "about-5":
-        return (
-          <AboutUsTemplate5
-            aboutUsData={component.data as AboutUs5Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "about-6":
-        return (
-          <AboutUsTemplate6
-            aboutUsData={component.data as AboutUs6Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "about-7":
-        return (
-          <AboutUsTemplate7
-            aboutUsData={component.data as AboutUs7Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "about-8":
-        return (
-          <AboutUsTemplate8
-            aboutUsData={component.data as AboutUs8Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "about-9":
-        return (
-          <AboutUsTemplate9
-            aboutUsData={component.data as AboutUs9Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "about-10":
-        return (
-          <AboutUsTemplate10
-            aboutUsData={component.data as AboutUs10Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "about-11":
-        return (
-          <AboutUsTemplate11
-            aboutUsData={component.data as AboutUs11Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "about-12":
-        return (
-          <AboutUsTemplate12
-            aboutUsData={component.data as AboutUs12Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "about-13":
-        return (
-          <AboutUsTemplate13
-            aboutUsData={component.data as AboutUs13Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "about-14":
-        return (
-          <AboutUsTemplate14
-            aboutUsData={component.data as AboutUs14Data}
-            isEditable={isEditable}
-            onUpdate={handleUpdate}
-          />
-        );
-      default:
-        const exhaustiveCheck: never = component.data;
-        return (
-          <div className="p-8 text-center">
-            Unknown template: {exhaustiveCheck}
-          </div>
-        );
+    if (isAboutUsTemplate1(component.data)) {
+      return <AboutUsTemplate1 aboutUsData={component.data} {...commonProps} />;
     }
+    if (isAboutUsTemplate2(component.data)) {
+      return <AboutUsTemplate2 aboutUsData={component.data} {...commonProps} />;
+    }
+    if (isAboutUsTemplate3(component.data)) {
+      return <AboutUsTemplate3 aboutUsData={component.data} {...commonProps} />;
+    }
+    if (isAboutUsTemplate4(component.data)) {
+      return <AboutUsTemplate4 aboutUsData={component.data} {...commonProps} />;
+    }
+    if (isAboutUsTemplate5(component.data)) {
+      return <AboutUsTemplate5 aboutUsData={component.data} {...commonProps} />;
+    }
+    if (isAboutUsTemplate6(component.data)) {
+      return <AboutUsTemplate6 aboutUsData={component.data} {...commonProps} />;
+    }
+    if (isAboutUsTemplate7(component.data)) {
+      return <AboutUsTemplate7 aboutUsData={component.data} {...commonProps} />;
+    }
+    if (isAboutUsTemplate8(component.data)) {
+      return <AboutUsTemplate8 aboutUsData={component.data} {...commonProps} />;
+    }
+    if (isAboutUsTemplate9(component.data)) {
+      return <AboutUsTemplate9 aboutUsData={component.data} {...commonProps} />;
+    }
+    if (isAboutUsTemplate10(component.data)) {
+      return (
+        <AboutUsTemplate10 aboutUsData={component.data} {...commonProps} />
+      );
+    }
+    if (isAboutUsTemplate11(component.data)) {
+      return (
+        <AboutUsTemplate11 aboutUsData={component.data} {...commonProps} />
+      );
+    }
+    if (isAboutUsTemplate12(component.data)) {
+      return (
+        <AboutUsTemplate12 aboutUsData={component.data} {...commonProps} />
+      );
+    }
+    if (isAboutUsTemplate13(component.data)) {
+      return (
+        <AboutUsTemplate13 aboutUsData={component.data} {...commonProps} />
+      );
+    }
+    if (isAboutUsTemplate14(component.data)) {
+      return (
+        <AboutUsTemplate14 aboutUsData={component.data} {...commonProps} />
+      );
+    }
+
+    return (
+      <div className="p-8 text-center">
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        Unknown template: {(component.data as any).template}
+      </div>
+    );
   };
 
   return (

@@ -64,6 +64,8 @@ import { PolicyComponent } from "@/components/site-owners/builder/policies/polic
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 import { TextEditorComponent } from "@/components/site-owners/builder/text-editor/text-editor-component";
+import { PricingComponent } from "@/components/site-owners/builder/pricing/pricing-component";
+import { PricingComponentData } from "@/types/owner-site/components/pricing";
 
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
@@ -75,25 +77,6 @@ interface CanvasAreaProps {
   pageComponents: ComponentResponse[];
   isLoading: boolean;
   error: Error | null;
-  onAddHero?: (insertIndex?: number) => void;
-  onAddCTA?: (insertIndex?: number) => void;
-  onAddAboutUs?: (insertIndex?: number) => void;
-  onAddProducts?: (insertIndex?: number) => void;
-  onAddCategories?: (insertIndex?: number) => void;
-  onAddSubCategories?: (insertIndex?: number) => void;
-  onAddBlog?: (insertIndex?: number) => void;
-  onAddServices?: (insertIndex?: number) => void;
-  onAddContact?: (insertIndex?: number) => void;
-  onAddAppointment?: (insertIndex?: number) => void;
-  onAddTeam?: (insertIndex?: number) => void;
-  onAddTestimonials?: (insertIndex?: number) => void;
-  onAddFAQ?: (insertIndex?: number) => void;
-  onAddPortfolio?: (insertIndex?: number) => void;
-  onAddBanner?: (insertIndex?: number) => void;
-  onAddNewsletter?: (insertIndex?: number) => void;
-  onAddYouTube?: (insertIndex?: number) => void;
-  onAddGallery?: (insertIndex?: number) => void;
-  onAddPolicies?: (insertIndex?: number) => void;
 
   onAddSection: (position?: "above" | "below", index?: number) => void;
 }
@@ -374,12 +357,22 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           />
         );
         break;
-      case "text_editor":
         componentElement = (
           <TextEditorComponent
             key={`text_editor-${component.id}`}
             component={component as TextEditorComponentData}
             siteUser=""
+            {...commonProps}
+          />
+        );
+        break;
+      case "pricing":
+        componentElement = (
+          <PricingComponent
+            key={`pricing-${component.id}`}
+            component={component as PricingComponentData}
+            onUpdate={() => {}}
+            onPricingClick={() => {}}
             {...commonProps}
           />
         );
@@ -476,36 +469,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             onMouseEnter={() => setHoveredComponentIndex(index)}
             onMouseLeave={() => setHoveredComponentIndex(null)}
           >
-            {/* Add Section Above Button - Show when not first and hovered */}
-            {!isFirst && isHovered && (
-              <div className="absolute -top-6 left-1/2 z-30 -translate-x-1/2 transform">
-                <Button
-                  onClick={() => handleAddSection("above", index)}
-                  variant="outline"
-                  size="sm"
-                  className="gap-1 border border-dashed border-blue-300 bg-white text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
-                >
-                  <Plus className="h-3 w-3" />
-                  Add Section Above
-                </Button>
-              </div>
-            )}
-
-            {/* Add Section Below Button - Show when hovered and either not last OR no footer */}
-            {isHovered && (!isLastComponent || !footer) && (
-              <div className="absolute -bottom-6 left-1/2 z-30 -translate-x-1/2 transform">
-                <Button
-                  onClick={() => handleAddSection("below", index)}
-                  variant="outline"
-                  size="sm"
-                  className="gap-1 border border-dashed border-blue-300 bg-white text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
-                >
-                  <Plus className="h-3 w-3" />
-                  Add Section Below
-                </Button>
-              </div>
-            )}
-
             {/* Control buttons container */}
             <div className="absolute top-2 -left-12 z-20 flex flex-col gap-1">
               {/* Arrow controls */}
@@ -578,6 +541,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const hasNewsletter = pageComponents.some(
     c => c.component_type === "newsletter"
   );
+  const hasPricing = pageComponents.some(c => c.component_type === "pricing");
 
   return (
     <div className="rounded-lg border-2 border-dashed bg-white transition-colors">

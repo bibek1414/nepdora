@@ -28,6 +28,8 @@ import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 import { CTAComponentData } from "@/types/owner-site/components/cta";
+import { PricingComponentData } from "@/types/owner-site/components/pricing";
+
 interface PageComponent {
   id: string | number;
   component_id: string;
@@ -51,7 +53,9 @@ interface PageComponent {
     | "youtube"
     | "policies"
     | "text_editor"
-    | "subcategory";
+    | "subcategory"
+    | "pricing";
+
   data:
     | HeroComponentData["data"]
     | AboutUsComponentData["data"]
@@ -72,7 +76,9 @@ interface PageComponent {
     | BannerComponentData["data"]
     | YouTubeComponentData["data"]
     | SubCategoryComponentData["data"]
-    | PolicyComponentData["data"];
+    | PolicyComponentData["data"]
+    | PricingComponentData["data"];
+
   order: number;
 }
 
@@ -122,6 +128,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
           "banner",
           "gallery",
           "policies",
+          "pricing",
         ].includes(component.component_type) &&
         !!component.data
     );
@@ -179,6 +186,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
       | TextEditorComponentData
       | PolicyComponentData
       | GalleryComponentData
+      | PricingComponentData
   ) => {
     console.log("Component update in preview (not applied):", {
       componentId,

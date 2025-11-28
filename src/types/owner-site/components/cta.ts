@@ -81,46 +81,6 @@ export interface CTAComponentData {
   page?: number;
 }
 
-export interface ApiCTAComponentResponse {
-  id: number;
-  component_id: string;
-  component_type: "cta";
-  data: CTAData;
-  order: number;
-  page: number;
-}
-
-export interface CreateCTARequest {
-  component_id?: string;
-  component_type: "cta";
-  data: CTAData;
-  order?: number;
-}
-
-export interface UpdateCTARequest {
-  component_id?: string;
-  component_type?: "cta";
-  data: Partial<CTAData>;
-  order?: number;
-}
-
-export interface CreateCTAResponse {
-  success: boolean;
-  message: string;
-  data: CTAComponentData;
-}
-
-export interface UpdateCTAResponse {
-  success: boolean;
-  message: string;
-  data: CTAComponentData;
-}
-
-export interface DeleteCTAResponse {
-  success: boolean;
-  message: string;
-}
-
 // Default data for each template
 export const defaultCTATemplate1Data: CTATemplate1Data = {
   template: "cta-1",

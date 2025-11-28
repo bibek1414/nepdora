@@ -29,7 +29,6 @@ export default function Collections({ params }: CollectionsProps) {
       siteUser={siteUser}
       title="Our Collections"
       subtitle="Discover our carefully curated selection of premium products"
-      pageSize={12}
     />
   );
 }

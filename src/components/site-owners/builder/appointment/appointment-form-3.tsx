@@ -193,60 +193,54 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
             </div>
 
             {/* Date & Time Row */}
-            {(data.showDate || data.showTime) && (
-              <div className="grid gap-6 md:grid-cols-2">
-                {data.showDate && (
-                  <div className="group">
-                    <Label
-                      htmlFor="date"
-                      className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
-                    >
-                      <Calendar className="h-4 w-4 text-purple-500" />
-                      Preferred Date{" "}
-                      {data.required_fields.date && (
-                        <span className="text-red-500">*</span>
-                      )}
-                    </Label>
-                    <Input
-                      id="date"
-                      name="date"
-                      type="date"
-                      value={formData.date}
-                      onChange={handleInputChange}
-                      required={data.required_fields.date}
-                      className="border-gray-200 transition-all focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
-                    />
-                  </div>
-                )}
-
-                {data.showTime && (
-                  <div className="group">
-                    <Label
-                      htmlFor="time"
-                      className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
-                    >
-                      <Clock className="h-4 w-4 text-purple-500" />
-                      Preferred Time{" "}
-                      {data.required_fields.time && (
-                        <span className="text-red-500">*</span>
-                      )}
-                    </Label>
-                    <Input
-                      id="time"
-                      name="time"
-                      type="time"
-                      value={formData.time}
-                      onChange={handleInputChange}
-                      required={data.required_fields.time}
-                      className="border-gray-200 transition-all focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
-                    />
-                  </div>
-                )}
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="group">
+                <Label
+                  htmlFor="date"
+                  className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
+                >
+                  <Calendar className="h-4 w-4 text-purple-500" />
+                  Preferred Date{" "}
+                  {data.required_fields.date && (
+                    <span className="text-red-500">*</span>
+                  )}
+                </Label>
+                <Input
+                  id="date"
+                  name="date"
+                  type="date"
+                  value={formData.date}
+                  onChange={handleInputChange}
+                  required={data.required_fields.date}
+                  className="border-gray-200 transition-all focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+                />
               </div>
-            )}
+
+              <div className="group">
+                <Label
+                  htmlFor="time"
+                  className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
+                >
+                  <Clock className="h-4 w-4 text-purple-500" />
+                  Preferred Time{" "}
+                  {data.required_fields.time && (
+                    <span className="text-red-500">*</span>
+                  )}
+                </Label>
+                <Input
+                  id="time"
+                  name="time"
+                  type="time"
+                  value={formData.time}
+                  onChange={handleInputChange}
+                  required={data.required_fields.time}
+                  className="border-gray-200 transition-all focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+                />
+              </div>
+            </div>
 
             {/* Reason */}
-            {data.showReason && reasonsData && reasonsData.length > 0 && (
+            {reasonsData && reasonsData.length > 0 && (
               <div className="group">
                 <Label
                   htmlFor="reason"

@@ -22,6 +22,7 @@ import {
   LayoutPanelTop,
   Settings,
   Calendar,
+  IndianRupee,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -110,6 +111,15 @@ const navigationGroups = [
         name: "Appointment",
         href: "/admin/appointments",
         icon: Calendar,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        name: "Pricing",
+        href: "/admin/pricing",
+        icon: IndianRupee,
       },
     ],
   },

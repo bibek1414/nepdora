@@ -28,6 +28,7 @@ import {
   Navigation,
   Square,
   Calendar,
+  DollarSign,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NavbarData } from "@/types/owner-site/components/navbar";
@@ -666,6 +667,23 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         description: "Clean policy layout with sidebar navigation",
       },
     ],
+    pricing: [
+      {
+        id: "pricing-1",
+        name: "Pricing Style 1",
+        image: "/images/site-owners/pricing/pricing1.png",
+      },
+      {
+        id: "pricing-2",
+        name: "Pricing Style 2",
+        image: "/images/site-owners/pricing/pricing2.png",
+      },
+      {
+        id: "pricing-3",
+        name: "Pricing Style 3",
+        image: "/images/site-owners/pricing/pricing3.png",
+      },
+    ],
     text_editor: [
       {
         id: "text-editor-1",
@@ -796,7 +814,9 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       "policies-1",
       "text-editor-1",
       "navbar-1",
+      "navbar-1",
       "footer-1",
+      "pricing-1",
     ];
 
     // Add website-type specific templates
@@ -960,6 +980,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       type: "section",
     },
     {
+      id: "pricing-sections",
+      label: "Pricing",
+      icon: DollarSign,
+      keywords: ["pricing", "plans", "cost", "subscription"],
+      hasTemplates: true,
+      templates: templates.pricing,
+      popular: true,
+      type: "section",
+    },
+    {
       id: "products-sections",
       label: "Products",
       icon: Package,
@@ -1070,37 +1100,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     const component = components.find(comp => comp.id === componentId);
 
     if (component?.type === "navbar" && onNavbarSelect) {
-      // Handle navbar selection
       const navbarData = getNavbarData(templateId);
       onNavbarSelect(navbarData);
     } else if (component?.type === "footer" && onFooterSelect) {
-      // Handle footer selection
       const footerStyle = getFooterStyle(templateId);
       onFooterSelect(footerStyle);
     } else {
-      // Handle regular section components
       onComponentClick(componentId, templateId);
     }
 
-    handleClose();
-  };
-
-  const handleComponentSelect = (component: ComponentItem) => {
-    if (component.type === "navbar" && onNavbarSelect) {
-      const navbarData = getNavbarData(
-        component.templates?.[0]?.id || "navbar-1"
-      );
-      onNavbarSelect(navbarData);
-    } else if (component.type === "footer" && onFooterSelect) {
-      const footerStyle = getFooterStyle(
-        component.templates?.[0]?.id || "footer-1"
-      );
-      onFooterSelect(footerStyle);
-    } else if (component.hasTemplates && component.templates) {
-      onComponentClick(component.id, component.templates[0].id);
-    } else {
-      onComponentClick(component.id);
-    }
     handleClose();
   };
 

@@ -49,14 +49,9 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
-    page_size = 8,
     title = "Our SubCategories",
     subtitle,
     style = "grid-1",
-    showDescription = true,
-    showProductCount = true,
-    showParentCategory = true,
-    itemsPerRow = 4,
   } = component.data || {};
 
   // Use unified mutation hooks
@@ -163,9 +158,6 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
     const cardProps = {
       subcategory,
       siteUser: isEditable ? undefined : siteUser,
-      showDescription,
-      showProductCount,
-      showParentCategory,
       onClick: () => handleSubCategoryClick(subcategory),
     };
 
@@ -185,14 +177,14 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
   const getGridClass = () => {
     switch (style) {
       case "subcategory-2":
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 3)}`;
+        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`;
       case "subcategory-3":
         return "grid-cols-1 lg:grid-cols-2 gap-8";
       case "subcategory-1":
         return "flex overflow-x-auto gap-6 pb-4";
       case "grid-1":
       default:
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 4)}`;
+        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`;
     }
   };
 
@@ -280,18 +272,16 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
 
             {isLoading && (
               <div className={`grid ${getGridClass()} gap-6`}>
-                {Array.from({ length: Math.min(page_size, 8) }).map(
-                  (_, index) => (
-                    <div key={index} className="flex flex-col space-y-3">
-                      <Skeleton className="h-[250px] w-full rounded-xl" />
-                      <div className="space-y-2">
-                        <Skeleton className="h-5 w-3/4" />
-                        <Skeleton className="h-4 w-1/2" />
-                        <Skeleton className="h-6 w-1/3" />
-                      </div>
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <div key={index} className="flex flex-col space-y-3">
+                    <Skeleton className="h-[250px] w-full rounded-xl" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-5 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                      <Skeleton className="h-6 w-1/3" />
                     </div>
-                  )
-                )}
+                  </div>
+                ))}
               </div>
             )}
 
@@ -375,7 +365,7 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
           <div
             className={`${style === "subcategory-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
           >
-            {Array.from({ length: page_size }).map((_, index) => (
+            {Array.from({ length: 8 }).map((_, index) => (
               <div key={index} className="flex flex-col space-y-4">
                 <Skeleton className="h-[280px] w-full rounded-lg" />
                 <div className="space-y-3">

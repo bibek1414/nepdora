@@ -19,9 +19,6 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface ProductCard1Props {
   product: Product;
   siteUser?: string;
-  showPrice?: boolean;
-  showDescription?: boolean;
-  showStock?: boolean;
   onClick?: () => void;
   onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
 }
@@ -29,9 +26,6 @@ interface ProductCard1Props {
 export const ProductCard1: React.FC<ProductCard1Props> = ({
   product,
   siteUser,
-  showPrice = true,
-  showDescription = true,
-  showStock = true,
   onClick,
   onWishlistToggle,
 }) => {
@@ -272,34 +266,32 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
             )}
 
             {/* Description */}
-            {showDescription && product.description && (
+            {product.description && (
               <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
                 {product.description}
               </p>
             )}
 
             {/* Price */}
-            {showPrice && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="text-2xl font-bold"
-                    style={{
-                      color: theme.colors.primary,
-                      fontFamily: theme.fonts.heading,
-                    }}
-                  >
-                    Rs.{Number(discountedPrice).toLocaleString("en-IN")}
-                  </span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span
+                  className="text-2xl font-bold"
+                  style={{
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.heading,
+                  }}
+                >
+                  Rs.{Number(discountedPrice).toLocaleString("en-IN")}
+                </span>
 
-                  {marketPrice && discountPercentage > 0 && (
-                    <span className="text-xl text-gray-400 line-through">
-                      Rs.{Number(marketPrice).toLocaleString("en-IN")}
-                    </span>
-                  )}
-                </div>
+                {marketPrice && discountPercentage > 0 && (
+                  <span className="text-xl text-gray-400 line-through">
+                    Rs.{Number(marketPrice).toLocaleString("en-IN")}
+                  </span>
+                )}
               </div>
-            )}
+            </div>
 
             {/* Action Button */}
             <Button

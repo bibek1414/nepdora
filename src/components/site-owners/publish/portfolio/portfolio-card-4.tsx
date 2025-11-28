@@ -8,8 +8,6 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface PortfolioCard4Props {
   portfolio: Portfolio;
   siteUser?: string;
-  showTechnologies?: boolean;
-  showCategories?: boolean;
   onClick?: () => void;
   index?: number;
 }
@@ -17,8 +15,6 @@ interface PortfolioCard4Props {
 export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
   portfolio,
   siteUser,
-  showTechnologies = true,
-  showCategories = true,
   onClick,
   index = 0,
 }) => {
@@ -106,7 +102,7 @@ export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
             </div>
 
             {/* Technologies */}
-            {showTechnologies && portfolio.tags?.length > 0 && (
+            {portfolio.tags?.length > 0 && (
               <div className="mb-6">
                 <p
                   className="text-sm font-medium text-blue-400 md:text-base"
@@ -165,7 +161,7 @@ export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
               <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
               {/* Category Badge on Image */}
-              {showCategories && portfolio.category?.name && (
+              {portfolio.category?.name && (
                 <div className="absolute top-4 left-4">
                   <span
                     className="rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold tracking-wider text-white uppercase"

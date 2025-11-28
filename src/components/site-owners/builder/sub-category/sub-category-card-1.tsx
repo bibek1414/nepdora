@@ -11,9 +11,6 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface SubCategoryCard1Props {
   subcategory: SubCategory;
   siteUser?: string;
-  showDescription?: boolean;
-  showProductCount?: boolean;
-  showParentCategory?: boolean;
   onClick?: () => void;
 }
 
@@ -21,8 +18,6 @@ interface SubCategoryCard1Props {
 export const SubCategoryCard1: React.FC<SubCategoryCard1Props> = ({
   subcategory,
   siteUser,
-  showDescription = true,
-  showParentCategory = true,
   onClick,
 }) => {
   const subcategoryImage =
@@ -67,19 +62,6 @@ export const SubCategoryCard1: React.FC<SubCategoryCard1Props> = ({
   return (
     <CardWrapper>
       <div className="bg-background-light dark:bg-background-dark flex flex-col rounded-xl p-4 shadow-sm transition-shadow duration-300 hover:shadow-md sm:p-5 md:p-6">
-        {/* Parent Category Badge */}
-        {showParentCategory && (
-          <div className="mb-3 flex justify-center">
-            <Badge
-              variant="outline"
-              className="text-[10px] font-medium sm:text-xs"
-            >
-              <Tag className="mr-1 h-3 w-3" />
-              {categoryName}
-            </Badge>
-          </div>
-        )}
-
         <div className="bg-card-light dark:bg-card-dark mb-5 flex h-48 items-center justify-center rounded-lg p-4 transition-transform duration-300 hover:scale-[1.03] sm:h-56 sm:p-5 md:h-64 md:p-6">
           <Image
             src={subcategoryImage}
@@ -95,7 +77,7 @@ export const SubCategoryCard1: React.FC<SubCategoryCard1Props> = ({
           {subcategory.name}
         </h3>
 
-        {showDescription && subcategory.description && (
+        {subcategory.description && (
           <p className="text-muted-foreground mb-4 text-center text-sm leading-relaxed sm:text-base">
             {subcategory.description}
           </p>

@@ -172,7 +172,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <div className="flex h-full items-center justify-center">
-                    {data.enableLightbox && !isEditable && (
+                    {!isEditable && (
                       <Button
                         variant="ghost"
                         size="icon"
@@ -214,10 +214,10 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
               </div>
 
               {/* Image Info */}
-              {data.showTitles && image.title && (
+              {image.title && (
                 <div className="p-3">
                   <h3 className="font-semibold text-gray-900">{image.title}</h3>
-                  {data.showDescriptions && image.description && (
+                  {image.description && (
                     <p className="mt-1 text-sm text-gray-600">
                       {image.description}
                     </p>
@@ -250,7 +250,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
       </div>
 
       {/* Lightbox */}
-      {data.enableLightbox && selectedImage && (
+      {selectedImage && (
         <Dialog
           open={!!selectedImage}
           onOpenChange={() => setSelectedImage(null)}

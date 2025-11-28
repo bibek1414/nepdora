@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
@@ -69,15 +70,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const {
-    page_size = 8,
     title = "Our Products",
     subtitle,
     style = "grid-1",
-    showPrice = true,
-    showDescription = true,
-    showStock = true,
-    itemsPerRow = 4,
-    selectionType = "all",
     categoryId,
     subCategoryId,
   } = component.data || {};
@@ -91,13 +86,10 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   // Calculate base filters from component configuration
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const baseFilters: any = {};
-  if (selectionType === "featured") {
-    baseFilters.is_featured = true;
-  } else if (selectionType === "popular") {
-    baseFilters.is_popular = true;
-  } else if (selectionType === "category" && categoryId) {
+  if (categoryId) {
     baseFilters.category_id = categoryId;
-  } else if (selectionType === "subcategory" && subCategoryId) {
+  }
+  if (subCategoryId) {
     baseFilters.sub_category_id = subCategoryId;
   }
 
@@ -114,7 +106,6 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   // Get products with pagination and conditionally apply filters
   const { data, isLoading, error } = useProducts({
     page: currentPage,
-    page_size: page_size,
     ...baseFilters,
     ...(shouldShowSidebar && !isEditable ? currentFilters : {}),
   });
@@ -233,9 +224,6 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     const cardProps = {
       product,
       siteUser: isEditable ? undefined : siteUser,
-      showPrice,
-      showDescription,
-      showStock,
       onClick: () => handleProductClick(product),
     };
 
@@ -263,7 +251,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   const getGridClass = () => {
     switch (style) {
       case "product-2":
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 3)}`;
+        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`;
       case "product-3":
         return "grid-cols-1 lg:grid-cols-2 gap-8";
       case "product-7":
@@ -272,10 +260,10 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
       case "product-6":
         return "";
       case "product-4":
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 4)}`;
+        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`;
       case "grid-1":
       default:
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 4)}`;
+        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`;
     }
   };
 
@@ -291,15 +279,6 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
               onOpenChange={setIsDeleteDialogOpen}
             >
               <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsFilterDialogOpen(true)}
-                  className="z-30"
-                >
-                  <Filter className="mr-2 h-4 w-4" />
-                  Filter
-                </Button>
                 <Link
                   href="/admin/products"
                   target="_blank"
@@ -353,18 +332,6 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
             </AlertDialog>
           </div>
         </div>
-
-        <ProductsFilterDialog
-          open={isFilterDialogOpen}
-          onOpenChange={setIsFilterDialogOpen}
-          currentSelection={{
-            selectionType,
-            categoryId,
-            subCategoryId,
-            page_size,
-          }}
-          onSave={handleFilterUpdate}
-        />
 
         {/* Products Preview with Conditional Sidebar Layout */}
         <div className="py-8">
@@ -439,18 +406,16 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                         : `grid ${getGridClass()} gap-6`
                     }
                   >
-                    {Array.from({ length: Math.min(page_size, 8) }).map(
-                      (_, index) => (
-                        <div key={index} className="flex flex-col space-y-3">
-                          <Skeleton className="h-[250px] w-full rounded-xl" />
-                          <div className="space-y-2">
-                            <Skeleton className="h-5 w-3/4" />
-                            <Skeleton className="h-4 w-1/2" />
-                            <Skeleton className="h-6 w-1/3" />
-                          </div>
+                    {Array.from({ length: 8 }).map((_, index) => (
+                      <div key={index} className="flex flex-col space-y-3">
+                        <Skeleton className="h-[250px] w-full rounded-xl" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-5 w-3/4" />
+                          <Skeleton className="h-4 w-1/2" />
+                          <Skeleton className="h-6 w-1/3" />
                         </div>
-                      )
-                    )}
+                      </div>
+                    ))}
                   </div>
                 )}
 
@@ -622,7 +587,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                     : `grid ${getGridClass()} gap-8`
                 }
               >
-                {Array.from({ length: page_size }).map((_, index) => (
+                {Array.from({ length: 8 }).map((_, index) => (
                   <div key={index} className="flex flex-col space-y-4">
                     <Skeleton className="h-[280px] w-full rounded-lg" />
                     <div className="space-y-3">

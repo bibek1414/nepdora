@@ -8,16 +8,12 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface PortfolioCard2Props {
   portfolio: Portfolio;
   siteUser?: string;
-  showTechnologies?: boolean;
-  showCategories?: boolean;
   onClick?: () => void;
 }
 
 export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
   portfolio,
   siteUser,
-  showTechnologies = true,
-  showCategories = true,
   onClick,
 }) => {
   // ✅ Fallback image
@@ -68,7 +64,7 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
     <Wrapper>
       <div className="group relative flex flex-col overflow-hidden rounded-2xl bg-white transition duration-300 dark:bg-gray-900">
         {/* Category */}
-        {showCategories && portfolio.category?.name && (
+        {portfolio.category?.name && (
           <p
             className="p-2 text-xs font-semibold tracking-wide uppercase"
             style={{ color: theme.colors.primary }}
@@ -125,7 +121,7 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
           </h3>
 
           {/* Tags */}
-          {showTechnologies && portfolio.tags?.length > 0 && (
+          {portfolio.tags?.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
               {portfolio.tags.map(tag => (
                 <span

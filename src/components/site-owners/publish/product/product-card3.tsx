@@ -19,9 +19,6 @@ import { Button as SOButton } from "@/components/ui/site-owners/button";
 interface ProductCard3Props {
   product: Product;
   siteUser?: string;
-  showPrice?: boolean;
-  showDescription?: boolean;
-  showStock?: boolean;
   onClick?: () => void;
   onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
 }
@@ -29,9 +26,6 @@ interface ProductCard3Props {
 export const ProductCard3: React.FC<ProductCard3Props> = ({
   product,
   siteUser,
-  showPrice = true,
-  showDescription = true,
-  showStock = true,
   onClick,
   onWishlistToggle,
 }) => {
@@ -215,7 +209,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                           {product.category.name}
                         </span>
                       )}
-                      {showStock && product.stock > 0 && product.stock <= 3 && (
+                      {product.stock > 0 && product.stock <= 3 && (
                         <div className="flex items-center gap-1 text-orange-600">
                           <Clock className="h-3 w-3" />
                           <span className="text-xs font-medium">
@@ -273,7 +267,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                 )}
 
                 {/* Description */}
-                {showDescription && product.description && (
+                {product.description && (
                   <p className="line-clamp-3 leading-relaxed text-gray-600">
                     {product.description}
                   </p>
@@ -298,31 +292,27 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
               {/* Bottom Section */}
               <div className="mt-6 space-y-4">
                 {/* Price */}
-                {showPrice && (
-                  <div className="flex items-end justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-3">
-                        <span className="text-3xl font-bold">
-                          Rs.{Number(discountedPrice).toLocaleString("en-IN")}
+                <div className="flex items-end justify-between">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl font-bold">
+                        Rs.{Number(discountedPrice).toLocaleString("en-IN")}
+                      </span>
+
+                      {marketPrice && discountPercentage > 0 && (
+                        <span className="text-xl text-gray-400 line-through">
+                          Rs.{Number(marketPrice).toLocaleString("en-IN")}
                         </span>
-
-                        {marketPrice && discountPercentage > 0 && (
-                          <span className="text-xl text-gray-400 line-through">
-                            Rs.{Number(marketPrice).toLocaleString("en-IN")}
-                          </span>
-                        )}
-                      </div>
-
-                      {showStock && (
-                        <p className="text-sm text-gray-500">
-                          {product.stock > 0
-                            ? `${product.stock} available`
-                            : "Out of stock"}
-                        </p>
                       )}
                     </div>
+
+                    <p className="text-sm text-gray-500">
+                      {product.stock > 0
+                        ? `${product.stock} available`
+                        : "Out of stock"}
+                    </p>
                   </div>
-                )}
+                </div>
 
                 {/* Action Buttons */}
                 <div className="flex gap-3">

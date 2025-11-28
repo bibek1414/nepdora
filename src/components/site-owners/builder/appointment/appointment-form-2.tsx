@@ -310,49 +310,45 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
 
               {/* Date & Time */}
               <div className="grid gap-4 md:grid-cols-2">
-                {data.showDate && (
-                  <div>
-                    <Label htmlFor="date" className="text-sm font-medium">
-                      Date{" "}
-                      {data.required_fields.date && (
-                        <span className="text-red-500">*</span>
-                      )}
-                    </Label>
-                    <Input
-                      id="date"
-                      name="date"
-                      type="date"
-                      value={formData.date}
-                      onChange={handleInputChange}
-                      required={data.required_fields.date}
-                      className="mt-1"
-                    />
-                  </div>
-                )}
+                <div>
+                  <Label htmlFor="date" className="text-sm font-medium">
+                    Date{" "}
+                    {data.required_fields.date && (
+                      <span className="text-red-500">*</span>
+                    )}
+                  </Label>
+                  <Input
+                    id="date"
+                    name="date"
+                    type="date"
+                    value={formData.date}
+                    onChange={handleInputChange}
+                    required={data.required_fields.date}
+                    className="mt-1"
+                  />
+                </div>
 
-                {data.showTime && (
-                  <div>
-                    <Label htmlFor="time" className="text-sm font-medium">
-                      Time{" "}
-                      {data.required_fields.time && (
-                        <span className="text-red-500">*</span>
-                      )}
-                    </Label>
-                    <Input
-                      id="time"
-                      name="time"
-                      type="time"
-                      value={formData.time}
-                      onChange={handleInputChange}
-                      required={data.required_fields.time}
-                      className="mt-1"
-                    />
-                  </div>
-                )}
+                <div>
+                  <Label htmlFor="time" className="text-sm font-medium">
+                    Time{" "}
+                    {data.required_fields.time && (
+                      <span className="text-red-500">*</span>
+                    )}
+                  </Label>
+                  <Input
+                    id="time"
+                    name="time"
+                    type="time"
+                    value={formData.time}
+                    onChange={handleInputChange}
+                    required={data.required_fields.time}
+                    className="mt-1"
+                  />
+                </div>
               </div>
 
               {/* Reason */}
-              {data.showReason && reasonsData && reasonsData.length > 0 && (
+              {reasonsData && reasonsData.length > 0 && (
                 <div>
                   <Label htmlFor="reason" className="text-sm font-medium">
                     Reason{" "}

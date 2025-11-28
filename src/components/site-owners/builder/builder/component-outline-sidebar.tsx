@@ -36,6 +36,7 @@ const typeToLabel: Record<string, string> = {
   youtube: "YouTube",
   gallery: "Gallery",
   policies: "Policies",
+  pricing: "Pricing",
   text_editor: "Text Editor",
 };
 

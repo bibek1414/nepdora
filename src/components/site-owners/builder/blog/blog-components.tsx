@@ -50,15 +50,9 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
-    page_size = 6,
     title = "Latest Blog Posts",
     subtitle,
     style = "grid-1",
-    showAuthor = true,
-    showDate = true,
-    showTags = true,
-    showReadTime = true,
-    itemsPerRow = 0,
   } = component.data || {};
 
   // Delete and update mutation hooks
@@ -72,7 +66,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   );
 
   // Calculate page size and get first page for the page_size
-  const pageSize = Math.min(page_size, 50);
+  const pageSize = 6;
 
   const { data, isLoading, error } = useBlogs({
     page: 1,
@@ -195,10 +189,6 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     const cardProps = {
       blog,
       siteUser: isEditable ? undefined : siteUser,
-      showAuthor,
-      showDate,
-      showTags,
-      showReadTime,
       onClick: () => handleBlogClick(blog),
     };
 
@@ -313,7 +303,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
 
             {isLoading && (
               <div className={`grid ${getGridClass()} gap-6`}>
-                {Array.from({ length: Math.min(page_size, 3) }).map(
+                {Array.from({ length: Math.min(pageSize, 3) }).map(
                   (_, index) => (
                     <div key={index} className="flex flex-col space-y-3">
                       <Skeleton className="h-[200px] w-full rounded-xl" />
@@ -341,7 +331,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
 
             {!isLoading && !error && blogs.length > 0 && (
               <div className={`grid ${getGridClass()} gap-6`}>
-                {blogs.slice(0, Math.min(page_size, 6)).map(blog => (
+                {blogs.slice(0, Math.min(pageSize, 6)).map(blog => (
                   <div
                     key={blog.id}
                     className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
@@ -399,7 +389,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
 
         {isLoading && (
           <div className={`grid ${getGridClass()} gap-8`}>
-            {Array.from({ length: page_size }).map((_, index) => (
+            {Array.from({ length: pageSize }).map((_, index) => (
               <div key={index} className="flex flex-col space-y-4">
                 <Skeleton className="h-[280px] w-full rounded-lg" />
                 <div className="space-y-3">
@@ -425,7 +415,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
 
         {!isLoading && !error && blogs.length > 0 && (
           <div className={`grid ${getGridClass()} gap-8`}>
-            {blogs.slice(0, page_size).map(blog => (
+            {blogs.slice(0, pageSize).map(blog => (
               <div key={blog.id} className="flex-shrink-0">
                 {renderBlogCard(blog)}
               </div>
@@ -447,10 +437,10 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
         )}
 
         {/* Pagination info */}
-        {!isLoading && !error && totalBlogs > page_size && (
+        {!isLoading && !error && totalBlogs > pageSize && (
           <div className="bg-muted/30 mt-12 rounded-lg p-4 text-center">
             <p className="text-muted-foreground">
-              Showing {Math.min(page_size, blogs.length)} of {totalBlogs} blog
+              Showing {Math.min(pageSize, blogs.length)} of {totalBlogs} blog
               posts
               {totalPages > 1 && ` (Page 1 of ${totalPages})`}
             </p>

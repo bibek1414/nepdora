@@ -11,8 +11,6 @@ export interface ContactData {
   title: string;
   subtitle?: string;
   description?: string;
-  showPhone?: boolean;
-  showEmail?: boolean;
   required_fields: {
     name: boolean;
     email: boolean;
@@ -52,11 +50,49 @@ export interface ContactFormSubmission {
 export const defaultContactData: ContactData = {
   component_type: "contact",
   style: "contact-1",
-  title: "Get in Touch",
+  title: "Contact Us",
   subtitle: "We'd love to hear from you",
   description: "Send us a message and we'll respond as soon as possible.",
-  showPhone: true,
-  showEmail: true,
+  required_fields: {
+    name: true,
+    email: true,
+    phone: false,
+    message: true,
+  },
+  contact_info: {
+    email: "contact@yourcompany.com",
+    phone: "+1 (555) 123-4567",
+    address: "123 Business St, City, State 12345",
+  },
+};
+
+export const defaultContactData2: ContactData = {
+  component_type: "contact",
+  style: "contact-2",
+  title: "Get in Touch",
+  subtitle: "Our team is here to help",
+  description: "Reach out to us for any inquiries or support.",
+  required_fields: {
+    name: true,
+    email: true,
+    phone: true,
+    message: true,
+  },
+  contact_info: {
+    email: "support@yourcompany.com",
+    phone: "+1 (555) 987-6543",
+    address: "456 Innovation Ave, Tech City, TC 67890",
+  },
+  map_embed_url:
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1422937950147!2d-73.98731968482413!3d40.75889497932681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes+Square!5e0!3m2!1sen!2sus!4v1510579767208",
+};
+
+export const defaultContactData3: ContactData = {
+  component_type: "contact",
+  style: "contact-3",
+  title: "Let's Start a Conversation",
+  subtitle: "We're ready to listen",
+  description: "Fill out the form below and we'll get back to you shortly.",
   required_fields: {
     name: true,
     email: true,
@@ -65,80 +101,66 @@ export const defaultContactData: ContactData = {
   },
   contact_info: {
     email: "hello@yourcompany.com",
-    phone: "+1 (555) 123-4567",
-    address: "123 Business St, City, State 12345",
+    phone: "+1 (555) 555-5555",
+    address: "789 Creative Blvd, Design District, DD 13579",
   },
 };
 
-// Default data variations for different styles
-export const defaultContact1Data: ContactData = {
-  ...defaultContactData,
-  style: "contact-1",
-  title: "Contact Us",
-  subtitle: "Get in touch with our team",
-  description: "We're here to help and answer any questions you might have.",
-};
-
-export const defaultContact2Data: ContactData = {
-  ...defaultContactData,
-  style: "contact-2",
-  title: "Let's Talk",
-  subtitle: "Start a conversation",
-  description:
-    "Whether you have a question, feedback, or just want to say hello, we'd love to hear from you.",
-};
-
-export const defaultContact3Data: ContactData = {
-  ...defaultContactData,
-  style: "contact-3",
-  title: "Send us a Message",
-  subtitle: "We're always ready to help",
-  description:
-    "Fill out the form below and our team will get back to you within 24 hours.",
-};
-
-export const defaultContact4Data: ContactData = {
-  ...defaultContactData,
+export const defaultContactData4: ContactData = {
+  component_type: "contact",
   style: "contact-4",
-  title: "Visit Our Location",
-  subtitle: "Find us or get in touch",
-  description: "Visit us in person or send us a message using the form below.",
+  title: "Visit Our Office",
+  subtitle: "We look forward to seeing you",
+  description: "Find us at our headquarters or send us a message online.",
+  required_fields: {
+    name: true,
+    email: true,
+    phone: true,
+    message: true,
+  },
+  contact_info: {
+    email: "info@yourcompany.com",
+    phone: "+1 (555) 246-8101",
+    address: "101 Corporate Dr, Business Park, BP 24680",
+  },
   map_embed_url:
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3533.1523989318835!2d85.32596447536811!3d27.681684276197256!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb192d0f057801%3A0x59809dfba777fb99!2sBaliyo%20Ventures!5e0!3m2!1sen!2snp!4v1757234557232!5m2!1sen!2snp",
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1422937950147!2d-73.98731968482413!3d40.75889497932681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes+Square!5e0!3m2!1sen!2sus!4v1510579767208",
 };
 
-export const defaultContact5Data: ContactData = {
-  ...defaultContactData,
+export const defaultContactData5: ContactData = {
+  component_type: "contact",
   style: "contact-5",
-  title: "Start a new<br />project?",
-  subtitle: undefined,
-  description: undefined,
+  title: "Contact Support",
+  subtitle: "24/7 Assistance",
+  description: "Our support team is available around the clock to assist you.",
+  required_fields: {
+    name: true,
+    email: true,
+    phone: false,
+    message: true,
+  },
   contact_info: {
-    email: "yourmail@mail.com\ndemomail@mail.com",
-    phone: "+00 123 321 456\n+00 123 456 678",
-    address: "Write Your Address here",
+    email: "support@yourcompany.com",
+    phone: "+1 (800) 123-4567",
   },
 };
 
-export const defaultContact6Data: ContactData = {
+export const defaultContactData6: ContactData = {
   component_type: "contact",
   style: "contact-6",
-  title: "Let Your Wanderlust Guide You",
-  subtitle: "Contact Information",
-  description:
-    "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standard dummy text for decades. Reach out and let's make your next move seamless.",
-  showPhone: true,
-  showEmail: true,
+  title: "Partner With Us",
+  subtitle: "Let's build something great together",
+  description: "Reach out to discuss partnership opportunities.",
   required_fields: {
     name: true,
     email: true,
-    phone: false,
+    phone: true,
     message: true,
   },
   contact_info: {
-    email: "hello@yourcompany.com",
-    phone: "+1 (555) 123-4567",
-    address: "123 Business St, City, State 12345",
+    email: "partners@yourcompany.com",
+    phone: "+1 (555) 999-8888",
+    address: "555 Partnership Way, Collaboration City, CC 99999",
   },
   image_url:
     "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2940&auto=format&fit=crop",

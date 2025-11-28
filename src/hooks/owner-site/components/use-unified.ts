@@ -17,6 +17,9 @@ export const usePageComponentsQuery = <
     queryKey: ["pageComponents", pageSlug],
     queryFn: () => componentsApi.getPageComponents<T>(pageSlug),
     enabled: !!pageSlug,
+    staleTime: 5000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 };
 export const usePageComponentsQueryPublished = <
@@ -28,6 +31,9 @@ export const usePageComponentsQueryPublished = <
     queryKey: ["pageComponents", pageSlug],
     queryFn: () => componentsApi.getPageComponentsPublished<T>(pageSlug),
     enabled: !!pageSlug,
+    staleTime: 5000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -44,7 +50,8 @@ export const useComponentsByTypeQuery = <T extends keyof ComponentTypeMap>(
   });
 };
 
-// Generic hook for creating components
+let invalidationTimeout: NodeJS.Timeout | null = null;
+
 export const useCreateComponentMutation = <T extends keyof ComponentTypeMap>(
   pageSlug: string,
   componentType: T
@@ -53,32 +60,24 @@ export const useCreateComponentMutation = <T extends keyof ComponentTypeMap>(
 
   return useMutation({
     mutationFn: async (data: ComponentTypeMap[T]) => {
-      // Get existing components to calculate proper order
       const existingComponents =
         await componentsApi.getPageComponents(pageSlug);
-
       return componentsApi.createComponent(
         pageSlug,
-        {
-          component_type: componentType,
-          data,
-        },
+        { component_type: componentType, data },
         existingComponents
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
-      queryClient.invalidateQueries({
-        queryKey: ["pageComponents", pageSlug, componentType],
-      });
-      toast.success(`${componentType} component created successfully!`);
-    },
-    onError: (error: unknown) => {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : `Failed to create ${componentType} component`;
-      toast.error(errorMessage);
+      // Debounce invalidation
+      if (invalidationTimeout) clearTimeout(invalidationTimeout);
+
+      invalidationTimeout = setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: ["pageComponents", pageSlug],
+        });
+        toast.success(`${componentType} component created successfully!`);
+      }, 300);
     },
   });
 };

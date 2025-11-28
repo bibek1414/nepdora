@@ -18,14 +18,31 @@ interface DeletePageDialogProps {
   page: Page;
   onPageDeleted?: (deletedSlug: string) => void;
   disabled?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  showTrigger?: boolean;
 }
 
 export const DeletePageDialog: React.FC<DeletePageDialogProps> = ({
   page,
   onPageDeleted,
   disabled,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+  showTrigger = true,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const isOpen = isControlled ? controlledOpen : internalOpen;
+
+  const setIsOpen = (open: boolean) => {
+    if (controlledOnOpenChange) {
+      controlledOnOpenChange(open);
+    }
+    if (!isControlled) {
+      setInternalOpen(open);
+    }
+  };
   const deletePageMutation = useDeletePage();
 
   const handleDelete = () => {
@@ -42,7 +59,7 @@ export const DeletePageDialog: React.FC<DeletePageDialogProps> = ({
     });
   };
 
-  if (disabled) {
+  if (showTrigger && disabled) {
     return (
       <X className="text-muted-foreground/50 mr-1 h-4 w-4 cursor-not-allowed" />
     );
@@ -50,9 +67,11 @@ export const DeletePageDialog: React.FC<DeletePageDialogProps> = ({
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogTrigger asChild>
-        <X className="text-muted-foreground hover:text-destructive mr-1 h-4 w-4 cursor-pointer transition-colors" />
-      </AlertDialogTrigger>
+      {showTrigger && (
+        <AlertDialogTrigger asChild>
+          <X className="text-muted-foreground hover:text-destructive mr-1 h-4 w-4 cursor-pointer transition-colors" />
+        </AlertDialogTrigger>
+      )}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Page</AlertDialogTitle>

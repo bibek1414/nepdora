@@ -9,8 +9,6 @@ export interface NewsletterData {
   button_text: string;
   show_privacy_note?: boolean;
   privacy_note?: string;
-  background_color?: string;
-  text_color?: string;
   order?: number;
 }
 
@@ -40,8 +38,6 @@ export const defaultNewsletterData: NewsletterData = {
   button_text: "Subscribe",
   show_privacy_note: true,
   privacy_note: "We respect your privacy. Unsubscribe at any time.",
-  background_color: "#f8fafc",
-  text_color: "#1e293b",
 };
 
 // Default data variations for different styles
@@ -61,8 +57,6 @@ export const defaultNewsletter2Data: NewsletterData = {
   subtitle: "Never miss an update",
   description:
     "Be the first to know about our latest news, product updates, and special offers.",
-  background_color: "#1e293b",
-  text_color: "#f8fafc",
 };
 
 export const defaultNewsletter3Data: NewsletterData = {

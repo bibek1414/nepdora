@@ -70,50 +70,29 @@ export const NewsletterForm2: React.FC<NewsletterForm2Props> = ({
     }
   };
 
-  const backgroundColor = data.background_color || "#1e293b";
-  const textColor = data.text_color || "#f8fafc";
-
   // Success state
   if (isSubscribed && !isEditable) {
     return (
-      <div
-        className="relative overflow-hidden rounded-xl p-4 sm:rounded-2xl sm:p-6 md:p-8 lg:p-12"
-        style={{ backgroundColor }}
-      >
+      <div className="relative overflow-hidden rounded-xl bg-slate-800 p-4 sm:rounded-2xl sm:p-6 md:p-8 lg:p-12">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-2 left-2 sm:top-4 sm:left-4">
-            <Sparkles
-              className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6"
-              style={{ color: textColor }}
-            />
+            <Sparkles className="h-4 w-4 text-slate-50 sm:h-5 sm:w-5 md:h-6 md:w-6" />
           </div>
           <div className="absolute top-4 right-4 sm:top-8 sm:right-8">
-            <Mail
-              className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8"
-              style={{ color: textColor }}
-            />
+            <Mail className="h-5 w-5 text-slate-50 sm:h-6 sm:w-6 md:h-8 md:w-8" />
           </div>
           <div className="absolute bottom-3 left-6 sm:bottom-6 sm:left-12">
-            <Sparkles
-              className="h-3 w-3 sm:h-4 sm:w-4"
-              style={{ color: textColor }}
-            />
+            <Sparkles className="h-3 w-3 text-slate-50 sm:h-4 sm:w-4" />
           </div>
         </div>
 
         <div className="relative z-10 text-center">
           <CheckCircle className="mx-auto mb-3 h-12 w-12 text-green-400 sm:mb-4 sm:h-14 sm:w-14 md:h-16 md:w-16" />
-          <h3
-            className="mb-2 text-lg font-bold sm:mb-3 sm:text-xl md:text-2xl"
-            style={{ color: textColor }}
-          >
+          <h3 className="mb-2 text-lg font-bold text-slate-50 sm:mb-3 sm:text-xl md:text-2xl">
             Welcome to our community!
           </h3>
-          <p
-            className="text-sm sm:text-base"
-            style={{ color: textColor, opacity: 0.8 }}
-          >
+          <p className="text-sm text-slate-50 opacity-80 sm:text-base">
             Thank you for subscribing. You&apos;ll receive amazing content soon!
           </p>
         </div>
@@ -122,35 +101,20 @@ export const NewsletterForm2: React.FC<NewsletterForm2Props> = ({
   }
 
   return (
-    <div
-      className="relative overflow-hidden rounded-xl p-4 sm:rounded-2xl sm:p-6 md:p-8 lg:p-12"
-      style={{ backgroundColor }}
-    >
+    <div className="relative overflow-hidden rounded-xl bg-slate-800 p-4 sm:rounded-2xl sm:p-6 md:p-8 lg:p-12">
       {/* Background Decorative Elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-2 left-2 sm:top-4 sm:left-4">
-          <Sparkles
-            className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6"
-            style={{ color: textColor }}
-          />
+          <Sparkles className="h-4 w-4 text-slate-50 sm:h-5 sm:w-5 md:h-6 md:w-6" />
         </div>
         <div className="absolute top-4 right-4 sm:top-8 sm:right-8">
-          <Mail
-            className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8"
-            style={{ color: textColor }}
-          />
+          <Mail className="h-5 w-5 text-slate-50 sm:h-6 sm:w-6 md:h-8 md:w-8" />
         </div>
         <div className="absolute bottom-3 left-6 sm:bottom-6 sm:left-12">
-          <Sparkles
-            className="h-3 w-3 sm:h-4 sm:w-4"
-            style={{ color: textColor }}
-          />
+          <Sparkles className="h-3 w-3 text-slate-50 sm:h-4 sm:w-4" />
         </div>
         <div className="absolute right-3 bottom-6 sm:right-6 sm:bottom-12">
-          <Mail
-            className="h-4 w-4 sm:h-5 sm:w-5"
-            style={{ color: textColor }}
-          />
+          <Mail className="h-4 w-4 text-slate-50 sm:h-5 sm:w-5" />
         </div>
       </div>
 
@@ -166,10 +130,7 @@ export const NewsletterForm2: React.FC<NewsletterForm2Props> = ({
               placeholder="Enter title..."
             />
           ) : (
-            <h2
-              className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl md:text-4xl"
-              style={{ color: textColor }}
-            >
+            <h2 className="mb-3 text-2xl font-bold text-slate-50 sm:mb-4 sm:text-3xl md:text-4xl">
               {data.title}
             </h2>
           )}
@@ -185,10 +146,7 @@ export const NewsletterForm2: React.FC<NewsletterForm2Props> = ({
                 placeholder="Enter subtitle..."
               />
             ) : (
-              <p
-                className="mb-4 text-base sm:mb-6 sm:text-lg md:text-xl"
-                style={{ color: textColor, opacity: 0.9 }}
-              >
+              <p className="mb-4 text-base text-slate-50 opacity-90 sm:mb-6 sm:text-lg md:text-xl">
                 {data.subtitle}
               </p>
             ))}
@@ -205,10 +163,7 @@ export const NewsletterForm2: React.FC<NewsletterForm2Props> = ({
                 multiline={true}
               />
             ) : (
-              <p
-                className="mx-auto max-w-2xl text-sm sm:text-base md:text-lg"
-                style={{ color: textColor, opacity: 0.8 }}
-              >
+              <p className="mx-auto max-w-2xl text-sm text-slate-50 opacity-80 sm:text-base md:text-lg">
                 {data.description}
               </p>
             ))}
@@ -242,10 +197,7 @@ export const NewsletterForm2: React.FC<NewsletterForm2Props> = ({
           </div>
 
           {data.show_privacy_note && data.privacy_note && (
-            <p
-              className="text-center text-xs sm:text-sm"
-              style={{ color: textColor, opacity: 0.7 }}
-            >
+            <p className="text-center text-xs text-slate-50 opacity-70 sm:text-sm">
               {data.privacy_note}
             </p>
           )}

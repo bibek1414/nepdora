@@ -19,9 +19,6 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface ProductCard5Props {
   product: Product;
   siteUser?: string;
-  showPrice?: boolean;
-  showDescription?: boolean;
-  showStock?: boolean;
   onClick?: () => void;
   onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
 }
@@ -29,9 +26,6 @@ interface ProductCard5Props {
 export const ProductCard5: React.FC<ProductCard5Props> = ({
   product,
   siteUser,
-  showPrice = true,
-  showDescription = true,
-  showStock = true,
   onClick,
   onWishlistToggle,
 }) => {
@@ -245,22 +239,20 @@ export const ProductCard5: React.FC<ProductCard5Props> = ({
           </p>
 
           {/* Price */}
-          {showPrice && (
-            <div
-              className="mt-4 text-3xl font-bold"
-              style={{
-                color: theme.colors.primary,
-                fontFamily: theme.fonts.heading,
-              }}
-            >
-              Rs.{Number(discountedPrice).toLocaleString("en-IN")}
-              {marketPrice && discountPercentage > 0 && (
-                <span className="text-xl text-gray-400 line-through">
-                  Rs.{Number(marketPrice).toLocaleString("en-IN")}
-                </span>
-              )}
-            </div>
-          )}
+          <div
+            className="mt-4 text-3xl font-bold"
+            style={{
+              color: theme.colors.primary,
+              fontFamily: theme.fonts.heading,
+            }}
+          >
+            Rs.{Number(discountedPrice).toLocaleString("en-IN")}
+            {marketPrice && discountPercentage > 0 && (
+              <span className="text-xl text-gray-400 line-through">
+                Rs.{Number(marketPrice).toLocaleString("en-IN")}
+              </span>
+            )}
+          </div>
 
           {/* Rating */}
           <div className="mt-3 flex items-center justify-center">
@@ -273,30 +265,26 @@ export const ProductCard5: React.FC<ProductCard5Props> = ({
           </div>
 
           {/* Description */}
-          {showDescription && product.description && (
+          {product.description && (
             <p className="text-secondary-text-light dark:text-secondary-text-dark mt-2 line-clamp-2 text-sm">
               {product.description}
             </p>
           )}
 
           {/* Stock Information */}
-          {showStock && (
-            <div className="mt-2">
-              {product.stock === 0 ? (
-                <span className="text-sm font-medium text-red-500">
-                  Sold Out
-                </span>
-              ) : product.stock <= 5 ? (
-                <span className="text-sm font-medium text-orange-500">
-                  Only {product.stock} left
-                </span>
-              ) : (
-                <span className="text-sm font-medium text-green-500">
-                  In Stock
-                </span>
-              )}
-            </div>
-          )}
+          <div className="mt-2">
+            {product.stock === 0 ? (
+              <span className="text-sm font-medium text-red-500">Sold Out</span>
+            ) : product.stock <= 5 ? (
+              <span className="text-sm font-medium text-orange-500">
+                Only {product.stock} left
+              </span>
+            ) : (
+              <span className="text-sm font-medium text-green-500">
+                In Stock
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Add to Cart button */}

@@ -63,22 +63,15 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   );
 
   const {
-    itemsToShow = 6,
     title = "Our Portfolio",
     subtitle,
     style = "portfolio-1",
-    columns = 3,
-    showCategories = true,
-    showTechnologies = true,
-    showFilters = true,
-    showPagination = false,
   } = component.data || {};
 
   // Fetch portfolios from API
-  const pageSize = Math.min(itemsToShow, 50);
   const { data, isLoading, error } = usePortfolios({
     page: 1,
-    page_size: pageSize,
+    page_size: 6,
   });
 
   // Extract portfolios from the API response structure

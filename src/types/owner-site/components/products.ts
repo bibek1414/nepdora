@@ -1,6 +1,5 @@
 export interface ProductsData {
   component_id?: string;
-  component_type: "products";
   style:
     | "product-1"
     | "product-2"
@@ -13,20 +12,7 @@ export interface ProductsData {
 
   title: string;
   subtitle?: string;
-  page_size: number;
-  showPagination?: boolean;
-  itemsPerRow?: number;
-  showPrice?: boolean;
-  showDescription?: boolean;
-  showStock?: boolean;
   order?: number;
-  selectionType?:
-    | "all"
-    | "featured"
-    | "popular"
-    | "category"
-    | "subcategory"
-    | "custom";
   categoryId?: number;
   subCategoryId?: number;
 }
@@ -42,15 +28,7 @@ export interface ProductsComponentData {
 
 // Default data for products component
 export const defaultProductsData: ProductsData = {
-  component_type: "products",
   style: "product-1",
   title: "Our Products",
   subtitle: "Discover our amazing collection of products",
-  page_size: 8,
-  showPagination: false,
-  itemsPerRow: 4,
-  showPrice: true,
-  showDescription: true,
-  showStock: true,
-  selectionType: "all",
 };

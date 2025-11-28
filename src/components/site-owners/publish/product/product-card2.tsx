@@ -20,9 +20,6 @@ import { toast } from "sonner";
 interface ProductCard2Props {
   product: Product;
   siteUser?: string;
-  showPrice?: boolean;
-  showDescription?: boolean;
-  showStock?: boolean;
   onClick?: () => void;
   onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
 }
@@ -30,9 +27,6 @@ interface ProductCard2Props {
 export const ProductCard2: React.FC<ProductCard2Props> = ({
   product,
   siteUser,
-  showPrice = true,
-  showDescription = true,
-  showStock = true,
   onClick,
   onWishlistToggle,
 }) => {
@@ -222,7 +216,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
               <span className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
                 {product.category?.name || "Premium Collection"}
               </span>
-              {showStock && product.stock > 0 && (
+              {product.stock > 0 && (
                 <span
                   className={`rounded-full px-2 py-1 text-xs ${
                     product.stock > 10
@@ -268,33 +262,29 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
             </div>
 
             {/* Description */}
-            {showDescription && product.description && (
+            {product.description && (
               <p className="line-clamp-2 text-sm leading-relaxed text-gray-600">
                 {product.description}
               </p>
             )}
 
             {/* Price Section */}
-            {showPrice && (
-              <div className="flex items-end justify-between pt-2">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl font-bold">
-                      Rs.{Number(discountedPrice).toLocaleString("en-IN")}
-                    </span>
+            <div className="flex items-end justify-between pt-2">
+              <div className="space-y-1">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl font-bold">
+                    Rs.{Number(discountedPrice).toLocaleString("en-IN")}
+                  </span>
 
-                    {marketPrice && discountPercentage > 0 && (
-                      <span className="text-xl text-gray-400 line-through">
-                        Rs.{Number(marketPrice).toLocaleString("en-IN")}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    Free shipping over $50
-                  </p>
+                  {marketPrice && discountPercentage > 0 && (
+                    <span className="text-xl text-gray-400 line-through">
+                      Rs.{Number(marketPrice).toLocaleString("en-IN")}
+                    </span>
+                  )}
                 </div>
+                <p className="text-xs text-gray-500">Free shipping over $50</p>
               </div>
-            )}
+            </div>
 
             {/* Action Button */}
             <SOButton

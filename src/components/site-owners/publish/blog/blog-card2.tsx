@@ -9,10 +9,6 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface BlogCard2Props {
   blog: BlogPost;
   siteUser?: string;
-  showAuthor?: boolean;
-  showDate?: boolean;
-  showTags?: boolean;
-  showReadTime?: boolean;
   onClick?: () => void;
   variant?: "featured" | "standard";
 }
@@ -20,11 +16,8 @@ interface BlogCard2Props {
 export const BlogCard2: React.FC<BlogCard2Props> = ({
   blog,
   siteUser,
-  showAuthor = true,
-  showDate = true,
-  showTags = true,
-  showReadTime = true,
   onClick,
+  variant = "standard",
 }) => {
   const blogImage =
     blog.thumbnail_image ||
@@ -86,7 +79,7 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
 
         <div>
           {/* Tags */}
-          {showTags && blog.tags && blog.tags.length > 1 && (
+          {blog.tags && blog.tags.length > 1 && (
             <div className="mb-3 flex flex-wrap gap-2">
               {blog.tags.slice(1, 4).map(tag => (
                 <Badge
@@ -104,13 +97,9 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
           )}
           {/* Meta information */}
           <div className="text-muted-foreground mb-3 flex items-center text-sm md:text-base">
-            {showDate && (
-              <>
-                <span className="tracking-wider uppercase">
-                  {formatDate(blog.created_at).toUpperCase()}
-                </span>
-              </>
-            )}
+            <span className="tracking-wider uppercase">
+              {formatDate(blog.created_at).toUpperCase()}
+            </span>
           </div>
 
           {/* Title */}
@@ -126,16 +115,10 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
 
           {/* Additional meta */}
           <div className="text-muted-foreground flex flex-wrap items-center gap-3 text-xs">
-            {showAuthor && blog.author && (
+            {blog.author && (
               <div className="flex items-center gap-1">
                 <User className="h-3 w-3" />
                 <span>{blog.author.username}</span>
-              </div>
-            )}
-            {showReadTime && blog.time_to_read && (
-              <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                <span>{blog.time_to_read} min read</span>
               </div>
             )}
           </div>

@@ -7,10 +7,6 @@ import { formatDate } from "@/utils/date";
 interface BlogCard3Props {
   blog: BlogPost;
   siteUser?: string;
-  showAuthor?: boolean;
-  showDate?: boolean;
-  showTags?: boolean;
-  showReadTime?: boolean;
   onClick?: () => void;
   index?: number;
 }
@@ -18,10 +14,6 @@ interface BlogCard3Props {
 export const BlogCard3: React.FC<BlogCard3Props> = ({
   blog,
   siteUser,
-  showAuthor = true,
-  showDate = true,
-  showTags = true,
-  showReadTime = true,
   onClick,
   index = 0,
 }) => {
@@ -71,27 +63,20 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
           />
         </div>
         <div>
-          {showDate && (
-            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-              {formatDate(blog.created_at)}
-            </p>
-          )}
+          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+            {formatDate(blog.created_at)}
+          </p>
           <h2 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
             {blog.title}
           </h2>
 
           <div className="flex flex-wrap items-center gap-4">
-            {showAuthor && blog.author && (
+            {blog.author && (
               <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
                 <span>By {blog.author.username}</span>
               </div>
             )}
-            {showReadTime && blog.time_to_read && (
-              <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-                <span>{blog.time_to_read} min read</span>
-              </div>
-            )}
-            {showTags && blog.tags && blog.tags.length > 0 && (
+            {blog.tags && blog.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {blog.tags.slice(0, 2).map(tag => (
                   <span

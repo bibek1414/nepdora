@@ -8,17 +8,12 @@ import { SubCategory } from "@/types/owner-site/admin/product";
 interface SubCategoryCard2Props {
   subcategory: SubCategory;
   siteUser?: string;
-  showDescription?: boolean;
-  showProductCount?: boolean;
-  showParentCategory?: boolean;
   onClick?: () => void;
 }
 
 export const SubCategoryCard2: React.FC<SubCategoryCard2Props> = ({
   subcategory,
   siteUser,
-  showDescription = true,
-  showParentCategory = true,
   onClick,
 }) => {
   const subcategoryImage =
@@ -72,21 +67,11 @@ export const SubCategoryCard2: React.FC<SubCategoryCard2Props> = ({
         />
         <div className="absolute inset-0 bg-black/30" />
 
-        {/* Parent Category Badge */}
-        {showParentCategory && (
-          <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-            <Badge className="bg-white/90 text-[10px] font-medium text-black sm:text-xs">
-              <Tag className="mr-1 h-3 w-3" />
-              {categoryName}
-            </Badge>
-          </div>
-        )}
-
         <div className="absolute right-4 bottom-4 left-4 text-white sm:right-auto">
           <h2 className="text-xl font-bold sm:text-2xl md:text-3xl">
             {subcategory.name}
           </h2>
-          {showDescription && subcategory.description && (
+          {subcategory.description && (
             <p className="mt-2 line-clamp-3 text-sm opacity-90 sm:line-clamp-2 sm:text-base">
               {subcategory.description}
             </p>

@@ -796,3 +796,84 @@ export const defaultAboutUs14Data: AboutUs14Data = {
     },
   ],
 };
+
+// Helper functions
+export const getDefaultAboutUsData = (
+  template: AboutUsData["template"]
+): AboutUsData => {
+  switch (template) {
+    case "about-1":
+      return defaultAboutUs1Data;
+    case "about-2":
+      return defaultAboutUs2Data;
+    case "about-3":
+      return defaultAboutUs3Data;
+    case "about-4":
+      return defaultAboutUs4Data;
+    case "about-5":
+      return defaultAboutUs5Data;
+    case "about-6":
+      return defaultAboutUs6Data;
+    case "about-7":
+      return defaultAboutUs7Data;
+    case "about-8":
+      return defaultAboutUs8Data;
+    case "about-9":
+      return defaultAboutUs9Data;
+    case "about-10":
+      return defaultAboutUs10Data;
+    case "about-11":
+      return defaultAboutUs11Data;
+    case "about-12":
+      return defaultAboutUs12Data;
+    case "about-13":
+      return defaultAboutUs13Data;
+    case "about-14":
+      return defaultAboutUs14Data;
+    default:
+      return defaultAboutUs1Data;
+  }
+};
+
+// Type guards for each template
+export const isAboutUsTemplate1 = (data: AboutUsData): data is AboutUs1Data =>
+  data.template === "about-1";
+
+export const isAboutUsTemplate2 = (data: AboutUsData): data is AboutUs2Data =>
+  data.template === "about-2";
+
+export const isAboutUsTemplate3 = (data: AboutUsData): data is AboutUs3Data =>
+  data.template === "about-3";
+
+export const isAboutUsTemplate4 = (data: AboutUsData): data is AboutUs4Data =>
+  data.template === "about-4";
+
+export const isAboutUsTemplate5 = (data: AboutUsData): data is AboutUs5Data =>
+  data.template === "about-5";
+
+export const isAboutUsTemplate6 = (data: AboutUsData): data is AboutUs6Data =>
+  data.template === "about-6";
+
+export const isAboutUsTemplate7 = (data: AboutUsData): data is AboutUs7Data =>
+  data.template === "about-7";
+
+export const isAboutUsTemplate8 = (data: AboutUsData): data is AboutUs8Data =>
+  data.template === "about-8";
+
+export const isAboutUsTemplate9 = (data: AboutUsData): data is AboutUs9Data =>
+  data.template === "about-9";
+
+export const isAboutUsTemplate10 = (data: AboutUsData): data is AboutUs10Data =>
+  data.template === "about-10";
+
+export const isAboutUsTemplate11 = (data: AboutUsData): data is AboutUs11Data =>
+  data.template === "about-11";
+
+export const isAboutUsTemplate12 = (data: AboutUsData): data is AboutUs12Data =>
+  data.template === "about-12";
+
+export const isAboutUsTemplate13 = (data: AboutUsData): data is AboutUs13Data =>
+  data.template === "about-13";
+
+export const isAboutUsTemplate14 = (data: AboutUsData): data is AboutUs14Data =>
+  data.template === "about-14";

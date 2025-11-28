@@ -18,15 +18,6 @@ export interface GalleryData {
     | "gallery-4"
     | "gallery-5"
     | "gallery-6";
-  layout: "grid" | "masonry" | "carousel";
-  columns: 2 | 3 | 4 | 5;
-  showTitles: boolean;
-  showDescriptions: boolean;
-  enableLightbox: boolean;
-  enableFiltering: boolean;
-  spacing: "tight" | "normal" | "wide";
-  borderRadius: "none" | "small" | "medium" | "large";
-  hoverEffect: "none" | "zoom" | "overlay" | "lift";
 }
 
 export interface GalleryComponentData {
@@ -92,13 +83,4 @@ export const defaultGalleryData: GalleryData = {
     },
   ],
   template: "gallery-1",
-  layout: "grid",
-  columns: 4,
-  showTitles: true,
-  showDescriptions: false,
-  enableLightbox: true,
-  enableFiltering: true,
-  spacing: "normal",
-  borderRadius: "medium",
-  hoverEffect: "zoom",
 };

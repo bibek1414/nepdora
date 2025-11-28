@@ -180,9 +180,6 @@ const WishlistPage = () => {
                 key={item.product.id}
                 product={productWithWishlistStatus}
                 onWishlistToggle={handleWishlistToggle}
-                showPrice={true}
-                showDescription={true}
-                showStock={true}
               />
             );
           })}

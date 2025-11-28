@@ -21,71 +21,12 @@ import {
   useFooterQuery,
   useCreateFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
-import { FooterStylesDialog } from "@/components/site-owners/builder/footer/footer-styles-dialog";
-import {
-  getDefaultHeroData,
-  HeroData,
-} from "@/types/owner-site/components/hero";
-import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-unified";
-import { AboutUsStylesDialog } from "@/components/site-owners/builder/about/about-styles-dialog";
-import {
-  defaultAboutUs1Data,
-  defaultAboutUs3Data,
-  defaultAboutUs2Data,
-  defaultAboutUs4Data,
-  defaultAboutUs5Data,
-  defaultAboutUs6Data,
-  defaultAboutUs7Data,
-  defaultAboutUs8Data,
-  defaultAboutUs9Data,
-  defaultAboutUs10Data,
-  defaultAboutUs11Data,
-  defaultAboutUs12Data,
-  defaultAboutUs13Data,
-  defaultAboutUs14Data,
-} from "@/types/owner-site/components/about";
-import { AboutUsData } from "@/types/owner-site/components/about";
-import { defaultProductsData } from "@/types/owner-site/components/products";
-import { Facebook, Twitter } from "lucide-react";
-import { defaultBlogData } from "@/types/owner-site/components/blog";
-import { defaultServicesData } from "@/types/owner-site/components/services";
-import {
-  ComponentResponse,
-  ComponentTypeMap,
-} from "@/types/owner-site/components/components";
-import {
-  ContactData,
-  defaultContact1Data,
-  defaultContact2Data,
-  defaultContact3Data,
-  defaultContact4Data,
-  defaultContact5Data,
-  defaultContact6Data,
-} from "@/types/owner-site/components/contact";
-import {
-  defaultCTATemplate1Data,
-  defaultCTATemplate2Data,
-  defaultCTATemplate3Data,
-  defaultCTATemplate4Data,
-} from "@/types/owner-site/components/cta";
-import { defaultAppointmentData } from "@/types/owner-site/components/appointment";
-import { defaultTeamData } from "@/types/owner-site/components/team";
-import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
-import { defaultFAQData } from "@/types/owner-site/components/faq";
-import { PortfolioStylesDialog } from "@/components/site-owners/builder/portfolio/portfolio-styles-dialog";
-import { defaultPortfolioData } from "@/types/owner-site/components/portfolio";
-import { BannerStylesDialog } from "@/components/site-owners/builder/banner/banner-styles-dialog";
-import { defaultBannerData } from "@/types/owner-site/components/banner";
-import { defaultNewsletterData } from "@/types/owner-site/components/newsletter";
-import { defaultYouTubeData } from "@/types/owner-site/components/youtube";
-import { PageTemplateDialog } from "@/components/site-owners/builder/templates/page-template-dialog";
-import { PageTemplate } from "@/types/owner-site/components/page-template";
 import { ComponentOutlineSidebar } from "@/components/site-owners/builder/builder/component-outline-sidebar";
-import { GalleryStylesDialog } from "@/components/site-owners/builder/gallery/gallery-styles-dialog";
 import { defaultGalleryData } from "@/types/owner-site/components/gallery";
 import { useQueryClient } from "@tanstack/react-query";
-import { TextEditorStylesDialog } from "../text-editor/text-editor-dialog";
 import { defaultTextEditorData } from "@/types/owner-site/components/text-editor";
+import { defaultPricingData } from "@/types/owner-site/components/pricing";
+
 import {
   defaultReturnExchangeData,
   defaultShippingData,
@@ -93,13 +34,49 @@ import {
   defaultTermsData,
 } from "@/types/owner-site/components/policies";
 import { toast } from "sonner";
+import {
+  ComponentResponse,
+  ComponentTypeMap,
+} from "@/types/owner-site/components/components";
+import {
+  ContactData,
+  defaultContactData,
+  defaultContactData2,
+  defaultContactData3,
+  defaultContactData4,
+  defaultContactData5,
+  defaultContactData6,
+} from "@/types/owner-site/components/contact";
+import { getDefaultCTAData } from "@/types/owner-site/components/cta";
+import {
+  getDefaultHeroData,
+  HeroData,
+} from "@/types/owner-site/components/hero";
+import {
+  getDefaultAboutUsData,
+  AboutUsData,
+} from "@/types/owner-site/components/about";
+import { defaultProductsData } from "@/types/owner-site/components/products";
+import { defaultBlogData } from "@/types/owner-site/components/blog";
+
+import { defaultServicesData } from "@/types/owner-site/components/services";
+import { defaultAppointmentData } from "@/types/owner-site/components/appointment";
+import { defaultTeamData } from "@/types/owner-site/components/team";
+import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
+import { defaultFAQData } from "@/types/owner-site/components/faq";
+import { defaultPortfolioData } from "@/types/owner-site/components/portfolio";
+import { defaultBannerData } from "@/types/owner-site/components/banner";
+import { defaultNewsletterData } from "@/types/owner-site/components/newsletter";
+import { defaultYouTubeData } from "@/types/owner-site/components/youtube";
+import { PageTemplateDialog } from "@/components/site-owners/builder/templates/page-template-dialog";
+import { PageTemplate } from "@/types/owner-site/components/page-template";
+import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-unified";
 import { componentsApi } from "@/services/api/owner-sites/components/unified";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
-import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
 import { useAuth } from "@/hooks/use-auth";
-import { decodeJwt } from "@/lib/utils";
 import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/use-unified";
+import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -112,145 +89,23 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { siteUser, pageSlug } = params;
   const { user } = useAuth();
 
-  // Add Section state with pending insert index
+  // Dialog states
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [isAddSectionDialogOpen, setIsAddSectionDialogOpen] = useState(false);
   const [pendingInsertIndex, setPendingInsertIndex] = useState<
     number | undefined
   >(undefined);
 
   // Dialog states
-  const [isGalleryStylesDialogOpen, setIsGalleryStylesDialogOpen] =
-    useState(false);
+  // Dialog states
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
-  const [isFooterDialogOpen, setIsFooterDialogOpen] = useState(false);
-  const [isHeroStylesDialogOpen, setIsHeroStylesDialogOpen] = useState(false);
-  const [isAboutUsStylesDialogOpen, setIsAboutUsStylesDialogOpen] =
-    useState(false);
-  const [isProductsStylesDialogOpen, setIsProductsStylesDialogOpen] =
-    useState(false);
-  const [isCategoriesStylesDialogOpen, setIsCategoriesStylesDialogOpen] =
-    useState(false);
-  const [isSubCategoriesStylesDialogOpen, setIsSubCategoriesStylesDialogOpen] =
-    useState(false);
-  const [isBlogStylesDialogOpen, setIsBlogStylesDialogOpen] = useState(false);
-  const [isServicesStylesDialogOpen, setIsServicesStylesDialogOpen] =
-    useState(false);
-  const [isContactStylesDialogOpen, setIsContactStylesDialogOpen] =
-    useState(false);
-  const [isAppointmentStylesDialogOpen, setIsAppointmentStylesDialogOpen] =
-    useState(false);
-  const [isCTAStylesDialogOpen, setIsCTAStylesDialogOpen] = useState(false);
-  const [isTeamStylesDialogOpen, setIsTeamStylesDialogOpen] = useState(false);
-  const [isTestimonialsStylesDialogOpen, setIsTestimonialsStylesDialogOpen] =
-    useState(false);
-  const [isFAQStylesDialogOpen, setIsFAQStylesDialogOpen] = useState(false);
-  const [isPortfolioStylesDialogOpen, setIsPortfolioStylesDialogOpen] =
-    useState(false);
-  const [isBannerStylesDialogOpen, setIsBannerStylesDialogOpen] =
-    useState(false);
-  const [isNewsletterStylesDialogOpen, setIsNewsletterStylesDialogOpen] =
-    useState(false);
-  const [isYouTubeStylesDialogOpen, setIsYouTubeStylesDialogOpen] =
-    useState(false);
   const [isPageTemplateDialogOpen, setIsPageTemplateDialogOpen] =
     useState(false);
-  const [isPoliciesStylesDialogOpen, setIsPoliciesStylesDialogOpen] =
-    useState(false);
-  const [isTextEditorStylesDialogOpen, setIsTextEditorStylesDialogOpen] =
-    useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(false);
-
-  // Enhanced onboarding check that prioritizes localStorage
-  useEffect(() => {
-    if (!user) {
-      setShowOnboarding(false);
-      return;
-    }
-
-    const checkOnboardingStatus = () => {
-      // Check multiple sources for the most current data
-      const sources = [];
-
-      // Source 1: User context
-      if (typeof user.is_onboarding_complete !== "undefined") {
-        sources.push({ source: "context", value: user.is_onboarding_complete });
-      }
-
-      // Source 2: localStorage (most up-to-date after API call)
-      try {
-        const storedUser = localStorage.getItem("authUser");
-        if (storedUser) {
-          const parsed = JSON.parse(storedUser);
-          if (typeof parsed.is_onboarding_complete !== "undefined") {
-            sources.push({
-              source: "localStorage",
-              value: parsed.is_onboarding_complete,
-            });
-          }
-        }
-      } catch (error) {
-        console.error("Error reading localStorage:", error);
-      }
-
-      // Source 3: JWT token from authTokens
-      try {
-        const storedTokens = localStorage.getItem("authTokens");
-        if (storedTokens) {
-          const tokens = JSON.parse(storedTokens);
-          if (tokens.access_token) {
-            const payload = decodeJwt(tokens.access_token);
-            if (payload?.is_onboarding_complete !== undefined) {
-              sources.push({
-                source: "JWT",
-                value: Boolean(payload.is_onboarding_complete),
-              });
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Error decoding JWT:", error);
-      }
-
-      console.log("🔍 ONBOARDING STATUS CHECK - All sources:", sources);
-
-      // Priority: localStorage > JWT > context
-      const localStorageSource = sources.find(s => s.source === "localStorage");
-      if (localStorageSource) {
-        console.log("✅ Using localStorage value:", localStorageSource.value);
-        return localStorageSource.value;
-      }
-
-      const jwtSource = sources.find(s => s.source === "JWT");
-      if (jwtSource) {
-        console.log("✅ Using JWT value:", jwtSource.value);
-        return jwtSource.value;
-      }
-
-      const contextSource = sources.find(s => s.source === "context");
-      if (contextSource) {
-        console.log("✅ Using context value:", contextSource.value);
-        return contextSource.value;
-      }
-
-      // Default to true (don't show onboarding) if we can't determine
-      console.log("✅ No sources found, defaulting to true");
-      return true;
-    };
-
-    const onboardingComplete = checkOnboardingStatus();
-    console.log(
-      "🎯 Final onboarding decision - show modal?",
-      !onboardingComplete
-    );
-
-    setShowOnboarding(!onboardingComplete);
-  }, [user]);
   // Queries and Mutations
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const createNavbarMutation = useCreateNavbarMutation();
 
   const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
-  const createFooterMutation = useCreateFooterMutation();
 
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
   const createPageMutation = useCreatePage();
@@ -267,7 +122,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   const currentPage = pageSlug;
   const queryClient = useQueryClient();
-  const updateOrderMutation = useUpdateComponentOrderMutation(currentPage);
 
   // Process page components
   const pageComponents = React.useMemo(() => {
@@ -313,6 +167,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             "youtube",
             "gallery",
             "policies",
+            "pricing",
             "text_editor",
           ].includes(component.component_type);
         const hasValidData = component && component.data;
@@ -354,6 +209,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       youtube: "YouTube",
       gallery: "Gallery",
       policies: "Policies",
+      pricing: "Pricing",
       text_editor: "Text Editor",
     };
     return names[componentType] || componentType;
@@ -407,19 +263,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       throw error;
     }
   };
-  // Onboarding handlers
-  const handleCloseOnboarding = () => {
-    setShowOnboarding(false);
-  };
 
-  const handleOpenOnboarding = () => {
-    setShowOnboarding(true);
-  };
-
-  const handleOnboardingComplete = () => {
-    setShowOnboarding(false);
-    // Optional: Refresh user data or invalidate queries
-  };
   // Auto-create home page
   useEffect(() => {
     if (
@@ -513,11 +357,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     const toastId = "navbar-create";
 
     createNavbarMutation.mutate(payload, {
-      onSuccess: () => {
-        console.log("Navbar created successfully from dialog");
-      },
+      onSuccess: () => {},
       onError: error => {
-        console.error("Failed to create navbar from dialog:", error);
         toast.error("Failed to create navbar", { id: toastId });
       },
     });
@@ -543,164 +384,16 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
   const handleCTATemplateSelect = async (template: CTAData["template"]) => {
-    let ctaData: CTAData;
-    switch (template) {
-      case "cta-1":
-        ctaData = defaultCTATemplate1Data;
-        break;
-      case "cta-2":
-        ctaData = defaultCTATemplate2Data;
-        break;
-      case "cta-3":
-        ctaData = defaultCTATemplate3Data;
-        break;
-      case "cta-4":
-        ctaData = defaultCTATemplate4Data;
-        break;
-      default:
-        ctaData = defaultCTATemplate1Data;
-    }
+    const ctaData = getDefaultCTAData(template);
 
-    setIsCTAStylesDialogOpen(false);
     await createComponentWithIndex("cta", ctaData, pendingInsertIndex);
   };
 
   // Add handler for opening CTA dialog
   const handleAddCTA = (insertIndex?: number) => {
     setPendingInsertIndex(insertIndex);
-    setIsCTAStylesDialogOpen(true);
-  };
-  // Footer handlers
-  const handleFooterSelectFromDialog = (
-    footerStyle:
-      | "style-1"
-      | "style-2"
-      | "style-3"
-      | "style-4"
-      | "style-5"
-      | "style-6"
-      | "style-7"
-  ) => {
-    const payload = {
-      content: "footer content",
-      footerData: {
-        style: footerStyle,
-        logoText: "Your Brand",
-        logoType: "text" as "text" | "image" | "both",
-        logoImage: "",
-        companyName: "Your Brand",
-        description:
-          "Innovative solutions for a modern world. We build amazing experiences.",
-        sections: [
-          {
-            id: "s1",
-            title: "Company",
-            links: [
-              { id: "l1", text: "About Us", href: "#" },
-              { id: "l2", text: "Careers", href: "#" },
-            ],
-          },
-          {
-            id: "s2",
-            title: "Resources",
-            links: [
-              { id: "l3", text: "Blog", href: "#" },
-              { id: "l4", text: "Help Center", href: "#" },
-            ],
-          },
-        ],
-        socialLinks: [
-          { id: "soc1", platform: "Facebook", href: "#", icon: Facebook },
-          { id: "soc2", platform: "Twitter", href: "#", icon: Twitter },
-        ],
-        contactInfo: {
-          email: "support@yourbrand.com",
-          phone: "+1 234 567 890",
-        },
-        newsletter: {
-          enabled: true,
-          title: "Join our Newsletter",
-          description:
-            "Get the latest news and updates delivered to your inbox.",
-        },
-        copyright: `© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
-      },
-      component_id: `footer-${Date.now()}`,
-    };
 
-    const toastId = "footer-create";
-
-    createFooterMutation.mutate(payload, {
-      onSuccess: () => {
-        console.log("Footer created successfully from dialog");
-        toast.success("Footer added successfully!", { id: toastId });
-      },
-      onError: error => {
-        console.error("Failed to create footer from dialog:", error);
-        toast.error("Failed to create footer", { id: toastId });
-      },
-    });
-  };
-
-  const handleFooterStyleSelect = (styleId: string) => {
-    const payload = {
-      content: "footer content",
-      footerData: {
-        style: styleId,
-        logoText: "Your Brand",
-        logoType: "text" as "text" | "image" | "both",
-        logoImage: "",
-        companyName: "Your Brand",
-        description:
-          "Innovative solutions for a modern world. We build amazing experiences.",
-        sections: [
-          {
-            id: "s1",
-            title: "Company",
-            links: [
-              { id: "l1", text: "About Us", href: "#" },
-              { id: "l2", text: "Careers", href: "#" },
-            ],
-          },
-          {
-            id: "s2",
-            title: "Resources",
-            links: [
-              { id: "l3", text: "Blog", href: "#" },
-              { id: "l4", text: "Help Center", href: "#" },
-            ],
-          },
-        ],
-        socialLinks: [
-          { id: "soc1", platform: "Facebook", href: "#", icon: Facebook },
-          { id: "soc2", platform: "Twitter", href: "#", icon: Twitter },
-        ],
-        contactInfo: {
-          email: "support@yourbrand.com",
-          phone: "+1 234 567 890",
-        },
-        newsletter: {
-          enabled: true,
-          title: "Join our Newsletter",
-          description:
-            "Get the latest news and updates delivered to your inbox.",
-        },
-        copyright: `© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
-      },
-      component_id: `footer-${Date.now()}`,
-    };
-
-    const toastId = "footer-create";
-
-    createFooterMutation.mutate(payload, {
-      onSuccess: () => {
-        setIsFooterDialogOpen(false);
-        toast.success("Footer added successfully!", { id: toastId });
-      },
-      onError: () => {
-        toast.error("Failed to add footer", { id: toastId });
-      },
-    });
+    handleCTATemplateSelect("cta-1");
   };
 
   // Template selection handlers with insertIndex support
@@ -708,78 +401,15 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     // Get ONLY the data needed for this specific template
     const heroData = getDefaultHeroData(template);
 
-    setIsHeroStylesDialogOpen(false);
-
     // This will now send only the necessary fields for the selected template
     await createComponentWithIndex("hero", heroData, pendingInsertIndex);
   };
 
   const handleAboutUsTemplateSelect = async (
-    template:
-      | "about-1"
-      | "about-2"
-      | "about-3"
-      | "about-4"
-      | "about-5"
-      | "about-6"
-      | "about-7"
-      | "about-8"
-      | "about-9"
-      | "about-10"
-      | "about-11"
-      | "about-12"
-      | "about-13"
-      | "about-14"
+    template: AboutUsData["template"]
   ) => {
-    let aboutUsData: AboutUsData;
-    switch (template) {
-      case "about-1":
-        aboutUsData = defaultAboutUs1Data;
-        break;
-      case "about-2":
-        aboutUsData = defaultAboutUs2Data;
-        break;
-      case "about-3":
-        aboutUsData = defaultAboutUs3Data;
-        break;
-      case "about-4":
-        aboutUsData = defaultAboutUs4Data;
-        break;
-      case "about-5":
-        aboutUsData = defaultAboutUs5Data;
-        break;
-      case "about-6":
-        aboutUsData = defaultAboutUs6Data;
-        break;
-      case "about-7":
-        aboutUsData = defaultAboutUs7Data;
-        break;
-      case "about-8":
-        aboutUsData = defaultAboutUs8Data;
-        break;
-      case "about-9":
-        aboutUsData = defaultAboutUs9Data;
-        break;
-      case "about-10":
-        aboutUsData = defaultAboutUs10Data;
-        break;
-      case "about-11":
-        aboutUsData = defaultAboutUs11Data;
-        break;
-      case "about-12":
-        aboutUsData = defaultAboutUs12Data;
-        break;
-      case "about-13":
-        aboutUsData = defaultAboutUs13Data;
-        break;
-      case "about-14":
-        aboutUsData = defaultAboutUs14Data;
-        break;
-      default:
-        aboutUsData = defaultAboutUs1Data;
-    }
+    const aboutUsData = getDefaultAboutUsData(template);
 
-    setIsAboutUsStylesDialogOpen(false);
     await createComponentWithIndex("about", aboutUsData, pendingInsertIndex);
   };
 
@@ -794,7 +424,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "product-7"
   ) => {
     const productsData = { ...defaultProductsData, style: template };
-    setIsProductsStylesDialogOpen(false);
+
     await createComponentWithIndex(
       "products",
       productsData,
@@ -821,7 +451,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       showProductCount: true,
       itemsPerRow: 4,
     };
-    setIsCategoriesStylesDialogOpen(false);
+
     await createComponentWithIndex(
       "category",
       categoryData,
@@ -843,7 +473,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       showParentCategory: true,
       itemsPerRow: 4,
     };
-    setIsSubCategoriesStylesDialogOpen(false);
+
     await createComponentWithIndex(
       "subcategory",
       subCategoryData,
@@ -855,7 +485,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     template: "blog-1" | "blog-2" | "blog-3" | "blog-4" | "blog-5"
   ) => {
     const blogData = { ...defaultBlogData, style: template };
-    setIsBlogStylesDialogOpen(false);
+
     await createComponentWithIndex("blog", blogData, pendingInsertIndex);
   };
 
@@ -868,7 +498,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "services-5"
   ) => {
     const servicesData = { ...defaultServicesData, style: template };
-    setIsServicesStylesDialogOpen(false);
+
     await createComponentWithIndex(
       "services",
       servicesData,
@@ -876,19 +506,19 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     );
   };
   const defaultContactMap: Record<ContactData["style"], ContactData> = {
-    "contact-1": defaultContact1Data,
-    "contact-2": defaultContact2Data,
-    "contact-3": defaultContact3Data,
-    "contact-4": defaultContact4Data,
-    "contact-5": defaultContact5Data,
-    "contact-6": defaultContact6Data,
+    "contact-1": defaultContactData,
+    "contact-2": defaultContactData2,
+    "contact-3": defaultContactData3,
+    "contact-4": defaultContactData4,
+    "contact-5": defaultContactData5,
+    "contact-6": defaultContactData6,
   };
 
   const handleContactTemplateSelect = async (
     template: ContactData["style"]
   ) => {
     const contactData = defaultContactMap[template];
-    setIsContactStylesDialogOpen(false);
+
     await createComponentWithIndex("contact", contactData, pendingInsertIndex);
   };
 
@@ -899,7 +529,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       ...defaultTeamData,
       style: template as ComponentTypeMap["team"]["style"],
     };
-    setIsTeamStylesDialogOpen(false);
+
     await createComponentWithIndex("team", teamData, pendingInsertIndex);
   };
   const handleAppointmentTemplateSelect = async (
@@ -909,7 +539,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       ...defaultAppointmentData,
       style: template as ComponentTypeMap["appointment"]["style"],
     };
-    setIsAppointmentStylesDialogOpen(false);
+
     await createComponentWithIndex(
       "appointment",
       appointmentData,
@@ -929,7 +559,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "testimonial-8"
   ) => {
     const testimonialsData = { ...defaultTestimonialsData, style: template };
-    setIsTestimonialsStylesDialogOpen(false);
+
     await createComponentWithIndex(
       "testimonials",
       testimonialsData,
@@ -948,7 +578,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "faq-7"
   ) => {
     const faqData = { ...defaultFAQData, style: template };
-    setIsFAQStylesDialogOpen(false);
+
     await createComponentWithIndex("faq", faqData, pendingInsertIndex);
   };
 
@@ -956,7 +586,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     template: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4"
   ) => {
     const portfolioData = { ...defaultPortfolioData, style: template };
-    setIsPortfolioStylesDialogOpen(false);
+
     await createComponentWithIndex(
       "portfolio",
       portfolioData,
@@ -968,7 +598,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     template: "banner-1" | "banner-2" | "banner-3" | "banner-4"
   ) => {
     const bannerData = { ...defaultBannerData, template: template };
-    setIsBannerStylesDialogOpen(false);
+
     await createComponentWithIndex("banner", bannerData, pendingInsertIndex);
   };
 
@@ -976,7 +606,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     template: "newsletter-1" | "newsletter-2" | "newsletter-3"
   ) => {
     const newsletterData = { ...defaultNewsletterData, style: template };
-    setIsNewsletterStylesDialogOpen(false);
+
     await createComponentWithIndex(
       "newsletter",
       newsletterData,
@@ -988,7 +618,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     template: "youtube-1" | "youtube-2" | "youtube-3"
   ) => {
     const youtubeData = { ...defaultYouTubeData, style: template };
-    setIsYouTubeStylesDialogOpen(false);
+
     await createComponentWithIndex("youtube", youtubeData, pendingInsertIndex);
   };
 
@@ -1002,7 +632,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "gallery-6"
   ) => {
     const galleryData = { ...defaultGalleryData, template: template };
-    setIsGalleryStylesDialogOpen(false);
+
     await createComponentWithIndex("gallery", galleryData, pendingInsertIndex);
   };
 
@@ -1026,17 +656,24 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       default:
         policyData = defaultReturnExchangeData;
     }
-    setIsPoliciesStylesDialogOpen(false);
+
     await createComponentWithIndex("policies", policyData, pendingInsertIndex);
   };
 
   const handleTextEditorTemplateSelect = async () => {
-    setIsTextEditorStylesDialogOpen(false);
     await createComponentWithIndex(
       "text_editor",
       defaultTextEditorData,
       pendingInsertIndex
     );
+  };
+
+  const handlePricingTemplateSelect = async (
+    template: "pricing-1" | "pricing-2" | "pricing-3"
+  ) => {
+    const pricingData = { ...defaultPricingData, style: template };
+
+    await createComponentWithIndex("pricing", pricingData, pendingInsertIndex);
   };
 
   // Page template handler
@@ -1087,135 +724,21 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   };
 
-  // Add handlers that store insertIndex and open dialogs
-  const handleAddHeroFromCanvas = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsHeroStylesDialogOpen(true);
+  // Onboarding handlers
+  const handleCloseOnboarding = () => {
+    setShowOnboarding(false);
   };
 
-  const handleAddAboutUsFromCanvas = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsAboutUsStylesDialogOpen(true);
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false);
+    // Optionally refresh user data or show success message
+    toast.success("Onboarding completed!");
   };
 
-  const handleAddProducts = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsProductsStylesDialogOpen(true);
+  const handleOpenOnboarding = () => {
+    setShowOnboarding(true);
   };
 
-  const handleAddCategories = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsCategoriesStylesDialogOpen(true);
-  };
-
-  const handleAddSubCategories = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsSubCategoriesStylesDialogOpen(true);
-  };
-
-  const handleAddBlog = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsBlogStylesDialogOpen(true);
-  };
-
-  const handleAddServices = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsServicesStylesDialogOpen(true);
-  };
-
-  const handleAddContact = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsContactStylesDialogOpen(true);
-  };
-  const handleAddAppointment = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsAppointmentStylesDialogOpen(true);
-  };
-
-  const handleAddTeam = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsTeamStylesDialogOpen(true);
-  };
-
-  const handleAddTestimonials = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsTestimonialsStylesDialogOpen(true);
-  };
-
-  const handleAddFAQ = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsFAQStylesDialogOpen(true);
-  };
-
-  const handleAddPortfolio = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsPortfolioStylesDialogOpen(true);
-  };
-
-  const handleAddBanner = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsBannerStylesDialogOpen(true);
-  };
-
-  const handleAddNewsletter = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsNewsletterStylesDialogOpen(true);
-  };
-
-  const handleAddYouTube = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsYouTubeStylesDialogOpen(true);
-  };
-
-  const handleAddGallery = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsGalleryStylesDialogOpen(true);
-  };
-
-  const handleAddPolicies = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsPoliciesStylesDialogOpen(true);
-  };
-
-  const handleAddTextEditor = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    setIsTextEditorStylesDialogOpen(true);
-  };
-  // Replace your current useEffect with this:
-  useEffect(() => {
-    const checkOnboardingStatus = () => {
-      // First, try to get from user context
-      if (user && typeof user.is_onboarding_complete !== "undefined") {
-        return user.is_onboarding_complete;
-      }
-
-      // Fallback: check localStorage directly
-      try {
-        const storedUser = localStorage.getItem("authUser");
-        if (storedUser) {
-          const parsedUser = JSON.parse(storedUser);
-          // Check both possible field names
-          return (
-            parsedUser.is_onboarding_complete ?? parsedUser.onboarding_complete
-          );
-        }
-      } catch (error) {
-        console.error("Error parsing stored user:", error);
-      }
-
-      // Default to true (don't show onboarding) if we can't determine
-      return true;
-    };
-
-    const isOnboardingComplete = checkOnboardingStatus();
-    console.log("Onboarding status:", {
-      fromContext: user?.is_onboarding_complete,
-      finalResult: isOnboardingComplete,
-    });
-
-    // Only show onboarding if it's explicitly false
-    setShowOnboarding(isOnboardingComplete === false);
-  }, [user]);
   // Component click handler for Add Section Dialog
   const handleComponentClick = (componentId: string, template?: string) => {
     if (componentId === "page-templates") {
@@ -1224,142 +747,105 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleHeroTemplateSelect(template as any);
-      } else {
-        setIsHeroStylesDialogOpen(true);
       }
     } else if (componentId === "about-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleAboutUsTemplateSelect(template as any);
-      } else {
-        setIsAboutUsStylesDialogOpen(true);
       }
     } else if (componentId === "cta-sections") {
       if (template) {
         handleCTATemplateSelect(template as CTAData["template"]);
-      } else {
-        setIsCTAStylesDialogOpen(true);
+      }
+    } else if (componentId === "pricing-sections") {
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handlePricingTemplateSelect(template as any);
       }
     } else if (componentId === "products-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleProductsTemplateSelect(template as any);
-      } else {
-        setIsProductsStylesDialogOpen(true);
       }
     } else if (componentId === "categories-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleCategoryTemplateSelect(template as any);
-      } else {
-        setIsCategoriesStylesDialogOpen(true);
       }
     } else if (componentId === "subcategories-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleSubCategoryTemplateSelect(template as any);
-      } else {
-        setIsSubCategoriesStylesDialogOpen(true);
       }
     } else if (componentId === "services-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleServicesTemplateSelect(template as any);
-      } else {
-        setIsServicesStylesDialogOpen(true);
       }
     } else if (componentId === "contact-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleContactTemplateSelect(template as any);
-      } else {
-        setIsContactStylesDialogOpen(true);
       }
     } else if (componentId === "appointment-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleAppointmentTemplateSelect(template as any);
-      } else {
-        setIsAppointmentStylesDialogOpen(true);
       }
     } else if (componentId === "team-members-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleTeamTemplateSelect(template as any);
-      } else {
-        setIsTeamStylesDialogOpen(true);
       }
     } else if (componentId === "testimonials-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleTestimonialsTemplateSelect(template as any);
-      } else {
-        setIsTestimonialsStylesDialogOpen(true);
       }
     } else if (componentId === "gallery-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleGalleryTemplateSelect(template as any);
-      } else {
-        setIsGalleryStylesDialogOpen(true);
       }
     } else if (componentId === "blog-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleBlogTemplateSelect(template as any);
-      } else {
-        setIsBlogStylesDialogOpen(true);
       }
     } else if (componentId === "faq-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleFAQTemplateSelect(template as any);
-      } else {
-        setIsFAQStylesDialogOpen(true);
       }
     } else if (componentId === "portfolio-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handlePortfolioTemplateSelect(template as any);
-      } else {
-        setIsPortfolioStylesDialogOpen(true);
       }
     } else if (componentId === "banner-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleBannerTemplateSelect(template as any);
-      } else {
-        setIsBannerStylesDialogOpen(true);
       }
     } else if (componentId === "youtube-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleYouTubeTemplateSelect(template as any);
-      } else {
-        setIsYouTubeStylesDialogOpen(true);
       }
     } else if (componentId === "newsletter-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleNewsletterTemplateSelect(template as any);
-      } else {
-        setIsNewsletterStylesDialogOpen(true);
       }
     } else if (componentId === "policies-sections") {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handlePoliciesTemplateSelect(template as any);
-      } else {
-        setIsPoliciesStylesDialogOpen(true);
       }
     } else if (componentId === "text-editor-sections") {
       if (template) {
         handleTextEditorTemplateSelect();
-      } else {
-        setIsTextEditorStylesDialogOpen(true);
       }
-    } else {
-      console.log(`${componentId} clicked`);
     }
   };
 
@@ -1511,13 +997,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             onComplete={handleOnboardingComplete}
           />
         )}
+
         {/* All Dialog Components */}
         <AddSectionDialog
           open={isAddSectionDialogOpen}
           onOpenChange={setIsAddSectionDialogOpen}
           onComponentClick={handleComponentClick}
           onNavbarSelect={handleNavbarSelectFromDialog}
-          onFooterSelect={handleFooterSelectFromDialog}
+          onFooterSelect={() => {}}
           websiteType={user?.website_type || "ecommerce"}
         />
 
@@ -1526,45 +1013,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onClose={() => setIsNavbarDialogOpen(false)}
           onSelectTemplate={handleNavbarTemplateSelect}
         />
-        <FooterStylesDialog
-          open={isFooterDialogOpen}
-          onOpenChange={setIsFooterDialogOpen}
-          onStyleSelect={handleFooterStyleSelect}
-        />
-
-        <TextEditorStylesDialog
-          open={isTextEditorStylesDialogOpen}
-          onOpenChange={setIsTextEditorStylesDialogOpen}
-          onStyleSelect={handleTextEditorTemplateSelect}
-        />
-
-        <AboutUsStylesDialog
-          open={isAboutUsStylesDialogOpen}
-          onOpenChange={setIsAboutUsStylesDialogOpen}
-          onStyleSelect={handleAboutUsTemplateSelect}
-        />
-        <GalleryStylesDialog
-          open={isGalleryStylesDialogOpen}
-          onOpenChange={setIsGalleryStylesDialogOpen}
-          onStyleSelect={handleGalleryTemplateSelect}
-        />
 
         <PageTemplateDialog
           isOpen={isPageTemplateDialogOpen}
           onClose={() => setIsPageTemplateDialogOpen(false)}
           onSelectTemplate={handlePageTemplateSelect}
-        />
-
-        <PortfolioStylesDialog
-          open={isPortfolioStylesDialogOpen}
-          onOpenChange={setIsPortfolioStylesDialogOpen}
-          onStyleSelect={handlePortfolioTemplateSelect}
-        />
-
-        <BannerStylesDialog
-          open={isBannerStylesDialogOpen}
-          onOpenChange={setIsBannerStylesDialogOpen}
-          onStyleSelect={handleBannerTemplateSelect}
         />
 
         {/* Top Navigation */}
@@ -1599,29 +1052,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                     navbar={navbarResponse?.data}
                     onAddNavbar={() => setIsNavbarDialogOpen(true)}
                     footer={footerResponse?.data}
-                    onAddFooter={() => setIsFooterDialogOpen(true)}
+                    onAddFooter={() => setIsAddSectionDialogOpen(true)}
                     currentPageSlug={currentPage}
                     pageComponents={pageComponents}
                     isLoading={isPageComponentsLoading}
                     error={pageComponentsError}
-                    onAddHero={handleAddHeroFromCanvas}
-                    onAddAboutUs={handleAddAboutUsFromCanvas}
-                    onAddProducts={handleAddProducts}
-                    onAddCategories={handleAddCategories}
-                    onAddSubCategories={handleAddSubCategories}
-                    onAddBlog={handleAddBlog}
-                    onAddServices={handleAddServices}
-                    onAddContact={handleAddContact}
-                    onAddAppointment={handleAddAppointment}
-                    onAddTeam={handleAddTeam}
-                    onAddTestimonials={handleAddTestimonials}
-                    onAddFAQ={handleAddFAQ}
-                    onAddPortfolio={handleAddPortfolio}
-                    onAddBanner={handleAddBanner}
-                    onAddNewsletter={handleAddNewsletter}
-                    onAddYouTube={handleAddYouTube}
-                    onAddGallery={handleAddGallery}
-                    onAddPolicies={handleAddPolicies}
                     onAddSection={handleAddSection}
                   />
                 </div>

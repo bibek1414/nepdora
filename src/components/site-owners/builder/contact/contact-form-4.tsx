@@ -140,53 +140,49 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
                     />
                   </div>
 
-                  {data.showEmail && (
-                    <div>
-                      <Label
-                        htmlFor="email"
-                        className="text-sm font-medium text-gray-700"
-                      >
-                        Email{" "}
-                        {data.required_fields.email && (
-                          <span className="text-red-500">*</span>
-                        )}
-                      </Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required={data.required_fields.email}
-                        className="mt-1"
-                        placeholder="your.email@example.com"
-                      />
-                    </div>
-                  )}
+                  <div>
+                    <Label
+                      htmlFor="email"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Email{" "}
+                      {data.required_fields.email && (
+                        <span className="text-red-500">*</span>
+                      )}
+                    </Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required={data.required_fields.email}
+                      className="mt-1"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
 
-                  {data.showPhone && (
-                    <div>
-                      <Label
-                        htmlFor="phone_number"
-                        className="text-sm font-medium text-gray-700"
-                      >
-                        Phone Number{" "}
-                        {data.required_fields.phone && (
-                          <span className="text-red-500">*</span>
-                        )}
-                      </Label>
-                      <Input
-                        id="phone_number"
-                        name="phone_number"
-                        type="tel"
-                        value={formData.phone_number}
-                        onChange={handleInputChange}
-                        required={data.required_fields.phone}
-                        className="mt-1"
-                        placeholder="+1 (555) 123-4567"
-                      />
-                    </div>
-                  )}
+                  <div>
+                    <Label
+                      htmlFor="phone_number"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Phone Number{" "}
+                      {data.required_fields.phone && (
+                        <span className="text-red-500">*</span>
+                      )}
+                    </Label>
+                    <Input
+                      id="phone_number"
+                      name="phone_number"
+                      type="tel"
+                      value={formData.phone_number}
+                      onChange={handleInputChange}
+                      required={data.required_fields.phone}
+                      className="mt-1"
+                      placeholder="+1 (555) 123-4567"
+                    />
+                  </div>
 
                   <div>
                     <Label

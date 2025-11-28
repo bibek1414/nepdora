@@ -9,20 +9,12 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface BlogCard5Props {
   blog: BlogPost;
   siteUser?: string;
-  showAuthor?: boolean;
-  showDate?: boolean;
-  showTags?: boolean;
-  showReadTime?: boolean;
   onClick?: () => void;
 }
 
 export const BlogCard5: React.FC<BlogCard5Props> = ({
   blog,
   siteUser,
-  showAuthor = true,
-  showDate = true,
-  showTags = true,
-  showReadTime = true,
   onClick,
 }) => {
   const blogImage =
@@ -101,18 +93,14 @@ export const BlogCard5: React.FC<BlogCard5Props> = ({
 
         {/* Metadata */}
         <div className="mb-3 flex items-center gap-4 text-xs text-gray-500">
-          {showDate && (
-            <span className="flex items-center gap-1">
-              <Calendar size={12} />
-              {formatDate(blog.created_at)}
-            </span>
-          )}
-          {showAuthor && (
-            <span className="flex items-center gap-1">
-              <User size={12} />
-              By {authorName}
-            </span>
-          )}
+          <span className="flex items-center gap-1">
+            <Calendar size={12} />
+            {formatDate(blog.created_at)}
+          </span>
+          <span className="flex items-center gap-1">
+            <User size={12} />
+            By {authorName}
+          </span>
         </div>
 
         {/* Title */}

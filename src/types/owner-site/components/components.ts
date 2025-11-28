@@ -18,6 +18,8 @@ import { GalleryData } from "./gallery";
 import { PolicyData } from "./policies";
 import { TextEditorData } from "./text-editor";
 import { CTAData } from "./cta";
+import { PricingData } from "./pricing";
+
 // Union type for all component data types
 export type ComponentData =
   | HeroData
@@ -39,7 +41,8 @@ export type ComponentData =
   | ServicesData
   | GalleryData
   | PolicyData
-  | TestimonialsData;
+  | TestimonialsData
+  | PricingData;
 
 // Component type mapping for better type safety
 export interface ComponentTypeMap {
@@ -63,9 +66,10 @@ export interface ComponentTypeMap {
   youtube: YouTubeData;
   policies: PolicyData;
   text_editor: TextEditorData;
+  pricing: PricingData;
 }
 
-// Generic interfaces that replace the any types
+// Generic interfaces
 export interface BaseComponentData<
   T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
 > {
@@ -85,10 +89,6 @@ export interface ComponentResponse<
   order: number;
   page?: number;
 }
-export const isGalleryComponent = (
-  component: ComponentResponse
-): component is ComponentResponse<"gallery"> =>
-  component.component_type === "gallery";
 
 export interface CreateComponentRequest<
   T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
@@ -131,6 +131,7 @@ export const isBlogComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"blog"> =>
   component.component_type === "blog";
+
 export const isPolicyComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"policies"> =>
@@ -160,10 +161,12 @@ export const isContactComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"contact"> =>
   component.component_type === "contact";
+
 export const isAppointmentComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"appointment"> =>
   component.component_type === "appointment";
+
 export const isTeamComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"team"> =>
@@ -202,6 +205,17 @@ export const isYouTubeComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"youtube"> =>
   component.component_type === "youtube";
+
+export const isGalleryComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"gallery"> =>
+  component.component_type === "gallery";
+
+export const isPricingComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"pricing"> =>
+  component.component_type === "pricing";
+
 export interface ApiListResponse<T> {
   data?: T[];
   components?: T[];

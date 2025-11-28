@@ -16,14 +16,12 @@ interface CollectionsPageProps {
   siteUser?: string;
   title?: string;
   subtitle?: string;
-  pageSize?: number;
 }
 
 export const CollectionsPage: React.FC<CollectionsPageProps> = ({
   siteUser,
   title = "Our Collections",
   subtitle = "Explore our curated collection of premium products",
-  pageSize = 12,
 }) => {
   const productFilters = useProductFilters();
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,7 +30,6 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
   // Get products with pagination and filters
   const { data, isLoading, error } = useProducts({
     page: currentPage,
-    page_size: pageSize,
     ...productFilters,
   });
 
@@ -103,7 +100,7 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
             {/* Loading State */}
             {isLoading && (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: pageSize }).map((_, index) => (
+                {Array.from({ length: 12 }).map((_, index) => (
                   <div key={index} className="flex flex-col space-y-3">
                     <Skeleton className="h-[300px] w-full rounded-xl" />
                     <div className="space-y-2">
@@ -138,9 +135,6 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
                       key={product.id}
                       product={product}
                       siteUser={siteUser}
-                      showPrice={true}
-                      showDescription={true}
-                      showStock={true}
                       onClick={() => handleProductClick(product)}
                     />
                   ))}

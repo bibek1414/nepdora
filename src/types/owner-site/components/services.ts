@@ -9,10 +9,6 @@ export interface ServicesData {
     | "services-5";
   title: string;
   subtitle?: string;
-  page_size: number;
-  showPagination?: boolean;
-  itemsPerRow?: number;
-  showDate?: boolean;
   order?: number;
 }
 
@@ -30,8 +26,4 @@ export const defaultServicesData: ServicesData = {
   style: "services-1",
   title: "Latest Services Posts",
   subtitle: "Stay updated with our newest articles and insights.",
-  page_size: 6,
-  showPagination: false,
-  itemsPerRow: 3,
-  showDate: true,
 };

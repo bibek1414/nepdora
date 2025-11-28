@@ -85,53 +85,49 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              {data.showEmail && (
-                <div>
-                  <Label
-                    htmlFor="email"
-                    className="mb-1 text-sm font-medium text-neutral-500"
-                  >
-                    Email{" "}
-                    {data.required_fields.email && (
-                      <span className="text-red-500">*</span>
-                    )}
-                  </Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required={data.required_fields.email}
-                    className="h-12 rounded-md border border-neutral-300 bg-white px-4 text-base focus:border-neutral-900 focus:ring-0 focus:outline-none"
-                    placeholder="you@example.com"
-                  />
-                </div>
-              )}
+              <div>
+                <Label
+                  htmlFor="email"
+                  className="mb-1 text-sm font-medium text-neutral-500"
+                >
+                  Email{" "}
+                  {data.required_fields.email && (
+                    <span className="text-red-500">*</span>
+                  )}
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required={data.required_fields.email}
+                  className="h-12 rounded-md border border-neutral-300 bg-white px-4 text-base focus:border-neutral-900 focus:ring-0 focus:outline-none"
+                  placeholder="you@example.com"
+                />
+              </div>
 
-              {data.showPhone && (
-                <div>
-                  <Label
-                    htmlFor="phone_number"
-                    className="mb-1 text-sm font-medium text-neutral-500"
-                  >
-                    Phone{" "}
-                    {data.required_fields.phone && (
-                      <span className="text-red-500">*</span>
-                    )}
-                  </Label>
-                  <Input
-                    id="phone_number"
-                    name="phone_number"
-                    type="tel"
-                    value={formData.phone_number}
-                    onChange={handleInputChange}
-                    required={data.required_fields.phone}
-                    className="h-12 rounded-md border border-neutral-300 bg-white px-4 text-base focus:border-neutral-900 focus:ring-0 focus:outline-none"
-                    placeholder="+1 (555) 123-4567"
-                  />
-                </div>
-              )}
+              <div>
+                <Label
+                  htmlFor="phone_number"
+                  className="mb-1 text-sm font-medium text-neutral-500"
+                >
+                  Phone{" "}
+                  {data.required_fields.phone && (
+                    <span className="text-red-500">*</span>
+                  )}
+                </Label>
+                <Input
+                  id="phone_number"
+                  name="phone_number"
+                  type="tel"
+                  value={formData.phone_number}
+                  onChange={handleInputChange}
+                  required={data.required_fields.phone}
+                  className="h-12 rounded-md border border-neutral-300 bg-white px-4 text-base focus:border-neutral-900 focus:ring-0 focus:outline-none"
+                  placeholder="+1 (555) 123-4567"
+                />
+              </div>
             </div>
 
             <div>

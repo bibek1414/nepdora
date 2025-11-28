@@ -52,20 +52,16 @@ export const ProductsFilterDialog: React.FC<ProductsFilterDialogProps> = ({
   // Initialize state from currentSelection when dialog opens
   useEffect(() => {
     if (open) {
-      setSelectionType(currentSelection.selectionType || "all");
       setCategoryId(currentSelection.categoryId);
       setSubCategoryId(currentSelection.subCategoryId);
-      setLimit(currentSelection.page_size || 8);
     }
   }, [open, currentSelection]);
 
   const handleSave = () => {
     onSave({
-      selectionType,
       categoryId: selectionType === "category" ? categoryId : undefined,
       subCategoryId:
         selectionType === "subcategory" ? subCategoryId : undefined,
-      page_size: limit,
     });
     onOpenChange(false);
   };

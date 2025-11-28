@@ -1,15 +1,8 @@
 export interface PortfolioData {
   component_id?: string;
-  component_type: "portfolio";
   style: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4";
   title: string;
   subtitle?: string;
-  itemsToShow: number;
-  showPagination?: boolean;
-  columns?: 2 | 3 | 4;
-  showCategories?: boolean;
-  showTechnologies?: boolean;
-  showFilters?: boolean;
   order?: number;
 }
 
@@ -23,14 +16,7 @@ export interface PortfolioComponentData {
 }
 
 export const defaultPortfolioData: PortfolioData = {
-  component_type: "portfolio",
   style: "portfolio-1",
   title: "Our Portfolio",
-  subtitle: "Explore our latest work and creative projects",
-  itemsToShow: 6,
-  showPagination: false,
-  columns: 3,
-  showCategories: true,
-  showTechnologies: true,
-  showFilters: true,
+  subtitle: "Check out our latest projects",
 };

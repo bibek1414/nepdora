@@ -72,13 +72,9 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
-    page_size = 8,
     title = "Our Categories",
     subtitle,
     style = "category-1",
-    showDescription = true,
-    showProductCount = true,
-    itemsPerRow = 4,
   } = component.data || {};
 
   // Use unified mutation hooks
@@ -217,8 +213,6 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
     const cardProps = {
       category,
       siteUser: isEditable ? undefined : siteUser,
-      showDescription,
-      showProductCount,
       onClick: () => handleCategoryClick(category),
     };
     switch (style) {
@@ -243,7 +237,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   const getGridClass = () => {
     switch (style) {
       case "category-1":
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 3)}`;
+        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`;
       case "category-2":
         return "grid-cols-1 lg:grid-cols-2 gap-8";
       case "category-3":
@@ -252,7 +246,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
         return "";
       case "category-7":
       default:
-        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(itemsPerRow, 4)}`;
+        return `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`;
     }
   };
 
@@ -375,18 +369,16 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
               {isLoading && (
                 <div className={`grid ${getGridClass()} gap-6`}>
-                  {Array.from({ length: Math.min(page_size, 8) }).map(
-                    (_, index) => (
-                      <div key={index} className="flex flex-col space-y-3">
-                        <Skeleton className="h-[250px] w-full rounded-xl" />
-                        <div className="space-y-2">
-                          <Skeleton className="h-5 w-3/4" />
-                          <Skeleton className="h-4 w-1/2" />
-                          <Skeleton className="h-6 w-1/3" />
-                        </div>
+                  {Array.from({ length: 8 }).map((_, index) => (
+                    <div key={index} className="flex flex-col space-y-3">
+                      <Skeleton className="h-[250px] w-full rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-5 w-3/4" />
+                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="h-6 w-1/3" />
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               )}
 
@@ -476,7 +468,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
               <div
                 className={`${style === "category-1" ? "flex gap-6 overflow-x-auto pb-4" : `grid ${getGridClass()} gap-8`}`}
               >
-                {Array.from({ length: page_size }).map((_, index) => (
+                {Array.from({ length: 8 }).map((_, index) => (
                   <div key={index} className="flex flex-col space-y-4">
                     <Skeleton className="h-[280px] w-full rounded-lg" />
                     <div className="space-y-3">

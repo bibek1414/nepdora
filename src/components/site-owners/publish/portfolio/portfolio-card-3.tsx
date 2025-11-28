@@ -10,16 +10,12 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface PortfolioCard3Props {
   portfolio: Portfolio;
   siteUser?: string;
-  showTechnologies?: boolean;
-  showCategories?: boolean;
   onClick?: () => void;
 }
 
 export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
   portfolio,
   siteUser,
-  showTechnologies = true,
-  showCategories = true,
   onClick,
 }) => {
   const portfolioImage =
@@ -86,7 +82,7 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
         <div className="flex flex-1 flex-col justify-between">
           <div>
             {/* Category */}
-            {showCategories && portfolio.category && (
+            {portfolio.category && (
               <Badge
                 className="mb-3"
                 style={{
@@ -122,18 +118,16 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
             />
 
             {/* Technologies */}
-            {showTechnologies &&
-              portfolio.tags &&
-              portfolio.tags.length > 0 && (
-                <div className="mb-4 flex flex-wrap gap-2">
-                  {portfolio.tags.map(tag => (
-                    <Badge key={tag.id} variant="outline">
-                      <Tag className="mr-1 h-3 w-3" />
-                      {tag.name}
-                    </Badge>
-                  ))}
-                </div>
-              )}
+            {portfolio.tags && portfolio.tags.length > 0 && (
+              <div className="mb-4 flex flex-wrap gap-2">
+                {portfolio.tags.map(tag => (
+                  <Badge key={tag.id} variant="outline">
+                    <Tag className="mr-1 h-3 w-3" />
+                    {tag.name}
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Actions */}
