@@ -1,22 +1,79 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import {
-  FileText,
-  Rocket,
-  Lightbulb,
-  Puzzle,
-  ShieldCheck,
-  ArrowUpRight,
-} from "lucide-react";
+import React, { useState } from "react";
+import Image from "next/image";
+import { ArrowLeft, ArrowRight, Send } from "lucide-react";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
-import { EditableText } from "@/components/ui/editable-text";
-import { EditableLink } from "@/components/ui/editable-link";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import Link from "next/link";
-import { useUpdateComponentMutation } from "@/hooks/owner-site/components/use-unified";
-import { toast } from "sonner";
+
+// Define colors here since we couldn't find them in the config
+const ADVENTURE_GREEN = "#1a4d2e"; // Dark green
+const ADVENTURE_LIME = "#d9f99d"; // Lime green
+
+interface ServiceCardProps {
+  service: ServicesPost;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+const ServiceCard: React.FC<ServiceCardProps> = ({
+  service,
+  isActive,
+  onClick,
+}) => {
+  // Strip HTML from description
+  const stripHtml = (html: string) =>
+    html
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  return (
+    <div
+      onClick={onClick}
+      className={`relative flex min-w-[280px] flex-1 cursor-pointer flex-col items-center rounded-[32px] bg-white p-8 text-center transition-all duration-300 ease-in-out md:p-10 ${
+        isActive
+          ? "z-10 scale-105 shadow-xl"
+          : "opacity-90 shadow-sm hover:-translate-y-1 hover:shadow-md"
+      } `}
+      style={{
+        borderColor: isActive ? ADVENTURE_LIME : "transparent",
+        borderWidth: isActive ? "2px" : "1px",
+      }}
+    >
+      <div
+        className="mb-8 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full shadow-inner"
+        style={{ backgroundColor: ADVENTURE_LIME }}
+      >
+        {service.thumbnail_image ? (
+          <div className="relative h-full w-full">
+            <Image
+              src={service.thumbnail_image}
+              alt={service.title}
+              fill
+              className="object-cover"
+            />
+          </div>
+        ) : (
+          <span className="text-2xl font-bold text-white">
+            {service.title.charAt(0)}
+          </span>
+        )}
+      </div>
+
+      <h3
+        className="mb-4 text-xl font-bold md:text-2xl"
+        style={{ color: ADVENTURE_GREEN }}
+      >
+        {service.title}
+      </h3>
+
+      <p className="text-sm leading-relaxed text-gray-500 md:text-base">
+        {stripHtml(service.description || "")}
+      </p>
+    </div>
+  );
+};
 
 interface ServicesCard6Props {
   component: ServicesComponentData;
@@ -28,368 +85,135 @@ interface ServicesCard6Props {
   onServiceClick?: (serviceSlug: string, order: number) => void;
 }
 
-const iconMap = {
-  FileText,
-  Rocket,
-  Lightbulb,
-  Puzzle,
-  ShieldCheck,
-};
-
-// Map service index to icon (cycling through available icons)
-const getIconForIndex = (index: number) => {
-  const icons: Array<keyof typeof iconMap> = [
-    "FileText",
-    "Rocket",
-    "Lightbulb",
-    "Puzzle",
-    "ShieldCheck",
-  ];
-  return icons[index % icons.length];
-};
-
 export const ServicesCard6: React.FC<ServicesCard6Props> = ({
   component,
   services,
-  isEditable = false,
-  siteUser,
-  pageSlug,
-  onUpdate,
   onServiceClick,
 }) => {
-  const [data, setData] = useState({
-    tag: component.data.tag || "[Core Services]",
-    title: component.data.title || "Explore Services",
-    italicWord: component.data.italicWord || "Services",
-    buttonText: component.data.buttonText || "Contact Us",
-    buttonLink: component.data.buttonLink || "#",
-  });
+  const [activeIndex, setActiveIndex] = useState(1); // Middle card active by default
 
-  const { data: themeResponse } = useThemeQuery();
-  const updateServicesComponent = useUpdateComponentMutation(
-    pageSlug || "",
-    "services"
-  );
-
-  // Get theme colors with fallback to defaults
-  const theme = useMemo(
-    () =>
-      themeResponse?.data?.[0]?.data?.theme || {
-        colors: {
-          text: "#0F172A",
-          primary: "#3B82F6",
-          primaryForeground: "#FFFFFF",
-          secondary: "#F59E0B",
-          secondaryForeground: "#1F2937",
-          background: "#FFFFFF",
-        },
-        fonts: {
-          body: "Inter",
-          heading: "Poppins",
-        },
-      },
-    [themeResponse]
-  );
-
-  // Handle text field updates
-  const handleTextUpdate =
-    (field: "tag" | "title" | "italicWord") => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-
-      if (!pageSlug) return;
-
-      const componentId = component.component_id || component.id?.toString();
-      if (!componentId) return;
-
-      updateServicesComponent.mutate(
-        {
-          componentId,
-          data: {
-            ...component.data,
-            [field]: value,
-          },
-        },
-        {
-          onError: error => {
-            toast.error("Failed to update", {
-              description:
-                error instanceof Error ? error.message : "Please try again",
-            });
-          },
-        }
-      );
-
-      if (onUpdate) {
-        onUpdate(componentId, {
-          ...component,
-          data: {
-            ...component.data,
-            [field]: value,
-          },
-        });
-      }
-    };
-
-  // Handle button link updates
-  const handleButtonLinkUpdate = (text: string, href: string) => {
-    const updatedData = {
-      ...data,
-      buttonText: text,
-      buttonLink: href,
-    };
-    setData(updatedData);
-
-    if (!pageSlug) return;
-
-    const componentId = component.component_id || component.id?.toString();
-    if (!componentId) return;
-
-    updateServicesComponent.mutate(
-      {
-        componentId,
-        data: {
-          ...component.data,
-          buttonText: text,
-          buttonLink: href,
-        },
-      },
-      {
-        onError: error => {
-          toast.error("Failed to update button", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
-
-    if (onUpdate) {
-      onUpdate(componentId, {
-        ...component,
-        data: {
-          ...component.data,
-          buttonText: text,
-          buttonLink: href,
-        },
-      });
-    }
+  const handlePrev = () => {
+    setActiveIndex(prev => (prev === 0 ? services.length - 1 : prev - 1));
   };
 
-  const handleServiceClick = (service: ServicesPost) => {
+  const handleNext = () => {
+    setActiveIndex(prev => (prev === services.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleCardClick = (index: number, service: ServicesPost) => {
+    setActiveIndex(index);
     if (onServiceClick && component.order !== undefined) {
-      onServiceClick(service.slug, component.order);
+      // Optional: Navigate on click if it's already active?
+      // For now just set active.
+      // onServiceClick(service.slug, component.order);
     }
   };
-
-  const getDetailsUrl = (service: ServicesPost): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/services/${service.slug}`;
-    }
-    return `/services/${service.slug}`;
-  };
-
-  // Strip HTML from description
-  const stripHtml = (html: string) =>
-    html
-      .replace(/<[^>]*>/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-  // Process all service descriptions outside of the map
-  const processedServices = useMemo(() => {
-    return services.map(service => {
-      const plainText = stripHtml(service.description || "");
-      const description = plainText
-        ? plainText
-        : "We help you define clear goals and build winning strategies that drive measurable business growth.";
-      return {
-        ...service,
-        processedDescription: description,
-      };
-    });
-  }, [services]);
 
   return (
-    <section
-      className="bg-white py-20"
-      style={{
-        backgroundColor: theme.colors.background,
-        fontFamily: theme.fonts.body,
-      }}
-    >
-      <div className="container mx-auto px-4 md:px-8">
-        {/* Header Row */}
-        <div className="mb-12 flex flex-col items-end justify-between md:flex-row">
-          <div className="mb-4 md:mb-0">
-            <EditableText
-              value={data.tag}
-              onChange={handleTextUpdate("tag")}
-              as="span"
-              isEditable={isEditable}
-              placeholder="[Core Services]"
-              style={{
-                color: theme.colors.text,
-                fontFamily: theme.fonts.body,
-              }}
-              className="mb-2 block text-sm font-medium text-gray-600"
-            />
-            <h2
-              className="text-3xl font-bold md:text-4xl lg:text-5xl"
-              style={{
-                color: theme.colors.text,
-                fontFamily: theme.fonts.heading,
-              }}
-            >
-              <EditableText
-                value={data.title}
-                onChange={handleTextUpdate("title")}
-                as="span"
-                isEditable={isEditable}
-                placeholder="Explore Services"
-              />{" "}
-              <span className="font-serif font-normal italic">
-                <EditableText
-                  value={data.italicWord}
-                  onChange={handleTextUpdate("italicWord")}
-                  as="span"
-                  isEditable={isEditable}
-                  placeholder="Services"
-                />
+    <div className="bg-bg-light relative flex min-h-screen w-full items-center justify-center overflow-hidden py-20">
+      {/* Background Split */}
+      <div className="bg-bg-dark absolute top-0 right-0 z-0 h-full w-full rounded-bl-[100px] md:w-[35%] md:rounded-none" />
+
+      <div className="relative z-10 container mx-auto px-6 md:px-12">
+        {/* Header Section with Navigation */}
+        <div className="mb-12 flex flex-col items-end justify-between md:mb-16 md:flex-row">
+          <div className="mb-8 max-w-4xl md:mb-0">
+            <div className="mb-4 flex items-center gap-2">
+              <span
+                className="text-xs font-bold tracking-[0.2em] uppercase"
+                style={{ color: ADVENTURE_GREEN }}
+              >
+                Our Services
               </span>
+              <Send
+                size={12}
+                className="-rotate-45"
+                fill="currentColor"
+                style={{ color: ADVENTURE_LIME }}
+              />
+            </div>
+
+            <h1 className="mb-2 font-sans text-4xl font-bold tracking-tight text-gray-900 md:text-6xl">
+              Adventure Unleashed
+            </h1>
+            <h2
+              className="font-sans text-4xl font-bold tracking-tight md:text-6xl"
+              style={{ color: ADVENTURE_GREEN }}
+            >
+              Discover Your Next
             </h2>
           </div>
-          <div className="flex-shrink-0">
-            <EditableLink
-              text={data.buttonText}
-              href={data.buttonLink || "#"}
-              onChange={handleButtonLinkUpdate}
+
+          {/* Navigation Buttons */}
+          <div className="hidden gap-4 md:flex">
+            <button
+              onClick={handlePrev}
+              className="group flex h-14 w-14 items-center justify-center rounded-full border border-gray-400 transition-colors duration-300 hover:text-white"
               style={{
-                backgroundColor: theme.colors.primary,
-                color: theme.colors.primaryForeground,
-                fontFamily: theme.fonts.body,
+                borderColor: "gray",
               }}
-              className="inline-flex items-center justify-between rounded-full py-2 pr-2 pl-6 text-[15px] font-medium shadow-lg shadow-blue-900/10 transition-colors hover:opacity-90 [&:hover_.icon-rotate]:rotate-45"
-              textPlaceholder="Contact Us"
-              hrefPlaceholder="#"
-              isEditable={isEditable}
-              siteUser={siteUser}
             >
-              <>
-                <span>{data.buttonText || "Contact Us"}</span>
-                <span className="icon-rotate ml-2 flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300">
-                  <ArrowUpRight
-                    className="h-5 w-5"
-                    style={{ color: theme.colors.primary }}
-                  />
-                </span>
-              </>
-            </EditableLink>
+              <ArrowLeft className="text-gray-600 transition-colors group-hover:text-white" />
+              <style jsx>{`
+                button:hover {
+                  background-color: ${ADVENTURE_GREEN};
+                  border-color: ${ADVENTURE_GREEN};
+                }
+              `}</style>
+            </button>
+            <button
+              onClick={handleNext}
+              className="group flex h-14 w-14 items-center justify-center rounded-full border border-gray-400 transition-colors duration-300 hover:text-white"
+            >
+              <ArrowRight className="text-gray-600 transition-colors group-hover:text-white" />
+              <style jsx>{`
+                button:hover {
+                  background-color: ${ADVENTURE_GREEN};
+                  border-color: ${ADVENTURE_GREEN};
+                }
+              `}</style>
+            </button>
           </div>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {processedServices.map((service, idx) => {
-            const iconKey = getIconForIndex(idx);
-            const IconComponent = iconMap[iconKey];
+        {/* Cards Container */}
+        <div className="relative flex flex-col items-stretch justify-center gap-6 md:flex-row md:gap-8">
+          {services.map((service, index) => (
+            <ServiceCard
+              key={service.id}
+              service={service}
+              isActive={index === activeIndex}
+              onClick={() => handleCardClick(index, service)}
+            />
+          ))}
+        </div>
 
-            const CardWrapper = siteUser
-              ? ({ children }: { children: React.ReactNode }) => (
-                  <Link href={getDetailsUrl(service)}>{children}</Link>
-                )
-              : ({ children }: { children: React.ReactNode }) => (
-                  <div
-                    onClick={() => handleServiceClick(service)}
-                    className="cursor-pointer"
-                  >
-                    {children}
-                  </div>
-                );
-
-            const cardId = `service-card-${service.id}`;
-
-            return (
-              <CardWrapper key={service.id}>
-                <div
-                  className="group rounded-3xl border border-transparent bg-gray-50 p-10 transition-all duration-300 hover:border-blue-100 hover:bg-white hover:shadow-xl"
-                  data-card-id={cardId}
-                >
-                  <style>{`
-                    [data-card-id="${cardId}"]:hover .icon-container-${service.id} {
-                      background-color: ${theme.colors.primary} !important;
-                    }
-                    [data-card-id="${cardId}"]:hover .icon-container-${service.id} svg {
-                      color: white !important;
-                    }
-                    [data-card-id="${cardId}"]:hover .read-more-${service.id} {
-                      color: ${theme.colors.primary} !important;
-                    }
-                    [data-card-id="${cardId}"]:hover .read-more-icon-${service.id} {
-                      transform: translateX(0.25rem);
-                    }
-                  `}</style>
-                  <div
-                    className={`icon-container-${service.id} mb-8 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm transition-colors`}
-                    style={{
-                      backgroundColor: "white",
-                      color: theme.colors.primary,
-                    }}
-                  >
-                    {IconComponent && (
-                      <IconComponent
-                        size={20}
-                        className="transition-colors"
-                        style={{
-                          color: theme.colors.primary,
-                        }}
-                      />
-                    )}
-                  </div>
-
-                  <h3
-                    className="mb-4 text-xl font-bold text-gray-900"
-                    style={{
-                      color: theme.colors.text,
-                      fontFamily: theme.fonts.heading,
-                    }}
-                  >
-                    {service.title}
-                  </h3>
-
-                  <p
-                    className="mb-8 text-sm leading-relaxed text-gray-500"
-                    style={{
-                      color: theme.colors.text,
-                      fontFamily: theme.fonts.body,
-                    }}
-                  >
-                    {service.processedDescription}
-                  </p>
-
-                  <div
-                    className={`read-more-${service.id} flex items-center gap-2 text-sm font-bold text-gray-900 transition-colors`}
-                    style={{
-                      color: theme.colors.text,
-                      fontFamily: theme.fonts.body,
-                    }}
-                  >
-                    <span>Read More</span>
-                    <div
-                      className={`read-more-icon-${service.id} flex h-5 w-5 items-center justify-center rounded-full text-white transition-transform`}
-                      style={{
-                        backgroundColor: theme.colors.primary,
-                      }}
-                    >
-                      <ArrowUpRight size={10} />
-                    </div>
-                  </div>
-                </div>
-              </CardWrapper>
-            );
-          })}
+        {/* Mobile Navigation */}
+        <div className="mt-8 flex justify-center gap-4 md:hidden">
+          <button
+            onClick={handlePrev}
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-400 active:text-white"
+          >
+            <ArrowLeft size={20} />
+            <style jsx>{`
+              button:active {
+                background-color: ${ADVENTURE_GREEN};
+              }
+            `}</style>
+          </button>
+          <button
+            onClick={handleNext}
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-400 active:text-white"
+          >
+            <ArrowRight size={20} />
+            <style jsx>{`
+              button:active {
+                background-color: ${ADVENTURE_GREEN};
+              }
+            `}</style>
+          </button>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
