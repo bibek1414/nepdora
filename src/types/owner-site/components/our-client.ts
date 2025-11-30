@@ -24,7 +24,7 @@ export const defaultOurClientsData: OurClientsData = {
   component_type: "our_clients",
   style: "our-clients-1",
   title: "Our Clients",
-  subtitle: "Trusted by industry leaders",
+  subtitle: "Companies we worked with",
   description: "We are proud to work with these amazing companies.",
   show_all: true,
   limit: 10,
