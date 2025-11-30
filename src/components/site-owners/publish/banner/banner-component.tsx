@@ -19,6 +19,8 @@ import {
 } from "@/types/owner-site/components/banner";
 import { BannerTemplate1 } from "./banner-template-1";
 import { BannerTemplate2 } from "./banner-template-2";
+import { BannerTemplate3 } from "./banner-template-3";
+import { BannerTemplate4 } from "./banner-template-4";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -130,7 +132,10 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
         return <BannerTemplate1 {...props} />;
       case "banner-2":
         return <BannerTemplate2 {...props} />;
-
+      case "banner-3":
+        return <BannerTemplate3 {...props} />;
+      case "banner-4":
+        return <BannerTemplate4 {...props} />;
       default:
         return (
           <div className="flex min-h-[200px] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-8">
