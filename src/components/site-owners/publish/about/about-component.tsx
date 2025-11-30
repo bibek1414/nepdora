@@ -29,6 +29,7 @@ import {
   AboutUs12Data,
   AboutUs13Data,
   AboutUs14Data,
+  AboutUs15Data,
   UpdateAboutUsRequest,
 } from "@/types/owner-site/components/about";
 import { AboutUsTemplate1 } from "./about-style-1";
@@ -51,17 +52,20 @@ import { AboutUsTemplate11 } from "./about-style-11";
 import { AboutUsTemplate12 } from "./about-style-12";
 import { AboutUsTemplate13 } from "./about-style-13";
 import { AboutUsTemplate14 } from "./about-style-14";
+import { AboutStyle15 } from "./about-style-15";
 
 interface AboutUsComponentProps {
   component: AboutUsComponentData;
   isEditable?: boolean;
   pageSlug: string;
+  siteUser?: string;
 }
 
 export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
   component,
   isEditable = false,
   pageSlug,
+  siteUser,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -216,6 +220,13 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
             aboutUsData={component.data as AboutUs14Data}
             isEditable={isEditable}
             onUpdate={handleUpdate}
+          />
+        );
+      case "about-15":
+        return (
+          <AboutStyle15
+            aboutUsData={component.data as AboutUs15Data}
+            siteUser={siteUser}
           />
         );
       default:

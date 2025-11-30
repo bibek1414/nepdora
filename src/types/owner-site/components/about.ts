@@ -249,6 +249,27 @@ export interface AboutUs14Data {
   services: AboutUs14Service[];
 }
 
+export interface AboutUs15Card {
+  id: string;
+  icon: "Puzzle" | "TrendingUp" | "Lightbulb";
+  title: string;
+  description: string;
+}
+
+export interface AboutUs15Data {
+  template: "about-15";
+  sectionTag: string;
+  title: string;
+  italicWord: string;
+  buttonText: string;
+  buttonLink: string;
+  primaryDescription: string;
+  secondaryDescription: string;
+  cards: AboutUs15Card[];
+  imageUrl: string;
+  imageAlt: string;
+}
+
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
@@ -264,7 +285,8 @@ export type AboutUsData =
   | AboutUs11Data
   | AboutUs12Data
   | AboutUs13Data
-  | AboutUs14Data;
+  | AboutUs14Data
+  | AboutUs15Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -319,7 +341,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs11Data>
     | Partial<AboutUs12Data>
     | Partial<AboutUs13Data>
-    | Partial<AboutUs14Data>;
+    | Partial<AboutUs14Data>
+    | Partial<AboutUs15Data>;
   order?: number;
 }
 
@@ -797,6 +820,42 @@ export const defaultAboutUs14Data: AboutUs14Data = {
   ],
 };
 
+export const defaultAboutUs15Data: AboutUs15Data = {
+  template: "about-15",
+  sectionTag: "[More About Us]",
+  title: "We Believe In Results With",
+  italicWord: "Consulting.",
+  buttonText: "Get Started",
+  buttonLink: "#",
+  primaryDescription:
+    "At Optimo, we believe that real business growth is rooted in strategy, insight, and execution. As a results-driven consulting firm for you.",
+  secondaryDescription:
+    "Our approach blends deep industry insight, extensive experience, and strategic thinking to solve complex challenges, innovation, and deliver measurable, lasting business value",
+  cards: [
+    {
+      id: "card-1",
+      icon: "Puzzle",
+      title: "Strategic Planning",
+      description: "Defining goals and strategies for sustainable",
+    },
+    {
+      id: "card-2",
+      icon: "TrendingUp",
+      title: "Operational Growth",
+      description: "Driving efficiency and scalable performance.",
+    },
+    {
+      id: "card-3",
+      icon: "Lightbulb",
+      title: "Strategic Planning",
+      description: "Transforming businesses through technology.",
+    },
+  ],
+  imageUrl:
+    "https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  imageAlt: "Senior Consultant",
+};
+
 // Helper functions
 export const getDefaultAboutUsData = (
   template: AboutUsData["template"]
@@ -830,6 +889,8 @@ export const getDefaultAboutUsData = (
       return defaultAboutUs13Data;
     case "about-14":
       return defaultAboutUs14Data;
+    case "about-15":
+      return defaultAboutUs15Data;
     default:
       return defaultAboutUs1Data;
   }
@@ -877,3 +938,6 @@ export const isAboutUsTemplate13 = (data: AboutUsData): data is AboutUs13Data =>
 
 export const isAboutUsTemplate14 = (data: AboutUsData): data is AboutUs14Data =>
   data.template === "about-14";
+
+export const isAboutUsTemplate15 = (data: AboutUsData): data is AboutUs15Data =>
+  data.template === "about-15";
