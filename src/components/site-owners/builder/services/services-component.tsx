@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { ServicesComponentData } from "@/types/owner-site/components/services";
+import {
+  ServicesComponentData,
+  ServicesData,
+} from "@/types/owner-site/components/services";
 import { useServices } from "@/hooks/owner-site/admin/use-services";
 import {
   useDeleteComponentMutation,
@@ -10,6 +13,7 @@ import { ServicesCard2 } from "./services-card2";
 import { ServicesCard3 } from "./services-card3";
 import { ServicesCard4 } from "./services-card4";
 import { ServicesCard5 } from "./services-card5";
+import { ServicesCard6 } from "./services-card6";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -49,11 +53,14 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const {
-    title = "Latest Services",
-    subtitle,
-    style = "services-1",
-  } = component.data || {};
+  const componentData: ServicesData = component.data || {
+    component_type: "services",
+    style: "services-1",
+    title: "Latest Services",
+  };
+  const { title = "Latest Services", subtitle } = componentData;
+
+  const style = componentData.style;
 
   const page_size = 6;
 
@@ -219,11 +226,117 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
       case "services-5":
         return "grid-cols-1 gap-8 md:grid-cols-3";
+      case "services-6":
+        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
       case "services-1":
       default:
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
     }
   };
+
+  // Special handling for services-6 (full section with header)
+  if (style === "services-6") {
+    return (
+      <div className="group relative">
+        {/* Delete Control with AlertDialog */}
+        <div className="absolute inset-y-4 top-4 -right-5 z-20 translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
+          <AlertDialog
+            open={isDeleteDialogOpen}
+            onOpenChange={setIsDeleteDialogOpen}
+          >
+            <div className="flex items-center gap-2">
+              <Link href="/admin/services/" target="_blank" rel="noopener">
+                <Button size="sm" variant="outline">
+                  Manage Services
+                </Button>
+              </Link>
+              <AlertDialogTrigger asChild>
+                <Button
+                  onClick={handleDeleteClick}
+                  variant="destructive"
+                  size="sm"
+                  className="h-8 px-3"
+                  disabled={deleteServicesComponent.isPending}
+                >
+                  <Trash2 className="mr-1 h-4 w-4" />
+                  {deleteServicesComponent.isPending ? "Deleting..." : "Delete"}
+                </Button>
+              </AlertDialogTrigger>
+            </div>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex items-center gap-2">
+                  <Trash2 className="text-destructive h-5 w-5" />
+                  Delete Services Component
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete this services component? This
+                  action cannot be undone and will permanently remove the
+                  component from your page.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleConfirmDelete}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  disabled={deleteServicesComponent.isPending}
+                >
+                  {deleteServicesComponent.isPending
+                    ? "Deleting..."
+                    : "Delete Component"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+
+        {/* Services-6 Full Section */}
+        {!isLoading && !error && (
+          <ServicesCard6
+            component={component}
+            services={services.slice(0, Math.min(page_size, services.length))}
+            isEditable={isEditable}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={onUpdate}
+            onServiceClick={onServiceClick}
+          />
+        )}
+
+        {isLoading && (
+          <div className="py-20">
+            <div className="container mx-auto px-4 md:px-8">
+              <div className="mb-12 flex flex-col items-end justify-between md:flex-row">
+                <div className="mb-4 md:mb-0">
+                  <Skeleton className="mb-2 h-4 w-32" />
+                  <Skeleton className="h-12 w-64" />
+                </div>
+                <Skeleton className="h-10 w-32" />
+              </div>
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <Skeleton key={index} className="h-64 rounded-3xl" />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error Loading Services</AlertTitle>
+            <AlertDescription>
+              {error instanceof Error
+                ? error.message
+                : "Failed to load services. Please check your API connection."}
+            </AlertDescription>
+          </Alert>
+        )}
+      </div>
+    );
+  }
 
   // Builder mode preview
   if (isEditable) {
@@ -373,6 +486,20 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
           </div>
         </div>
       </div>
+    );
+  }
+
+  // Special handling for services-6 in live site
+  if (componentData.style === "services-6") {
+    return (
+      <ServicesCard6
+        component={component}
+        services={services.slice(0, page_size)}
+        isEditable={false}
+        siteUser={siteUser}
+        pageSlug={pageSlug}
+        onServiceClick={onServiceClick}
+      />
     );
   }
 

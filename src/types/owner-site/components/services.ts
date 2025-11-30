@@ -6,10 +6,16 @@ export interface ServicesData {
     | "services-2"
     | "services-3"
     | "services-4"
-    | "services-5";
+    | "services-5"
+    | "services-6";
   title: string;
   subtitle?: string;
   order?: number;
+  // Additional fields for services-6
+  tag?: string;
+  italicWord?: string;
+  buttonText?: string;
+  buttonLink?: string;
 }
 
 export interface ServicesComponentData {

@@ -579,6 +579,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "services-3"
       | "services-4"
       | "services-5"
+      | "services-6"
   ) => {
     const servicesData = { ...defaultServicesData, style: template };
 
