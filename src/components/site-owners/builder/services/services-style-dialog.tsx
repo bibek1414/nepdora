@@ -17,6 +17,7 @@ interface ServicesStyleDialogProps {
       | "services-3"
       | "services-4"
       | "services-5"
+      | "services-6"
   ) => void;
 }
 
@@ -25,7 +26,8 @@ type ServicesTemplateId =
   | "services-2"
   | "services-3"
   | "services-4"
-  | "services-5";
+  | "services-5"
+  | "services-6";
 
 export const ServicesStyleDialog: React.FC<ServicesStyleDialogProps> = ({
   open,
@@ -56,6 +58,10 @@ export const ServicesStyleDialog: React.FC<ServicesStyleDialogProps> = ({
     {
       id: "services-5",
       name: "Modern Cards",
+    },
+    {
+      id: "services-6",
+      name: "Adventure Carousel",
     },
   ];
 
