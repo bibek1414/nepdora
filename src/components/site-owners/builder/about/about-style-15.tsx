@@ -24,7 +24,7 @@ const iconMap = {
   Lightbulb,
 };
 
-export const AboutStyle15: React.FC<AboutUsTemplate15Props> = ({
+export const AboutUsTemplate15: React.FC<AboutUsTemplate15Props> = ({
   aboutUsData,
   isEditable = false,
   onUpdate,

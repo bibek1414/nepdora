@@ -169,6 +169,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/our-clients/our-clients-3.png",
       },
     ],
+
     cta: [
       {
         id: "cta-1",
@@ -287,6 +288,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "about-15",
         name: "About Style 15",
         image: "/images/site-owners/about/about15.png",
+      },
+      {
+        id: "about-16",
+        name: "About Style 16",
+        image: "/images/site-owners/about/about16.png",
       },
     ],
     products: [
@@ -783,6 +789,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Navbar with Appointment",
         image: "/images/site-owners/navbars/navbar9.png",
         description: "Includes appointment button",
+      },
+      {
+        id: "navbar-11",
+        name: "Navbar with Breadcrumbs",
+        image: "/images/site-owners/navbars/navbar9.png",
+        description: "Includes dynamic breadcrumbs for inner pages",
       },
     ],
     // FOOTER TEMPLATES

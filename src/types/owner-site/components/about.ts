@@ -270,6 +270,22 @@ export interface AboutUs15Data {
   imageAlt: string;
 }
 
+export interface AboutUs16Data {
+  template: "about-16";
+  badgeCount: string;
+  badgeText: string;
+  badgeDescription: string;
+  smallTitle: string;
+  title: string;
+  highlightedText: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  mainImage: string;
+  smallImage1: string;
+  smallImage2: string;
+}
+
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
@@ -286,7 +302,10 @@ export type AboutUsData =
   | AboutUs12Data
   | AboutUs13Data
   | AboutUs14Data
-  | AboutUs15Data;
+  | AboutUs13Data
+  | AboutUs14Data
+  | AboutUs15Data
+  | AboutUs16Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -342,7 +361,10 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs12Data>
     | Partial<AboutUs13Data>
     | Partial<AboutUs14Data>
-    | Partial<AboutUs15Data>;
+    | Partial<AboutUs13Data>
+    | Partial<AboutUs14Data>
+    | Partial<AboutUs15Data>
+    | Partial<AboutUs16Data>;
   order?: number;
 }
 
@@ -856,6 +878,26 @@ export const defaultAboutUs15Data: AboutUs15Data = {
   imageAlt: "Senior Consultant",
 };
 
+export const defaultAboutUs16Data: AboutUs16Data = {
+  template: "about-16",
+  badgeCount: "35",
+  badgeText: "Years' Experience in HR",
+  badgeDescription: "We have Lots of Success Stories",
+  smallTitle: "ACUVIC IS THE BEST SOLUTION",
+  title: "Welcome to Digital",
+  highlightedText: "HR Consulting",
+  description:
+    "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure.",
+  buttonText: "Explore More",
+  buttonLink: "#",
+  mainImage:
+    "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  smallImage1:
+    "https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
+  smallImage2:
+    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
+};
+
 // Helper functions
 export const getDefaultAboutUsData = (
   template: AboutUsData["template"]
@@ -891,6 +933,8 @@ export const getDefaultAboutUsData = (
       return defaultAboutUs14Data;
     case "about-15":
       return defaultAboutUs15Data;
+    case "about-16":
+      return defaultAboutUs16Data;
     default:
       return defaultAboutUs1Data;
   }
@@ -941,3 +985,6 @@ export const isAboutUsTemplate14 = (data: AboutUsData): data is AboutUs14Data =>
 
 export const isAboutUsTemplate15 = (data: AboutUsData): data is AboutUs15Data =>
   data.template === "about-15";
+
+export const isAboutUsTemplate16 = (data: AboutUsData): data is AboutUs16Data =>
+  data.template === "about-16";

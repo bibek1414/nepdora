@@ -246,15 +246,12 @@ export function FooterStyle7({
   );
 
   return (
-    <div
-      className="group relative"
-      style={{ backgroundColor: backgroundColor }}
-    >
+    <div className="group relative" style={{ backgroundColor: primaryColor }}>
       <footer className="relative mx-auto mt-20 max-w-7xl pt-20 text-white">
         {/* Floating CTA Bar */}
         <div
           className="absolute top-0 left-1/2 flex w-[90%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-between rounded-full border border-white/10 p-8 shadow-2xl md:w-[80%] md:flex-row md:p-12"
-          style={{ backgroundColor: backgroundColor }}
+          style={{ backgroundColor: primaryColor }}
         >
           <div className="mb-4 flex items-center gap-4 md:mb-0">
             <div
@@ -340,7 +337,7 @@ export function FooterStyle7({
               </div>
               <FooterLogo footerData={footerData} />
             </div>
-            <p className="text-sm leading-relaxed text-gray-400">
+            <p className="text-sm leading-relaxed text-white">
               {footerData.description}
             </p>
             <div className="flex gap-4">
