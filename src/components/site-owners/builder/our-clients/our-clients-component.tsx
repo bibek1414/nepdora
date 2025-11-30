@@ -239,10 +239,12 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
             dangerouslySetInnerHTML={{ __html: title }}
           ></h2>
           {subtitle && (
-            <p
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            ></p>
+            <div className="mb-10 flex items-center justify-center gap-3 opacity-80">
+              <p
+                className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
+            </div>
           )}
         </div>
 

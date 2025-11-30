@@ -30,35 +30,58 @@ export const OurClients3: React.FC<OurClients3Props> = ({ data }) => {
     );
   }
 
+  // Duplicate the list to create the seamless infinite loop effect
+  // Ensure we have enough items to fill the screen width for a smooth marquee
+  const marqueeItems = [...clients, ...clients, ...clients, ...clients];
+
   return (
-    <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
-      {clients.map(client => (
-        <div key={client.id} className="group relative">
-          <div className="absolute -inset-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 blur transition duration-200 group-hover:opacity-20"></div>
-          <div className="relative flex items-center justify-center rounded-lg bg-white p-2">
-            {client.url ? (
-              <a
-                href={client.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
+    <div className="flex w-full flex-col items-center">
+      {/* Header Label similar to the screenshot */}
+
+      {/* Constrained width container */}
+      <div className="group relative w-full max-w-4xl overflow-hidden">
+        {/* The Scrolling Container */}
+        <div
+          className="group/marquee relative w-full"
+          style={{
+            maskImage:
+              "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
+          }}
+        >
+          {/* The Moving Strip */}
+          <div className="animate-scroll flex w-max items-center gap-16 pr-16 md:gap-24 md:pr-24">
+            {marqueeItems.map((client, index) => (
+              <div
+                key={`${client.id}-${index}`}
+                className="logo-item flex-shrink-0 cursor-pointer opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0"
               >
-                <img
-                  src={client.logo}
-                  alt={client.name}
-                  className="h-12 w-auto object-contain opacity-70 transition-opacity hover:opacity-100"
-                />
-              </a>
-            ) : (
-              <img
-                src={client.logo}
-                alt={client.name}
-                className="h-12 w-auto object-contain opacity-70 transition-opacity hover:opacity-100"
-              />
-            )}
+                {client.url ? (
+                  <a
+                    href={client.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    <img
+                      src={client.logo}
+                      alt={client.name}
+                      className="h-20 w-auto object-contain"
+                    />
+                  </a>
+                ) : (
+                  <img
+                    src={client.logo}
+                    alt={client.name}
+                    className="h-20 w-auto object-contain"
+                  />
+                )}
+              </div>
+            ))}
           </div>
         </div>
-      ))}
+      </div>
     </div>
   );
 };
