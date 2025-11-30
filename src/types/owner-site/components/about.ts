@@ -286,6 +286,22 @@ export interface AboutUs16Data {
   smallImage2: string;
 }
 
+export interface AboutUs17Data {
+  template: "about-17";
+  title: string;
+  titleHighlight: string;
+  description: string;
+  visaApplied: string;
+  visaType: string;
+  approval: string;
+  button1Text: string;
+  button1Link: string;
+  button2Text: string;
+  button2Link: string;
+  imageUrl: string;
+  imageAlt: string;
+}
+
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
@@ -305,7 +321,8 @@ export type AboutUsData =
   | AboutUs13Data
   | AboutUs14Data
   | AboutUs15Data
-  | AboutUs16Data;
+  | AboutUs16Data
+  | AboutUs17Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -364,7 +381,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs13Data>
     | Partial<AboutUs14Data>
     | Partial<AboutUs15Data>
-    | Partial<AboutUs16Data>;
+    | Partial<AboutUs16Data>
+    | Partial<AboutUs17Data>;
   order?: number;
 }
 
@@ -898,6 +916,24 @@ export const defaultAboutUs16Data: AboutUs16Data = {
     "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
 };
 
+export const defaultAboutUs17Data: AboutUs17Data = {
+  template: "about-17",
+  title: "Visa",
+  titleHighlight: "Got Approved for Eygpt",
+  description:
+    "Aliquam eros justo, posuere lobortis viverra laoreet matti ullamcorper posuere viverra .Aliquam eros justo, posuere lobortis viverra laoreet augue mattis fmentum ullamco rper viverra laoreet Aliquam eros justo, posuere lobortis viverra laoreet matti ullamc orper posuere viverra .Aliquam eros justo, posu Aliquam eros justo, posuere lobortis viverra laoreet matti ullamcorper posuere viverra .Aliquam eros justo, posuere lobo rtis viverra laoreet augue mattis fmentum ullamcorper viverra laoreet Aliquam eros justo, posuere lobortis viverra laoreet matti ullamcorper posuere",
+  visaApplied: "Visa Special",
+  visaType: "10 years +",
+  approval: "adbs@gmail.com",
+  button1Text: "Apply For Visa",
+  button1Link: "#",
+  button2Text: "Read More Stories",
+  button2Link: "#",
+  imageUrl:
+    "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=2874&auto=format&fit=crop",
+  imageAlt: "Visa approval document",
+};
+
 // Helper functions
 export const getDefaultAboutUsData = (
   template: AboutUsData["template"]
@@ -935,6 +971,8 @@ export const getDefaultAboutUsData = (
       return defaultAboutUs15Data;
     case "about-16":
       return defaultAboutUs16Data;
+    case "about-17":
+      return defaultAboutUs17Data;
     default:
       return defaultAboutUs1Data;
   }
@@ -988,3 +1026,6 @@ export const isAboutUsTemplate15 = (data: AboutUsData): data is AboutUs15Data =>
 
 export const isAboutUsTemplate16 = (data: AboutUsData): data is AboutUs16Data =>
   data.template === "about-16";
+
+export const isAboutUsTemplate17 = (data: AboutUsData): data is AboutUs17Data =>
+  data.template === "about-17";

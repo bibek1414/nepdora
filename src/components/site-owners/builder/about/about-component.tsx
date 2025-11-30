@@ -32,6 +32,7 @@ import {
   isAboutUsTemplate14,
   isAboutUsTemplate15,
   isAboutUsTemplate16,
+  isAboutUsTemplate17,
 } from "@/types/owner-site/components/about";
 import { AboutUsTemplate1 } from "./about-style-1";
 import { AboutUsTemplate2 } from "./about-style-2";
@@ -54,6 +55,7 @@ import { AboutUsTemplate13 } from "./about-style-13";
 import { AboutUsTemplate14 } from "./about-style-14";
 import { AboutUsTemplate15 } from "./about-style-15";
 import { AboutUsTemplate16 } from "./about-style-16";
+import { AboutUsTemplate17 } from "./about-style-17";
 
 interface AboutUsComponentProps {
   component: AboutUsComponentData;
@@ -171,6 +173,11 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
     if (isAboutUsTemplate16(component.data)) {
       return (
         <AboutUsTemplate16 aboutUsData={component.data} {...commonProps} />
+      );
+    }
+    if (isAboutUsTemplate17(component.data)) {
+      return (
+        <AboutUsTemplate17 aboutUsData={component.data} {...commonProps} />
       );
     }
 
