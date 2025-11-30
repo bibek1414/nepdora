@@ -156,17 +156,17 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "our-clients-1",
         name: "Our Clients Style 1",
-        image: "/images/site-owners/our-clients/our-clients-1.png",
+        image: "/images/site-owners/our-clients/ourclients1.png",
       },
       {
         id: "our-clients-2",
         name: "Our Clients Style 2",
-        image: "/images/site-owners/our-clients/our-clients-2.png",
+        image: "/images/site-owners/our-clients/ourclients2.png",
       },
       {
         id: "our-clients-3",
         name: "Our Clients Style 3",
-        image: "/images/site-owners/our-clients/our-clients-3.png",
+        image: "/images/site-owners/our-clients/ourclients3.png",
       },
     ],
 
@@ -787,7 +787,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "navbar-10",
         name: "Navbar with Appointment",
-        image: "/images/site-owners/navbars/navbar9.png",
+        image: "/images/site-owners/navbars/navbar10.png",
         description: "Includes appointment button",
       },
       {
