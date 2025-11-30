@@ -70,14 +70,18 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
     "Market Expansion",
     "Risk Management",
   ];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const imageData = mainImage as any;
+  const showFloatingCard =
+    imageData.showFloatingCard !== undefined
+      ? imageData.showFloatingCard
+      : true;
   const cardItemsString =
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (mainImage as any).cardItems ||
-    defaultItems.join(",") ||
-    defaultItems.join(",");
+    imageData.cardItems || defaultItems.join(",") || defaultItems.join(",");
   const cardItems = cardItemsString
     .split(",")
-    .map((item: string) => item.trim());
+    .map((item: string) => item.trim())
+    .filter((item: string) => item.length > 0);
 
   // Handle section tag update
   const handleSectionTagUpdate = (value: string) => {
@@ -161,6 +165,40 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
       {
         ...mainImage,
         cardItems: updatedCardItems,
+        showFloatingCard: updatedItems.length > 0 ? showFloatingCard : false,
+      },
+      ...(data.images?.slice(1) || []),
+    ];
+    const updatedData = { ...data, images: updatedImages };
+    setData(updatedData);
+    onUpdate?.({ images: updatedImages });
+  };
+
+  // Handle remove entire floating card
+  const handleRemoveFloatingCard = () => {
+    const updatedImages = [
+      {
+        ...mainImage,
+        showFloatingCard: false,
+      },
+      ...(data.images?.slice(1) || []),
+    ];
+    const updatedData = { ...data, images: updatedImages };
+    setData(updatedData);
+    onUpdate?.({ images: updatedImages });
+  };
+
+  // Handle show floating card again
+  const handleShowFloatingCard = () => {
+    const updatedImages = [
+      {
+        ...mainImage,
+        showFloatingCard: true,
+        cardItems:
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (mainImage as any).cardItems ||
+          defaultItems.join(",") ||
+          defaultItems.join(","),
       },
       ...(data.images?.slice(1) || []),
     ];
@@ -241,62 +279,96 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
           />
 
           {/* Floating Card */}
-          <div className="absolute bottom-8 left-8 max-w-xs rounded-2xl bg-white p-8 shadow-xl md:bottom-12 md:left-12 md:max-w-sm">
-            <div
-              className="mb-6 flex h-10 w-10 items-center justify-center rounded-full text-white"
-              style={{
-                backgroundColor: theme.colors.primary,
-              }}
-            >
-              <Pin size={18} fill="currentColor" />
-            </div>
-            <ul className="space-y-3">
-              {cardItems.map((item: string, i: number) => (
-                <li
-                  key={i}
-                  className="flex items-center gap-2 text-sm font-medium text-gray-800"
+          {showFloatingCard && (
+            <div className="group/card absolute bottom-8 left-8 max-w-xs rounded-2xl bg-white p-8 shadow-xl md:bottom-12 md:left-12 md:max-w-sm">
+              {isEditable && (
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={handleRemoveFloatingCard}
+                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 transition-opacity group-hover/card:opacity-100"
+                  title="Remove floating card"
                 >
-                  <div
-                    className="h-1.5 w-1.5 rounded-full"
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                    }}
-                  ></div>
-                  <EditableText
-                    value={item}
-                    onChange={value => handleCardItemUpdate(i, value)}
-                    as="span"
-                    isEditable={isEditable}
-                    placeholder="Item text"
-                    className="flex-1"
-                  />
-                  {isEditable && (
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+              <div
+                className="mb-6 flex h-10 w-10 items-center justify-center rounded-full text-white"
+                style={{
+                  backgroundColor: theme.colors.primary,
+                }}
+              >
+                <Pin size={18} fill="currentColor" />
+              </div>
+              <ul className="space-y-3">
+                {cardItems.length > 0 ? (
+                  cardItems.map((item: string, i: number) => (
+                    <li
+                      key={i}
+                      className="flex items-center gap-2 text-sm font-medium text-gray-800"
+                    >
+                      <div
+                        className="h-1.5 w-1.5 rounded-full"
+                        style={{
+                          backgroundColor: theme.colors.primary,
+                        }}
+                      ></div>
+                      <EditableText
+                        value={item}
+                        onChange={value => handleCardItemUpdate(i, value)}
+                        as="span"
+                        isEditable={isEditable}
+                        placeholder="Item text"
+                        className="flex-1"
+                      />
+                      {isEditable && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleRemoveCardItem(i)}
+                          className="h-6 w-6 p-0 opacity-0 transition-opacity group-hover/card:opacity-100"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-sm text-gray-500 italic">
+                    No items yet. Add items below.
+                  </li>
+                )}
+                {isEditable && (
+                  <li>
                     <Button
                       size="sm"
-                      variant="ghost"
-                      onClick={() => handleRemoveCardItem(i)}
-                      className="h-6 w-6 p-0 opacity-0 transition-opacity group-hover:opacity-100"
+                      variant="outline"
+                      onClick={handleAddCardItem}
+                      className="mt-2 w-full"
                     >
-                      <X className="h-3 w-3" />
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Item
                     </Button>
-                  )}
-                </li>
-              ))}
-              {isEditable && (
-                <li>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handleAddCardItem}
-                    className="mt-2 w-full"
-                  >
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Item
-                  </Button>
-                </li>
-              )}
-            </ul>
-          </div>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
+
+          {/* Show Floating Card Button (when hidden) */}
+          {isEditable && !showFloatingCard && (
+            <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleShowFloatingCard}
+                className="bg-white/90 backdrop-blur-sm"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Show Floating Card
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </section>

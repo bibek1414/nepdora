@@ -265,10 +265,10 @@ export const ContactForm7: React.FC<ContactForm7Props> = ({
           typeof sectionBackground === "string" ? undefined : sectionBackground,
       }}
     >
-      <div className="pointer-events-none absolute -top-40 left-[-10%] h-96 w-96 rounded-full bg-gradient-to-br from-white/40 to-white/0 blur-3xl" />
-      <div className="pointer-events-none absolute top-0 right-[-15%] h-[420px] w-[420px] rounded-full bg-gradient-to-bl from-[#E0E8FF]/70 to-transparent blur-3xl" />
+      {/* <div className="pointer-events-none absolute -top-40 left-[-10%] h-96 w-96 rounded-full bg-gradient-to-br from-white/40 to-white/0 blur-3xl" />
+      <div className="pointer-events-none absolute top-0 right-[-15%] h-[420px] w-[420px] rounded-full bg-gradient-to-bl from-[#E0E8FF]/70 to-transparent blur-3xl" /> */}
 
-      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-2">
           <div className="space-y-6">
             <EditableText
@@ -305,7 +305,7 @@ export const ContactForm7: React.FC<ContactForm7Props> = ({
               {locationCards.map((card, index) => (
                 <div
                   key={card.id || index}
-                  className="rounded-2xl border border-black/5 bg-white/90 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur"
+                  className="rounded-2xl border border-black/5 bg-white/90 p-6 backdrop-blur"
                 >
                   <div
                     className="mb-5 flex h-11 w-11 items-center justify-center rounded-full"
@@ -362,7 +362,7 @@ export const ContactForm7: React.FC<ContactForm7Props> = ({
                     }}
                     showAltEditor={isEditable}
                   />
-                  <div className="absolute top-4 left-4 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold tracking-wide text-gray-900 uppercase shadow">
+                  <div className="absolute top-4 left-4 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold tracking-wide text-gray-900 uppercase">
                     <EditableText
                       value={item.label}
                       onChange={value => handleGalleryLabelChange(index, value)}
@@ -393,7 +393,7 @@ export const ContactForm7: React.FC<ContactForm7Props> = ({
                   }}
                   showAltEditor={isEditable}
                 />
-                <div className="absolute top-4 left-4 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold tracking-wide text-gray-900 uppercase shadow">
+                <div className="absolute top-4 left-4 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold tracking-wide text-gray-900 uppercase">
                   <EditableText
                     value={locationGallery[2].label}
                     onChange={value => handleGalleryLabelChange(2, value)}
@@ -466,7 +466,7 @@ export const ContactForm7: React.FC<ContactForm7Props> = ({
           </div>
 
           <div>
-            <div className="rounded-[32px] bg-white/95 p-8 shadow-[0_25px_65px_rgba(15,23,42,0.15)] ring-1 ring-black/5 md:p-12">
+            <div className="rounded-[32px] bg-white/95 p-8 ring-1 ring-black/5 md:p-12">
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div>
@@ -532,20 +532,27 @@ export const ContactForm7: React.FC<ContactForm7Props> = ({
                 <button
                   type="submit"
                   disabled={submitContactForm.isPending || isPreview}
-                  className="flex w-full items-center justify-between rounded-full px-6 py-4 text-base font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-                  style={{ backgroundColor: accentColor }}
+                  className="group flex w-full cursor-pointer items-center justify-between rounded-full px-6 py-4 text-base font-semibold transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                    fontFamily: theme.fonts.body,
+                  }}
                 >
                   <span>
                     {submitContactForm.isPending ? "Sending..." : buttonLabel}
                   </span>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-inner">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-inner transition-transform duration-300 group-hover:rotate-45">
                     {submitContactForm.isPending ? (
                       <Loader2
                         className="h-5 w-5 animate-spin"
-                        style={{ color: accentColor }}
+                        style={{ color: theme.colors.primary }}
                       />
                     ) : (
-                      <ArrowUpRight size={18} style={{ color: accentColor }} />
+                      <ArrowUpRight
+                        size={18}
+                        style={{ color: theme.colors.primary }}
+                      />
                     )}
                   </span>
                 </button>
