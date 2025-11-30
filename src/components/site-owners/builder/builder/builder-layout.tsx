@@ -76,7 +76,7 @@ import { componentsApi } from "@/services/api/owner-sites/components/unified";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
 import { useAuth } from "@/hooks/use-auth";
-
+import { Facebook, Twitter } from "lucide-react";
 import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
 interface BuilderLayoutProps {
   params: {
@@ -105,7 +105,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   // Queries and Mutations
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const createNavbarMutation = useCreateNavbarMutation();
-
+  const createFooterMutation = useCreateFooterMutation();
   const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
 
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
@@ -391,7 +391,76 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
     await createComponentWithIndex("cta", ctaData, pendingInsertIndex);
   };
+  const handleFooterSelectFromDialog = (
+    footerStyle:
+      | "style-1"
+      | "style-2"
+      | "style-3"
+      | "style-4"
+      | "style-5"
+      | "style-6"
+      | "style-7"
+  ) => {
+    const payload = {
+      content: "footer content",
+      footerData: {
+        style: footerStyle,
+        logoText: "Your Brand",
+        logoType: "text" as "text" | "image" | "both",
+        logoImage: "",
+        companyName: "Your Brand",
+        description:
+          "Innovative solutions for a modern world. We build amazing experiences.",
+        sections: [
+          {
+            id: "s1",
+            title: "Company",
+            links: [
+              { id: "l1", text: "About Us", href: "#" },
+              { id: "l2", text: "Careers", href: "#" },
+            ],
+          },
+          {
+            id: "s2",
+            title: "Resources",
+            links: [
+              { id: "l3", text: "Blog", href: "#" },
+              { id: "l4", text: "Help Center", href: "#" },
+            ],
+          },
+        ],
+        socialLinks: [
+          { id: "soc1", platform: "Facebook", href: "#", icon: Facebook },
+          { id: "soc2", platform: "Twitter", href: "#", icon: Twitter },
+        ],
+        contactInfo: {
+          email: "support@yourbrand.com",
+          phone: "+1 234 567 890",
+        },
+        newsletter: {
+          enabled: true,
+          title: "Join our Newsletter",
+          description:
+            "Get the latest news and updates delivered to your inbox.",
+        },
+        copyright: `© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
+      },
+      component_id: `footer-${Date.now()}`,
+    };
 
+    const toastId = "footer-create";
+
+    createFooterMutation.mutate(payload, {
+      onSuccess: () => {
+        console.log("Footer created successfully from dialog");
+        toast.success("Footer added successfully!", { id: toastId });
+      },
+      onError: error => {
+        console.error("Failed to create footer from dialog:", error);
+        toast.error("Failed to create footer", { id: toastId });
+      },
+    });
+  };
   // Add handler for opening CTA dialog
   const handleAddCTA = (insertIndex?: number) => {
     setPendingInsertIndex(insertIndex);
@@ -913,7 +982,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onOpenChange={setIsAddSectionDialogOpen}
           onComponentClick={handleComponentClick}
           onNavbarSelect={handleNavbarSelectFromDialog}
-          onFooterSelect={() => {}}
+          onFooterSelect={handleFooterSelectFromDialog}
           websiteType={user?.website_type || "ecommerce"}
         />
 

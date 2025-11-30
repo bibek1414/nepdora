@@ -768,6 +768,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/navbars/navbar9.png",
         description: "Clean and minimal navbar design",
       },
+      {
+        id: "navbar-10",
+        name: "Navbar with Appointment",
+        image: "/images/site-owners/navbars/navbar9.png",
+        description: "Includes appointment button",
+      },
     ],
     // FOOTER TEMPLATES
     footer: [
