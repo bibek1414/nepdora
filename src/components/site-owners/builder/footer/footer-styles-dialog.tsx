@@ -14,7 +14,15 @@ interface FooterStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
-    style: "style-1" | "style-2" | "style-3" | "style-4" | "style-5" | "style-6"
+    style:
+      | "style-1"
+      | "style-2"
+      | "style-3"
+      | "style-4"
+      | "style-5"
+      | "style-6"
+      | "style-7"
+      | "style-8"
   ) => void;
 }
 
@@ -24,7 +32,15 @@ export const FooterStylesDialog: React.FC<FooterStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "style-1" | "style-2" | "style-3" | "style-4" | "style-5" | "style-6" | null
+    | "style-1"
+    | "style-2"
+    | "style-3"
+    | "style-4"
+    | "style-5"
+    | "style-6"
+    | "style-7"
+    | "style-8"
+    | null
   >(null);
 
   const templates = [
@@ -58,10 +74,28 @@ export const FooterStylesDialog: React.FC<FooterStylesDialogProps> = ({
       name: "Footer Style 6",
       data: { style: "style-6" } as FooterData,
     },
+    {
+      id: "style-7" as const,
+      name: "Footer Style 7",
+      data: { style: "style-7" } as FooterData,
+    },
+    {
+      id: "style-8" as const,
+      name: "Footer Style 8",
+      data: { style: "style-8" } as FooterData,
+    },
   ];
 
   const handleSelect = (t: {
-    id: "style-1" | "style-2" | "style-3" | "style-4" | "style-5" | "style-6";
+    id:
+      | "style-1"
+      | "style-2"
+      | "style-3"
+      | "style-4"
+      | "style-5"
+      | "style-6"
+      | "style-7"
+      | "style-8";
     data: FooterData;
   }) => {
     setSelectedStyle(t.id);
