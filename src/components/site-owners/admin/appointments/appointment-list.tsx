@@ -53,6 +53,7 @@ import {
 } from "@/types/owner-site/admin/appointment";
 import { CreateAppointmentReasonDialog } from "./appointment-reason-dialog";
 import AppointmentDetailsDialog from "./appointment-details-dialog";
+import Link from "next/link";
 
 // Debounce hook
 const useDebounce = (value: string, delay: number) => {
@@ -113,8 +114,9 @@ const AppointmentList = () => {
     setFilters(prev => ({ ...prev, page: newPage }));
   }, []);
 
-  const clearSearch = () => {
+  const handleClearFilters = () => {
     setSearchTerm("");
+    setStatusFilter("all");
   };
 
   const handleViewDetails = (appointment: Appointment) => {
@@ -268,16 +270,6 @@ const AppointmentList = () => {
                 onChange={e => setSearchTerm(e.target.value)}
                 className="pr-10 pl-10"
               />
-              {searchTerm && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearSearch}
-                  className="absolute top-1/2 right-2 h-6 w-6 -translate-y-1/2 p-0"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
             </div>
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -308,6 +300,15 @@ const AppointmentList = () => {
                     ? "Try adjusting your filters."
                     : "When customers book appointments, they will appear here."}
                 </p>
+                {(searchTerm || statusFilter !== "all") && (
+                  <Button
+                    variant="outline"
+                    className="mt-4"
+                    onClick={handleClearFilters}
+                  >
+                    Clear filters
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -320,53 +321,69 @@ const AppointmentList = () => {
     <div className="mx-auto">
       <div className="space-y-4">
         {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              Appointments
-            </h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <CreateAppointmentReasonDialog />
-            <Badge variant="secondary">
-              {appointmentsData.count} total appointments
-            </Badge>
-          </div>
+        <div className="mb-8">
+          <h1 className="mb-2 text-3xl font-bold text-black">Appointments</h1>
+          <p className="text-muted-foreground">
+            Manage and track your appointments
+          </p>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <div className="relative flex-1">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-            <Input
-              placeholder="Search by name, email, or phone..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className="pr-10 pl-10"
-            />
-            {searchTerm && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearSearch}
-                className="absolute top-1/2 right-2 h-6 w-6 -translate-y-1/2 p-0"
-              >
-                <X className="h-4 w-4" />
+        {/* Search and Filters */}
+        <div className="mb-6 space-y-4">
+          {/* Search Bar */}
+          <div className="flex flex-col justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
+            <div className="flex items-center space-x-2">
+              <div className="relative w-full max-w-sm">
+                <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+                <Input
+                  type="search"
+                  placeholder="Search by name, email, or phone..."
+                  className="pl-9 placeholder:text-gray-400"
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" size="sm">
+                <Link href="/admin/appointments/reason">Manage Reason</Link>
               </Button>
-            )}
+              <CreateAppointmentReasonDialog />
+            </div>
           </div>
 
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
-            </SelectContent>
-          </Select>
+          {/* Status Filter Tabs */}
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant={statusFilter === "all" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setStatusFilter("all")}
+              className="flex items-center gap-2"
+            >
+              All
+            </Button>
+            <Button
+              variant={statusFilter === "pending" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setStatusFilter("pending")}
+            >
+              Pending
+            </Button>
+            <Button
+              variant={statusFilter === "completed" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setStatusFilter("completed")}
+            >
+              Completed
+            </Button>
+            <Button
+              variant={statusFilter === "cancelled" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setStatusFilter("cancelled")}
+            >
+              Cancelled
+            </Button>
+          </div>
         </div>
 
         {/* Table */}
@@ -382,7 +399,6 @@ const AppointmentList = () => {
                     <TableHead>Time</TableHead>
                     <TableHead>Reason</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -419,59 +435,27 @@ const AppointmentList = () => {
                         {appointment.reason?.name || "Not specified"}
                       </TableCell>
                       <TableCell>
-                        {getStatusBadge(appointment.status)}
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={e => e.stopPropagation()}
-                            >
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={e => {
-                                e.stopPropagation();
-                                handleStatusChange(appointment.id, "pending");
-                              }}
-                            >
-                              Mark as Pending
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={e => {
-                                e.stopPropagation();
-                                handleStatusChange(appointment.id, "completed");
-                              }}
-                            >
-                              Mark as Completed
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={e => {
-                                e.stopPropagation();
-                                handleStatusChange(appointment.id, "cancelled");
-                              }}
-                            >
-                              Mark as Cancelled
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={e => {
-                                e.stopPropagation();
-                                handleDelete(appointment.id);
-                              }}
-                              className="text-red-600"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div onClick={e => e.stopPropagation()}>
+                          <Select
+                            value={appointment.status}
+                            onValueChange={value =>
+                              handleStatusChange(appointment.id, value)
+                            }
+                          >
+                            <SelectTrigger className="w-[130px]">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="pending">Pending</SelectItem>
+                              <SelectItem value="completed">
+                                Completed
+                              </SelectItem>
+                              <SelectItem value="cancelled">
+                                Cancelled
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

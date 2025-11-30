@@ -1,5 +1,3 @@
-// components/site-owners/admin/appointment/appointment-reason-dialog.tsx
-
 "use client";
 
 import React, { useState } from "react";

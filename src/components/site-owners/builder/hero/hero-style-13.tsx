@@ -277,7 +277,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             value={descriptionContent}
             onChange={handleTextUpdate("description")}
             as="p"
-            className="mb-10 max-w-xl text-lg leading-relaxed text-gray-200 md:text-xl"
+            className="mb-10 max-w-xl text-lg leading-relaxed text-gray-200"
             isEditable={isEditable}
             placeholder="Enter hero description..."
             multiline
