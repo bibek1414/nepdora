@@ -1,6 +1,6 @@
 export interface PricingData {
   component_id?: string;
-  style: "pricing-1" | "pricing-2" | "pricing-3";
+  style: "pricing-1" | "pricing-2" | "pricing-3" | "pricing-4";
   title: string;
   subtitle?: string;
   order?: number;

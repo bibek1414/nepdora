@@ -4,7 +4,6 @@ import { AboutUs12Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { ArrowRight, Map } from "lucide-react";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface AboutUsTemplate12Props {
   aboutUsData: AboutUs12Data;
@@ -21,22 +20,6 @@ export function AboutUsTemplate12({
   const [activeMemberId, setActiveMemberId] = useState<string | null>(
     data.teamMembers[0]?.id || null
   );
-  const { data: themeResponse } = useThemeQuery();
-
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#84cc16",
-      primaryForeground: "#FFFFFF",
-      secondary: "#013D2F",
-      secondaryForeground: "#FFFFFF",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   // Handle text field updates
   const handleTextUpdate = (field: keyof AboutUs12Data) => (value: string) => {
@@ -78,14 +61,7 @@ export function AboutUsTemplate12({
     };
 
   return (
-    <div
-      className="relative px-4 py-16 sm:px-6 lg:px-12"
-      style={{
-        backgroundColor: theme.colors.background,
-        color: theme.colors.text,
-        fontFamily: theme.fonts.body,
-      }}
-    >
+    <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-12">
       {/* Background decoration lines */}
       <div className="pointer-events-none absolute top-0 left-0 h-full w-full overflow-hidden opacity-[0.03]">
         <svg width="100%" height="100%">
@@ -110,10 +86,7 @@ export function AboutUsTemplate12({
 
       <div className="container mx-auto grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
         <div>
-          <div
-            className="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest uppercase"
-            style={{ color: theme.colors.text, opacity: 0.6 }}
-          >
+          <div className="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest uppercase">
             <Map size={14} />
             <EditableText
               value={data.sectionTag}
@@ -128,10 +101,6 @@ export function AboutUsTemplate12({
             onChange={handleTextUpdate("title")}
             as="h2"
             className="mb-12 text-4xl leading-tight font-bold md:text-5xl"
-            style={{
-              color: theme.colors.secondary,
-              fontFamily: theme.fonts.heading,
-            }}
             isEditable={isEditable}
             placeholder="Exploring the Unknown Voyages of Wonder"
           />
@@ -143,20 +112,7 @@ export function AboutUsTemplate12({
                 <div
                   key={member.id}
                   className="group flex cursor-pointer items-center justify-between rounded-2xl border bg-white p-6 shadow-sm transition-colors"
-                  style={{
-                    borderColor: isActive
-                      ? theme.colors.primary
-                      : "rgba(0,0,0,0.1)",
-                  }}
                   onClick={() => setActiveMemberId(member.id)}
-                  onMouseEnter={e => {
-                    if (!isActive)
-                      e.currentTarget.style.borderColor = theme.colors.primary;
-                  }}
-                  onMouseLeave={e => {
-                    if (!isActive)
-                      e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
-                  }}
                 >
                   <div>
                     <EditableText
@@ -164,14 +120,10 @@ export function AboutUsTemplate12({
                       onChange={handleMemberUpdate(member.id, "name")}
                       as="h4"
                       className="font-bold"
-                      style={{ color: theme.colors.secondary }}
                       isEditable={isEditable}
                       placeholder="Name"
                     />
-                    <div
-                      className="mt-1 text-xs"
-                      style={{ color: theme.colors.text, opacity: 0.6 }}
-                    >
+                    <div className="mt-1 text-xs">
                       <EditableText
                         value={member.role}
                         onChange={handleMemberUpdate(member.id, "role")}
@@ -181,22 +133,7 @@ export function AboutUsTemplate12({
                       />
                     </div>
                   </div>
-                  <button
-                    className="flex h-10 w-10 items-center justify-center rounded-full transition-colors"
-                    style={{
-                      backgroundColor: isActive
-                        ? theme.colors.primary
-                        : "transparent",
-                      color: isActive
-                        ? theme.colors.primaryForeground
-                        : "rgba(0,0,0,0.3)",
-                      borderWidth: "1px",
-                      borderStyle: "solid",
-                      borderColor: isActive
-                        ? theme.colors.primary
-                        : "rgba(0,0,0,0.1)",
-                    }}
-                  >
+                  <button className="flex h-10 w-10 items-center justify-center rounded-full transition-colors">
                     <ArrowRight size={16} />
                   </button>
                 </div>
@@ -229,13 +166,6 @@ export function AboutUsTemplate12({
                 <span
                   key={i}
                   className="cursor-pointer text-xs font-bold transition-colors"
-                  style={{ color: theme.colors.secondary }}
-                  onMouseEnter={e =>
-                    (e.currentTarget.style.color = theme.colors.primary)
-                  }
-                  onMouseLeave={e =>
-                    (e.currentTarget.style.color = theme.colors.secondary)
-                  }
                 >
                   {social}
                 </span>

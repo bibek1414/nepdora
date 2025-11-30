@@ -1,5 +1,3 @@
-// components/site-owners/pricing/pricing-component.tsx
-
 import React, { useState } from "react";
 import { PricingComponentData } from "@/types/owner-site/components/pricing";
 import { usePricings } from "@/hooks/owner-site/admin/use-pricing";
@@ -10,6 +8,7 @@ import {
 import { PricingCard1 } from "./pricing-card-1";
 import { PricingCard2 } from "./pricing-card-2";
 import { PricingCard3 } from "./pricing-card-3";
+import { PricingCard4 } from "./pricing-card-4";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -151,6 +150,8 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
         return <PricingCard2 key={pricing.id} {...cardProps} />;
       case "pricing-3":
         return <PricingCard3 key={pricing.id} {...cardProps} />;
+      case "pricing-4":
+        return <PricingCard4 key={pricing.id} {...cardProps} />;
       case "pricing-1":
       default:
         return <PricingCard1 key={pricing.id} {...cardProps} />;
@@ -219,25 +220,32 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
 
         <div className="py-8">
           <div className="container mx-auto px-4">
-            <div className="mb-8 text-center">
-              <EditableText
-                value={title}
-                onChange={handleTitleChange}
-                as="h2"
-                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-              <EditableText
-                value={subtitle || ""}
-                onChange={handleSubtitleChange}
-                as="p"
-                className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                isEditable={true}
-                placeholder="Enter subtitle..."
-                multiline={true}
-              />
-            </div>
+            {/* Conditionally render the text center div only if title or subtitle exist */}
+            {(title || subtitle) && (
+              <div className="mb-8 text-center">
+                {title && (
+                  <EditableText
+                    value={title}
+                    onChange={handleTitleChange}
+                    as="h2"
+                    className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                    isEditable={true}
+                    placeholder="Enter title..."
+                  />
+                )}
+                {subtitle && (
+                  <EditableText
+                    value={subtitle}
+                    onChange={handleSubtitleChange}
+                    as="p"
+                    className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                    isEditable={true}
+                    placeholder="Enter subtitle..."
+                    multiline={true}
+                  />
+                )}
+              </div>
+            )}
 
             {isLoading && (
               <div className={`grid ${getGridClass()} gap-6`}>
@@ -294,20 +302,25 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
 
   // Live site rendering
   return (
-    <section className="bg-background py-12 md:py-16">
+    <section className="bg-background mx-auto max-w-5xl py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          <h2
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></h2>
-          {subtitle && (
-            <p
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            ></p>
-          )}
-        </div>
+        {/* Conditionally render header only if title or subtitle exist */}
+        {(title || subtitle) && (
+          <div className="mb-12 text-center">
+            {title && (
+              <h2
+                className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+                dangerouslySetInnerHTML={{ __html: title }}
+              ></h2>
+            )}
+            {subtitle && (
+              <p
+                className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
+            )}
+          </div>
+        )}
 
         {isLoading && (
           <div className={`grid ${getGridClass()} gap-8`}>

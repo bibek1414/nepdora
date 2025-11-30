@@ -222,22 +222,14 @@ export function AboutUsTemplate17({
       {/* Left Column: Content */}
       <div className="w-full shrink-0 pt-0 lg:w-[702px]">
         {/* Heading */}
-        <h1
-          className="mb-0 text-4xl leading-[1.2] font-bold md:text-[50px]"
-          style={{
-            color: theme.colors.text || "#034833",
-            fontFamily: theme.fonts.heading,
-          }}
-        >
-          <EditableText
-            value={data.title}
-            onChange={handleTextUpdate("title")}
-            as="span"
-            isEditable={isEditable}
-            placeholder="Visa Got Approved for Eygpt"
-            useHeadingFont
-          />
-        </h1>
+        <EditableText
+          value={data.title}
+          onChange={handleTextUpdate("title")}
+          as="h1"
+          isEditable={isEditable}
+          placeholder="Visa Got Approved for Eygpt"
+          useHeadingFont
+        />
 
         {/* Quote Block */}
         <div className="mt-[30px] mb-[20px]">
@@ -267,14 +259,14 @@ export function AboutUsTemplate17({
         {/* Details Grid */}
         <div className="my-10 flex flex-col gap-4">
           <div className="relative flex h-[30px] flex-col sm:flex-row sm:items-baseline">
-            <h4
-              className="absolute top-0 left-0 min-w-[135px] text-lg font-semibold"
-              style={{
-                color: theme.colors.text || "#034833",
-                fontFamily: theme.fonts.heading,
-              }}
-            >
-              Visa Applied:
+            <h4 className="absolute top-0 left-0 min-w-[135px] text-lg font-semibold">
+              <EditableText
+                value={data.visaAppliedLabel}
+                onChange={handleTextUpdate("visaAppliedLabel")}
+                as="span"
+                isEditable={isEditable}
+                placeholder="Visa Applied:"
+              />
             </h4>
             <span
               className="absolute top-0 left-[135px] text-base"
@@ -294,14 +286,14 @@ export function AboutUsTemplate17({
           </div>
 
           <div className="relative flex h-[30px] flex-col sm:flex-row sm:items-baseline">
-            <h4
-              className="absolute top-0 left-0 min-w-[135px] text-lg font-semibold"
-              style={{
-                color: theme.colors.text || "#034833",
-                fontFamily: theme.fonts.heading,
-              }}
-            >
-              Visa Type:
+            <h4 className="absolute top-0 left-0 min-w-[135px] text-lg font-semibold">
+              <EditableText
+                value={data.visaTypeLabel}
+                onChange={handleTextUpdate("visaTypeLabel")}
+                as="span"
+                isEditable={isEditable}
+                placeholder="Visa Type:"
+              />
             </h4>
             <span
               className="absolute top-0 left-[108px] text-base"
@@ -321,14 +313,14 @@ export function AboutUsTemplate17({
           </div>
 
           <div className="relative flex h-[30px] flex-col sm:flex-row sm:items-baseline">
-            <h4
-              className="absolute top-0 left-0 min-w-[135px] text-lg font-semibold"
-              style={{
-                color: theme.colors.text || "#034833",
-                fontFamily: theme.fonts.heading,
-              }}
-            >
-              Approval:
+            <h4 className="absolute top-0 left-0 min-w-[135px] text-lg font-semibold">
+              <EditableText
+                value={data.approvalLabel}
+                onChange={handleTextUpdate("approvalLabel")}
+                as="span"
+                isEditable={isEditable}
+                placeholder="Approval:"
+              />
             </h4>
             <span
               className="absolute top-0 left-[106px] text-base"
@@ -384,11 +376,6 @@ export function AboutUsTemplate17({
               isEditable={isEditable}
               siteUser={siteUser}
               className="flex h-[60px] w-[186px] items-center justify-center rounded-full border bg-transparent text-sm font-semibold transition-colors"
-              style={{
-                borderColor: theme.colors.primary || "#83CD20",
-                color: theme.colors.text || "#034833",
-                fontFamily: theme.fonts.body,
-              }}
               textPlaceholder="Read More Stories"
               hrefPlaceholder="#"
             />

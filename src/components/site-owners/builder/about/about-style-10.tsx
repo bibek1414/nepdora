@@ -104,15 +104,8 @@ export function AboutUsTemplate10({
   };
 
   return (
-    <div
-      className="px-4 py-16 sm:px-6 lg:px-12"
-      style={{
-        backgroundColor: theme.colors.background,
-        color: theme.colors.text,
-        fontFamily: theme.fonts.body,
-      }}
-    >
-      <div className="container mx-auto">
+    <div className="px-4 py-16 sm:px-6 lg:px-12">
+      <div className="container mx-auto max-w-7xl">
         <div className="mb-16 grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
           {/* Left Side Images */}
           <div className="relative">
@@ -209,7 +202,7 @@ export function AboutUsTemplate10({
           <div className="space-y-8">
             <div
               className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase"
-              style={{ color: hexToRgba(theme.colors.text, 0.6) }}
+              style={{ color: hexToRgba(theme.colors.primary, 0.6) }}
             >
               <Map size={16} />
               <EditableText
@@ -225,10 +218,6 @@ export function AboutUsTemplate10({
               onChange={handleTextUpdate("title")}
               as="h2"
               className="text-4xl leading-tight font-bold lg:text-5xl"
-              style={{
-                color: theme.colors.secondary,
-                fontFamily: theme.fonts.heading,
-              }}
               isEditable={isEditable}
               placeholder="Main Title"
             />
@@ -237,7 +226,6 @@ export function AboutUsTemplate10({
               onChange={handleTextUpdate("description")}
               as="p"
               className="leading-relaxed"
-              style={{ color: hexToRgba(theme.colors.text, 0.7) }}
               isEditable={isEditable}
               placeholder="Description..."
               multiline={true}
@@ -313,7 +301,7 @@ export function AboutUsTemplate10({
                       <li
                         key={itemIndex}
                         className="flex items-center gap-2 text-xs"
-                        style={{ color: hexToRgba(theme.colors.text, 0.8) }}
+                        style={{ color: hexToRgba(theme.colors.primary, 0.8) }}
                       >
                         <Check
                           size={14}
@@ -384,7 +372,7 @@ export function AboutUsTemplate10({
                     onChange={handleTextUpdate("supportText")}
                     as="div"
                     className="text-[10px] font-bold uppercase"
-                    style={{ color: hexToRgba(theme.colors.text, 0.6) }}
+                    style={{ color: hexToRgba(theme.colors.primary, 0.6) }}
                     isEditable={isEditable}
                     placeholder="Need help?"
                   />

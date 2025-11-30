@@ -289,10 +289,12 @@ export interface AboutUs16Data {
 export interface AboutUs17Data {
   template: "about-17";
   title: string;
-  titleHighlight: string;
   description: string;
+  visaAppliedLabel: string;
   visaApplied: string;
+  visaTypeLabel: string;
   visaType: string;
+  approvalLabel: string;
   approval: string;
   button1Text: string;
   button1Link: string;
@@ -918,12 +920,14 @@ export const defaultAboutUs16Data: AboutUs16Data = {
 
 export const defaultAboutUs17Data: AboutUs17Data = {
   template: "about-17",
-  title: "Visa",
-  titleHighlight: "Got Approved for Eygpt",
+  title: "Visa Got Approved for Eygpt",
   description:
     "Aliquam eros justo, posuere lobortis viverra laoreet matti ullamcorper posuere viverra .Aliquam eros justo, posuere lobortis viverra laoreet augue mattis fmentum ullamco rper viverra laoreet Aliquam eros justo, posuere lobortis viverra laoreet matti ullamc orper posuere viverra .Aliquam eros justo, posu Aliquam eros justo, posuere lobortis viverra laoreet matti ullamcorper posuere viverra .Aliquam eros justo, posuere lobo rtis viverra laoreet augue mattis fmentum ullamcorper viverra laoreet Aliquam eros justo, posuere lobortis viverra laoreet matti ullamcorper posuere",
+  visaAppliedLabel: "Visa Applied:",
   visaApplied: "Visa Special",
+  visaTypeLabel: "Visa Type:",
   visaType: "10 years +",
+  approvalLabel: "Approval:",
   approval: "adbs@gmail.com",
   button1Text: "Apply For Visa",
   button1Link: "#",

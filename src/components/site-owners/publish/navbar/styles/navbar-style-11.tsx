@@ -19,6 +19,7 @@ import Link from "next/link";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { AppointmentForm } from "@/components/site-owners/builder/appointment/navbar-dialog/appointment-form";
 import { defaultAppointmentData } from "@/types/owner-site/components/appointment";
+import { usePathname } from "next/navigation";
 
 const EditableItem: React.FC<{
   onEdit: () => void;
@@ -68,11 +69,11 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
     if (isEditable || !siteUser || disableClicks) return "#";
 
     if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return ``;
+      return `/publish/${siteUser}`;
     }
 
     const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/${cleanHref}`;
+    return `/publish/${siteUser}/${cleanHref}`;
   };
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
