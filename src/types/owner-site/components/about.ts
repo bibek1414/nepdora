@@ -347,7 +347,8 @@ export type AboutUsData =
   | AboutUs15Data
   | AboutUs16Data
   | AboutUs17Data
-  | AboutUs18Data;
+  | AboutUs18Data
+  | AboutUs19Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -992,6 +993,56 @@ export const defaultAboutUs18Data: AboutUs18Data = {
   secondaryImageAlt: "Travel essentials flat lay with map and camera",
 };
 
+export interface AboutUs19Data {
+  template: "about-19";
+  sectionTag: string;
+  title: string;
+  italicWord: string;
+  description: string;
+  steps: Array<{
+    id: string;
+    stepNumber: string;
+    icon: string;
+    title: string;
+    description: string;
+  }>;
+}
+
+export const defaultAboutUs19Data: AboutUs19Data = {
+  template: "about-19",
+  sectionTag: "[Our Process]",
+  title: "Step-by-Step to Business Growth",
+  italicWord: "Business Growth",
+  description:
+    "How We Turn Strategy Into Measurable Success through our refined three-step methodology.",
+  steps: [
+    {
+      id: "1",
+      stepNumber: "01",
+      icon: "Search",
+      title: "Discover & Diagnose",
+      description:
+        "We start by understanding your needs and evaluating your outdoor space through a free consultation — in-person or virtual.",
+    },
+    {
+      id: "2",
+      stepNumber: "02",
+      icon: "Puzzle",
+      title: "Strategize & Plan",
+      description:
+        "We develop tailored, data-driven strategies designed to solve challenges, align with your goals and create a roadmap for success.",
+    },
+    {
+      id: "3",
+      stepNumber: "03",
+      icon: "Rocket",
+      title: "Execute & Optimize",
+      description:
+        "We work alongside your team to implement solutions, monitor progress and refine the strategy for maximum impact.",
+    },
+  ],
+};
+
 // Helper functions
 export const getDefaultAboutUsData = (
   template: AboutUsData["template"]
@@ -1033,6 +1084,8 @@ export const getDefaultAboutUsData = (
       return defaultAboutUs17Data;
     case "about-18":
       return defaultAboutUs18Data;
+    case "about-19":
+      return defaultAboutUs19Data;
     default:
       return defaultAboutUs1Data;
   }
@@ -1092,3 +1145,6 @@ export const isAboutUsTemplate17 = (data: AboutUsData): data is AboutUs17Data =>
 
 export const isAboutUsTemplate18 = (data: AboutUsData): data is AboutUs18Data =>
   data.template === "about-18";
+
+export const isAboutUsTemplate19 = (data: AboutUsData): data is AboutUs19Data =>
+  data.template === "about-19";
