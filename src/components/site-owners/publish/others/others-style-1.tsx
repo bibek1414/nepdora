@@ -63,7 +63,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
 
   return (
     <section
-      className="relative w-full overflow-hidden px-4 py-12 sm:px-6 sm:py-16 md:py-20 lg:px-8"
+      className="relative mx-auto max-w-7xl overflow-hidden px-4 py-12 sm:px-6 sm:py-16 md:py-20 lg:px-8"
       style={{
         backgroundColor:
           data.backgroundType === "color"

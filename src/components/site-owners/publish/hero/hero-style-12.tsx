@@ -143,7 +143,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
           style={{ backgroundColor: theme.colors.primary }}
         ></div>
 
-        <div className="relative z-10 grid h-full w-full grid-cols-1 items-center gap-8 px-4 py-8 md:px-8 md:py-16 lg:grid-cols-2 lg:gap-20 lg:px-16">
+        <div className="relative z-10 grid h-full w-full grid-cols-1 items-center gap-8 px-5 py-8 md:py-16 lg:grid-cols-2 lg:gap-20">
           {/* Left Content */}
           <div className="relative z-10 max-w-2xl space-y-6 md:space-y-10">
             {/* Title */}

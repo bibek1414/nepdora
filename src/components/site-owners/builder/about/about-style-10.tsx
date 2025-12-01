@@ -104,8 +104,8 @@ export function AboutUsTemplate10({
   };
 
   return (
-    <div className="px-4 py-16 sm:px-6 lg:px-12">
-      <div className="container mx-auto max-w-7xl">
+    <div className="py-16">
+      <div className="mx-auto max-w-7xl px-10">
         <div className="mb-16 grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
           {/* Left Side Images */}
           <div className="relative">

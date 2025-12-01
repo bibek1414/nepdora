@@ -69,7 +69,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
 
   return (
     <section
-      className="relative w-full overflow-hidden px-4 py-12 sm:px-6 sm:py-16 md:py-20 lg:px-8"
+      className="relative mx-auto max-w-7xl overflow-hidden px-4 py-12 sm:px-6 sm:py-16 md:py-20 lg:px-8"
       style={{
         backgroundColor:
           data.backgroundType === "color"
@@ -85,7 +85,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
         color: theme.colors.text,
       }}
     >
-      <div className="container mx-auto max-w-7xl">
+      <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
           {/* Left Column - Large Image */}
           <div className="lg:col-span-5">
