@@ -11,7 +11,14 @@ interface BlogStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
-    style: "blog-1" | "blog-2" | "blog-3" | "blog-4" | "blog-5" | "blog-6"
+    style:
+      | "blog-1"
+      | "blog-2"
+      | "blog-3"
+      | "blog-4"
+      | "blog-5"
+      | "blog-6"
+      | "blog-7"
   ) => void;
 }
 
@@ -21,7 +28,14 @@ export const BlogStylesDialog: React.FC<BlogStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "blog-1" | "blog-2" | "blog-3" | "blog-4" | "blog-5" | "blog-6" | null
+    | "blog-1"
+    | "blog-2"
+    | "blog-3"
+    | "blog-4"
+    | "blog-5"
+    | "blog-6"
+    | "blog-7"
+    | null
   >(null);
 
   const templates = [
@@ -49,10 +63,21 @@ export const BlogStylesDialog: React.FC<BlogStylesDialogProps> = ({
       id: "blog-6" as const,
       name: "Blog Style 6",
     },
+    {
+      id: "blog-7" as const,
+      name: "Blog Style 7",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "blog-1" | "blog-2" | "blog-3" | "blog-4" | "blog-5" | "blog-6";
+    id:
+      | "blog-1"
+      | "blog-2"
+      | "blog-3"
+      | "blog-4"
+      | "blog-5"
+      | "blog-6"
+      | "blog-7";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {

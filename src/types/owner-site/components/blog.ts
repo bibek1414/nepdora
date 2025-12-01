@@ -1,6 +1,13 @@
 export interface BlogData {
   component_id?: string;
-  style: "blog-1" | "blog-2" | "blog-3" | "blog-4" | "blog-5" | "blog-6";
+  style:
+    | "blog-1"
+    | "blog-2"
+    | "blog-3"
+    | "blog-4"
+    | "blog-5"
+    | "blog-6"
+    | "blog-7";
   title: string;
   subtitle?: string;
   order?: number;
