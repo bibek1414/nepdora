@@ -33,6 +33,7 @@ import {
   AboutUs16Data,
   UpdateAboutUsRequest,
   AboutUs17Data,
+  AboutUs18Data,
 } from "@/types/owner-site/components/about";
 import { AboutUsTemplate1 } from "./about-style-1";
 import { AboutUsTemplate2 } from "./about-style-2";
@@ -57,6 +58,7 @@ import { AboutUsTemplate14 } from "./about-style-14";
 import { AboutStyle15 } from "./about-style-15";
 import { AboutUsTemplate16 } from "./about-style-16";
 import { AboutUsTemplate17 } from "./about-style-17";
+import { AboutUsTemplate18 } from "./about-style-18";
 interface AboutUsComponentProps {
   component: AboutUsComponentData;
   isEditable?: boolean;
@@ -244,6 +246,14 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
         return (
           <AboutUsTemplate17
             aboutUsData={component.data as AboutUs17Data}
+            isEditable={isEditable}
+            onUpdate={handleUpdate}
+          />
+        );
+      case "about-18":
+        return (
+          <AboutUsTemplate18
+            aboutUsData={component.data as AboutUs18Data}
             isEditable={isEditable}
             onUpdate={handleUpdate}
           />
