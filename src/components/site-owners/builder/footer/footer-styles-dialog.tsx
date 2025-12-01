@@ -23,6 +23,7 @@ interface FooterStylesDialogProps {
       | "style-6"
       | "style-7"
       | "style-8"
+      | "style-9"
   ) => void;
 }
 
@@ -40,6 +41,7 @@ export const FooterStylesDialog: React.FC<FooterStylesDialogProps> = ({
     | "style-6"
     | "style-7"
     | "style-8"
+    | "style-9"
     | null
   >(null);
 
@@ -84,6 +86,11 @@ export const FooterStylesDialog: React.FC<FooterStylesDialogProps> = ({
       name: "Footer Style 8",
       data: { style: "style-8" } as FooterData,
     },
+    {
+      id: "style-9" as const,
+      name: "Footer Style 9",
+      data: { style: "style-9" } as FooterData,
+    },
   ];
 
   const handleSelect = (t: {
@@ -95,7 +102,8 @@ export const FooterStylesDialog: React.FC<FooterStylesDialogProps> = ({
       | "style-5"
       | "style-6"
       | "style-7"
-      | "style-8";
+      | "style-8"
+      | "style-9";
     data: FooterData;
   }) => {
     setSelectedStyle(t.id);

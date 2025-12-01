@@ -47,6 +47,9 @@ interface AddSectionDialogProps {
       | "style-4"
       | "style-5"
       | "style-6"
+      | "style-7"
+      | "style-8"
+      | "style-9"
   ) => void;
   websiteType?: string;
 }
@@ -939,6 +942,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/footers/footer8.png",
         description: "Footer with social media links",
       },
+      {
+        id: "footer-9",
+        name: "Footer Style 9",
+        image: "/images/site-owners/footers/footer9.png",
+        description: "Dark footer with student services and policy links",
+      },
     ],
   };
 
@@ -1422,7 +1431,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
   // Helper function to get footer style based on template ID
   const getFooterStyle = (
     templateId: string
-  ): "style-1" | "style-2" | "style-3" | "style-4" | "style-5" | "style-6" => {
+  ):
+    | "style-1"
+    | "style-2"
+    | "style-3"
+    | "style-4"
+    | "style-5"
+    | "style-6"
+    | "style-7"
+    | "style-8"
+    | "style-9" => {
     const styleNumber = templateId.split("-")[1];
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
     return `style-${styleNumber}` as any;

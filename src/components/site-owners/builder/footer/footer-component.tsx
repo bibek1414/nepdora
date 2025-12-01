@@ -29,6 +29,7 @@ import { FooterStyle5 } from "./footer-style5";
 import { FooterStyle6 } from "./footer-style6";
 import { FooterStyle7 } from "./footer-style7";
 import { FooterStyle8 } from "./footer-style8";
+import { FooterStyle9 } from "./footer-style9";
 import { FooterEditorDialog } from "./footer-editor-dialog";
 import {
   FooterData,
@@ -341,7 +342,9 @@ export function Footer({
                 ? FooterStyle7
                 : style === "style-8"
                   ? FooterStyle8
-                  : FooterStyle1;
+                  : style === "style-9"
+                    ? FooterStyle9
+                    : FooterStyle1;
 
   const isLoading =
     updateFooterMutation.isPending ||
