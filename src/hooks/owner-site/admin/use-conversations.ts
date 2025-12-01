@@ -124,7 +124,7 @@ export const useSendMessage = () => {
           context.previous
         );
       }
-      toast.error("Failed to send message");
+      toast.error("Failed to send message due to restricted permissions");
     },
   });
 };
