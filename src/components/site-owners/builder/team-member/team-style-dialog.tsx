@@ -19,6 +19,7 @@ interface TeamStylesDialogProps {
       | "card-5"
       | "card-6"
       | "team-7"
+      | "card-8"
   ) => void;
 }
 
@@ -35,6 +36,7 @@ export const TeamStylesDialog: React.FC<TeamStylesDialogProps> = ({
     | "card-5"
     | "card-6"
     | "team-7"
+    | "card-8"
     | null
   >(null);
 
@@ -67,6 +69,10 @@ export const TeamStylesDialog: React.FC<TeamStylesDialogProps> = ({
       id: "team-7" as const,
       name: "Team Style 7",
     },
+    {
+      id: "card-8" as const,
+      name: "Card Style 8",
+    },
   ];
 
   const handleSelect = (template: {
@@ -77,7 +83,8 @@ export const TeamStylesDialog: React.FC<TeamStylesDialogProps> = ({
       | "card-4"
       | "card-5"
       | "card-6"
-      | "team-7";
+      | "team-7"
+      | "card-8";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
@@ -127,7 +134,9 @@ export const TeamStylesDialog: React.FC<TeamStylesDialogProps> = ({
                               ? "6"
                               : template.id === "team-7"
                                 ? "7"
-                                : template.id.split("-")[1]
+                                : template.id === "card-8"
+                                  ? "8"
+                                  : template.id.split("-")[1]
                       }.png`}
                       alt={template.name}
                       width={400}
