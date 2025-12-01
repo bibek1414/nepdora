@@ -10,6 +10,7 @@ import { BlogCard2 } from "./blog-card2";
 import { BlogCard3 } from "./blog-card3";
 import { BlogCard4 } from "./blog-card4";
 import { BlogCard5 } from "./blog-card5";
+import { BlogCard6 } from "./blog-card6";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -210,14 +211,18 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   const getGridClass = () => {
     switch (style) {
       case "blog-2":
-        return `grid-cols-1 sm:grid-cols-4 `;
+        return "grid-cols-1 sm:grid-cols-4";
       case "blog-3":
         return "grid-cols-1 gap-6";
       case "blog-4":
         return "grid-cols-1 sm:grid-cols-2 gap-6";
+      case "blog-5":
+      case "blog-6":
+        // Blog 5 & 6 are single-column / large-width cards
+        return "grid-cols-1";
       case "blog-1":
       default:
-        return `grid-cols-1 sm:grid-cols-4 `;
+        return "grid-cols-1 sm:grid-cols-4";
     }
   };
 
@@ -329,20 +334,33 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
               </Alert>
             )}
 
-            {!isLoading && !error && blogs.length > 0 && (
-              <div className={`grid ${getGridClass()} gap-6`}>
-                {blogs.slice(0, Math.min(pageSize, 6)).map(blog => (
-                  <div
-                    key={blog.id}
-                    className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
-                  >
-                    {/* Overlay to prevent clicks in builder mode */}
-                    <div className="absolute inset-0 z-10 bg-transparent" />
-                    {renderBlogCard(blog)}
-                  </div>
-                ))}
-              </div>
-            )}
+            {!isLoading &&
+              !error &&
+              blogs.length > 0 &&
+              (style === "blog-6" ? (
+                <div className="relative cursor-default">
+                  {/* Overlay to prevent clicks in builder mode */}
+                  <div className="absolute inset-0 z-10 bg-transparent" />
+                  <BlogCard6
+                    blogs={blogs.slice(0, Math.min(pageSize, 6))}
+                    siteUser={undefined}
+                    onPostClick={handleBlogClick}
+                  />
+                </div>
+              ) : (
+                <div className={`grid ${getGridClass()} gap-6`}>
+                  {blogs.slice(0, Math.min(pageSize, 6)).map(blog => (
+                    <div
+                      key={blog.id}
+                      className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
+                    >
+                      {/* Overlay to prevent clicks in builder mode */}
+                      <div className="absolute inset-0 z-10 bg-transparent" />
+                      {renderBlogCard(blog)}
+                    </div>
+                  ))}
+                </div>
+              ))}
 
             {!isLoading && !error && blogs.length === 0 && (
               <div className="bg-muted/50 rounded-lg py-12 text-center">
@@ -413,15 +431,24 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
           </Alert>
         )}
 
-        {!isLoading && !error && blogs.length > 0 && (
-          <div className={`grid ${getGridClass()} gap-8`}>
-            {blogs.slice(0, pageSize).map(blog => (
-              <div key={blog.id} className="flex-shrink-0">
-                {renderBlogCard(blog)}
-              </div>
-            ))}
-          </div>
-        )}
+        {!isLoading &&
+          !error &&
+          blogs.length > 0 &&
+          (style === "blog-6" ? (
+            <BlogCard6
+              blogs={blogs.slice(0, pageSize)}
+              siteUser={siteUser}
+              onPostClick={handleBlogClick}
+            />
+          ) : (
+            <div className={`grid ${getGridClass()} gap-8`}>
+              {blogs.slice(0, pageSize).map(blog => (
+                <div key={blog.id} className="flex-shrink-0">
+                  {renderBlogCard(blog)}
+                </div>
+              ))}
+            </div>
+          ))}
 
         {!isLoading && !error && blogs.length === 0 && (
           <div className="py-16 text-center">

@@ -554,7 +554,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handleBlogTemplateSelect = async (
-    template: "blog-1" | "blog-2" | "blog-3" | "blog-4" | "blog-5"
+    template: "blog-1" | "blog-2" | "blog-3" | "blog-4" | "blog-5" | "blog-6"
   ) => {
     const blogData = { ...defaultBlogData, style: template };
 

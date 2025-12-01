@@ -10,6 +10,7 @@ import { BlogCard2 } from "./blog-card2";
 import { BlogCard3 } from "./blog-card3";
 import { BlogCard4 } from "./blog-card4";
 import { BlogCard5 } from "./blog-card5";
+import { BlogCard6 } from "./blog-card6";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -413,15 +414,24 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
           </Alert>
         )}
 
-        {!isLoading && !error && blogs.length > 0 && (
-          <div className={`grid ${getGridClass()} gap-8`}>
-            {blogs.slice(0, pageSize).map(blog => (
-              <div key={blog.id} className="flex-shrink-0">
-                {renderBlogCard(blog)}
-              </div>
-            ))}
-          </div>
-        )}
+        {!isLoading &&
+          !error &&
+          blogs.length > 0 &&
+          (style === "blog-6" ? (
+            <BlogCard6
+              blogs={blogs.slice(0, pageSize)}
+              siteUser={siteUser}
+              onPostClick={handleBlogClick}
+            />
+          ) : (
+            <div className={`grid ${getGridClass()} gap-8`}>
+              {blogs.slice(0, pageSize).map(blog => (
+                <div key={blog.id} className="flex-shrink-0">
+                  {renderBlogCard(blog)}
+                </div>
+              ))}
+            </div>
+          ))}
 
         {!isLoading && !error && blogs.length === 0 && (
           <div className="py-16 text-center">
