@@ -12,7 +12,7 @@ interface BannerStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
-    template: "banner-1" | "banner-2" | "banner-3" | "banner-4"
+    template: "banner-1" | "banner-2" | "banner-3" | "banner-4" | "banner-5"
   ) => void;
 }
 
@@ -22,7 +22,7 @@ export const BannerStylesDialog: React.FC<BannerStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "banner-1" | "banner-2" | "banner-3" | "banner-4" | null
+    "banner-1" | "banner-2" | "banner-3" | "banner-4" | "banner-5" | null
   >(null);
 
   const templates = [
@@ -41,10 +41,20 @@ export const BannerStylesDialog: React.FC<BannerStylesDialogProps> = ({
       name: "Three Column",
       description: "Three column banner with navigation controls",
     },
+    {
+      id: "banner-4" as const,
+      name: "Four Column",
+      description: "Four column banner with navigation controls",
+    },
+    {
+      id: "banner-5" as const,
+      name: "Five Column",
+      description: "Five column banner with navigation controls",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "banner-1" | "banner-2" | "banner-3" | "banner-4";
+    id: "banner-1" | "banner-2" | "banner-3" | "banner-4" | "banner-5";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {

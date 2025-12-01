@@ -4,7 +4,7 @@ export interface BannerData {
   subtitle?: string;
   bannerType: "Slider" | "Sidebar" | "Banner";
   images: BannerImage[];
-  template: "banner-1" | "banner-2" | "banner-3" | "banner-4";
+  template: "banner-1" | "banner-2" | "banner-3" | "banner-4" | "banner-5";
 }
 
 export interface BannerComponentData {
