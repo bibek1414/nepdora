@@ -168,7 +168,10 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
               multiline
             />
 
-            <div className="border-l-[3px] border-[#3C32E7] py-1 pl-5">
+            <div
+              className="border-l-[3px] py-1 pl-5"
+              style={{ borderColor: theme.colors.primary }}
+            >
               <EditableText
                 value={data.featuredStatValue}
                 onChange={handleTextUpdate("featuredStatValue")}
@@ -219,7 +222,10 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
           <div className="flex flex-col gap-6 pt-2 lg:w-[28%] lg:pl-6">
             <div className="min-h-[200px] rounded-2xl bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
               <div className="mb-6">
-                <Pin className="h-5 w-5 rotate-45 text-[#3C32E7]" />
+                <Pin
+                  className="h-5 w-5 rotate-45"
+                  style={{ color: theme.colors.primary }}
+                />
               </div>
               <div className="space-y-3.5 text-[15px] font-medium text-[#1A1A1A]">
                 {data.bulletPoints.map(point => (
@@ -240,7 +246,10 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
               text={data.ctaText}
               href={data.ctaLink}
               onChange={handleButtonUpdate}
-              className="group flex w-full items-center justify-between rounded-full bg-[#3C32E7] py-2 pr-2 pl-6 text-[15px] font-medium text-white shadow-lg shadow-blue-900/10 transition-colors hover:bg-[#322ac4]"
+              className="group flex w-full items-center justify-between rounded-full py-2 pr-2 pl-6 text-[15px] font-medium text-white shadow-lg shadow-blue-900/10 transition-colors hover:opacity-90"
+              style={{
+                backgroundColor: theme.colors.primary,
+              }}
               isEditable={isEditable}
               textPlaceholder="Book a Free Call"
               hrefPlaceholder="#"
@@ -249,7 +258,10 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
               <>
                 <span>{data.ctaText || "Book a Free Call"}</span>
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:rotate-45">
-                  <ArrowUpRight className="h-5 w-5 text-[#3C32E7]" />
+                  <ArrowUpRight
+                    className="h-5 w-5"
+                    style={{ color: theme.colors.primary }}
+                  />
                 </span>
               </>
             </EditableLink>
@@ -285,10 +297,15 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
                 key={stat.id}
                 className="flex h-full flex-col items-start gap-6 rounded-2xl bg-white p-7 shadow-[0_2px_15px_rgba(0,0,0,0.03)]"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EEF0FF]">
+                <div
+                  className="flex h-12 w-12 items-center justify-center rounded-full"
+                  style={{
+                    backgroundColor: hexToRgba(theme.colors.primary, 0.1),
+                  }}
+                >
                   <Icon
                     className="h-5 w-5"
-                    style={{ color: theme.colors.primary || "#3C32E7" }}
+                    style={{ color: theme.colors.primary }}
                   />
                 </div>
                 <div>

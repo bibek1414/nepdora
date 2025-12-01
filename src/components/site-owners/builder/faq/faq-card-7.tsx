@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, ArrowUpRight } from "lucide-react";
 import { FAQ } from "@/types/owner-site/admin/faq";
 import { EditableText } from "@/components/ui/editable-text";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface FaqCard7Props {
   faqs: FAQ[];
@@ -37,6 +38,27 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
 }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(
     faqs.length > 1 ? faqs[1].id : faqs.length > 0 ? faqs[0].id : null
+  );
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with fallback to defaults
+  const theme = useMemo(
+    () =>
+      themeResponse?.data?.[0]?.data?.theme || {
+        colors: {
+          text: "#0F172A",
+          primary: "#3C32E7",
+          primaryForeground: "#FFFFFF",
+          secondary: "#F59E0B",
+          secondaryForeground: "#1F2937",
+          background: "#FFFFFF",
+        },
+        fonts: {
+          body: "Inter",
+          heading: "Poppins",
+        },
+      },
+    [themeResponse]
   );
 
   return (
@@ -114,18 +136,34 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
                     isEditable={true}
                     placeholder="Enter button text..."
                   />
-                  <button className="group flex w-full items-center justify-between rounded-full bg-[#3C32E7] py-2 pr-2 pl-6 text-[15px] font-medium text-white shadow-lg shadow-blue-900/10 transition-colors hover:bg-[#322ac4]">
+                  <button
+                    className="group flex w-full items-center justify-between rounded-full py-2 pr-2 pl-6 text-[15px] font-medium text-white shadow-lg shadow-blue-900/10 transition-colors hover:opacity-90"
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                    }}
+                  >
                     <span>{buttonText}</span>
                     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:rotate-45">
-                      <ArrowUpRight className="h-5 w-5 text-[#3C32E7]" />
+                      <ArrowUpRight
+                        className="h-5 w-5"
+                        style={{ color: theme.colors.primary }}
+                      />
                     </span>
                   </button>
                 </div>
               ) : (
-                <button className="group flex w-full items-center justify-between rounded-full bg-[#3C32E7] py-2 pr-2 pl-6 text-[15px] font-medium text-white shadow-lg shadow-blue-900/10 transition-colors hover:bg-[#322ac4]">
+                <button
+                  className="group flex w-full items-center justify-between rounded-full py-2 pr-2 pl-6 text-[15px] font-medium text-white shadow-lg shadow-blue-900/10 transition-colors hover:opacity-90"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                  }}
+                >
                   <span>{buttonText}</span>
                   <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:rotate-45">
-                    <ArrowUpRight className="h-5 w-5 text-[#3C32E7]" />
+                    <ArrowUpRight
+                      className="h-5 w-5"
+                      style={{ color: theme.colors.primary }}
+                    />
                   </span>
                 </button>
               )}
@@ -154,10 +192,17 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
                     </span>
                     <div
                       className={`flex-shrink-0 rounded-full p-2 transition-all duration-300 ease-in-out ${
-                        isOpen
-                          ? "bg-blue-100 text-blue-700"
-                          : "border border-blue-600 bg-white text-blue-600"
+                        isOpen ? "bg-opacity-10" : "border bg-white"
                       }`}
+                      style={{
+                        backgroundColor: isOpen
+                          ? `${theme.colors.primary}1A`
+                          : "transparent",
+                        borderColor: isOpen
+                          ? "transparent"
+                          : theme.colors.primary,
+                        color: theme.colors.primary,
+                      }}
                     >
                       {isOpen ? <Minus size={16} /> : <Plus size={16} />}
                     </div>
