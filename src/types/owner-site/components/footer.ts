@@ -42,6 +42,7 @@ export interface FooterData {
     description: string;
   };
   copyright: string;
+  policyLinks?: FooterLink[];
   style: string;
 }
 
