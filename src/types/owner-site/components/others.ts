@@ -17,6 +17,12 @@ export interface OthersStatistic {
   label: string;
 }
 
+export interface OthersProcessItem {
+  id: string;
+  title: string;
+  description: string;
+}
+
 export interface OthersTemplate1Data {
   template: "others-1";
   subHeading: string;
@@ -59,8 +65,25 @@ export interface OthersTemplate2Data {
   backgroundImageUrl?: string;
 }
 
+export interface OthersTemplate3Data {
+  template: "others-3";
+  processLabel: string;
+  heading: string;
+  processItems: OthersProcessItem[];
+  successLabel: string;
+  successHeading: string;
+  successDescription: string;
+  statistics: OthersStatistic[];
+  backgroundType: "color" | "gradient" | "image";
+  backgroundColor?: string;
+  backgroundImageUrl?: string;
+}
+
 // Union type for all others templates
-export type OthersData = OthersTemplate1Data | OthersTemplate2Data;
+export type OthersData =
+  | OthersTemplate1Data
+  | OthersTemplate2Data
+  | OthersTemplate3Data;
 
 // Component and API interfaces
 export interface OthersComponentData {
@@ -163,6 +186,44 @@ export const defaultOthersTemplate2Data: OthersTemplate2Data = {
   backgroundColor: "#FFFFFF",
 };
 
+export const defaultOthersTemplate3Data: OthersTemplate3Data = {
+  template: "others-3",
+  processLabel: "PROCESS OVER VIEW",
+  heading: "Where Wanderlust Meets Reality Destinations",
+  processItems: [
+    {
+      id: "proc-1",
+      title: "Efficiency Experts",
+      description:
+        "Lorem Ipsum is simply dummy text th printing and typese Lorem Ipm been the industry's standard",
+    },
+    {
+      id: "proc-2",
+      title: "Global Entry",
+      description:
+        "Lorem Ipsum is simply dummy text th printing and typese Lorem Ipm been the industry's standard",
+    },
+    {
+      id: "proc-3",
+      title: "Passport Plus",
+      description:
+        "Lorem Ipsum is simply dummy text th printing and typese Lorem Ipm been the industry's standard",
+    },
+  ],
+  successLabel: "SUCCESS STORY",
+  successHeading: "Experiencing Traditions and Customs",
+  successDescription:
+    "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standardever",
+  statistics: [
+    { id: "stat-1", value: "200+", label: "Team member" },
+    { id: "stat-2", value: "20+", label: "Winning award" },
+    { id: "stat-3", value: "10k+", label: "Complete project" },
+    { id: "stat-4", value: "900+", label: "Client review" },
+  ],
+  backgroundType: "color",
+  backgroundColor: "#F1F5F1",
+};
+
 // Helper functions
 export const getDefaultOthersData = (
   template: OthersData["template"]
@@ -172,6 +233,8 @@ export const getDefaultOthersData = (
       return defaultOthersTemplate1Data;
     case "others-2":
       return defaultOthersTemplate2Data;
+    case "others-3":
+      return defaultOthersTemplate3Data;
     default:
       return defaultOthersTemplate1Data;
   }
@@ -185,3 +248,7 @@ export const isOthersTemplate1 = (
 export const isOthersTemplate2 = (
   data: OthersData
 ): data is OthersTemplate2Data => data.template === "others-2";
+
+export const isOthersTemplate3 = (
+  data: OthersData
+): data is OthersTemplate3Data => data.template === "others-3";
