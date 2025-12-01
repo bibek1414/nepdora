@@ -79,11 +79,28 @@ export interface OthersTemplate3Data {
   backgroundImageUrl?: string;
 }
 
+export interface OthersCountryCard {
+  id: string;
+  label: string;
+}
+
+export interface OthersTemplate4Data {
+  template: "others-4";
+  subHeading: string;
+  heading: string;
+  buttons: OthersButton[];
+  countryCards: OthersCountryCard[];
+  backgroundType: "color" | "gradient" | "image";
+  backgroundColor?: string;
+  backgroundImageUrl?: string;
+}
+
 // Union type for all others templates
 export type OthersData =
   | OthersTemplate1Data
   | OthersTemplate2Data
-  | OthersTemplate3Data;
+  | OthersTemplate3Data
+  | OthersTemplate4Data;
 
 // Component and API interfaces
 export interface OthersComponentData {
@@ -224,6 +241,29 @@ export const defaultOthersTemplate3Data: OthersTemplate3Data = {
   backgroundColor: "#F1F5F1",
 };
 
+export const defaultOthersTemplate4Data: OthersTemplate4Data = {
+  template: "others-4",
+  subHeading: "RELAX TRAVEL",
+  heading: "Visa Immigration\nFor A Brighter\nYou Future",
+  buttons: [
+    {
+      id: "btn-1",
+      text: "Contact Us",
+      variant: "outline",
+      href: "#",
+    },
+  ],
+  countryCards: [
+    { id: "card-1", label: "Germany" },
+    { id: "card-2", label: "South Korea" },
+    { id: "card-3", label: "South Africa" },
+    { id: "card-4", label: "Turkey" },
+    { id: "card-5", label: "Indonesia" },
+  ],
+  backgroundType: "color",
+  backgroundColor: "#EDE8E3",
+};
+
 // Helper functions
 export const getDefaultOthersData = (
   template: OthersData["template"]
@@ -235,6 +275,8 @@ export const getDefaultOthersData = (
       return defaultOthersTemplate2Data;
     case "others-3":
       return defaultOthersTemplate3Data;
+    case "others-4":
+      return defaultOthersTemplate4Data;
     default:
       return defaultOthersTemplate1Data;
   }
@@ -252,3 +294,7 @@ export const isOthersTemplate2 = (
 export const isOthersTemplate3 = (
   data: OthersData
 ): data is OthersTemplate3Data => data.template === "others-3";
+
+export const isOthersTemplate4 = (
+  data: OthersData
+): data is OthersTemplate4Data => data.template === "others-4";
