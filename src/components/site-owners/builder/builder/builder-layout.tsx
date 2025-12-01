@@ -642,6 +642,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "testimonial-6"
       | "testimonial-7"
       | "testimonial-8"
+      | "testimonial-9"
+      | "testimonial-10"
   ) => {
     const testimonialsData = { ...defaultTestimonialsData, style: template };
 

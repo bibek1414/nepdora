@@ -17,7 +17,8 @@ type TestimonialStyleId =
   | "testimonial-6"
   | "testimonial-7"
   | "testimonial-8"
-  | "testimonial-9";
+  | "testimonial-9"
+  | "testimonial-10";
 
 interface TestimonialsStylesDialogProps {
   open: boolean;
@@ -68,6 +69,10 @@ export const TestimonialsStylesDialog: React.FC<
     {
       id: "testimonial-9" as const,
       name: "Carousel Style",
+    },
+    {
+      id: "testimonial-10" as const,
+      name: "Card Style 10",
     },
   ];
 

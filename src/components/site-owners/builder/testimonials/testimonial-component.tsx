@@ -12,7 +12,7 @@ import { TestimonialCard4 } from "./testimonial-card-4";
 import { TestimonialCard5 } from "./testimonial-card-5";
 import { TestimonialCard6 } from "./testimonial-card-6"; // Add this import
 import { TestimonialCard9 } from "./testimonial-card-9";
-
+import { TestimonialCard10 } from "./testimonial-card-10";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -213,13 +213,18 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     switch (style) {
       case "testimonial-2":
         return <TestimonialCard2 key={testimonial.id} {...cardProps} />;
+      case "testimonial-3":
+        return <TestimonialCard3 key={testimonial.id} {...cardProps} />;
       case "testimonial-4":
         return <TestimonialCard4 key={testimonial.id} {...cardProps} />;
       case "testimonial-7":
         return <TestimonialCard7 key={testimonial.id} {...cardProps} />;
-      case "testimonial-3":
-        return <TestimonialCard3 key={testimonial.id} {...cardProps} />;
       case "testimonial-1":
+      case "testimonial-5":
+      case "testimonial-6":
+      case "testimonial-8":
+      case "testimonial-9":
+      case "testimonial-10":
       default:
         return <TestimonialCard1 key={testimonial.id} {...cardProps} />;
     }
@@ -254,6 +259,17 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
       );
     }
 
+    if (style === "testimonial-10") {
+      return (
+        <TestimonialCard10
+          testimonials={testimonials.slice(0, page_size)}
+          onClick={handleTestimonialClick}
+          backgroundImage={backgroundImage}
+          isEditable={isEditable}
+          onBackgroundChange={handleBackgroundImageChange}
+        />
+      );
+    }
     return null;
   };
 
@@ -268,7 +284,9 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
       case "testimonial-5":
       case "testimonial-6":
       case "testimonial-9":
+      case "testimonial-10":
         return "";
+
       case "testimonial-1":
       default:
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
@@ -511,7 +529,8 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
                   >
                     {style === "testimonial-5" ||
                     style === "testimonial-6" ||
-                    style === "testimonial-9" ? (
+                    style === "testimonial-9" ||
+                    style === "testimonial-10" ? (
                       <div className="flex gap-4 overflow-hidden">
                         {Array.from({ length: 3 }).map((_, index) => (
                           <div key={index} className="w-80 flex-shrink-0">
@@ -555,7 +574,8 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
                   <>
                     {style === "testimonial-5" ||
                     style === "testimonial-6" ||
-                    style === "testimonial-9" ? (
+                    style === "testimonial-9" ||
+                    style === "testimonial-10" ? (
                       renderCarouselOrStagger()
                     ) : (
                       <div className={`grid ${getGridClass()} gap-6`}>
@@ -745,6 +765,65 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
             <TestimonialCard9
               testimonials={testimonials.slice(0, page_size)}
               onClick={handleTestimonialClick}
+            />
+          )}
+
+          {!isLoading && !error && testimonials.length === 0 && (
+            <div className="bg-muted/50 mt-10 w-full rounded-lg py-12 text-center">
+              <MessageSquareQuote className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+              <h3 className="text-foreground mb-2 text-lg font-semibold">
+                No Testimonials Available
+              </h3>
+              <p className="text-muted-foreground">
+                Customer testimonials will be displayed here once available.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  }
+
+  if (style === "testimonial-10") {
+    return (
+      <section className="bg-background py-12 md:py-16">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="mb-12 text-center">
+            <h2
+              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+              dangerouslySetInnerHTML={{ __html: title }}
+            ></h2>
+            {subtitle && (
+              <p
+                className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
+            )}
+          </div>
+
+          {isLoading && (
+            <div className="mx-auto max-w-7xl">
+              <Skeleton className="h-[540px] w-full rounded-[40px]" />
+            </div>
+          )}
+
+          {error && (
+            <Alert variant="destructive" className="mx-auto max-w-2xl">
+              <AlertCircle className="h-5 w-5" />
+              <AlertTitle>Unable to Load Testimonials</AlertTitle>
+              <AlertDescription className="text-base">
+                {error instanceof Error
+                  ? error.message
+                  : "We're having trouble loading testimonials. Please try refreshing the page."}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {!isLoading && !error && testimonials.length > 0 && (
+            <TestimonialCard10
+              testimonials={testimonials.slice(0, page_size)}
+              onClick={handleTestimonialClick}
+              backgroundImage={backgroundImage}
             />
           )}
 
