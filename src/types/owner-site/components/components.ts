@@ -20,6 +20,7 @@ import { TextEditorData } from "./text-editor";
 import { CTAData } from "./cta";
 import { PricingData } from "./pricing";
 import { OurClientsData } from "./our-client";
+import { OthersData } from "./others";
 
 // Union type for all component data types
 export type ComponentData =
@@ -44,6 +45,7 @@ export type ComponentData =
   | PolicyData
   | TestimonialsData
   | PricingData
+  | OthersData
   | OurClientsData;
 
 // Component type mapping for better type safety
@@ -70,6 +72,7 @@ export interface ComponentTypeMap {
   text_editor: TextEditorData;
   pricing: PricingData;
   our_clients: OurClientsData;
+  others: OthersData;
 }
 
 // Generic interfaces
@@ -129,6 +132,11 @@ export const isAboutComponent = (
   component: ComponentResponse
 ): component is ComponentResponse<"about"> =>
   component.component_type === "about";
+
+export const isOthersComponent = (
+  component: ComponentResponse
+): component is ComponentResponse<"others"> =>
+  component.component_type === "others";
 
 export const isBlogComponent = (
   component: ComponentResponse
