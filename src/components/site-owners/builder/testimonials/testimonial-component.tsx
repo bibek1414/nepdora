@@ -497,25 +497,31 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
               </div>
             ) : (
               <div className="container mx-auto px-4">
-                <div className="mb-8 text-center">
-                  <EditableText
-                    value={title}
-                    onChange={handleTitleChange}
-                    as="h2"
-                    className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                    isEditable={true}
-                    placeholder="Enter title..."
-                  />
-                  <EditableText
-                    value={subtitle || ""}
-                    onChange={handleSubtitleChange}
-                    as="p"
-                    className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                    isEditable={true}
-                    placeholder="Enter subtitle..."
-                    multiline={true}
-                  />
-                </div>
+                {(title || subtitle) && style !== "testimonial-10" && (
+                  <div className="mb-8 text-center">
+                    {title && (
+                      <EditableText
+                        value={title}
+                        onChange={handleTitleChange}
+                        as="h2"
+                        className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                        isEditable={true}
+                        placeholder="Enter title..."
+                      />
+                    )}
+                    {subtitle && (
+                      <EditableText
+                        value={subtitle}
+                        onChange={handleSubtitleChange}
+                        as="p"
+                        className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                        isEditable={true}
+                        placeholder="Enter subtitle..."
+                        multiline={true}
+                      />
+                    )}
+                  </div>
+                )}
 
                 {isLoading && (
                   <div
@@ -775,19 +781,6 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     return (
       <section className="bg-background py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4">
-          <div className="mb-12 text-center">
-            <h2
-              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-              dangerouslySetInnerHTML={{ __html: title }}
-            ></h2>
-            {subtitle && (
-              <p
-                className="text-muted-foreground mx-auto max-w-3xl text-xl"
-                dangerouslySetInnerHTML={{ __html: subtitle }}
-              ></p>
-            )}
-          </div>
-
           {isLoading && (
             <div className="mx-auto max-w-7xl">
               <Skeleton className="h-[540px] w-full rounded-[40px]" />
@@ -833,18 +826,22 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   return (
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          <h2
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></h2>
-          {subtitle && (
-            <p
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            ></p>
-          )}
-        </div>
+        {(title || subtitle) && (
+          <div className="mb-12 text-center">
+            {title && (
+              <h2
+                className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+                dangerouslySetInnerHTML={{ __html: title }}
+              ></h2>
+            )}
+            {subtitle && (
+              <p
+                className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
+            )}
+          </div>
+        )}
 
         {isLoading && (
           <div

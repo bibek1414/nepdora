@@ -220,9 +220,8 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
       case "blog-4":
         return "grid-cols-1 sm:grid-cols-2 gap-6";
       case "blog-5":
+        return "grid-cols-1 sm:grid-cols-4 gap-6";
       case "blog-6":
-      case "blog-7":
-        // Blog 5, 6 & 7 are single-column / large-width cards
         return "grid-cols-1";
       case "blog-1":
       default:
@@ -437,18 +436,20 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   return (
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          <h2
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></h2>
-          {subtitle && (
-            <p
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            ></p>
-          )}
-        </div>
+        {(title || subtitle) && style !== "blog-6" && (
+          <div className="mb-12 text-center">
+            <h2
+              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+              dangerouslySetInnerHTML={{ __html: title }}
+            ></h2>
+            {subtitle && (
+              <p
+                className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                dangerouslySetInnerHTML={{ __html: subtitle }}
+              ></p>
+            )}
+          </div>
+        )}
 
         {isLoading && (
           <div className={`grid ${getGridClass()} gap-8`}>

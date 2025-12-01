@@ -9,14 +9,23 @@ export interface FAQData {
     | "faq-5"
     | "faq-6"
     | "faq-7"
-    | "faq-8";
+    | "faq-8"
+    | "faq-9"
+    | "faq-10";
 
   title: string;
   subtitle?: string;
   order?: number;
-  // Additional props for FAQ Card 6
+
+  // Additional props for FAQ Card 6 & 9
   leftImage?: string;
-  // Additional props for FAQ Card 7
+
+  // Additional props for FAQ Card 10 (3 images)
+  leftImage1?: string;
+  leftImage2?: string;
+  leftImage3?: string;
+
+  // Additional props for FAQ Card 7 & 9 & 10
   titleItalic?: string;
   contactTitle?: string;
   contactDescription?: string;

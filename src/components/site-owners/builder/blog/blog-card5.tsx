@@ -104,17 +104,12 @@ export const BlogCard5: React.FC<BlogCard5Props> = ({
         </div>
 
         {/* Title */}
-        <h3 className="mb-4 text-xl font-bold transition-colors group-hover:text-[#84cc16]">
+        <h3 className="mb-4 text-lg font-bold transition-colors">
           {blog.title}
         </h3>
 
-        {/* Excerpt */}
-        <p className="mb-4 line-clamp-2 text-sm text-gray-500">
-          {getExcerpt(blog.content)}
-        </p>
-
         {/* Read More Link */}
-        <div className="flex items-center gap-2 text-sm font-bold transition-transform group-hover:translate-x-2">
+        <div className="flex items-center gap-2 text-sm font-bold transition-transform">
           Read More <ArrowRight size={14} />
         </div>
       </div>

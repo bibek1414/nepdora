@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Button } from "@/components/ui/button";
 import { Plus, Minus, ArrowUpRight } from "lucide-react";
 import { FAQ } from "@/types/owner-site/admin/faq";
 import { EditableText } from "@/components/ui/editable-text";

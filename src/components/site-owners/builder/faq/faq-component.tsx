@@ -13,6 +13,7 @@ import { FAQCard5 } from "./faq-card-5";
 import { FaqCard6 } from "./faq-card-6";
 import { FaqCard7 } from "./faq-card-7";
 import { FaqCard8 } from "./faq-card-8";
+import { FaqCard9 } from "./faq-card-9";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -241,6 +242,9 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
       title = "Frequently Asked Questions",
       subtitle,
       leftImage,
+      leftImage1,
+      leftImage2,
+      leftImage3,
       titleItalic,
       contactTitle,
       contactDescription,
@@ -303,7 +307,91 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
           />
         );
       case "faq-8":
-        return <FaqCard8 {...baseCardProps} />;
+        return (
+          <FaqCard8
+            {...baseCardProps}
+            title={title}
+            subtitle={subtitle}
+            isEditable={isEditable}
+            onTitleChange={handleTitleChange}
+            onSubtitleChange={handleSubtitleChange}
+          />
+        );
+      case "faq-9":
+        return (
+          <FaqCard9
+            {...baseCardProps}
+            title={title}
+            subtitle={subtitle}
+            leftImage1={leftImage1}
+            leftImage2={leftImage2}
+            leftImage3={leftImage3}
+            contactTitle={contactTitle}
+            contactDescription={contactDescription}
+            isEditable={isEditable}
+            onTitleChange={handleTitleChange}
+            onSubtitleChange={handleSubtitleChange}
+            onLeftImage1Change={url => {
+              if (!pageSlug) return;
+              updateFAQComponent.mutate({
+                componentId: component.component_id,
+                data: {
+                  ...component.data,
+                  leftImage1: url,
+                },
+              });
+              if (onUpdate) {
+                onUpdate(component.component_id, {
+                  ...component,
+                  data: {
+                    ...component.data,
+                    leftImage1: url,
+                  },
+                });
+              }
+            }}
+            onLeftImage2Change={url => {
+              if (!pageSlug) return;
+              updateFAQComponent.mutate({
+                componentId: component.component_id,
+                data: {
+                  ...component.data,
+                  leftImage2: url,
+                },
+              });
+              if (onUpdate) {
+                onUpdate(component.component_id, {
+                  ...component,
+                  data: {
+                    ...component.data,
+                    leftImage2: url,
+                  },
+                });
+              }
+            }}
+            onLeftImage3Change={url => {
+              if (!pageSlug) return;
+              updateFAQComponent.mutate({
+                componentId: component.component_id,
+                data: {
+                  ...component.data,
+                  leftImage3: url,
+                },
+              });
+              if (onUpdate) {
+                onUpdate(component.component_id, {
+                  ...component,
+                  data: {
+                    ...component.data,
+                    leftImage3: url,
+                  },
+                });
+              }
+            }}
+            onContactTitleChange={handleContactTitleChange}
+            onContactDescriptionChange={handleContactDescriptionChange}
+          />
+        );
       case "faq-2":
         return <FAQCard2 {...baseCardProps} />;
       case "faq-3":
@@ -370,7 +458,7 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
           </AlertDialog>
         </div>
 
-        {/* FAQ Form Dialog - Updated to use correct props */}
+        {/* FAQ Form Dialog */}
         <FAQForm
           open={isAddDialogOpen}
           onOpenChange={setIsAddDialogOpen}
@@ -381,31 +469,34 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
         <div className="py-8">
           <div className="container mx-auto px-4">
             {/* Only show separate title/subtitle for styles that don't have built-in titles */}
-            {style !== "faq-6" && style !== "faq-7" && style !== "faq-8" && (
-              <div className="mb-8 text-center">
-                <EditableText
-                  value={title}
-                  onChange={handleTitleChange}
-                  as="h2"
-                  className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                  isEditable={true}
-                  placeholder="Enter title..."
-                />
-                <EditableText
-                  value={subtitle || ""}
-                  onChange={handleSubtitleChange}
-                  as="p"
-                  className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                  isEditable={true}
-                  placeholder="Enter subtitle..."
-                  multiline={true}
-                />
-              </div>
-            )}
+            {style !== "faq-6" &&
+              style !== "faq-7" &&
+              style !== "faq-8" &&
+              style !== "faq-9" && (
+                <div className="mb-8 text-center">
+                  <EditableText
+                    value={title}
+                    onChange={handleTitleChange}
+                    as="h2"
+                    className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                    isEditable={true}
+                    placeholder="Enter title..."
+                  />
+                  <EditableText
+                    value={subtitle || ""}
+                    onChange={handleSubtitleChange}
+                    as="p"
+                    className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                    isEditable={true}
+                    placeholder="Enter subtitle..."
+                    multiline={true}
+                  />
+                </div>
+              )}
 
             <div
               className={
-                style === "faq-6" || style === "faq-7"
+                style === "faq-6" || style === "faq-7" || style === "faq-9"
                   ? "w-full"
                   : "mx-auto max-w-4xl"
               }
@@ -433,10 +524,7 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
               )}
 
               {!isLoading && !error && faqs.length > 0 && (
-                <div className="relative">
-                  <div className="absolute inset-0 z-10 bg-transparent" />
-                  {renderFAQCard()}
-                </div>
+                <div className="relative">{renderFAQCard()}</div>
               )}
 
               {!isLoading && !error && faqs.length === 0 && (
@@ -462,24 +550,27 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-6xl px-4">
         {/* Only show separate title/subtitle for styles that don't have built-in titles */}
-        {style !== "faq-6" && style !== "faq-7" && style !== "faq-8" && (
-          <div className="mb-12 text-center">
-            <h2
-              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-              dangerouslySetInnerHTML={{ __html: title }}
-            ></h2>
-            {subtitle && (
-              <p
-                className="text-muted-foreground mx-auto max-w-3xl text-xl"
-                dangerouslySetInnerHTML={{ __html: subtitle }}
-              ></p>
-            )}
-          </div>
-        )}
+        {style !== "faq-6" &&
+          style !== "faq-7" &&
+          style !== "faq-8" &&
+          style !== "faq-9" && (
+            <div className="mb-12 text-center">
+              <h2
+                className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+                dangerouslySetInnerHTML={{ __html: title }}
+              ></h2>
+              {subtitle && (
+                <p
+                  className="text-muted-foreground mx-auto max-w-3xl text-xl"
+                  dangerouslySetInnerHTML={{ __html: subtitle }}
+                ></p>
+              )}
+            </div>
+          )}
 
         <div
           className={
-            style === "faq-6" || style === "faq-7"
+            style === "faq-6" || style === "faq-7" || style === "faq-9"
               ? "w-full"
               : "mx-auto max-w-4xl"
           }

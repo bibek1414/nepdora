@@ -220,8 +220,8 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
 
         <div className="py-8">
           <div className="container mx-auto px-4">
-            {/* Conditionally render the text center div only if title or subtitle exist */}
-            {(title || subtitle) && (
+            {/* Conditionally render the text center div only if title or subtitle exist and style is not pricing-4 */}
+            {(title || subtitle) && style !== "pricing-4" && (
               <div className="mb-8 text-center">
                 {title && (
                   <EditableText
@@ -305,7 +305,7 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
     <section className="bg-background mx-auto max-w-5xl py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
         {/* Conditionally render header only if title or subtitle exist */}
-        {(title || subtitle) && (
+        {(title || subtitle) && style !== "pricing-4" && (
           <div className="mb-12 text-center">
             {title && (
               <h2

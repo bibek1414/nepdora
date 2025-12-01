@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Check, Mail, MapPin, Phone, Send, Loader2 } from "lucide-react";
+import { EditableText } from "@/components/ui/editable-text";
 import { Button } from "@/components/ui/site-owners/button";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import {
@@ -20,6 +21,8 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
   data,
   siteUser,
   isPreview = false,
+  isEditable = false,
+  onDataChange,
 }) => {
   const [formData, setFormData] = useState<ContactFormSubmission>({
     name: "Anonymous",
@@ -71,6 +74,44 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const updateTitle = (value: string) => {
+    if (onDataChange) {
+      onDataChange({
+        ...data,
+        title: value,
+      });
+    }
+  };
+
+  const updateSubtitle = (value: string) => {
+    if (onDataChange) {
+      onDataChange({
+        ...data,
+        subtitle: value,
+      });
+    }
+  };
+
+  const updateDescription = (value: string) => {
+    if (onDataChange) {
+      onDataChange({
+        ...data,
+        description: value,
+      });
+    }
+  };
+
+  const updateChecklist = (index: number, value: string) => {
+    if (onDataChange) {
+      const newChecklist = [...checklist];
+      newChecklist[index] = value;
+      onDataChange({
+        ...data,
+        checklist: newChecklist,
+      });
+    }
+  };
+
   // Use theme colors with fallbacks
   const primaryColor = theme.colors.primary || "#034833";
   const secondaryColor = theme.colors.secondary || "#83CD20";
@@ -90,30 +131,42 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
 
   return (
     <section className="px-4 py-12 sm:px-6 lg:px-12">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-5xl">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
           {/* Left Content: Text & Checklist */}
           <div className="flex flex-col space-y-6">
             <div className="space-y-4">
               {/* Subtitle */}
               <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gray-500 uppercase">
-                <span className="flex items-center gap-2">
-                  <span className="text-2xl">💸</span> {subtitle}
-                </span>
+                <EditableText
+                  value={subtitle}
+                  onChange={updateSubtitle}
+                  as="span"
+                  isEditable={isEditable}
+                  className="flex items-center gap-2"
+                />
               </div>
 
               {/* Main Title */}
-              <h2
+              <EditableText
+                value={title}
+                onChange={updateTitle}
+                as="h2"
                 className="text-4xl leading-tight font-bold md:text-5xl"
                 style={{ color: primaryColor }}
-              >
-                {title}
-              </h2>
+                isEditable={isEditable}
+                multiline={true}
+              />
 
               {/* Description */}
-              <p className="text-lg leading-relaxed text-gray-500">
-                {description}
-              </p>
+              <EditableText
+                value={description}
+                onChange={updateDescription}
+                as="p"
+                className="text-lg leading-relaxed text-gray-500"
+                isEditable={isEditable}
+                multiline={true}
+              />
             </div>
 
             {/* Checklist */}
@@ -121,12 +174,14 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
               {checklist.map((item, index) => (
                 <li key={index} className="flex items-center gap-3">
                   <Check size={20} style={{ color: secondaryColor }} />
-                  <span
+                  <EditableText
+                    value={item}
+                    onChange={value => updateChecklist(index, value)}
+                    as="span"
                     className="text-lg font-medium"
                     style={{ color: primaryColor }}
-                  >
-                    {item}
-                  </span>
+                    isEditable={isEditable}
+                  />
                 </li>
               ))}
             </ul>
