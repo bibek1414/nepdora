@@ -17,7 +17,8 @@ export interface GalleryData {
     | "gallery-3"
     | "gallery-4"
     | "gallery-5"
-    | "gallery-6";
+    | "gallery-6"
+    | "gallery-7";
 }
 
 export interface GalleryComponentData {

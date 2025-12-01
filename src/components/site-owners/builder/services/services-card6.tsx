@@ -5,21 +5,21 @@ import Image from "next/image";
 import { ArrowLeft, ArrowRight, Send } from "lucide-react";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
-
-// Define colors here since we couldn't find them in the config
-const ADVENTURE_GREEN = "#1a4d2e"; // Dark green
-const ADVENTURE_LIME = "#d9f99d"; // Lime green
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface ServiceCardProps {
   service: ServicesPost;
   isActive: boolean;
   onClick: () => void;
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  theme: any;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
   service,
   isActive,
   onClick,
+  theme,
 }) => {
   // Strip HTML from description
   const stripHtml = (html: string) =>
@@ -37,13 +37,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           : "opacity-90 shadow-sm hover:-translate-y-1 hover:shadow-md"
       } `}
       style={{
-        borderColor: isActive ? ADVENTURE_LIME : "transparent",
+        borderColor: isActive ? theme.colors.secondary : "transparent",
         borderWidth: isActive ? "2px" : "1px",
       }}
     >
       <div
         className="mb-8 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full shadow-inner"
-        style={{ backgroundColor: ADVENTURE_LIME }}
+        style={{ backgroundColor: theme.colors.secondary }}
       >
         {service.thumbnail_image ? (
           <div className="relative h-full w-full">
@@ -63,7 +63,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
       <h3
         className="mb-4 text-xl font-bold md:text-2xl"
-        style={{ color: ADVENTURE_GREEN }}
+        style={{ color: theme.colors.primary }}
       >
         {service.title}
       </h3>
@@ -91,6 +91,23 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
   onServiceClick,
 }) => {
   const [activeIndex, setActiveIndex] = useState(1); // Middle card active by default
+  const { data: themeResponse } = useThemeQuery();
+
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#1a4d2e", // Default to previous ADVENTURE_GREEN
+      primaryForeground: "#FFFFFF",
+      secondary: "#d9f99d", // Default to previous ADVENTURE_LIME
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   const handlePrev = () => {
     setActiveIndex(prev => (prev === 0 ? services.length - 1 : prev - 1));
@@ -110,7 +127,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
   };
 
   return (
-    <div className="bg-bg-light relative flex min-h-screen w-full items-center justify-center overflow-hidden py-20">
+    <div className="bg-bg-light relative mx-auto flex min-h-screen max-w-7xl items-center justify-center overflow-hidden py-20">
       {/* Background Split */}
       <div className="bg-bg-dark absolute top-0 right-0 z-0 h-full w-full rounded-bl-[100px] md:w-[35%] md:rounded-none" />
 
@@ -121,7 +138,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
             <div className="mb-4 flex items-center gap-2">
               <span
                 className="text-xs font-bold tracking-[0.2em] uppercase"
-                style={{ color: ADVENTURE_GREEN }}
+                style={{ color: theme.colors.primary }}
               >
                 Our Services
               </span>
@@ -129,7 +146,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
                 size={12}
                 className="-rotate-45"
                 fill="currentColor"
-                style={{ color: ADVENTURE_LIME }}
+                style={{ color: theme.colors.secondary }}
               />
             </div>
 
@@ -138,7 +155,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
             </h1>
             <h2
               className="font-sans text-4xl font-bold tracking-tight md:text-6xl"
-              style={{ color: ADVENTURE_GREEN }}
+              style={{ color: theme.colors.primary }}
             >
               Discover Your Next
             </h2>
@@ -148,30 +165,18 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
           <div className="hidden gap-4 md:flex">
             <button
               onClick={handlePrev}
-              className="group flex h-14 w-14 items-center justify-center rounded-full border border-gray-400 transition-colors duration-300 hover:text-white"
+              className="group flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-gray-400 transition-colors duration-300"
               style={{
                 borderColor: "gray",
               }}
             >
-              <ArrowLeft className="text-gray-600 transition-colors group-hover:text-white" />
-              <style jsx>{`
-                button:hover {
-                  background-color: ${ADVENTURE_GREEN};
-                  border-color: ${ADVENTURE_GREEN};
-                }
-              `}</style>
+              <ArrowLeft className="text-gray-600 transition-colors" />
             </button>
             <button
               onClick={handleNext}
-              className="group flex h-14 w-14 items-center justify-center rounded-full border border-gray-400 transition-colors duration-300 hover:text-white"
+              className="group flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-gray-400 transition-colors duration-300"
             >
-              <ArrowRight className="text-gray-600 transition-colors group-hover:text-white" />
-              <style jsx>{`
-                button:hover {
-                  background-color: ${ADVENTURE_GREEN};
-                  border-color: ${ADVENTURE_GREEN};
-                }
-              `}</style>
+              <ArrowRight className="text-gray-600 transition-colors" />
             </button>
           </div>
         </div>
@@ -184,6 +189,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
               service={service}
               isActive={index === activeIndex}
               onClick={() => handleCardClick(index, service)}
+              theme={theme}
             />
           ))}
         </div>
@@ -197,7 +203,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
             <ArrowLeft size={20} />
             <style jsx>{`
               button:active {
-                background-color: ${ADVENTURE_GREEN};
+                background-color: ${theme.colors.primary};
               }
             `}</style>
           </button>
@@ -208,7 +214,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
             <ArrowRight size={20} />
             <style jsx>{`
               button:active {
-                background-color: ${ADVENTURE_GREEN};
+                background-color: ${theme.colors.primary};
               }
             `}</style>
           </button>

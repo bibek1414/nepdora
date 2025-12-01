@@ -14,6 +14,8 @@ import { ContactForm4 } from "./contact-form-4";
 import { ContactForm5 } from "./contact-form-5";
 import { ContactForm6 } from "./contact-form-6";
 import { ContactForm7 } from "./contact-form-7";
+import { ContactForm8 } from "./contact-form-8";
+import { ContactForm9 } from "./contact-form-9";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -176,7 +178,11 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
         return <ContactForm5 {...formProps} />;
       case "contact-7":
         return <ContactForm7 {...formProps} />;
-      case "contact-1":
+      case "contact-8":
+        return <ContactForm8 {...formProps} />;
+      case "contact-9":
+        return <ContactForm9 {...formProps} />;
+
       case "contact-6":
         return <ContactForm6 {...formProps} />;
       default:
@@ -240,7 +246,9 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
             {/* Only show title/subtitle editing for non-form-4 and non-form-5 styles */}
             {style !== "contact-4" &&
               style !== "contact-5" &&
-              style !== "contact-7" && (
+              style !== "contact-7" &&
+              style !== "contact-8" &&
+              style !== "contact-9" && (
                 <div className="mb-8 text-center">
                   <EditableText
                     value={title}
@@ -278,7 +286,9 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
         {/* Only show title/subtitle for non-form-4 and non-form-5 styles */}
         {style !== "contact-4" &&
           style !== "contact-5" &&
-          style !== "contact-7" && (
+          style !== "contact-7" &&
+          style !== "contact-8" &&
+          style !== "contact-9" && (
             <div className="mb-12 text-center">
               <h2
                 className="text-foreground mb-4 text-4xl font-bold tracking-tight"

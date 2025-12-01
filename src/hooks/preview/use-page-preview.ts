@@ -30,6 +30,7 @@ import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 import { PricingComponentData } from "@/types/owner-site/components/pricing";
+import { OthersComponentData } from "@/types/owner-site/components/others";
 
 interface PageComponent {
   id: string | number;
@@ -38,7 +39,9 @@ interface PageComponent {
     | "hero"
     | "about"
     | "products"
+    | "others"
     | "blog"
+    | "others"
     | "services"
     | "contact"
     | "team"
@@ -64,12 +67,14 @@ interface PageComponent {
     | AboutUsComponentData["data"]
     | ProductsComponentData["data"]
     | BlogComponentData["data"]
+    | OthersComponentData["data"]
     | ServicesComponentData["data"]
     | ContactComponentData["data"]
     | FAQComponentData["data"]
     | AppointmentComponentData["data"]
     | OurClientsComponentData["data"]
     | CTAComponentData["data"]
+    | OthersComponentData["data"]
     | TeamComponentData["data"]
     | GalleryComponentData["data"]
     | TestimonialsComponentData["data"]
@@ -120,11 +125,13 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
           "services",
           "contact",
           "team",
+          "others",
           "faq",
           "testimonials",
           "category",
           "newsletter",
           "subcategory",
+          "others",
           "portfolio",
           "our_clients",
           "appointment",
@@ -180,12 +187,14 @@ export function usePagePreview(siteUser: string, pageSlug: string) {
       | BlogComponentData
       | ServicesComponentData
       | ContactComponentData
+      | OthersComponentData
       | TeamComponentData
       | FAQComponentData
       | TestimonialsComponentData
       | CategoryComponentData
       | SubCategoryComponentData
       | NewsletterComponentData
+      | OthersComponentData
       | PortfolioComponentData
       | BannerComponentData
       | VideosComponentData

@@ -121,7 +121,7 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
                   label="Email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  required={data.required_fields.email}
+                  required={data.required_fields?.email}
                   className="mt-1"
                   placeholder="your.email@example.com"
                 />
@@ -135,7 +135,7 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
                   label="Phone Number"
                   value={formData.phone_number}
                   onChange={handleInputChange}
-                  required={data.required_fields.phone}
+                  required={data.required_fields?.phone}
                   className="mt-1"
                   placeholder="+1 (555) 123-4567"
                 />

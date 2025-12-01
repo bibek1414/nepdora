@@ -47,12 +47,18 @@ import {
   defaultContactData5,
   defaultContactData6,
   defaultContactData7,
+  defaultContactData8,
+  defaultContactData9,
 } from "@/types/owner-site/components/contact";
 import { getDefaultCTAData } from "@/types/owner-site/components/cta";
 import {
   getDefaultHeroData,
   HeroData,
 } from "@/types/owner-site/components/hero";
+import {
+  getDefaultOthersData,
+  OthersData,
+} from "@/types/owner-site/components/others";
 import {
   getDefaultAboutUsData,
   AboutUsData,
@@ -150,6 +156,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           component.component_type &&
           [
             "hero",
+            "others",
             "about",
             "products",
             "category",
@@ -193,6 +200,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const getComponentDisplayName = (componentType: string): string => {
     const names: Record<string, string> = {
       hero: "Hero",
+      others: "Others",
       about: "About Us",
       products: "Products",
       category: "Category",
@@ -476,6 +484,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     // This will now send only the necessary fields for the selected template
     await createComponentWithIndex("hero", heroData, pendingInsertIndex);
   };
+  const handleOthersTemplateSelect = async (
+    template: OthersData["template"]
+  ) => {
+    const othersData = getDefaultOthersData(template);
+
+    await createComponentWithIndex("others", othersData, pendingInsertIndex);
+  };
 
   const handleAboutUsTemplateSelect = async (
     template: AboutUsData["template"]
@@ -597,6 +612,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     "contact-5": defaultContactData5,
     "contact-6": defaultContactData6,
     "contact-7": defaultContactData7,
+    "contact-8": defaultContactData8,
+    "contact-9": defaultContactData9,
   };
 
   const handleContactTemplateSelect = async (
@@ -834,6 +851,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       if (template) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         handleHeroTemplateSelect(template as any);
+      }
+    } else if (componentId === "others-sections") {
+      if (template) {
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleOthersTemplateSelect(template as any);
       }
     } else if (componentId === "about-sections") {
       if (template) {

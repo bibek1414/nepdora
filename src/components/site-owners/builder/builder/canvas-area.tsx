@@ -10,6 +10,7 @@ import {
 import { NavbarComponent } from "@/components/site-owners/builder/navbar/navbar-component";
 import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer-component";
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
+import { OthersComponent } from "@/components/site-owners/builder/others/others-component";
 import { AboutUsComponent } from "@/components/site-owners/builder/about/about-component";
 import { ProductsComponent } from "@/components/site-owners/builder/products/products-component";
 import { CategoryComponent } from "@/components/site-owners/builder/category/category-component";
@@ -30,6 +31,7 @@ import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
 import { ComponentResponse } from "@/types/owner-site/components/components";
 import { HeroComponentData } from "@/types/owner-site/components/hero";
+import { OthersComponentData } from "@/types/owner-site/components/others";
 import { AboutUsComponentData } from "@/types/owner-site/components/about";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
@@ -223,6 +225,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             key={`hero-${component.id}`}
             component={component as HeroComponentData}
             siteUser=""
+            {...commonProps}
+          />
+        );
+        break;
+      case "others":
+        componentElement = (
+          <OthersComponent
+            key={`others-${component.id}`}
+            siteUser=""
+            component={component as OthersComponentData}
             {...commonProps}
           />
         );
@@ -564,6 +576,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
   // Calculate component statistics
   const hasHero = pageComponents.some(c => c.component_type === "hero");
+  const hasOthers = pageComponents.some(c => c.component_type === "others");
   const hasAbout = pageComponents.some(c => c.component_type === "about");
   const hasProducts = pageComponents.some(c => c.component_type === "products");
   const hasCategories = pageComponents.some(

@@ -10,7 +10,7 @@ import { TestimonialCard2 } from "./testimonial-card-2";
 import { TestimonialCard3 } from "./testimonial-card-3";
 import { TestimonialCard4 } from "./testimonial-card-4";
 import { TestimonialCard5 } from "./testimonial-card-5";
-import { TestimonialCard6 } from "./testimonial-card-6"; // Add this import
+import { TestimonialCard6 } from "./testimonial-card-6";
 import { TestimonialCard9 } from "./testimonial-card-9";
 import { TestimonialCard10 } from "./testimonial-card-10";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -728,21 +728,8 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
 
   if (style === "testimonial-9") {
     return (
-      <section className="bg-background py-12 md:py-16">
+      <section className="bg-background">
         <div className="mx-auto max-w-7xl px-4">
-          <div className="mb-12 text-center">
-            <h2
-              className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-              dangerouslySetInnerHTML={{ __html: title }}
-            ></h2>
-            {subtitle && (
-              <p
-                className="text-muted-foreground mx-auto max-w-3xl text-xl"
-                dangerouslySetInnerHTML={{ __html: subtitle }}
-              ></p>
-            )}
-          </div>
-
           {isLoading && (
             <div className="mx-auto max-w-7xl">
               <Skeleton className="h-[400px] w-full rounded-[40px]" />

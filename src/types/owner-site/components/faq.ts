@@ -1,7 +1,15 @@
 export interface FAQData {
   component_id?: string;
   component_type: "faq";
-  style: "faq-1" | "faq-2" | "faq-3" | "faq-4" | "faq-5" | "faq-6" | "faq-7";
+  style:
+    | "faq-1"
+    | "faq-2"
+    | "faq-3"
+    | "faq-4"
+    | "faq-5"
+    | "faq-6"
+    | "faq-7"
+    | "faq-8";
 
   title: string;
   subtitle?: string;

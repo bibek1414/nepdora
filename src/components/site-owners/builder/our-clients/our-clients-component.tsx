@@ -201,24 +201,28 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
         <div className="py-8">
           <div className="container mx-auto px-4">
             <div className="mb-8 text-center">
-              <EditableText
-                value={title}
-                onChange={handleTitleChange}
-                as="h2"
-                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-              {subtitle !== undefined && (
-                <EditableText
-                  value={subtitle || ""}
-                  onChange={handleSubtitleChange}
-                  as="p"
-                  className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                  isEditable={true}
-                  placeholder="Enter subtitle..."
-                  multiline={true}
-                />
+              {style !== "our-clients-1" && (
+                <>
+                  <EditableText
+                    value={title}
+                    onChange={handleTitleChange}
+                    as="h2"
+                    className="text-foreground mb-2 text-3xl font-bold tracking-tight"
+                    isEditable={true}
+                    placeholder="Enter title..."
+                  />
+                  {subtitle !== undefined && (
+                    <EditableText
+                      value={subtitle || ""}
+                      onChange={handleSubtitleChange}
+                      as="p"
+                      className="text-muted-foreground mx-auto max-w-2xl text-lg"
+                      isEditable={true}
+                      placeholder="Enter subtitle..."
+                      multiline={true}
+                    />
+                  )}
+                </>
               )}
             </div>
 
@@ -234,17 +238,21 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mb-12 text-center">
-          <h2
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></h2>
-          {subtitle && (
-            <div className="mb-10 flex items-center justify-center gap-3 opacity-80">
-              <p
-                className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase"
-                dangerouslySetInnerHTML={{ __html: subtitle }}
-              ></p>
-            </div>
+          {style !== "our-clients-1" && (
+            <>
+              <h2
+                className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+                dangerouslySetInnerHTML={{ __html: title }}
+              ></h2>
+              {subtitle && (
+                <div className="mb-10 flex items-center justify-center gap-3 opacity-80">
+                  <p
+                    className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase"
+                    dangerouslySetInnerHTML={{ __html: subtitle }}
+                  ></p>
+                </div>
+              )}
+            </>
           )}
         </div>
 

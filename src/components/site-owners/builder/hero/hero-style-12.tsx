@@ -128,118 +128,120 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
 
   return (
     <section
-      className="relative mx-auto mt-5 flex min-h-[600px] w-full max-w-7xl items-center overflow-hidden rounded-[48px] py-7 lg:min-h-[720px]"
+      className="min-h-screen"
       style={{ backgroundColor: theme.colors.background }}
     >
-      {/* Background decoration: Eiffel Tower outline */}
-      <div className="pointer-events-none absolute bottom-0 left-4 z-0 w-[250px] text-white opacity-[0.08] md:left-10 md:w-[350px] lg:w-[450px]">
-        <EiffelTowerBg />
-      </div>
-
-      {/* Accent decorative circle */}
-      <div
-        className="absolute -right-[10%] bottom-[-10%] z-0 h-[400px] w-[400px] rounded-full md:h-[500px] md:w-[500px]"
-        style={{ backgroundColor: theme.colors.primary }}
-      ></div>
-
-      <div className="relative z-10 grid h-full w-full grid-cols-1 items-center gap-8 px-4 py-8 md:px-8 md:py-16 lg:grid-cols-2 lg:gap-20 lg:px-16">
-        {/* Left Content */}
-        <div className="relative z-10 max-w-2xl space-y-6 md:space-y-10">
-          {/* Title */}
-          <EditableText
-            value={data.title || "Visa Made Easy\nDreams Made\nPossible"}
-            onChange={handleTextUpdate("title")}
-            as="h1"
-            className="!md:text-7xl !text-6xl leading-tight font-bold text-white"
-            isEditable={isEditable}
-            placeholder="Visa Made Easy\nDreams Made\nPossible"
-            useHeadingFont={true}
-            multiline={true}
-          />
-
-          {/* Buttons Container */}
-          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center md:gap-8">
-            {/* Primary Button */}
-            <EditableLink
-              text={primaryButton.text}
-              href={primaryButton.href || "#"}
-              onChange={(text, href) => {
-                handleButtonUpdate(primaryButton.id, text, href);
-              }}
-              isEditable={isEditable}
-              siteUser={siteUser}
-              className="group flex items-center gap-3 rounded-full border border-white/40 px-6 py-3 font-semibold text-white transition-all duration-300 hover:shadow-lg md:px-9 md:py-4"
-              textPlaceholder="Button text..."
-              hrefPlaceholder="Enter URL..."
-            >
-              <span>{primaryButton.text}</span>
-              <ArrowRight
-                size={18}
-                className="transition-transform group-hover:translate-x-1"
-              />
-            </EditableLink>
-
-            {/* Secondary Button */}
-            <EditableLink
-              text={secondaryButton.text}
-              href={secondaryButton.href || "#"}
-              onChange={(text, href) => {
-                handleButtonUpdate(secondaryButton.id, text, href);
-              }}
-              isEditable={isEditable}
-              siteUser={siteUser}
-              className="group flex cursor-pointer items-center gap-3 text-white md:gap-4"
-              textPlaceholder="Button text..."
-              hrefPlaceholder="Enter URL..."
-            >
-              <div
-                className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 shadow-lg transition-all duration-300 group-hover:shadow-lg md:h-14 md:w-14"
-                style={{ backgroundColor: theme.colors.secondary }}
-              >
-                <Play
-                  size={18}
-                  className="ml-0.5 fill-white text-white md:ml-1"
-                  style={{ color: theme.colors.secondaryForeground }}
-                />
-              </div>
-              <span className="text-base font-medium md:text-lg">
-                {secondaryButton.text}
-              </span>
-            </EditableLink>
-          </div>
+      <div className="relative mx-auto flex min-h-[600px] w-full max-w-7xl items-center overflow-hidden rounded-[48px] lg:min-h-[720px]">
+        {/* Background decoration: Eiffel Tower outline */}
+        <div className="pointer-events-none absolute bottom-0 left-4 z-0 w-[250px] text-white opacity-[0.08] md:left-10 md:w-[350px] lg:w-[450px]">
+          <EiffelTowerBg />
         </div>
 
-        {/* Right Content - Image */}
-        <div className="relative flex h-full w-full items-center justify-center lg:justify-end">
-          <div className="relative z-10 h-full w-full max-w-md overflow-hidden rounded-2xl border-[6px] border-white/10 shadow-2xl md:border-[8px] lg:max-w-lg">
-            <EditableImage
-              src={getImageUrl() || imageUrl}
-              alt={data.imageAlt || "Happy traveler in Paris"}
-              onImageChange={handleImageUpdate}
-              onAltChange={handleAltUpdate}
+        {/* Accent decorative circle */}
+        <div
+          className="absolute -right-[10%] bottom-[-10%] z-0 h-[400px] w-[400px] rounded-full md:h-[500px] md:w-[500px]"
+          style={{ backgroundColor: theme.colors.primary }}
+        ></div>
+
+        <div className="relative z-10 grid h-full w-full grid-cols-1 items-center gap-8 px-4 py-8 md:px-8 md:py-16 lg:grid-cols-2 lg:gap-20 lg:px-16">
+          {/* Left Content */}
+          <div className="relative z-10 max-w-2xl space-y-6 md:space-y-10">
+            {/* Title */}
+            <EditableText
+              value={data.title || "Visa Made Easy\nDreams Made\nPossible"}
+              onChange={handleTextUpdate("title")}
+              as="h1"
+              className="!md:text-7xl !text-6xl leading-tight font-bold text-white"
               isEditable={isEditable}
-              className="h-150 w-full object-cover"
-              width={600}
-              height={750}
-              cloudinaryOptions={{
-                folder: "hero-images",
-                resourceType: "image",
-              }}
-              showAltEditor={isEditable}
-              placeholder={{
-                width: 600,
-                height: 750,
-                text: "Upload hero image",
-              }}
+              placeholder="Visa Made Easy\nDreams Made\nPossible"
+              useHeadingFont={true}
+              multiline={true}
             />
 
-            {/* Overlay gradient */}
-            <div
-              className="absolute inset-0 bg-gradient-to-t from-[#013D2F]/40 to-transparent"
-              style={{
-                background: `linear-gradient(to top, ${theme.colors.background}66, transparent)`,
-              }}
-            ></div>
+            {/* Buttons Container */}
+            <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center md:gap-8">
+              {/* Primary Button */}
+              <EditableLink
+                text={primaryButton.text}
+                href={primaryButton.href || "#"}
+                onChange={(text, href) => {
+                  handleButtonUpdate(primaryButton.id, text, href);
+                }}
+                isEditable={isEditable}
+                siteUser={siteUser}
+                className="group flex items-center gap-3 rounded-full border border-white/40 px-6 py-3 font-semibold text-white transition-all duration-300 hover:shadow-lg md:px-9 md:py-4"
+                textPlaceholder="Button text..."
+                hrefPlaceholder="Enter URL..."
+              >
+                <span>{primaryButton.text}</span>
+                <ArrowRight
+                  size={18}
+                  className="transition-transform group-hover:translate-x-1"
+                />
+              </EditableLink>
+
+              {/* Secondary Button */}
+              <EditableLink
+                text={secondaryButton.text}
+                href={secondaryButton.href || "#"}
+                onChange={(text, href) => {
+                  handleButtonUpdate(secondaryButton.id, text, href);
+                }}
+                isEditable={isEditable}
+                siteUser={siteUser}
+                className="group flex cursor-pointer items-center gap-3 text-white md:gap-4"
+                textPlaceholder="Button text..."
+                hrefPlaceholder="Enter URL..."
+              >
+                <div
+                  className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 shadow-lg transition-all duration-300 group-hover:shadow-lg md:h-14 md:w-14"
+                  style={{ backgroundColor: theme.colors.secondary }}
+                >
+                  <Play
+                    size={18}
+                    className="ml-0.5 fill-white text-white md:ml-1"
+                    style={{ color: theme.colors.secondaryForeground }}
+                  />
+                </div>
+                <span className="text-base font-medium md:text-lg">
+                  {secondaryButton.text}
+                </span>
+              </EditableLink>
+            </div>
+          </div>
+
+          {/* Right Content - Image */}
+          <div className="relative flex h-full w-full items-center justify-center lg:justify-end">
+            <div className="relative z-10 h-full w-full max-w-md overflow-hidden rounded-2xl border-[6px] border-white/10 shadow-2xl md:border-[8px] lg:max-w-lg">
+              <EditableImage
+                src={getImageUrl() || imageUrl}
+                alt={data.imageAlt || "Happy traveler in Paris"}
+                onImageChange={handleImageUpdate}
+                onAltChange={handleAltUpdate}
+                isEditable={isEditable}
+                className="h-150 w-full object-cover"
+                width={600}
+                height={750}
+                cloudinaryOptions={{
+                  folder: "hero-images",
+                  resourceType: "image",
+                }}
+                showAltEditor={isEditable}
+                placeholder={{
+                  width: 600,
+                  height: 750,
+                  text: "Upload hero image",
+                }}
+              />
+
+              {/* Overlay gradient */}
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-[#013D2F]/40 to-transparent"
+                style={{
+                  background: `linear-gradient(to top, ${theme.colors.background}66, transparent)`,
+                }}
+              ></div>
+            </div>
           </div>
         </div>
       </div>

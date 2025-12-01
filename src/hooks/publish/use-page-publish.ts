@@ -30,6 +30,7 @@ import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 import { CTAComponentData } from "@/types/owner-site/components/cta";
 import { PricingComponentData } from "@/types/owner-site/components/pricing";
+import { OthersComponentData } from "@/types/owner-site/components/others";
 
 interface PageComponent {
   id: string | number;
@@ -39,6 +40,7 @@ interface PageComponent {
     | "about"
     | "products"
     | "blog"
+    | "others"
     | "services"
     | "contact"
     | "team"
@@ -70,6 +72,7 @@ interface PageComponent {
     | OurClientsComponentData["data"]
     | FAQComponentData["data"]
     | TeamComponentData["data"]
+    | OthersComponentData["data"]
     | TestimonialsComponentData["data"]
     | PortfolioComponentData["data"]
     | NewsletterComponentData["data"]
@@ -131,6 +134,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
           "text_editor",
           "banner",
           "gallery",
+          "others",
           "policies",
           "pricing",
         ].includes(component.component_type) &&
@@ -183,6 +187,7 @@ export function usePagePublished(siteUser: string, pageSlug: string) {
       | TestimonialsComponentData
       | CategoryComponentData
       | AppointmentComponentData
+      | OthersComponentData
       | SubCategoryComponentData
       | NewsletterComponentData
       | PortfolioComponentData

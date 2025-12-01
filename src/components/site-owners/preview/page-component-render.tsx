@@ -47,13 +47,15 @@ import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 import { PricingComponentData } from "@/types/owner-site/components/pricing";
-
+import { OthersComponentData } from "@/types/owner-site/components/others";
+import { OthersComponent } from "@/components/site-owners/builder/others/others-component";
 interface PageComponent {
   id: string | number;
   component_id: string;
   component_type:
     | "hero"
     | "about"
+    | "others"
     | "products"
     | "blog"
     | "services"
@@ -81,6 +83,7 @@ interface PageComponent {
     | AboutUsComponentData["data"]
     | ProductsComponentData["data"]
     | BlogComponentData["data"]
+    | OthersComponentData["data"]
     | ServicesComponentData["data"]
     | ContactComponentData["data"]
     | AppointmentComponentData["data"]
@@ -119,6 +122,7 @@ interface PageComponentRendererProps {
       | ProductsComponentData
       | BlogComponentData
       | ServicesComponentData
+      | OthersComponentData
       | ContactComponentData
       | AppointmentComponentData
       | OurClientsComponentData
@@ -169,6 +173,16 @@ export function PageComponentRenderer({
           <AboutUsComponent
             key={component.id}
             component={component as AboutUsComponentData}
+            isEditable={false}
+            pageSlug={pageSlug}
+          />
+        );
+      case "others":
+        return (
+          <OthersComponent
+            key={component.id}
+            siteUser={siteUser}
+            component={component as OthersComponentData}
             isEditable={false}
             pageSlug={pageSlug}
           />

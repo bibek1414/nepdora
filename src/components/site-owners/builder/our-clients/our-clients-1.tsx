@@ -31,11 +31,11 @@ export const OurClients1: React.FC<OurClients1Props> = ({ data }) => {
   }
 
   return (
-    <div className="grid grid-cols-2 items-center justify-items-center gap-8 md:grid-cols-4 lg:grid-cols-5">
+    <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 lg:gap-16">
       {clients.map(client => (
         <div
           key={client.id}
-          className="flex items-center justify-center p-4 grayscale transition-all duration-200 hover:grayscale-0"
+          className="flex items-center justify-center transition-all duration-200 hover:opacity-80"
         >
           {client.url ? (
             <a
@@ -47,14 +47,14 @@ export const OurClients1: React.FC<OurClients1Props> = ({ data }) => {
               <img
                 src={client.logo}
                 alt={client.name}
-                className="max-h-12 w-auto object-contain"
+                className="h-8 w-auto object-contain md:h-10"
               />
             </a>
           ) : (
             <img
               src={client.logo}
               alt={client.name}
-              className="max-h-12 w-auto object-contain"
+              className="h-8 w-auto object-contain md:h-10"
             />
           )}
         </div>

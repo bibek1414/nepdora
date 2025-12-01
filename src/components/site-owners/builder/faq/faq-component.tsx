@@ -12,6 +12,7 @@ import { FAQCard4 } from "./faq-card-4";
 import { FAQCard5 } from "./faq-card-5";
 import { FaqCard6 } from "./faq-card-6";
 import { FaqCard7 } from "./faq-card-7";
+import { FaqCard8 } from "./faq-card-8";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -301,6 +302,8 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
             onButtonTextChange={handleButtonTextChange}
           />
         );
+      case "faq-8":
+        return <FaqCard8 {...baseCardProps} />;
       case "faq-2":
         return <FAQCard2 {...baseCardProps} />;
       case "faq-3":
@@ -378,7 +381,7 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
         <div className="py-8">
           <div className="container mx-auto px-4">
             {/* Only show separate title/subtitle for styles that don't have built-in titles */}
-            {style !== "faq-6" && style !== "faq-7" && (
+            {style !== "faq-6" && style !== "faq-7" && style !== "faq-8" && (
               <div className="mb-8 text-center">
                 <EditableText
                   value={title}
@@ -459,7 +462,7 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-6xl px-4">
         {/* Only show separate title/subtitle for styles that don't have built-in titles */}
-        {style !== "faq-6" && style !== "faq-7" && (
+        {style !== "faq-6" && style !== "faq-7" && style !== "faq-8" && (
           <div className="mb-12 text-center">
             <h2
               className="text-foreground mb-4 text-4xl font-bold tracking-tight"

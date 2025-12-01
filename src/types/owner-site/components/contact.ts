@@ -21,11 +21,14 @@ export interface ContactData {
     | "contact-4"
     | "contact-5"
     | "contact-6"
-    | "contact-7";
+    | "contact-7"
+    | "contact-8"
+    | "contact-9";
   title: string;
   subtitle?: string;
   description?: string;
   contact_tag?: string;
+  checklist?: string[];
   required_fields: {
     name: boolean;
     email: boolean;
@@ -243,4 +246,53 @@ export const defaultContactData7: ContactData = {
         "https://images.unsplash.com/photo-1593642532400-2682810df593?auto=format&fit=crop&w=1600&q=80",
     },
   ],
+};
+
+export const defaultContactData9: ContactData = {
+  component_type: "contact",
+  style: "contact-9",
+  title: "Remote Destinations Seeking Solitude",
+  subtitle: "SUCCESS STORY",
+  description:
+    "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standard dummy text ever",
+  checklist: [
+    "Mistakes To Avoid",
+    "Your Startup",
+    "Knew About Fonts",
+    "Knew About Fonts",
+  ],
+  required_fields: {
+    name: false,
+    email: true,
+    phone: true,
+    message: true,
+  },
+  contact_info: {
+    email: "",
+    phone: "",
+    address: "",
+  },
+};
+
+export const defaultContactData8: ContactData = {
+  component_type: "contact",
+  style: "contact-8",
+  title: "Let Your Wanderlust Guide You",
+  subtitle: "CONTACT INFORMATION",
+  description: "",
+  required_fields: {
+    name: false, // Name field is removed in contact-8 design
+    email: true,
+    phone: true,
+    message: true,
+  },
+  contact_info: {
+    email: "",
+    phone: "",
+    address: "",
+  },
+  image_url:
+    "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2940&auto=format&fit=crop",
+  image_alt: "Traveler smiling",
+  button_label: "Send Message",
 };

@@ -115,9 +115,6 @@ const ProcessCard: React.FC<ProcessCardProps> = ({
   return (
     <div
       className={`relative flex h-auto min-h-[240px] w-full flex-col items-start justify-start rounded-[20px] bg-white p-10 shadow-[0px_0px_60px_rgba(0,0,0,0.05)] transition-transform duration-300 hover:-translate-y-2 md:w-[410px] ${isOffset ? "cursor-pointer lg:mt-[40px]" : ""} `}
-      style={{
-        backgroundColor: theme.colors.background,
-      }}
     >
       {/* Number */}
       <div className="mb-4">
@@ -389,12 +386,7 @@ export const BannerTemplate5: React.FC<BannerTemplateProps> = ({
   const title = data.title || "Unforgettable Getaways Escaping Routine";
 
   return (
-    <section
-      className="relative mx-auto mt-8 w-full max-w-7xl overflow-hidden rounded-[50px] border border-gray-200"
-      style={{
-        backgroundColor: theme.colors.background,
-      }}
-    >
+    <section className="relative mx-auto mt-8 w-full max-w-7xl overflow-hidden rounded-[50px] border border-gray-200">
       {/* Decorative Background Layer */}
       <BackgroundPattern color={theme.colors.primary} />
 

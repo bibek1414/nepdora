@@ -152,6 +152,18 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/hero/hero13.png",
       },
     ],
+    others: [
+      {
+        id: "others-1",
+        name: "Others Style 1",
+        image: "/images/site-owners/others/others1.png",
+      },
+      {
+        id: "others-2",
+        name: "Others Style 2",
+        image: "/images/site-owners/others/others2.png",
+      },
+    ],
     our_clients: [
       {
         id: "our-clients-1",
@@ -449,6 +461,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Contact Form 7",
         image: "/images/site-owners/contact/contact7.png",
       },
+      {
+        id: "contact-8",
+        name: "Contact Form 8",
+        image: "/images/site-owners/contact/contact8.png",
+      },
+      {
+        id: "contact-9",
+        name: "Contact Form 9",
+        image: "/images/site-owners/contact/contact9.png",
+      },
     ],
     testimonials: [
       {
@@ -575,6 +597,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Gallery Style 6",
         image: "/images/site-owners/gallery/gallery6.png",
       },
+      {
+        id: "gallery-7",
+        name: "Gallery Style 7",
+        image: "/images/site-owners/gallery/gallery7.png",
+      },
     ],
     banner: [
       {
@@ -670,6 +697,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "faq-7",
         name: "FAQ Style 7",
         image: "/images/site-owners/faq/faq-7.png",
+      },
+      {
+        id: "faq-8",
+        name: "FAQ Style 8",
+        image: "/images/site-owners/faq/faq-8.png",
       },
     ],
     portfolio: [
@@ -1030,6 +1062,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["images", "photos", "media", "pictures"],
       hasTemplates: true,
       templates: templates.gallery,
+      type: "section",
+    },
+    {
+      id: "others-sections",
+      label: "others",
+      icon: FileText,
+      keywords: ["articles", "posts", "news", "updates"],
+      hasTemplates: true,
+      templates: templates.others,
       type: "section",
     },
     {

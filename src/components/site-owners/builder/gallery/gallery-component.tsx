@@ -27,6 +27,7 @@ import {
 import { GalleryTemplate4 } from "./gallery-template-4";
 import { GalleryTemplate5 } from "./gallery-template-5";
 import { GalleryTemplate6 } from "./gallery-template-6";
+import { GalleryTemplate7 } from "./gallery-template-7";
 
 interface GalleryComponentProps {
   component: GalleryComponentData;
@@ -133,6 +134,8 @@ export const GalleryComponent: React.FC<GalleryComponentProps> = ({
         return <GalleryTemplate5 {...props} />;
       case "gallery-6":
         return <GalleryTemplate6 {...props} />;
+      case "gallery-7":
+        return <GalleryTemplate7 {...props} />;
       default:
         return (
           <div className="flex min-h-[200px] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-8">
