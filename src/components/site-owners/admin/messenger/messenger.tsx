@@ -120,7 +120,7 @@ export default function MessagingPage({ subDomain }: MessagingPageProps) {
   }, [conversationDetail]);
 
   // Send message handler
-  const handleSendMessage = async (content: string) => {
+  const handleSendMessage = async (content: string, tag?: string) => {
     if (
       !selectedConversationId ||
       !selectedIntegration ||
@@ -144,6 +144,7 @@ export default function MessagingPage({ subDomain }: MessagingPageProps) {
         page_access_token: selectedIntegration.pageAccessToken,
         conversationId: selectedConversationId,
         page_id: selectedIntegration.pageId,
+        tag,
       });
 
       console.log("✅ Message sent to:", participantId);
