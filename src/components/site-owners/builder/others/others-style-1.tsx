@@ -100,15 +100,15 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
               {/* Decorative Border/Frame */}
               <div
                 className="absolute -top-6 -right-6 -bottom-6 -left-6 -z-10 rounded-[2.5rem] border-4"
-                style={{ borderColor: "#84CC16" }} // Using a lime green color as per design
+                style={{ borderColor: theme.colors.secondary }}
               />
 
               {/* Experience Badge */}
               <div
                 className="absolute right-8 bottom-8 flex flex-col items-center justify-center rounded-2xl px-6 py-4 shadow-lg"
                 style={{
-                  backgroundColor: "#84CC16", // Lime green
-                  color: "#FFFFFF",
+                  backgroundColor: theme.colors.secondary,
+                  color: theme.colors.secondaryForeground,
                 }}
               >
                 <EditableText
@@ -170,7 +170,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
               className="mb-8 text-4xl leading-tight font-bold md:text-5xl"
               style={{
                 fontFamily: theme.fonts.heading,
-                color: "#064E3B", // Dark green
+                color: theme.colors.primary,
               }}
             />
 
@@ -181,7 +181,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
                   <div className="flex-shrink-0">
                     <CheckCircle2
                       className="h-6 w-6"
-                      style={{ color: "#064E3B" }}
+                      style={{ color: theme.colors.primary }}
                     />
                   </div>
                   <div>
@@ -191,7 +191,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
                       isEditable={isEditable}
                       as="h3"
                       className="mb-2 text-xl font-bold"
-                      style={{ color: "#064E3B" }}
+                      style={{ color: theme.colors.primary }}
                     />
                     <EditableText
                       value={feature.description}
@@ -222,8 +222,8 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
                   }}
                   className="inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-semibold transition-transform hover:scale-105"
                   style={{
-                    backgroundColor: "#84CC16",
-                    color: "#FFFFFF",
+                    backgroundColor: theme.colors.secondary,
+                    color: theme.colors.secondaryForeground,
                   }}
                 />
               )}
@@ -232,9 +232,12 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
               <div className="flex items-center gap-3">
                 <div
                   className="flex h-12 w-12 items-center justify-center rounded-full"
-                  style={{ backgroundColor: "#84CC16" }}
+                  style={{ backgroundColor: theme.colors.secondary }}
                 >
-                  <Phone className="h-5 w-5 text-white" />
+                  <Phone
+                    className="h-5 w-5"
+                    style={{ color: theme.colors.secondaryForeground }}
+                  />
                 </div>
                 <div>
                   <EditableText
@@ -256,7 +259,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
                     }
                     isEditable={isEditable}
                     className="text-lg font-bold"
-                    style={{ color: "#064E3B" }}
+                    style={{ color: theme.colors.primary }}
                   />
                 </div>
               </div>

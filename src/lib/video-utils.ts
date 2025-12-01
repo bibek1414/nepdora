@@ -34,6 +34,8 @@ export const extractVideoInfo = (url: string): VideoInfo => {
 
   // Facebook patterns
   const facebookPatterns = [
+    /facebook\.com\/reel\/(\d+)/,
+    /facebook\.com\/share\/r\/([a-zA-Z0-9]+)/,
     /facebook\.com\/.*\/videos\/(\d+)/,
     /fb\.watch\/([a-zA-Z0-9_-]+)/,
     /facebook\.com\/watch\/?\?v=(\d+)/,
@@ -110,6 +112,12 @@ export const getVideoEmbedUrl = (
     case "youtube":
       return `https://www.youtube.com/embed/${id}?rel=0`;
     case "facebook":
+      if (originalUrl.includes("/share/r/")) {
+        return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(originalUrl)}&show_text=false`;
+      }
+      if (originalUrl.includes("/reel/")) {
+        return `https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/reel/${id}&show_text=false`;
+      }
       return `https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v=${id}&show_text=false`;
     case "instagram":
       return `https://www.instagram.com/p/${id}/embed`;

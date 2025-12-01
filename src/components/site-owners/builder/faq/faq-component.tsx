@@ -388,8 +388,6 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
                 });
               }
             }}
-            onContactTitleChange={handleContactTitleChange}
-            onContactDescriptionChange={handleContactDescriptionChange}
           />
         );
       case "faq-2":

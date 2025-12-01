@@ -23,8 +23,6 @@ interface FaqCard9Props {
   onLeftImage1Change?: (url: string) => void;
   onLeftImage2Change?: (url: string) => void;
   onLeftImage3Change?: (url: string) => void;
-  onContactTitleChange?: (title: string) => void;
-  onContactDescriptionChange?: (description: string) => void;
 }
 
 export const FaqCard9: React.FC<FaqCard9Props> = ({
@@ -34,16 +32,12 @@ export const FaqCard9: React.FC<FaqCard9Props> = ({
   leftImage1,
   leftImage2,
   leftImage3,
-  contactTitle = "Daily Activity",
-  contactDescription = "Loream is ispam",
   isEditable = false,
   onTitleChange,
   onSubtitleChange,
   onLeftImage1Change,
   onLeftImage2Change,
   onLeftImage3Change,
-  onContactTitleChange,
-  onContactDescriptionChange,
 }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(
     faqs.length > 0 ? faqs[0].id : null
@@ -134,53 +128,6 @@ export const FaqCard9: React.FC<FaqCard9Props> = ({
                   className="object-cover"
                 />
               )}
-            </div>
-          </div>
-
-          {/* Contact Card Overlay */}
-          <div
-            className="w-full max-w-xs rounded-2xl border bg-white p-4 shadow-lg md:absolute md:bottom-8 md:-left-8 md:w-72"
-            style={{ borderColor: secondaryColor }}
-          >
-            <div className="flex items-center gap-4">
-              <div
-                className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white"
-                style={{ backgroundColor: secondaryColor }}
-              >
-                <Globe className="h-6 w-6" />
-              </div>
-              <div className="flex-1">
-                {isEditable && onContactTitleChange ? (
-                  <EditableText
-                    value={contactTitle}
-                    onChange={onContactTitleChange}
-                    as="h4"
-                    className="text-lg font-bold"
-                    style={{ color: primaryColor }}
-                    isEditable={true}
-                    placeholder="Title..."
-                  />
-                ) : (
-                  <h4
-                    className="text-lg font-bold"
-                    style={{ color: primaryColor }}
-                  >
-                    {contactTitle}
-                  </h4>
-                )}
-                {isEditable && onContactDescriptionChange ? (
-                  <EditableText
-                    value={contactDescription}
-                    onChange={onContactDescriptionChange}
-                    as="p"
-                    className="text-sm text-gray-500"
-                    isEditable={true}
-                    placeholder="Description..."
-                  />
-                ) : (
-                  <p className="text-sm text-gray-500">{contactDescription}</p>
-                )}
-              </div>
             </div>
           </div>
         </div>

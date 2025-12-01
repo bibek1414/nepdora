@@ -29,7 +29,7 @@ export const InnerPageHeader = ({ title, currentPage }: PageHeaderProps) => {
   return (
     <div className="bg-background w-full px-4 pb-8 sm:px-6 lg:px-8">
       <div
-        className="relative mx-auto flex h-[300px] w-full max-w-7xl flex-col justify-center overflow-hidden rounded-[30px] px-6 md:h-[400px] md:rounded-[50px] md:px-20"
+        className="relative mx-auto flex h-[300px] w-full max-w-7xl flex-col justify-center overflow-hidden rounded-[30px] px-6"
         style={{
           backgroundColor: theme.colors.primary,
         }}

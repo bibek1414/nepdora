@@ -221,7 +221,7 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
         {/* Mobile Header Right Side - Menu Button */}
         <div className="flex items-center gap-2 lg:hidden">
           <Button
-            variant="ghost"
+            variant="default"
             size="icon"
             onClick={toggleMobileMenu}
             className="h-10 w-10"
@@ -238,7 +238,7 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
             <SheetTitle className="text-lg font-semibold">Menu</SheetTitle>
           </SheetHeader>
 
-          <div className="mt-6 flex h-[calc(100vh-100px)] flex-col">
+          <div className="flex h-[calc(100vh-100px)] flex-col">
             {/* Mobile Links */}
             <div className="mb-6 space-y-2">
               {links.map(link =>
@@ -249,8 +249,8 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                     onDelete={() => onDeleteLink(link.id)}
                   >
                     <Button
-                      variant="ghost"
-                      className="hover:bg-accent h-12 w-full justify-start px-4 text-lg font-normal"
+                      variant="navigation"
+                      className="hover:bg-accent w-full justify-start px-4 text-lg font-normal"
                       onClick={e => e.preventDefault()}
                     >
                       {link.text}
@@ -259,8 +259,8 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                 ) : (
                   <SheetClose asChild key={link.id}>
                     <Button
-                      variant="ghost"
-                      className="hover:bg-accent h-12 w-full justify-start px-4 text-lg font-normal"
+                      variant="navigation"
+                      className="hover:bg-accent w-full justify-start px-4 text-lg font-normal"
                       asChild={!disableClicks}
                     >
                       <Link

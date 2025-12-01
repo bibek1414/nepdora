@@ -134,7 +134,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
         {/* Wrapper so bottom card overlaps main card like in design */}
         <div className="relative pb-32 md:pb-40 lg:pb-44">
           {/* Top Process Section */}
-          <div className="relative rounded-[40px] bg-white px-6 py-12 shadow-sm sm:px-10 md:px-16 md:py-16">
+          <div className="relative h-200 rounded-[40px] bg-white px-6 py-12 shadow-sm sm:px-10 md:px-16 md:py-16">
             {/* Left gray block */}
             <div className="pointer-events-none absolute inset-y-0 left-0 w-[32%] rounded-[32px] bg-[#E6E7EA]" />
 
@@ -161,7 +161,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
                   onChange={val => handleUpdate({ heading: val })}
                   isEditable={isEditable}
                   as="h2"
-                  className="max-w-[700px] text-center text-3xl leading-tight font-bold md:text-[40px] lg:text-[48px]"
+                  className="mx-auto max-w-[700px] text-3xl leading-tight font-bold md:text-[40px] lg:text-[48px]"
                   style={{
                     fontFamily: theme.fonts.heading,
                     color: theme.colors.primary,
@@ -178,9 +178,9 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
                   return (
                     <div
                       key={item.id}
-                      className="relative flex h-full flex-col items-start rounded-[20px] border border-[#E3DBD8] bg-white p-7 transition-shadow hover:shadow-lg"
+                      className="relative flex h-60 flex-col items-start rounded-[20px] border border-[#E3DBD8] bg-white p-7 transition-shadow hover:shadow-lg"
                     >
-                      <div className="mb-4 flex w-full items-start gap-4">
+                      <div className="mb-4 flex w-full flex-shrink-0 items-start gap-4 sm:mb-0 sm:w-auto">
                         <div
                           className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full border bg-white"
                           style={{ borderColor: theme.colors.secondary }}
@@ -205,16 +205,16 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
                             className="text-lg leading-snug font-semibold"
                             style={{ color: theme.colors.primary }}
                           />
+                          <EditableText
+                            value={item.description}
+                            onChange={val =>
+                              handleProcessItemUpdate(index, "description", val)
+                            }
+                            isEditable={isEditable}
+                            className="mt-2 text-sm leading-7 text-[#727272]"
+                          />
                         </div>
                       </div>
-                      <EditableText
-                        value={item.description}
-                        onChange={val =>
-                          handleProcessItemUpdate(index, "description", val)
-                        }
-                        isEditable={isEditable}
-                        className="text-sm leading-7 text-[#727272]"
-                      />
                     </div>
                   );
                 })}
@@ -224,7 +224,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
 
           {/* Bottom Success & Stats Section - overlapping & centered */}
           <div
-            className="absolute bottom-0 left-1/2 w-full max-w-[900px] -translate-x-1/2 translate-y-1/2 overflow-hidden rounded-[30px] px-8 py-10 shadow-lg md:rounded-[40px] md:px-14 md:py-14 lg:px-20 lg:py-16"
+            className="relative z-10 mx-auto mt-[-50px] w-full max-w-[900px] rounded-[30px] px-8 py-10 shadow-lg md:absolute md:bottom-50 md:left-1/2 md:mt-0 md:-translate-x-1/2 md:translate-y-1/2 md:rounded-[40px]"
             style={{ backgroundColor: theme.colors.secondary }}
           >
             {/* Background waves */}

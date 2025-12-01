@@ -16,6 +16,7 @@ const buttonVariants = cva(
         secondary: "shadow-xs cursor-pointer",
         ghost: "cursor-pointer",
         link: "underline-offset-4 hover:underline cursor-pointer",
+        navigation: "cursor-pointer",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -96,6 +97,12 @@ function Button({
           backgroundColor: "transparent",
           color: theme.colors.text,
         };
+      case "navigation":
+        return {
+          ...baseStyles,
+          backgroundColor: "transparent",
+          color: "black",
+        };
 
       case "link":
         return {
@@ -142,7 +149,8 @@ function Button({
           "--hover-bg": `${theme.colors.primary}1a`,
           "--hover-color": theme.colors.text,
         } as React.CSSProperties;
-
+      case "navigation":
+        return {} as React.CSSProperties;
       default:
         return {};
     }

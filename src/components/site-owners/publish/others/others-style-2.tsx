@@ -120,9 +120,13 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                 <div className="mb-6">
                   <div
                     className="flex h-20 w-20 items-center justify-center rounded-full"
-                    style={{ backgroundColor: "#84CC16" }}
+                    style={{ backgroundColor: theme.colors.secondary }}
                   >
-                    <Globe className="h-10 w-10 text-white" strokeWidth={1.5} />
+                    <Globe
+                      className="h-10 w-10"
+                      strokeWidth={1.5}
+                      style={{ color: theme.colors.secondaryForeground }}
+                    />
                   </div>
                 </div>
 
@@ -135,7 +139,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                   className="mb-4 text-2xl leading-tight font-bold md:text-3xl lg:text-4xl"
                   style={{
                     fontFamily: theme.fonts.heading,
-                    color: "#064E3B",
+                    color: theme.colors.primary,
                   }}
                 />
 
@@ -166,7 +170,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                       className="inline-flex items-center justify-center gap-2 rounded-full border px-6 py-2.5 text-sm font-medium transition-all hover:bg-gray-50"
                       style={{
                         borderColor: "#E5E7EB",
-                        color: "#064E3B",
+                        color: theme.colors.primary,
                         backgroundColor: "white",
                       }}
                     >
@@ -207,7 +211,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
             {/* Bottom Section: Statistics */}
             <div
               className="rounded-[2.5rem] px-8 py-10 shadow-sm"
-              style={{ backgroundColor: "#84CC16" }}
+              style={{ backgroundColor: theme.colors.secondary }}
             >
               <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
                 {data.statistics.map((stat, index) => (
@@ -227,7 +231,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                       isEditable={isEditable}
                       as="h2"
                       className="mb-1 text-3xl leading-none font-bold md:text-4xl lg:text-5xl"
-                      style={{ color: "#FFFFFF" }}
+                      style={{ color: theme.colors.secondaryForeground }}
                     />
                     <EditableText
                       value={
@@ -244,7 +248,10 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                       isEditable={isEditable}
                       as="p"
                       className="!text-xs font-medium md:text-sm"
-                      style={{ color: "#FFFFFF", opacity: 0.9 }}
+                      style={{
+                        color: theme.colors.secondaryForeground,
+                        opacity: 0.9,
+                      }}
                     />
                   </div>
                 ))}

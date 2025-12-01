@@ -4,7 +4,15 @@ import React, { useEffect, useState } from "react";
 import { OthersTemplate3Data } from "@/types/owner-site/components/others";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableText } from "@/components/ui/editable-text";
-import { BarChart3, Scale, ShieldCheck } from "lucide-react";
+import {
+  ShieldCheck,
+  BarChart3,
+  Scale,
+  Users,
+  Award,
+  FileText,
+  UserCheck,
+} from "lucide-react";
 
 interface OthersTemplate3Props {
   othersData: OthersTemplate3Data;
@@ -47,8 +55,6 @@ const Squiggle = ({
   </svg>
 );
 
-const iconPalette = ["#83CD20", "#83CD20", "#83CD20"];
-
 const iconComponents = [ShieldCheck, BarChart3, Scale];
 
 export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
@@ -66,7 +72,11 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
       text: "#0F172A",
-      background: "#F1F5F1",
+      primary: "#034833",
+      primaryForeground: "#FFFFFF",
+      secondary: "#83CD20",
+      secondaryForeground: "#1F2937",
+      background: "#F3F5F4",
     },
     fonts: {
       body: "Plus Jakarta Sans",
@@ -77,10 +87,12 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
   const handleUpdate = (newData: Partial<OthersTemplate3Data>) => {
     const updatedData = { ...data, ...newData };
     setData(updatedData);
-    onUpdate?.(updatedData);
+    if (onUpdate) {
+      onUpdate(updatedData);
+    }
   };
 
-  const handleProcessUpdate = (
+  const handleProcessItemUpdate = (
     index: number,
     field: "title" | "description",
     value: string
@@ -102,11 +114,11 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
 
   return (
     <section
-      className="relative w-full px-4 py-16 sm:px-6 lg:px-10"
+      className="relative w-full overflow-hidden px-4 py-12 sm:px-6 sm:py-16 md:py-20 lg:px-8"
       style={{
         backgroundColor:
           data.backgroundType === "color"
-            ? data.backgroundColor
+            ? data.backgroundColor || theme.colors.background
             : theme.colors.background,
         backgroundImage:
           data.backgroundType === "image"
@@ -115,107 +127,165 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
         backgroundSize: "cover",
         backgroundPosition: "center",
         fontFamily: theme.fonts.body,
+        color: theme.colors.text,
       }}
     >
-      <div className="pointer-events-none absolute top-8 -left-32 hidden h-[520px] w-[380px] rounded-[50px] bg-[#D8DCD3] sm:block lg:-left-10" />
+      <div className="container mx-auto max-w-6xl">
+        {/* Wrapper so bottom card overlaps main card like in design */}
+        <div className="relative pb-32 md:pb-40 lg:pb-44">
+          {/* Top Process Section */}
+          <div className="relative h-200 rounded-[40px] bg-white px-6 py-12 shadow-sm sm:px-10 md:px-16 md:py-16">
+            {/* Left gray block */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-[32%] rounded-[32px] bg-[#E6E7EA]" />
 
-      <div className="relative mx-auto max-w-[1200px] rounded-[50px] bg-white px-6 py-14 shadow-sm sm:px-10 lg:px-20">
-        {/* Process Header */}
-        <div className="text-center">
-          <div className="mb-4 flex items-center justify-center gap-3 text-[#034833]">
-            <Squiggle className="h-2.5 w-12 text-[#034833]" flip />
-            <EditableText
-              value={data.processLabel}
-              onChange={val => handleUpdate({ processLabel: val })}
-              isEditable={isEditable}
-              className="text-xs font-semibold tracking-[0.2em]"
-              style={{
-                letterSpacing: "0.2em",
-                color: "#034833",
-                fontFamily: theme.fonts.body,
-              }}
-            />
-            <Squiggle className="h-2.5 w-12 text-[#034833]" />
-          </div>
-
-          <EditableText
-            value={data.heading}
-            onChange={val => handleUpdate({ heading: val })}
-            isEditable={isEditable}
-            as="h2"
-            className="mx-auto max-w-3xl text-3xl leading-tight font-bold text-[#034833] sm:text-4xl lg:text-[50px] lg:leading-[60px]"
-            style={{ fontFamily: theme.fonts.heading }}
-          />
-        </div>
-
-        {/* Process Cards */}
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {data.processItems.map((item, index) => {
-            const Icon =
-              iconComponents[index % iconComponents.length] || ShieldCheck;
-            return (
-              <div
-                key={item.id}
-                className="rounded-[20px] border border-[#E3DBD8] p-6 shadow-[0px_24px_70px_rgba(3,72,51,0.05)]"
-              >
-                <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full border border-[#83CD20]">
-                    <Icon
-                      className="h-10 w-10 text-[#83CD20]"
-                      strokeWidth={1.5}
-                    />
-                  </div>
-                  <div className="text-lg font-semibold text-[#727272]">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
+            <div className="relative z-10">
+              {/* Section header */}
+              <div className="mb-12 flex flex-col items-center text-center">
+                <div className="mb-4 flex items-center gap-3">
+                  <Squiggle
+                    className="text-[color:var(--process-accent,#034833)]"
+                    flip
+                  />
+                  <EditableText
+                    value={data.processLabel}
+                    onChange={val => handleUpdate({ processLabel: val })}
+                    isEditable={isEditable}
+                    className="text-xs font-semibold tracking-[0.1em] uppercase"
+                    style={{ color: theme.colors.primary }}
+                  />
+                  <Squiggle className="text-[color:var(--process-accent,#034833)]" />
                 </div>
 
                 <EditableText
-                  value={item.title}
-                  onChange={val => handleProcessUpdate(index, "title", val)}
+                  value={data.heading}
+                  onChange={val => handleUpdate({ heading: val })}
                   isEditable={isEditable}
-                  as="h3"
-                  className="mb-3 text-2xl font-semibold text-[#034833]"
-                />
-
-                <EditableText
-                  value={item.description}
-                  onChange={val =>
-                    handleProcessUpdate(index, "description", val)
-                  }
-                  isEditable={isEditable}
-                  className="text-base leading-7 text-[#727272]"
+                  as="h2"
+                  className="mx-auto max-w-[700px] text-3xl leading-tight font-bold md:text-[40px] lg:text-[48px]"
+                  style={{
+                    fontFamily: theme.fonts.heading,
+                    color: theme.colors.primary,
+                  }}
                 />
               </div>
-            );
-          })}
-        </div>
 
-        {/* Success Story */}
-        <div className="mt-16 rounded-[30px] bg-[#83CD20] p-8 text-white md:p-12">
-          <div className="relative overflow-hidden rounded-[30px]">
-            <div className="absolute inset-0 -z-10 opacity-30">
-              <div
-                className="h-full w-full rounded-[30px]"
-                style={{
-                  backgroundImage:
-                    "repeating-radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5), rgba(255,255,255,0.5) 2px, transparent 2px, transparent 30px)",
-                }}
-              />
+              {/* Process cards */}
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                {data.processItems.map((item, index) => {
+                  const Icon = iconComponents[index % iconComponents.length];
+                  const number = (index + 1).toString().padStart(2, "0");
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="relative flex h-60 flex-col items-start rounded-[20px] border border-[#E3DBD8] bg-white p-7 transition-shadow hover:shadow-lg"
+                    >
+                      <div className="mb-4 flex w-full flex-shrink-0 items-start gap-4 sm:mb-0 sm:w-auto">
+                        <div
+                          className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full border bg-white"
+                          style={{ borderColor: theme.colors.secondary }}
+                        >
+                          <Icon
+                            className="h-7 w-7"
+                            strokeWidth={1.5}
+                            style={{ color: theme.colors.secondary }}
+                          />
+                        </div>
+                        <div className="pt-1">
+                          <span className="mb-1 block text-sm font-semibold text-[#727272]">
+                            {number}
+                          </span>
+                          <EditableText
+                            value={item.title}
+                            onChange={val =>
+                              handleProcessItemUpdate(index, "title", val)
+                            }
+                            isEditable={isEditable}
+                            as="h3"
+                            className="text-lg leading-snug font-semibold"
+                            style={{ color: theme.colors.primary }}
+                          />
+                          <EditableText
+                            value={item.description}
+                            onChange={val =>
+                              handleProcessItemUpdate(index, "description", val)
+                            }
+                            isEditable={isEditable}
+                            className="mt-2 text-sm leading-7 text-[#727272]"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Success & Stats Section - overlapping & centered */}
+          <div
+            className="relative z-10 mx-auto mt-[-50px] w-full max-w-[900px] rounded-[30px] px-8 py-10 shadow-lg md:absolute md:bottom-50 md:left-1/2 md:mt-0 md:-translate-x-1/2 md:translate-y-1/2 md:rounded-[40px]"
+            style={{ backgroundColor: theme.colors.secondary }}
+          >
+            {/* Background waves */}
+            <div className="pointer-events-none absolute inset-0 opacity-30">
+              <svg
+                className="h-full w-full"
+                preserveAspectRatio="none"
+                viewBox="0 0 1290 420"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M-50 100 C 300 150, 600 -50, 1340 100"
+                  stroke="white"
+                  strokeWidth="0.8"
+                />
+                <path
+                  d="M-50 150 C 350 200, 650 0, 1340 150"
+                  stroke="white"
+                  strokeWidth="0.8"
+                />
+                <path
+                  d="M-50 200 C 400 250, 700 50, 1340 200"
+                  stroke="white"
+                  strokeWidth="0.8"
+                />
+                <path
+                  d="M-50 250 C 450 300, 750 100, 1340 250"
+                  stroke="white"
+                  strokeWidth="0.8"
+                />
+                <path
+                  d="M-50 300 C 500 350, 800 150, 1340 300"
+                  stroke="white"
+                  strokeWidth="0.8"
+                />
+                <path
+                  d="M-50 350 C 550 400, 850 200, 1340 350"
+                  stroke="white"
+                  strokeWidth="0.8"
+                />
+                <path
+                  d="M-50 400 C 600 450, 900 250, 1340 400"
+                  stroke="white"
+                  strokeWidth="0.8"
+                />
+              </svg>
             </div>
 
-            <div className="relative grid gap-10 rounded-[30px] bg-[#83CD20]/95 p-8 md:grid-cols-[1.2fr_1fr] md:p-12">
-              <div>
-                <div className="mb-4 flex items-center gap-3 text-white">
-                  <Squiggle className="h-2.5 w-12 text-white" flip />
+            <div className="relative z-10 flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
+              {/* Left copy */}
+              <div className="w-full lg:w-[45%]">
+                <div className="mb-3 flex items-center gap-3">
                   <EditableText
                     value={data.successLabel}
                     onChange={val => handleUpdate({ successLabel: val })}
                     isEditable={isEditable}
-                    className="text-xs font-semibold tracking-[0.2em] text-white"
-                    style={{ letterSpacing: "0.2em" }}
+                    className="text-xs font-semibold tracking-[0.1em] uppercase"
+                    style={{ color: "#FFFFFF" }}
                   />
-                  <Squiggle className="h-2.5 w-12 text-white" />
+                  <Squiggle className="text-white" />
                 </div>
 
                 <EditableText
@@ -223,39 +293,70 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
                   onChange={val => handleUpdate({ successHeading: val })}
                   isEditable={isEditable}
                   as="h3"
-                  className="mb-6 text-3xl leading-tight font-bold text-white md:text-[50px] md:leading-[60px]"
-                  style={{ fontFamily: theme.fonts.heading }}
+                  className="mb-4 text-3xl leading-tight font-bold md:text-[40px] lg:text-[44px]"
+                  style={{
+                    fontFamily: theme.fonts.heading,
+                    color: "#FFFFFF",
+                  }}
                 />
 
                 <EditableText
                   value={data.successDescription}
                   onChange={val => handleUpdate({ successDescription: val })}
                   isEditable={isEditable}
-                  className="text-base leading-7 text-white/85"
+                  className="max-w-md text-sm leading-7 text-white/90"
                 />
               </div>
 
-              <div className="grid gap-6 md:grid-cols-2">
-                {data.statistics.map((stat, index) => (
-                  <div
-                    key={stat.id}
-                    className="rounded-[20px] border border-white/50 p-6 backdrop-blur-[2px]"
-                  >
-                    <EditableText
-                      value={stat.value}
-                      onChange={val => handleStatUpdate(index, "value", val)}
-                      isEditable={isEditable}
-                      as="h4"
-                      className="text-3xl font-bold text-white md:text-[42px]"
-                    />
-                    <EditableText
-                      value={stat.label}
-                      onChange={val => handleStatUpdate(index, "label", val)}
-                      isEditable={isEditable}
-                      className="mt-2 text-sm font-medium tracking-wide text-white/80 uppercase"
-                    />
-                  </div>
-                ))}
+              {/* Right stats grid */}
+              <div className="w-full lg:w-[55%]">
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                  {data.statistics.map((stat, index) => {
+                    const StatIcon =
+                      index === 0
+                        ? Users
+                        : index === 1
+                          ? Award
+                          : index === 2
+                            ? FileText
+                            : UserCheck;
+
+                    return (
+                      <div
+                        key={stat.id}
+                        className="flex items-center gap-4 rounded-[20px] border border-white/80 bg-white/5 px-6 py-5 backdrop-blur-sm transition-colors hover:bg-white/10"
+                      >
+                        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-white">
+                          <StatIcon
+                            className="h-7 w-7"
+                            strokeWidth={2.4}
+                            style={{ color: theme.colors.primary }}
+                          />
+                        </div>
+                        <div>
+                          <EditableText
+                            value={stat.value}
+                            onChange={val =>
+                              handleStatUpdate(index, "value", val)
+                            }
+                            isEditable={isEditable}
+                            as="h4"
+                            className="text-3xl leading-none font-bold md:text-[40px]"
+                            style={{ color: "#FFFFFF" }}
+                          />
+                          <EditableText
+                            value={stat.label}
+                            onChange={val =>
+                              handleStatUpdate(index, "label", val)
+                            }
+                            isEditable={isEditable}
+                            className="mt-1 text-sm text-white/90"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
