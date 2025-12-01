@@ -11,6 +11,7 @@ import { BlogCard3 } from "./blog-card3";
 import { BlogCard4 } from "./blog-card4";
 import { BlogCard5 } from "./blog-card5";
 import { BlogCard6 } from "./blog-card6";
+import { BlogCard7 } from "./blog-card7";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -202,6 +203,8 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
         return <BlogCard4 {...cardProps} />;
       case "blog-5":
         return <BlogCard5 {...cardProps} />;
+      case "blog-7":
+        return <BlogCard7 {...cardProps} isFeatured={false} />;
       case "blog-1":
       default:
         return <BlogCard1 {...cardProps} />;
@@ -218,7 +221,8 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
         return "grid-cols-1 sm:grid-cols-2 gap-6";
       case "blog-5":
       case "blog-6":
-        // Blog 5 & 6 are single-column / large-width cards
+      case "blog-7":
+        // Blog 5, 6 & 7 are single-column / large-width cards
         return "grid-cols-1";
       case "blog-1":
       default:
@@ -347,6 +351,47 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
                     onPostClick={handleBlogClick}
                   />
                 </div>
+              ) : style === "blog-7" ? (
+                <div className="grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-2">
+                  {/* Left Column - Featured Post */}
+                  {blogs[0] && (
+                    <div className="relative cursor-default">
+                      <div className="absolute inset-0 z-10 bg-transparent" />
+                      <BlogCard7
+                        blog={blogs[0]}
+                        siteUser={undefined}
+                        onClick={() => handleBlogClick(blogs[0])}
+                        isFeatured={true}
+                      />
+                    </div>
+                  )}
+
+                  {/* Right Column - List of Posts */}
+                  <div className="flex flex-col gap-10">
+                    {blogs[1] && (
+                      <div className="relative h-full cursor-default">
+                        <div className="absolute inset-0 z-10 bg-transparent" />
+                        <BlogCard7
+                          blog={blogs[1]}
+                          siteUser={undefined}
+                          onClick={() => handleBlogClick(blogs[1])}
+                          isFeatured={false}
+                        />
+                      </div>
+                    )}
+                    {blogs[2] && (
+                      <div className="relative h-full cursor-default border-t border-gray-100 pt-10 lg:border-t-0 lg:pt-0">
+                        <div className="absolute inset-0 z-10 bg-transparent" />
+                        <BlogCard7
+                          blog={blogs[2]}
+                          siteUser={undefined}
+                          onClick={() => handleBlogClick(blogs[2])}
+                          isFeatured={false}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
               ) : (
                 <div className={`grid ${getGridClass()} gap-6`}>
                   {blogs.slice(0, Math.min(pageSize, 6)).map(blog => (
@@ -440,6 +485,42 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
               siteUser={siteUser}
               onPostClick={handleBlogClick}
             />
+          ) : style === "blog-7" ? (
+            <div className="grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-2">
+              {/* Left Column - Featured Post */}
+              {blogs[0] && (
+                <BlogCard7
+                  blog={blogs[0]}
+                  siteUser={siteUser}
+                  onClick={() => handleBlogClick(blogs[0])}
+                  isFeatured={true}
+                />
+              )}
+
+              {/* Right Column - List of Posts */}
+              <div className="flex flex-col gap-10">
+                {blogs[1] && (
+                  <div className="h-full">
+                    <BlogCard7
+                      blog={blogs[1]}
+                      siteUser={siteUser}
+                      onClick={() => handleBlogClick(blogs[1])}
+                      isFeatured={false}
+                    />
+                  </div>
+                )}
+                {blogs[2] && (
+                  <div className="h-full border-t border-gray-100 pt-10 lg:border-t-0 lg:pt-0">
+                    <BlogCard7
+                      blog={blogs[2]}
+                      siteUser={siteUser}
+                      onClick={() => handleBlogClick(blogs[2])}
+                      isFeatured={false}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
           ) : (
             <div className={`grid ${getGridClass()} gap-8`}>
               {blogs.slice(0, pageSize).map(blog => (
