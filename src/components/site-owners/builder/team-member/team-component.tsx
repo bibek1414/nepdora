@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import Image from "next/image";
-import { useTeamMembers } from "@/hooks/owner-site/admin/use-team-member";
+import {
+  useTeamMembers,
+  useUpdateTeamMember,
+} from "@/hooks/owner-site/admin/use-team-member";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -14,6 +17,7 @@ import { TeamCard4 } from "./team-card-4";
 import { TeamCard5 } from "./team-card-5";
 import { TeamCard6 } from "./team-card-6";
 import { TeamCard7 } from "./team-card-7";
+import { TeamCard8 } from "./team-card-8";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -128,6 +132,8 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
     "team"
   );
 
+  const updateTeamMember = useUpdateTeamMember();
+
   // Get team members
   const { data: members = [], isLoading, error } = useTeamMembers();
   const activeMember = members.find(m => m.id === activeMemberId) || members[0];
@@ -223,6 +229,15 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
     }
   };
 
+  const handleMemberUpdate = (memberId: number, data: Partial<TEAM>) => {
+    const formData = new FormData();
+    if (data.name) formData.append("name", data.name);
+    if (data.role) formData.append("role", data.role);
+    // Add other fields if necessary
+
+    updateTeamMember.mutate({ id: memberId, memberData: formData });
+  };
+
   const renderTeamCard = (member: TEAM) => {
     const cardProps = {
       member,
@@ -237,6 +252,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       "team-4": "card-4",
       "team-5": "card-5",
       "team-6": "card-6",
+      "team-8": "card-8",
     };
 
     const styleKey = (styleMap[style as string] || style) as string;
@@ -253,6 +269,15 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
         return <TeamCard5 key={member.id} {...cardProps} />;
       case "card-6":
         return <TeamCard6 key={member.id} {...cardProps} />;
+      case "card-8":
+        return (
+          <TeamCard8
+            key={member.id}
+            {...cardProps}
+            isEditable={isEditable}
+            onUpdate={data => handleMemberUpdate(member.id, data)}
+          />
+        );
       default:
         return <TeamCard1 key={member.id} {...cardProps} />;
     }
@@ -281,6 +306,8 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
       case "card-6":
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+      case "card-8":
+        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
       default:
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
     }
