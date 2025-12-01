@@ -46,6 +46,7 @@ export interface SendMessageRequest {
   recipient_id: string;
   message?: string;
   page_access_token: string;
+  tag?: string;
   attachment?: {
     type: "image" | "audio" | "video" | "file";
     payload: {

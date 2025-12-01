@@ -180,11 +180,16 @@ export const useConversationsApi = {
       recipient: { id: string };
       message: { text?: string; attachment?: typeof attachment };
       messaging_type: string;
+      tag?: string;
     } = {
       recipient: { id: recipientId },
       message: {},
-      messaging_type: "RESPONSE",
+      messaging_type: data.tag ? "MESSAGE_TAG" : "RESPONSE",
     };
+
+    if (data.tag) {
+      messagePayload.tag = data.tag;
+    }
 
     if (message) {
       messagePayload.message.text = message;
