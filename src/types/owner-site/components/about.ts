@@ -304,6 +304,28 @@ export interface AboutUs17Data {
   imageAlt: string;
 }
 
+export interface AboutUs18Feature {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface AboutUs18Data {
+  template: "about-18";
+  sectionTag: string;
+  headline: string;
+  subheadline: string;
+  description: string;
+  experienceYears: string;
+  features: AboutUs18Feature[];
+  buttonText: string;
+  buttonLink: string;
+  mainImageUrl: string;
+  mainImageAlt: string;
+  secondaryImageUrl: string;
+  secondaryImageAlt: string;
+}
+
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
@@ -324,7 +346,8 @@ export type AboutUsData =
   | AboutUs14Data
   | AboutUs15Data
   | AboutUs16Data
-  | AboutUs17Data;
+  | AboutUs17Data
+  | AboutUs18Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -384,7 +407,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs14Data>
     | Partial<AboutUs15Data>
     | Partial<AboutUs16Data>
-    | Partial<AboutUs17Data>;
+    | Partial<AboutUs17Data>
+    | Partial<AboutUs18Data>;
   order?: number;
 }
 
@@ -938,6 +962,36 @@ export const defaultAboutUs17Data: AboutUs17Data = {
   imageAlt: "Visa approval document",
 };
 
+export const defaultAboutUs18Data: AboutUs18Data = {
+  template: "about-18",
+  sectionTag: "ABOUT US",
+  headline: "Unknown Wanderlust",
+  subheadline: "Your Journey into",
+  description:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet rcus nunc. Duis egestas ac ante sed tincidunt.",
+  experienceYears: "10+",
+  features: [
+    {
+      id: "1",
+      title: "Safety Guides",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    },
+    {
+      id: "2",
+      title: "Passport Assistance",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    },
+  ],
+  buttonText: "Read More",
+  buttonLink: "#",
+  mainImageUrl:
+    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=2070&auto=format&fit=crop",
+  mainImageAlt: "Wooden boat on turquoise mountain lake",
+  secondaryImageUrl:
+    "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop",
+  secondaryImageAlt: "Travel essentials flat lay with map and camera",
+};
+
 // Helper functions
 export const getDefaultAboutUsData = (
   template: AboutUsData["template"]
@@ -977,6 +1031,8 @@ export const getDefaultAboutUsData = (
       return defaultAboutUs16Data;
     case "about-17":
       return defaultAboutUs17Data;
+    case "about-18":
+      return defaultAboutUs18Data;
     default:
       return defaultAboutUs1Data;
   }
@@ -1033,3 +1089,6 @@ export const isAboutUsTemplate16 = (data: AboutUsData): data is AboutUs16Data =>
 
 export const isAboutUsTemplate17 = (data: AboutUsData): data is AboutUs17Data =>
   data.template === "about-17";
+
+export const isAboutUsTemplate18 = (data: AboutUsData): data is AboutUs18Data =>
+  data.template === "about-18";

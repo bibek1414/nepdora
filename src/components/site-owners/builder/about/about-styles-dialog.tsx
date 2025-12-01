@@ -28,6 +28,10 @@ interface AboutUsStylesDialogProps {
       | "about-12"
       | "about-13"
       | "about-14"
+      | "about-15"
+      | "about-16"
+      | "about-17"
+      | "about-18"
   ) => void;
 }
 
@@ -51,6 +55,10 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
     | "about-12"
     | "about-13"
     | "about-14"
+    | "about-15"
+    | "about-16"
+    | "about-17"
+    | "about-18"
     | null
   >(null);
 
@@ -69,6 +77,10 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
     { id: "about-12" as const, name: "Team Showcase" },
     { id: "about-13" as const, name: "Partnership & Process" },
     { id: "about-14" as const, name: "Services & Strategy" },
+    { id: "about-15" as const, name: "Vision & Values" },
+    { id: "about-16" as const, name: "Badge & Impact" },
+    { id: "about-17" as const, name: "Visa Approval" },
+    { id: "about-18" as const, name: "Travel & Adventure" },
   ];
 
   const handleSelect = (
@@ -87,6 +99,10 @@ export const AboutUsStylesDialog: React.FC<AboutUsStylesDialogProps> = ({
       | "about-12"
       | "about-13"
       | "about-14"
+      | "about-15"
+      | "about-16"
+      | "about-17"
+      | "about-18"
   ) => {
     setSelectedStyle(templateId);
     setTimeout(() => {
