@@ -158,7 +158,7 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
       viewport={{ once: true, amount: 0.15 }}
       transition={{ staggerChildren: 0.12 }}
     >
-      <div className="mx-auto min-h-screen max-w-[1400px] px-6 py-16 md:px-16 lg:px-24">
+      <div className="mx-auto min-h-screen max-w-[1400px] px-6 py-14 md:px-16 lg:px-[82px]">
         <motion.div
           className="mb-20 max-w-5xl"
           variants={fadeInUp}

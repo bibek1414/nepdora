@@ -112,7 +112,7 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
 
   return (
     <section className="bg-white py-12">
-      <div className="container mx-auto px-4 md:px-8">
+      <div className="container mx-auto max-w-7xl px-[23px]">
         <div
           className="relative flex flex-col overflow-hidden rounded-3xl bg-blue-700 lg:flex-row"
           style={{ backgroundColor: primaryBackground }}

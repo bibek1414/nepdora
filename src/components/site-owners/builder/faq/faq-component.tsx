@@ -137,31 +137,6 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     }
   };
 
-  const handleTitleItalicChange = (newTitleItalic: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
-
-    updateFAQComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        titleItalic: newTitleItalic,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
-        data: {
-          ...component.data,
-          titleItalic: newTitleItalic,
-        },
-      });
-    }
-  };
-
   const handleContactTitleChange = (newContactTitle: string) => {
     if (!pageSlug) {
       console.error("pageSlug is required for updating component");
@@ -245,7 +220,6 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
       leftImage1,
       leftImage2,
       leftImage3,
-      titleItalic,
       contactTitle,
       contactDescription,
       buttonText,
@@ -294,13 +268,11 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
           <FaqCard7
             {...baseCardProps}
             title={title}
-            titleItalic={titleItalic}
             contactTitle={contactTitle}
             contactDescription={contactDescription}
             buttonText={buttonText}
             isEditable={isEditable}
             onTitleChange={handleTitleChange}
-            onTitleItalicChange={handleTitleItalicChange}
             onContactTitleChange={handleContactTitleChange}
             onContactDescriptionChange={handleContactDescriptionChange}
             onButtonTextChange={handleButtonTextChange}
@@ -465,7 +437,7 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
 
         {/* FAQ Preview */}
         <div className="py-8">
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto">
             {/* Only show separate title/subtitle for styles that don't have built-in titles */}
             {style !== "faq-6" &&
               style !== "faq-7" &&
@@ -546,7 +518,7 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   // Live site rendering
   return (
     <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-6xl px-4">
+      <div className="container mx-auto max-w-6xl">
         {/* Only show separate title/subtitle for styles that don't have built-in titles */}
         {style !== "faq-6" &&
           style !== "faq-7" &&

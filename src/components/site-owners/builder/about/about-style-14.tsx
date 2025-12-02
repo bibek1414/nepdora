@@ -118,7 +118,7 @@ export function AboutUsTemplate14({
       viewport={{ once: true, amount: 0.2 }}
       transition={{ staggerChildren: 0.15 }}
     >
-      <div className="container mx-auto max-w-7xl px-4 md:px-8">
+      <div className="container mx-auto max-w-7xl px-[23px]">
         <motion.div
           className="mb-16 flex flex-col items-end justify-between md:flex-row"
           variants={fadeInUp}

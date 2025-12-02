@@ -141,7 +141,7 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
       viewport={{ once: true, amount: 0.2 }}
       transition={{ staggerChildren: 0.15 }}
     >
-      <div className="mx-auto max-w-[1400px] px-6 py-8 md:px-16 lg:px-24">
+      <div className="mx-auto max-w-[1400px] px-6 py-8 md:px-16 lg:px-[84px]">
         <motion.div
           className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2"
           variants={fadeIn}

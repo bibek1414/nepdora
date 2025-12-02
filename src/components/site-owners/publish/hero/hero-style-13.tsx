@@ -282,7 +282,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
       </motion.div>
 
       {/* Content */}
-      <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-4 md:px-8">
+      <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-4 md:px-4">
         <motion.div
           className="max-w-3xl text-white"
           variants={fadeInUp}

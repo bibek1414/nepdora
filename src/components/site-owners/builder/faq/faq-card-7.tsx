@@ -10,13 +10,11 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface FaqCard7Props {
   faqs: FAQ[];
   title?: string;
-  titleItalic?: string;
   contactTitle?: string;
   contactDescription?: string;
   buttonText?: string;
   isEditable?: boolean;
   onTitleChange?: (title: string) => void;
-  onTitleItalicChange?: (titleItalic: string) => void;
   onContactTitleChange?: (contactTitle: string) => void;
   onContactDescriptionChange?: (contactDescription: string) => void;
   onButtonTextChange?: (buttonText: string) => void;
@@ -24,14 +22,12 @@ interface FaqCard7Props {
 
 export const FaqCard7: React.FC<FaqCard7Props> = ({
   faqs,
-  title = "Friendly Asked",
-  titleItalic = "Questions.",
+  title = "Friendly Asked Questions.",
   contactTitle = "Still have a question?",
   contactDescription = "Our team is ready to assist you with anything you need.",
   buttonText = "Make a Call",
   isEditable = false,
   onTitleChange,
-  onTitleItalicChange,
   onContactTitleChange,
   onContactDescriptionChange,
   onButtonTextChange,
@@ -78,7 +74,7 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
       viewport={{ once: true, amount: 0.2 }}
       transition={{ staggerChildren: 0.12 }}
     >
-      <div className="container mx-auto max-w-7xl px-4 md:px-8">
+      <div className="container mx-auto max-w-7xl">
         <motion.div
           className="grid grid-cols-1 gap-16 lg:grid-cols-12"
           variants={fadeIn}
@@ -101,22 +97,7 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
                 />
               ) : (
                 title
-              )}{" "}
-              <br />{" "}
-              <span className="font-serif font-normal italic">
-                {isEditable && onTitleItalicChange ? (
-                  <EditableText
-                    value={titleItalic}
-                    onChange={onTitleItalicChange}
-                    as="span"
-                    className="font-serif font-normal italic"
-                    isEditable={true}
-                    placeholder="Enter italic title..."
-                  />
-                ) : (
-                  titleItalic
-                )}
-              </span>
+              )}
             </h2>
 
             <div className="mb-6 rounded-2xl border border-gray-100 bg-white p-6">

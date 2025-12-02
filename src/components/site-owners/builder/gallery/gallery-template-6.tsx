@@ -271,7 +271,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
       viewport={{ once: true, amount: 0.2 }}
       transition={{ staggerChildren: 0.12 }}
     >
-      <div className="container mx-auto max-w-7xl px-4 md:px-8">
+      <div className="container mx-auto max-w-7xl px-[23px]">
         <motion.div
           className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
           variants={fadeInUp}
