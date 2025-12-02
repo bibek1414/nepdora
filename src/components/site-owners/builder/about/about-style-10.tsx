@@ -109,50 +109,25 @@ export function AboutUsTemplate10({
         <div className="mb-8 grid grid-cols-1 items-center gap-8 sm:mb-12 sm:gap-12 md:mb-16 md:gap-16 lg:grid-cols-2">
           {/* Left Side Images */}
           <div className="relative">
-            <div className="group relative h-[300px] w-full overflow-hidden rounded-[16px] sm:h-[350px] sm:rounded-[24px] md:h-[450px] md:rounded-[32px] lg:h-[500px] lg:rounded-[40px] xl:h-[600px]">
-              <EditableImage
-                src={data.imageUrl}
-                alt={data.imageAlt}
-                onImageChange={handleImageUpdate}
-                onAltChange={handleAltUpdate}
-                isEditable={isEditable}
-                className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                width={800}
-                height={600}
-                priority
-                cloudinaryOptions={{
-                  folder: "about-us-images",
-                  resourceType: "image",
-                }}
-                showAltEditor={isEditable}
-              />
-              <div className="absolute inset-0 bg-black/10"></div>
-            </div>
-
-            {/* Badge */}
-            <div
-              className="absolute top-3 right-3 flex h-20 w-20 cursor-default flex-col items-center justify-center rounded-lg p-3 text-center shadow-lg transition-transform hover:rotate-0 sm:top-4 sm:right-4 sm:h-24 sm:w-24 sm:rounded-xl sm:p-4 md:top-6 md:right-6 md:h-28 md:w-28 md:rounded-xl md:p-5 lg:top-8 lg:right-8 lg:h-32 lg:w-32 lg:rotate-3 lg:transform lg:rounded-2xl lg:p-6"
-              style={{
-                backgroundColor: theme.colors.primary,
-                color: theme.colors.primaryForeground,
-              }}
-            >
-              <EditableText
-                value={data.badgeCount}
-                onChange={handleTextUpdate("badgeCount")}
-                as="span"
-                className="block text-2xl leading-none font-extrabold sm:text-3xl md:text-4xl"
-                isEditable={isEditable}
-                placeholder="25"
-              />
-              <EditableText
-                value={data.badgeText}
-                onChange={handleTextUpdate("badgeText")}
-                as="span"
-                className="mt-0.5 text-[8px] leading-tight font-medium sm:mt-1 sm:text-[10px] md:text-xs"
-                isEditable={isEditable}
-                placeholder="Years Of experience"
-              />
+            <div className="group relative w-full overflow-hidden rounded-[40px]">
+              <div className="relative aspect-[1/1] h-full w-full">
+                <EditableImage
+                  src={data.imageUrl}
+                  alt={data.imageAlt}
+                  onImageChange={handleImageUpdate}
+                  onAltChange={handleAltUpdate}
+                  isEditable={isEditable}
+                  className="absolute inset-0 aspect-[1/1] object-cover transition-transform duration-700 group-hover:scale-105"
+                  width={800}
+                  height={600}
+                  priority
+                  cloudinaryOptions={{
+                    folder: "about-us-images",
+                    resourceType: "image",
+                  }}
+                  showAltEditor={isEditable}
+                />
+              </div>
             </div>
 
             {/* Floating Circle Stamp */}
