@@ -11,7 +11,8 @@ export interface TestimonialsData {
     | "testimonial-7"
     | "testimonial-8"
     | "testimonial-9"
-    | "testimonial-10";
+    | "testimonial-10"
+    | "testimonial-11";
   title: string;
   subtitle?: string;
   page_size: number;
