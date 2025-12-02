@@ -54,7 +54,7 @@ export const TestimonialCard5: React.FC<TestimonialCard5Props> = ({
   };
 
   return (
-    <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-12 lg:px-16 xl:px-8">
       <Carousel opts={{ align: "start", loop: true }} className="w-full">
         <CarouselContent className="-ml-2 md:-ml-4">
           {testimonials.map(testimonial => (
@@ -108,8 +108,8 @@ export const TestimonialCard5: React.FC<TestimonialCard5Props> = ({
         </CarouselContent>
 
         {/* Navigation Arrows */}
-        <CarouselPrevious className="absolute top-1/2 left-0 h-12 w-12 -translate-x-12 -translate-y-1/2 border-2 border-gray-200 bg-white shadow-lg hover:bg-gray-50" />
-        <CarouselNext className="absolute top-1/2 right-0 h-12 w-12 translate-x-12 -translate-y-1/2 border-2 border-gray-200 bg-white shadow-lg hover:bg-gray-50" />
+        <CarouselPrevious className="absolute top-1/2 left-2 h-10 w-10 -translate-y-1/2 border-2 border-gray-200 bg-white shadow-lg hover:bg-gray-50 sm:left-4 sm:h-12 sm:w-12 md:left-0 md:-translate-x-12" />
+        <CarouselNext className="absolute top-1/2 right-2 h-10 w-10 -translate-y-1/2 border-2 border-gray-200 bg-white shadow-lg hover:bg-gray-50 sm:right-4 sm:h-12 sm:w-12 md:right-0 md:translate-x-12" />
       </Carousel>
     </div>
   );

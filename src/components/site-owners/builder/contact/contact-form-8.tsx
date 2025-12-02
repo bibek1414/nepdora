@@ -120,8 +120,8 @@ export const ContactForm8: React.FC<ContactForm8Props> = ({
     <section className="px-4 py-12 sm:px-6 lg:px-12">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-20">
-          {/* Left Illustration/Image */}
-          <div className="relative flex items-center justify-center">
+          {/* Left Illustration/Image - Shows second on mobile, first on desktop */}
+          <div className="relative order-2 flex items-center justify-center lg:order-none">
             {/* Abstract background blob if needed, keeping it clean for now as requested */}
             <div className="relative w-full max-w-md lg:max-w-full">
               <EditableImage
@@ -140,8 +140,8 @@ export const ContactForm8: React.FC<ContactForm8Props> = ({
             </div>
           </div>
 
-          {/* Right Content */}
-          <div className="flex flex-col justify-center">
+          {/* Right Content - Shows first on mobile, second on desktop */}
+          <div className="order-1 flex flex-col justify-center lg:order-none">
             <div className="mb-8 space-y-2">
               {/* Subtitle */}
               <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gray-500 uppercase">

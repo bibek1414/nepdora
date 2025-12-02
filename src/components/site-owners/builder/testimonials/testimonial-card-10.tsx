@@ -67,7 +67,7 @@ export const TestimonialCard10: React.FC<TestimonialCard10Props> = ({
   if (!activeTestimonial) return null;
 
   return (
-    <div className="flex w-full justify-center overflow-x-visible py-10 lg:py-16">
+    <div className="flex w-full justify-center overflow-x-visible">
       {/* 
         Main Container 
         Compacted dimensions:
