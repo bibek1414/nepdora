@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Plus, Image as ImageIcon, Mic, Smile } from "lucide-react";
+import {
+  Send,
+  Plus,
+  Image as ImageIcon,
+  Mic,
+  Smile,
+  Clock,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -51,6 +58,14 @@ export function MessageInput({
       );
       setMessage("");
       if (textareaRef.current) textareaRef.current.style.height = "auto";
+
+      // Show success toast when using human agent tag
+      if (useHumanAgentTag) {
+        toast.success("Message sent with 7-day reply window! 🕐", {
+          description:
+            "You can now reply to this conversation for up to 7 days.",
+        });
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error sending message:", error);
@@ -122,25 +137,50 @@ export function MessageInput({
     }
   };
 
+  const handleToggleHumanAgentTag = () => {
+    const newValue = !useHumanAgentTag;
+    setUseHumanAgentTag(newValue);
+
+    if (newValue) {
+      toast.info("7-Day Reply Window Activated 🕐", {
+        description: "Your next message will use the extended reply window.",
+      });
+    } else {
+      toast.info("Standard Reply Window", {
+        description: "Switched back to 24-hour messaging window.",
+      });
+    }
+  };
+
   return (
     <>
       <div className="sticky z-20 border-t border-gray-200 bg-white px-2 py-2 md:px-4">
         <div className="mx-auto max-w-3xl">
           {/* Human Agent Tag Toggle */}
-          <div className="mb-2 flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="human-agent-tag"
-              checked={useHumanAgentTag}
-              onChange={e => setUseHumanAgentTag(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <label
-              htmlFor="human-agent-tag"
-              className="cursor-pointer text-xs text-gray-600 select-none"
+          <div className="mb-2">
+            <button
+              type="button"
+              onClick={handleToggleHumanAgentTag}
+              className={cn(
+                "flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all duration-200",
+                useHumanAgentTag
+                  ? "border-green-500 bg-green-50 text-green-700 hover:bg-green-100"
+                  : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
+              )}
             >
-              Use Extended 7-Day Support Reply Window (Human Agent Tag)
-            </label>
+              <div
+                className={cn(
+                  "flex h-5 w-5 items-center justify-center rounded-full transition-colors",
+                  useHumanAgentTag ? "bg-green-500" : "bg-gray-300"
+                )}
+              >
+                {useHumanAgentTag && <Clock className="h-3 w-3 text-white" />}
+              </div>
+              <span>
+                {useHumanAgentTag ? "✓ Using" : "Use"} 7-Day Human Agent Reply
+                Window
+              </span>
+            </button>
           </div>
 
           <div className="flex items-end gap-1.5 md:gap-2">
