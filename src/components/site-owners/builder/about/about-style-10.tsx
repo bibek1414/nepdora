@@ -104,19 +104,19 @@ export function AboutUsTemplate10({
   };
 
   return (
-    <div className="py-16">
-      <div className="mx-auto max-w-7xl px-10">
-        <div className="mb-16 grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+    <div className="py-8 sm:py-12 md:py-16">
+      <div className="mx-auto max-w-7xl px-3 sm:px-5 md:px-8 lg:px-10">
+        <div className="mb-8 grid grid-cols-1 items-center gap-8 sm:mb-12 sm:gap-12 md:mb-16 md:gap-16 lg:grid-cols-2">
           {/* Left Side Images */}
           <div className="relative">
-            <div className="group relative h-[500px] w-full overflow-hidden rounded-[40px] lg:h-[600px]">
+            <div className="group relative h-[300px] w-full overflow-hidden rounded-[16px] sm:h-[350px] sm:rounded-[24px] md:h-[450px] md:rounded-[32px] lg:h-[500px] lg:rounded-[40px] xl:h-[600px]">
               <EditableImage
                 src={data.imageUrl}
                 alt={data.imageAlt}
                 onImageChange={handleImageUpdate}
                 onAltChange={handleAltUpdate}
                 isEditable={isEditable}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
                 width={800}
                 height={600}
                 priority
@@ -131,7 +131,7 @@ export function AboutUsTemplate10({
 
             {/* Badge */}
             <div
-              className="absolute top-8 right-8 flex h-32 w-32 cursor-default flex-col items-center justify-center rounded-2xl p-6 text-center shadow-lg transition-transform hover:rotate-0 sm:rotate-3 sm:transform"
+              className="absolute top-3 right-3 flex h-20 w-20 cursor-default flex-col items-center justify-center rounded-lg p-3 text-center shadow-lg transition-transform hover:rotate-0 sm:top-4 sm:right-4 sm:h-24 sm:w-24 sm:rounded-xl sm:p-4 md:top-6 md:right-6 md:h-28 md:w-28 md:rounded-xl md:p-5 lg:top-8 lg:right-8 lg:h-32 lg:w-32 lg:rotate-3 lg:transform lg:rounded-2xl lg:p-6"
               style={{
                 backgroundColor: theme.colors.primary,
                 color: theme.colors.primaryForeground,
@@ -141,7 +141,7 @@ export function AboutUsTemplate10({
                 value={data.badgeCount}
                 onChange={handleTextUpdate("badgeCount")}
                 as="span"
-                className="block text-4xl leading-none font-extrabold"
+                className="block text-2xl leading-none font-extrabold sm:text-3xl md:text-4xl"
                 isEditable={isEditable}
                 placeholder="25"
               />
@@ -149,7 +149,7 @@ export function AboutUsTemplate10({
                 value={data.badgeText}
                 onChange={handleTextUpdate("badgeText")}
                 as="span"
-                className="mt-1 text-xs leading-tight font-medium"
+                className="mt-0.5 text-[8px] leading-tight font-medium sm:mt-1 sm:text-[10px] md:text-xs"
                 isEditable={isEditable}
                 placeholder="Years Of experience"
               />
@@ -157,14 +157,14 @@ export function AboutUsTemplate10({
 
             {/* Floating Circle Stamp */}
             <div
-              className="absolute -bottom-10 -left-6 hidden h-32 w-32 animate-[spin_10s_linear_infinite] items-center justify-center rounded-full p-2 md:flex"
+              className="absolute -bottom-6 -left-4 hidden h-24 w-24 animate-[spin_10s_linear_infinite] items-center justify-center rounded-full p-1.5 md:-bottom-8 md:-left-5 md:flex md:h-28 md:w-28 md:p-2 lg:-bottom-10 lg:-left-6 lg:h-32 lg:w-32"
               style={{
                 backgroundColor: theme.colors.background,
               }}
             >
               <div className="relative flex h-full w-full items-center justify-center rounded-full border border-dashed border-gray-300">
                 <MoveUpRight
-                  className="h-6 w-6"
+                  className="h-4 w-4 md:h-5 md:w-5 lg:h-6 lg:w-6"
                   style={{ color: theme.colors.secondary }}
                 />
                 <svg
@@ -177,7 +177,7 @@ export function AboutUsTemplate10({
                     fill="transparent"
                   />
                   <text
-                    className="text-[10px] font-bold tracking-widest uppercase"
+                    className="text-[8px] font-bold tracking-widest uppercase md:text-[9px] lg:text-[10px]"
                     style={{ fill: theme.colors.secondary }}
                   >
                     <textPath href="#curve">
@@ -199,12 +199,12 @@ export function AboutUsTemplate10({
           </div>
 
           {/* Right Side Content */}
-          <div className="space-y-8">
+          <div className="space-y-4 sm:space-y-6 md:space-y-8">
             <div
-              className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase"
+              className="flex items-center gap-1.5 text-[10px] font-semibold tracking-widest uppercase sm:gap-2 sm:text-xs"
               style={{ color: hexToRgba(theme.colors.primary, 0.6) }}
             >
-              <Map size={16} />
+              <Map size={12} className="sm:size-4" />
               <EditableText
                 value={data.sectionTag}
                 onChange={handleTextUpdate("sectionTag")}
@@ -217,7 +217,7 @@ export function AboutUsTemplate10({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h2"
-              className="text-4xl leading-tight font-bold lg:text-5xl"
+              className="text-2xl leading-tight font-bold sm:text-3xl md:text-4xl lg:text-5xl"
               isEditable={isEditable}
               placeholder="Main Title"
             />
