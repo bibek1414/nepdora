@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 import { EditableText } from "@/components/ui/editable-text";
@@ -121,14 +122,36 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
   const activeImageUrl = activeTabData?.imageUrl || data.imageUrl;
   const activeImageAlt = activeTabData?.imageAlt || data.imageAlt;
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
   return (
-    <section
+    <motion.section
       className="py-16 md:py-24"
       style={{ backgroundColor: theme.colors.background }}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ staggerChildren: 0.15 }}
     >
       <div className="mx-auto max-w-[1400px] px-6 py-8 md:px-16 lg:px-24">
-        <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
-          <div className="relative h-[500px] overflow-hidden rounded-2xl shadow-lg">
+        <motion.div
+          className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2"
+          variants={fadeIn}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <motion.div
+            className="relative h-[500px] overflow-hidden rounded-2xl shadow-lg"
+            variants={fadeInUp}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
             <EditableImage
               src={activeImageUrl}
               alt={activeImageAlt}
@@ -208,9 +231,12 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
                 </EditableLink>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div
+            variants={fadeInUp}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
             <EditableText
               value={data.heading}
               onChange={handleTextUpdate("heading")}
@@ -250,17 +276,17 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
                     style={{
                       color:
                         activeTab === tab.id
-                          ? theme.colors.text
+                          ? theme.colors.primary
                           : theme.colors.text + "66",
                       fontFamily: theme.fonts.body,
                     }}
-                    className={`flex items-center gap-2 text-sm font-medium whitespace-nowrap transition-colors ${
+                    className={`flex cursor-pointer items-center gap-2 text-sm font-medium whitespace-nowrap transition-colors ${
                       activeTab === tab.id ? "" : "hover:opacity-80"
                     }`}
                   >
                     {activeTab === tab.id && (
                       <span
-                        className="h-2 w-2 rounded-full"
+                        className="h-2 w-2 cursor-pointer rounded-full"
                         style={{ backgroundColor: theme.colors.primary }}
                       />
                     )}
@@ -268,7 +294,7 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
                       value={tab.title}
                       onChange={handleTabTitleUpdate(tab.id)}
                       as="span"
-                      className="cursor-text"
+                      className="cursor-pointer"
                       isEditable={isEditable}
                       placeholder="Tab title"
                     />
@@ -277,22 +303,29 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               </div>
             </div>
 
-            <EditableText
-              value={activeTabData?.description || ""}
-              onChange={handleTabDescriptionUpdate(activeTabData?.id || "")}
-              as="div"
-              style={{
-                color: theme.colors.text,
-                fontFamily: theme.fonts.body,
-              }}
-              className="text-sm leading-loose opacity-80"
-              isEditable={isEditable}
-              placeholder="Tab description"
-              multiline
-            />
-          </div>
-        </div>
+            <motion.div
+              key={activeTabData?.id || "tab-content"}
+              initial={false}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+            >
+              <EditableText
+                value={activeTabData?.description || ""}
+                onChange={handleTabDescriptionUpdate(activeTabData?.id || "")}
+                as="div"
+                style={{
+                  color: theme.colors.text,
+                  fontFamily: theme.fonts.body,
+                }}
+                className="text-sm leading-loose opacity-80"
+                isEditable={isEditable}
+                placeholder="Tab description"
+                multiline
+              />
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };

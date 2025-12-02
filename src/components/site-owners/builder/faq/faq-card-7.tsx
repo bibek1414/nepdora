@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import { Plus, Minus, ArrowUpRight } from "lucide-react";
 import { FAQ } from "@/types/owner-site/admin/faq";
 import { EditableText } from "@/components/ui/editable-text";
@@ -60,11 +61,34 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
     [themeResponse]
   );
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 24 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
   return (
-    <section>
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-12">
-          <div className="lg:col-span-4">
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ staggerChildren: 0.12 }}
+    >
+      <div className="container mx-auto max-w-7xl px-4 md:px-8">
+        <motion.div
+          className="grid grid-cols-1 gap-16 lg:grid-cols-12"
+          variants={fadeIn}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <motion.div
+            className="lg:col-span-4"
+            variants={fadeInUp}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <h2 className="mb-6 text-4xl font-semibold">
               {isEditable && onTitleChange ? (
                 <EditableText
@@ -167,18 +191,27 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
                 </button>
               )}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="space-y-0 lg:col-span-8">
+          <motion.div
+            className="space-y-0 lg:col-span-8"
+            variants={fadeInUp}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             {faqs.map((faq, idx) => {
               const isOpen = openIndex === faq.id;
               const isLast = idx === faqs.length - 1;
               return (
-                <div
+                <motion.div
                   key={faq.id}
                   className={`overflow-hidden bg-white transition-all duration-300 ${
                     !isLast ? "border-b border-gray-200" : ""
                   }`}
+                  variants={fadeInUp}
+                  initial={false}
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                 >
                   <button
                     onClick={() =>
@@ -214,17 +247,27 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
                     }`}
                   >
                     <div className="overflow-hidden">
-                      <div className="p-6 pt-0 text-sm leading-relaxed text-gray-500">
-                        {faq.answer}
-                      </div>
+                      <motion.div
+                        initial={false}
+                        animate={{
+                          height: isOpen ? "auto" : 0,
+                          opacity: isOpen ? 1 : 0,
+                        }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="p-6 pt-0 text-sm leading-relaxed text-gray-500">
+                          {faq.answer}
+                        </div>
+                      </motion.div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };

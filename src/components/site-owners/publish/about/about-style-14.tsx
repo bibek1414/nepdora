@@ -1,5 +1,6 @@
 "use client";
 import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import {
   AboutUs14Data,
   AboutUs14Service,
@@ -98,10 +99,31 @@ export function AboutUsTemplate14({
     });
   };
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
   return (
-    <section id="services" className="bg-white py-20">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="mb-16 flex flex-col items-end justify-between md:flex-row">
+    <motion.section
+      id="services"
+      className="bg-white py-20"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ staggerChildren: 0.15 }}
+    >
+      <div className="container mx-auto max-w-7xl px-4 md:px-8">
+        <motion.div
+          className="mb-16 flex flex-col items-end justify-between md:flex-row"
+          variants={fadeInUp}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
           <div className="mb-0 max-w-xl">
             <div className="flex flex-wrap gap-2 text-3xl font-bold text-gray-900 md:text-4xl">
               <EditableText
@@ -137,82 +159,123 @@ export function AboutUsTemplate14({
               </span>
             </>
           </EditableLink>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-24">
+        <motion.div
+          className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-24"
+          variants={fadeIn}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           {/* Accordion List */}
-          <div className="space-y-6">
-            {data.services.map((service, idx) => (
-              <div
-                key={service.id}
-                className={`group cursor-pointer border-b border-gray-100 pb-6 transition-all duration-300`}
-                onClick={() => setActiveService(idx)}
-              >
-                <div className="mb-4 flex items-center gap-6">
-                  <span
-                    className={`text-lg font-medium ${activeService === idx ? "text-blue-700" : "text-gray-400 group-hover:text-gray-600"}`}
-                  >
-                    [{service.id}]
-                  </span>
-                  <div
-                    className={`text-2xl font-medium ${activeService === idx ? "text-gray-900" : "text-gray-400 group-hover:text-gray-600"}`}
-                  >
-                    <EditableText
-                      value={service.title}
-                      onChange={handleServiceUpdate(service.id, "title")}
-                      as="h4"
-                      isEditable={isEditable}
-                      placeholder="Service Title"
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className={`overflow-hidden transition-all duration-500 ease-in-out ${activeService === idx ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
+          <motion.div
+            className="space-y-6"
+            variants={fadeInUp}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
+            {data.services.map((service, idx) => {
+              const isActive = activeService === idx;
+              return (
+                <motion.div
+                  key={service.id}
+                  className="group cursor-pointer border-b border-gray-100 pb-6"
+                  onClick={() => setActiveService(idx)}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.3 }}
+                  variants={fadeInUp}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                 >
-                  <div className="pl-14">
-                    <div className="mb-6 max-w-md text-sm leading-relaxed text-gray-500">
+                  <div className="mb-4 flex items-center gap-6">
+                    <span
+                      className={`text-lg font-medium transition-colors duration-300 ${
+                        isActive
+                          ? "text-gray-900"
+                          : "text-gray-400 group-hover:text-gray-600"
+                      }`}
+                      style={
+                        isActive ? { color: theme.colors.primary } : undefined
+                      }
+                    >
+                      [{service.id}]
+                    </span>
+                    <div
+                      className={`text-2xl font-medium transition-colors duration-300 ${
+                        isActive
+                          ? "text-gray-900"
+                          : "text-gray-400 group-hover:text-gray-600"
+                      }`}
+                    >
                       <EditableText
-                        value={service.description}
-                        onChange={handleServiceUpdate(
-                          service.id,
-                          "description"
-                        )}
-                        as="p"
+                        value={service.title}
+                        onChange={handleServiceUpdate(service.id, "title")}
+                        as="h4"
                         isEditable={isEditable}
-                        multiline
-                        placeholder="Service Description"
+                        placeholder="Service Title"
                       />
                     </div>
-                    <ul className="space-y-3">
-                      {service.points.map((point, i) => (
-                        <li
-                          key={i}
-                          className="flex items-center gap-3 text-sm font-medium text-gray-800"
-                        >
-                          <Check size={16} className="text-blue-600" />
-                          <EditableText
-                            value={point}
-                            onChange={handleServiceUpdate(
-                              service.id,
-                              "points",
-                              i
-                            )}
-                            as="span"
-                            isEditable={isEditable}
-                            placeholder="Point"
-                          />
-                        </li>
-                      ))}
-                    </ul>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
+
+                  <motion.div
+                    className="overflow-hidden"
+                    initial={false}
+                    animate={{
+                      height: isActive ? "auto" : 0,
+                      opacity: isActive ? 1 : 0,
+                    }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                  >
+                    <div className="pt-1 pb-4 pl-14">
+                      <div className="mb-6 max-w-md text-sm leading-relaxed text-gray-500">
+                        <EditableText
+                          value={service.description}
+                          onChange={handleServiceUpdate(
+                            service.id,
+                            "description"
+                          )}
+                          as="p"
+                          isEditable={isEditable}
+                          multiline
+                          placeholder="Service Description"
+                        />
+                      </div>
+                      <ul className="space-y-3">
+                        {service.points.map((point, i) => (
+                          <li
+                            key={i}
+                            className="flex items-center gap-3 text-sm font-medium text-gray-800"
+                          >
+                            <Check
+                              size={16}
+                              className="text-blue-600"
+                              style={{ color: theme.colors.primary }}
+                            />
+                            <EditableText
+                              value={point}
+                              onChange={handleServiceUpdate(
+                                service.id,
+                                "points",
+                                i
+                              )}
+                              as="span"
+                              isEditable={isEditable}
+                              placeholder="Point"
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
 
           {/* Right Image */}
-          <div className="relative h-[550px] overflow-hidden rounded-2xl shadow-2xl">
+          <motion.div
+            className="relative h-[550px] overflow-hidden rounded-2xl shadow-2xl"
+            variants={fadeInUp}
+            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+          >
             {data.services[activeService] && (
               <EditableImage
                 src={data.services[activeService].image}
@@ -233,9 +296,9 @@ export function AboutUsTemplate14({
             )}
             {/* Gradient Overlay for subtle text contrast if needed */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-900/20 to-transparent"></div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

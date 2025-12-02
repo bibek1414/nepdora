@@ -174,7 +174,6 @@ export interface AboutUs11Stat {
   icon: string;
   value: string;
   label: string;
-  sublabel: string;
 }
 
 export interface AboutUs11Data {
@@ -743,29 +742,25 @@ export const defaultAboutUs11Data: AboutUs11Data = {
       id: "stat-1",
       icon: "folder",
       value: "250+",
-      label: "Over 300+ clients complete",
-      sublabel: "high-impact projects.",
+      label: "Over 300+ clients complete high-impact projects.",
     },
     {
       id: "stat-2",
       icon: "sun",
       value: "98%",
-      label: "Trusted by hundreds of clients",
-      sublabel: "who rate our work highly.",
+      label: "Trusted by hundreds of clients who rate our work highly.",
     },
     {
       id: "stat-3",
       icon: "users",
       value: "50+",
-      label: "Our ability to adapt and deliver",
-      sublabel: "impactful solutions across.",
+      label: "Our ability to adapt and deliver impactful solutions across.",
     },
     {
       id: "stat-4",
       icon: "lightbulb",
       value: "20+",
-      label: "Building on years of experience,",
-      sublabel: "we provide trusted guidance.",
+      label: "Building on years of experience, we provide trusted guidance.",
     },
   ],
   ctaText: "Book a Free Call",

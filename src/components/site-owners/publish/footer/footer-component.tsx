@@ -30,6 +30,7 @@ import { FooterStyle5 } from "./footer-style5";
 import { FooterStyle6 } from "./footer-style6";
 import { FooterStyle7 } from "./footer-style7";
 import { FooterStyle9 } from "./footer-style9";
+import { FooterStyle10 } from "./footer-style10";
 import { FooterEditorDialog } from "@/components/site-owners/builder/footer/footer-editor-dialog";
 import { FooterData } from "@/types/owner-site/components/footer";
 import {
@@ -332,7 +333,9 @@ export function Footer({
                 ? FooterStyle7
                 : style === "style-9"
                   ? FooterStyle9
-                  : FooterStyle1;
+                  : style === "style-10"
+                    ? FooterStyle10
+                    : FooterStyle1;
 
   const isLoading =
     updateFooterMutation.isPending ||

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useId, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { ArrowUpRight, Loader2 } from "lucide-react";
 import {
   HeroTemplate13Data,
@@ -200,8 +201,24 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
     }
   };
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
   return (
-    <section className="relative h-screen min-h-[700px] w-full overflow-hidden bg-gray-900">
+    <motion.section
+      className="relative h-screen min-h-[700px] w-full overflow-hidden bg-gray-900"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ staggerChildren: 0.15 }}
+    >
       {isEditable && (
         <div className="absolute top-6 right-4 z-30">
           <label
@@ -240,7 +257,11 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
       )}
 
       {/* Background Image with Overlay */}
-      <div className="absolute inset-0">
+      <motion.div
+        className="absolute inset-0"
+        variants={fadeIn}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <EditableImage
           src={backgroundImage}
           alt={data.imageAlt || "Office meeting background"}
@@ -258,11 +279,15 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
-      </div>
+      </motion.div>
 
       {/* Content */}
       <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-4 md:px-8">
-        <div className="max-w-3xl text-white">
+        <motion.div
+          className="max-w-3xl text-white"
+          variants={fadeInUp}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <EditableText
             value={titleContent}
             onChange={handleTextUpdate("title")}
@@ -283,7 +308,11 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             multiline
           />
 
-          <div className="flex flex-wrap gap-4">
+          <motion.div
+            className="flex flex-wrap gap-4"
+            variants={fadeInUp}
+            transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+          >
             <EditableLink
               key={primaryButton.id}
               text={primaryButtonText}
@@ -304,9 +333,9 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
                 </span>
               </>
             </EditableLink>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };

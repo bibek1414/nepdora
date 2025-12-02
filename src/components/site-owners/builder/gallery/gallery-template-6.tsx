@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   GalleryData,
   GalleryImage,
@@ -252,12 +253,32 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, [updateFadeVisibility]);
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
   return (
-    <section className="overflow-hidden bg-white py-20">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+    <motion.section
+      className="overflow-hidden bg-white py-20"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ staggerChildren: 0.12 }}
+    >
+      <div className="container mx-auto max-w-7xl px-4 md:px-8">
+        <motion.div
+          className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+          variants={fadeInUp}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <div className="max-w-2xl space-y-3">
-            <h2 className="text-3xl font-semibold text-gray-900 md:text-4xl">
+            <h2 className="text-2xl font-semibold text-gray-900 md:text-3xl">
               <EditableText
                 value={data.title || "How We Helped Clients Grow Smarter"}
                 onChange={handleTitleUpdate}
@@ -265,7 +286,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                 className="leading-tight"
               />
             </h2>
-            <p className="text-base text-gray-600 md:text-lg">
+            <p className="text-sm text-gray-600 md:text-base">
               <EditableText
                 value={
                   data.subtitle ||
@@ -295,7 +316,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
               <ArrowRight size={18} />
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {isUploading && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -306,7 +327,11 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
           </div>
         )}
 
-        <div className="relative">
+        <motion.div
+          className="relative"
+          variants={fadeIn}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <div
             className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-white via-white/60 to-transparent transition-opacity duration-300"
             style={{ opacity: showRightFade ? 1 : 0 }}
@@ -321,9 +346,14 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                 img => img.id === image.id
               );
               return (
-                <div
+                <motion.div
                   key={image.id}
                   className="group/card relative h-[450px] min-w-[300px] cursor-pointer overflow-hidden rounded-2xl md:min-w-[350px]"
+                  variants={fadeInUp}
+                  initial={false}
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 0.45, ease: "easeOut" }}
                 >
                   <div className="h-full w-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:transition-transform [&_img]:duration-700 group-hover/card:[&_img]:scale-110 hover:[&_img]:scale-110">
                     <EditableImage
@@ -413,7 +443,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
 
@@ -436,8 +466,8 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };

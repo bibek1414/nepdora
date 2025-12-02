@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import {
   ArrowUpRight,
   Folder,
@@ -48,6 +49,16 @@ const hexToRgba = (hex: string, alpha = 1) => {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
   return hex;
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
 };
 
 type TextFieldKey =
@@ -105,7 +116,7 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
   };
 
   const handleStatUpdate =
-    (id: string, field: "value" | "label" | "sublabel") => (value: string) => {
+    (id: string, field: "value" | "label") => (value: string) => {
       const updatedStats = data.stats.map(stat =>
         stat.id === id ? { ...stat, [field]: value } : stat
       );
@@ -136,15 +147,23 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
   };
 
   return (
-    <section
+    <motion.section
       className="bg-[#f8f8f6] py-16 md:py-24"
       style={{
         backgroundColor: theme.colors.background || "#f8f8f6",
         color: theme.colors.text,
       }}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ staggerChildren: 0.12 }}
     >
       <div className="mx-auto min-h-screen max-w-[1400px] px-6 py-16 md:px-16 lg:px-24">
-        <div className="mb-20 max-w-5xl">
+        <motion.div
+          className="mb-20 max-w-5xl"
+          variants={fadeInUp}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <EditableText
             value={data.headline}
             onChange={handleTextUpdate("headline")}
@@ -154,15 +173,19 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
             placeholder="Add your headline"
             multiline
           />
-        </div>
+        </motion.div>
 
-        <div className="mb-32 flex flex-col items-start gap-8 lg:flex-row">
+        <motion.div
+          className="mb-32 flex flex-col items-start gap-8 lg:flex-row"
+          variants={fadeInUp}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
           <div className="flex h-full flex-col justify-between pt-2 lg:w-[22%]">
             <EditableText
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="mb-12 text-[13px] leading-[1.6] text-gray-600 lg:mb-[180px]"
+              className="mb-12 text-[13px] leading-4 text-gray-600 lg:mb-[180px]"
               isEditable={isEditable}
               placeholder="Add supporting description"
               multiline
@@ -191,7 +214,11 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
             </div>
           </div>
 
-          <div className="px-2 lg:w-[46%] lg:max-w-[520px]">
+          <motion.div
+            className="px-2 lg:w-[46%] lg:max-w-[520px]"
+            variants={fadeInUp}
+            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+          >
             <div
               className="relative w-full overflow-hidden rounded-3xl shadow-sm"
               style={{ aspectRatio: "4 / 3.8" }}
@@ -217,10 +244,18 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
                 }}
               />
             </div>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-col gap-6 pt-2 lg:w-[28%] lg:pl-6">
-            <div className="min-h-[200px] rounded-2xl bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+          <motion.div
+            className="flex flex-col gap-6 pt-2 lg:w-[28%] lg:pl-6"
+            variants={fadeInUp}
+            transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
+          >
+            <motion.div
+              className="min-h-[200px] rounded-2xl bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
+              variants={fadeIn}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
               <div className="mb-6">
                 <Pin
                   className="h-5 w-5 rotate-45"
@@ -240,7 +275,7 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
                   />
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             <EditableLink
               text={data.ctaText}
@@ -265,10 +300,17 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
                 </span>
               </>
             </EditableLink>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="mx-auto mb-20 max-w-4xl text-center">
+        <motion.div
+          className="mx-auto mb-20 max-w-4xl text-center"
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
           <EditableText
             value={data.supportingTitle}
             onChange={handleTextUpdate("supportingTitle")}
@@ -287,15 +329,24 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
             placeholder="Add a brief description"
             multiline
           />
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <motion.div
+          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4"
+          variants={fadeIn}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           {data.stats.map(stat => {
             const Icon = getIcon(stat.icon);
             return (
-              <div
+              <motion.div
                 key={stat.id}
-                className="flex h-full flex-col items-start gap-6 rounded-2xl bg-white p-7 shadow-[0_2px_15px_rgba(0,0,0,0.03)]"
+                className="flex h-full flex-col items-start gap-6 rounded-2xl border border-gray-100 bg-white p-7"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.3 }}
+                variants={fadeInUp}
+                transition={{ duration: 0.6, ease: "easeOut" }}
               >
                 <div
                   className="flex h-12 w-12 items-center justify-center rounded-full"
@@ -326,21 +377,12 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
                     placeholder="Add label"
                     multiline
                   />
-                  <EditableText
-                    value={stat.sublabel}
-                    onChange={handleStatUpdate(stat.id, "sublabel")}
-                    as="p"
-                    className="text-[13px] text-gray-500"
-                    isEditable={isEditable}
-                    placeholder="Add sublabel"
-                    multiline
-                  />
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };

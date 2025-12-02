@@ -953,6 +953,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/footers/footer9.png",
         description: "Dark footer with student services and policy links",
       },
+      {
+        id: "footer-10",
+        name: "Footer Style 10",
+        image: "/images/site-owners/footers/footer10.png",
+        description: "Footer with social media links",
+      },
     ],
   };
 
