@@ -48,13 +48,13 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 const renderSocialIcon = (social: SocialLink) => {
   const IconFromMap = iconMap[social.platform];
   if (IconFromMap) {
-    return <IconFromMap className="h-4 w-4" />;
+    return <IconFromMap className="h-3.5 w-3.5 sm:h-4 sm:w-4" />;
   }
   if (typeof social.icon === "function") {
     const IconComponent = social.icon;
-    return <IconComponent className="h-4 w-4" />;
+    return <IconComponent className="h-3.5 w-3.5 sm:h-4 sm:w-4" />;
   }
-  return <Facebook className="h-4 w-4" />;
+  return <Facebook className="h-3.5 w-3.5 sm:h-4 sm:w-4" />;
 };
 
 const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
@@ -62,7 +62,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
 
   if (logoType === "text") {
     return (
-      <span className="text-xl font-bold text-white">
+      <span className="text-base font-bold text-white sm:text-lg md:text-xl">
         {logoText || companyName}
       </span>
     );
@@ -73,23 +73,25 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
       <img
         src={logoImage}
         alt={companyName}
-        className="h-8 w-auto object-contain"
+        className="h-6 w-auto object-contain sm:h-7 md:h-8"
       />
     ) : (
-      <span className="text-xl font-bold text-white">{companyName}</span>
+      <span className="text-base font-bold text-white sm:text-lg md:text-xl">
+        {companyName}
+      </span>
     );
   }
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
       {logoImage && (
         <img
           src={logoImage}
           alt={companyName}
-          className="h-8 w-auto object-contain"
+          className="h-6 w-auto object-contain sm:h-7 md:h-8"
         />
       )}
-      <span className="text-xl font-bold text-white">
+      <span className="text-base font-bold text-white sm:text-lg md:text-xl">
         {logoText || companyName}
       </span>
     </div>
@@ -239,32 +241,33 @@ export function FooterStyle7({
       className="group relative"
       style={{ backgroundColor: backgroundColor }}
     >
-      <footer className="relative mx-auto mt-20 max-w-7xl pt-20 text-white">
+      <footer className="relative mx-auto mt-12 max-w-7xl pt-12 text-white sm:mt-16 sm:pt-16 md:mt-20 md:pt-20">
         {/* Floating CTA Bar */}
         <div
-          className="absolute top-0 left-1/2 flex w-[90%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-between rounded-full border border-white/10 p-8 shadow-2xl md:w-[80%] md:flex-row md:p-12"
+          className="absolute top-0 left-1/2 flex w-[95%] min-w-[288px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-between rounded-2xl border border-white/10 p-4 shadow-2xl sm:w-[90%] sm:rounded-3xl sm:p-6 md:w-[80%] md:flex-row md:rounded-full md:p-12"
           style={{ backgroundColor: backgroundColor }}
         >
-          <div className="mb-4 flex items-center gap-4 md:mb-0">
+          <div className="mb-3 flex items-center gap-2 sm:mb-4 sm:gap-3 md:mb-0 md:gap-4">
             <div
-              className="flex h-12 w-12 items-center justify-center rounded-full text-white"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-white sm:h-11 sm:w-11 md:h-12 md:w-12"
               style={{
                 backgroundColor: secondaryColor,
                 color: secondaryForeground,
               }}
             >
               <svg
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
+                className="sm:h-6 sm:w-6"
               >
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
               </svg>
             </div>
-            <h3 className="text-xl font-bold whitespace-pre-line md:text-2xl">
+            <h3 className="text-base leading-tight font-bold whitespace-pre-line sm:text-lg md:text-xl lg:text-2xl">
               <EditableText
                 value={ctaText1}
                 onChange={handleCtaText1Update}
@@ -276,29 +279,30 @@ export function FooterStyle7({
             </h3>
           </div>
 
-          <div className="mx-8 hidden h-12 w-[1px] bg-white/20 md:block"></div>
+          <div className="mx-4 hidden h-8 w-[1px] bg-white/20 sm:mx-6 sm:h-10 md:mx-8 md:block md:h-12"></div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
             <div
-              className="flex h-12 w-12 items-center justify-center rounded-full text-white"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-white sm:h-11 sm:w-11 md:h-12 md:w-12"
               style={{
                 backgroundColor: secondaryColor,
                 color: secondaryForeground,
               }}
             >
               <svg
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
+                className="sm:h-6 sm:w-6"
               >
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
             </div>
-            <h3 className="text-xl font-bold whitespace-pre-line md:text-2xl">
+            <h3 className="text-base leading-tight font-bold whitespace-pre-line sm:text-lg md:text-xl lg:text-2xl">
               <EditableText
                 value={ctaText2}
                 onChange={handleCtaText2Update}
@@ -312,32 +316,35 @@ export function FooterStyle7({
         </div>
 
         <div
-          className="grid grid-cols-1 gap-12 border-b border-white/10 px-4 pt-24 pb-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-12"
+          className="grid grid-cols-1 gap-8 border-b border-white/10 px-3 pt-16 pb-8 sm:gap-10 sm:px-4 sm:pt-20 sm:pb-10 md:grid-cols-2 md:gap-12 md:px-6 md:pt-24 md:pb-12 lg:grid-cols-4 lg:px-12"
           style={{ borderColor: `${primaryForeground}10` }}
         >
           {/* Brand Column */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-2.5">
+          <div className="space-y-4 sm:space-y-5 md:space-y-6">
+            <div className="flex items-center gap-2 sm:gap-2.5">
               <div
-                className="flex h-10 w-10 items-center justify-center rounded-full text-white"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white sm:h-9 sm:w-9 md:h-10 md:w-10"
                 style={{
                   backgroundColor: primaryForeground,
                   color: primaryColor,
                 }}
               >
-                <Plane size={20} className="-rotate-45" fill="currentColor" />
+                <Plane
+                  size={16}
+                  className="-rotate-45 fill-current sm:h-5 sm:w-5 md:h-5 md:w-5"
+                />
               </div>
               <FooterLogo footerData={footerData} />
             </div>
-            <p className="text-sm leading-relaxed text-gray-400">
+            <p className="text-xs leading-relaxed text-white/90 sm:text-sm">
               {footerData.description}
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-2.5 sm:gap-3 md:gap-4">
               {footerData.socialLinks.map(social => (
                 <Link
                   key={social.id}
                   href={social.href || "#"}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
+                  className="flex h-7 w-7 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900 sm:h-8 sm:w-8"
                   style={{
                     backgroundColor: `${primaryForeground}15`,
                     color: primaryForeground,
@@ -359,17 +366,17 @@ export function FooterStyle7({
 
           {/* Services Links */}
           <div>
-            <h4 className="mb-6 text-lg font-bold">
+            <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
               {servicesSection?.title || "Services"}
             </h4>
-            <ul className="space-y-3 text-sm text-gray-400">
+            <ul className="space-y-2 text-xs sm:space-y-2.5 sm:text-sm md:space-y-3">
               {(servicesSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex items-center gap-2"
-                  style={{ color: `${primaryForeground}80` }}
+                  className="flex items-center gap-2 text-white/90"
+                  // style={{ color: `${primaryForeground}80` }}
                 >
-                  <span style={{ color: secondaryColor }}>✓</span>
+                  <span className="text-white/90">✓</span>
                   <Link
                     href={generateLinkHref(link.href || "")}
                     className="transition-colors hover:text-white"
@@ -384,17 +391,17 @@ export function FooterStyle7({
 
           {/* Resources */}
           <div>
-            <h4 className="mb-6 text-lg font-bold">
+            <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
               {usefulLinksSection?.title || "Resources"}
             </h4>
-            <ul className="space-y-3 text-sm text-gray-400">
+            <ul className="space-y-2 text-xs sm:space-y-2.5 sm:text-sm md:space-y-3">
               {(usefulLinksSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex items-center gap-2"
-                  style={{ color: `${primaryForeground}80` }}
+                  className="flex items-center gap-2 text-white/90"
+                  // style={{ color: `${primaryForeground}80` }}
                 >
-                  <span style={{ color: secondaryColor }}>&gt;</span>
+                  <span className="text-white/90">&gt;</span>
                   <Link
                     href={generateLinkHref(link.href || "")}
                     className="transition-colors hover:text-white"
@@ -409,10 +416,10 @@ export function FooterStyle7({
 
           {/* Newsletter */}
           <div>
-            <h4 className="mb-6 text-lg font-bold">
+            <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
               {footerData.newsletter.title}
             </h4>
-            <p className="mb-4 text-sm text-gray-400">
+            <p className="mb-3 text-xs leading-relaxed text-white/90 sm:mb-4 sm:text-sm">
               {footerData.newsletter.description}
             </p>
 
@@ -430,14 +437,14 @@ export function FooterStyle7({
                       placeholder="Enter Email"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
-                      className="w-full rounded-full border px-4 py-3 text-sm text-white focus:outline-none"
+                      className="w-full rounded-full border px-3 py-2 pr-12 text-xs text-white focus:outline-none sm:px-4 sm:py-2.5 sm:pr-14 sm:text-sm"
                       disabled={
                         isEditable || createNewsletterMutation.isPending
                       }
                     />
                     <Button
                       type="submit"
-                      className="absolute top-1 right-1 flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+                      className="absolute top-1/2 right-1 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full p-0 transition-colors sm:right-1.5 sm:h-9 sm:w-9"
                       style={{
                         backgroundColor: secondaryColor,
                         color: secondaryForeground,
@@ -446,7 +453,7 @@ export function FooterStyle7({
                         isEditable || createNewsletterMutation.isPending
                       }
                     >
-                      <Send size={16} />
+                      <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </Button>
                   </div>
 
@@ -467,11 +474,11 @@ export function FooterStyle7({
         </div>
 
         <div
-          className="flex flex-col items-center justify-between px-4 py-8 text-xs sm:px-6 md:flex-row lg:px-12"
+          className="flex flex-col items-center justify-between gap-3 px-3 py-6 text-[10px] leading-relaxed sm:gap-4 sm:px-4 sm:py-7 sm:text-xs md:flex-row md:gap-0 md:px-6 md:py-8 lg:px-12"
           style={{ color: `${primaryForeground}80` }}
         >
           <p>{footerData.copyright}</p>
-          <div className="mt-4 flex gap-8 md:mt-0">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:justify-start md:gap-8">
             {(legalSection?.links || []).map(link => (
               <Link
                 key={link.id}

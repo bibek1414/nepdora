@@ -69,7 +69,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
 
   return (
     <section
-      className="relative mx-auto max-w-7xl overflow-hidden px-4 py-12 sm:px-6 sm:py-16 md:py-20 lg:px-8"
+      className="relative w-full overflow-hidden px-3 py-8 sm:px-6 sm:py-12 md:py-16 lg:px-8 lg:py-20"
       style={{
         backgroundColor:
           data.backgroundType === "color"
@@ -86,10 +86,10 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
       }}
     >
       <div className="container mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
+        <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-12 lg:gap-12">
           {/* Left Column - Large Image */}
           <div className="lg:col-span-5">
-            <div className="relative h-auto min-h-[600px] w-full">
+            <div className="relative h-auto min-h-[300px] w-full sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px]">
               <EditableImage
                 src={data.leftImage?.url || defaultLeftImage}
                 alt={data.leftImage?.alt || "Team collaboration"}
@@ -99,7 +99,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                     leftImage: { url, alt: alt || data.leftImage.alt },
                   })
                 }
-                className="h-150 w-full rounded-[2.5rem] object-cover"
+                className="h-150 w-full rounded-2xl object-cover sm:rounded-3xl md:rounded-[2.5rem]"
                 cloudinaryOptions={{
                   folder: "template-images",
                   resourceType: "image",
@@ -111,21 +111,20 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
           </div>
 
           {/* Right Column - Content */}
-          <div className="flex flex-col justify-between gap-8 lg:col-span-7">
+          <div className="flex flex-col justify-between gap-6 sm:gap-8 lg:col-span-7">
             {/* Top Section: Text + Small Image */}
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
               {/* Text Content */}
               <div className="flex flex-col justify-center">
                 {/* Icon */}
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                   <div
-                    className="flex h-20 w-20 items-center justify-center rounded-full"
-                    style={{ backgroundColor: theme.colors.secondary }}
+                    className="flex h-16 w-16 items-center justify-center rounded-full sm:h-[4.5rem] sm:w-[4.5rem] md:h-20 md:w-20"
+                    style={{ backgroundColor: "#84CC16" }}
                   >
                     <Globe
-                      className="h-10 w-10"
+                      className="h-8 w-8 text-white sm:h-9 sm:w-9 md:h-10 md:w-10"
                       strokeWidth={1.5}
-                      style={{ color: theme.colors.secondaryForeground }}
                     />
                   </div>
                 </div>
@@ -136,7 +135,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                   onChange={val => handleUpdate({ heading: val })}
                   isEditable={isEditable}
                   as="h2"
-                  className="mb-4 text-2xl leading-tight font-bold md:text-3xl lg:text-4xl"
+                  className="mb-3 text-xl leading-tight font-bold sm:mb-4 sm:text-2xl md:text-3xl lg:text-4xl"
                   style={{
                     fontFamily: theme.fonts.heading,
                     color: theme.colors.primary,
@@ -151,7 +150,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                   }
                   onChange={val => handleUpdate({ description: val })}
                   isEditable={isEditable}
-                  className="mb-8 text-sm text-gray-500 md:text-base"
+                  className="mb-6 text-xs text-gray-500 sm:mb-8 sm:text-sm md:text-base"
                 />
 
                 {/* Button */}
@@ -167,7 +166,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                         newButtons[0] = { ...newButtons[0], text, href };
                         handleUpdate({ buttons: newButtons });
                       }}
-                      className="inline-flex items-center justify-center gap-2 rounded-full border px-6 py-2.5 text-sm font-medium transition-all hover:bg-gray-50"
+                      className="inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-medium transition-all hover:bg-gray-50 sm:px-6 sm:py-2.5 sm:text-sm"
                       style={{
                         borderColor: "#E5E7EB",
                         color: theme.colors.primary,
@@ -182,12 +181,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
               </div>
 
               {/* Right Small Image */}
-              <div
-                className="relative h-auto min-h-[300px]"
-                style={{
-                  clipPath: "polygon(0 0, 100% 0, 100% 100%, 10% 100%)",
-                }}
-              >
+              <div className="relative h-auto min-h-[250px] [clip-path:none] sm:min-h-[300px] md:[clip-path:polygon(0_0,100%_0,100%_100%,10%_100%)]">
                 <EditableImage
                   src={data.rightImage?.url || defaultRightImage}
                   alt={data.rightImage?.alt || "Business meeting"}
@@ -197,7 +191,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                       rightImage: { url, alt: alt || data.rightImage.alt },
                     })
                   }
-                  className="h-85 w-full rounded-[2.5rem] object-cover"
+                  className="h-85 w-full rounded-2xl object-cover sm:rounded-3xl md:rounded-[2.5rem]"
                   cloudinaryOptions={{
                     folder: "template-images",
                     resourceType: "image",
@@ -210,10 +204,10 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
 
             {/* Bottom Section: Statistics */}
             <div
-              className="rounded-[2.5rem] px-8 py-10 shadow-sm"
-              style={{ backgroundColor: theme.colors.secondary }}
+              className="rounded-2xl px-4 py-6 shadow-sm sm:rounded-3xl sm:px-6 sm:py-8 md:rounded-[2.5rem] md:px-8 md:py-10"
+              style={{ backgroundColor: "#84CC16" }}
             >
-              <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+              <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4 md:gap-8">
                 {data.statistics.map((stat, index) => (
                   <div key={stat.id} className="text-center">
                     <EditableText
@@ -230,8 +224,8 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                       onChange={val => handleStatUpdate(index, "value", val)}
                       isEditable={isEditable}
                       as="h2"
-                      className="mb-1 text-3xl leading-none font-bold md:text-4xl lg:text-5xl"
-                      style={{ color: theme.colors.secondaryForeground }}
+                      className="mb-1 text-2xl leading-none font-bold sm:text-3xl md:text-4xl lg:text-5xl"
+                      style={{ color: "#FFFFFF" }}
                     />
                     <EditableText
                       value={
@@ -247,11 +241,8 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                       onChange={val => handleStatUpdate(index, "label", val)}
                       isEditable={isEditable}
                       as="p"
-                      className="!text-xs font-medium md:text-sm"
-                      style={{
-                        color: theme.colors.secondaryForeground,
-                        opacity: 0.9,
-                      }}
+                      className="!text-[10px] font-medium sm:!text-xs md:text-sm"
+                      style={{ color: "#FFFFFF", opacity: 0.9 }}
                     />
                   </div>
                 ))}
