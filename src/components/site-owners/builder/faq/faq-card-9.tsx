@@ -61,7 +61,7 @@ export const FaqCard9: React.FC<FaqCard9Props> = ({
     "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2074&auto=format&fit=crop";
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-2 py-1">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
         {/* Left Column - Images */}
         <div className="relative flex flex-col gap-4">

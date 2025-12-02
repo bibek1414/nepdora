@@ -235,7 +235,7 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
 
   // Live site rendering
   return (
-    <section className="bg-background py-12 md:py-16">
+    <section className="bg-background md:py-1">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mb-12 text-center">
           {style !== "our-clients-1" && (

@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, User, Calendar, ArrowRight } from "lucide-react";
+import {
+  Search,
+  User,
+  Calendar,
+  MessageCircle,
+  ArrowRight,
+} from "lucide-react";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -13,7 +19,7 @@ interface BlogCard6Props {
   onPostClick?: (blog: BlogPost) => void;
 }
 
-// Sidebar: only Search (no popular posts, no category)
+// Sidebar: only Search + Popular Tags (no popular posts, no category)
 const BlogSidebar6: React.FC<{
   colors: {
     primary: string;
@@ -29,41 +35,58 @@ const BlogSidebar6: React.FC<{
   return (
     <div className="w-full flex-shrink-0 md:w-[300px]">
       {/* Search Widget */}
-      <div className="mb-8 rounded-[15px] bg-white p-6 shadow-[0px_0px_40px_rgba(0,0,0,0.05)]">
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Search.."
+          className="h-[48px] w-full rounded-full border bg-white pr-12 pl-5 text-[14px] font-normal text-[#9CA3AF] placeholder-[#9CA3AF] outline-none"
+          style={{
+            borderColor: colors.border,
+            fontFamily: fonts.body,
+          }}
+          value={searchValue}
+          onChange={e => onSearchChange(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              onSearchSubmit();
+            }
+          }}
+        />
+        <button
+          className="absolute top-1/2 right-1.5 flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full transition-colors"
+          style={{ backgroundColor: colors.primary }}
+          type="button"
+          onClick={onSearchSubmit}
+        >
+          <Search className="h-4 w-4 text-white" />
+        </button>
+      </div>
+
+      {/* Popular Tags Widget */}
+      {/* <div className="rounded-[15px] bg-white p-6 shadow-[0px_0px_40px_rgba(0,0,0,0.05)]">
         <h3
           className="mb-4 text-[18px] leading-[24px] font-bold text-[#034833]"
           style={{ fontFamily: fonts.body, color: colors.text }}
         >
-          Search Here
+          Popular Tags
         </h3>
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search.."
-            className="h-[48px] w-full rounded-full border bg-white pr-12 pl-5 text-[14px] font-normal text-[#9CA3AF] placeholder-[#9CA3AF] outline-none"
-            style={{
-              borderColor: colors.border,
-              fontFamily: fonts.body,
-            }}
-            value={searchValue}
-            onChange={e => onSearchChange(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                onSearchSubmit();
-              }
-            }}
-          />
-          <button
-            className="absolute top-1/2 right-1.5 flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full transition-colors"
-            style={{ backgroundColor: colors.primary }}
-            type="button"
-            onClick={onSearchSubmit}
-          >
-            <Search className="h-4 w-4 text-white" />
-          </button>
+        <div className="flex flex-wrap gap-2.5">
+          {tags.map(tag => (
+            <button
+              key={tag}
+              className="rounded-full border bg-transparent px-4 py-2 text-[13px] font-normal text-[#727272] transition-colors"
+              style={{
+                borderColor: colors.border,
+                fontFamily: fonts.body,
+                color: colors.mutedForeground,
+              }}
+            >
+              {tag}
+            </button>
+          ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -193,7 +216,7 @@ const BlogPostCard6: React.FC<{
   );
 };
 
-// Bottom pagination – styled like design, backed by API pagination
+// Bottom pagination – styled like design, but backed by API pagination
 const Pagination6: React.FC<{
   page: number;
   totalPages: number;

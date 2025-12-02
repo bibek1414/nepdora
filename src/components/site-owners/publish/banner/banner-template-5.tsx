@@ -119,7 +119,7 @@ const ProcessCard: React.FC<ProcessCardProps> = ({
       {/* Number */}
       <div className="mb-4">
         <span
-          className="font-['Plus_Jakarta_Sans'] text-[50px] leading-[60px] font-bold select-none"
+          className="text-[50px] leading-[60px] font-bold select-none"
           style={{
             WebkitTextStroke: `2px ${theme.colors.primary}`,
             WebkitTextFillColor: "transparent",
@@ -133,7 +133,7 @@ const ProcessCard: React.FC<ProcessCardProps> = ({
 
       {/* Title */}
       <h3
-        className="mb-4 font-['Plus_Jakarta_Sans'] text-[22px] leading-[30px] font-bold"
+        className="mb-4 text-[22px] leading-[30px] font-bold"
         style={{
           color: theme.colors.text,
           fontFamily: theme.fonts.heading,
@@ -150,7 +150,7 @@ const ProcessCard: React.FC<ProcessCardProps> = ({
 
       {/* Description */}
       <p
-        className="font-['Plus_Jakarta_Sans'] text-[16px] leading-[30px] font-normal"
+        className="text-[16px] leading-[30px] font-normal"
         style={{
           color: theme.colors.text,
           fontFamily: theme.fonts.body,
@@ -208,7 +208,7 @@ const ProcessHeader: React.FC<ProcessHeaderProps> = ({
           />
         </div>
         <span
-          className="font-['Plus_Jakarta_Sans'] text-[14px] leading-[14px] font-semibold tracking-[0.1em] uppercase"
+          className="text-[14px] leading-[14px] font-semibold tracking-[0.1em] uppercase"
           style={{
             color: theme.colors.primary,
             fontFamily: theme.fonts.body,
@@ -226,7 +226,7 @@ const ProcessHeader: React.FC<ProcessHeaderProps> = ({
 
       {/* Main Title */}
       <h2
-        className="max-w-[630px] font-['Plus_Jakarta_Sans'] text-[40px] leading-[1.2] font-bold md:text-[50px]"
+        className="max-w-[630px] text-[40px] leading-[1.2] font-bold md:text-[50px]"
         style={{
           color: theme.colors.text,
           fontFamily: theme.fonts.heading,

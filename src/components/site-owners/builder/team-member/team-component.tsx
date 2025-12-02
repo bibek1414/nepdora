@@ -646,7 +646,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
   // Live site rendering
   if (isTeam7Style) {
     return (
-      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-12">
+      <section className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
         {/* Background decoration lines */}
         <div className="pointer-events-none absolute top-0 left-0 h-full w-full overflow-hidden opacity-[0.03]">
           <svg width="100%" height="100%">

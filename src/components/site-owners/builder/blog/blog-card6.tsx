@@ -35,40 +35,32 @@ const BlogSidebar6: React.FC<{
   return (
     <div className="w-full flex-shrink-0 md:w-[300px]">
       {/* Search Widget */}
-      <div className="mb-8 rounded-[15px] bg-white p-6 shadow-[0px_0px_40px_rgba(0,0,0,0.05)]">
-        <h3
-          className="mb-4 text-[18px] leading-[24px] font-bold text-[#034833]"
-          style={{ fontFamily: fonts.body, color: colors.text }}
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Search.."
+          className="h-[48px] w-full rounded-full border bg-white pr-12 pl-5 text-[14px] font-normal text-[#9CA3AF] placeholder-[#9CA3AF] outline-none"
+          style={{
+            borderColor: colors.border,
+            fontFamily: fonts.body,
+          }}
+          value={searchValue}
+          onChange={e => onSearchChange(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              onSearchSubmit();
+            }
+          }}
+        />
+        <button
+          className="absolute top-1/2 right-1.5 flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full transition-colors"
+          style={{ backgroundColor: colors.primary }}
+          type="button"
+          onClick={onSearchSubmit}
         >
-          Search Here
-        </h3>
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search.."
-            className="h-[48px] w-full rounded-full border bg-white pr-12 pl-5 text-[14px] font-normal text-[#9CA3AF] placeholder-[#9CA3AF] outline-none"
-            style={{
-              borderColor: colors.border,
-              fontFamily: fonts.body,
-            }}
-            value={searchValue}
-            onChange={e => onSearchChange(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                onSearchSubmit();
-              }
-            }}
-          />
-          <button
-            className="absolute top-1/2 right-1.5 flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full transition-colors"
-            style={{ backgroundColor: colors.primary }}
-            type="button"
-            onClick={onSearchSubmit}
-          >
-            <Search className="h-4 w-4 text-white" />
-          </button>
-        </div>
+          <Search className="h-4 w-4 text-white" />
+        </button>
       </div>
 
       {/* Popular Tags Widget */}

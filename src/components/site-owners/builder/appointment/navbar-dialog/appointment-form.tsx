@@ -87,8 +87,8 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
 
   return (
     <div className="mx-auto max-w-4xl">
-      <Card className="gap-0 border-none bg-white py-0">
-        <CardContent className="p-8">
+      <Card className="gap-0 border-none bg-white py-2">
+        <CardContent className="p-0">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Full Name */}
             <div>
@@ -99,7 +99,6 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
                 value={formData.full_name}
                 onChange={handleInputChange}
                 required={data.required_fields.full_name}
-                className="mt-1"
                 label={getLabel("Full Name", data.required_fields.full_name)}
               />
             </div>
