@@ -13,6 +13,7 @@ import { TestimonialCard5 } from "./testimonial-card-5";
 import { TestimonialCard6 } from "./testimonial-card-6";
 import { TestimonialCard9 } from "./testimonial-card-9";
 import { TestimonialCard10 } from "./testimonial-card-10";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -43,6 +44,7 @@ import TestimonialForm from "@/components/site-owners/admin/testimonials/testimo
 import { useCreateTestimonial } from "@/hooks/owner-site/admin/use-testimonials";
 import { TestimonialCard7 } from "./testimonial-card-7";
 import { TestimonialCard8 } from "./testimonial-card-8";
+import { TestimonialCard11 } from "./testimonial-card-11";
 
 interface TestimonialsComponentProps {
   component: TestimonialsComponentData;
@@ -219,12 +221,16 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
         return <TestimonialCard4 key={testimonial.id} {...cardProps} />;
       case "testimonial-7":
         return <TestimonialCard7 key={testimonial.id} {...cardProps} />;
+      case "testimonial-11":
+        return <TestimonialCard11 key={testimonial.id} {...cardProps} />;
       case "testimonial-1":
       case "testimonial-5":
       case "testimonial-6":
       case "testimonial-8":
       case "testimonial-9":
       case "testimonial-10":
+      case "testimonial-11":
+        return <TestimonialCard11 key={testimonial.id} {...cardProps} />;
       default:
         return <TestimonialCard1 key={testimonial.id} {...cardProps} />;
     }
@@ -280,11 +286,13 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
       case "testimonial-3":
         return "grid-cols-1 lg:grid-cols-3 gap-8";
       case "testimonial-7":
+      case "testimonial-11":
         return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6";
       case "testimonial-5":
       case "testimonial-6":
       case "testimonial-9":
       case "testimonial-10":
+      case "testimonial-11":
         return "";
 
       case "testimonial-1":
