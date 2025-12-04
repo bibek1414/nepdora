@@ -74,6 +74,15 @@ const navigationGroups = [
     ],
   },
   {
+    items: [
+      {
+        name: "Services",
+        href: "/admin/services",
+        icon: FileText,
+      },
+    ],
+  },
+  {
     items: [{ name: "Inquiries", href: "/admin/inquiries", icon: Mail }],
   },
   {
