@@ -23,6 +23,7 @@ import {
   GalleryHorizontal,
   Calendar,
   IndianRupee,
+  Database,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -143,6 +144,11 @@ const navigationGroups = [
   },
   {
     items: [{ name: "Plugins", href: "/admin/plugins", icon: Unplug }],
+  },
+  {
+    items: [
+      { name: "Collections", href: "/admin/collections", icon: Database },
+    ],
   },
 ];
 
