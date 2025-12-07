@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  ChevronRight,
-  ChevronDown,
-  ArrowRight,
-  Loader2,
-  Plus,
-} from "lucide-react";
+import { ChevronRight, ChevronDown, Loader2, Plus } from "lucide-react";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -395,7 +389,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
                               className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700 transition hover:bg-gray-200"
                             >
                               View
-                              <ArrowRight className="h-3 w-3" />
+                              <ChevronRight className="h-3 w-3" />
                             </button>
                           )}
                           <ChevronDown

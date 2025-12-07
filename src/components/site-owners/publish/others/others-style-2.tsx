@@ -6,7 +6,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/publish/editable-link";
-import { Globe, ArrowRight } from "lucide-react";
+import { Globe, ChevronRight } from "lucide-react";
 
 interface OthersTemplate2Props {
   othersData: OthersTemplate2Data;
@@ -174,7 +174,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                       }}
                     >
                       {data.buttons[0].text || "Contact us"}
-                      <ArrowRight className="h-4 w-4" />
+                      <ChevronRight className="h-4 w-4" />
                     </EditableLink>
                   </div>
                 )}

@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { TEAM } from "@/types/owner-site/admin/team-member";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
@@ -55,7 +55,7 @@ export const TeamCard7: React.FC<TeamCard7Props> = ({
           color: isActive ? theme.colors.primaryForeground : "#4B5563",
         }}
       >
-        <ArrowRight size={16} />
+        <ChevronRight size={16} />
       </button>
     </div>
   );

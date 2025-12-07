@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowRight, Mail, MapPin, Phone, Send, Loader2 } from "lucide-react";
+import { ChevronRight, Mail, MapPin, Phone, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/site-owners/button";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";

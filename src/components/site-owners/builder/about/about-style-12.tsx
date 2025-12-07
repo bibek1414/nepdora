@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { AboutUs12Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
-import { ArrowRight, Map } from "lucide-react";
+import { ChevronRight, Map } from "lucide-react";
 
 interface AboutUsTemplate12Props {
   aboutUsData: AboutUs12Data;
@@ -134,7 +134,7 @@ export function AboutUsTemplate12({
                     </div>
                   </div>
                   <button className="flex h-10 w-10 items-center justify-center rounded-full transition-colors">
-                    <ArrowRight size={16} />
+                    <ChevronRight size={16} />
                   </button>
                 </div>
               );

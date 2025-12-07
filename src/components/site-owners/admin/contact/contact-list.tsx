@@ -217,23 +217,6 @@ const ContactDetails = () => {
     <div className="mx-auto">
       <div className="space-y-4">
         {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight text-gray-900">
-              Inquiries
-            </h1>
-          </div>
-          <div className="flex flex-col gap-2 sm:items-end">
-            <Badge variant="secondary" className="self-start sm:self-center">
-              {contactsData.count} total inquiries
-            </Badge>
-            {searchTerm && (
-              <div className="text-sm text-gray-500">
-                Showing results for &apos;{searchTerm}&apos;
-              </div>
-            )}
-          </div>
-        </div>
 
         <div className="relative w-1/4">
           <Search className="absolute top-1/2 left-3 z-50 h-4 w-4 -translate-y-1/2 text-gray-400" />

@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, User, ArrowRight } from "lucide-react";
+import { Calendar, User, ChevronRight } from "lucide-react";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -115,7 +115,7 @@ export const BlogCard5: React.FC<BlogCard5Props> = ({
 
         {/* Read More Link */}
         <div className="flex items-center gap-2 text-sm font-bold transition-transform group-hover:translate-x-2">
-          Read More <ArrowRight size={14} />
+          Read More <ChevronRight size={14} />
         </div>
       </div>
     </CardWrapper>

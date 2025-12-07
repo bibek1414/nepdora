@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Briefcase } from "lucide-react";
+import { ChevronRight, Briefcase } from "lucide-react";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
@@ -150,7 +150,7 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
             style={{ color: primaryColor }}
           >
             Learn More
-            <ArrowRight className="h-4 w-4" strokeWidth={2} />
+            <ChevronRight className="h-4 w-4" strokeWidth={2} />
           </span>
         </div>
       </article>

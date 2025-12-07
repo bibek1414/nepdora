@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Check, ArrowRight } from "lucide-react";
+import { Check, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Pricing } from "@/types/owner-site/admin/pricing";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { AboutUs10Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
-import { Check, ArrowRight, Phone, MoveUpRight, Map } from "lucide-react";
+import { Check, ChevronRight, Phone, MoveUpRight, Map } from "lucide-react";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface AboutUsTemplate10Props {
@@ -325,7 +325,7 @@ export function AboutUsTemplate10({
                   isEditable={isEditable}
                   placeholder="Read More"
                 />{" "}
-                <ArrowRight size={16} />
+                <ChevronRight size={16} />
               </button>
               <div className="flex items-center gap-3 border-l border-gray-200 pl-4">
                 <div

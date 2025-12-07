@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ArrowRight, Play } from "lucide-react";
+import { ChevronRight, Play } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/publish/editable-link";
@@ -174,7 +174,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                 hrefPlaceholder="Enter URL..."
               >
                 <span>{primaryButton.text}</span>
-                <ArrowRight
+                <ChevronRight
                   size={14}
                   className="transition-transform group-hover:translate-x-1 sm:size-[16px] md:size-[18px]"
                 />

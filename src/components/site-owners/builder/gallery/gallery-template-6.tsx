@@ -8,7 +8,7 @@ import {
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Loader2, Plus, X } from "lucide-react";
+import { ArrowLeft, ChevronRight, Loader2, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 
@@ -313,7 +313,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
               type="button"
               aria-label="Scroll right"
             >
-              <ArrowRight size={18} />
+              <ChevronRight size={18} />
             </button>
           </div>
         </motion.div>

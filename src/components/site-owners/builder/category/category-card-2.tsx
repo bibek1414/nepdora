@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Category } from "@/types/owner-site/admin/product";
 
 interface CategoryCard2Props {
@@ -61,7 +61,7 @@ export const CategoryCard2: React.FC<CategoryCard2Props> = ({
         <div className="absolute bottom-4 left-4 text-white">
           <h2 className="text-3xl font-bold md:text-4xl">{category.name}</h2>
           <a className="mt-2 inline-flex items-center rounded-full bg-black/70 px-4 py-2 text-base font-semibold transition-colors hover:bg-black md:text-lg">
-            SHOP NOW <ArrowRight className="ml-2 h-5 w-5" />
+            SHOP NOW <ChevronRight className="ml-2 h-5 w-5" />
           </a>
         </div>
       </div>

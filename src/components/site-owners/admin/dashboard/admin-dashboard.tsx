@@ -6,8 +6,17 @@ import RecentOrders from "../orders/recent-orders";
 import { GoogleAuthRedirectHandler } from "@/components/auth/GoogleAuthRedirectHandler";
 
 import { SessionProvider } from "next-auth/react";
-export default function AdminDashboard() {
+import { User as UserType } from "@/hooks/use-jwt-server";
+import RecentInquiries from "../contact/recent-inquiries";
+import RecentAppointments from "../appointments/recent-appointments";
+
+interface AdminDashboardProps {
+  user?: UserType;
+}
+
+export default function AdminDashboard({ user }: AdminDashboardProps) {
   const { data, isLoading, isError, error, refetch } = useDashboardStats();
+  const isServiceSite = user?.websiteType === "service";
 
   return (
     <div>
@@ -15,15 +24,25 @@ export default function AdminDashboard() {
         <GoogleAuthRedirectHandler />
       </SessionProvider>
 
-      <Dashboard
-        data={data}
-        isLoading={isLoading}
-        isError={isError}
-        error={error}
-        refetch={refetch}
-      />
-      <div className="mb-40">
-        <RecentOrders />
+      <div className="mt-8 mb-40">
+        {isServiceSite ? (
+          <div className="mx-auto max-w-6xl space-y-8">
+            <RecentInquiries />
+            <RecentAppointments />
+          </div>
+        ) : (
+          <div>
+            <Dashboard
+              data={data}
+              isLoading={isLoading}
+              isError={isError}
+              error={error}
+              refetch={refetch}
+            />
+
+            <RecentOrders />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Tag } from "lucide-react";
+import { ChevronRight, Tag } from "lucide-react";
 import { SubCategory } from "@/types/owner-site/admin/product";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 

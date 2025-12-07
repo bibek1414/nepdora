@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Tag } from "lucide-react";
+import { ChevronRight, Tag } from "lucide-react";
 import { SubCategory } from "@/types/owner-site/admin/product";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
@@ -115,7 +115,7 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
           {/* Hover Content */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100">
             <div className="translate-y-4 transform text-center text-white transition-transform duration-500 group-hover:translate-y-0">
-              <ArrowRight className="mx-auto mb-2 h-10 w-10" />
+              <ChevronRight className="mx-auto mb-2 h-10 w-10" />
               <p
                 className="text-base font-semibold"
                 style={{ fontFamily: theme.fonts.heading }}
@@ -137,7 +137,7 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
             >
               {subcategory.name}
             </h3>
-            <ArrowRight
+            <ChevronRight
               className="h-5 w-5 flex-shrink-0 transition-all duration-300 group-hover:translate-x-1"
               style={{ color: theme.colors.primary }}
             />

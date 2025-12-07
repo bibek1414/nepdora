@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { AboutUs17Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
@@ -359,7 +359,7 @@ export function AboutUsTemplate17({
           >
             <>
               <span>{data.button1Text || "Apply For Visa"}</span>
-              <ArrowRight size={14} strokeWidth={3} />
+              <ChevronRight size={14} strokeWidth={3} />
             </>
           </EditableLink>
 

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/utils/date";
 import { BlogPost } from "@/types/owner-site/admin/blog";
-import { Calendar, User, ArrowRight } from "lucide-react";
+import { Calendar, User, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -152,7 +152,7 @@ export const BlogCard7: React.FC<BlogCard7Props> = ({
                 className="flex items-center gap-2 font-bold"
                 style={{ color: accentColor }}
               >
-                Read More <ArrowRight size={18} />
+                Read More <ChevronRight size={18} />
               </div>
             </button>
           </CardContent>
@@ -217,7 +217,7 @@ export const BlogCard7: React.FC<BlogCard7Props> = ({
                 className="flex items-center gap-2 text-sm font-bold"
                 style={{ color: accentColor }}
               >
-                Read More <ArrowRight size={16} />
+                Read More <ChevronRight size={16} />
               </div>
             </button>
           </CardContent>

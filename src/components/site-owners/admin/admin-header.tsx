@@ -24,25 +24,11 @@ import {
   Share,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import Image from "next/image";
 import Link from "next/link";
-
-interface User {
-  id: number;
-  email: string;
-  name: string;
-  storeName: string;
-  role: string;
-  phoneNumber: string;
-  domain: string;
-  subDomain: string;
-  hasProfile: boolean;
-  hasProfileCompleted: boolean;
-  avatar: string;
-}
+import { User as UserType } from "@/hooks/use-jwt-server";
 
 interface AdminHeaderProps {
-  user: User;
+  user: UserType;
 }
 
 export default function AdminHeader({ user }: AdminHeaderProps) {
@@ -80,7 +66,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
         <div className="flex items-center space-x-4"></div>
 
         <div className="flex items-center space-x-2">
-          <Link
+          {/* <Link
             href={`/publish/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -121,7 +107,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
               <Pencil className="mr-2 h-4 w-4" />
               Website Builder
             </Button>
-          </Link>
+          </Link> */}
           <a
             href="https://docs.nepdora.com"
             target="_blank"
@@ -162,15 +148,16 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium capitalize">{user.name}</p>
-                  <p className="text-muted-foreground text-xs">{user.email}</p>
-                  <div className="flex items-center space-x-2">
+                  <DropdownMenuSeparator />
+                  {/* <p className="text-muted-foreground text-xs">{user.email}</p> */}
+                  {/* <div className="flex items-center space-x-2">
                     <Badge variant="outline" className="text-xs">
                       {user.subDomain}
                     </Badge>
-                  </div>
+                  </div> */}
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator />
+              {/* <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => handleNavigation("/admin/profile")}
               >
@@ -183,7 +170,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator /> */}
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>

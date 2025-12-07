@@ -26,24 +26,10 @@ import {
   Database,
 } from "lucide-react";
 import Image from "next/image";
-
-interface User {
-  id: number;
-  email: string;
-  name: string;
-  storeName: string;
-  role: string;
-  phoneNumber: string;
-  domain: string;
-  subDomain: string;
-  hasProfile: boolean;
-  hasProfileCompleted: boolean;
-  websiteType?: string;
-  avatar: string;
-}
+import { User as UserType } from "@/hooks/use-jwt-server";
 
 interface AdminSidebarProps {
-  user: User;
+  user: UserType;
 }
 
 const navigationGroups = [
@@ -54,6 +40,7 @@ const navigationGroups = [
     items: [
       { name: "Template", href: "/admin/template", icon: LayoutPanelTop },
     ],
+    hideForService: true,
   },
   {
     items: [{ name: "Products", href: "/admin/products", icon: Package }],
@@ -113,6 +100,7 @@ const navigationGroups = [
         icon: Settings,
       },
     ],
+    hideForService: true,
   },
   {
     items: [

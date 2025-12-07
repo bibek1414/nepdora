@@ -113,7 +113,6 @@ const usePlugins = (websiteType?: string) => {
         icon: "/images/icons/whatsapp-icon.png",
         type: "whatsapp",
         is_enabled: whatsappConfig?.is_enabled || false,
-        hideForService: true,
       },
       {
         id: "dash",

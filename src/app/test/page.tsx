@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button"; // Adjust path to your Shadcn Button
-import { Check, ArrowRight } from "lucide-react";
+import { Check, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils"; // Standard Shadcn utility
 
 interface PricingPlan {
@@ -83,7 +83,7 @@ export default function PricingSection() {
                     )}
                   >
                     Buy Plan
-                    <ArrowRight
+                    <ChevronRight
                       className={cn(
                         "ml-2 h-4 w-4 transition-transform group-hover:translate-x-1",
                         plan.isPopular ? "text-white" : "text-[#0f2824]"

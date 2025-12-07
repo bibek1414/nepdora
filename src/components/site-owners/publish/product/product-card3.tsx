@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Star, Heart, ArrowRight, Clock } from "lucide-react";
+import { ShoppingCart, Star, Heart, ChevronRight, Clock } from "lucide-react";
 import { Product } from "@/types/owner-site/admin/product";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
 import {
@@ -333,7 +333,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                     onClick={handleViewDetails}
                   >
                     View Details
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
               </div>

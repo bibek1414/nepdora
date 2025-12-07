@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Github, Tag, ArrowRight } from "lucide-react";
+import { ExternalLink, Github, Tag, ChevronRight } from "lucide-react";
 import { Portfolio } from "@/types/owner-site/admin/portfolio";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
@@ -139,7 +139,7 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
               style={{ color: theme.colors.primary }}
             >
               View Details
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+              <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
             </Button>
 
             {portfolio.project_url && (

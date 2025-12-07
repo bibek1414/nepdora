@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Category } from "@/types/owner-site/admin/product";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Button } from "@/components/ui/button";
@@ -108,7 +108,7 @@ export const CategoryCard3: React.FC<CategoryCard3Props> = ({
           {/* Hover Content */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100">
             <div className="translate-y-4 transform text-center text-white transition-transform duration-500 group-hover:translate-y-0">
-              <ArrowRight className="mx-auto mb-2 h-12 w-12" />
+              <ChevronRight className="mx-auto mb-2 h-12 w-12" />
               <p
                 className="text-lg font-semibold"
                 style={{ fontFamily: theme.fonts.heading }}
@@ -130,7 +130,7 @@ export const CategoryCard3: React.FC<CategoryCard3Props> = ({
             >
               {category.name}
             </h3>
-            <ArrowRight
+            <ChevronRight
               className="h-5 w-5 transition-all duration-300 group-hover:translate-x-1"
               style={{ color: theme.colors.primary }}
             />

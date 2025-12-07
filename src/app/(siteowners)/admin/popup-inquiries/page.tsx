@@ -1,4 +1,4 @@
-import PopupFormList from "@/components/site-owners/admin/popup-inquiries/popup-inquiries";
+import PopupFormList from "@/components/site-owners/admin/popup-inquiries/popup-inquiries-list";
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 

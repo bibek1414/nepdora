@@ -5,7 +5,7 @@ import { OthersTemplate4Data } from "@/types/owner-site/components/others";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 interface OthersTemplate4Props {
   othersData: OthersTemplate4Data;
@@ -200,7 +200,7 @@ export const OthersTemplate4: React.FC<OthersTemplate4Props> = ({
                     }}
                     className="inline-flex items-center gap-2"
                   />
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </button>
               )}
             </div>

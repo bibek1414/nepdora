@@ -79,7 +79,7 @@ const contentItems: ContentItem[] = [
 export default function ContentManagement() {
   return (
     <div className="min-h-screen bg-white p-6">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
             Content Management

@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  ChevronRight,
-  ChevronLeft,
-  ArrowRight,
-  Loader2,
-  Plus,
-} from "lucide-react";
+import { ChevronRight, Loader2, Plus } from "lucide-react";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";

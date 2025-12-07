@@ -1,4 +1,3 @@
-// hooks/use-jwt-server.ts
 import { cookies } from "next/headers";
 import { decodeJWT, isTokenExpired, JWTPayload } from "@/lib/jwt-utils";
 

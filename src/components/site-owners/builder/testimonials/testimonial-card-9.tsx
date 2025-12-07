@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
+import { ArrowLeft, ChevronRight, Quote } from "lucide-react";
 import { Testimonial } from "@/types/owner-site/admin/testimonial";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import Image from "next/image";
@@ -125,7 +125,7 @@ export const TestimonialCard9: React.FC<TestimonialCard9Props> = ({
               className="flex h-12 w-12 items-center justify-center rounded-full bg-white transition-colors hover:opacity-90"
               style={{ color: theme.colors.secondary }}
             >
-              <ArrowRight size={20} />
+              <ChevronRight size={20} />
             </button>
           </div>
         </div>

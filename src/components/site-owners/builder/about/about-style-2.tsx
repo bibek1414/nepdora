@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { AboutUs2Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
@@ -232,7 +232,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
               siteUser={siteUser}
             >
               <span>{data.ctaText || "Let's Go"}</span>
-              <ArrowRight className="h-5 w-5" />
+              <ChevronRight className="h-5 w-5" />
             </EditableLink>
           </div>
         </div>

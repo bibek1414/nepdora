@@ -6,7 +6,7 @@ import {
   User,
   Calendar,
   MessageCircle,
-  ArrowRight,
+  ChevronRight,
 } from "lucide-react";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
@@ -209,7 +209,7 @@ const BlogPostCard6: React.FC<{
           }}
         >
           <span className="text-[13px] font-semibold">Learn More</span>
-          <ArrowRight className="h-3 w-3 stroke-[3]" />
+          <ChevronRight className="h-3 w-3 stroke-[3]" />
         </button>
       </article>
     </Wrapper>

@@ -38,7 +38,7 @@ import {
 import { PopUpForm, PopUp } from "@/types/owner-site/admin/popup";
 import { PopupFormFilters } from "@/types/owner-site/admin/popup";
 
-const PopupFormList = () => {
+const PopupInquiryList = () => {
   const [filters, setFilters] = useState<PopupFormFilters>({
     page: 1,
     page_size: 10,
@@ -207,30 +207,7 @@ const PopupFormList = () => {
   return (
     <div className="mx-auto px-4 py-5">
       <div className="space-y-4">
-        {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight text-gray-900">
-              Popup Form Submissions
-            </h1>
-          </div>
-          <div className="flex flex-col gap-2 sm:items-end">
-            <Badge variant="secondary" className="self-start sm:self-center">
-              {formsData.count} total submissions
-            </Badge>
-            {(searchTerm || selectedPopup) && (
-              <div className="text-sm text-gray-500">
-                {searchTerm && `Showing results for '${searchTerm}'`}
-                {searchTerm && selectedPopup && " • "}
-                {selectedPopup &&
-                  `Filtered by ${getPopupTitle(parseInt(selectedPopup))}`}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="relative max-w-sm flex-1">
+        <div className="relative w-1/4">
           <Search className="absolute top-1/2 left-3 z-50 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <Input
             placeholder="Search by name, email, phone, or address..."
@@ -361,4 +338,4 @@ const PopupFormList = () => {
   );
 };
 
-export default PopupFormList;
+export default PopupInquiryList;

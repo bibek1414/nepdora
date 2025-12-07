@@ -11,6 +11,9 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function AdminPage() {
-  return <AdminDashboardPage />;
+import { getServerUser } from "@/hooks/use-jwt-server";
+
+export default async function AdminPage() {
+  const user = await getServerUser();
+  return <AdminDashboardPage user={user || undefined} />;
 }

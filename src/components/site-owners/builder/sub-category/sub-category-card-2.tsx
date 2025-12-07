@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Tag } from "lucide-react";
+import { ChevronRight, Tag } from "lucide-react";
 import { SubCategory } from "@/types/owner-site/admin/product";
 
 interface SubCategoryCard2Props {
@@ -78,7 +78,7 @@ export const SubCategoryCard2: React.FC<SubCategoryCard2Props> = ({
           )}
           <div className="mt-3 inline-flex items-center rounded-full bg-black/70 px-4 py-2 text-xs font-semibold tracking-wide uppercase transition-colors hover:bg-black sm:text-sm md:text-base">
             Explore
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <ChevronRight className="ml-2 h-4 w-4" />
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { ArrowRight, CheckSquare, Send } from "lucide-react";
+import { ChevronRight, CheckSquare, Send } from "lucide-react";
 import { AboutUs18Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
@@ -280,7 +280,7 @@ export function AboutUsTemplate18({
             >
               <>
                 <span>{data.buttonText || "Read More"}</span>
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </>
             </EditableLink>
           </div>
