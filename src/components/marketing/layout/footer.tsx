@@ -42,7 +42,11 @@ const Footer: React.FC = () => {
             {/* Brand section */}
             <div className="lg:col-span-5">
               <div className="mb-6">
-                <img src="/fulllogo.svg" alt="Nepdora" className="h-8 w-auto" />
+                <img
+                  src="/nepdora-logoo.svg"
+                  alt="Nepdora"
+                  className="h-8 w-auto"
+                />
               </div>
               <p className="mb-8 max-w-md text-base leading-relaxed text-gray-600">
                 Build stunning websites in minutes, not days. Everything you

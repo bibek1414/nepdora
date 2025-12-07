@@ -18,25 +18,33 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
   onCategoryChange,
 }) => {
   return (
-    <div className="mb-8 sm:mb-12">
-      {/* Mobile: Horizontal scroll */}
-      <div className="flex justify-start overflow-x-auto pb-2 sm:justify-center">
-        <div className="inline-flex gap-2 rounded-lg border border-gray-200 bg-gray-50 p-1">
-          {categories.map(category => (
-            <button
-              key={category.key}
-              onClick={() => onCategoryChange(category.key)}
-              className={`rounded-md px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-all duration-200 sm:px-4 sm:py-2 sm:text-sm md:px-6 ${
-                selectedCategory === category.key
-                  ? "bg-purple-600 text-white"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              {category.label}
-            </button>
-          ))}
-        </div>
-      </div>
+    <div className="flex flex-wrap gap-2">
+      {categories.map(category => (
+        <button
+          key={category.key}
+          onClick={() => onCategoryChange(category.key)}
+          className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+            selectedCategory === category.key
+              ? "bg-slate-900 text-white"
+              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+          }`}
+        >
+          {category.label}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export const CategoryNavigationSkeleton = () => {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {[1, 2, 3, 4, 5].map(i => (
+        <div
+          key={i}
+          className="h-9 w-24 animate-pulse rounded-full bg-slate-200"
+        />
+      ))}
     </div>
   );
 };

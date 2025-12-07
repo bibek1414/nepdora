@@ -212,7 +212,7 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
               <div className="flex items-center space-x-4">
                 <div className="flex items-center">
                   <Image
-                    src="/fulllogo.svg"
+                    src="/nepdora-logoo.svg"
                     alt="Logo"
                     width={150}
                     height={40}

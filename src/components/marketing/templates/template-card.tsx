@@ -1,17 +1,35 @@
 "use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Template } from "@/types/super-admin/components/template";
 import { usePreviewTemplate } from "@/hooks/owner-site/admin/use-template";
+import { motion } from "framer-motion";
 
 interface TemplateCardProps {
   template: Template;
 }
 
+const getBgColor = (id: number | string) => {
+  const colors = [
+    "bg-stone-100",
+    "bg-slate-100",
+    "bg-orange-50",
+    "bg-indigo-50",
+    "bg-pink-50",
+    "bg-gray-100",
+  ];
+  const index =
+    typeof id === "number"
+      ? id
+      : typeof id === "string"
+        ? parseInt(id, 10) || 0
+        : 0;
+  return colors[Math.abs(index) % colors.length];
+};
+
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
   const { openPreview } = usePreviewTemplate();
-  const [isHovered, setIsHovered] = React.useState(false);
+  const bgColor = getBgColor(template.id);
 
   const handlePreview = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -20,55 +38,57 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
   };
 
   return (
-    <div className="group cursor-pointer transition-all duration-300 hover:-translate-y-1">
-      <div className="group-hover: relative overflow-hidden rounded-lg bg-white ring-1 ring-gray-200 transition-all duration-300 group-hover:ring-gray-300">
-        <div
-          className="relative aspect-[4/3] overflow-hidden"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          {template.template_image ? (
-            <img
-              src={template.template_image}
-              alt={template.name}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-              <span className="text-4xl text-gray-400">📄</span>
-            </div>
-          )}
-
-          {/* Hover Overlay with Preview Button */}
-          <div
-            className={`absolute inset-0 flex items-center justify-center bg-black/60 transition-opacity duration-300 ${
-              isHovered ? "opacity-100" : "opacity-0"
-            }`}
+    <motion.div
+      layout
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="group cursor-pointer"
+    >
+      <div
+        className={`relative mb-4 aspect-[4/3] overflow-hidden rounded-2xl ${bgColor}`}
+      >
+        {template.template_image ? (
+          <img
+            src={template.template_image}
+            alt={template.name}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <span className="text-4xl text-gray-400">📄</span>
+          </div>
+        )}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+          <Button
+            variant="default"
+            size="sm"
+            className="translate-y-4 transition-transform group-hover:translate-y-0"
+            onClick={handlePreview}
           >
-            <Button
-              onClick={handlePreview}
-              variant="secondary"
-              className="rounded-lg bg-white text-gray-900 transition-all duration-200 hover:bg-gray-50"
-            >
-              Preview
-            </Button>
-          </div>
+            Customize
+          </Button>
         </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <h3 className="font-bold text-slate-900">{template.name}</h3>
+        <span className="text-xs font-medium tracking-wide text-slate-500 uppercase">
+          {template.template_category?.name || "Template"}
+        </span>
+      </div>
+    </motion.div>
+  );
+};
 
-        <div className="p-4">
-          <div className="mb-2 text-lg font-semibold text-gray-900 capitalize transition-colors duration-200">
-            {template.name}
-          </div>
-
-          <Link href={"/admin/signup"}>
-            <Button
-              variant="outline"
-              className="w-full border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50"
-            >
-              Use Template
-            </Button>
-          </Link>
-        </div>
+export const TemplateCardSkeleton = () => {
+  return (
+    <div>
+      <div className="mb-4 aspect-[4/3] overflow-hidden rounded-2xl bg-slate-100">
+        <div className="h-full w-full animate-pulse bg-slate-200" />
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="h-6 w-32 animate-pulse rounded bg-slate-200" />
+        <div className="h-4 w-16 animate-pulse rounded bg-slate-200" />
       </div>
     </div>
   );

@@ -111,9 +111,9 @@ const Header: React.FC = () => {
         <div className="flex items-center space-x-2">
           <Link href="/" onClick={closeMenu}>
             <img
-              src="/fulllogo.svg"
+              src="/nepdora-logoo.svg"
               alt="Nepdora Logo"
-              className="h-8 cursor-pointer sm:h-10"
+              className="h-8 cursor-pointer sm:h-6"
             />
           </Link>
         </div>
@@ -136,14 +136,14 @@ const Header: React.FC = () => {
                 </Button>
               </Link>
               <Link href="/admin/signup">
-                <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: bg-gradient-to-r text-white transition-all duration-200">
+                <Button className="bg-primary/80 text-white transition-all duration-200">
                   Create Your Website for Free
                 </Button>
               </Link>
             </>
           ) : (
             <Link href="/admin">
-              <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: bg-gradient-to-r text-white transition-all duration-200">
+              <Button className="bg-primary/80 text-white transition-all duration-200">
                 Admin Panel
               </Button>
             </Link>

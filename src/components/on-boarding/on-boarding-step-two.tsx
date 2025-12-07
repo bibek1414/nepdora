@@ -54,7 +54,7 @@ export const OnboardingStepTwo = ({
           <ArrowLeft className="h-5 w-5" />
           <span className="font-medium">Back</span>
         </button>
-        <img src="/fulllogo.svg" alt="Logo" className="h-8" />
+        <img src="/nepdora-logoo.svg" alt="Logo" className="h-8" />
         <button
           className="text-gray-600 hover:text-gray-900"
           onClick={() => onContinue()}

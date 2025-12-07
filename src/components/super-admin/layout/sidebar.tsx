@@ -73,7 +73,12 @@ export default function SuperAdminSidebar() {
           {!collapsed && (
             <div className="flex flex-col">
               <div className="flex items-center space-x-2">
-                <Image src="/fulllogo.svg" alt="Logo" width={120} height={32} />
+                <Image
+                  src="/nepdora-logoo.svg"
+                  alt="Logo"
+                  width={120}
+                  height={32}
+                />
               </div>
             </div>
           )}

@@ -244,7 +244,7 @@ export const OnboardingStepFour = ({
               <ArrowLeft className="h-5 w-5" />
               <span className="font-medium">Back</span>
             </Button>
-            <img src="/fulllogo.svg" alt="Logo" className="h-8" />
+            <img src="/nepdora-logoo.svg" alt="Logo" className="h-8" />
             <div className="w-20"></div>
           </div>
         </header>

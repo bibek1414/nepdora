@@ -1,7 +1,10 @@
 "use client";
 import { useState } from "react";
-import { TemplateCard } from "./template-card";
-import { CategoryNavigation } from "./category-navigation";
+import { TemplateCard, TemplateCardSkeleton } from "./template-card";
+import {
+  CategoryNavigation,
+  CategoryNavigationSkeleton,
+} from "./category-navigation";
 import { useTemplates } from "@/hooks/super-admin/components/use-templates";
 import { useTemplateCategories } from "@/hooks/super-admin/components/use-template-category";
 
@@ -12,7 +15,7 @@ interface UICategory {
 }
 
 const TemplatesPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
 
@@ -25,14 +28,14 @@ const TemplatesPage = () => {
     page: currentPage,
     pageSize: pageSize,
     category:
-      selectedCategory && selectedCategory !== "all"
+      selectedCategory && selectedCategory !== "All"
         ? selectedCategory
         : undefined,
   });
 
   // Transform API categories to UI format
   const categories: UICategory[] = [
-    { key: "all", label: "All Templates" },
+    { key: "All", label: "All" },
     ...(categoriesData || []).map(cat => ({
       key: cat.slug,
       label: cat.name,
@@ -59,43 +62,52 @@ const TemplatesPage = () => {
 
   if (categoriesLoading || templatesLoading) {
     return (
-      <div className="bg-background min-h-screen">
-        <div className="mx-auto max-w-7xl px-3 py-8 sm:px-4 sm:py-12 lg:px-8 lg:py-16">
-          <div className="mb-8 text-center">
-            <h2 className="text-foreground mb-4 text-2xl font-extrabold tracking-tight sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
-              Choose From Our Templates
-            </h2>
+      <section className="bg-white py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-12 flex flex-col items-start justify-between gap-6">
+            <div>
+              <h2 className="mb-4 text-3xl font-bold text-slate-900 md:text-5xl">
+                Not just templates.
+                <span className="font-serif text-slate-400 italic">
+                  Unique Identities.
+                </span>
+              </h2>
+            </div>
+            <CategoryNavigationSkeleton />
           </div>
-          <div className="flex items-center justify-center py-12">
-            <div className="text-gray-500">Loading templates...</div>
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <TemplateCardSkeleton key={i} />
+            ))}
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="bg-background min-h-screen">
-      <div className="mx-auto max-w-7xl px-3 py-8 sm:px-4 sm:py-12 lg:px-8 lg:py-16">
-        {/* Header Section */}
-        <div className="mb-8 text-center">
-          <h2 className="text-foreground mb-4 text-2xl font-extrabold tracking-tight sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
-            Choose From {templatesData?.count || 0}+ Templates
-          </h2>
-        </div>
+    <section className="bg-white py-24">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="mb-12 flex flex-col items-start justify-between gap-6">
+          <div>
+            <h2 className="mb-4 text-3xl font-bold text-slate-900 md:text-5xl">
+              Not just templates.
+              <span className="font-serif text-slate-400 italic">
+                Unique Identities.
+              </span>
+            </h2>
+          </div>
 
-        {/* Category Navigation */}
-        {categories.length > 0 && (
           <CategoryNavigation
             categories={categories}
-            selectedCategory={selectedCategory || "all"}
+            selectedCategory={selectedCategory}
             onCategoryChange={handleCategoryChange}
           />
-        )}
+        </div>
 
         {/* Templates Grid */}
         {templatesData?.results && templatesData.results.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
             {templatesData.results.map(template => (
               <TemplateCard key={template.id} template={template} />
             ))}
@@ -105,7 +117,7 @@ const TemplatesPage = () => {
             <div className="text-center">
               <p className="text-lg text-gray-500">
                 No templates found{" "}
-                {selectedCategory && selectedCategory !== "all"
+                {selectedCategory && selectedCategory !== "All"
                   ? "in this category"
                   : ""}
               </p>
@@ -134,7 +146,7 @@ const TemplatesPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 
