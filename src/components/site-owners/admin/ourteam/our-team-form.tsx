@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import ReusableQuill from "@/components/ui/tip-tap";
 import {
   Dialog,
   DialogContent,
@@ -111,6 +111,21 @@ export const TeamMemberDialog: React.FC<TeamMemberDialogProps> = ({
       ...prev,
       [name]: name === "order" ? parseInt(value) || 0 : value,
     }));
+  };
+
+  const handleAboutChange = (content: string) => {
+    setFormData(prev => ({
+      ...prev,
+      about: content,
+    }));
+
+    if (fieldErrors.about) {
+      setFieldErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.about;
+        return newErrors;
+      });
+    }
   };
 
   const handleImageChange = (files: File | File[] | null) => {
@@ -358,13 +373,11 @@ export const TeamMemberDialog: React.FC<TeamMemberDialogProps> = ({
           {/* About Section */}
           <div className="space-y-2">
             <Label htmlFor="about">About</Label>
-            <Textarea
-              id="about"
-              name="about"
+            <ReusableQuill
               value={formData.about}
-              onChange={handleInputChange}
+              onChange={handleAboutChange}
               placeholder="Brief description about the team member..."
-              rows={3}
+              minHeight="500px"
               className={fieldErrors.about ? "border-red-500" : ""}
             />
             {fieldErrors.about && (
