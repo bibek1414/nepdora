@@ -1,16 +1,8 @@
 import Script from "next/script";
 import dynamic from "next/dynamic";
 import HeroSection from "@/components/marketing/hero-section/hero-section";
-import FeaturesSection from "@/components/marketing/features-section/features-section";
 import CapabilitiesSection from "@/components/marketing/features/capabilities-section";
-import ProcessSection from "@/components/marketing/process-section/process-section";
-import PricingSection from "@/components/marketing/pricing-section/pricing-section-hero";
-import BuildYourWay from "@/components/marketing/build-your-way/build-your-way";
-import StatsSection from "@/components/marketing/stats-section/stats-section";
-import AISection from "@/components/marketing/ai-section/ai-section";
 import type { Metadata } from "next";
-import { HeroScrollDemo } from "@/components/marketing/hero-scroll/hero-scroll";
-import BuildGrowShowcase from "@/components/marketing/build-grow-showcase/build-grow-showcase";
 import CaseStudies from "@/components/marketing/case-studies/case-studies";
 import Concierge from "@/components/marketing/concierge/concierge";
 import UseCases from "@/components/marketing/use-cases/use-cases";
@@ -22,10 +14,7 @@ const TestimonialsSection = dynamic(
   () => import("@/components/marketing/testimonials/testimonials"),
   { loading: () => <div className="py-20" /> }
 );
-const FAQSection = dynamic(
-  () => import("@/components/marketing/faq-section/faq-section"),
-  { loading: () => <div className="py-20" /> }
-);
+
 const ContactSection = dynamic(
   () => import("@/components/marketing/contact-us/contact-us"),
   { loading: () => <div className="py-16" /> }
@@ -189,25 +178,17 @@ export default function Marketing() {
       />
 
       {/* Marketing Page Sections */}
-      <div>
+      <div className="mx-auto max-w-6xl px-2 md:px-0">
         <HeroSection />
-
         <TemplatesPage />
-        {/* <StatsSection /> */}
-        {/* <FeaturesSection /> */}
         <CapabilitiesSection />
         <CaseStudies />
-        {/* <ProcessSection /> */}
         <UseCases />
         <QuickBuilder />
         <Comparison />
         <Concierge />
-        {/* <AISection /> */}
         <TestimonialsSection />
-        {/* <PricingSection /> */}
-        <ContactSection />
-        <FAQSection />
-        {/* <BuildGrowShowcase /> */}
+        {/* <ContactSection /> */}
         <CTA />
       </div>
     </>

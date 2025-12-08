@@ -44,20 +44,20 @@ const CaseStudies: React.FC = () => {
   ];
 
   return (
-    <section id="case-studies" className="bg-slate-50 py-24">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-4 flex flex-col items-end justify-between md:flex-row">
+    <section id="case-studies" className="py-12 sm:py-16 md:py-20 lg:py-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8 flex flex-col items-start justify-between sm:mb-10 md:flex-row md:items-end">
           <div>
-            <h2 className="mb-6 text-3xl leading-tight font-bold text-slate-900 md:text-5xl">
+            <h2 className="mb-4 text-2xl leading-tight font-bold text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
               Don&apos;t just take our word for it.{" "}
-              <span className="text-primary font-serif italic">
+              <span className="font-serif text-slate-600 italic">
                 See the growth.
               </span>
             </h2>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-3">
           {studies.map((study, idx) => (
             <motion.div
               key={study.id}
@@ -67,7 +67,7 @@ const CaseStudies: React.FC = () => {
               transition={{ delay: idx * 0.1 }}
               className="group flex flex-col"
             >
-              <div className="relative mb-6 aspect-[3/4] overflow-hidden rounded-2xl bg-slate-200 md:aspect-[4/5]">
+              <div className="relative mb-4 aspect-[3/4] overflow-hidden rounded-xl bg-slate-200 sm:mb-6 sm:rounded-2xl md:aspect-[4/5]">
                 <img
                   src={study.image}
                   alt={study.company}
@@ -75,22 +75,22 @@ const CaseStudies: React.FC = () => {
                 />
                 <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/0"></div>
 
-                <div className="absolute top-4 left-4">
-                  <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold tracking-wider text-slate-900 uppercase backdrop-blur-md">
+                <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
+                  <span className="rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-slate-900 uppercase backdrop-blur-md sm:px-3 sm:text-xs sm:tracking-wider">
                     {study.category}
                   </span>
                 </div>
               </div>
 
               <div>
-                <h3 className="mb-2 text-xl font-bold text-slate-900">
+                <h3 className="mb-2 text-lg font-bold text-slate-900 sm:text-xl">
                   {study.company}
                 </h3>
-                <div className="text-primary mb-3 flex items-center gap-2 text-sm font-medium">
-                  <div className="bg-primary h-1.5 w-1.5 rounded-full"></div>
+                <div className="mb-3 flex items-center gap-2 text-xs font-medium text-slate-700 sm:text-sm">
+                  <div className="h-1.5 w-1.5 rounded-full bg-slate-600"></div>
                   {study.metric}
                 </div>
-                <p className="border-l border-slate-200 pl-4 text-sm leading-relaxed text-slate-500">
+                <p className="border-l-2 border-slate-200 pl-3 text-xs leading-relaxed text-slate-600 sm:pl-4 sm:text-sm">
                   &quot;{study.desc}&quot;
                 </p>
               </div>

@@ -1,168 +1,149 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Calendar, User, Bell } from "lucide-react";
+import React from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { MessageCircle, ChevronRight } from "lucide-react";
 
 const UseCases: React.FC = () => {
-  const [orders, setOrders] = useState<
-    { id: number; amt: string; time: string }[]
-  >([]);
-  const [inquiries, setInquiries] = useState<
-    { id: number; name: string; type: string }[]
-  >([]);
-
-  useEffect(() => {
-    const orderInterval = setInterval(() => {
-      const newOrder = {
-        id: Date.now(),
-        amt: `NPR ${(Math.floor(Math.random() * 50) + 10) * 100}`,
-        time: "Just now",
-      };
-      setOrders(prev => [newOrder, ...prev].slice(0, 3));
-    }, 4000);
-
-    const inquiryInterval = setInterval(() => {
-      const names = ["Sarah M.", "John D.", "Priya K.", "Alex R."];
-      const types = ["Booking Request", "Project Quote", "Consultation"];
-      const newInquiry = {
-        id: Date.now(),
-        name: names[Math.floor(Math.random() * names.length)],
-        type: types[Math.floor(Math.random() * types.length)],
-      };
-      setInquiries(prev => [newInquiry, ...prev].slice(0, 3));
-    }, 5000);
-
-    return () => {
-      clearInterval(orderInterval);
-      clearInterval(inquiryInterval);
-    };
-  }, []);
-
   return (
-    <section className="border-border bg-background border-t py-24">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="mb-16 text-center">
-          <h2 className="text-foreground mb-4 text-3xl leading-tight font-bold md:text-5xl">
-            Built for{" "}
-            <span className="text-muted-foreground font-serif italic">
-              your
-            </span>{" "}
-            business type.
-          </h2>
-          <p className="text-muted-foreground text-lg font-light">
-            Whether you ship products or sell time, we have the tools.
-          </p>
+    <section className="bg-white py-12 sm:py-16 md:py-20 lg:py-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8 flex flex-col items-start justify-between sm:mb-10 md:flex-row md:items-end">
+          <div>
+            <h2 className="mb-4 text-2xl leading-tight font-bold text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
+              Best Designed Websites for Any Business
+            </h2>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          {/* Ecommerce Card */}
-          <div className="border-border bg-muted/20 rounded-3xl border p-8 transition-all duration-300 hover:shadow-lg md:p-12">
-            <div className="mb-8 flex items-start justify-between">
-              <div className="border-border bg-background flex h-12 w-12 items-center justify-center rounded-xl border shadow-sm">
-                <ShoppingBag className="text-foreground" size={20} />
+        <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
+          {/* PRODUCT SALES CARD */}
+          <div className="group rounded-2xl border border-slate-200 transition-all duration-300 hover:shadow-lg hover:shadow-slate-200/30 sm:rounded-3xl">
+            <div className="relative flex h-full flex-col overflow-hidden rounded-2xl bg-white p-6 sm:p-8">
+              <div className="mb-3 flex items-center gap-3">
+                <h3 className="text-lg font-bold text-slate-900 sm:text-xl">
+                  If you sell products
+                </h3>
               </div>
-              <div className="bg-primary/10 text-primary rounded-full px-3 py-1 text-[10px] font-bold tracking-wide uppercase">
-                Active Store
-              </div>
-            </div>
 
-            <h3 className="text-foreground mb-3 text-2xl font-bold">
-              Product Sales
-            </h3>
-            <p className="text-muted-foreground mb-10 text-base leading-relaxed">
-              Global logistics, inventory sync, and automated tax calculations
-              built-in.
-            </p>
+              <p className="mb-4 text-sm leading-relaxed text-slate-600 sm:text-base">
+                Complete online store with inventory management, cart system,
+                and local payment gateways (eSewa, Fonepay) built-in.
+              </p>
 
-            <div className="border-border bg-background min-h-[160px] rounded-xl border p-5 shadow-sm">
-              <div className="text-muted-foreground mb-4 flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase">
-                <Bell size={12} /> Real-time Sales
-              </div>
-              <div className="space-y-3">
-                <AnimatePresence mode="popLayout">
-                  {orders.map(order => (
-                    <motion.div
-                      key={order.id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="flex items-center justify-between"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="bg-primary h-1.5 w-1.5 rounded-full"></div>
-                        <div className="text-foreground text-sm font-medium">
-                          New Order
-                        </div>
-                      </div>
-                      <div className="text-muted-foreground font-mono text-sm">
-                        {order.amt}
-                      </div>
-                    </motion.div>
+              <Button
+                size="default"
+                variant="outline"
+                className="group mb-6 w-fit text-sm shadow-md hover:shadow-lg sm:mb-8"
+              >
+                Start Building Ecommerce Website
+                <ChevronRight className="ml-2 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+              </Button>
+
+              {/* Mockup */}
+              <div className="relative mt-auto aspect-4/3 w-full overflow-hidden rounded-t-xl border-x border-t border-slate-200 bg-slate-50 shadow-sm">
+                {/* Mockup Header */}
+                <div className="flex h-8 items-center gap-2 border-b border-slate-100 bg-white px-3">
+                  <div className="h-2 w-2 rounded-full bg-slate-300"></div>
+                  <div className="h-1.5 w-12 rounded-full bg-slate-100"></div>
+                </div>
+                {/* Mockup Body */}
+                <div className="grid grid-cols-2 gap-3 p-4">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="flex flex-col gap-2">
+                      <div className="aspect-square w-full rounded-md bg-slate-200"></div>
+                      <div className="h-2 w-2/3 rounded bg-slate-100"></div>
+                      <div className="h-2 w-1/3 rounded bg-slate-200"></div>
+                    </div>
                   ))}
-                </AnimatePresence>
-                {orders.length === 0 && (
-                  <div className="text-muted-foreground text-sm">
-                    Waiting for orders...
+                </div>
+                {/* Notification Overlay */}
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="absolute top-10 right-3 flex items-center gap-2 rounded-lg border border-slate-200 bg-white p-2 shadow-md sm:top-12 sm:right-4 sm:gap-3 sm:p-3"
+                >
+                  <div>
+                    <div className="text-[9px] font-semibold text-slate-900 sm:text-[10px]">
+                      New Order
+                    </div>
+                    <div className="text-[9px] text-slate-500 sm:text-[10px]">
+                      NPR 2,500
+                    </div>
                   </div>
-                )}
+                </motion.div>
               </div>
             </div>
           </div>
 
-          {/* Service Business Card */}
-          <div className="border-border bg-background rounded-3xl border p-8 transition-all duration-300 hover:shadow-lg md:p-12">
-            <div className="mb-8 flex items-start justify-between">
-              <div className="border-border bg-muted/20 flex h-12 w-12 items-center justify-center rounded-xl border shadow-sm">
-                <Calendar className="text-foreground" size={20} />
+          {/* SERVICE SALES CARD */}
+          <div className="group rounded-2xl border border-slate-200 transition-all duration-300 hover:shadow-lg hover:shadow-slate-200/30 sm:rounded-3xl">
+            <div className="relative flex h-full flex-col overflow-hidden rounded-2xl bg-white p-6 sm:p-8">
+              <div className="mb-3 flex items-center gap-3">
+                <h3 className="text-lg font-bold text-slate-900 sm:text-xl">
+                  If you sell services
+                </h3>
               </div>
-              <div className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-[10px] font-bold tracking-wide uppercase">
-                Booking System
-              </div>
-            </div>
 
-            <h3 className="text-foreground mb-3 text-2xl font-bold">
-              Service & Portfolio
-            </h3>
-            <p className="text-muted-foreground mb-10 text-base leading-relaxed">
-              Integrated scheduling, client CRM, and portfolio galleries to
-              convert visitors.
-            </p>
+              <p className="mb-4 text-sm leading-relaxed text-slate-600 sm:text-base">
+                Professional portfolio sites with automated booking systems,
+                calendar syncing, and client inquiry forms.
+              </p>
 
-            <div className="border-border bg-muted/20 min-h-[160px] rounded-xl border p-5 shadow-inner">
-              <div className="text-muted-foreground mb-4 flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase">
-                <User size={12} /> Client Inquiries
-              </div>
-              <div className="space-y-3">
-                <AnimatePresence mode="popLayout">
-                  {inquiries.map(inq => (
-                    <motion.div
-                      key={inq.id}
-                      layout
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                      className="border-border bg-background flex items-center gap-3 rounded-lg border p-2.5 shadow-sm"
-                    >
-                      <div className="bg-muted text-muted-foreground flex h-6 w-6 items-center justify-center rounded text-[10px] font-bold">
-                        {inq.name.charAt(0)}
-                      </div>
-                      <div className="flex flex-1 items-center justify-between">
-                        <span className="text-foreground text-sm font-semibold">
-                          {inq.name}
-                        </span>
-                        <span className="border-border text-muted-foreground rounded border px-1.5 text-[10px]">
-                          {inq.type}
-                        </span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-                {inquiries.length === 0 && (
-                  <div className="text-muted-foreground text-sm">
-                    No new inquiries
+              <Button
+                size="default"
+                variant="outline"
+                className="group mb-6 w-fit text-sm shadow-md hover:shadow-lg sm:mb-8"
+              >
+                Start Building Business Website
+                <ChevronRight className="ml-2 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+              </Button>
+
+              {/* Mockup */}
+              <div className="relative mt-auto aspect-4/3 w-full overflow-hidden rounded-t-xl border-x border-t border-slate-200 bg-slate-50 shadow-sm">
+                {/* Mockup Header */}
+                <div className="flex h-8 items-center justify-between border-b border-slate-100 bg-white px-3">
+                  <div className="h-1.5 w-16 rounded-full bg-slate-200"></div>
+                  <div className="flex gap-1">
+                    <div className="h-1.5 w-6 rounded-full bg-slate-100"></div>
+                    <div className="h-1.5 w-6 rounded-full bg-slate-100"></div>
                   </div>
-                )}
+                </div>
+                {/* Mockup Body */}
+                <div className="p-0">
+                  <div className="relative mb-4 h-32 w-full bg-slate-200">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="rounded bg-white px-4 py-1 text-[10px] font-bold">
+                        Book Appointment
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2 px-4">
+                    <div className="h-2 w-3/4 rounded bg-slate-200"></div>
+                    <div className="h-2 w-full rounded bg-slate-100"></div>
+                    <div className="h-2 w-full rounded bg-slate-100"></div>
+                  </div>
+                </div>
+                {/* Notification Overlay */}
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 1 }}
+                  className="absolute top-10 right-3 flex items-center gap-2 rounded-lg border border-slate-200 bg-white p-2 shadow-md sm:top-12 sm:right-4 sm:gap-3 sm:p-3"
+                >
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-slate-700 sm:h-8 sm:w-8">
+                    <MessageCircle size={12} className="sm:h-3.5 sm:w-3.5" />
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-semibold text-slate-900 sm:text-[10px]">
+                      New Inquiry
+                    </div>
+                    <div className="text-[9px] text-slate-500 sm:text-[10px]">
+                      Consultation Req.
+                    </div>
+                  </div>
+                </motion.div>
               </div>
             </div>
           </div>

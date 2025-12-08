@@ -62,20 +62,20 @@ const TemplatesPage = () => {
 
   if (categoriesLoading || templatesLoading) {
     return (
-      <section className="bg-white py-24">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-12 flex flex-col items-start justify-between gap-6">
+      <section className="bg-white py-12 sm:py-16 md:py-20 lg:py-24">
+        <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6">
+          <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:mb-10 sm:gap-6 md:mb-12">
             <div>
-              <h2 className="mb-4 text-3xl font-bold text-slate-900 md:text-5xl">
+              <h2 className="mb-3 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
                 Not just templates.
-                <span className="font-serif text-slate-400 italic">
+                <span className="font-serif text-slate-500 italic">
                   Unique Identities.
                 </span>
               </h2>
             </div>
             <CategoryNavigationSkeleton />
           </div>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map(i => (
               <TemplateCardSkeleton key={i} />
             ))}
@@ -86,16 +86,16 @@ const TemplatesPage = () => {
   }
 
   return (
-    <section className="bg-white py-24">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-12 flex flex-col items-start justify-between gap-6">
+    <section className="bg-white py-12 sm:py-16 md:py-20 lg:py-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:mb-10 sm:gap-6 md:mb-12">
           <div>
-            <h2 className="mb-4 text-3xl font-bold text-slate-900 md:text-5xl">
-              Not just templates.
-              <span className="font-serif text-slate-400 italic">
-                Unique Identities.
-              </span>
+            <h2 className="mb-2 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl">
+              Featured Website Templates
             </h2>
+            <p className="text-xs text-slate-600 sm:text-sm">
+              Monthly updated templates to help you get started.
+            </p>
           </div>
 
           <CategoryNavigation
@@ -107,15 +107,15 @@ const TemplatesPage = () => {
 
         {/* Templates Grid */}
         {templatesData?.results && templatesData.results.length > 0 ? (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3">
             {templatesData.results.map(template => (
               <TemplateCard key={template.id} template={template} />
             ))}
           </div>
         ) : (
-          <div className="flex items-center justify-center py-12">
+          <div className="flex items-center justify-center py-10 sm:py-12">
             <div className="text-center">
-              <p className="text-lg text-gray-500">
+              <p className="text-sm text-slate-600 sm:text-base md:text-lg">
                 No templates found{" "}
                 {selectedCategory && selectedCategory !== "All"
                   ? "in this category"
@@ -127,19 +127,21 @@ const TemplatesPage = () => {
 
         {/* Pagination */}
         {(templatesData?.next || templatesData?.previous) && (
-          <div className="mt-8 flex items-center justify-center gap-4">
+          <div className="mt-6 flex items-center justify-center gap-3 sm:mt-8 sm:gap-4">
             <button
               onClick={handlePrevPage}
               disabled={!templatesData?.previous}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-2 sm:text-sm"
             >
               Previous
             </button>
-            <span className="text-sm text-gray-600">Page {currentPage}</span>
+            <span className="text-xs text-slate-600 sm:text-sm">
+              Page {currentPage}
+            </span>
             <button
               onClick={handleNextPage}
               disabled={!templatesData?.next}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-2 sm:text-sm"
             >
               Next
             </button>

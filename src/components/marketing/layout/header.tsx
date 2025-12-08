@@ -26,7 +26,7 @@ const Header: React.FC = () => {
     // Show skeleton while loading
     return (
       <header className="border-primary/10 sticky top-0 z-50 border-b bg-white/80 px-4 py-4 backdrop-blur-md sm:px-6">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between">
           {/* Logo Skeleton */}
           <Skeleton className="h-8 w-32 sm:h-10" />
 
@@ -58,7 +58,7 @@ const Header: React.FC = () => {
           href="https://docs.nepdora.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-muted-foreground hover:text-primary cursor-pointer font-medium transition-colors"
+          className="text-muted-foreground hover:text-primary cursor-pointer text-xs font-normal transition-colors"
         >
           {item}
         </a>
@@ -69,7 +69,7 @@ const Header: React.FC = () => {
       <Link
         key={item}
         href={`/${item.toLowerCase()}`}
-        className="text-muted-foreground hover:text-primary cursor-pointer font-medium transition-colors"
+        className="text-muted-foreground hover:text-primary cursor-pointer text-xs font-normal transition-colors"
       >
         {item}
       </Link>
@@ -106,7 +106,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="border-primary/10 sticky top-0 z-50 border-b bg-white/80 px-4 py-4 backdrop-blur-md sm:px-6">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between">
         {/* Logo */}
         <div className="flex items-center space-x-2">
           <Link href="/" onClick={closeMenu}>
@@ -119,7 +119,7 @@ const Header: React.FC = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden items-center space-x-8 md:flex">
+        <div className="hidden items-center space-x-6 md:flex">
           {navigationItems.map(item => renderNavigationItem(item))}
         </div>
 

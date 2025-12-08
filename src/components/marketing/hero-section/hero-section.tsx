@@ -5,27 +5,27 @@ import {
   ChevronRight,
   Command,
   TrendingUp,
-  Sparkles,
-  MousePointer2,
-  Bell,
   Store,
   Briefcase,
+  MousePointer2,
+  Bell,
+  CheckCircle,
+  ShoppingBag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Hero: React.FC = () => {
   const [step, setStep] = useState(0);
-  // 0: Input Typing "Build a website..."
-  // 1: Selection Screen (Ecommerce vs Service)
-  // 2: Selection Click Interaction
-  // 3: Website Assembly/Loading
-  // 4: Sales Dashboard
+  // 0: Input Typing
+  // 1: Selection Screen
+  // 2: Selection Click
+  // 3: Website Building (Header -> Hero -> Grid)
+  // 4: Final Polish/Dashboard
 
   const [text, setText] = useState("");
-  const fullText = "Build a website for me";
+  const fullText = "Build a luxury pashmina store";
   const [salesCount, setSalesCount] = useState(14500);
 
-  // Cycle through animation steps
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
 
@@ -40,25 +40,25 @@ const Hero: React.FC = () => {
           clearInterval(typeInterval);
           timeout = setTimeout(() => setStep(1), 600);
         }
-      }, 50);
+      }, 40);
       return () => {
         clearInterval(typeInterval);
         clearTimeout(timeout);
       };
     } else if (step === 1) {
-      // Step 1: Show Selection Screen, wait briefly before cursor moves
-      timeout = setTimeout(() => setStep(2), 1500);
+      // Step 1: Wait on selection screen
+      timeout = setTimeout(() => setStep(2), 1000);
       return () => clearTimeout(timeout);
     } else if (step === 2) {
-      // Step 2: Cursor clicks "Ecommerce"
+      // Step 2: Click Animation
       timeout = setTimeout(() => setStep(3), 800);
       return () => clearTimeout(timeout);
     } else if (step === 3) {
-      // Step 3: Website Build Animation
-      timeout = setTimeout(() => setStep(4), 2000);
+      // Step 3: Building Animation duration
+      timeout = setTimeout(() => setStep(4), 2500);
       return () => clearTimeout(timeout);
     } else if (step === 4) {
-      // Step 4: Sales Dashboard
+      // Step 4: Show result loop
       const countInterval = setInterval(() => {
         setSalesCount(prev => (prev < 45000 ? prev + 1500 : prev));
       }, 150);
@@ -76,65 +76,71 @@ const Hero: React.FC = () => {
   }, [step]);
 
   return (
-    <section className="bg-background my-36 overflow-hidden pt-12 pb-20 md:pt-12 md:pb-12">
-      <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col items-center gap-16 md:flex-row">
+    <section className="overflow-hidden bg-white pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 text-left"
+            className="max-w-xl flex-1 text-left"
           >
-            <div className="bg-accent mb-8 inline-flex items-center gap-2 rounded-full border px-3 py-1">
-              <TrendingUp size={14} className="text-black" />
-              <span className="text-xs font-normal text-black">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
+              <TrendingUp size={12} className="text-slate-600" />
+              <span className="text-[11px] font-medium text-slate-600 sm:text-xs">
                 For Nepali Business Owners
               </span>
             </div>
 
-            <h1 className="text-foreground mb-6 text-5xl leading-[1.05] font-bold tracking-tight md:text-7xl">
-              Build your Website in <br /> 5 minutes.
+            <h1 className="mb-4 text-3xl leading-tight font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
+              Build your Website in 5 minutes.
             </h1>
 
-            <p className="text-muted-foreground mb-10 max-w-md text-lg leading-relaxed font-light">
+            <p className="mb-8 max-w-md text-sm leading-relaxed font-normal text-slate-600 sm:text-base md:text-lg">
               From prompt to profits. We handle the design, payments, and
               logistics so you can just sell.
             </p>
 
-            <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
               <Button
                 size="lg"
-                className="shadow-primary/20 group hover:shadow-primary/40 shadow-lg"
+                className="group shadow-md shadow-slate-200/50 hover:shadow-lg hover:shadow-slate-200/80"
               >
                 Start Building Free
                 <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
-              <div className="text-muted-foreground flex items-center gap-3 pl-2 text-sm">
-                <span>No technical skills needed.</span>
+              <div className="flex items-center gap-3 pl-2 text-xs text-slate-500 sm:text-sm">
+                <span>No credit card needed.</span>
               </div>
             </div>
           </motion.div>
 
-          {/* Interactive Animation */}
+          {/* Interactive Animation - Widescreen Look */}
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full max-w-4xl flex-1"
+            className="w-full max-w-2xl flex-1"
           >
-            <div className="bg-background shadow-muted/50 border-border relative flex h-[500px] flex-col overflow-hidden rounded-2xl border shadow-2xl md:h-[600px]">
+            <div className="relative flex h-[320px] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-200/30 sm:h-[380px] md:h-[450px] lg:rounded-2xl lg:shadow-xl">
               {/* Browser Header */}
-              <div className="bg-background border-border relative z-20 flex flex-none items-center justify-between border-b px-4 py-3">
+              <div className="relative z-20 flex flex-none items-center justify-between border-b border-slate-200 bg-white px-3 py-2 sm:px-4 sm:py-2.5">
                 <div className="flex gap-1.5">
-                  <div className="bg-muted h-2.5 w-2.5 rounded-full"></div>
-                  <div className="bg-muted h-2.5 w-2.5 rounded-full"></div>
+                  <div className="h-2 w-2 rounded-full bg-slate-300 sm:h-2.5 sm:w-2.5"></div>
+                  <div className="h-2 w-2 rounded-full bg-slate-300 sm:h-2.5 sm:w-2.5"></div>
                 </div>
-                <div className="text-muted-foreground text-[10px] font-bold tracking-widest uppercase">
-                  Nepdora AI
+                <div className="flex min-w-[160px] items-center justify-center gap-1.5 rounded-md bg-slate-50 px-2.5 py-1 sm:min-w-[200px] sm:px-3">
+                  <div className="h-2.5 w-2.5 text-slate-600 sm:h-3 sm:w-3">
+                    <CheckCircle size={10} className="sm:h-3 sm:w-3" />
+                  </div>
+                  <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase sm:text-[10px] sm:tracking-widest">
+                    nepdora.ai/builder
+                  </div>
                 </div>
+                <div className="w-6 sm:w-8"></div> {/* Spacer for balance */}
               </div>
 
-              <div className="bg-muted/20 relative flex-1 overflow-hidden p-6">
+              <div className="relative flex flex-1 flex-col overflow-hidden bg-slate-50/50">
                 <AnimatePresence mode="wait">
                   {/* STEP 0: INPUT */}
                   {step === 0 && (
@@ -142,228 +148,215 @@ const Hero: React.FC = () => {
                       key="input"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute inset-0 flex flex-col justify-center px-8"
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute inset-0 flex flex-col items-center justify-center px-8"
                     >
-                      <div className="bg-background shadow-muted/50 border-border rounded-2xl border p-8 shadow-xl">
+                      <div className="w-full max-w-md rounded-2xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/50">
                         <div className="mb-6 flex items-center gap-3">
-                          <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-full">
-                            <Command size={20} />
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+                            <Command size={16} />
                           </div>
-                          <span className="text-foreground text-xs font-bold tracking-wide uppercase">
+                          <span className="text-xs font-bold tracking-wide text-slate-900 uppercase">
                             AI Prompt
                           </span>
                         </div>
-                        <div className="text-foreground font-serif text-2xl leading-snug">
-                          &quot;{text}
-                          <span className="text-primary animate-pulse">|</span>
-                          &quot;
+                        <div className="font-serif text-2xl leading-snug text-slate-800">
+                          "{text}
+                          <span className="animate-pulse text-emerald-500">
+                            |
+                          </span>
+                          "
                         </div>
                       </div>
                     </motion.div>
                   )}
 
-                  {/* STEP 1 & 2: SELECTION SCREEN */}
+                  {/* STEP 1 & 2: SELECTION */}
                   {(step === 1 || step === 2) && (
                     <motion.div
                       key="select"
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 1.05 }}
-                      className="bg-muted/10 absolute inset-0 flex flex-col justify-center px-8"
+                      className="absolute inset-0 flex flex-col justify-center bg-slate-50 px-12"
                     >
-                      <h3 className="text-foreground mb-8 text-center text-xl font-bold">
-                        What are you building?
+                      <h3 className="mb-8 text-center text-xl font-bold text-slate-900">
+                        Select Type
                       </h3>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="mx-auto grid w-full max-w-lg grid-cols-2 gap-6">
                         {/* ECOMMERCE CARD */}
                         <motion.div
                           animate={
                             step === 2
                               ? {
-                                  scale: 0.95,
-                                  borderColor: "var(--primary)",
-                                  backgroundColor: "var(--primary-foreground)",
+                                  scale: 0.98,
+                                  borderColor: "#10b981",
+                                  backgroundColor: "#ecfdf5",
+                                  boxShadow:
+                                    "0 4px 12px rgba(16, 185, 129, 0.1)",
                                 }
                               : {}
                           }
-                          className="bg-background border-border relative z-10 flex flex-col items-center gap-4 rounded-xl border p-6 text-center shadow-sm"
+                          className="relative z-10 flex cursor-pointer flex-col items-center gap-4 rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm transition-colors"
                         >
-                          <div className="bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-full">
-                            <Store size={24} />
+                          <div className="bg-accent flex h-14 w-14 items-center justify-center rounded-xl text-slate-500">
+                            <Store size={28} />
                           </div>
-                          <div className="text-foreground text-sm font-bold">
+                          <div className="text-base font-bold text-slate-900">
                             Ecommerce
                           </div>
                         </motion.div>
 
                         {/* SERVICE CARD */}
-                        <div className="bg-background border-border flex flex-col items-center gap-4 rounded-xl border p-6 text-center opacity-60 shadow-sm">
-                          <div className="bg-muted text-muted-foreground flex h-12 w-12 items-center justify-center rounded-full">
-                            <Briefcase size={24} />
+                        <div className="flex flex-col items-center gap-4 rounded-xl border border-slate-200 bg-white p-8 text-center opacity-60 shadow-sm">
+                          <div className="bg-accent flex h-14 w-14 items-center justify-center rounded-xl text-slate-500">
+                            <Briefcase size={28} />
                           </div>
-                          <div className="text-foreground text-sm font-bold">
+                          <div className="text-base font-bold text-slate-900">
                             Service
                           </div>
                         </div>
                       </div>
 
-                      {/* Cursor Animation */}
+                      {/* Cursor */}
                       <motion.div
                         initial={{ x: "100%", y: "100%", opacity: 0 }}
-                        animate={{ x: 120, y: 280, opacity: 1 }} // Coordinates tuned to hit the left card center
+                        animate={{ x: 180, y: 220, opacity: 1 }}
                         transition={{
                           duration: 0.8,
                           ease: "circOut",
-                          delay: 0.2,
+                          delay: 0.1,
                         }}
                         className="pointer-events-none absolute top-0 left-0 z-50"
                       >
                         <MousePointer2
-                          className="fill-foreground text-background drop-shadow-xl"
+                          className="fill-slate-900 text-white drop-shadow-xl"
                           size={32}
                         />
                         {step === 2 && (
                           <motion.div
                             initial={{ scale: 0 }}
-                            animate={{ scale: 2, opacity: 0 }}
+                            animate={{ scale: 1.5, opacity: 0 }}
                             transition={{ duration: 0.4 }}
-                            className="bg-primary absolute -top-3 -left-3 h-14 w-14 rounded-full opacity-30"
+                            className="absolute -top-3 -left-3 h-14 w-14 rounded-full bg-emerald-500 opacity-30"
                           />
                         )}
                       </motion.div>
                     </motion.div>
                   )}
 
-                  {/* STEP 3: WEBSITE BUILD */}
-                  {step === 3 && (
+                  {/* STEP 3 & 4: BUILD & RESULT */}
+                  {(step === 3 || step === 4) && (
                     <motion.div
                       key="website"
-                      className="bg-background absolute inset-0"
+                      className="absolute inset-0 flex flex-col bg-white"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
                     >
-                      {/* Website Skeleton */}
-                      <div className="flex h-full flex-col overflow-hidden">
-                        {/* Nav */}
+                      {/* Website Skeleton / Build Process */}
+                      <div className="relative flex h-full flex-col overflow-hidden">
+                        {/* Navigation Bar */}
                         <motion.div
-                          initial={{ y: -20, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          transition={{ delay: 0.1 }}
-                          className="border-border flex h-16 flex-none items-center justify-between border-b px-8"
+                          initial={{ y: -50 }}
+                          animate={{ y: 0 }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
+                          className="z-20 flex h-16 flex-none items-center justify-between border-b border-slate-100 bg-white px-8"
                         >
-                          <div className="bg-muted h-4 w-24 rounded-full"></div>
-                          <div className="flex gap-3">
-                            <div className="bg-muted/50 h-3 w-12 rounded-full"></div>
-                            <div className="bg-muted/50 h-3 w-12 rounded-full"></div>
+                          <div className="h-5 w-32 rounded-full bg-slate-900"></div>
+                          <div className="flex gap-6">
+                            <div className="h-2 w-20 rounded-full bg-slate-200"></div>
+                            <div className="h-2 w-20 rounded-full bg-slate-200"></div>
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-xs text-white">
+                              <ShoppingBag size={14} />
+                            </div>
                           </div>
                         </motion.div>
 
-                        {/* Hero Banner */}
-                        <motion.div
-                          initial={{ scale: 0.95, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          transition={{ delay: 0.3 }}
-                          className="bg-primary/5 relative m-6 flex h-48 flex-none flex-col justify-center overflow-hidden rounded-2xl px-8"
-                        >
-                          <div className="bg-muted z-10 mb-3 h-6 w-48 rounded"></div>
-                          <div className="bg-muted/50 z-10 h-4 w-64 rounded"></div>
-                        </motion.div>
+                        {/* Hero Banner Area */}
+                        <div className="relative flex-none p-6">
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 200, opacity: 1 }}
+                            transition={{
+                              duration: 0.8,
+                              delay: 0.2,
+                              ease: "circOut",
+                            }}
+                            className="relative w-full overflow-hidden rounded-2xl bg-slate-100"
+                          >
+                            <img
+                              src="https://images.unsplash.com/photo-1576053139778-7e32f2ae3cfd?auto=format&fit=crop&q=80&w=1200"
+                              className="h-full w-full object-cover opacity-90"
+                              alt="Banner"
+                            />
+                            <div className="absolute inset-0 flex flex-col justify-center bg-black/10 px-10">
+                              <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: 300 }}
+                                transition={{ delay: 0.6, duration: 0.5 }}
+                                className="mb-4 h-10 overflow-hidden rounded-md bg-white"
+                              />
+                              <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: 180 }}
+                                transition={{ delay: 0.7, duration: 0.5 }}
+                                className="h-4 overflow-hidden rounded-md bg-white/80"
+                              />
+                            </div>
+                          </motion.div>
+                        </div>
 
-                        {/* Products */}
-                        <div className="grid flex-1 grid-cols-2 gap-6 overflow-hidden px-6">
-                          {[1, 2].map(i => (
+                        {/* Product Grid */}
+                        <div className="grid flex-1 grid-cols-3 gap-6 overflow-hidden px-6 pb-4">
+                          {[1, 2, 3].map(i => (
                             <motion.div
                               key={i}
-                              initial={{ y: 20, opacity: 0 }}
+                              initial={{ y: 50, opacity: 0 }}
                               animate={{ y: 0, opacity: 1 }}
-                              transition={{ delay: 0.5 + i * 0.1 }}
-                              className="border-border h-full rounded-xl border p-4"
+                              transition={{
+                                delay: 0.8 + i * 0.2,
+                                duration: 0.5,
+                              }}
+                              className="flex h-full flex-col rounded-xl border border-slate-100 bg-white p-4"
                             >
-                              <div className="bg-muted/20 mb-3 h-32 w-full rounded-lg"></div>
-                              <div className="bg-muted mb-2 h-3 w-24 rounded"></div>
-                              <div className="bg-primary text-primary-foreground mt-2 inline-block rounded px-3 py-1.5 text-[10px] font-bold tracking-wide">
-                                ADD TO CART
+                              <div className="group relative mb-3 h-24 w-full overflow-hidden rounded-lg bg-slate-100"></div>
+                              <div className="mb-2 h-3 w-3/4 rounded bg-slate-200"></div>
+                              <div className="mb-auto h-3 w-1/2 rounded bg-slate-100"></div>
+                              <div className="mt-2 w-full rounded bg-slate-900 py-2 text-center text-[10px] font-bold text-white">
+                                Add
                               </div>
                             </motion.div>
                           ))}
                         </div>
+
+                        {/* Notification Overlay (Step 4) */}
+                        <AnimatePresence>
+                          {step === 4 && (
+                            <motion.div
+                              initial={{ x: 100, opacity: 0 }}
+                              animate={{ x: 0, opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="absolute top-24 right-8 z-30 flex items-center gap-4 rounded-xl border border-slate-100 bg-white p-4 shadow-xl"
+                            >
+                              <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                                <Bell size={18} />
+                                <span className="absolute top-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-red-500"></span>
+                              </div>
+                              <div>
+                                <div className="text-xs font-bold text-slate-900">
+                                  New Order #2891
+                                </div>
+                                <div className="text-[10px] text-slate-500">
+                                  Total: NPR 4,500
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                     </motion.div>
                   )}
-
-                  {/* STEP 4: SALES DASHBOARD */}
-                  {step === 4 && (
-                    <motion.div
-                      key="sales"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="bg-muted/10 absolute inset-0 flex flex-col justify-center p-8"
-                    >
-                      <motion.div
-                        initial={{ y: 10, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        className="bg-background border-border mb-6 rounded-3xl border p-8 shadow-xl"
-                      >
-                        <div className="mb-6 flex items-start justify-between">
-                          <div>
-                            <div className="text-muted-foreground mb-2 text-xs font-bold tracking-widest uppercase">
-                              Total Revenue
-                            </div>
-                            <div className="text-foreground font-mono text-5xl font-bold tracking-tight">
-                              NPR {salesCount.toLocaleString()}
-                            </div>
-                          </div>
-                          <div className="bg-primary/10 text-primary rounded-full p-3">
-                            <TrendingUp size={24} />
-                          </div>
-                        </div>
-                        <div className="bg-muted h-2 w-full overflow-hidden rounded-full">
-                          <motion.div
-                            initial={{ width: "30%" }}
-                            animate={{ width: "85%" }}
-                            transition={{ duration: 1.5 }}
-                            className="bg-primary h-full"
-                          />
-                        </div>
-                        <div className="text-muted-foreground mt-4 flex items-center gap-2 text-sm">
-                          <span className="text-primary bg-primary/10 rounded px-2 py-0.5 font-bold">
-                            +12%
-                          </span>
-                          from last week
-                        </div>
-                      </motion.div>
-
-                      <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="bg-background border-border flex items-center gap-5 rounded-2xl border p-5 shadow-md"
-                      >
-                        <div className="bg-primary/10 text-primary relative flex h-12 w-12 items-center justify-center rounded-full">
-                          <Bell size={20} />
-                          <span className="bg-destructive border-background absolute top-0 right-0 h-3.5 w-3.5 rounded-full border-2"></span>
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-foreground font-bold">
-                            New Order Received
-                          </div>
-                          <div className="text-muted-foreground text-sm">
-                            Just now via Online Store
-                          </div>
-                        </div>
-                        <div className="text-primary text-lg font-bold">
-                          +1,500
-                        </div>
-                      </motion.div>
-                    </motion.div>
-                  )}
                 </AnimatePresence>
-
-                {/* Background Decoration */}
-                <div className="from-primary/0 via-primary/5 to-background/0 pointer-events-none absolute top-1/2 left-1/2 -z-10 h-[150%] w-[150%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr blur-3xl"></div>
               </div>
             </div>
           </motion.div>
