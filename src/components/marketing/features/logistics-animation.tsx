@@ -33,10 +33,12 @@ function NumberTicker({ value }: { value: number }) {
 
 export const LogisticsAnimation: React.FC = () => {
   const [revenue, setRevenue] = useState(12450);
+  const [nextRoute, setNextRoute] = useState<"express" | "standard">("express");
   const [logs, setLogs] = useState<LogEntry[]>([
     { id: 1, text: "System Online: Routing Active", type: "info" },
   ]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [activeOrderId, setActiveOrderId] = useState<number | null>(null);
 
   const addLog = useCallback(
     (text: string, type: "info" | "success" = "info") => {
@@ -51,30 +53,28 @@ export const LogisticsAnimation: React.FC = () => {
     []
   );
 
-  const handleComplete = useCallback(
-    (id: number, route: "express" | "standard") => {
-      const earnedAmount = route === "express" ? 145 : 85;
-      setRevenue(prev => prev + earnedAmount);
-      setOrders(prev => prev.filter(o => o.id !== id));
-    },
-    []
-  );
+  const handleComplete = useCallback(() => {
+    const earnedAmount = nextRoute === "express" ? 145 : 85;
 
+    // Increase revenue
+    setRevenue(prev => prev + earnedAmount);
+
+    // Remove the current order
+    setOrders([]);
+    setActiveOrderId(null);
+
+    // Alternate routes for next order
+    setNextRoute(prev => (prev === "express" ? "standard" : "express"));
+  }, [nextRoute]);
+
+  // Create initial order
   useEffect(() => {
-    setOrders([{ id: Date.now(), route: "express" }]);
-
-    const interval = setInterval(() => {
-      if (document.hidden) return;
+    if (orders.length === 0 && activeOrderId === null) {
       const id = Date.now();
-      const route = Math.random() > 0.5 ? "express" : "standard";
-      setOrders(prev => {
-        if (prev.length > 4) return prev;
-        return [...prev, { id, route }];
-      });
-    }, 2800);
-
-    return () => clearInterval(interval);
-  }, []);
+      setActiveOrderId(id);
+      setOrders([{ id, route: nextRoute }]);
+    }
+  }, [orders, nextRoute, activeOrderId]);
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-6 select-none">
@@ -204,14 +204,14 @@ export const LogisticsAnimation: React.FC = () => {
               key={order.id}
               route={order.route}
               onLog={addLog}
-              onComplete={() => handleComplete(order.id, order.route)}
+              onComplete={handleComplete}
             />
           ))}
         </AnimatePresence>
       </div>
 
       {/* Activity Log */}
-      <div className="mt-2 min-h-[60px] border-t border-slate-100 pt-3">
+      <div className="mt-2 min-h-[70px] border-t border-slate-100 pt-3">
         <div className="space-y-1.5">
           <AnimatePresence mode="popLayout">
             {logs.map(log => (
