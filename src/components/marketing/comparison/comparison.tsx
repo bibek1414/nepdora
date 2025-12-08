@@ -47,8 +47,9 @@ const Comparison: React.FC = () => {
                   <span className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
                     NPR
                   </span>
+
                   <motion.span
-                    className="text-3xl font-bold tracking-tight text-slate-700 sm:text-4xl md:text-5xl"
+                    className="ml-2 text-3xl font-bold tracking-tight text-slate-700 sm:text-4xl md:text-5xl"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                   >
@@ -126,7 +127,7 @@ const CountUp = ({ end, duration }: { end: number; duration: number }) => {
     }, 1000 / 60);
     return () => clearInterval(timer);
   }, [end, duration]);
-  return <>{count.toLocaleString()}</>;
+  return <>{count.toLocaleString("en-IN")}</>;
 };
 
 export default Comparison;

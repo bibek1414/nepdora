@@ -6,6 +6,7 @@ import SocialIcons from "./social-icons";
 import { useState } from "react";
 import { useNewsletter } from "@/hooks/use-newsletter";
 import { xinfinAddress, xinfinEmail, xinfinPhone } from "@/constants/contact";
+import Image from "next/image";
 
 export const Footer = () => {
   return (
@@ -43,6 +44,12 @@ export const Footer = () => {
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
+            <Image
+              src="/nepdora-logooo.svg"
+              alt="Logo"
+              width={100}
+              height={100}
+            />
             <p className="max-w-sm text-xs leading-relaxed text-gray-600 sm:text-sm">
               We&apos;re committed to delivering exceptional care with
               compassion, trust, and integrity. From your first visit to

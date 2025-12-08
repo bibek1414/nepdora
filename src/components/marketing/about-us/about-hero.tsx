@@ -22,9 +22,12 @@ const AboutHero: React.FC = () => {
             </span>
           </h1>
           <p className="mb-8 max-w-2xl text-base leading-relaxed font-light text-slate-500 sm:text-lg md:text-xl lg:text-2xl">
-            We are on a mission to democratize the digital economy. We believe a
-            shopkeeper in Asan should have the same digital power as a startup
-            in Silicon Valley.
+            We are on a mission to democratize the digital economy. We believe a{" "}
+            {}
+            <span className="text-primary font-serif italic">
+              shopkeeper in Asan should have the same digital power as a startup
+              in Silicon Valley.
+            </span>
           </p>
         </motion.div>
       </div>

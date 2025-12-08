@@ -82,8 +82,8 @@ const WebsitePreview = ({ config }: { config: WebsiteState }) => {
   };
 
   const widthClass = {
-    mobile: "w-[375px]",
-    tablet: "w-[700px]",
+    mobile: "w-full max-w-[375px]",
+    tablet: "w-full max-w-[700px]",
     desktop: "w-full",
   }[config.viewport];
 
@@ -101,7 +101,7 @@ const WebsitePreview = ({ config }: { config: WebsiteState }) => {
           </span>
         </div>
         {config.viewport !== "mobile" && (
-          <div className="flex items-center gap-6 text-[10px] font-medium uppercase">
+          <div className="hidden items-center gap-6 text-[10px] font-medium uppercase sm:flex">
             <span className={`${textClass} opacity-60`}>Shop</span>
             <span className={`${textClass} opacity-60`}>Stories</span>
             <span className={`${textClass} opacity-60`}>About</span>
@@ -115,7 +115,7 @@ const WebsitePreview = ({ config }: { config: WebsiteState }) => {
 
       <div className="flex-1 overflow-y-auto p-4">
         <div
-          className={`mb-6 grid items-center gap-6 ${config.viewport === "mobile" ? "grid-cols-1" : "grid-cols-2"}`}
+          className={`mb-6 grid items-center gap-6 ${config.viewport === "mobile" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}
         >
           <div>
             <span
@@ -152,7 +152,7 @@ const WebsitePreview = ({ config }: { config: WebsiteState }) => {
             Featured Products
           </h3>
           <div
-            className={`grid gap-4 ${config.viewport === "mobile" ? "grid-cols-2" : "grid-cols-3"}`}
+            className={`grid gap-4 ${config.viewport === "mobile" ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-3"}`}
           >
             {products
               .slice(0, config.viewport === "mobile" ? 2 : 3)
@@ -216,16 +216,16 @@ export const DesignAnimation = () => {
     const animate = async () => {
       // Coordinates for cursor positions
       const C = {
-        MOB: { x: 142, y: 23 },
-        TAB: { x: 178, y: 23 },
-        DESK: { x: 214, y: 23 },
+        MOB: { x: 168, y: 23 },
+        TAB: { x: 198, y: 23 },
+        DESK: { x: 220, y: 23 },
         LIGHT: { x: 42, y: 95 },
-        DARK: { x: 154, y: 95 },
-        FONT_DD: { x: 128, y: 166 },
-        FONT_SER: { x: 128, y: 222 },
-        LOGO_DD: { x: 128, y: 240 },
-        LOGO_GEO: { x: 128, y: 295 },
-        CHAT: { x: 186, y: 356 },
+        DARK: { x: 164, y: 105 },
+        FONT_DD: { x: 138, y: 180 },
+        FONT_SER: { x: 138, y: 246 },
+        LOGO_DD: { x: 138, y: 254 },
+        LOGO_GEO: { x: 138, y: 340 },
+        CHAT: { x: 206, y: 386 },
       };
 
       while (isActive) {
@@ -369,10 +369,10 @@ export const DesignAnimation = () => {
   };
 
   return (
-    <div className="relative flex h-[700px] w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50 font-sans shadow-sm">
+    <div className="relative flex h-[900px] w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-slate-50 font-sans shadow-sm md:h-[700px] md:flex-row">
       {/* Animated Cursor */}
       <div
-        className="pointer-events-none absolute z-[100] transition-all duration-150 ease-out"
+        className="pointer-events-none absolute z-[100] hidden transition-all duration-150 ease-out md:block"
         style={{
           transform: `translate(${cursor.x}px, ${cursor.y}px) scale(${cursor.active ? 0.85 : 1})`,
           filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4))",
@@ -382,7 +382,7 @@ export const DesignAnimation = () => {
       </div>
 
       {/* Left Panel - Editor */}
-      <div className="relative z-10 flex w-64 flex-shrink-0 flex-col border-r border-slate-200 bg-white">
+      <div className="relative z-10 flex h-auto w-full flex-shrink-0 flex-col border-b border-slate-200 bg-white md:h-full md:w-64 md:border-r md:border-b-0">
         <div className="border-b border-slate-100 px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -409,7 +409,7 @@ export const DesignAnimation = () => {
           </div>
         </div>
 
-        <div className="flex-1 space-y-6 overflow-y-auto p-4">
+        <div className="flex-1 space-y-4 overflow-y-auto p-4 md:space-y-6">
           {/* Theme Toggle */}
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase">
@@ -506,7 +506,7 @@ export const DesignAnimation = () => {
       </div>
 
       {/* Right Panel - Preview */}
-      <div className="relative flex flex-1 items-start justify-center overflow-hidden bg-slate-100/50 p-6">
+      <div className="relative flex flex-1 items-start justify-center overflow-hidden bg-slate-100/50 p-4 md:p-6">
         {/* Grid Background */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.03]"

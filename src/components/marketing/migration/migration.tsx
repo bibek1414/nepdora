@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight, Check, Shield, Zap } from "lucide-react";
+import { ChevronRight, Check, Shield, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ const Migration: React.FC = () => {
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
           <div className="order-2 lg:order-1">
-            <Card className="border-slate-200 shadow-xl shadow-slate-200/50">
+            <Card className="border-slate-200">
               <CardContent className="p-8 md:p-10">
                 <div className="mb-8 flex items-center justify-between border-b border-slate-100 pb-6">
                   <div className="opacity-50 grayscale">
@@ -103,7 +103,7 @@ const Migration: React.FC = () => {
                   </div>
                   <Button className="w-full justify-center py-6 text-base">
                     Start Free Transfer{" "}
-                    <ArrowRight size={18} className="ml-2" />
+                    <ChevronRight size={18} className="ml-2" />
                   </Button>
                 </form>
                 <div className="mt-4 flex items-center justify-center gap-2 text-[10px] font-medium tracking-wide text-slate-400 uppercase">

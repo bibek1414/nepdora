@@ -84,9 +84,9 @@ function isRootDomain(request: NextRequest): boolean {
 }
 
 /**
- * Middleware: rewrites subdomain routes and redirects authenticated users
+ * proxy: rewrites subdomain routes and redirects authenticated users
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const subdomain = extractSubdomain(request);
 
@@ -155,7 +155,7 @@ export async function middleware(request: NextRequest) {
 }
 
 /**
- * Matcher: run middleware on all routes except API, Next internals, and static files
+ * Matcher: run proxy on all routes except API, Next internals, and static files
  */
 export const config = {
   matcher: [
