@@ -66,12 +66,12 @@ const TemplatesPage = () => {
         <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6">
           <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:mb-10 sm:gap-6 md:mb-12">
             <div>
-              <h2 className="mb-3 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
-                Not just templates.
-                <span className="font-serif text-slate-500 italic">
-                  Unique Identities.
-                </span>
+              <h2 className="mb-2 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl">
+                Featured Website Templates
               </h2>
+              <p className="text-xs text-slate-600 sm:text-sm">
+                Monthly updated templates to help you get started.
+              </p>
             </div>
             <CategoryNavigationSkeleton />
           </div>

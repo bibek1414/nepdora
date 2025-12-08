@@ -9,6 +9,7 @@ import UseCases from "@/components/marketing/use-cases/use-cases";
 import QuickBuilder from "@/components/marketing/quick-builder/quick-builder";
 import CTA from "@/components/marketing/cta-section/cta-section";
 import Comparison from "@/components/marketing/comparison/comparison";
+import Migration from "@/components/marketing/migration/migration";
 // Lazy load non-critical components to reduce initial load
 const TestimonialsSection = dynamic(
   () => import("@/components/marketing/testimonials/testimonials"),
@@ -186,6 +187,7 @@ export default function Marketing() {
         <UseCases />
         <QuickBuilder />
         <Comparison />
+        <Migration />
         <Concierge />
         <TestimonialsSection />
         {/* <ContactSection /> */}

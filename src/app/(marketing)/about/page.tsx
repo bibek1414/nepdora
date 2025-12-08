@@ -1,9 +1,11 @@
-import CountdownAnimation from "@/components/marketing/about-us/hero-section";
-import AboutUs from "@/components/marketing/about-us/about-us";
-import OurStrengths from "@/components/marketing/about-us/our-strengths";
-import CustomerTestimonials from "@/components/marketing/testimonials/testimonials";
-import Technology from "@/components/marketing/about-us/techonology-section";
 import type { Metadata } from "next";
+import AboutHero from "@/components/marketing/about-us/about-hero";
+import AboutStory from "@/components/marketing/about-us/about-story";
+import AboutSecurity from "@/components/marketing/about-us/about-security";
+import AboutValues from "@/components/marketing/about-us/about-values";
+import AboutTeam from "@/components/marketing/about-us/about-team";
+import CTA from "@/components/marketing/cta-section/cta-section";
+import Testimonials from "@/components/marketing/testimonials/testimonials";
 
 export const metadata: Metadata = {
   title: "About Nepdora : Made in Nepal Website Builder",
@@ -49,12 +51,14 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <>
-      <CountdownAnimation />
-      <AboutUs />
-      <OurStrengths />
-      <CustomerTestimonials />
-      <Technology />
-    </>
+    <div>
+      <AboutHero />
+      <AboutStory />
+      <AboutSecurity />
+      <AboutValues />
+      <AboutTeam />
+      <Testimonials />
+      <CTA />
+    </div>
   );
 }
