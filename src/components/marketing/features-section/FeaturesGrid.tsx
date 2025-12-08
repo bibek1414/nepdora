@@ -9,15 +9,16 @@ import {
   Clock,
   Layout,
   Layers,
+  Sparkles,
 } from "lucide-react";
 import AnalyticsSkeleton from "./AnalyticsSkeleton";
 import OrdersSkeleton from "./OrdersSkeleton";
 import GlobalSalesSkeleton from "./GlobalSalesSkeleton";
-import IntegrationsSkeleton from "./IntegrationsSkeleton";
 import TemplateSkeleton from "./TemplateSkeleton";
 import DomainSkeleton from "./DomainSkeleton";
 import CrmSmallSkeleton from "./CrmSmallSkeleton";
 import SetupSkeleton from "./SetupSkeleton";
+import AIBuilderDemo from "./AIBuilderDemo";
 
 const features = [
   // ROW 1: Large Cards
@@ -65,13 +66,13 @@ const features = [
     skeleton: <GlobalSalesSkeleton />,
     icon: Globe,
   },
+
   {
-    title: "Seamless Integrations",
-    description: "Connect with Salesforce, Slack, and your favorite tools.",
-    className:
-      "md:col-span-2 md:row-span-2 bg-slate-900 text-white border-slate-800",
-    skeleton: <IntegrationsSkeleton />,
-    icon: Layers,
+    title: "AI Website Builder",
+    description: "Describe your dream website and watch it come to life.",
+    className: "md:col-span-4 md:row-span-4 bg-white",
+    skeleton: <AIBuilderDemo />,
+    icon: Sparkles,
   },
 ];
 
