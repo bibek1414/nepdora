@@ -30,10 +30,10 @@ const QuickBuilder: React.FC = () => {
       <div className="relative z-10 mx-auto max-w-3xl px-3 text-center sm:px-4 lg:px-6">
         <div className="mb-8 sm:mb-10 md:mb-12">
           <h2 className="mb-3 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
-            Ready to begin?
+            Build Your Free Website Now
           </h2>
           <p className="text-sm font-normal text-slate-500 sm:text-base md:text-lg">
-            Type your idea. We&apos;ll build the rest.
+            Tell us about your business. We'll build the rest.
           </p>
         </div>
 

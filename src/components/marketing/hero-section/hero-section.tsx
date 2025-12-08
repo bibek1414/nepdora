@@ -88,7 +88,7 @@ const Hero: React.FC = () => {
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
               <TrendingUp size={12} className="text-slate-600" />
               <span className="text-[11px] font-medium text-slate-600 sm:text-xs">
-                For Nepali Business Owners
+                For Nepali Business Owners - Build All Kind of Websites Build
               </span>
             </div>
 
@@ -97,8 +97,10 @@ const Hero: React.FC = () => {
             </h1>
 
             <p className="mb-8 max-w-md text-sm leading-relaxed font-normal text-slate-600 sm:text-base md:text-lg">
-              From prompt to profits. We handle the design, payments, and
-              logistics so you can just sell.
+              Tell us about your business and your website will be live within 5
+              Minutes, totally customized for your business. We handle the
+              design, payments, and logistics so you can just sell your products
+              and services.
             </p>
 
             <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
@@ -109,9 +111,6 @@ const Hero: React.FC = () => {
                 Start Building Free
                 <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
-              <div className="flex items-center gap-3 pl-2 text-xs text-slate-500 sm:text-sm">
-                <span>No credit card needed.</span>
-              </div>
             </div>
           </motion.div>
 
@@ -153,7 +152,7 @@ const Hero: React.FC = () => {
                     >
                       <div className="w-full max-w-md rounded-2xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/50">
                         <div className="mb-6 flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+                          <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100">
                             <Command size={16} />
                           </div>
                           <span className="text-xs font-bold tracking-wide text-slate-900 uppercase">
@@ -162,10 +161,7 @@ const Hero: React.FC = () => {
                         </div>
                         <div className="font-serif text-2xl leading-snug text-slate-800">
                           "{text}
-                          <span className="animate-pulse text-emerald-500">
-                            |
-                          </span>
-                          "
+                          <span className="text-primary animate-pulse">|</span>"
                         </div>
                       </div>
                     </motion.div>
@@ -238,7 +234,7 @@ const Hero: React.FC = () => {
                             initial={{ scale: 0 }}
                             animate={{ scale: 1.5, opacity: 0 }}
                             transition={{ duration: 0.4 }}
-                            className="absolute -top-3 -left-3 h-14 w-14 rounded-full bg-emerald-500 opacity-30"
+                            className="bg-primary absolute -top-3 -left-3 h-14 w-14 rounded-full opacity-30"
                           />
                         )}
                       </motion.div>
@@ -266,7 +262,7 @@ const Hero: React.FC = () => {
                           <div className="flex gap-6">
                             <div className="h-2 w-20 rounded-full bg-slate-200"></div>
                             <div className="h-2 w-20 rounded-full bg-slate-200"></div>
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-xs text-white">
+                            <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-full text-xs text-white">
                               <ShoppingBag size={14} />
                             </div>
                           </div>
@@ -338,7 +334,7 @@ const Hero: React.FC = () => {
                               exit={{ opacity: 0 }}
                               className="absolute top-24 right-8 z-30 flex items-center gap-4 rounded-xl border border-slate-100 bg-white p-4 shadow-xl"
                             >
-                              <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                              <div className="text-primary relative flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
                                 <Bell size={18} />
                                 <span className="absolute top-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-red-500"></span>
                               </div>

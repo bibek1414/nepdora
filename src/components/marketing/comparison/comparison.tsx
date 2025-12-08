@@ -40,7 +40,7 @@ const Comparison: React.FC = () => {
                     <Calculator size={16} className="sm:h-[18px] sm:w-[18px]" />
                   </div>
                   <p className="text-[10px] font-semibold tracking-wide text-slate-500 uppercase sm:text-xs sm:tracking-widest">
-                    Savings Calculator
+                    You will save
                   </p>
                 </div>
                 <div className="flex items-baseline gap-1">
@@ -55,9 +55,6 @@ const Comparison: React.FC = () => {
                     <CountUp end={245000} duration={2} />
                   </motion.span>
                 </div>
-                <p className="mt-2 text-xs font-medium text-slate-500 sm:mt-3 sm:text-sm">
-                  Average first-year savings per project.
-                </p>
               </div>
             </motion.div>
           </div>

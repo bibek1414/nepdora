@@ -48,11 +48,9 @@ const CaseStudies: React.FC = () => {
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col items-start justify-between sm:mb-10 md:flex-row md:items-end">
           <div>
-            <h2 className="mb-4 text-2xl leading-tight font-bold text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
-              Don&apos;t just take our word for it.{" "}
-              <span className="font-serif text-slate-600 italic">
-                See the growth.
-              </span>
+            <h2 className="mb-4 text-2xl leading-tight font-extrabold text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
+              See how other Nepali Business get value from their Website on
+              Nepdora.
             </h2>
           </div>
         </div>

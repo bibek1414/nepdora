@@ -9,12 +9,11 @@ const Concierge: React.FC = () => {
         <div className="flex flex-col items-center gap-8 md:flex-row md:gap-12">
           <div className="flex-1">
             <h2 className="mb-3 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl">
-              We&apos;ll build it for you.{" "}
-              <span className="font-serif text-slate-600 italic">Free.</span>
+              Our team will help you built it
             </h2>
             <p className="mb-6 text-sm text-slate-600 sm:text-base md:text-lg">
-              Too busy? Our team will set up your site, products, and payment
-              gateways at no extra cost.
+              Too busy to build it yourself? Our team will set up your site,
+              products, services, and payment gateways at no extra cost.
             </p>
 
             <ul className="mb-6 space-y-2 sm:mb-8 sm:space-y-2.5">

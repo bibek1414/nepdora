@@ -11,7 +11,7 @@ const UseCases: React.FC = () => {
         <div className="mb-8 flex flex-col items-start justify-between sm:mb-10 md:flex-row md:items-end">
           <div>
             <h2 className="mb-4 text-2xl leading-tight font-bold text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
-              Best Designed Websites for Any Business
+              Build Custom Website For Every Business
             </h2>
           </div>
         </div>
