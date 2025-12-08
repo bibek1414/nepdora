@@ -1,3 +1,4 @@
+import FeaturesGrid from "@/components/marketing/features-section/FeaturesGrid";
 import FeaturesSection from "@/components/marketing/features-section/features-section";
 import type { Metadata } from "next";
 
@@ -44,5 +45,5 @@ export const metadata: Metadata = {
 };
 
 export default function FeaturesPage() {
-  return <FeaturesSection />;
+  return <FeaturesGrid />;
 }
