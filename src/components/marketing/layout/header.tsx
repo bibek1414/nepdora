@@ -111,9 +111,9 @@ const Header: React.FC = () => {
         <div className="flex items-center space-x-2">
           <Link href="/" onClick={closeMenu}>
             <img
-              src="/nepdora-logoo.svg"
+              src="/nepdora-logooo.svg"
               alt="Nepdora Logo"
-              className="h-8 cursor-pointer sm:h-6"
+              className="h-6 cursor-pointer sm:h-6"
             />
           </Link>
         </div>

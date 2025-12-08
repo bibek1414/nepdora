@@ -20,7 +20,7 @@ export const LoadingScreen = ({ isVisible }: LoadingScreenProps) => {
       {/* Logo and Content */}
       <div className="flex flex-col items-center space-y-6">
         <img
-          src="/nepdora-logoo.svg"
+          src="/nepdora-logooo.svg"
           alt="Nepdora Sitebuilder+"
           className="h-16 w-auto"
         />

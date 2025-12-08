@@ -25,6 +25,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Nepdora : Website Builder - Create a Free Website In Minutes",
+  icons: {
+    icon: "https://nepdora.com/favicon.ico",
+    shortcut: "https://nepdora.com/favicon-16x16.png",
+    apple: "https://nepdora.com/apple-touch-icon.png",
+  },
   description:
     "Launch your business online quickly with our free website builder, free hosting, and a comprehensive suite of essential business tools. Start now!",
   openGraph: {

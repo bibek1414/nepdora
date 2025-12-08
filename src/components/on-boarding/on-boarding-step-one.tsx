@@ -76,7 +76,7 @@ export const OnboardingStepOne = ({
       <div className="flex min-h-screen flex-col bg-white">
         {/* Header */}
         <header className="flex items-center justify-between px-6 py-4">
-          <img src="/nepdora-logoo.svg" alt="Logo" className="h-8" />
+          <img src="/nepdora-logooo.svg" alt="Logo" className="h-8" />
           <Button
             variant="ghost"
             className="text-gray-600 hover:text-gray-900"

@@ -111,7 +111,7 @@ export default function Marketing() {
     name: "Nepdora Pvt. Ltd.",
     alternateName: "Nepdora",
     url: "https://nepdora.com",
-    logo: "https://nepdora.com/nepdora-logoo.svg",
+    logo: "https://nepdora.com/nepdora-logooo.svg",
     founder: {
       "@type": "Person",
       name: "Vishal Dhakal",

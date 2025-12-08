@@ -173,7 +173,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
               <div className="flex items-center space-x-4">
                 <div className="flex items-center">
                   <Image
-                    src="/nepdora-logoo.svg"
+                    src="/nepdora-logooo.svg"
                     alt="Logo"
                     width={150}
                     height={40}
