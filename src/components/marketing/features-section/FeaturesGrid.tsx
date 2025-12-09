@@ -78,7 +78,7 @@ const features = [
 
 const FeaturesGrid: React.FC = () => {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-24 sm:px-10 sm:py-32">
+    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-10 sm:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
