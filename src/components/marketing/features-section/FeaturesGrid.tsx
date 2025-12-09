@@ -78,7 +78,7 @@ const features = [
 
 const FeaturesGrid: React.FC = () => {
   return (
-    <section className="bg-slate-50 py-24 sm:py-32">
+    <section className="mx-auto max-w-7xl px-4 py-24 sm:px-10 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -97,7 +97,7 @@ const FeaturesGrid: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: idx * 0.05, duration: 0.5 }}
-              className={`group relative flex flex-col overflow-hidden rounded-[2rem] border shadow-sm transition-all hover:shadow-lg ${feature.className} ${feature.className.includes("bg-slate-900") ? "border-slate-800" : "border-slate-200"}`}
+              className={`group relative flex flex-col overflow-hidden rounded-[2rem] border ${feature.className} ${feature.className.includes("bg-slate-900") ? "border-slate-800" : "border-slate-200"}`}
             >
               {/* Animation/Skeleton Area */}
               <div className="relative flex-1 overflow-hidden">
