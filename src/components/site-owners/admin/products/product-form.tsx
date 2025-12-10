@@ -631,6 +631,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                   placeholder="Write your product description here..."
                                   height="260px"
                                   toolbar="advanced"
+                                  uploadFolder="products"
                                 />
                               </FormControl>
                               <FormMessage />

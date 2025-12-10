@@ -125,6 +125,7 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
                     placeholder="Write your service description here..."
                     height="250px"
                     toolbar="advanced"
+                    uploadFolder="services"
                   />
                 </FormControl>
                 <FormMessage />

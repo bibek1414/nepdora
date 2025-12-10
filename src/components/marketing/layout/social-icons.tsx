@@ -1,31 +1,21 @@
-import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
 
 const SocialIcons = () => {
   return (
     <div className="flex items-center space-x-4">
       <a
-        href="#"
+        href="https://www.facebook.com/NepdoraWebBuilder"
         className="text-gray-500 transition-colors hover:text-gray-900"
+        target="_blank"
       >
         <Facebook size={20} />
       </a>
       <a
-        href="#"
+        href="https://www.instagram.com/nep_dora"
         className="text-gray-500 transition-colors hover:text-gray-900"
+        target="_blank"
       >
         <Instagram size={20} />
-      </a>
-      <a
-        href="#"
-        className="text-gray-500 transition-colors hover:text-gray-900"
-      >
-        <Linkedin size={20} />
-      </a>
-      <a
-        href="#"
-        className="text-gray-500 transition-colors hover:text-gray-900"
-      >
-        <Twitter size={20} />
       </a>
     </div>
   );

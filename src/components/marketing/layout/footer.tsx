@@ -95,9 +95,7 @@ export const Footer = () => {
               <div className="flex flex-col space-y-3">
                 <FooterLink href="/contact">Contact Us</FooterLink>
                 <FooterLink href="/privacy-policy">Privacy Policy</FooterLink>
-                <FooterLink href="/terms-and-conditions">
-                  Terms and Conditions
-                </FooterLink>
+                <FooterLink href="/terms">Terms and Conditions</FooterLink>
               </div>
             </div>
           </motion.div>
@@ -131,7 +129,7 @@ export const Footer = () => {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <p className="text-xs text-gray-500">
-            © Copywrite {new Date().getFullYear()} All rights reserved.
+            © Nepdora {new Date().getFullYear()} All rights reserved.
           </p>
           <SocialIcons />
         </motion.div>

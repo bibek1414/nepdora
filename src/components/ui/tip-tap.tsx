@@ -48,6 +48,7 @@ import {
   Minus,
   Plus,
 } from "lucide-react";
+import { uploadToCloudinary } from "@/utils/cloudinary";
 
 const FontSizeExtension = TextStyle.extend({
   addGlobalAttributes() {
@@ -371,6 +372,7 @@ export interface ReusableQuillProps {
   onImageUpload?: (file: File) => Promise<string>;
   maxImageSize?: number;
   acceptedImageTypes?: string[];
+  uploadFolder?: string;
 }
 
 export interface ReusableQuillRef {
@@ -403,6 +405,7 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
         "image/gif",
         "image/webp",
       ],
+      uploadFolder,
     },
     ref
   ) => {
@@ -621,11 +624,24 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
         if (onImageUpload) {
           imageUrl = await onImageUpload(file);
         } else {
-          imageUrl = await new Promise<string>(resolve => {
-            const reader = new FileReader();
-            reader.onload = e => resolve(e.target?.result as string);
-            reader.readAsDataURL(file);
-          });
+          try {
+            // Upload to Cloudinary by default if no custom handler provided
+            imageUrl = await uploadToCloudinary(file, {
+              folder: uploadFolder || "text-editor",
+              resourceType: "image",
+            });
+          } catch (uploadError) {
+            console.error(
+              "Cloudinary upload failed, falling back to local FileReader:",
+              uploadError
+            );
+            // Fallback to local FileReader if Cloudinary fails
+            imageUrl = await new Promise<string>(resolve => {
+              const reader = new FileReader();
+              reader.onload = e => resolve(e.target?.result as string);
+              reader.readAsDataURL(file);
+            });
+          }
         }
 
         // Insert image at current cursor position

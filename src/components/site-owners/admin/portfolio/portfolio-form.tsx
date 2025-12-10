@@ -300,6 +300,7 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
                     placeholder="Write your portfolio content here..."
                     height="250px"
                     toolbar="advanced"
+                    uploadFolder="portfolio"
                   />
                 </FormControl>
                 <FormMessage />

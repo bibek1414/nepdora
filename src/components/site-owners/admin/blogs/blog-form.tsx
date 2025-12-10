@@ -213,6 +213,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
                     placeholder="Write your blog content here..."
                     height="250px"
                     toolbar="advanced"
+                    uploadFolder="blogs"
                   />
                 </FormControl>
                 <FormMessage />

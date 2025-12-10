@@ -379,6 +379,7 @@ export const TeamMemberDialog: React.FC<TeamMemberDialogProps> = ({
               placeholder="Brief description about the team member..."
               minHeight="500px"
               className={fieldErrors.about ? "border-red-500" : ""}
+              uploadFolder="team-members"
             />
             {fieldErrors.about && (
               <p className="text-sm text-red-500">

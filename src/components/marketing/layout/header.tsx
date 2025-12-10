@@ -136,14 +136,14 @@ const Header: React.FC = () => {
                 </Button>
               </Link>
               <Link href="/admin/signup">
-                <Button className="bg-primary/80 text-white transition-all duration-200">
+                <Button className="bg-primary/80 rounded-full text-white transition-all duration-200">
                   Create Your Website for Free
                 </Button>
               </Link>
             </>
           ) : (
             <Link href="/admin">
-              <Button className="bg-primary/80 text-white transition-all duration-200">
+              <Button className="bg-primary/80 rounded-full text-white transition-all duration-200">
                 Admin Panel
               </Button>
             </Link>
@@ -198,14 +198,14 @@ const Header: React.FC = () => {
                     onClick={closeMenu}
                     className="block"
                   >
-                    <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: w-full bg-gradient-to-r text-white transition-all duration-200">
+                    <Button className="from-primary to-secondary hover:from-primary/90 w-full rounded-full">
                       Start Using the Nepdora Free
                     </Button>
                   </Link>
                 </>
               ) : (
                 <Link href="/admin" onClick={closeMenu} className="block">
-                  <Button className="from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 hover: w-full bg-gradient-to-r text-white transition-all duration-200">
+                  <Button className="w-full rounded-full text-white transition-all duration-200">
                     Admin Panel
                   </Button>
                 </Link>
