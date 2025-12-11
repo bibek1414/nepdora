@@ -24,7 +24,7 @@ import {
 } from "@/types/owner-site/admin/collection";
 import { Badge } from "@/components/ui/badge";
 import { uploadToCloudinary } from "@/utils/cloudinary";
-import { Loader2, Upload, X } from "lucide-react";
+import { Loader2, Upload, X, Plus } from "lucide-react";
 import Image from "next/image";
 import ReusableQuill from "@/components/ui/tip-tap";
 
@@ -52,7 +52,25 @@ export function CollectionDataDialog({
 
   useEffect(() => {
     if (editingData) {
-      setFormData(editingData.data);
+      // Parse stringified arrays for text/email fields
+      const parsedData = { ...editingData.data };
+      collection.all_fields.forEach(field => {
+        if (
+          (field.type === "text" || field.type === "email") &&
+          typeof parsedData[field.name] === "string"
+        ) {
+          try {
+            // Try to parse JSON stringified arrays
+            const parsed = JSON.parse(parsedData[field.name]);
+            if (Array.isArray(parsed)) {
+              parsedData[field.name] = parsed;
+            }
+          } catch {
+            // Not JSON, keep as string
+          }
+        }
+      });
+      setFormData(parsedData);
     } else {
       // Initialize with empty values based on field types
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,7 +91,29 @@ export function CollectionDataDialog({
 
     // Validate required fields
     const missingFields = collection.all_fields
-      .filter(f => f.required && !formData[f.name])
+      .filter(f => {
+        if (!f.required) return false;
+        const value = formData[f.name];
+        // Handle image fields that can be string or array
+        if (f.type === "image") {
+          if (Array.isArray(value)) {
+            return value.length === 0;
+          }
+          return !value || value === "";
+        }
+        // Handle text/email fields that can be string or array
+        if (f.type === "text" || f.type === "email") {
+          if (Array.isArray(value)) {
+            // Check if array is empty or all values are empty strings
+            return (
+              value.length === 0 ||
+              value.every((v: string) => !v || v.trim() === "")
+            );
+          }
+          return !value || value === "";
+        }
+        return !value;
+      })
       .map(f => f.name);
 
     if (missingFields.length > 0) {
@@ -84,17 +124,29 @@ export function CollectionDataDialog({
     }
 
     try {
+      // Process formData: stringify arrays for text/email fields
+      const processedData = { ...formData };
+      collection.all_fields.forEach(field => {
+        if (
+          (field.type === "text" || field.type === "email") &&
+          Array.isArray(processedData[field.name])
+        ) {
+          // Stringify array values for text fields
+          processedData[field.name] = JSON.stringify(processedData[field.name]);
+        }
+      });
+
       if (editingData) {
         await updateDataMutation.mutateAsync({
           slug: collection.slug,
           id: editingData.id,
-          dataInput: { data: formData },
+          dataInput: { data: processedData },
         });
         toast.success("Data updated successfully");
       } else {
         await createDataMutation.mutateAsync({
           slug: collection.slug,
-          dataInput: { data: formData },
+          dataInput: { data: processedData },
         });
         toast.success("Data created successfully");
       }
@@ -132,24 +184,68 @@ export function CollectionDataDialog({
     fieldName: string,
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     try {
       setUploadingFields(prev => ({ ...prev, [fieldName]: true }));
-      const imageUrl = await uploadToCloudinary(file);
-      updateFieldValue(fieldName, imageUrl);
-      toast.success("Image uploaded successfully");
+
+      const currentValue = formData[fieldName];
+      const isArray = Array.isArray(currentValue);
+      const existingImages = isArray
+        ? currentValue
+        : currentValue
+          ? [currentValue]
+          : [];
+
+      // Upload all selected files
+      const uploadPromises = Array.from(files).map(file =>
+        uploadToCloudinary(file)
+      );
+      const uploadedUrls = await Promise.all(uploadPromises);
+
+      // Combine existing images with new ones
+      const allImages = [...existingImages, ...uploadedUrls];
+
+      // If multiple images, store as array; if single, store as string
+      const newValue = allImages.length > 1 ? allImages : allImages[0] || "";
+      updateFieldValue(fieldName, newValue);
+
+      toast.success(
+        uploadedUrls.length > 1
+          ? `${uploadedUrls.length} images uploaded successfully`
+          : "Image uploaded successfully"
+      );
     } catch (error) {
-      toast.error("Failed to upload image");
+      toast.error("Failed to upload image(s)");
       console.error(error);
     } finally {
       setUploadingFields(prev => ({ ...prev, [fieldName]: false }));
+      // Reset file input
+      e.target.value = "";
     }
   };
 
-  const removeImage = (fieldName: string) => {
-    updateFieldValue(fieldName, "");
+  const removeImage = (fieldName: string, index?: number) => {
+    const currentValue = formData[fieldName];
+
+    if (Array.isArray(currentValue)) {
+      // Remove specific image from array
+      if (index !== undefined) {
+        const newArray = currentValue.filter((_, i) => i !== index);
+        // If only one image left, convert to string
+        updateFieldValue(
+          fieldName,
+          newArray.length === 1 ? newArray[0] : newArray
+        );
+      } else {
+        // Remove all images
+        updateFieldValue(fieldName, "");
+      }
+    } else {
+      // Single image - remove it
+      updateFieldValue(fieldName, "");
+    }
   };
 
   const handleRichTextImageUpload = async (file: File): Promise<string> => {
@@ -194,13 +290,79 @@ export function CollectionDataDialog({
     switch (field.type) {
       case "text":
       case "email":
+        const isArrayValue = Array.isArray(fieldValue);
+        const textArray = isArrayValue
+          ? fieldValue
+          : fieldValue
+            ? [fieldValue]
+            : [""];
+
         return (
-          <Input
-            type={field.type === "email" ? "email" : "text"}
-            value={fieldValue || ""}
-            onChange={e => updateFieldValue(field.name, e.target.value)}
-            required={field.required}
-          />
+          <div className="space-y-2">
+            {textArray.map((textValue: string, index: number) => (
+              <div key={index} className="flex gap-2">
+                <Input
+                  type={field.type === "email" ? "email" : "text"}
+                  value={textValue || ""}
+                  onChange={e => {
+                    const newArray = [...textArray];
+                    newArray[index] = e.target.value;
+                    // If it was already an array or has multiple items, keep as array
+                    // Otherwise, store as string
+                    const newValue =
+                      isArrayValue || newArray.length > 1
+                        ? newArray
+                        : newArray[0] || "";
+                    updateFieldValue(field.name, newValue);
+                  }}
+                  placeholder={
+                    field.type === "email"
+                      ? "Enter email address"
+                      : `Enter ${field.name}`
+                  }
+                  required={field.required && index === 0}
+                  className="flex-1"
+                />
+                {isArrayValue && textArray.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      const newArray = textArray.filter((_, i) => i !== index);
+                      // If only one value left, convert to string
+                      updateFieldValue(
+                        field.name,
+                        newArray.length === 1 ? newArray[0] : newArray
+                      );
+                    }}
+                    className="h-10 w-10 shrink-0"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                // Convert to array if not already, then add empty string
+                const currentArray = isArrayValue
+                  ? fieldValue
+                  : fieldValue
+                    ? [fieldValue]
+                    : [""];
+                const newArray = [...currentArray, ""];
+                updateFieldValue(field.name, newArray);
+              }}
+              className="w-full"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add {field.name}
+            </Button>
+          </div>
         );
 
       case "number":
@@ -247,25 +409,81 @@ export function CollectionDataDialog({
         );
 
       case "image":
+        const imagesArray = Array.isArray(fieldValue)
+          ? fieldValue
+          : fieldValue
+            ? [fieldValue]
+            : [];
+        const hasImages = imagesArray.length > 0;
+
         return (
           <div className="space-y-3">
-            {fieldValue ? (
-              <div className="relative h-40 w-full overflow-hidden rounded-md border">
-                <Image
-                  src={fieldValue}
-                  alt={field.name}
-                  fill
-                  className="object-cover"
-                />
+            {hasImages ? (
+              <div className="space-y-3">
+                <div
+                  className={`grid gap-3 ${
+                    imagesArray.length === 1
+                      ? "grid-cols-1"
+                      : imagesArray.length === 2
+                        ? "grid-cols-2"
+                        : "grid-cols-3"
+                  }`}
+                >
+                  {imagesArray.map((imageUrl: string, index: number) => (
+                    <div
+                      key={index}
+                      className="relative aspect-square w-full overflow-hidden rounded-md border"
+                    >
+                      <Image
+                        src={imageUrl}
+                        alt={`${field.name} ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2 h-8 w-8"
+                        onClick={() => removeImage(field.name, index)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
                 <Button
                   type="button"
-                  variant="destructive"
-                  size="icon"
-                  className="absolute top-2 right-2 h-8 w-8"
-                  onClick={() => removeImage(field.name)}
+                  variant="outline"
+                  className="w-full"
+                  disabled={uploadingFields[field.name]}
+                  onClick={() =>
+                    document
+                      .getElementById(`file-upload-${field.name}`)
+                      ?.click()
+                  }
                 >
-                  <X className="h-4 w-4" />
+                  {uploadingFields[field.name] ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="mr-2 h-4 w-4" />
+                      Add More Images
+                    </>
+                  )}
                 </Button>
+                <Input
+                  id={`file-upload-${field.name}`}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={e => handleImageUpload(field.name, e)}
+                  disabled={uploadingFields[field.name]}
+                />
               </div>
             ) : (
               <div className="flex items-center gap-4">
@@ -288,7 +506,7 @@ export function CollectionDataDialog({
                   ) : (
                     <>
                       <Upload className="mr-2 h-4 w-4" />
-                      Upload Image
+                      Upload Image(s)
                     </>
                   )}
                 </Button>
@@ -296,6 +514,7 @@ export function CollectionDataDialog({
                   id={`file-upload-${field.name}`}
                   type="file"
                   accept="image/*"
+                  multiple
                   className="hidden"
                   onChange={e => handleImageUpload(field.name, e)}
                   disabled={uploadingFields[field.name]}
@@ -304,7 +523,11 @@ export function CollectionDataDialog({
             )}
             <Input
               type="hidden"
-              value={fieldValue || ""}
+              value={
+                Array.isArray(fieldValue)
+                  ? JSON.stringify(fieldValue)
+                  : fieldValue || ""
+              }
               required={field.required}
             />
           </div>

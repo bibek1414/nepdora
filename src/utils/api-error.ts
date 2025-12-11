@@ -33,20 +33,40 @@ export const handleApiError = async (response: Response): Promise<Response> => {
     // Handle validation errors (400)
     if (response.status === 400 && errorData.error?.params?.field_errors) {
       const fieldErrors = errorData.error.params.field_errors;
-      const fieldNames = Object.keys(fieldErrors);
 
-      if (fieldNames.length > 0) {
-        // Create a user-friendly message for validation errors
-        const errorList = fieldNames
-          .map(field => `${field}: ${fieldErrors[field].join(", ")}`)
-          .join("; ");
-        errorMessage = `Validation failed: ${errorList}`;
+      // Flatten nested field errors and normalize to arrays
+      const flattenErrors = (obj: unknown, prefix = ""): FieldErrors => {
+        const result: FieldErrors = {};
+
+        if (typeof obj === "string") {
+          result[prefix || "field"] = [obj];
+        } else if (Array.isArray(obj)) {
+          result[prefix || "field"] = obj.map(String);
+        } else if (obj && typeof obj === "object") {
+          Object.entries(obj).forEach(([key, value]) => {
+            // Skip "data" wrapper, use prefix directly
+            const nextPrefix =
+              key === "data" ? prefix : prefix ? `${prefix}.${key}` : key;
+            Object.assign(result, flattenErrors(value, nextPrefix));
+          });
+        }
+
+        return result;
+      };
+
+      const flattenedErrors = flattenErrors(fieldErrors);
+      const errorMessages = Object.entries(flattenedErrors).map(
+        ([field, messages]) => `${field}: ${messages.join(", ")}`
+      );
+
+      if (errorMessages.length > 0) {
+        errorMessage = `Validation failed: ${errorMessages.join("; ")}`;
       }
 
       const error = new Error(errorMessage) as ApiError;
       error.status = response.status;
       error.data = errorData;
-      error.fieldErrors = fieldErrors; // Attach field errors for form handling
+      error.fieldErrors = flattenedErrors;
       throw error;
     }
 
