@@ -29,6 +29,8 @@ export interface Collection {
   default_fields: Record<string, DefaultField>;
   fields: Omit<FieldDefinition, "is_default">[];
   all_fields: FieldDefinition[];
+  send_email?: boolean;
+  admin_email?: string;
   created_at: string;
   updated_at: string;
 }
@@ -43,6 +45,8 @@ export interface CreateCollectionInput {
 export interface UpdateCollectionInput {
   name?: string;
   fields?: Omit<FieldDefinition, "is_default">[];
+  send_email?: boolean;
+  admin_email?: string;
 }
 
 export interface CollectionData {

@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import {
   useCollection,
@@ -46,6 +47,8 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
   const router = useRouter();
   const [collectionName, setCollectionName] = useState("");
   const [fields, setFields] = useState<FieldInput[]>([]);
+  const [sendEmail, setSendEmail] = useState(false);
+  const [adminEmail, setAdminEmail] = useState("");
 
   const { data: collection, isLoading } = useCollection(slug);
   const updateCollectionMutation = useUpdateCollection();
@@ -62,6 +65,8 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
           searchable: f.searchable,
         }))
       );
+      setSendEmail(collection.send_email ?? false);
+      setAdminEmail(collection.admin_email ?? "");
     }
   }, [collection]);
 
@@ -103,6 +108,23 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
       return;
     }
 
+    // Validate admin email if send_email is enabled
+    if (sendEmail && !adminEmail.trim()) {
+      toast.error(
+        "Admin email is required when email notifications are enabled"
+      );
+      return;
+    }
+
+    // Validate email format if provided
+    if (sendEmail && adminEmail.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(adminEmail.trim())) {
+        toast.error("Please enter a valid email address");
+        return;
+      }
+    }
+
     try {
       await updateCollectionMutation.mutateAsync({
         slug,
@@ -115,6 +137,9 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
             filterable: f.filterable,
             searchable: f.searchable,
           })),
+          send_email: sendEmail,
+          ...(sendEmail &&
+            adminEmail.trim() && { admin_email: adminEmail.trim() }),
         },
       });
 
@@ -193,6 +218,42 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
               <p className="text-muted-foreground text-sm">
                 Slug cannot be changed after creation
               </p>
+            </div>
+
+            <div className="space-y-4 pt-4">
+              <div className="flex items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <Label htmlFor="send-email" className="cursor-pointer">
+                    Send Email Notifications
+                  </Label>
+                  <p className="text-muted-foreground text-sm">
+                    Enable email notifications for new collection data
+                    submissions
+                  </p>
+                </div>
+                <Switch
+                  id="send-email"
+                  checked={sendEmail}
+                  onCheckedChange={setSendEmail}
+                />
+              </div>
+
+              {sendEmail && (
+                <div className="space-y-2">
+                  <Label htmlFor="admin-email">Admin Email *</Label>
+                  <Input
+                    id="admin-email"
+                    type="email"
+                    placeholder="admin@example.com"
+                    value={adminEmail}
+                    onChange={e => setAdminEmail(e.target.value)}
+                    required
+                  />
+                  <p className="text-muted-foreground text-sm">
+                    Email address to receive notifications for new submissions
+                  </p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
