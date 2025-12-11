@@ -36,6 +36,8 @@ export interface Collection {
 export interface CreateCollectionInput {
   name: string;
   fields: Omit<FieldDefinition, "is_default">[];
+  send_email?: boolean;
+  admin_email?: string;
 }
 
 export interface UpdateCollectionInput {

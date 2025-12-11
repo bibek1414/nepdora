@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useCreateCollection } from "@/hooks/owner-site/admin/use-collections";
 import { FieldType } from "@/types/owner-site/admin/collection";
@@ -46,6 +47,8 @@ export function CreateCollectionDialog({
   const router = useRouter();
   const [collectionName, setCollectionName] = useState("");
   const [fields, setFields] = useState<FieldInput[]>([]);
+  const [sendEmail, setSendEmail] = useState(false);
+  const [adminEmail, setAdminEmail] = useState("");
 
   const createCollectionMutation = useCreateCollection();
 
@@ -87,6 +90,23 @@ export function CreateCollectionDialog({
       return;
     }
 
+    // Validate admin email if send_email is enabled
+    if (sendEmail && !adminEmail.trim()) {
+      toast.error(
+        "Admin email is required when email notifications are enabled"
+      );
+      return;
+    }
+
+    // Validate email format if provided
+    if (sendEmail && adminEmail.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(adminEmail.trim())) {
+        toast.error("Please enter a valid email address");
+        return;
+      }
+    }
+
     try {
       const result = await createCollectionMutation.mutateAsync({
         name: collectionName,
@@ -97,6 +117,9 @@ export function CreateCollectionDialog({
           filterable: f.filterable,
           searchable: f.searchable,
         })),
+        send_email: sendEmail,
+        ...(sendEmail &&
+          adminEmail.trim() && { admin_email: adminEmail.trim() }),
       });
 
       toast.success("Collection created successfully");
@@ -104,6 +127,8 @@ export function CreateCollectionDialog({
       // Reset form
       setCollectionName("");
       setFields([]);
+      setSendEmail(false);
+      setAdminEmail("");
       onOpenChange(false);
 
       // Navigate to the collection data page
@@ -140,6 +165,42 @@ export function CreateCollectionDialog({
               <p className="text-muted-foreground text-sm">
                 Slug will be auto-generated from the name
               </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <Label htmlFor="send-email" className="cursor-pointer">
+                    Send Email Notifications
+                  </Label>
+                  <p className="text-muted-foreground text-sm">
+                    Enable email notifications for new collection data
+                    submissions
+                  </p>
+                </div>
+                <Switch
+                  id="send-email"
+                  checked={sendEmail}
+                  onCheckedChange={setSendEmail}
+                />
+              </div>
+
+              {sendEmail && (
+                <div className="space-y-2">
+                  <Label htmlFor="admin-email">Admin Email *</Label>
+                  <Input
+                    id="admin-email"
+                    type="email"
+                    placeholder="admin@example.com"
+                    value={adminEmail}
+                    onChange={e => setAdminEmail(e.target.value)}
+                    required
+                  />
+                  <p className="text-muted-foreground text-sm">
+                    Email address to receive notifications for new submissions
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
