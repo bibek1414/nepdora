@@ -51,7 +51,7 @@ export default function RecentInquiries() {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="border-none shadow-none">
         <CardHeader>
           <CardTitle className="text-lg font-semibold">
             Recent Inquiries
@@ -86,7 +86,7 @@ export default function RecentInquiries() {
     contactsData.results.length === 0
   ) {
     return (
-      <Card>
+      <Card className="border-none shadow-none">
         <CardHeader>
           <CardTitle className="text-lg font-semibold">
             Recent Inquiries

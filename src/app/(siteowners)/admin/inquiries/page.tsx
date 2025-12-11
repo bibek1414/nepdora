@@ -1,68 +1,9 @@
-"use client";
+import { getServerUser } from "@/hooks/use-jwt-server";
+import InquiriesClient from "./inquiries-client";
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import ContactList from "@/components/site-owners/admin/contact/contact-list";
-import PopupFormList from "@/components/site-owners/admin/popup-inquiries/popup-inquiries-list";
-import { NewsletterList } from "@/components/site-owners/admin/newsletter/newsletter-list";
+export default async function InquiriesManagement() {
+  const user = await getServerUser();
+  const subDomain = user?.subDomain;
 
-type InquiryType = "contact" | "popup" | "newsletter";
-
-export default function InquiriesManagement() {
-  const [selectedView, setSelectedView] = useState<InquiryType>("contact");
-
-  const renderContent = () => {
-    switch (selectedView) {
-      case "contact":
-        return <ContactList />;
-      case "popup":
-        return <PopupFormList />;
-      case "newsletter":
-        return <NewsletterList />;
-      default:
-        return <ContactList />;
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-white p-6">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Inquiries Management
-            </h1>
-            <p className="mt-2 text-gray-600">
-              Manage all your customer inquiries and communications
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant={selectedView === "contact" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedView("contact")}
-          >
-            Contact Inquiries
-          </Button>
-          <Button
-            variant={selectedView === "popup" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedView("popup")}
-          >
-            Popup Inquiries
-          </Button>
-          <Button
-            variant={selectedView === "newsletter" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedView("newsletter")}
-          >
-            Newsletter Subscriptions
-          </Button>
-        </div>
-
-        <div className="mt-6">{renderContent()}</div>
-      </div>
-    </div>
-  );
+  return <InquiriesClient subDomain={subDomain} />;
 }

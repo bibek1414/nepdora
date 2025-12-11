@@ -192,10 +192,6 @@ export function NewsletterList() {
                 <p className="mb-4 text-gray-600">
                   Your newsletter subscribers will appear here once they sign up
                 </p>
-                <Button className="bg-blue-600 text-white hover:bg-blue-700">
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Add Subscriber
-                </Button>
               </div>
             )}
           </CardContent>

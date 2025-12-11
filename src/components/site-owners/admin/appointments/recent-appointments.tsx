@@ -90,7 +90,7 @@ export default function RecentAppointments() {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="border-none shadow-none">
         <CardHeader>
           <CardTitle className="text-lg font-semibold">
             Recent Appointments
@@ -126,7 +126,7 @@ export default function RecentAppointments() {
     appointmentsData.results.length === 0
   ) {
     return (
-      <Card>
+      <Card className="border-none shadow-none">
         <CardTitle className="text-lg font-semibold">
           Recent Appointments
         </CardTitle>

@@ -150,6 +150,9 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
     if (user.websiteType === "service" && group.hideForService) {
       return false;
     }
+    if (user.subDomain === "batoma") {
+      group.items = group.items.filter(item => item.name !== "Collections");
+    }
     return true;
   });
 
