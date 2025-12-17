@@ -38,6 +38,8 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
+  ChevronRight,
+  Plus,
 } from "lucide-react";
 import {
   AppointmentFilters,
@@ -76,11 +78,28 @@ const AppointmentList = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
+  // Main list data
   const {
     data: appointmentsData,
     isLoading,
     error,
   } = useGetAppointments(filters);
+
+  // Count queries for tabs
+  const { data: totalCountData } = useGetAppointments({ page_size: 1 });
+  const { data: pendingCountData } = useGetAppointments({
+    status: "pending",
+    page_size: 1,
+  });
+  const { data: completedCountData } = useGetAppointments({
+    status: "completed",
+    page_size: 1,
+  });
+  const { data: cancelledCountData } = useGetAppointments({
+    status: "cancelled",
+    page_size: 1,
+  });
+
   const updateAppointment = useUpdateAppointment();
   const deleteAppointment = useDeleteAppointment();
 
@@ -106,11 +125,6 @@ const AppointmentList = () => {
     setFilters(prev => ({ ...prev, page: newPage }));
   }, []);
 
-  const handleClearFilters = () => {
-    setSearchTerm("");
-    setStatusFilter("all");
-  };
-
   const handleViewDetails = (appointment: Appointment) => {
     setSelectedAppointment(appointment);
     setIsDialogOpen(true);
@@ -130,19 +144,6 @@ const AppointmentList = () => {
     }
   };
 
-  const handleStatusChange = (appointmentId: number, newStatus: string) => {
-    updateAppointment.mutate({
-      id: appointmentId,
-      data: { status: newStatus as "pending" | "completed" | "cancelled" },
-    });
-  };
-
-  const handleDelete = (appointmentId: number) => {
-    if (confirm("Are you sure you want to delete this appointment?")) {
-      deleteAppointment.mutate(appointmentId);
-    }
-  };
-
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Not set";
     const date = new Date(dateString);
@@ -153,35 +154,39 @@ const AppointmentList = () => {
     });
   };
 
-  const formatTime = (timeString: string | null) => {
-    if (!timeString) return "Not set";
-    return timeString;
-  };
+  const statusTabs = [
+    { id: "all", label: "All", count: totalCountData?.count || 0 },
+    {
+      id: "pending",
+      label: "Pending",
+      count: pendingCountData?.count || 0,
+    },
+    {
+      id: "completed",
+      label: "Completed",
+      count: completedCountData?.count || 0,
+    },
+    {
+      id: "cancelled",
+      label: "Cancelled",
+      count: cancelledCountData?.count || 0,
+    },
+  ];
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "completed":
-        return (
-          <Badge className="bg-green-100 text-green-800">
-            <CheckCircle className="mr-1 h-3 w-3" />
-            Completed
-          </Badge>
-        );
-      case "cancelled":
-        return (
-          <Badge className="bg-red-100 text-red-800">
-            <XCircle className="mr-1 h-3 w-3" />
-            Cancelled
-          </Badge>
-        );
-      default:
-        return (
-          <Badge className="bg-yellow-100 text-yellow-800">
-            <AlertCircle className="mr-1 h-3 w-3" />
-            Pending
-          </Badge>
-        );
-    }
+    const styles: Record<string, string> = {
+      pending: "bg-amber-50 text-amber-700 border-amber-200",
+      completed: "bg-green-50 text-green-700 border-green-200",
+      cancelled: "bg-red-50 text-red-600 border-red-200",
+    };
+    return (
+      <Badge
+        variant="outline"
+        className={`font-medium capitalize ${styles[status] || ""}`}
+      >
+        {status}
+      </Badge>
+    );
   };
 
   const totalPages = Math.ceil(
@@ -189,38 +194,21 @@ const AppointmentList = () => {
   );
   const currentPage = filters.page || 1;
 
-  const LoadingSkeleton = () => (
-    <div className="space-y-4">
-      <Skeleton className="h-8 w-32" />
-      <Card>
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex space-x-4">
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-4 w-48" />
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-4 w-16" />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <LoadingSkeleton />
+      <div className="container mx-auto px-6 py-8">
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-6 py-8">
         <Alert variant="destructive">
           <AlertDescription>
             Error loading appointments. Please try again later.
@@ -230,255 +218,183 @@ const AppointmentList = () => {
     );
   }
 
-  // Empty state with full UI
-  if (
-    !appointmentsData ||
-    !appointmentsData.results ||
-    appointmentsData.results.length === 0
-  ) {
-    return (
-      <div className="mx-auto">
-        <div className="space-y-4">
-          {/* Header */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-                Appointments
-              </h1>
-            </div>
-            <div className="flex items-center gap-3">
-              <CreateAppointmentReasonDialog />
-              <Badge variant="secondary">0 total appointments</Badge>
-            </div>
-          </div>
-
-          {/* Filters */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <div className="relative flex-1">
-              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input
-                placeholder="Search by name, email, or phone..."
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-                className="pr-10 pl-10"
-              />
-            </div>
-
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Empty state message */}
-          <Card>
-            <CardContent>
-              <div className="py-8 text-center">
-                <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-4 text-lg font-medium text-gray-900">
-                  {searchTerm || statusFilter !== "all"
-                    ? "No matching appointments found"
-                    : "No appointments found"}
-                </h3>
-                <p className="mt-2 text-sm text-gray-500">
-                  {searchTerm || statusFilter !== "all"
-                    ? "Try adjusting your filters."
-                    : "When customers book appointments, they will appear here."}
-                </p>
-                {(searchTerm || statusFilter !== "all") && (
-                  <Button
-                    variant="outline"
-                    className="mt-4"
-                    onClick={handleClearFilters}
-                  >
-                    Clear filters
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="mx-auto">
-      <div className="space-y-4">
+    <div className="min-h-screen bg-gray-50/50">
+      <div className="mx-auto max-w-6xl px-6 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="mb-2 text-3xl font-bold text-black">Appointments</h1>
-          <p className="text-muted-foreground">
-            Manage and track your appointments
-          </p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
+              Appointments
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Manage and track your appointments
+            </p>
+          </div>
+          <Button className="gap-2 bg-gray-900 text-white hover:bg-gray-800">
+            <Plus className="h-4 w-4" />
+            New Appointment
+          </Button>
         </div>
 
         {/* Search and Filters */}
         <div className="mb-6 space-y-4">
-          {/* Search Bar */}
-          <div className="flex flex-col justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
-            <div className="flex items-center space-x-2">
-              <div className="relative w-full max-w-sm">
-                <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-                <Input
-                  type="search"
-                  placeholder="Search by name, email, or phone..."
-                  className="pl-9 placeholder:text-gray-400"
-                  value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
-                />
-              </div>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative w-full sm:w-80">
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Input
+                type="search"
+                placeholder="Search by name or email..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className="border-gray-200 bg-white pl-10 placeholder:text-gray-400 focus-visible:ring-gray-300"
+              />
             </div>
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
-                <Link href="/admin/appointments/reason">Manage Reason</Link>
-              </Button>
-              <CreateAppointmentReasonDialog />
+            <div className="flex gap-2">
+              <Link href="/admin/appointments/reason">
+                <Button
+                  variant="outline"
+                  className="border-gray-200 bg-transparent text-gray-700"
+                >
+                  Manage Reasons
+                </Button>
+              </Link>
             </div>
           </div>
 
-          {/* Status Filter Tabs */}
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant={statusFilter === "all" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setStatusFilter("all")}
-              className="flex items-center gap-2"
-            >
-              All
-            </Button>
-            <Button
-              variant={statusFilter === "pending" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setStatusFilter("pending")}
-            >
-              Pending
-            </Button>
-            <Button
-              variant={statusFilter === "completed" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setStatusFilter("completed")}
-            >
-              Completed
-            </Button>
-            <Button
-              variant={statusFilter === "cancelled" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setStatusFilter("cancelled")}
-            >
-              Cancelled
-            </Button>
+          {/* Status Tabs */}
+          <div className="flex w-fit gap-1 rounded-lg bg-gray-100/80 p-1">
+            {statusTabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setStatusFilter(tab.id)}
+                className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all ${
+                  statusFilter === tab.id
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                {tab.label}
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs ${
+                    statusFilter === tab.id
+                      ? "bg-gray-100 text-gray-700"
+                      : "bg-gray-200/60 text-gray-500"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Table */}
-        <Card className="border-none">
-          <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
+        <div className="border-none shadow-none">
+          <div className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-gray-100 hover:bg-transparent">
+                  <TableHead className="text-xs font-medium tracking-wide text-gray-500 uppercase">
+                    Name
+                  </TableHead>
+                  <TableHead className="text-xs font-medium tracking-wide text-gray-500 uppercase">
+                    Contact
+                  </TableHead>
+                  <TableHead className="text-xs font-medium tracking-wide text-gray-500 uppercase">
+                    Date
+                  </TableHead>
+                  <TableHead className="text-xs font-medium tracking-wide text-gray-500 uppercase">
+                    Time
+                  </TableHead>
+                  <TableHead className="text-xs font-medium tracking-wide text-gray-500 uppercase">
+                    Reason
+                  </TableHead>
+                  <TableHead className="text-xs font-medium tracking-wide text-gray-500 uppercase">
+                    Status
+                  </TableHead>
+                  <TableHead className="w-10"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {appointmentsData?.results?.length === 0 ? (
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Time</TableHead>
-                    <TableHead>Reason</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableCell colSpan={7} className="h-24 text-center">
+                      No appointments found.
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {appointmentsData.results.map((appointment: Appointment) => (
+                ) : (
+                  appointmentsData?.results.map((appointment: Appointment) => (
                     <TableRow
                       key={appointment.id}
-                      className="cursor-pointer transition-colors hover:bg-gray-50/50"
+                      className="cursor-pointer border-gray-100 transition-colors hover:bg-gray-50/50"
                       onClick={() => handleViewDetails(appointment)}
                     >
-                      <TableCell className="font-medium capitalize">
+                      <TableCell className="font-medium text-gray-900">
                         {appointment.full_name}
                       </TableCell>
                       <TableCell>
-                        <div className="space-y-1 text-sm">
-                          <div>{appointment.email}</div>
-                          <div className="text-gray-500">
+                        <div className="space-y-0.5">
+                          <div className="text-sm text-gray-600">
+                            {appointment.email}
+                          </div>
+                          <div className="text-xs text-gray-400">
                             {appointment.phone}
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-1 text-sm">
-                          <Calendar className="h-3 w-3 text-gray-400" />
+                        <div className="flex items-center gap-1.5 text-sm text-gray-600">
+                          <Calendar className="h-3.5 w-3.5 text-gray-400" />
                           {formatDate(appointment.date)}
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-1 text-sm">
-                          <Clock className="h-3 w-3 text-gray-400" />
-                          {formatTime(appointment.time)}
+                        <div className="flex items-center gap-1.5 text-sm text-gray-600">
+                          <Clock className="h-3.5 w-3.5 text-gray-400" />
+                          {appointment.time || "--:--"}
                         </div>
                       </TableCell>
-                      <TableCell>
-                        {appointment.reason?.name || "Not specified"}
+                      <TableCell className="text-gray-600">
+                        {appointment.reason?.name || "-"}
                       </TableCell>
                       <TableCell>
-                        <div onClick={e => e.stopPropagation()}>
-                          <Select
-                            value={appointment.status}
-                            onValueChange={value =>
-                              handleStatusChange(appointment.id, value)
-                            }
-                          >
-                            <SelectTrigger className="w-[130px]">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="pending">Pending</SelectItem>
-                              <SelectItem value="completed">
-                                Completed
-                              </SelectItem>
-                              <SelectItem value="cancelled">
-                                Cancelled
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                        {getStatusBadge(appointment.status)}
+                      </TableCell>
+                      <TableCell>
+                        <ChevronRight className="h-4 w-4 text-gray-400" />
                       </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-            showFirstLast={true}
-            maxVisiblePages={7}
-          />
-        )}
-
-        {/* Results Summary */}
-        {appointmentsData.results.length > 0 && (
-          <div className="text-center text-sm text-gray-500">
-            Showing {(currentPage - 1) * (filters.page_size || 10) + 1} to{" "}
+        {/* Footer / Pagination */}
+        <div className="mt-4 flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <div className="text-sm text-gray-500">
+            Showing{" "}
+            {(currentPage - 1) * (filters.page_size || 10) +
+              ((appointmentsData?.results?.length || 0) > 0 ? 1 : 0)}{" "}
+            to{" "}
             {Math.min(
               currentPage * (filters.page_size || 10),
-              appointmentsData.count
+              appointmentsData?.count || 0
             )}{" "}
-            of {appointmentsData.count} appointments
+            of {appointmentsData?.count || 0} appointments
           </div>
-        )}
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              showFirstLast={false}
+              maxVisiblePages={5}
+            />
+          )}
+        </div>
       </div>
 
       {/* Appointment Details Dialog */}

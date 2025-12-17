@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import {
   Globe,
   Youtube,
@@ -7,15 +6,15 @@ import {
   Package,
   Home,
   MessageSquare,
-  LucideIcon,
   Users,
   Handshake,
   UserCog,
+  LucideIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 
-// ✅ Add this metadata function
 export async function generateMetadata(): Promise<Metadata> {
   return generateAdminPageMetadata({
     pageName: "Content Management",
@@ -86,7 +85,7 @@ const contentItems: ContentItem[] = [
   {
     name: "Services",
     href: "/admin/services",
-    icon: Home, // Changed from Users to Home/Briefcase or similar for distinction if needed, but keeping Users is fine if preferred. I'll use Home for now to diversify.
+    icon: Home,
     description: "Manage your services",
     gradient: "from-[#E0F2FE] to-[#BAE6FD]",
     shadowColor: "shadow-sky-100",
@@ -132,7 +131,7 @@ export default function ContentManagement() {
                 className="group relative block"
               >
                 <div
-                  className={`relative overflow-hidden rounded-2xl bg-linear-to-br ${item.gradient} p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl ${item.shadowColor}`}
+                  className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${item.gradient} p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl ${item.shadowColor}`}
                 >
                   {/* Decorative Circle Background */}
                   <div className="absolute -top-6 -right-6 h-32 w-32 rounded-full bg-white/30 blur-2xl transition-all duration-500 group-hover:bg-white/40" />

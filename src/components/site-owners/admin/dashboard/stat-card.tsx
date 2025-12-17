@@ -7,7 +7,7 @@ interface StatCardProps {
   title: string;
   value: string | number;
   change: number;
-  icon: string;
+  icon: string | React.ElementType;
   bgColor: string;
   trendColor: string;
 }
@@ -16,7 +16,7 @@ const StatCard: React.FC<StatCardProps> = ({
   title,
   value,
   change,
-  icon,
+  icon: Icon,
   bgColor,
   trendColor,
 }) => {
@@ -37,14 +37,18 @@ const StatCard: React.FC<StatCardProps> = ({
         <div className="mb-4 flex items-start justify-between">
           <div className="flex items-center gap-3">
             {/* Icon on the left */}
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
-              <Image
-                src={icon}
-                alt={`${title} icon`}
-                width={24}
-                height={24}
-                className="h-15 w-10 object-contain"
-              />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/60">
+              {typeof Icon === "string" ? (
+                <Image
+                  src={Icon}
+                  alt={`${title} icon`}
+                  width={24}
+                  height={24}
+                  className="h-15 w-10 object-contain"
+                />
+              ) : (
+                <Icon className="h-5 w-5 text-gray-700" />
+              )}
             </div>
             <div className="text-sm font-medium text-black/70">{title}</div>
           </div>

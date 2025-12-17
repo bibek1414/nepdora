@@ -60,13 +60,13 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
   };
 
   return (
-    <header className="fixed top-0 right-0 left-0 z-45 h-16 border-b bg-white">
-      <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 w-full border-b bg-white">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left side - Logo */}
         <div className="flex items-center space-x-4"></div>
 
         <div className="flex items-center space-x-2">
-          {/* <Link
+          <Link
             href={`/publish/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -107,7 +107,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
               <Pencil className="mr-2 h-4 w-4" />
               Website Builder
             </Button>
-          </Link> */}
+          </Link>
           <a
             href="https://docs.nepdora.com"
             target="_blank"
