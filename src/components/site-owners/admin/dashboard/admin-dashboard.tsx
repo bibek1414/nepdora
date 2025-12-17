@@ -9,6 +9,11 @@ import { SessionProvider } from "next-auth/react";
 import { User as UserType } from "@/hooks/use-jwt-server";
 import RecentInquiries from "../contact/recent-inquiries";
 import RecentAppointments from "../appointments/recent-appointments";
+import Link from "next/link";
+import { MessageSquare, Calendar, Settings } from "lucide-react";
+import { StatsCards } from "./stats-cards";
+import { useGetContacts } from "@/hooks/owner-site/admin/use-contact";
+import { useGetAppointments } from "@/hooks/owner-site/admin/use-appointment";
 
 interface AdminDashboardProps {
   user?: UserType;
@@ -16,7 +21,24 @@ interface AdminDashboardProps {
 
 export default function AdminDashboard({ user }: AdminDashboardProps) {
   const { data, isLoading, isError, error, refetch } = useDashboardStats();
-  const isServiceSite = user?.websiteType === "service";
+
+  // Fetch counts for stats cards
+  const { data: contactsData, isLoading: isContactsLoading } = useGetContacts({
+    page: 1,
+    page_size: 1,
+  });
+  const { data: appointmentsData, isLoading: isAppointmentsLoading } =
+    useGetAppointments({ page: 1, page_size: 1 });
+  const {
+    data: pendingAppointmentsData,
+    isLoading: isPendingAppointmentsLoading,
+  } = useGetAppointments({ page: 1, page_size: 1, status: "pending" });
+
+  const isServiceSite =
+    user?.websiteType === "service" ||
+    user?.websiteType === "SERVICE_WEBSITE" ||
+    user?.websiteType === "AGENCY_WEBSITE" ||
+    user?.websiteType === "CONSULTANCY_WEBSITE";
 
   return (
     <div>
@@ -24,11 +46,38 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
         <GoogleAuthRedirectHandler />
       </SessionProvider>
 
-      <div className="mt-8 mb-40">
+      <div className="mx-auto mt-8 mb-40 max-w-6xl px-6 md:px-0">
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+              Dashboard
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Welcome back, {user?.name || "Admin"}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+            <span>{new Date().toLocaleDateString()}</span>
+          </div>
+        </div>
+
         {isServiceSite ? (
-          <div className="mx-auto max-w-6xl space-y-8">
-            <RecentInquiries />
-            <RecentAppointments />
+          <div className="space-y-8">
+            <StatsCards
+              inquiriesCount={contactsData?.count}
+              appointmentsCount={appointmentsData?.count}
+              pendingAppointmentsCount={pendingAppointmentsData?.count}
+              isLoading={
+                isContactsLoading ||
+                isAppointmentsLoading ||
+                isPendingAppointmentsLoading
+              }
+            />
+
+            <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
+              <RecentInquiries />
+              <RecentAppointments />
+            </div>
           </div>
         ) : (
           <div>

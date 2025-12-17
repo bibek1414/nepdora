@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -62,23 +62,14 @@ const navigationGroups = [
     ],
   },
   {
-    items: [
-      {
-        name: "Services",
-        href: "/admin/services",
-        icon: FileText,
-      },
-    ],
-  },
-  {
     items: [{ name: "Inquiries", href: "/admin/inquiries", icon: Mail }],
   },
   {
     items: [
       {
-        name: "Our Clients",
-        href: "/admin/our-clients",
-        icon: GalleryHorizontal,
+        name: "Appointment",
+        href: "/admin/appointments",
+        icon: Calendar,
       },
     ],
   },
@@ -115,15 +106,6 @@ const navigationGroups = [
   {
     items: [
       {
-        name: "Appointment",
-        href: "/admin/appointments",
-        icon: Calendar,
-      },
-    ],
-  },
-  {
-    items: [
-      {
         name: "Pricing",
         href: "/admin/pricing",
         icon: IndianRupee,
@@ -142,7 +124,17 @@ const navigationGroups = [
 
 export default function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("sidebarCollapsed");
+      return saved ? JSON.parse(saved) : false;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("sidebarCollapsed", JSON.stringify(collapsed));
+  }, [collapsed]);
 
   // Filter navigation groups based on website type
   const filteredNavigationGroups = navigationGroups.filter(group => {
@@ -171,15 +163,19 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
             collapsed ? "w-full justify-center" : "w-full"
           )}
         >
-          {!collapsed && (
+          {collapsed ? (
+            <div className="flex w-full justify-center">
+              <Image src="/icon.svg" alt="Icon" width={32} height={32} />
+            </div>
+          ) : (
             <div className="flex flex-col">
               <div className="flex items-center space-x-4">
-                <div className="flex items-center">
+                <div className="shrink-0 items-center">
                   <Image
-                    src="/nepdora-logooo.svg"
+                    src="/nepdora-logo.png"
                     alt="Logo"
-                    width={150}
-                    height={40}
+                    width={110}
+                    height={30}
                   />
                 </div>
               </div>

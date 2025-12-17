@@ -36,15 +36,12 @@ export function PluginToggle({
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <span className="text-sm text-gray-500">
-        {isEnabled ? "Enabled" : "Disabled"}
-      </span>
+    <div className="flex items-center" onClick={e => e.stopPropagation()}>
       <Switch
         checked={isEnabled}
         onCheckedChange={handleToggle}
         disabled={isLoading}
-        className="data-[state=checked]:bg-green-600"
+        className="data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-gray-200"
       />
     </div>
   );

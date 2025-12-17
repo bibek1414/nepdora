@@ -295,7 +295,7 @@ export const SiteConfigForm: React.FC = () => {
   const hasModifications = isCreateMode || modifiedFields.size > 0;
 
   return (
-    <div className="space-y-6 p-6 pb-24">
+    <div className="space-y-6 pb-24">
       {" "}
       {/* Added padding bottom for sticky button */}
       <div className="flex items-center justify-between">
@@ -333,7 +333,7 @@ export const SiteConfigForm: React.FC = () => {
                     <img
                       src={faviconUrl}
                       alt="Current favicon"
-                      className="h-8 w-8 rounded border bg-white object-contain"
+                      className="h-8 w-8 rounded bg-white object-contain"
                     />
                   </div>
                 )}
@@ -363,7 +363,7 @@ export const SiteConfigForm: React.FC = () => {
                     <img
                       src={logoUrl}
                       alt="Current logo"
-                      className="max-h-20 rounded border bg-white object-contain"
+                      className="max-h-20 rounded bg-white object-contain"
                     />
                   </div>
                 )}

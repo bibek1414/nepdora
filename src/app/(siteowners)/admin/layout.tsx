@@ -24,7 +24,7 @@ export default async function AdminLayout({
         <DynamicFavicon />
         <div className="flex min-h-screen bg-white">
           <AdminSidebar user={user} />
-          <div className="mt-15 flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col">
             <AdminHeader user={user} />
             <main className="flex-1">{children}</main>
           </div>

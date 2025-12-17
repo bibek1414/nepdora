@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, X, Search } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2, X, Search, Settings } from "lucide-react";
 import { Plugin } from "@/types/plugin";
 import { WhatsAppConfig } from "./config/whatsapp-config";
 import { LogisticsConfig } from "./config/logistics-config";
@@ -26,6 +27,7 @@ import {
 } from "@/hooks/owner-site/admin/use-google-analytics";
 import { toast } from "sonner";
 
+/* ----------------------------- Modal ----------------------------- */
 const Modal = ({
   isOpen,
   onClose,
@@ -42,402 +44,271 @@ const Modal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="bg-opacity-50 absolute inset-0 bg-black/80"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative mx-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white">
-        <div className="sticky top-0 flex items-center justify-between border-b bg-white px-6 py-4">
-          <h2 className="text-2xl font-semibold">{title}</h2>
-          <button
+      <div className="relative mx-4 w-full max-w-2xl rounded-2xl bg-white shadow-xl">
+        <div className="flex items-center justify-between border-b px-6 py-4">
+          <h2 className="text-xl font-semibold">{title}</h2>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="rounded-full p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            className="rounded-full"
           >
-            <X className="h-5 w-5" />
-          </button>
+            <X className="h-4 w-4" />
+          </Button>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="max-h-[75vh] overflow-y-auto p-6">{children}</div>
       </div>
     </div>
   );
 };
 
-// Hook for plugin management with real API integration
+/* ----------------------------- Hooks ------------------------------ */
 const usePlugins = (websiteType?: string) => {
+  const { data: whatsapps = [], isLoading: l1, refetch: r1 } = useWhatsApps();
+  const { data: dash = [], isLoading: l2, refetch: r2 } = useLogisticsDash();
+  const { data: ydm = [], isLoading: l3, refetch: r3 } = useLogisticsYDM();
   const {
-    data: whatsapps = [],
-    isLoading: isLoadingWhatsApp,
-    refetch: refetchWhatsApp,
-  } = useWhatsApps();
-  const {
-    data: dashLogistics = [],
-    isLoading: isLoadingDash,
-    refetch: refetchDash,
-  } = useLogisticsDash();
-  const {
-    data: ydmLogistics = [],
-    isLoading: isLoadingYDM,
-    refetch: refetchYDM,
-  } = useLogisticsYDM();
-  const {
-    data: analyticsConfigs = [],
-    isLoading: isLoadingAnalytics,
-    refetch: refetchAnalytics,
+    data: analytics = [],
+    isLoading: l4,
+    refetch: r4,
   } = useGoogleAnalytics();
 
-  const updateWhatsAppMutation = useUpdateWhatsApp();
-  const updateLogisticsMutation = useUpdateLogistics();
-  const updateAnalyticsMutation = useUpdateGoogleAnalytics();
+  const u1 = useUpdateWhatsApp();
+  const u2 = useUpdateLogistics();
+  const u3 = useUpdateGoogleAnalytics();
 
   const [plugins, setPlugins] = useState<Plugin[]>([]);
 
   useEffect(() => {
-    // Get WhatsApp config
-    const whatsappConfig = whatsapps.length > 0 ? whatsapps[0] : null;
-
-    // Get Dash config
-    const dashConfig = dashLogistics.length > 0 ? dashLogistics[0] : null;
-
-    // Get YDM config
-    const ydmConfig = ydmLogistics.length > 0 ? ydmLogistics[0] : null;
-
-    // Get Google Analytics config
-    const analyticsConfig =
-      analyticsConfigs.length > 0 ? analyticsConfigs[0] : null;
-
-    const pluginsList: Plugin[] = [
+    const list: Plugin[] = [
       {
         id: "whatsapp",
         name: "WhatsApp Chat",
-        description: "Show WhatsApp chat box on your website",
+        description: "Let visitors contact you instantly via WhatsApp",
         category: "COMMUNICATION",
         icon: "/images/icons/whatsapp-icon.png",
         type: "whatsapp",
-        is_enabled: whatsappConfig?.is_enabled || false,
+        is_enabled: whatsapps?.[0]?.is_enabled || false,
       },
       {
         id: "dash",
         name: "Dash Logistics",
-        description: "Ship order to dash logistics dashboard",
+        description: "Auto push orders to Dash logistics",
         category: "SHIPPING",
         icon: "/images/icons/dash-logistics.png",
         type: "dash",
-        is_enabled: dashConfig?.is_enabled || false,
+        is_enabled: dash?.[0]?.is_enabled || false,
         hideForService: true,
       },
       {
         id: "ydm",
         name: "YDM Logistics",
-        description: "Ship order to YDM logistics dashboard",
+        description: "Ship orders via YDM logistics",
         category: "SHIPPING",
         icon: "/images/icons/ydm-logistics.png",
         type: "ydm",
-        is_enabled: ydmConfig?.is_enabled || false,
+        is_enabled: ydm?.[0]?.is_enabled || false,
         hideForService: true,
       },
       {
         id: "google-analytics",
         name: "Google Analytics",
-        description: "Track website traffic and user behavior",
+        description: "Track traffic & user behaviour",
         category: "ANALYTICS",
         icon: "/images/icons/google-analytic.png",
         type: "google-analytics",
-        is_enabled: analyticsConfig?.is_enabled || false,
+        is_enabled: analytics?.[0]?.is_enabled || false,
       },
     ];
 
-    // Filter plugins based on website type
-    const filteredPlugins = pluginsList.filter(plugin => {
-      if (websiteType === "service" && plugin.hideForService) {
-        return false;
-      }
-      return true;
-    });
+    setPlugins(
+      list.filter(p => !(websiteType === "service" && p.hideForService))
+    );
+  }, [whatsapps, dash, ydm, analytics, websiteType]);
 
-    setPlugins(filteredPlugins);
-  }, [whatsapps, dashLogistics, ydmLogistics, analyticsConfigs, websiteType]);
-
-  const togglePlugin = async (
-    pluginId: string,
-    pluginType: string,
-    enabled: boolean
-  ): Promise<{ success: boolean; needsConfig: boolean }> => {
+  const togglePlugin = async (id: string, type: string, enabled: boolean) => {
     try {
-      if (pluginType === "whatsapp") {
-        const whatsappConfig = whatsapps.length > 0 ? whatsapps[0] : null;
-        if (whatsappConfig) {
-          await updateWhatsAppMutation.mutateAsync({
-            id: whatsappConfig.id,
-            data: {
-              ...whatsappConfig,
-              is_enabled: enabled,
-            },
+      let configExists = false;
+
+      if (type === "whatsapp") {
+        if (whatsapps[0]) {
+          await u1.mutateAsync({
+            id: whatsapps[0].id,
+            data: { ...whatsapps[0], is_enabled: enabled },
           });
-          await refetchWhatsApp();
-          toast.success(
-            `WhatsApp plugin ${enabled ? "enabled" : "disabled"} successfully`
-          );
-          return { success: true, needsConfig: false };
-        } else {
-          toast.error(
-            "WhatsApp configuration not found. Please configure first."
-          );
-          return { success: false, needsConfig: true };
+          await r1();
+          configExists = true;
         }
-      } else if (pluginType === "dash") {
-        const dashConfig = dashLogistics.length > 0 ? dashLogistics[0] : null;
-        if (dashConfig) {
-          await updateLogisticsMutation.mutateAsync({
-            id: dashConfig.id,
-            data: {
-              ...dashConfig,
-              is_enabled: enabled,
-            },
+      } else if (type === "dash" || type === "ydm") {
+        const cfg = type === "dash" ? dash[0] : ydm[0];
+        if (cfg) {
+          await u2.mutateAsync({
+            id: cfg.id,
+            data: { ...cfg, is_enabled: enabled },
           });
-          await refetchDash();
-          toast.success(
-            `Dash Logistics plugin ${enabled ? "enabled" : "disabled"} successfully`
-          );
-          return { success: true, needsConfig: false };
-        } else {
-          toast.error(
-            "Dash Logistics configuration not found. Please configure first."
-          );
-          return { success: false, needsConfig: true };
+          type === "dash" ? await r2() : await r3();
+          configExists = true;
         }
-      } else if (pluginType === "ydm") {
-        const ydmConfig = ydmLogistics.length > 0 ? ydmLogistics[0] : null;
-        if (ydmConfig) {
-          await updateLogisticsMutation.mutateAsync({
-            id: ydmConfig.id,
-            data: {
-              ...ydmConfig,
-              is_enabled: enabled,
-            },
+      } else if (type === "google-analytics") {
+        if (analytics[0]) {
+          await u3.mutateAsync({
+            id: analytics[0].id,
+            data: { ...analytics[0], is_enabled: enabled },
           });
-          await refetchYDM();
-          toast.success(
-            `YDM Logistics plugin ${enabled ? "enabled" : "disabled"} successfully`
-          );
-          return { success: true, needsConfig: false };
-        } else {
-          toast.error(
-            "YDM Logistics configuration not found. Please configure first."
-          );
-          return { success: false, needsConfig: true };
-        }
-      } else if (pluginType === "google-analytics") {
-        const analyticsConfig =
-          analyticsConfigs.length > 0 ? analyticsConfigs[0] : null;
-        if (analyticsConfig) {
-          await updateAnalyticsMutation.mutateAsync({
-            id: analyticsConfig.id,
-            data: {
-              ...analyticsConfig,
-              is_enabled: enabled,
-            },
-          });
-          await refetchAnalytics();
-          toast.success(
-            `Google Analytics plugin ${enabled ? "enabled" : "disabled"} successfully`
-          );
-          return { success: true, needsConfig: false };
-        } else {
-          toast.error(
-            "Google Analytics configuration not found. Please configure first."
-          );
-          return { success: false, needsConfig: true };
+          await r4();
+          configExists = true;
         }
       }
-      return { success: false, needsConfig: false };
-    } catch (error) {
-      toast.error(`Failed to ${enabled ? "enable" : "disable"} plugin`);
-      console.error("Toggle plugin error:", error);
-      return { success: false, needsConfig: false };
+
+      if (configExists) {
+        toast.success(`Plugin ${enabled ? "enabled" : "disabled"}`);
+        return { success: true, needsConfig: false };
+      } else {
+        toast.error("Configuration not found. Please configure first.");
+        return { success: false, needsConfig: true };
+      }
+    } catch {
+      toast.error("Failed to update plugin");
+      return { success: false, needsConfig: true };
     }
   };
 
-  const isLoading =
-    isLoadingWhatsApp || isLoadingDash || isLoadingYDM || isLoadingAnalytics;
-
-  return { plugins, isLoading, togglePlugin };
+  return { plugins, isLoading: l1 || l2 || l3 || l4, togglePlugin };
 };
 
-interface PluginManagerProps {
+/* --------------------------- Component ---------------------------- */
+export default function PluginManager({
+  websiteType,
+}: {
   websiteType?: string;
-}
-
-export default function PluginManager({ websiteType }: PluginManagerProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedPlugin, setSelectedPlugin] = useState<Plugin | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+}) {
   const { plugins, isLoading, togglePlugin } = usePlugins(websiteType);
+  const [search, setSearch] = useState("");
+  const [tab, setTab] = useState("ALL");
+  const [active, setActive] = useState<Plugin | null>(null);
 
-  const filteredPlugins = plugins.filter(
-    plugin =>
-      plugin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      plugin.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handlePluginClick = (plugin: Plugin) => {
-    setSelectedPlugin(plugin);
-    setIsModalOpen(true);
-  };
-
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSave = (data: any) => {
-    console.log("Saving plugin configuration:", data);
-    setIsModalOpen(false);
-  };
-
-  const handleTogglePlugin = async (
-    pluginId: string,
-    pluginType: string,
-    enabled: boolean
-  ) => {
-    const result = await togglePlugin(pluginId, pluginType, enabled);
-
-    // If enabling failed due to missing config, open the config modal
-    if (enabled && result.needsConfig) {
-      const plugin = plugins.find(p => p.id === pluginId);
-      if (plugin) {
-        setSelectedPlugin(plugin);
-        setIsModalOpen(true);
-      }
+  const handleToggle = async (id: string, type: string, enabled: boolean) => {
+    const result = await togglePlugin(id, type, enabled);
+    if (!result.success && result.needsConfig) {
+      const p = plugins.find(pl => pl.id === id);
+      if (p) setActive(p);
     }
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case "COMMUNICATION":
-        return "bg-blue-100 text-blue-700";
-      case "SHIPPING":
-        return "bg-green-100 text-green-700";
-      case "ANALYTICS":
-        return "bg-purple-100 text-purple-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
+  const filtered = useMemo(() => {
+    return plugins.filter(p => {
+      const matchText =
+        p.name.toLowerCase().includes(search.toLowerCase()) ||
+        p.description.toLowerCase().includes(search.toLowerCase());
+      const matchTab = tab === "ALL" || p.category === tab;
+      return matchText && matchTab;
+    });
+  }, [plugins, search, tab]);
 
   if (isLoading) {
     return (
-      <div className="container mx-auto max-w-7xl p-6">
-        <div className="flex h-64 items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6">
-      {/* Search Bar */}
-      <div className="mb-6">
-        <div className="relative max-w-sm">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <h1 className="text-2xl font-bold">Plugins</h1>
+        <div className="relative w-full max-w-sm">
+          <Search className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
           <Input
-            type="text"
-            placeholder="Search plugins..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="pl-10 placeholder:text-gray-500"
+            placeholder="Search plugins"
+            className="pl-9"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
           />
-          <Search className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
         </div>
       </div>
 
-      {/* Header */}
-      <h2 className="mb-6 text-2xl font-bold">
-        Available Plugins ({filteredPlugins.length})
-      </h2>
+      {/* Tabs */}
+      <Tabs value={tab} onValueChange={setTab}>
+        <TabsList className="gap-2">
+          <TabsTrigger value="ALL">All</TabsTrigger>
+          <TabsTrigger value="COMMUNICATION">Communication</TabsTrigger>
+          <TabsTrigger value="SHIPPING">Shipping</TabsTrigger>
+          <TabsTrigger value="ANALYTICS">Analytics</TabsTrigger>
+        </TabsList>
+      </Tabs>
 
-      {/* Plugin Grid */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredPlugins.map(plugin => (
-          <Card
-            key={plugin.id}
-            className="cursor-pointer transition-all hover:shadow-md"
-            onClick={() => handlePluginClick(plugin)}
-          >
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <img
-                    src={plugin.icon}
-                    alt={plugin.name}
-                    className="h-14 w-14 object-contain"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="mb-2 flex items-start justify-between gap-2">
-                    <h3 className="text-lg font-semibold">{plugin.name}</h3>
-                    <Badge className={getCategoryColor(plugin.category)}>
-                      {plugin.category}
+      {/* Grid */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {filtered.map(p => (
+          <Card key={p.id} className="rounded-2xl transition hover:shadow-lg">
+            <CardContent className="flex h-full flex-col gap-4 p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-xl">
+                    <img src={p.icon} className="h-7 w-7" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">{p.name}</p>
+                    <Badge variant="secondary" className="mt-1 text-xs">
+                      {p.category}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600">{plugin.description}</p>
-
-                  <div className="mt-4 flex items-center justify-between">
-                    <div onClick={e => e.stopPropagation()}>
-                      <PluginToggle
-                        pluginId={plugin.id}
-                        pluginType={plugin.type}
-                        isEnabled={plugin.is_enabled}
-                        onToggle={handleTogglePlugin}
-                      />
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={e => {
-                        e.stopPropagation();
-                        handlePluginClick(plugin);
-                      }}
-                    >
-                      Configure
-                    </Button>
-                  </div>
-
-                  {plugin.status && (
-                    <Badge variant="secondary" className="mt-2">
-                      {plugin.status.toUpperCase()}
-                    </Badge>
-                  )}
                 </div>
+                <PluginToggle
+                  pluginId={p.id}
+                  pluginType={p.type}
+                  isEnabled={p.is_enabled}
+                  onToggle={handleToggle}
+                />
+              </div>
+
+              <p className="text-muted-foreground text-sm">{p.description}</p>
+
+              <div className="mt-auto flex items-center justify-between">
+                <span
+                  className={`text-xs ${p.is_enabled ? "text-green-600" : "text-muted-foreground"}`}
+                >
+                  {p.is_enabled ? "Active" : "Inactive"}
+                </span>
+                <Button variant="ghost" size="sm" onClick={() => setActive(p)}>
+                  <Settings className="mr-2 h-4 w-4" /> Configure
+                </Button>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Configuration Modal */}
+      {/* Modal */}
       <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title={`Configure ${selectedPlugin?.name} Plugin`}
+        isOpen={!!active}
+        onClose={() => setActive(null)}
+        title={`Configure ${active?.name}`}
       >
-        {selectedPlugin?.type === "whatsapp" && (
+        {active?.type === "whatsapp" && (
           <WhatsAppConfig
-            plugin={selectedPlugin}
-            onClose={() => setIsModalOpen(false)}
-            onSave={handleSave}
+            plugin={active}
+            onClose={() => setActive(null)}
+            onSave={() => setActive(null)}
           />
         )}
-
-        {(selectedPlugin?.type === "dash" || selectedPlugin?.type === "ydm") &&
-          selectedPlugin && (
-            <LogisticsConfig
-              plugin={selectedPlugin}
-              onClose={() => setIsModalOpen(false)}
-              onSave={handleSave}
-            />
-          )}
-
-        {selectedPlugin?.type === "google-analytics" && (
+        {(active?.type === "dash" || active?.type === "ydm") && active && (
+          <LogisticsConfig
+            plugin={active}
+            onClose={() => setActive(null)}
+            onSave={() => setActive(null)}
+          />
+        )}
+        {active?.type === "google-analytics" && (
           <GoogleAnalyticsConfig
-            plugin={selectedPlugin}
-            onClose={() => setIsModalOpen(false)}
-            onSave={handleSave}
+            plugin={active}
+            onClose={() => setActive(null)}
+            onSave={() => setActive(null)}
           />
         )}
       </Modal>
