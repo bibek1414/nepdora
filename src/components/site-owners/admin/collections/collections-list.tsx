@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Database, Trash2, Edit, Eye } from "lucide-react";
+import { Plus, Database, Trash2, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,7 +22,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import {
   useCollections,
@@ -108,74 +107,55 @@ export function CollectionsList() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {collections.map(collection => (
-            <Card key={collection.id} className="cursor-pointer shadow-none">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="flex items-center gap-2">
-                      <Database className="h-5 w-5" />
-                      {collection.name}
-                    </CardTitle>
-                    <CardDescription className="mt-1">
-                      Slug: {collection.slug}
-                    </CardDescription>
-                  </div>
+            <div
+              key={collection.id}
+              className="group relative flex flex-col justify-between rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:bg-gray-50/50 hover:shadow-md"
+            >
+              <div>
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gray-50 text-gray-900 group-hover:bg-white group-hover:shadow-sm">
+                  <Database className="h-5 w-5" />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-muted-foreground mb-2 text-sm">
-                      Custom Fields
-                    </p>
-                    <div className="flex flex-wrap gap-1">
-                      {collection.fields.length === 0 ? (
-                        <Badge variant="outline">No custom fields</Badge>
-                      ) : (
-                        collection.fields.map((field, idx) => (
-                          <Badge key={idx} variant="secondary">
-                            {field.name}
-                          </Badge>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                  <div className="mt-4 flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() =>
-                        router.push(`/admin/collections/${collection.slug}`)
-                      }
-                    >
-                      <Eye className="mr-2 h-4 w-4" />
-                      View Data
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        router.push(
-                          `/admin/collections/${collection.slug}/edit`
-                        )
-                      }
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => confirmDelete(collection)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+                <h3 className="font-semibold text-gray-900">
+                  {collection.name}
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">/{collection.slug}</p>
+              </div>
+
+              <div className="mt-6 flex items-center gap-2 border-t border-gray-50 pt-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 flex-1 text-xs font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  onClick={() =>
+                    router.push(`/admin/collections/${collection.slug}`)
+                  }
+                >
+                  View Data
+                </Button>
+                <div className="flex gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-gray-400 hover:text-gray-900"
+                    onClick={() =>
+                      router.push(`/admin/collections/${collection.slug}/edit`)
+                    }
+                  >
+                    <Edit className="h-3.5 w-3.5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-gray-400 hover:bg-red-50 hover:text-red-600"
+                    onClick={() => confirmDelete(collection)}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       )}
