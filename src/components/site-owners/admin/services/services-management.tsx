@@ -111,8 +111,8 @@ const ServicesManagement = () => {
   const hasPrevious = !!serviceData?.previous;
 
   return (
-    <div className="bg-gray-50 py-8">
-      <div className="px-4 sm:px-6 lg:px-8">
+    <div className="animate-in fade-in min-h-screen bg-white duration-700">
+      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
         <ServicesHeader
           onCreateNew={handleCreateNew}
           onRefresh={handleRefresh}
@@ -127,18 +127,20 @@ const ServicesManagement = () => {
         />
 
         {totalPages > 1 && (
-          <Pagination
-            count={totalServices}
-            pageSize={filters.pageSize}
-            hasNext={hasNext}
-            hasPrevious={hasPrevious}
-            onPageSizeChange={handlePageSizeChange}
-            currentPage={filters.page}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-            showFirstLast={true}
-            maxVisiblePages={7}
-          />
+          <div className="mt-6">
+            <Pagination
+              count={totalServices}
+              pageSize={filters.pageSize}
+              hasNext={hasNext}
+              hasPrevious={hasPrevious}
+              onPageSizeChange={handlePageSizeChange}
+              currentPage={filters.page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              showFirstLast={true}
+              maxVisiblePages={7}
+            />
+          </div>
         )}
       </div>
 

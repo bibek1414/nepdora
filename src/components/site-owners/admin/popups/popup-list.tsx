@@ -1,11 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -15,17 +12,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
   Table,
   TableBody,
   TableCell,
@@ -33,18 +19,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  Plus,
-  Edit,
-  Trash2,
-  Image as ImageIcon,
-  AlertCircle,
-  Settings,
-  Eye,
-  EyeOff,
-  MoreVertical,
-} from "lucide-react";
+  TableWrapper,
+  TableActionButtons,
+  TableUserCell,
+} from "@/components/ui/custom-table";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Plus, Image as ImageIcon, AlertCircle, RefreshCw } from "lucide-react";
 import PopupForm from "./popup-form";
 import {
   usePopups,
@@ -94,19 +75,6 @@ const PopupListPage: React.FC = () => {
     });
   };
 
-  // Handle row click - opens edit modal
-  const handleRowClick = (popup: PopUp, event: React.MouseEvent) => {
-    // Don't trigger if clicking on interactive elements
-    const target = event.target as HTMLElement;
-    const isInteractiveElement = target.closest(
-      'button, [role="switch"], input, select, textarea'
-    );
-
-    if (!isInteractiveElement) {
-      handleOpenEditModal(popup);
-    }
-  };
-
   const formatFieldName = (field: string) => {
     return field.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
   };
@@ -127,218 +95,165 @@ const PopupListPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
-      {/* Header Section */}
-      <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight">
-            Popup Management
-          </h1>
-          <p className="text-muted-foreground">
-            Create, edit, and manage all your popup forms in one place.
-          </p>
+    <div className="animate-in fade-in min-h-screen bg-white duration-700">
+      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
+        {/* Header Section */}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              Popups
+            </h1>
+            <p className="text-sm text-slate-500">
+              Create, edit, and manage all your popup forms in one place.
+            </p>
+          </div>
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogTrigger asChild>
+              <Button
+                onClick={handleOpenAddModal}
+                className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Create New Popup
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-h-[90vh] max-w-4xl overflow-hidden">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingPopup ? "Edit Popup" : "Create New Popup"}
+                </DialogTitle>
+                <DialogDescription>
+                  {editingPopup
+                    ? "Update your popup configuration and settings."
+                    : "Set up a new popup to engage with your website visitors."}
+                </DialogDescription>
+              </DialogHeader>
+              <ScrollArea className="max-h-[75vh] pr-4">
+                <PopupForm
+                  initialData={editingPopup}
+                  onSubmitSuccess={handleCloseModal}
+                />
+              </ScrollArea>
+            </DialogContent>
+          </Dialog>
         </div>
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogTrigger asChild>
-            <Button
-              onClick={handleOpenAddModal}
-              size="lg"
-              className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Create New Popup
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-h-[90vh] max-w-4xl overflow-hidden">
-            <DialogHeader>
-              <DialogTitle>
-                {editingPopup ? "Edit Popup" : "Create New Popup"}
-              </DialogTitle>
-              <DialogDescription>
-                {editingPopup
-                  ? "Update your popup configuration and settings."
-                  : "Set up a new popup to engage with your website visitors."}
-              </DialogDescription>
-            </DialogHeader>
-            <ScrollArea className="max-h-[75vh] pr-4">
-              <PopupForm
-                initialData={editingPopup}
-                onSubmitSuccess={handleCloseModal}
-              />
-            </ScrollArea>
-          </DialogContent>
-        </Dialog>
-      </div>
 
-      {/* Main Content */}
-      <Card>
-        <CardContent className="p-0">
-          {isLoading ? (
-            <div className="flex items-center justify-center p-8">
-              <div className="space-y-2 text-center">
-                <div className="border-primary mx-auto h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
-                <p className="text-muted-foreground">Loading popups...</p>
+        {/* Main Content */}
+        <TableWrapper>
+          <div className="min-h-[400px]">
+            {isLoading ? (
+              <div className="flex h-64 flex-col items-center justify-center gap-3">
+                <RefreshCw className="h-8 w-8 animate-spin text-slate-500" />
+                <p className="animate-pulse text-sm text-slate-400">
+                  Loading popups...
+                </p>
               </div>
-            </div>
-          ) : isError ? (
-            <div className="p-6">
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  {error?.message || "Failed to load popups. Please try again."}
-                </AlertDescription>
-              </Alert>
-            </div>
-          ) : popups?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center space-y-4 p-12 text-center">
-              <div className="bg-muted rounded-full p-3">
-                <Settings className="text-muted-foreground h-6 w-6" />
+            ) : isError ? (
+              <div className="p-6">
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    {error?.message ||
+                      "Failed to load popups. Please try again."}
+                  </AlertDescription>
+                </Alert>
               </div>
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold">No popups found</h3>
-                <p className="text-muted-foreground max-w-sm">
+            ) : popups?.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+                  <ImageIcon className="h-6 w-6 text-slate-400" />
+                </div>
+                <h3 className="text-sm font-medium text-slate-900">
+                  No popups found
+                </h3>
+                <p className="mt-1 text-sm text-slate-500">
                   Get started by creating your first popup to engage with your
                   website visitors.
                 </p>
               </div>
-              <Button onClick={handleOpenAddModal}>
-                <Plus className="mr-2 h-4 w-4" />
-                Create Your First Popup
-              </Button>
-            </div>
-          ) : (
-            <>
-              <div className="hidden lg:block">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[80px]">Image</TableHead>
-                      <TableHead>Title</TableHead>
-                      <TableHead>Fields</TableHead>
-                      <TableHead className="">Status</TableHead>
-                      <TableHead className="w-[120px]">Actions</TableHead>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-b border-slate-100 hover:bg-transparent">
+                    <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                      Popup Info
+                    </TableHead>
+                    <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                      Enabled Fields
+                    </TableHead>
+                    <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                      Status
+                    </TableHead>
+                    <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+                      Actions
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {popups?.map(popup => (
+                    <TableRow
+                      key={popup.id}
+                      className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
+                    >
+                      <TableCell className="px-6 py-4">
+                        <TableUserCell
+                          imageSrc={popup.image as string}
+                          fallback={popup.title.substring(0, 2).toUpperCase()}
+                          title={popup.title}
+                          subtitle={popup.disclaimer}
+                        />
+                      </TableCell>
+                      <TableCell className="px-6 py-4">
+                        <div className="flex flex-wrap gap-1">
+                          {popup.enabled_fields.length > 0 ? (
+                            popup.enabled_fields.slice(0, 3).map(field => (
+                              <Badge
+                                key={field}
+                                variant="secondary"
+                                className="bg-slate-100 text-[10px] font-medium text-slate-600 hover:bg-slate-200"
+                              >
+                                {getFieldIcon(field)} {formatFieldName(field)}
+                              </Badge>
+                            ))
+                          ) : (
+                            <Badge variant="outline" className="text-xs">
+                              No fields
+                            </Badge>
+                          )}
+                          {popup.enabled_fields.length > 3 && (
+                            <Badge variant="secondary" className="text-xs">
+                              +{popup.enabled_fields.length - 3} more
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4">
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            checked={popup.is_active}
+                            onCheckedChange={checked =>
+                              handleStatusToggle(popup, checked)
+                            }
+                            disabled={updatePopupMutation.isPending}
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <TableActionButtons
+                            onEdit={() => handleOpenEditModal(popup)}
+                            onDelete={() => handleDelete(popup.id!)}
+                          />
+                        </div>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {popups?.map(popup => (
-                      <TableRow
-                        key={popup.id}
-                        className="hover:bg-muted/50 cursor-pointer"
-                        onClick={e => handleRowClick(popup, e)}
-                      >
-                        <TableCell>
-                          <Avatar className="h-12 w-12">
-                            <AvatarImage
-                              src={popup.image as string}
-                              alt={popup.title}
-                              className="object-cover"
-                            />
-                            <AvatarFallback className="bg-muted">
-                              <ImageIcon className="text-muted-foreground h-5 w-5" />
-                            </AvatarFallback>
-                          </Avatar>
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          <div className="space-y-1">
-                            <div className="font-semibold">{popup.title}</div>
-                            {popup.disclaimer && (
-                              <div className="text-muted-foreground line-clamp-1 text-sm">
-                                {popup.disclaimer.length > 50
-                                  ? `${popup.disclaimer.substring(0, 50)}...`
-                                  : popup.disclaimer}
-                              </div>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {popup.enabled_fields.length > 0 ? (
-                              popup.enabled_fields.slice(0, 3).map(field => (
-                                <Badge
-                                  key={field}
-                                  variant="secondary"
-                                  className="text-xs"
-                                >
-                                  {getFieldIcon(field)} {formatFieldName(field)}
-                                </Badge>
-                              ))
-                            ) : (
-                              <Badge variant="outline" className="text-xs">
-                                No fields
-                              </Badge>
-                            )}
-                            {popup.enabled_fields.length > 3 && (
-                              <Badge variant="secondary" className="text-xs">
-                                +{popup.enabled_fields.length - 3} more
-                              </Badge>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell onClick={e => e.stopPropagation()}>
-                          <div className="flex items-center space-x-2">
-                            <Switch
-                              checked={popup.is_active}
-                              onCheckedChange={checked =>
-                                handleStatusToggle(popup, checked)
-                              }
-                              disabled={updatePopupMutation.isPending}
-                            />
-                          </div>
-                        </TableCell>
-                        <TableCell onClick={e => e.stopPropagation()}>
-                          <div className="flex items-center gap-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleOpenEditModal(popup)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 w-8 p-0 text-red-500 hover:bg-red-50 hover:text-red-600"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>
-                                    Are you sure?
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This action cannot be undone. This will
-                                    permanently delete the popup &apos;
-                                    {popup.title}&apos; and remove all
-                                    associated data.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDelete(popup.id!)}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                  >
-                                    Delete
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+        </TableWrapper>
+      </div>
     </div>
   );
 };

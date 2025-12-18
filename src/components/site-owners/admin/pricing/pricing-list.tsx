@@ -33,6 +33,9 @@ import {
 import { Pricing } from "@/types/owner-site/admin/pricing";
 import { useDebouncedCallback } from "use-debounce";
 
+import { TableWrapper, TableActionButtons } from "@/components/ui/custom-table";
+import { RefreshCw } from "lucide-react";
+
 export const PricingList: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingPricing, setEditingPricing] = useState<Pricing | null>(null);
@@ -78,8 +81,7 @@ export const PricingList: React.FC = () => {
     setSearch("");
   };
 
-  const handleDelete = (pricing: Pricing, event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent row click from triggering
+  const handleDelete = (pricing: Pricing) => {
     setDeletePricing(pricing);
   };
 
@@ -97,212 +99,225 @@ export const PricingList: React.FC = () => {
 
   const pricings = data?.results || [];
 
+  if (isLoading) {
+    return (
+      <div className="animate-in fade-in min-h-screen bg-white duration-700">
+        <div className="mx-auto max-w-7xl p-4 sm:p-6">
+          <div className="flex h-64 flex-col items-center justify-center gap-3">
+            <RefreshCw className="h-8 w-8 animate-spin text-slate-500" />
+            <p className="animate-pulse text-sm text-slate-400">
+              Loading pricing plans...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (error) {
     return (
-      <Card className="border-none shadow-none">
-        <div className="mb-3 flex items-center justify-between">
+      <div className="animate-in fade-in min-h-screen bg-white duration-700">
+        <div className="mx-auto max-w-7xl p-4 sm:p-6">
+          <div className="flex h-64 flex-col items-center justify-center gap-4 text-center">
+            <div className="rounded-full bg-red-50 p-3">
+              <DollarSign className="h-8 w-8 text-red-600" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold tracking-tight text-slate-900">
+                Pricing Plans
+              </h1>
+              <p className="text-sm text-red-600">
+                {error instanceof Error
+                  ? error.message
+                  : "Failed to load pricing plans"}
+              </p>
+            </div>
+            <Button
+              onClick={() => setShowForm(true)}
+              className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Pricing Plan
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="animate-in fade-in min-h-screen bg-white duration-700">
+      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Pricing Plans</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              Pricing Plans
+            </h1>
+            <p className="text-sm text-slate-500">
+              Manage your pricing plans and features.
+            </p>
           </div>
           <Button
             onClick={() => setShowForm(true)}
-            className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Pricing Plan
           </Button>
         </div>
-        <CardContent>
-          <p className="text-destructive">
-            {error instanceof Error
-              ? error.message
-              : "Failed to load pricing plans"}
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
 
-  return (
-    <div>
-      <div className="mb-3 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Pricing Plans</h1>
+        <div className="flex items-center justify-between gap-4">
+          <div className="relative w-full max-w-md">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Input
+              placeholder="Search pricing plans..."
+              value={searchInput}
+              onChange={handleSearchChange}
+              className="h-9 border-slate-200 bg-white pr-10 pl-10 text-sm placeholder:text-slate-500 focus-visible:ring-1 focus-visible:ring-slate-900"
+            />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         </div>
-        <Button
-          onClick={() => setShowForm(true)}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add Pricing Plan
-        </Button>
-      </div>
 
-      <div className="mt-10 mb-6">
-        <div className="relative max-w-md">
-          <Search className="absolute top-1/2 left-3 z-1 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            placeholder="Search pricing plans..."
-            value={searchInput}
-            onChange={handleSearchChange}
-            className="border-gray-200 bg-white pr-10 pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
-          />
-          {searchInput && (
-            <button
-              type="button"
-              onClick={clearSearch}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition hover:text-gray-600"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
-      </div>
+        <TableWrapper>
+          <Table>
+            <TableHeader>
+              <TableRow className="border-b border-slate-100 hover:bg-transparent">
+                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                  Plan Name
+                </TableHead>
+                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                  Price
+                </TableHead>
+                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                  Description
+                </TableHead>
+                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                  Features
+                </TableHead>
+                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                  Status
+                </TableHead>
+                <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
 
-      <Card className="border-none shadow-none">
-        <CardContent>
-          {isLoading ? (
-            <div className="space-y-3">
-              {[...Array(5)].map((_, i) => (
-                <Skeleton key={i} className="h-16 w-full" />
-              ))}
-            </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader className="[&_tr]:!border-b-0">
-                    <TableRow>
-                      <TableHead>Plan Name</TableHead>
-                      <TableHead>Price</TableHead>
-                      <TableHead>Description</TableHead>
-                      <TableHead>Features</TableHead>
-                      <TableHead className="w-[100px]">Status</TableHead>
-                      <TableHead className="w-[50px]">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-
-                  <TableBody>
-                    {pricings.map(pricing => (
-                      <TableRow
-                        key={pricing.id}
-                        className="cursor-pointer border-none transition-colors hover:bg-gray-50"
-                        onClick={e => handleRowClick(pricing, e)}
-                      >
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            {pricing.name}
-                            {pricing.is_popular && (
-                              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            Rs.{" "}
-                            <span className="font-semibold">
-                              {pricing.price}
-                            </span>
-                            <span className="text-muted-foreground text-sm">
-                              /mo
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-muted-foreground max-w-[300px] truncate">
-                          {pricing.description}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">
-                            {pricing.features.length} features
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {pricing.is_popular ? (
-                            <Badge className="bg-yellow-100 text-yellow-800">
-                              Popular
-                            </Badge>
-                          ) : (
-                            <Badge variant="outline">Standard</Badge>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <div
-                            className="flex items-center gap-x-2"
-                            onClick={e => e.stopPropagation()}
-                          >
-                            <Button
-                              variant="ghost"
-                              onClick={() => handleEdit(pricing)}
-                              className="action-button"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              onClick={e => handleDelete(pricing, e)}
-                              className="action-button text-destructive hover:text-destructive hover:bg-transparent"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-
-              {pricings.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <DollarSign className="mb-4 h-16 w-16 text-gray-300" />
-                  <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                    No pricing plans found
-                  </h3>
-                  <p className="mb-6 max-w-sm text-gray-500">
-                    Get started by creating your first pricing plan to showcase
-                    your offerings
-                  </p>
-                  <Button
-                    onClick={() => setShowForm(true)}
-                    className="bg-black text-white hover:bg-gray-800"
+            <TableBody>
+              {pricings.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="py-12 text-center text-slate-500"
                   >
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Pricing Plan
-                  </Button>
-                </div>
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <DollarSign className="h-12 w-12 text-slate-200" />
+                      <p>
+                        No pricing plans found. Click "Add Pricing Plan" to get
+                        started.
+                      </p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                pricings.map(pricing => (
+                  <TableRow
+                    key={pricing.id}
+                    className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
+                  >
+                    <TableCell className="px-6 py-4 font-medium">
+                      <div className="flex items-center gap-2 text-slate-900">
+                        {pricing.name}
+                        {pricing.is_popular && (
+                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
+                      <div className="flex items-center gap-1 text-slate-600">
+                        <span className="text-xs font-semibold">Rs.</span>
+                        <span className="font-bold">{pricing.price}</span>
+                        <span className="text-xs text-slate-400">/mo</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="max-w-[300px] truncate px-6 py-4 text-sm text-slate-500">
+                      {pricing.description}
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
+                      <Badge
+                        variant="secondary"
+                        className="rounded-md bg-slate-100 font-medium text-slate-600"
+                      >
+                        {pricing.features.length} features
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
+                      {pricing.is_popular ? (
+                        <Badge className="bg-yellow-50 font-semibold text-yellow-700 hover:bg-yellow-100">
+                          Popular
+                        </Badge>
+                      ) : (
+                        <Badge
+                          variant="outline"
+                          className="border-slate-200 font-medium text-slate-500"
+                        >
+                          Standard
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-right">
+                      <TableActionButtons
+                        onEdit={() => handleEdit(pricing)}
+                        onDelete={() => handleDelete(pricing)}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))
               )}
-            </>
-          )}
-        </CardContent>
-      </Card>
+            </TableBody>
+          </Table>
+        </TableWrapper>
 
-      {showForm && (
-        <PricingForm pricing={editingPricing} onClose={handleCloseForm} />
-      )}
+        {showForm && (
+          <PricingForm pricing={editingPricing} onClose={handleCloseForm} />
+        )}
 
-      <AlertDialog
-        open={!!deletePricing}
-        onOpenChange={() => setDeletePricing(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action will permanently delete &apos;{deletePricing?.name}
-              &apos; and all its features.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              className="bg-destructive hover:bg-destructive/90"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        <AlertDialog
+          open={!!deletePricing}
+          onOpenChange={() => setDeletePricing(null)}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action will permanently delete &apos;{deletePricing?.name}
+                &apos; and all its features.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={confirmDelete}
+                className="bg-red-600 font-semibold text-white hover:bg-red-700"
+              >
+                {deletePricingMutation.isPending ? (
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   );
 };

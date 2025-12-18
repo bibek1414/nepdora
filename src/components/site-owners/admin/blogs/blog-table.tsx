@@ -1,5 +1,20 @@
 import React from "react";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { BlogPost } from "@/types/owner-site/admin/blog";
+import { FileText, Edit, Trash2, RefreshCw, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+
+interface BlogsTableProps {
+  blogs: BlogPost[];
+  onEdit: (blog: BlogPost) => void;
+  onDelete: (blog: BlogPost) => void;
+  onTogglePublish: (blog: BlogPost) => void;
+  isLoading: boolean;
+}
+
 import {
   Table,
   TableBody,
@@ -8,11 +23,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { BlogPost } from "@/types/owner-site/admin/blog";
-import { FileText, Edit, Trash2 } from "lucide-react";
-import Link from "next/link";
+import {
+  TableWrapper,
+  TableActionButtons,
+  TableUserCell,
+} from "@/components/ui/custom-table";
 
 interface BlogsTableProps {
   blogs: BlogPost[];
@@ -30,181 +45,85 @@ const BlogsTable: React.FC<BlogsTableProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <>
-        <div className="hidden rounded-lg border sm:block">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell>
-                    <Skeleton className="h-10 w-full" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-24" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-8 w-24" />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+      <TableWrapper>
+        <div className="flex h-64 flex-col items-center justify-center gap-3">
+          <RefreshCw className="h-8 w-8 animate-spin text-slate-500" />
+          <p className="animate-pulse text-sm text-slate-400">
+            Loading blogs...
+          </p>
         </div>
-
-        <div className="space-y-3 sm:hidden">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="rounded-lg border bg-white p-4">
-              <div className="mb-3 flex items-center gap-3">
-                <Skeleton className="h-12 w-12 flex-shrink-0 rounded-md" />
-                <div className="min-w-0 flex-1">
-                  <Skeleton className="mb-2 h-5 w-full" />
-                  <Skeleton className="h-4 w-20" />
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <Skeleton className="h-4 w-20" />
-                <div className="flex gap-2">
-                  <Skeleton className="h-8 w-8 rounded" />
-                  <Skeleton className="h-8 w-8 rounded" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </>
+      </TableWrapper>
     );
   }
 
   if (blogs.length === 0) {
     return (
-      <div className="flex h-64 flex-col items-center justify-center rounded-lg bg-white text-center">
-        <FileText className="h-12 w-12 text-gray-400" />
-        <h3 className="mt-4 text-lg font-medium text-gray-900">
-          No blogs found
-        </h3>
-        <p className="mt-1 px-4 text-sm text-gray-500">
-          Get started by creating your first blog post.
-        </p>
-      </div>
+      <TableWrapper>
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+            <FileText className="h-6 w-6 text-slate-400" />
+          </div>
+          <h3 className="text-sm font-medium text-slate-900">No blogs found</h3>
+          <p className="mt-1 text-sm text-slate-500">
+            Get started by creating your first blog post.
+          </p>
+        </div>
+      </TableWrapper>
     );
   }
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    });
+  };
+
   return (
-    <>
-      <div className="hidden overflow-x-auto rounded-lg sm:block">
-        <Table>
-          <TableHeader className="[&_tr]:border-b-0">
-            <TableRow>
-              <TableHead className="min-w-[80px]">Image</TableHead>
-              <TableHead className="min-w-[200px]">Title</TableHead>
-              <TableHead className="min-w-[100px]">Created</TableHead>
-              <TableHead className="min-w-[100px] pr-6 text-right">
-                Actions
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="[&_tr]:border-b-0">
-            {blogs.map(blog => (
-              <TableRow key={blog.id}>
-                <TableCell>
-                  <div className="relative h-10 w-10 flex-shrink-0">
-                    <Image
-                      src={blog.thumbnail_image || "/images/fallback.png"}
-                      alt={blog.thumbnail_image_alt_description || blog.title}
-                      fill
-                      sizes="40px"
-                      className="rounded-md object-cover"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Link href={`/admin/blogs/edit/${blog.slug}`}>
-                    <span className="line-clamp-2 font-medium text-gray-900 hover:underline">
-                      {blog.title}
-                    </span>
-                  </Link>
-                </TableCell>
-                <TableCell className="text-sm">
-                  {new Date(blog.created_at).toLocaleDateString()}
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onEdit(blog)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-red-500 hover:text-red-600"
-                      onClick={() => onDelete(blog)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      <div className="space-y-3 sm:hidden">
-        {blogs.map(blog => (
-          <div key={blog.id} className="rounded-lg border bg-white p-4">
-            <div className="mb-3 flex items-center gap-3">
-              <div className="relative h-12 w-12 flex-shrink-0">
-                <Image
-                  src={blog.thumbnail_image || "/images/fallback.png"}
-                  alt={blog.thumbnail_image_alt_description || blog.title}
-                  fill
-                  className="rounded-md object-cover"
+    <TableWrapper>
+      <Table>
+        <TableHeader>
+          <TableRow className="border-b border-slate-100 hover:bg-transparent">
+            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+              Blog Post
+            </TableHead>
+            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+              Created
+            </TableHead>
+            <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+              Actions
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {blogs.map(blog => (
+            <TableRow
+              key={blog.id}
+              className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
+            >
+              <TableCell className="px-6 py-4">
+                <TableUserCell
+                  imageSrc={blog.thumbnail_image || undefined}
+                  fallback={blog.title.substring(0, 2).toUpperCase()}
+                  title={blog.title}
+                  subtitle={blog.slug}
                 />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="mb-1 line-clamp-2 text-sm leading-tight font-medium text-gray-900">
-                  {blog.title}
-                </h3>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between border-t border-gray-100 pt-3">
-              <span className="text-xs text-gray-500">
-                {new Date(blog.created_at).toLocaleDateString()}
-              </span>
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onEdit(blog)}
-                  className="h-8 w-8 p-0"
-                >
-                  <Edit className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
-                  onClick={() => onDelete(blog)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </>
+              </TableCell>
+              <TableCell className="px-6 py-4 whitespace-nowrap text-slate-500">
+                {formatDate(blog.created_at)}
+              </TableCell>
+              <TableCell className="px-6 py-4 text-right">
+                <TableActionButtons
+                  onEdit={() => onEdit(blog)}
+                  onDelete={() => onDelete(blog)}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableWrapper>
   );
 };
 

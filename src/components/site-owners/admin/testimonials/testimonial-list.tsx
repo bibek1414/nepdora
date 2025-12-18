@@ -129,43 +129,42 @@ export default function TestimonialList() {
   }
 
   return (
-    <div className="mx-auto bg-white">
-      {/* Main Container with responsive padding */}
-      <div className="container mx-auto max-w-7xl px-6 py-8">
+    <div className="animate-in fade-in min-h-screen bg-white duration-700">
+      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
         {/* Header Section */}
         <TestimonialsHeader
           onAdd={handleAdd}
           testimonialsCount={testimonials.length}
         />
-        <div className="mt-10 mb-6">
-          <div className="relative max-w-md">
-            <Search className="absolute top-1/2 left-3 z-1 h-4 w-4 -translate-y-1/2 text-gray-400" />
+
+        <div className="flex items-center justify-between gap-4">
+          <div className="relative w-full max-w-md">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <Input
               placeholder="Search by name..."
               value={searchInput}
               onChange={handleSearchChange}
-              className="border-gray-200 bg-white pr-10 pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
+              className="h-9 border-slate-200 bg-white pr-10 pl-10 text-sm placeholder:text-slate-500 focus-visible:ring-1 focus-visible:ring-slate-900"
             />
             {searchInput && (
               <button
                 type="button"
                 onClick={clearSearch}
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition hover:text-gray-600"
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
               >
                 <X className="h-4 w-4" />
               </button>
             )}
           </div>
         </div>
-        {/* Content Card with responsive design */}
-        <div className="overflow-hidden rounded-lg bg-white">
-          <TestimonialsTable
-            testimonials={testimonials}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            isLoading={isLoadingTestimonials}
-          />
-        </div>
+
+        {/* Content */}
+        <TestimonialsTable
+          testimonials={testimonials}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          isLoading={isLoadingTestimonials}
+        />
 
         {/* Modal */}
         <TestimonialModal

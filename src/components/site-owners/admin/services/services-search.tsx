@@ -20,21 +20,21 @@ const ServicesSearch: React.FC<ServicesSearchProps> = ({ onSearch }) => {
   };
 
   return (
-    <div className="mt-10 mb-6">
-      <div className="relative max-w-md">
-        <Search className="absolute top-1/2 left-3 z-1 h-4 w-4 -translate-y-1/2 text-gray-400" />
+    <div className="mb-6 flex items-center justify-between gap-4">
+      <div className="relative w-full max-w-md">
+        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
         <Input
           type="text"
-          placeholder="Search by title, description..."
+          placeholder="Search services..."
           value={searchTerm}
           onChange={handleSearchChange}
-          className="border-gray-200 bg-white pr-10 pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
+          className="h-9 border-slate-200 bg-white pr-10 pl-10 text-sm placeholder:text-slate-500 focus-visible:ring-1 focus-visible:ring-slate-900"
         />
         {searchTerm && (
           <button
             type="button"
             onClick={clearSearch}
-            className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition hover:text-gray-600"
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
           >
             <X className="h-4 w-4" />
           </button>
