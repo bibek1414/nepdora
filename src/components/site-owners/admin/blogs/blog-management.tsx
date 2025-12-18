@@ -129,14 +129,16 @@ const BlogsManagement = () => {
   const hasPrevious = !!blogData?.previous;
 
   return (
-    <div className="bg-gray-50 py-8">
-      <div className="px-4 sm:px-6 lg:px-8">
+    <div className="animate-in fade-in min-h-screen bg-white duration-700">
+      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
         <BlogsHeader
           onCreateNew={handleCreateNew}
           onRefresh={handleRefresh}
           blogsCount={totalBlogs}
         />
-        <BlogsSearch onSearch={handleSearch} />
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <BlogsSearch onSearch={handleSearch} />
+        </div>
         <BlogsTable
           blogs={blogs}
           onEdit={handleEditBlog}

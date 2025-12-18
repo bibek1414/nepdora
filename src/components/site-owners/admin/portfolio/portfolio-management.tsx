@@ -9,6 +9,7 @@ import {
 } from "@/hooks/owner-site/admin/use-portfolio";
 import PortfoliosTable from "@/components/site-owners/admin/portfolio/portfolio-table";
 import PortfoliosHeader from "@/components/site-owners/admin/portfolio/portfolio-header";
+import PortfoliosSearch from "@/components/site-owners/admin/portfolio/portfolio-search";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -108,12 +109,15 @@ const PortfoliosManagement = () => {
   const hasPrevious = !!portfolioData?.previous;
 
   return (
-    <div className="bg-gray-50 py-8">
-      <div className="px-4 sm:px-6 lg:px-8">
+    <div className="animate-in fade-in min-h-screen bg-white duration-700">
+      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
         <PortfoliosHeader
           onCreateNew={handleCreateNew}
           portfoliosCount={totalPortfolios}
         />
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <PortfoliosSearch onSearch={handleSearch} />
+        </div>
         <PortfoliosTable
           portfolios={portfolios}
           onEdit={handleEditPortfolio}

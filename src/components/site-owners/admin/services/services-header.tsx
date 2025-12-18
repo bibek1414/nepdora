@@ -14,24 +14,26 @@ const ServicesHeader: React.FC<ServicesHeaderProps> = ({
   onRefresh,
 }) => {
   return (
-    <div className="mb-6 sm:mb-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0 flex-1">
-          <h1 className="text-2xl leading-tight font-bold text-gray-900 sm:text-3xl">
-            Services
-          </h1>
-        </div>
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          Services
+        </h1>
+        <p className="text-sm text-slate-500">
+          Manage your services.{" "}
+          <span className="font-semibold text-slate-700">{servicesCount}</span>{" "}
+          {servicesCount === 1 ? "service" : "services"} available.
+        </p>
+      </div>
 
-        <div className="flex flex-shrink-0 items-center gap-2 sm:gap-3">
-          <Button
-            onClick={onCreateNew}
-            size="sm"
-            className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
-          >
-            <Plus className="h-4 w-4 sm:mr-2" />
-            Add Service
-          </Button>
-        </div>
+      <div className="flex items-center gap-3">
+        <Button
+          onClick={onCreateNew}
+          className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Add Service
+        </Button>
       </div>
     </div>
   );

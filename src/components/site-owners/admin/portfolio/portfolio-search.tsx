@@ -22,38 +22,16 @@ const PortfoliosSearch: React.FC<PortfoliosSearchProps> = ({ onSearch }) => {
   };
 
   return (
-    <div className="mb-6 rounded-lg bg-white p-4">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-        <div className="min-w-0 flex-1">
-          <Label
-            htmlFor="search"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Search Portfolios
-          </Label>
-          <div className="relative mt-1">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
-            <Input
-              type="text"
-              id="search"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              placeholder="Search by title, content..."
-              className="w-full pl-10"
-            />
-          </div>
-        </div>
-
-        <div className="w-full sm:w-auto">
-          <Button
-            onClick={clearFilters}
-            variant="outline"
-            className="w-full sm:mt-6 sm:w-auto"
-          >
-            Clear Filters
-          </Button>
-        </div>
-      </div>
+    <div className="relative w-full sm:w-80">
+      <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+      <Input
+        type="text"
+        id="search"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        placeholder="Search portfolios..."
+        className="h-9 border-slate-200 bg-white pl-9 text-sm transition-all placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
+      />
     </div>
   );
 };

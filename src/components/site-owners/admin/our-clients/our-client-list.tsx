@@ -43,6 +43,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+import {
+  TableWrapper,
+  TableActionButtons,
+  TableUserCell,
+} from "@/components/ui/custom-table";
+import { RefreshCw } from "lucide-react";
+
 // Debounce hook
 const useDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -96,183 +103,176 @@ export default function OurClientList() {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        <div className="flex justify-between">
-          <Skeleton className="h-10 w-32" />
-          <Skeleton className="h-10 w-32" />
+      <div className="animate-in fade-in min-h-screen bg-white duration-700">
+        <div className="mx-auto max-w-7xl p-4 sm:p-6">
+          <div className="flex h-64 flex-col items-center justify-center gap-3">
+            <RefreshCw className="h-8 w-8 animate-spin text-slate-500" />
+            <p className="animate-pulse text-sm text-slate-400">
+              Loading clients...
+            </p>
+          </div>
         </div>
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              {[...Array(5)].map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full" />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
       </div>
     );
   }
 
   if (error) {
     return (
-      <Alert variant="destructive">
-        <AlertDescription>
-          Error loading clients. Please try again later.
-        </AlertDescription>
-      </Alert>
+      <div className="animate-in fade-in min-h-screen bg-white duration-700">
+        <div className="mx-auto max-w-7xl p-4 sm:p-6">
+          <Alert variant="destructive" className="border-red-200 bg-red-50">
+            <AlertDescription className="text-red-800">
+              Error loading clients. Please try again later.
+            </AlertDescription>
+          </Alert>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Our Clients
-          </h1>
-          <p className="text-muted-foreground">
-            Manage your client logos and links.
-          </p>
+    <div className="animate-in fade-in min-h-screen bg-white duration-700">
+      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              Our Clients
+            </h1>
+            <p className="text-sm text-slate-500">
+              Manage your client logos and links.
+            </p>
+          </div>
+          <Button
+            onClick={() => {
+              setEditingClient(null);
+              setIsFormOpen(true);
+            }}
+            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+          >
+            <Plus className="mr-2 h-4 w-4" /> Add Client
+          </Button>
         </div>
-        <Button
-          onClick={() => {
-            setEditingClient(null);
-            setIsFormOpen(true);
-          }}
-        >
-          <Plus className="mr-2 h-4 w-4" /> Add Client
-        </Button>
-      </div>
 
-      <div className="flex items-center gap-2">
-        <div className="relative max-w-sm flex-1">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            placeholder="Search clients..."
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-            className="pr-10 pl-10"
-          />
-          {searchTerm && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearSearch}
-              className="absolute top-1/2 right-2 h-6 w-6 -translate-y-1/2 p-0 hover:bg-gray-100"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
+        <div className="flex items-center justify-between gap-4">
+          <div className="relative w-full max-w-md">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Input
+              placeholder="Search clients..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="h-9 border-slate-200 bg-white pr-10 pl-10 text-sm placeholder:text-slate-500 focus-visible:ring-1 focus-visible:ring-slate-900"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         </div>
-      </div>
 
-      <Card>
-        <CardContent className="p-0">
+        <TableWrapper>
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Logo</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>URL</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+              <TableRow className="border-b border-slate-100 hover:bg-transparent">
+                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                  Client Info
+                </TableHead>
+                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                  URL
+                </TableHead>
+                <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {clientsData?.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="py-8 text-center">
-                    No clients found.
+                  <TableCell
+                    colSpan={3}
+                    className="py-12 text-center text-slate-500"
+                  >
+                    No clients found. Click "Add Client" to get started.
                   </TableCell>
                 </TableRow>
               ) : (
                 clientsData?.map(client => (
                   <TableRow
                     key={client.id}
-                    className="hover:bg-muted/50 cursor-pointer"
-                    onClick={() => handleEdit(client)}
+                    className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
                   >
-                    <TableCell>
-                      {client.logo && (
-                        <img
-                          src={client.logo}
-                          alt={client.name}
-                          className="h-10 w-10 rounded-md border bg-white object-contain"
-                        />
+                    <TableCell className="px-6 py-4">
+                      <TableUserCell
+                        imageSrc={client.logo || undefined}
+                        fallback={client.name.charAt(0).toUpperCase()}
+                        title={client.name}
+                      />
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
+                      {client.url ? (
+                        <a
+                          href={client.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                        >
+                          {client.url}
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      ) : (
+                        <span className="text-xs text-slate-400">---</span>
                       )}
                     </TableCell>
-                    <TableCell className="font-medium">{client.name}</TableCell>
-                    <TableCell>
-                      {client.url && (
-                        <p className="text-blue-600">{client.url}</p>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={e => {
-                            e.stopPropagation();
-                            handleEdit(client);
-                          }}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-red-600 hover:bg-red-50 hover:text-red-700"
-                          onClick={e => {
-                            e.stopPropagation();
-                            setDeleteId(client.id);
-                          }}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+                    <TableCell className="px-6 py-4 text-right">
+                      <TableActionButtons
+                        onEdit={() => handleEdit(client)}
+                        onDelete={() => setDeleteId(client.id)}
+                      />
                     </TableCell>
                   </TableRow>
                 ))
               )}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+        </TableWrapper>
 
-      <OurClientForm
-        open={isFormOpen}
-        onOpenChange={setIsFormOpen}
-        client={editingClient}
-      />
+        <OurClientForm
+          open={isFormOpen}
+          onOpenChange={setIsFormOpen}
+          client={editingClient}
+        />
 
-      <AlertDialog
-        open={!!deleteId}
-        onOpenChange={open => !open && setDeleteId(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              client.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              {deleteMutation.isPending ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                "Delete"
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        <AlertDialog
+          open={!!deleteId}
+          onOpenChange={open => !open && setDeleteId(null)}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the
+                client.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-red-600 font-semibold text-white hover:bg-red-700"
+              >
+                {deleteMutation.isPending ? (
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   );
 }

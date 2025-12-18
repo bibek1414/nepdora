@@ -1,29 +1,21 @@
+"use client";
+
 import React from "react";
 import {
+  FileText,
+  Briefcase,
+  Users,
+  MessageSquare,
   Globe,
   Youtube,
-  Briefcase,
   Package,
   Home,
-  MessageSquare,
-  Users,
   Handshake,
   UserCog,
-  ArrowUpRight,
   LucideIcon,
+  ArrowUpRight,
 } from "lucide-react";
 import Link from "next/link";
-import { generateAdminPageMetadata } from "@/lib/metadata-utils";
-import type { Metadata } from "next";
-
-export async function generateMetadata(): Promise<Metadata> {
-  return generateAdminPageMetadata({
-    pageName: "Content Management",
-    pageDescription:
-      "Easily manage all your website content in {storeName}. Control blogs, videos, portfolio, FAQs, testimonials, and more from one dashboard.",
-    pageRoute: "/admin/content-management",
-  });
-}
 
 interface ContentItem {
   name: string;
@@ -40,131 +32,127 @@ const contentItems: ContentItem[] = [
     href: "/admin/blogs",
     icon: Globe,
     description: "Manage blog posts and articles",
-    gradient: "from-[#FFE2D9] to-[#FFD0C2]",
-    shadowColor: "shadow-orange-200",
+    gradient: "bg-orange-50",
+    shadowColor: "hover:border-orange-200",
   },
   {
     name: "Videos",
     href: "/admin/videos",
     icon: Youtube,
     description: "Manage video content",
-    gradient: "from-[#F0DDFE] to-[#E3C5FE]",
-    shadowColor: "shadow-purple-200",
+    gradient: "bg-purple-50",
+    shadowColor: "hover:border-purple-200",
   },
   {
     name: "Portfolios",
     href: "/admin/portfolio",
     icon: Briefcase,
     description: "Manage portfolio projects",
-    gradient: "from-[#E6E6FA] to-[#D8D8F6]", // Periwinkle-ish
-    shadowColor: "shadow-indigo-200",
+    gradient: "bg-indigo-50",
+    shadowColor: "hover:border-indigo-200",
   },
   {
     name: "Popup",
     href: "/admin/popup",
     icon: Package,
     description: "Configure popup messages",
-    gradient: "from-[#FFF6D1] to-[#FFEBB0]",
-    shadowColor: "shadow-yellow-200",
+    gradient: "bg-amber-50",
+    shadowColor: "hover:border-amber-200",
   },
   {
     name: "FAQ",
     href: "/admin/faq",
     icon: MessageSquare,
     description: "Manage frequently asked questions",
-    gradient: "from-[#DCFCE7] to-[#BBF7D0]",
-    shadowColor: "shadow-green-200",
+    gradient: "bg-emerald-50",
+    shadowColor: "hover:border-emerald-200",
   },
   {
     name: "Testimonials",
     href: "/admin/testimonials",
     icon: Users,
     description: "Manage client testimonials",
-    gradient: "from-[#FCE7F3] to-[#FBCFE8]",
-    shadowColor: "shadow-pink-200",
+    gradient: "bg-pink-50",
+    shadowColor: "hover:border-pink-200",
   },
   {
     name: "Services",
     href: "/admin/services",
     icon: Home,
     description: "Manage your services",
-    gradient: "from-[#E0F2FE] to-[#BAE6FD]",
-    shadowColor: "shadow-sky-200",
+    gradient: "bg-sky-50",
+    shadowColor: "hover:border-sky-200",
   },
   {
     name: "Our Clients",
     href: "/admin/our-clients",
     icon: Handshake,
     description: "Manage your clients",
-    gradient: "from-[#CFFAFE] to-[#A5F3FC]",
-    shadowColor: "shadow-cyan-200",
+    gradient: "bg-cyan-50",
+    shadowColor: "hover:border-cyan-200",
   },
   {
     name: "Team",
     href: "/admin/team-member",
     icon: UserCog,
     description: "Manage your team members",
-    gradient: "from-[#F1F5F9] to-[#E2E8F0]",
-    shadowColor: "shadow-slate-200",
+    gradient: "bg-slate-50",
+    shadowColor: "hover:border-slate-300",
   },
 ];
 
-export default function ContentManagement() {
+export default function ContentManagementPage() {
+  // const { siteData } = useGetSiteData(); // Removed unused hook
+  // const subDomain = siteData?.subDomain; // Removed unused variable
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100/50 p-8">
+    <div className="animate-in fade-in min-h-screen bg-white p-8 duration-700 sm:p-12">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+        <div className="mb-12 space-y-3">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
             Content Management
           </h1>
-          <p className="mt-3 text-lg text-gray-600">
-            Design, create, and manage your content with ease.
+          <p className="max-w-2xl text-lg text-slate-500">
+            Centralize your website content. Select a module below to start
+            editing.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {contentItems.map(item => {
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {contentItems.map((item, idx) => {
             const Icon = item.icon;
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className="group relative block"
+                className="group relative block outline-none"
+                style={{
+                  animationDelay: `${idx * 75}ms`,
+                }}
               >
                 <div
-                  className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${item.gradient} p-8 transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl ${item.shadowColor}`}
+                  className={`relative h-full overflow-hidden rounded-2xl border border-transparent ${item.gradient} p-7 transition-all duration-500 ease-out hover:-translate-y-1.5 ${item.shadowColor}`}
                 >
-                  {/* Decorative Circle Background */}
-                  <div className="absolute -top-8 -right-8 h-40 w-40 rounded-full bg-white/30 blur-3xl transition-all duration-500 group-hover:scale-125 group-hover:bg-white/50" />
-
-                  {/* Secondary decorative element */}
-                  <div className="absolute -bottom-4 -left-4 h-32 w-32 rounded-full bg-white/20 blur-2xl transition-all duration-500 group-hover:scale-110" />
-
-                  <div className="relative flex h-48 flex-col justify-between">
-                    {/* Arrow Up Right Icon */}
-                    <div className="absolute top-0 right-0">
-                      <div className="rounded-xl bg-white/70 p-2 shadow-sm backdrop-blur-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-white/90 group-hover:shadow-md">
-                        <ArrowUpRight
-                          className="h-5 w-5 text-gray-800"
-                          strokeWidth={2.5}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex-1">
-                      <div className="mb-4 inline-flex rounded-xl bg-white/70 p-3 shadow-sm backdrop-blur-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-white/90 group-hover:shadow-md">
-                        <Icon
-                          className="h-6 w-6 text-gray-800"
-                          strokeWidth={2.5}
-                        />
-                      </div>
-                      <h3 className="text-2xl font-bold text-gray-900">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-1 flex-col gap-1">
+                      <h3 className="text-xl font-bold text-slate-800 transition-colors group-hover:text-slate-900">
                         {item.name}
                       </h3>
-                      <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-gray-700">
+                      <p className="text-sm font-medium text-slate-500 transition-colors group-hover:text-slate-600">
                         {item.description}
                       </p>
                     </div>
+                    {/* Re-added Icon rendering since it's used in design */}
+                    <div className="shrink-0">
+                      <Icon
+                        className="h-8 w-8 text-slate-700 opacity-80"
+                        strokeWidth={1.5}
+                      />
+                    </div>
+                  </div>
+                  {/* Decorative Arrow */}
+                  <div className="absolute top-4 right-4 opacity-0 transition-opacity group-hover:opacity-100">
+                    <ArrowUpRight className="h-5 w-5 text-slate-400" />
                   </div>
                 </div>
               </Link>

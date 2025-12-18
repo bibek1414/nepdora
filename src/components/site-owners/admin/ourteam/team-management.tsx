@@ -35,30 +35,32 @@ export const TeamManagement: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <Card className="p-8">
-          <CardContent className="flex flex-col items-center space-y-4">
-            <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
-            <p className="text-muted-foreground">Loading team members...</p>
-          </CardContent>
-        </Card>
+      <div className="animate-in fade-in min-h-screen bg-white duration-700">
+        <div className="mx-auto max-w-7xl p-4 sm:p-6">
+          <div className="flex h-64 flex-col items-center justify-center gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-slate-500" />
+            <p className="animate-pulse text-sm text-slate-400">
+              Loading team members...
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <Card className="border-destructive p-8">
-          <CardContent className="flex flex-col items-center space-y-4 text-center">
-            <div className="bg-destructive/10 rounded-full p-3">
-              <Users className="text-destructive h-8 w-8" />
+      <div className="animate-in fade-in min-h-screen bg-white duration-700">
+        <div className="mx-auto max-w-7xl p-4 sm:p-6">
+          <div className="flex h-64 flex-col items-center justify-center gap-4 text-center">
+            <div className="rounded-full bg-red-50 p-3">
+              <Users className="h-8 w-8 text-red-600" />
             </div>
             <div>
-              <h3 className="text-destructive mb-2 font-semibold">
+              <h3 className="font-semibold text-red-600">
                 Failed to Load Team Members
               </h3>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-sm text-slate-500">
                 {error.message ||
                   "An unexpected error occurred while loading the team members."}
               </p>
@@ -66,34 +68,41 @@ export const TeamManagement: React.FC = () => {
             <Button
               variant="outline"
               onClick={() => window.location.reload()}
-              className="mt-4"
+              className="mt-2 h-9 rounded-lg border-slate-200"
             >
               Try Again
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto">
-      {/* Header Section */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="mb-4 text-3xl font-bold">Team Management</h1>
+    <div className="animate-in fade-in min-h-screen bg-white duration-700">
+      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
+        {/* Header Section */}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              Team Management
+            </h1>
+            <p className="text-sm text-slate-500">
+              Manage your team members and their roles.
+            </p>
+          </div>
+          <Button
+            onClick={handleAddMember}
+            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Team Member
+          </Button>
         </div>
-        <Button
-          onClick={handleAddMember}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
-        >
-          <Plus className="h-4 w-4" />
-          Add Team Member
-        </Button>
-      </div>
 
-      {/* Team Members Table */}
-      <TeamMembersTable members={members || []} onEdit={handleEditMember} />
+        {/* Team Members Table */}
+        <TeamMembersTable members={members || []} onEdit={handleEditMember} />
+      </div>
 
       {/* Team Member Dialog */}
       <TeamMemberDialog

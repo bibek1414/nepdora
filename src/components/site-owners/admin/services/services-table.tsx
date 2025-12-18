@@ -21,6 +21,20 @@ interface ServicesTableProps {
   isLoading: boolean;
 }
 
+import {
+  TableWrapper,
+  TableActionButtons,
+  TableUserCell,
+} from "@/components/ui/custom-table";
+import { RefreshCw } from "lucide-react";
+
+interface ServicesTableProps {
+  services: ServicesPost[];
+  onEdit: (service: ServicesPost) => void;
+  onDelete: (service: ServicesPost) => void;
+  isLoading: boolean;
+}
+
 const ServicesTable: React.FC<ServicesTableProps> = ({
   services,
   onEdit,
@@ -29,183 +43,83 @@ const ServicesTable: React.FC<ServicesTableProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <>
-        <div className="hidden rounded-lg sm:block">
-          <Table className="border-none">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell>
-                    <Skeleton className="h-10 w-full" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-24" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-8 w-24" />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+      <TableWrapper>
+        <div className="flex h-64 flex-col items-center justify-center gap-3">
+          <RefreshCw className="h-8 w-8 animate-spin text-slate-500" />
+          <p className="animate-pulse text-sm text-slate-400">
+            Loading services...
+          </p>
         </div>
-
-        <div className="space-y-3 sm:hidden">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="rounded-lg bg-white p-4">
-              <div className="mb-3 flex items-center gap-3">
-                <Skeleton className="h-12 w-12 flex-shrink-0 rounded-md" />
-                <div className="min-w-0 flex-1">
-                  <Skeleton className="mb-2 h-5 w-full" />
-                  <Skeleton className="h-4 w-20" />
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <Skeleton className="h-4 w-20" />
-                <div className="flex gap-2">
-                  <Skeleton className="h-8 w-8 rounded" />
-                  <Skeleton className="h-8 w-8 rounded" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </>
+      </TableWrapper>
     );
   }
 
   if (services.length === 0) {
     return (
-      <div className="flex h-64 flex-col items-center justify-center rounded-lg bg-white text-center">
-        <FileText className="h-12 w-12 text-gray-400" />
-        <h3 className="mt-4 text-lg font-medium text-gray-900">
-          No services found
-        </h3>
-        <p className="mt-1 px-4 text-sm text-gray-500">
-          Get started by creating your first service.
-        </p>
-      </div>
+      <TableWrapper>
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+            <FileText className="h-6 w-6 text-slate-400" />
+          </div>
+          <h3 className="text-sm font-medium text-slate-900">
+            No services found
+          </h3>
+          <p className="mt-1 text-sm text-slate-500">
+            Get started by creating your first service.
+          </p>
+        </div>
+      </TableWrapper>
     );
   }
 
   return (
-    <>
-      <div className="hidden overflow-x-auto rounded-lg sm:block">
-        <Table>
-          <TableHeader className="[&_tr]:border-b-0">
-            <TableRow>
-              <TableHead className="min-w-[80px]">Image</TableHead>
-              <TableHead className="min-w-[200px]">Title</TableHead>
-              <TableHead className="min-w-[100px]">Created</TableHead>
-              <TableHead className="min-w-[100px] pr-6 text-right">
-                Actions
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="[&_tr]:border-b-0">
-            {services.map(service => (
-              <TableRow key={service.id}>
-                <TableCell>
-                  <div className="relative h-13 w-13">
-                    <Image
-                      src={service.thumbnail_image || "/images/fallback.png"}
-                      alt={
-                        service.thumbnail_image_alt_description || service.title
-                      }
-                      fill
-                      sizes="50px"
-                      className="rounded-md object-cover"
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Link href={`/admin/services/edit/${service.slug}`}>
-                    <span className="line-clamp-2 font-medium text-gray-900 hover:underline">
-                      {service.title}
-                    </span>
-                  </Link>
-                </TableCell>
-                <TableCell className="text-sm">
-                  {new Date(service.created_at).toLocaleDateString()}
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onEdit(service)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-red-500 hover:text-red-600"
-                      onClick={() => onDelete(service)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      <div className="space-y-3 sm:hidden">
-        {services.map(service => (
-          <div key={service.id} className="rounded-lg bg-white p-4">
-            <div className="mb-3 flex items-center gap-3">
-              <div className="relative h-12 w-12 flex-shrink-0">
-                <Image
-                  src={service.thumbnail_image || "/images/fallback.png"}
-                  alt={service.thumbnail_image_alt_description || service.title}
-                  fill
-                  className="rounded-md object-cover"
+    <TableWrapper>
+      <Table>
+        <TableHeader>
+          <TableRow className="border-b border-slate-100 hover:bg-transparent">
+            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+              Service Info
+            </TableHead>
+            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+              Created
+            </TableHead>
+            <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+              Actions
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {services.map(service => (
+            <TableRow
+              key={service.id}
+              className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
+            >
+              <TableCell className="px-6 py-4">
+                <TableUserCell
+                  imageSrc={service.thumbnail_image || undefined}
+                  fallback={service.title.substring(0, 2).toUpperCase()}
+                  title={service.title}
+                  subtitle={service.slug}
                 />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="mb-1 line-clamp-2 text-sm leading-tight font-medium text-gray-900">
-                  {service.title}
-                </h3>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-3">
-              <span className="text-xs text-gray-500">
-                {new Date(service.created_at).toLocaleDateString()}
-              </span>
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onEdit(service)}
-                  className="h-8 w-8 p-0"
-                >
-                  <Edit className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
-                  onClick={() => onDelete(service)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </>
+              </TableCell>
+              <TableCell className="px-6 py-4 text-xs whitespace-nowrap text-slate-500">
+                {new Date(service.created_at).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
+              </TableCell>
+              <TableCell className="px-6 py-4 text-right">
+                <TableActionButtons
+                  onEdit={() => onEdit(service)}
+                  onDelete={() => onDelete(service)}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableWrapper>
   );
 };
 
