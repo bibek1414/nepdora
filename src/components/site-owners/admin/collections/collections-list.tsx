@@ -20,6 +20,7 @@ import {
   MessageCircle,
   Star,
   BookOpen,
+  ArrowUpRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,14 +44,14 @@ import { toast } from "sonner";
 const getCollectionStyle = (name: string) => {
   const lower = name.toLowerCase();
 
-  // Returns: gradient (for thumbnail), color (for icon)
+  // Returns: bg (for container), color (for icon)
   if (
     lower.includes("blog") ||
     lower.includes("post") ||
     lower.includes("article")
   ) {
     return {
-      gradient: "from-orange-50 to-orange-100",
+      bg: "bg-orange-50",
       color: "text-orange-600",
       shadowColor: "hover:border-orange-200",
       icon: PenTool,
@@ -62,7 +63,7 @@ const getCollectionStyle = (name: string) => {
     lower.includes("portfolio")
   ) {
     return {
-      gradient: "from-blue-50 to-blue-100",
+      bg: "bg-blue-50",
       color: "text-blue-600",
       shadowColor: "hover:border-blue-200",
       icon: Briefcase,
@@ -75,7 +76,7 @@ const getCollectionStyle = (name: string) => {
     lower.includes("staff")
   ) {
     return {
-      gradient: "from-cyan-50 to-cyan-100",
+      bg: "bg-cyan-50",
       color: "text-cyan-600",
       shadowColor: "hover:border-cyan-200",
       icon: Users,
@@ -88,7 +89,7 @@ const getCollectionStyle = (name: string) => {
     lower.includes("item")
   ) {
     return {
-      gradient: "from-emerald-50 to-emerald-100",
+      bg: "bg-emerald-50",
       color: "text-emerald-600",
       shadowColor: "hover:border-emerald-200",
       icon: ShoppingBag,
@@ -100,7 +101,7 @@ const getCollectionStyle = (name: string) => {
     lower.includes("schedule")
   ) {
     return {
-      gradient: "from-rose-50 to-rose-100",
+      bg: "bg-rose-50",
       color: "text-rose-600",
       shadowColor: "hover:border-rose-200",
       icon: Calendar,
@@ -113,7 +114,7 @@ const getCollectionStyle = (name: string) => {
     lower.includes("media")
   ) {
     return {
-      gradient: "from-purple-50 to-purple-100",
+      bg: "bg-purple-50",
       color: "text-purple-600",
       shadowColor: "hover:border-purple-200",
       icon: ImageIcon,
@@ -125,7 +126,7 @@ const getCollectionStyle = (name: string) => {
     lower.includes("meta")
   ) {
     return {
-      gradient: "from-amber-50 to-amber-100",
+      bg: "bg-amber-50",
       color: "text-amber-600",
       shadowColor: "hover:border-amber-200",
       icon: Tag,
@@ -137,7 +138,7 @@ const getCollectionStyle = (name: string) => {
     lower.includes("feedback")
   ) {
     return {
-      gradient: "from-pink-50 to-pink-100",
+      bg: "bg-pink-50",
       color: "text-pink-600",
       shadowColor: "hover:border-pink-200",
       icon: MessageCircle,
@@ -145,7 +146,7 @@ const getCollectionStyle = (name: string) => {
   }
   if (lower.includes("service") || lower.includes("offer")) {
     return {
-      gradient: "from-indigo-50 to-indigo-100",
+      bg: "bg-indigo-50",
       color: "text-indigo-600",
       shadowColor: "hover:border-indigo-200",
       icon: Star,
@@ -157,7 +158,7 @@ const getCollectionStyle = (name: string) => {
     lower.includes("campaign")
   ) {
     return {
-      gradient: "from-red-50 to-red-100",
+      bg: "bg-red-50",
       color: "text-red-600",
       shadowColor: "hover:border-red-200",
       icon: Megaphone,
@@ -168,19 +169,19 @@ const getCollectionStyle = (name: string) => {
   const sum = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const fallbacks = [
     {
-      gradient: "from-slate-50 to-slate-100",
+      bg: "bg-slate-50",
       color: "text-slate-600",
       shadowColor: "hover:border-slate-300",
       icon: LayoutTemplate,
     },
     {
-      gradient: "from-violet-50 to-violet-100",
+      bg: "bg-violet-50",
       color: "text-violet-600",
       shadowColor: "hover:border-violet-200",
       icon: FileText,
     },
     {
-      gradient: "from-lime-50 to-lime-100",
+      bg: "bg-lime-50",
       color: "text-lime-600",
       shadowColor: "hover:border-lime-200",
       icon: Layout,
@@ -368,20 +369,20 @@ export function CollectionsList() {
                 <div
                   className={cn(
                     "relative h-full overflow-hidden rounded-2xl border border-transparent p-7 transition-all duration-500 ease-out hover:-translate-y-1.5",
-                    style.gradient,
+                    style.bg,
                     style.shadowColor
                   )}
                 >
                   {/* Delete Button */}
                   <button
-                    className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/80 text-slate-600 opacity-0 shadow-sm backdrop-blur-sm transition-all group-hover:opacity-100 hover:bg-white hover:text-red-600"
+                    className="absolute top-3 right-10 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-white/50 text-slate-600 opacity-0 shadow-sm backdrop-blur-sm transition-all group-hover:opacity-100 hover:bg-white hover:text-red-600"
                     onClick={e => {
                       e.stopPropagation();
                       setDeleteId(String(collection.id));
                     }}
                     title="Delete collection"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-4 w-4 cursor-pointer" />
                   </button>
 
                   <div className="flex items-start justify-between gap-4">
@@ -393,9 +394,6 @@ export function CollectionsList() {
                         {collection.all_fields?.length || 0} field
                         {collection.all_fields?.length !== 1 ? "s" : ""}
                       </p>
-                    </div>
-                    <div className={cn("flex-shrink-0", style.color)}>
-                      <Icon className="h-8 w-8" strokeWidth={2} />
                     </div>
                   </div>
                 </div>
@@ -423,14 +421,14 @@ export function CollectionsList() {
               <Button
                 variant="outline"
                 onClick={() => setDeleteId(null)}
-                className="rounded-xl"
+                className="cursor-pointer rounded-xl"
               >
                 Cancel
               </Button>
               <Button
                 variant="destructive"
                 onClick={handleDelete}
-                className="rounded-xl"
+                className="cursor-pointer rounded-xl"
                 disabled={deleteCollectionMutation.isPending}
               >
                 {deleteCollectionMutation.isPending

@@ -142,17 +142,6 @@ export default function ContentManagementPage() {
                         {item.description}
                       </p>
                     </div>
-                    {/* Re-added Icon rendering since it's used in design */}
-                    <div className="shrink-0">
-                      <Icon
-                        className="h-8 w-8 text-slate-700 opacity-80"
-                        strokeWidth={1.5}
-                      />
-                    </div>
-                  </div>
-                  {/* Decorative Arrow */}
-                  <div className="absolute top-4 right-4 opacity-0 transition-opacity group-hover:opacity-100">
-                    <ArrowUpRight className="h-5 w-5 text-slate-400" />
                   </div>
                 </div>
               </Link>
