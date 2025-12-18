@@ -58,7 +58,7 @@ const QuickBuilder: React.FC = () => {
                 <Button
                   onClick={handleGenerate}
                   variant="default"
-                  className="text-sm shadow-md hover:shadow-lg sm:text-base"
+                  className="rounded-full text-sm shadow-md hover:shadow-lg sm:text-base"
                 >
                   Generate Site{" "}
                   <ChevronRight

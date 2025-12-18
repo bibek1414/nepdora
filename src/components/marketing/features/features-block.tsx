@@ -24,7 +24,7 @@ export const FeatureBlock: React.FC<FeatureBlockProps> = ({
         <Button
           size="default"
           variant="outline"
-          className="group mt-2 w-fit cursor-pointer items-center gap-2 text-sm font-normal"
+          className="group mt-2 w-fit cursor-pointer items-center gap-2 rounded-full text-sm font-normal"
         >
           <span>Explore More</span>
           <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />

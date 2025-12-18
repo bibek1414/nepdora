@@ -129,8 +129,8 @@ const Header: React.FC = () => {
             <>
               <Link href="/admin/login">
                 <Button
-                  variant="ghost"
-                  className="text-muted-foreground hover:text-primary"
+                  variant="outline"
+                  className="text-muted-foreground hover:none rounded-full shadow-none hover:bg-transparent"
                 >
                   Sign In
                 </Button>

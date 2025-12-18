@@ -104,10 +104,7 @@ const Hero: React.FC = () => {
             </p>
 
             <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-              <Button
-                size="lg"
-                className="group shadow-md shadow-slate-200/50 hover:shadow-lg hover:shadow-slate-200/80"
-              >
+              <Button variant="rounded" className="">
                 Start Building Free
                 <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>

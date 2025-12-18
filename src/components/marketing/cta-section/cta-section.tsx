@@ -13,13 +13,16 @@ const CTA: React.FC = () => {
         service business anything can be built on Nepdora.
       </p>
       <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
-        <Button size="lg" className="w-full text-sm sm:w-auto sm:text-base">
+        <Button
+          size="lg"
+          className="w-full rounded-full text-sm sm:w-auto sm:text-base"
+        >
           Start Building Now
         </Button>
         <Button
           variant="outline"
           size="lg"
-          className="w-full text-sm sm:w-auto sm:text-base"
+          className="w-full rounded-full text-sm sm:w-auto sm:text-base"
         >
           Talk to Sales
         </Button>

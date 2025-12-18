@@ -101,7 +101,7 @@ const Migration: React.FC = () => {
                       />
                     </div>
                   </div>
-                  <Button className="w-full justify-center py-6 text-base">
+                  <Button className="w-full justify-center rounded-full py-6 text-base">
                     Start Free Transfer{" "}
                     <ChevronRight size={18} className="ml-2" />
                   </Button>

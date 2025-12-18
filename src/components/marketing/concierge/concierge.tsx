@@ -41,7 +41,7 @@ const Concierge: React.FC = () => {
             <Button
               size="lg"
               variant="outline"
-              className="text-sm sm:text-base"
+              className="rounded-full text-sm sm:text-base"
             >
               Chat with an Expert
             </Button>
