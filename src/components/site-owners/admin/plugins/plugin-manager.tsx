@@ -12,6 +12,7 @@ import { WhatsAppConfig } from "./config/whatsapp-config";
 import { LogisticsConfig } from "./config/logistics-config";
 import { GoogleAnalyticsConfig } from "./config/google-analytics-config";
 import { PluginToggle } from "./plugin-toggle";
+import { cn } from "@/lib/utils";
 import {
   useWhatsApps,
   useUpdateWhatsApp,
@@ -210,12 +211,12 @@ export default function PluginManager({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 p-8">
+      <div className="min-h-screen bg-white p-8 sm:p-12">
         <div className="mx-auto max-w-7xl">
           <div className="flex h-64 items-center justify-center">
             <div className="flex flex-col items-center gap-3">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-              <p className="text-sm font-medium text-slate-600">
+              <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+              <p className="text-sm font-medium text-slate-500">
                 Loading plugins...
               </p>
             </div>
@@ -225,24 +226,37 @@ export default function PluginManager({
     );
   }
 
+  const getCategoryStyle = (category: string) => {
+    switch (category) {
+      case "COMMUNICATION":
+        return { bg: "bg-orange-50", border: "hover:border-orange-200" };
+      case "SHIPPING":
+        return { bg: "bg-blue-50", border: "hover:border-blue-200" };
+      case "ANALYTICS":
+        return { bg: "bg-purple-50", border: "hover:border-purple-200" };
+      default:
+        return { bg: "bg-slate-50", border: "hover:border-slate-200" };
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 p-8">
-      <div className="mx-auto max-w-7xl space-y-8">
+    <div className="animate-in fade-in min-h-screen bg-white p-8 duration-700 sm:p-12">
+      <div className="mx-auto max-w-7xl space-y-12">
         {/* Header */}
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold tracking-tight text-slate-900">
+          <div className="space-y-3">
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900">
               Plugins
             </h1>
-            <p className="text-sm font-medium text-slate-600">
-              Extend your website with powerful integrations
+            <p className="max-w-2xl text-lg text-slate-500">
+              Extend your website with powerful integrations.
             </p>
           </div>
           <div className="relative w-full md:w-80">
             <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-slate-400" />
             <Input
               placeholder="Search plugins..."
-              className="h-12 rounded-xl border-slate-200/60 bg-white/80 pl-12 text-base shadow-sm backdrop-blur-sm transition-all placeholder:text-slate-400 focus:border-blue-300 focus:bg-white focus:shadow-md focus:ring-2 focus:ring-blue-500/20"
+              className="h-11 rounded-xl border-slate-200 bg-white pl-12 text-sm transition-all placeholder:text-slate-400 focus:border-slate-300"
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
@@ -250,124 +264,137 @@ export default function PluginManager({
         </div>
 
         {/* Tabs */}
-        <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="inline-flex gap-2 rounded-xl bg-white/80 p-1.5 shadow-sm backdrop-blur-sm">
-            <TabsTrigger
-              value="ALL"
-              className="rounded-lg px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md"
-            >
-              All
-            </TabsTrigger>
-            <TabsTrigger
-              value="COMMUNICATION"
-              className="rounded-lg px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md"
-            >
-              Communication
-            </TabsTrigger>
-            <TabsTrigger
-              value="SHIPPING"
-              className="rounded-lg px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md"
-            >
-              Shipping
-            </TabsTrigger>
-            <TabsTrigger
-              value="ANALYTICS"
-              className="rounded-lg px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md"
-            >
-              Analytics
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="flex justify-start">
+          <Tabs value={tab} onValueChange={setTab}>
+            <TabsList className="h-11 gap-1 rounded-xl bg-slate-100 p-1">
+              <TabsTrigger
+                value="ALL"
+                className="rounded-lg px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                All
+              </TabsTrigger>
+              <TabsTrigger
+                value="COMMUNICATION"
+                className="rounded-lg px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                Communication
+              </TabsTrigger>
+              <TabsTrigger
+                value="SHIPPING"
+                className="rounded-lg px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                Shipping
+              </TabsTrigger>
+              <TabsTrigger
+                value="ANALYTICS"
+                className="rounded-lg px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+              >
+                Analytics
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
 
         {/* Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p, index) => (
-            <Card
-              key={p.id}
-              className="group relative overflow-hidden rounded-2xl border border-slate-200/60 bg-white/90 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:border-blue-200 hover:bg-white hover:shadow-2xl hover:shadow-blue-500/10"
-              style={{
-                animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`,
-              }}
-            >
-              {/* Decorative gradient background */}
-              <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-gradient-to-br from-blue-400/10 to-indigo-400/10 blur-3xl transition-all duration-500 group-hover:scale-150" />
-
-              <CardContent className="relative flex h-full flex-col gap-5 p-7">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-md">
-                      <img src={p.icon} className="h-8 w-8" alt={p.name} />
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((p, index) => {
+            const style = getCategoryStyle(p.category);
+            return (
+              <div
+                key={p.id}
+                className={cn(
+                  "group relative overflow-hidden rounded-2xl border border-transparent p-7 transition-all duration-500 ease-out hover:-translate-y-1.5",
+                  style.bg,
+                  style.border
+                )}
+                style={{
+                  animationDelay: `${index * 75}ms`,
+                }}
+              >
+                <div className="flex h-full flex-col gap-5">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-white shadow-sm transition-all duration-300 group-hover:shadow-md">
+                        <img src={p.icon} className="h-8 w-8" alt={p.name} />
+                      </div>
+                      <div className="flex flex-1 flex-col gap-0.5">
+                        <h3 className="text-xl font-bold text-slate-800 transition-colors group-hover:text-slate-900">
+                          {p.name}
+                        </h3>
+                        <p className="text-sm font-medium text-slate-500">
+                          {p.category}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-lg font-bold text-slate-900 transition-colors group-hover:text-blue-600">
-                        {p.name}
-                      </p>
-                      <Badge
-                        variant="secondary"
-                        className="mt-1.5 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600 transition-colors group-hover:bg-blue-50 group-hover:text-blue-600"
-                      >
-                        {p.category}
-                      </Badge>
-                    </div>
-                  </div>
-                  <PluginToggle
-                    pluginId={p.id}
-                    pluginType={p.type}
-                    isEnabled={p.is_enabled}
-                    onToggle={handleToggle}
-                  />
-                </div>
-
-                <p className="text-sm leading-relaxed text-slate-600">
-                  {p.description}
-                </p>
-
-                <div className="mt-auto flex items-center justify-between pt-2">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`h-2 w-2 rounded-full ${
-                        p.is_enabled
-                          ? "bg-green-500 shadow-sm shadow-green-500/50"
-                          : "bg-slate-300"
-                      }`}
+                    <PluginToggle
+                      pluginId={p.id}
+                      pluginType={p.type}
+                      isEnabled={p.is_enabled}
+                      onToggle={handleToggle}
                     />
-                    <span
-                      className={`text-sm font-semibold ${
-                        p.is_enabled ? "text-green-600" : "text-slate-500"
-                      }`}
-                    >
-                      {p.is_enabled ? "Active" : "Inactive"}
-                    </span>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setActive(p)}
-                    className="group/btn rounded-lg transition-all hover:bg-blue-50 hover:text-blue-600"
-                  >
-                    <Settings className="mr-2 h-4 w-4 transition-transform group-hover/btn:rotate-90" />
-                    Configure
-                  </Button>
+
+                  <p className="line-clamp-2 text-sm font-medium text-slate-500 transition-colors group-hover:text-slate-600">
+                    {p.description}
+                  </p>
+
+                  <div className="mt-auto flex items-center justify-between pt-2">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`h-2 w-2 rounded-full ${
+                          p.is_enabled
+                            ? "bg-green-500 shadow-sm"
+                            : "bg-slate-300"
+                        }`}
+                      />
+                      <span
+                        className={`text-sm font-semibold ${
+                          p.is_enabled ? "text-green-600" : "text-slate-500"
+                        }`}
+                      >
+                        {p.is_enabled ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setActive(p)}
+                      className="group/btn h-9 rounded-lg bg-white/50 px-3 shadow-sm transition-all hover:bg-white hover:text-blue-600"
+                    >
+                      <Settings className="mr-2 h-4 w-4 transition-transform group-hover/btn:rotate-90" />
+                      Configure
+                    </Button>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+            );
+          })}
         </div>
 
         {/* Empty State */}
         {filtered.length === 0 && (
-          <div className="rounded-2xl bg-white/70 py-20 text-center shadow-lg backdrop-blur-sm">
+          <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 py-20 text-center">
             <div className="mb-4 flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm">
                 <Search className="h-8 w-8 text-slate-400" />
               </div>
             </div>
-            <p className="text-lg font-medium text-slate-600">
+            <h3 className="text-lg font-bold text-slate-900">
               No plugins found
-            </p>
+            </h3>
             <p className="mt-1 text-sm text-slate-500">
-              Try adjusting your filters
+              Try adjusting your search or filters.
             </p>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearch("");
+                setTab("ALL");
+              }}
+              className="mt-6 rounded-xl"
+            >
+              Clear Filters
+            </Button>
           </div>
         )}
       </div>
