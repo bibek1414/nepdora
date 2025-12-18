@@ -313,7 +313,6 @@ const AppointmentList = () => {
                   <TableHead className="text-xs font-medium tracking-wide text-gray-500 uppercase">
                     Status
                   </TableHead>
-                  <TableHead className="w-10"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -360,9 +359,6 @@ const AppointmentList = () => {
                       </TableCell>
                       <TableCell>
                         {getStatusBadge(appointment.status)}
-                      </TableCell>
-                      <TableCell>
-                        <ChevronRight className="h-4 w-4 text-gray-400" />
                       </TableCell>
                     </TableRow>
                   ))
