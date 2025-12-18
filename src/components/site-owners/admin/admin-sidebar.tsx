@@ -223,7 +223,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
                     >
                       <item.icon
                         className={cn(
-                          "h-4 w-4 flex-shrink-0",
+                          "h-4 w-4 shrink-0",
                           collapsed ? "mr-0" : "mr-2"
                         )}
                       />

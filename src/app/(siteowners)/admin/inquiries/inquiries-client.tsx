@@ -25,6 +25,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Pagination from "@/components/ui/pagination";
+import ContactDetailsDialog from "@/components/site-owners/admin/contact/contact-details-dialog";
+import { Contact } from "@/types/owner-site/admin/contact";
 
 type InquiryType = "contact" | "popup" | "newsletter" | "booking";
 
@@ -36,6 +38,8 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
   const [selectedView, setSelectedView] = useState<InquiryType>("contact");
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const isBatoma = subDomain === "batoma";
 
   // Fetch data for all tabs to get counts
@@ -130,6 +134,23 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
     });
   };
 
+  const handleViewContactDetails = (contact: Contact) => {
+    setSelectedContact(contact);
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedContact(null);
+  };
+
+  const handleContactChange = (contactId: number) => {
+    if (contactsData?.results) {
+      const contact = contactsData.results.find(c => c.id === contactId);
+      setSelectedContact(contact || null);
+    }
+  };
+
   const renderContactTable = () => (
     <Table>
       <TableHeader>
@@ -146,9 +167,6 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
           <TableHead className="text-xs font-medium tracking-wide text-gray-500 uppercase">
             Date
           </TableHead>
-          <TableHead className="text-xs font-medium tracking-wide text-gray-500 uppercase">
-            Status
-          </TableHead>
           <TableHead className="w-10"></TableHead>
         </TableRow>
       </TableHeader>
@@ -157,6 +175,7 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
           <TableRow
             key={inquiry.id}
             className="cursor-pointer border-gray-100 transition-colors hover:bg-gray-50/50"
+            onClick={() => handleViewContactDetails(inquiry)}
           >
             <TableCell className="font-medium text-gray-900">
               {inquiry.name}
@@ -169,10 +188,6 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
             </TableCell>
             <TableCell className="text-gray-500">
               {formatDate(inquiry.created_at)}
-            </TableCell>
-            <TableCell>{getStatusBadge("new")}</TableCell>
-            <TableCell>
-              <ChevronRight className="h-4 w-4 text-gray-400" />
             </TableCell>
           </TableRow>
         ))}
@@ -470,6 +485,15 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
             />
           )}
         </div>
+
+        {/* Contact Details Dialog */}
+        <ContactDetailsDialog
+          contacts={contactsData?.results || []}
+          currentContactId={selectedContact?.id || null}
+          isOpen={isDialogOpen}
+          onClose={handleCloseDialog}
+          onContactChange={handleContactChange}
+        />
       </div>
     </div>
   );
