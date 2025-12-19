@@ -100,7 +100,8 @@ const BlogsTable: React.FC<BlogsTableProps> = ({
           {blogs.map(blog => (
             <TableRow
               key={blog.id}
-              className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
+              className="group cursor-pointer border-b border-slate-50 transition-colors hover:bg-gray-50"
+              onClick={() => onEdit(blog)}
             >
               <TableCell className="px-6 py-4">
                 <TableUserCell

@@ -2,7 +2,6 @@
 
 import React from "react";
 import {
-  FileText,
   Briefcase,
   Users,
   MessageSquare,
@@ -13,7 +12,6 @@ import {
   Handshake,
   UserCog,
   LucideIcon,
-  ArrowUpRight,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -106,39 +104,35 @@ export default function ContentManagementPage() {
   // const subDomain = siteData?.subDomain; // Removed unused variable
 
   return (
-    <div className="animate-in fade-in min-h-screen bg-white p-8 duration-700 sm:p-12">
+    <div className="min-h-screen bg-white p-4 sm:p-6 md:p-8 lg:p-12">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 space-y-3">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+        <div className="mb-6 space-y-2 sm:mb-8 sm:space-y-3">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
             Content Management
           </h1>
-          <p className="max-w-2xl text-lg text-slate-500">
+          <p className="max-w-2xl text-sm text-slate-500 sm:text-base">
             Centralize your website content. Select a module below to start
             editing.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {contentItems.map((item, idx) => {
-            const Icon = item.icon;
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-3">
+          {contentItems.map(item => {
             return (
               <Link
                 key={item.name}
                 href={item.href}
                 className="group relative block outline-none"
-                style={{
-                  animationDelay: `${idx * 75}ms`,
-                }}
               >
                 <div
-                  className={`relative h-full overflow-hidden rounded-2xl border border-transparent ${item.gradient} p-7 transition-all duration-500 ease-out hover:-translate-y-1.5 ${item.shadowColor}`}
+                  className={`relative h-full overflow-hidden rounded-xl border border-transparent ${item.gradient} p-4 transition-all duration-300 ease-out sm:rounded-2xl sm:p-5 sm:hover:-translate-y-0.5 md:p-7 ${item.shadowColor}`}
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex flex-1 flex-col gap-1">
-                      <h3 className="text-xl font-bold text-slate-800 transition-colors group-hover:text-slate-900">
+                  <div className="flex items-start justify-between gap-3 sm:gap-4">
+                    <div className="flex flex-1 flex-col gap-0.5 sm:gap-1">
+                      <h3 className="text-base font-bold text-slate-800 transition-colors group-hover:text-slate-900 sm:text-lg md:text-xl">
                         {item.name}
                       </h3>
-                      <p className="text-sm font-medium text-slate-500 transition-colors group-hover:text-slate-600">
+                      <p className="text-xs font-medium text-slate-500 transition-colors group-hover:text-slate-500 sm:text-sm">
                         {item.description}
                       </p>
                     </div>

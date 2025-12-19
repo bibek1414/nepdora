@@ -183,307 +183,386 @@ const BlogForm: React.FC<BlogFormProps> = ({
   const safeAllTags = Array.isArray(allTags) ? allTags : [];
 
   return (
-    <div className="mx-auto max-w-4xl rounded-lg bg-white p-6">
+    <div className="mx-auto max-w-7xl rounded-lg bg-white p-3 sm:p-4 md:p-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title *</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter blog title" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="space-y-4 sm:space-y-6 md:space-y-8"
+        >
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-3">
+            {/* Left Column - Blog Info */}
+            <div className="space-y-4 sm:space-y-6 lg:col-span-2">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm sm:text-base">
+                      Title *
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter blog title"
+                        {...field}
+                        className="text-sm sm:text-base"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="content"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Content *</FormLabel>
-                <FormControl>
-                  <ReusableQuill
-                    value={field.value || ""}
-                    onChange={field.onChange}
-                    placeholder="Write your blog content here..."
-                    height="250px"
-                    toolbar="advanced"
-                    uploadFolder="blogs"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm sm:text-base">
+                      Content *
+                    </FormLabel>
+                    <FormControl>
+                      <div className="[&_.tiptap]:min-h-[300px] sm:[&_.tiptap]:min-h-[400px] md:[&_.tiptap]:min-h-[600px] [&_iframe]:min-h-[300px] sm:[&_iframe]:min-h-[400px] md:[&_iframe]:min-h-[600px]">
+                        <ReusableQuill
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          placeholder="Write your blog content here..."
+                          height="600px"
+                          toolbar="advanced"
+                          uploadFolder="blogs"
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div className="space-y-4 rounded-md border p-4">
-            <h3 className="text-lg font-medium">SEO Information</h3>
-            <FormField
-              control={form.control}
-              name="meta_title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Meta Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="SEO friendly title" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    {field.value?.length || 0}/60 characters
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="meta_description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Meta Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="SEO friendly description"
-                      rows={3}
-                      {...field}
+              <div className="space-y-3 rounded-md border p-3 sm:space-y-4 sm:p-4">
+                <h3 className="text-base font-medium sm:text-lg">Media</h3>
+                <FormField
+                  control={form.control}
+                  name="thumbnail_image"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm sm:text-base">
+                        Thumbnail Image
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          ref={fileInputRef}
+                          onChange={handleFileChange}
+                          className="text-xs file:text-xs sm:text-sm sm:file:text-sm"
+                        />
+                      </FormControl>
+                      <FormDescription className="text-xs sm:text-sm">
+                        {isEditMode && "Leave empty to keep current image."}
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {isEditMode && blog?.thumbnail_image && !selectedFile && (
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-600 sm:text-sm">
+                      Current image:
+                    </p>
+                    <Image
+                      src={blog.thumbnail_image}
+                      alt="Current thumbnail"
+                      width={128}
+                      height={128}
+                      className="mt-1 h-auto max-w-full rounded-md object-cover"
                     />
-                  </FormControl>
-                  <FormDescription>
-                    {field.value?.length || 0}/160 characters
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="space-y-4 rounded-md border p-4">
-            <h3 className="text-lg font-medium">Media & Tags</h3>
-            <FormField
-              control={form.control}
-              name="thumbnail_image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Thumbnail Image</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      ref={fileInputRef}
-                      onChange={handleFileChange}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    {isEditMode && "Leave empty to keep current image."}
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {isEditMode && blog?.thumbnail_image && !selectedFile && (
-              <div className="mt-2">
-                <p className="text-sm text-gray-600">Current image:</p>
-                <Image
-                  src={blog.thumbnail_image}
-                  alt="Current thumbnail"
-                  width={128}
-                  height={128}
-                  className="mt-1 rounded-md object-cover"
+                  </div>
+                )}
+                {selectedFile && (
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-600 sm:text-sm">
+                      New image selected:
+                    </p>
+                    <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-center">
+                      <span className="min-w-0 flex-1 truncate text-xs sm:text-sm">
+                        {selectedFile.name}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="text-xs sm:text-sm"
+                        onClick={() => {
+                          setSelectedFile(null);
+                          if (fileInputRef.current) {
+                            fileInputRef.current.value = "";
+                          }
+                          form.setValue("thumbnail_image", null);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                <FormField
+                  control={form.control}
+                  name="thumbnail_image_alt_description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm sm:text-base">
+                        Alt Description
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Image alt description for accessibility"
+                          {...field}
+                          className="text-sm sm:text-base"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
-            )}
-            {selectedFile && (
-              <div className="mt-2">
-                <p className="text-sm text-gray-600">New image selected:</p>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm">{selectedFile.name}</span>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedFile(null);
-                      if (fileInputRef.current) {
-                        fileInputRef.current.value = "";
-                      }
-                      form.setValue("thumbnail_image", null);
-                    }}
-                  >
-                    Remove
-                  </Button>
+            </div>
+
+            {/* Right Column - SEO Information & Tags */}
+            <div className="mt-8 space-y-4 sm:space-y-6 lg:sticky lg:top-20 lg:col-span-1 lg:max-h-[calc(100vh-2rem)] lg:self-start lg:overflow-y-auto">
+              <div className="space-y-3 rounded-md border p-3 sm:space-y-4 sm:p-4">
+                <h3 className="text-base font-medium sm:text-lg">
+                  SEO Information
+                </h3>
+                <div className="space-y-4 sm:space-y-6 md:space-y-8">
+                  <FormField
+                    control={form.control}
+                    name="meta_title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm sm:text-base">
+                          Meta Title
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="SEO friendly title"
+                            {...field}
+                            className="text-sm sm:text-base"
+                          />
+                        </FormControl>
+                        <FormDescription className="text-xs sm:text-sm">
+                          {field.value?.length || 0}/60 characters
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="meta_description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm sm:text-base">
+                          Meta Description
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="SEO friendly description"
+                            rows={3}
+                            {...field}
+                            className="text-sm sm:text-base"
+                          />
+                        </FormControl>
+                        <FormDescription className="text-xs sm:text-sm">
+                          {field.value?.length || 0}/160 characters
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </div>
-            )}
-            <FormField
-              control={form.control}
-              name="thumbnail_image_alt_description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Alt Description</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Image alt description for accessibility"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="tag_ids"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center justify-between">
-                    <FormLabel>Tags</FormLabel>
-                    <Dialog
-                      open={isTagDialogOpen}
-                      onOpenChange={setIsTagDialogOpen}
-                    >
-                      <DialogTrigger asChild>
-                        <Button type="button" variant="outline" size="sm">
-                          <Plus className="mr-1 h-4 w-4" />
-                          Create Tag
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Create New Tag</DialogTitle>
-                          <DialogDescription>
-                            Add a new tag that can be used for blog posts.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          <div className="space-y-2">
-                            <label
-                              htmlFor="tag-name"
-                              className="text-sm font-medium"
-                            >
-                              Tag Name
-                            </label>
-                            <Input
-                              id="tag-name"
-                              placeholder="Enter tag name"
-                              value={newTagName}
-                              onChange={e => setNewTagName(e.target.value)}
-                              onKeyDown={e => {
-                                if (e.key === "Enter") {
-                                  e.preventDefault();
-                                  handleCreateTag();
-                                }
-                              }}
-                            />
-                          </div>
-                          <div className="flex justify-end space-x-2">
+
+              <div className="space-y-3 rounded-md border p-3 sm:space-y-4 sm:p-4">
+                <FormField
+                  control={form.control}
+                  name="tag_ids"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+                        <FormLabel className="text-base font-medium sm:text-lg">
+                          Tags
+                        </FormLabel>
+                        <Dialog
+                          open={isTagDialogOpen}
+                          onOpenChange={setIsTagDialogOpen}
+                        >
+                          <DialogTrigger asChild>
                             <Button
                               type="button"
                               variant="outline"
-                              onClick={() => {
-                                setIsTagDialogOpen(false);
-                                setNewTagName("");
-                              }}
-                              disabled={isCreatingTag}
+                              size="sm"
+                              className="w-full text-xs sm:w-auto sm:text-sm"
                             >
-                              Cancel
+                              <Plus className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
+                              <span className="hidden min-[360px]:inline">
+                                Create Tag
+                              </span>
+                              <span className="min-[360px]:hidden">Create</span>
                             </Button>
-                            <Button
-                              type="button"
-                              onClick={handleCreateTag}
-                              disabled={isCreatingTag || !newTagName.trim()}
-                            >
-                              {isCreatingTag ? "Creating..." : "Create Tag"}
-                            </Button>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            "w-full justify-between",
-                            !field.value?.length && "text-muted-foreground"
-                          )}
-                          disabled={isLoadingTags}
-                        >
-                          <span className="truncate">
-                            {field.value?.length
-                              ? `${field.value.length} tag(s) selected`
-                              : "Select tags"}
-                          </span>
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-                      <Command>
-                        <CommandInput placeholder="Search tags..." />
-                        <CommandList>
-                          <CommandEmpty>No tags found.</CommandEmpty>
-                          <CommandGroup>
-                            {safeAllTags.map(tag => (
-                              <CommandItem
-                                value={tag.name}
-                                key={tag.id}
-                                onSelect={() => handleTagToggle(tag)}
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    field.value?.includes(tag.id)
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
+                          </DialogTrigger>
+                          <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-md">
+                            <DialogHeader>
+                              <DialogTitle className="text-base sm:text-lg">
+                                Create New Tag
+                              </DialogTitle>
+                              <DialogDescription className="text-xs sm:text-sm">
+                                Add a new tag that can be used for blog posts.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-3 sm:space-y-4">
+                              <div className="space-y-2">
+                                <label
+                                  htmlFor="tag-name"
+                                  className="text-xs font-medium sm:text-sm"
+                                >
+                                  Tag Name
+                                </label>
+                                <Input
+                                  id="tag-name"
+                                  placeholder="Enter tag name"
+                                  value={newTagName}
+                                  onChange={e => setNewTagName(e.target.value)}
+                                  onKeyDown={e => {
+                                    if (e.key === "Enter") {
+                                      e.preventDefault();
+                                      handleCreateTag();
+                                    }
+                                  }}
+                                  className="text-sm sm:text-base"
                                 />
-                                {tag.name}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {selectedTags.map(tag => (
-                      <Badge key={tag.id} variant="outline">
-                        {tag.name}
-                        <button
-                          type="button"
-                          onClick={() => handleTagToggle(tag)}
-                          className="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
-                        >
-                          <X className="text-muted-foreground hover:text-foreground h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                              </div>
+                              <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row sm:space-x-2">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  onClick={() => {
+                                    setIsTagDialogOpen(false);
+                                    setNewTagName("");
+                                  }}
+                                  disabled={isCreatingTag}
+                                  className="w-full text-xs sm:w-auto sm:text-sm"
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  type="button"
+                                  onClick={handleCreateTag}
+                                  disabled={isCreatingTag || !newTagName.trim()}
+                                  className="w-full text-xs sm:w-auto sm:text-sm"
+                                >
+                                  {isCreatingTag ? "Creating..." : "Create Tag"}
+                                </Button>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                "w-full justify-between text-xs sm:text-sm",
+                                !field.value?.length && "text-muted-foreground"
+                              )}
+                              disabled={isLoadingTags}
+                            >
+                              <span className="truncate">
+                                {field.value?.length
+                                  ? `${field.value.length} tag(s) selected`
+                                  : "Select tags"}
+                              </span>
+                              <ChevronsUpDown className="ml-2 h-3 w-3 shrink-0 opacity-50 sm:h-4 sm:w-4" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[--radix-popover-trigger-width] max-w-[calc(100vw-2rem)] p-0">
+                          <Command>
+                            <CommandInput
+                              placeholder="Search tags..."
+                              className="text-sm sm:text-base"
+                            />
+                            <CommandList>
+                              <CommandEmpty className="py-4 text-xs sm:text-sm">
+                                No tags found.
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {safeAllTags.map(tag => (
+                                  <CommandItem
+                                    value={tag.name}
+                                    key={tag.id}
+                                    onSelect={() => handleTagToggle(tag)}
+                                    className="text-xs sm:text-sm"
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-3 w-3 sm:h-4 sm:w-4",
+                                        field.value?.includes(tag.id)
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                    {tag.name}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <div className="flex flex-wrap gap-1.5 pt-2 sm:gap-2">
+                        {selectedTags.map(tag => (
+                          <Badge
+                            key={tag.id}
+                            variant="outline"
+                            className="px-2 py-0.5 text-xs sm:text-sm"
+                          >
+                            <span className="max-w-[120px] truncate sm:max-w-none">
+                              {tag.name}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleTagToggle(tag)}
+                              className="ring-offset-background focus:ring-ring ml-1 shrink-0 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
+                            >
+                              <X className="text-muted-foreground hover:text-foreground h-3 w-3" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex justify-end space-x-4 border-t pt-6">
+
+          <div className="flex flex-col-reverse justify-end gap-2 border-t pt-4 sm:flex-row sm:gap-4 sm:pt-6">
             <Button
               type="button"
               variant="outline"
               onClick={onCancel}
               disabled={isLoading}
+              className="w-full text-xs sm:w-auto sm:text-sm"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-gray-600 text-white hover:bg-gray-700"
+              className="w-full bg-gray-600 text-xs text-white hover:bg-gray-700 sm:w-auto sm:text-sm"
             >
               {isLoading
                 ? "Saving..."

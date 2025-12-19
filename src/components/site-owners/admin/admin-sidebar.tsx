@@ -151,12 +151,12 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
   return (
     <div
       className={cn(
-        "bg-background sticky top-0 z-50 flex h-screen flex-col border-r transition-all duration-300 ease-in-out",
+        "bg-background sticky top-0 z-50 flex h-screen flex-col border-r border-gray-100 transition-all duration-300 ease-in-out",
         collapsed ? "w-16" : "w-64"
       )}
     >
       {/* Logo Section */}
-      <div className="flex h-16 items-center border-b px-4">
+      <div className="flex h-16 items-center border-b border-gray-100 px-4">
         <div
           className={cn(
             "flex items-center gap-2 transition-all duration-300",
@@ -247,7 +247,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       </div>
 
       {/* User Profile Section */}
-      <div className="border-t p-4">
+      <div className="border-t border-gray-100 p-4">
         <div
           className={cn(
             "flex items-center gap-2",

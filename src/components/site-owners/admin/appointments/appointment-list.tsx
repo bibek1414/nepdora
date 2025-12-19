@@ -5,13 +5,9 @@ import {
   Search,
   Calendar,
   Clock,
-  MoreHorizontal,
-  CheckCircle2,
-  XCircle,
-  Download,
-  Plus,
   ChevronLeft,
   ChevronRight,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,15 +56,6 @@ const StatusBadge = ({ status }: { status: string }) => {
     completed: "bg-blue-50 text-blue-700 border-blue-200",
   };
 
-  const iconMap: Record<string, any> = {
-    confirmed: CheckCircle2,
-    pending: Clock,
-    cancelled: XCircle,
-    completed: CheckCircle2,
-  };
-
-  const Icon = iconMap[status.toLowerCase()] || Clock;
-
   return (
     <span
       className={cn(
@@ -77,7 +64,6 @@ const StatusBadge = ({ status }: { status: string }) => {
           "border-slate-200 bg-slate-50 text-slate-600"
       )}
     >
-      <Icon className="h-3 w-3" />
       {status}
     </span>
   );
@@ -137,7 +123,6 @@ const useDebounce = (value: string, delay: number) => {
 };
 
 export default function AppointmentList() {
-  const [activeStatus, setActiveStatus] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Appointment | null>(
@@ -148,36 +133,24 @@ export default function AppointmentList() {
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [page, setPage] = useState(1);
 
-  const { data: appointmentsData, isLoading } = useGetAppointments({
+  const {
+    data: appointmentsData,
+    isLoading,
+    refetch,
+  } = useGetAppointments({
     page,
     page_size: ITEMS_PER_PAGE,
     search: debouncedSearchTerm || undefined,
-    status: activeStatus === "all" ? undefined : activeStatus,
   });
 
-  // Count queries
-  const { data: totalCountData } = useGetAppointments({ page_size: 1 });
-  const { data: pendingCountData } = useGetAppointments({
-    status: "pending",
-    page_size: 1,
-  });
-  const { data: confirmedCountData } = useGetAppointments({
-    status: "confirmed",
-    page_size: 1,
-  });
-  const { data: cancelledCountData } = useGetAppointments({
-    status: "cancelled",
-    page_size: 1,
-  });
-  const { data: completedCountData } = useGetAppointments({
-    status: "completed",
-    page_size: 1,
-  });
+  const handleRefresh = () => {
+    refetch();
+  };
 
-  // Reset pagination when filter/search changes
+  // Reset pagination when search changes
   useEffect(() => {
     setPage(1);
-  }, [activeStatus, debouncedSearchTerm]);
+  }, [debouncedSearchTerm]);
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Not set";
@@ -196,21 +169,6 @@ export default function AppointmentList() {
   const totalPages = Math.ceil((appointmentsData?.count || 0) / ITEMS_PER_PAGE);
   const paginatedBookings = appointmentsData?.results || [];
 
-  const counts: Record<string, number> = {
-    all: totalCountData?.count || 0,
-    pending: pendingCountData?.count || 0,
-    confirmed: confirmedCountData?.count || 0,
-    cancelled: cancelledCountData?.count || 0,
-    completed: completedCountData?.count || 0,
-  };
-
-  const tabs = [
-    { id: "all", label: "All Bookings", count: counts.all },
-    { id: "pending", label: "Pending", count: counts.pending },
-    { id: "completed", label: "Completed", count: counts.completed },
-    { id: "cancelled", label: "Cancelled", count: counts.cancelled },
-  ];
-
   return (
     <div className="animate-in fade-in min-h-screen bg-white duration-500">
       <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
@@ -221,65 +179,27 @@ export default function AppointmentList() {
               Appointments
             </h1>
             <p className="text-sm text-slate-500">
-              Schedule and manage customer bookings.
+              See your appointments. {appointmentsData?.count || 0} appointments
+              available.
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="hidden items-center gap-2 border-slate-200 sm:flex"
-            >
-              <Download className="h-4 w-4" />
-              Export
-            </Button>
-            <Button
-              size="sm"
-              className="gap-2 bg-slate-900 text-white hover:bg-slate-800"
-            >
-              <Plus className="h-4 w-4" />
-              New Appointment
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isLoading}
+            className="h-9 border-slate-200 bg-white"
+          >
+            <RefreshCw
+              className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+            />
+            Refresh
+          </Button>
         </div>
 
-        {/* Filters & Search Toolbar */}
-        <div className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-0.5 sm:flex-row sm:items-center">
-          {/* Custom Tab List */}
-          <div className="no-scrollbar -mb-px flex items-center gap-1 overflow-x-auto">
-            {tabs.map(tab => {
-              const isActive = activeStatus === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveStatus(tab.id)}
-                  className={cn(
-                    "group relative flex items-center gap-2 border-b-2 px-3 py-2.5 text-sm font-medium transition-colors",
-                    isActive
-                      ? "border-blue-600 text-blue-600"
-                      : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800"
-                  )}
-                >
-                  {tab.label}
-                  {tab.count > 0 && (
-                    <span
-                      className={cn(
-                        "ml-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[10px]",
-                        isActive
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-slate-100 text-slate-600"
-                      )}
-                    >
-                      {tab.count}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Search Input */}
-          <div className="relative mb-2 w-full sm:mb-0 sm:w-64">
+        {/* Search Toolbar */}
+        <div className="flex justify-end">
+          <div className="relative w-full sm:w-64">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <Input
               placeholder="Search appointments..."

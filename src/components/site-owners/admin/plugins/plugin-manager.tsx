@@ -4,7 +4,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, X, Search, Settings } from "lucide-react";
 import { Plugin } from "@/types/plugin";
@@ -12,7 +11,6 @@ import { WhatsAppConfig } from "./config/whatsapp-config";
 import { LogisticsConfig } from "./config/logistics-config";
 import { GoogleAnalyticsConfig } from "./config/google-analytics-config";
 import { PluginToggle } from "./plugin-toggle";
-import { cn } from "@/lib/utils";
 import {
   useWhatsApps,
   useUpdateWhatsApp,
@@ -43,24 +41,25 @@ const Modal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className="relative mx-4 w-full max-w-2xl rounded-2xl bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b px-6 py-4">
-          <h2 className="text-xl font-semibold">{title}</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="relative w-full max-w-2xl rounded-lg border border-slate-200 bg-white shadow-lg">
+        <div className="flex items-center justify-between border-b border-slate-200 px-3 py-3 sm:px-6 sm:py-4">
+          <h2 className="truncate pr-2 text-base font-semibold text-slate-900 sm:text-lg">
+            {title}
+          </h2>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="rounded-full"
+            className="h-8 w-8 shrink-0 rounded-md hover:bg-slate-100"
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
-        <div className="max-h-[75vh] overflow-y-auto p-6">{children}</div>
+        <div className="max-h-[85vh] overflow-y-auto p-3 sm:p-6">
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -211,12 +210,12 @@ export default function PluginManager({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white p-8 sm:p-12">
+      <div className="min-h-screen bg-white p-4 sm:p-8 md:p-12">
         <div className="mx-auto max-w-7xl">
           <div className="flex h-64 items-center justify-center">
             <div className="flex flex-col items-center gap-3">
-              <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
-              <p className="text-sm font-medium text-slate-500">
+              <Loader2 className="h-6 w-6 animate-spin text-slate-400 sm:h-8 sm:w-8" />
+              <p className="text-xs font-medium text-slate-500 sm:text-sm">
                 Loading plugins...
               </p>
             </div>
@@ -226,37 +225,24 @@ export default function PluginManager({
     );
   }
 
-  const getCategoryStyle = (category: string) => {
-    switch (category) {
-      case "COMMUNICATION":
-        return { bg: "bg-orange-50", border: "hover:border-orange-200" };
-      case "SHIPPING":
-        return { bg: "bg-blue-50", border: "hover:border-blue-200" };
-      case "ANALYTICS":
-        return { bg: "bg-purple-50", border: "hover:border-purple-200" };
-      default:
-        return { bg: "bg-slate-50", border: "hover:border-slate-200" };
-    }
-  };
-
   return (
-    <div className="animate-in fade-in min-h-screen bg-white p-8 duration-700 sm:p-12">
-      <div className="mx-auto max-w-7xl space-y-12">
+    <div className="min-h-screen bg-white p-4 sm:p-6 md:p-8 lg:p-12">
+      <div className="mx-auto max-w-7xl space-y-4 sm:space-y-6 md:space-y-8">
         {/* Header */}
-        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div className="space-y-3">
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+        <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-1 sm:space-y-2">
+            <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
               Plugins
             </h1>
-            <p className="max-w-2xl text-lg text-slate-500">
-              Extend your website with powerful integrations.
+            <p className="text-xs text-slate-600 sm:text-sm">
+              Extend your website with powerful integrations
             </p>
           </div>
           <div className="relative w-full md:w-80">
-            <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-1/2 text-slate-400 sm:left-3 sm:h-4 sm:w-4" />
             <Input
               placeholder="Search plugins..."
-              className="h-11 rounded-xl border-slate-200 bg-white pl-12 text-sm transition-all placeholder:text-slate-400 focus:border-slate-300"
+              className="h-9 rounded-lg border-slate-200 bg-white pl-8 text-xs placeholder:text-slate-400 focus:border-slate-300 focus:ring-1 focus:ring-slate-300 sm:h-10 sm:pl-10 sm:text-sm"
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
@@ -264,30 +250,34 @@ export default function PluginManager({
         </div>
 
         {/* Tabs */}
-        <div className="flex justify-start">
-          <Tabs value={tab} onValueChange={setTab}>
-            <TabsList className="h-11 gap-1 rounded-xl bg-slate-100 p-1">
+        <div className="-mx-4 flex justify-start overflow-x-auto px-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+          <Tabs
+            value={tab}
+            onValueChange={setTab}
+            className="w-full min-w-max sm:w-auto"
+          >
+            <TabsList className="inline-flex h-9 gap-0.5 rounded-lg bg-slate-50 p-0.5 sm:h-10 sm:gap-1 sm:p-1">
               <TabsTrigger
                 value="ALL"
-                className="rounded-lg px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+                className="rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm sm:px-4 sm:py-1.5 sm:text-sm"
               >
                 All
               </TabsTrigger>
               <TabsTrigger
                 value="COMMUNICATION"
-                className="rounded-lg px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+                className="rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm sm:px-4 sm:py-1.5 sm:text-sm"
               >
                 Communication
               </TabsTrigger>
               <TabsTrigger
                 value="SHIPPING"
-                className="rounded-lg px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+                className="rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm sm:px-4 sm:py-1.5 sm:text-sm"
               >
                 Shipping
               </TabsTrigger>
               <TabsTrigger
                 value="ANALYTICS"
-                className="rounded-lg px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+                className="rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm sm:px-4 sm:py-1.5 sm:text-sm"
               >
                 Analytics
               </TabsTrigger>
@@ -296,94 +286,91 @@ export default function PluginManager({
         </div>
 
         {/* Grid */}
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p, index) => {
-            const style = getCategoryStyle(p.category);
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+          {filtered.map(p => {
             return (
-              <div
+              <Card
                 key={p.id}
-                className={cn(
-                  "group relative overflow-hidden rounded-2xl border border-transparent p-7 transition-all duration-500 ease-out hover:-translate-y-1.5",
-                  style.bg,
-                  style.border
-                )}
-                style={{
-                  animationDelay: `${index * 75}ms`,
-                }}
+                className="group border-slate-200 bg-white p-2 transition-shadow hover:shadow-md"
               >
-                <div className="flex h-full flex-col gap-5">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-white shadow-sm transition-all duration-300 group-hover:shadow-md">
-                        <img src={p.icon} className="h-8 w-8" alt={p.name} />
+                <CardContent className="p-4 py-0 sm:p-6">
+                  <div className="flex h-full flex-col gap-3 sm:gap-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
+                        <img
+                          src={p.icon}
+                          className="h-10 w-10 shrink-0 rounded-lg object-contain"
+                          alt={p.name}
+                        />
+                        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                          <h3 className="truncate text-sm font-semibold text-slate-900 sm:text-base">
+                            {p.name}
+                          </h3>
+                          <p className="text-[10px] text-slate-500 sm:text-xs">
+                            {p.category}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex flex-1 flex-col gap-0.5">
-                        <h3 className="text-xl font-bold text-slate-800 transition-colors group-hover:text-slate-900">
-                          {p.name}
-                        </h3>
-                        <p className="text-sm font-medium text-slate-500">
-                          {p.category}
-                        </p>
+                      <div className="shrink-0">
+                        <PluginToggle
+                          pluginId={p.id}
+                          pluginType={p.type}
+                          isEnabled={p.is_enabled}
+                          onToggle={handleToggle}
+                        />
                       </div>
                     </div>
-                    <PluginToggle
-                      pluginId={p.id}
-                      pluginType={p.type}
-                      isEnabled={p.is_enabled}
-                      onToggle={handleToggle}
-                    />
-                  </div>
 
-                  <p className="line-clamp-2 text-sm font-medium text-slate-500 transition-colors group-hover:text-slate-600">
-                    {p.description}
-                  </p>
+                    <p className="line-clamp-2 text-xs text-slate-600 sm:text-sm">
+                      {p.description}
+                    </p>
 
-                  <div className="mt-auto flex items-center justify-between pt-2">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`h-2 w-2 rounded-full ${
-                          p.is_enabled
-                            ? "bg-green-500 shadow-sm"
-                            : "bg-slate-300"
-                        }`}
-                      />
-                      <span
-                        className={`text-sm font-semibold ${
-                          p.is_enabled ? "text-green-600" : "text-slate-500"
-                        }`}
+                    <div className="mt-auto flex items-center justify-between gap-2 border-t border-slate-100 pt-3 sm:pt-4">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <div
+                          className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                            p.is_enabled ? "bg-green-500" : "bg-slate-300"
+                          }`}
+                        />
+                        <span
+                          className={`text-[10px] font-medium sm:text-xs ${
+                            p.is_enabled ? "text-green-600" : "text-slate-500"
+                          }`}
+                        >
+                          {p.is_enabled ? "Active" : "Inactive"}
+                        </span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setActive(p)}
+                        className="h-7 rounded-md px-2 text-[10px] hover:bg-slate-50 sm:h-8 sm:px-3 sm:text-xs"
                       >
-                        {p.is_enabled ? "Active" : "Inactive"}
-                      </span>
+                        <Settings className="mr-1 h-3 w-3 sm:mr-1.5 sm:h-3.5 sm:w-3.5" />
+                        <span className="hidden sm:inline">Configure</span>
+                        <span className="sm:hidden">Config</span>
+                      </Button>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setActive(p)}
-                      className="group/btn h-9 rounded-lg bg-white/50 px-3 shadow-sm transition-all hover:bg-white hover:text-blue-600"
-                    >
-                      <Settings className="mr-2 h-4 w-4 transition-transform group-hover/btn:rotate-90" />
-                      Configure
-                    </Button>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
 
         {/* Empty State */}
         {filtered.length === 0 && (
-          <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 py-20 text-center">
-            <div className="mb-4 flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm">
-                <Search className="h-8 w-8 text-slate-400" />
+          <div className="rounded-lg border border-slate-200 bg-white py-12 text-center sm:py-16">
+            <div className="mb-3 flex justify-center sm:mb-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 sm:h-12 sm:w-12">
+                <Search className="h-5 w-5 text-slate-400 sm:h-6 sm:w-6" />
               </div>
             </div>
-            <h3 className="text-lg font-bold text-slate-900">
+            <h3 className="text-sm font-semibold text-slate-900 sm:text-base">
               No plugins found
             </h3>
-            <p className="mt-1 text-sm text-slate-500">
-              Try adjusting your search or filters.
+            <p className="mt-1 text-xs text-slate-500 sm:text-sm">
+              Try adjusting your search or filters
             </p>
             <Button
               variant="outline"
@@ -391,7 +378,7 @@ export default function PluginManager({
                 setSearch("");
                 setTab("ALL");
               }}
-              className="mt-6 rounded-xl"
+              className="mt-4 h-8 rounded-lg text-xs sm:mt-6 sm:h-9 sm:text-sm"
             >
               Clear Filters
             </Button>

@@ -60,7 +60,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-white">
+    <header className="sticky top-0 z-40 w-full border-b border-gray-100 bg-white">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left side - Logo */}
         <div className="flex items-center space-x-4"></div>
@@ -70,6 +70,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             href={`/publish/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"
+            className="hidden"
           >
             <Button
               variant="outline"
@@ -84,6 +85,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             href={`/preview/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"
+            className="hidden"
           >
             <Button
               variant="outline"
@@ -98,6 +100,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             href={`/builder/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"
+            className="hidden"
           >
             <Button
               variant="outline"
