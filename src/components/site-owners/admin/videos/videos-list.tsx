@@ -267,7 +267,7 @@ export function YouTubeList() {
                 </TableBody>
               </Table>
             ) : (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="flex h-full min-h-[400px] flex-col items-center justify-center text-center">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
                   <Youtube className="h-6 w-6 text-slate-400" />
                 </div>

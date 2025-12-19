@@ -171,7 +171,7 @@ export default function AppointmentList() {
 
   return (
     <div className="animate-in fade-in min-h-screen bg-white duration-500">
-      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
+      <div className="mx-auto max-w-5xl space-y-4 p-4 sm:p-6">
         {/* Page Header */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>

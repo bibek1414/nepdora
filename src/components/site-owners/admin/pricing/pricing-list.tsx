@@ -147,7 +147,7 @@ export const PricingList: React.FC = () => {
 
   return (
     <div className="animate-in fade-in min-h-screen bg-white duration-700">
-      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
+      <div className="mx-auto max-w-5xl space-y-4 p-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900">

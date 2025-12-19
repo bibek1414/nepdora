@@ -499,7 +499,7 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
   };
 
   const EmptyState = ({ label }: { label: string }) => (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
+    <div className="flex h-full min-h-[400px] flex-col items-center justify-center text-center">
       <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
         <Search className="h-6 w-6 text-slate-400" />
       </div>
@@ -512,7 +512,7 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
 
   return (
     <div className="animate-in fade-in min-h-screen bg-white duration-500">
-      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
+      <div className="mx-auto max-w-5xl space-y-4 p-4 sm:p-6">
         {/* Page Header */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>

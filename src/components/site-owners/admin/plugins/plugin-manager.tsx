@@ -227,7 +227,7 @@ export default function PluginManager({
 
   return (
     <div className="min-h-screen bg-white p-4 sm:p-6 md:p-8 lg:p-12">
-      <div className="mx-auto max-w-7xl space-y-4 sm:space-y-6 md:space-y-8">
+      <div className="mx-auto max-w-5xl space-y-4 sm:space-y-6 md:space-y-8">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-center md:justify-between">
           <div className="space-y-1 sm:space-y-2">

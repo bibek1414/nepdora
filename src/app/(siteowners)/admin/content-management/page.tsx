@@ -105,7 +105,7 @@ export default function ContentManagementPage() {
 
   return (
     <div className="min-h-screen bg-white p-4 sm:p-6 md:p-8 lg:p-12">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-5xl">
         <div className="mb-6 space-y-2 sm:mb-8 sm:space-y-3">
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
             Content Management

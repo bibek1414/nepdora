@@ -47,10 +47,10 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
       <div className="mx-auto mt-8 mb-40 max-w-5xl px-6 md:px-0">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
               Dashboard
             </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-base text-gray-500">
               Welcome back, {user?.name || "Admin"}
             </p>
           </div>
