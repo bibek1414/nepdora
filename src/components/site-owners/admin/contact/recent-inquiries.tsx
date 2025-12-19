@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { useGetContacts } from "@/hooks/owner-site/admin/use-contact";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, ChevronRight, MessageSquare } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ChevronRight, MessageSquare } from "lucide-react";
 import { Contact } from "@/types/owner-site/admin/contact";
 import Link from "next/link";
 import ContactDetailsDialog from "./contact-details-dialog";
@@ -38,18 +43,16 @@ export default function RecentInquiries() {
 
   if (isLoading) {
     return (
-      <Card className="border-border bg-card shadow-sm">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg font-semibold">
-            Recent Inquiries
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 p-6 pt-0">
+      <div className="rounded-xl border border-slate-100 bg-white p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-lg font-semibold">Recent Inquiries</h3>
+        </div>
+        <div className="space-y-3">
           {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full rounded-lg" />
+            <Skeleton key={i} className="h-12 w-full rounded-lg" />
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
@@ -63,68 +66,102 @@ export default function RecentInquiries() {
 
   if (!data?.results?.length) {
     return (
-      <Card className="border-border bg-card shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">
-            Recent Inquiries
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-muted-foreground py-10 text-center text-sm">
+      <div className="rounded-xl border border-slate-100 bg-white p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-lg font-semibold">Recent Inquiries</h3>
+        </div>
+        <div className="text-muted-foreground py-10 text-center text-sm">
           <MessageSquare className="mx-auto mb-3 h-10 w-10 opacity-50" />
           No inquiries yet.
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   return (
     <>
-      <Card className="border-border bg-card shadow-sm">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <div className="flex items-center gap-2">
-            <MessageSquare className="text-muted-foreground h-5 w-5" />
-            <CardTitle className="text-lg font-semibold">
-              Recent Inquiries
-            </CardTitle>
+      <div className="rounded-xl border border-slate-100 bg-white">
+        <div className="border-b border-slate-100 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">Recent Inquiries</h3>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <Link href="/admin/inquiries" className="flex items-center gap-1">
-              View all
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        </CardHeader>
-        <CardContent className="p-0">
-          <div className="divide-border divide-y">
+        </div>
+
+        <Table>
+          <TableHeader>
+            <TableRow className="border-b border-slate-100 bg-gray-50">
+              <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                Name
+              </TableHead>
+              <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                Contact
+              </TableHead>
+              <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                Message
+              </TableHead>
+              <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+                Date
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {data.results.map((c: Contact) => (
-              <div
+              <TableRow
                 key={c.id}
                 onClick={() => openDialog(c.id)}
-                className="hover:bg-accent/50 flex cursor-pointer items-center gap-4 px-6 py-4 transition-colors"
+                className="group cursor-pointer border-b border-slate-50 transition-colors hover:bg-gray-50"
               >
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-foreground font-medium">{c.name}</p>
-                    {/* Status logic can be added here if backend supports it */}
+                <TableCell className="px-6 py-4">
+                  <span className="font-medium text-slate-900 capitalize">
+                    {c.name}
+                  </span>
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  <div className="flex flex-col gap-0.5">
+                    {c.email && (
+                      <span className="text-sm text-slate-600">{c.email}</span>
+                    )}
+                    {c.phone_number && (
+                      <span className="text-sm text-slate-600">
+                        {c.phone_number}
+                      </span>
+                    )}
+                    {!c.email && !c.phone_number && (
+                      <span className="text-sm text-slate-500">—</span>
+                    )}
                   </div>
-                  <p className="text-muted-foreground truncate text-sm">
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  <p className="max-w-md truncate text-slate-600">
                     {c.message || "—"}
                   </p>
-                </div>
-                <div className="bg-muted/50 text-muted-foreground flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {formatDate(c.created_at)}
-                </div>
-              </div>
+                </TableCell>
+                <TableCell className="px-6 py-4 text-right">
+                  <span className="whitespace-nowrap text-slate-500">
+                    {formatDate(c.created_at)}
+                  </span>
+                </TableCell>
+              </TableRow>
             ))}
+          </TableBody>
+        </Table>
+
+        <div className="border-t border-slate-100 px-6 py-4">
+          <div className="flex justify-end">
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <Link href="/admin/inquiries" className="flex items-center gap-1">
+                View all
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       <ContactDetailsDialog
         contacts={data.results}

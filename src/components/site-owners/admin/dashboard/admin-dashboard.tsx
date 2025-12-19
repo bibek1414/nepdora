@@ -9,8 +9,6 @@ import { SessionProvider } from "next-auth/react";
 import { User as UserType } from "@/hooks/use-jwt-server";
 import RecentInquiries from "../contact/recent-inquiries";
 import RecentAppointments from "../appointments/recent-appointments";
-import Link from "next/link";
-import { MessageSquare, Calendar, Settings } from "lucide-react";
 import { StatsCards } from "./stats-cards";
 import { useGetContacts } from "@/hooks/owner-site/admin/use-contact";
 import { useGetAppointments } from "@/hooks/owner-site/admin/use-appointment";
@@ -46,7 +44,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
         <GoogleAuthRedirectHandler />
       </SessionProvider>
 
-      <div className="mx-auto mt-8 mb-40 max-w-6xl px-6 md:px-0">
+      <div className="mx-auto mt-8 mb-40 max-w-5xl px-6 md:px-0">
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-gray-900">
@@ -74,7 +72,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
               }
             />
 
-            <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
+            <div className="grid gap-8 md:grid-cols-2 lg:gap-4">
               <RecentInquiries />
               <RecentAppointments />
             </div>

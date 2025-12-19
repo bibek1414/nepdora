@@ -548,7 +548,7 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
         </div>
 
         {/* Filters & Search Toolbar */}
-        <div className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-0.5 sm:flex-row sm:items-center">
+        <div className="flex flex-col justify-between gap-4 pb-0.5 sm:flex-row sm:items-center">
           {/* Custom Tab List */}
           <div className="no-scrollbar -mb-px flex items-center gap-1 overflow-x-auto">
             {tabs.map(tab => {
