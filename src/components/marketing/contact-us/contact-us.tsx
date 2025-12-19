@@ -36,8 +36,7 @@ export default function ContactUs() {
           Get in touch
         </h2>
         <p className="mx-auto max-w-xl text-sm text-slate-600 sm:text-base md:text-lg">
-          Have a question or want to work together? We&apos;d love to hear from
-          you.
+          Have a question or want to work together?
         </p>
       </div>
 
