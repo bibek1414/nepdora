@@ -166,20 +166,20 @@ export const PricingList: React.FC = () => {
           </Button>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
-          <div className="relative w-full max-w-md">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <div className="mb-6 flex items-center justify-end gap-4">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
             <Input
               placeholder="Search pricing plans..."
               value={searchInput}
               onChange={handleSearchChange}
-              className="h-9 border-slate-200 bg-white pr-10 pl-10 text-sm placeholder:text-slate-500 focus-visible:ring-1 focus-visible:ring-slate-900"
+              className="h-9 bg-black/5 pr-10 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
             />
             {searchInput && (
               <button
                 type="button"
                 onClick={clearSearch}
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-black/40 transition hover:text-black/60"
               >
                 <X className="h-4 w-4" />
               </button>

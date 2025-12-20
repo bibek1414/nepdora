@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useGetAppointments } from "@/hooks/owner-site/admin/use-appointment";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -18,9 +17,9 @@ import Link from "next/link";
 import AppointmentDetailsDialog from "./appointment-details-dialog";
 
 const statusStyles = {
-  pending: "bg-amber-50 text-amber-700 border-amber-200",
-  completed: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  cancelled: "bg-red-50 text-red-600 border-red-200",
+  pending: "text-black/60",
+  completed: "text-black/40",
+  cancelled: "text-black/40",
 };
 
 export default function RecentAppointments() {
@@ -48,129 +47,88 @@ export default function RecentAppointments() {
         })
       : "—";
 
-  if (isLoading) {
-    return (
-      <div className="rounded-xl border border-slate-100 bg-white p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Recent Appointments</h3>
-        </div>
-        <div className="space-y-3">
-          {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full rounded-lg" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertDescription>Failed to load appointments.</AlertDescription>
-      </Alert>
-    );
-  }
-
-  if (!data?.results?.length) {
-    return (
-      <div className="rounded-xl border border-slate-100 bg-white p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Recent Appointments</h3>
-        </div>
-        <div className="text-muted-foreground py-10 text-center text-sm">
-          No recent appointments found.
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
-      <div className="rounded-xl border border-slate-100 bg-white">
-        <div className="border-b border-slate-100 px-6 py-4">
+      <div className="rounded-lg border border-black/5 bg-white">
+        <div className="border-b border-black/5 px-6 py-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Recent Appointments</h3>
+            <h3 className="text-base font-semibold text-[#003d79]">
+              Recent Appointments
+            </h3>
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="group h-auto rounded-md px-3 py-1.5 text-xs font-normal text-black/60 transition-all hover:bg-black/5 hover:text-black"
+            >
+              <Link
+                href="/admin/appointments"
+                className="flex items-center gap-1.5"
+              >
+                View all
+                <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            </Button>
           </div>
         </div>
 
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-slate-100 bg-gray-50">
-              <TableHead className="px-6 py-4 font-semibold text-slate-700">
+            <TableRow className="border-b border-black/5">
+              <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                 Name
               </TableHead>
-              <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                Date
+              <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                Date & Time
               </TableHead>
-              <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                Time
-              </TableHead>
-              <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+              <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
                 Status
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.results.map((appointment: Appointment) => (
+            {data?.results.map((appointment: Appointment) => (
               <TableRow
                 key={appointment.id}
                 onClick={() => openDialog(appointment.id)}
-                className="group cursor-pointer border-b border-slate-50 transition-colors hover:bg-gray-50"
+                className="cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
               >
                 <TableCell className="px-6 py-4">
-                  <span className="font-medium text-slate-900 capitalize">
+                  <span className="text-sm font-normal text-black capitalize">
                     {appointment.full_name}
                   </span>
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  <span className="whitespace-nowrap text-slate-500">
-                    {formatDate(appointment.date)}
-                  </span>
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  <span className="text-slate-600">
-                    {appointment.time || "—"}
-                  </span>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-xs text-black/50">
+                      {formatDate(appointment.date)}
+                    </span>
+                    {appointment.time && (
+                      <span className="text-xs text-black/40">
+                        {appointment.time}
+                      </span>
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell className="px-6 py-4 text-right">
-                  <Badge
-                    variant="outline"
-                    className={`ml-auto inline-flex rounded-full border px-2.5 py-0.5 text-xs font-medium capitalize ${
+                  <span
+                    className={`text-xs font-normal capitalize ${
                       statusStyles[
                         appointment.status as keyof typeof statusStyles
-                      ] || "border-slate-200 bg-slate-50 text-slate-600"
+                      ] || "text-black/40"
                     }`}
                   >
                     {appointment.status}
-                  </Badge>
+                  </span>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-
-        <div className="border-t border-slate-100 px-6 py-4">
-          <div className="flex justify-end">
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <Link
-                href="/admin/appointments"
-                className="flex items-center gap-1"
-              >
-                View all
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
       </div>
 
       <AppointmentDetailsDialog
-        appointments={data.results}
+        appointments={data?.results || []}
         currentAppointmentId={selectedAppointmentId}
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}

@@ -41,103 +41,74 @@ export default function RecentInquiries() {
         })
       : "—";
 
-  if (isLoading) {
-    return (
-      <div className="rounded-xl border border-slate-100 bg-white p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Recent Inquiries</h3>
-        </div>
-        <div className="space-y-3">
-          {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full rounded-lg" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertDescription>Failed to load inquiries.</AlertDescription>
-      </Alert>
-    );
-  }
-
-  if (!data?.results?.length) {
-    return (
-      <div className="rounded-xl border border-slate-100 bg-white p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Recent Inquiries</h3>
-        </div>
-        <div className="text-muted-foreground py-10 text-center text-sm">
-          <MessageSquare className="mx-auto mb-3 h-10 w-10 opacity-50" />
-          No inquiries yet.
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
-      <div className="rounded-xl border border-slate-100 bg-white">
-        <div className="border-b border-slate-100 px-6 py-4">
+      <div className="rounded-lg border border-black/5 bg-white">
+        <div className="border-b border-black/5 px-6 py-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Recent Inquiries</h3>
+            <h3 className="text-base font-semibold text-[#003d79]">
+              Recent Inquiries
+            </h3>
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="group h-auto rounded-md px-3 py-1.5 text-xs font-normal text-black/60 transition-all hover:bg-black/5 hover:text-black"
+            >
+              <Link
+                href="/admin/inquiries"
+                className="flex items-center gap-1.5"
+              >
+                View all
+                <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            </Button>
           </div>
         </div>
 
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-slate-100 bg-gray-50">
-              <TableHead className="px-6 py-4 font-semibold text-slate-700">
+            <TableRow className="border-b border-black/5">
+              <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                 Name
               </TableHead>
-              <TableHead className="px-6 py-4 font-semibold text-slate-700">
+              <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                 Contact
               </TableHead>
-              <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                Message
-              </TableHead>
-              <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+              <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
                 Date
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.results.map((c: Contact) => (
+            {data?.results.map((c: Contact) => (
               <TableRow
                 key={c.id}
                 onClick={() => openDialog(c.id)}
-                className="group cursor-pointer border-b border-slate-50 transition-colors hover:bg-gray-50"
+                className="cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
               >
                 <TableCell className="px-6 py-4">
-                  <span className="font-medium text-slate-900 capitalize">
+                  <span className="text-sm font-normal text-black capitalize">
                     {c.name}
                   </span>
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   <div className="flex flex-col gap-0.5">
                     {c.email && (
-                      <span className="text-sm text-slate-600">{c.email}</span>
+                      <span className="text-xs text-black/50">{c.email}</span>
                     )}
                     {c.phone_number && (
-                      <span className="text-sm text-slate-600">
+                      <span className="text-xs text-black/50">
                         {c.phone_number}
                       </span>
                     )}
                     {!c.email && !c.phone_number && (
-                      <span className="text-sm text-slate-500">—</span>
+                      <span className="text-xs text-black/40">—</span>
                     )}
                   </div>
                 </TableCell>
-                <TableCell className="px-6 py-4">
-                  <p className="max-w-md truncate text-slate-600">
-                    {c.message || "—"}
-                  </p>
-                </TableCell>
                 <TableCell className="px-6 py-4 text-right">
-                  <span className="whitespace-nowrap text-slate-500">
+                  <span className="text-xs text-black/40">
                     {formatDate(c.created_at)}
                   </span>
                 </TableCell>
@@ -145,26 +116,10 @@ export default function RecentInquiries() {
             ))}
           </TableBody>
         </Table>
-
-        <div className="border-t border-slate-100 px-6 py-4">
-          <div className="flex justify-end">
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <Link href="/admin/inquiries" className="flex items-center gap-1">
-                View all
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
       </div>
 
       <ContactDetailsDialog
-        contacts={data.results}
+        contacts={data?.results || []}
         currentContactId={selectedContactId}
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}

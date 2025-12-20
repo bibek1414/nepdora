@@ -10,8 +10,6 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint:fix": "next lint --fix",
-    "prepare": "husky",
-    "commit": "git-cz",
     "lint:errors": "eslint . --ext .js,.jsx,.ts,.tsx --quiet"
   },
   "dependencies": {

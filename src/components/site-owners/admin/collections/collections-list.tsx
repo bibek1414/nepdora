@@ -276,12 +276,12 @@ export function CollectionsList() {
         {/* Search and Create */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="group relative w-full sm:w-80">
-            <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-black/40" />
             <Input
               placeholder="Search collections..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="h-11 rounded-xl border-slate-200 bg-white pl-12 text-sm transition-all placeholder:text-slate-400 focus:border-slate-300"
+              className="h-11 rounded-xl bg-black/5 pl-12 text-sm transition-all placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
             />
           </div>
 

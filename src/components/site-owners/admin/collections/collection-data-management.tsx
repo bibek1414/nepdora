@@ -197,17 +197,15 @@ export function CollectionDataManagement({
       </div>
 
       <CardContent className="gap-0 px-0 py-0">
-        <div className="flex w-1/3">
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="text-muted-foreground absolute top-4 left-3 h-4 w-4" />
-              <Input
-                placeholder="Search..."
-                className="pl-10 placeholder:text-gray-400"
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-              />
-            </div>
+        <div className="mb-6 flex w-full sm:w-64">
+          <div className="relative w-full">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
+            <Input
+              placeholder="Search..."
+              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
           </div>
         </div>
       </CardContent>

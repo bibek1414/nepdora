@@ -8,9 +8,13 @@ import {
   ChevronLeft,
   ChevronRight,
   RefreshCw,
+  CheckCircle2,
+  Hourglass,
+  XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 import {
   Dialog,
@@ -32,7 +36,6 @@ import {
   TableUserCell,
   TableActionButtons,
 } from "@/components/ui/custom-table";
-import { cn } from "@/lib/utils";
 import { useGetAppointments } from "@/hooks/owner-site/admin/use-appointment";
 import { Appointment } from "@/types/owner-site/admin/appointment";
 
@@ -122,8 +125,11 @@ const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
+type StatusFilter = "all" | "pending" | "confirmed" | "completed" | "cancelled";
+
 export default function AppointmentList() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Appointment | null>(
     null
@@ -147,10 +153,37 @@ export default function AppointmentList() {
     refetch();
   };
 
-  // Reset pagination when search changes
+  // Reset pagination when search or filter changes
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, statusFilter]);
+
+  const statusTabs = [
+    { id: "all" as StatusFilter, label: "All", icon: Calendar, count: appointmentsData?.count || 0 },
+    { id: "pending" as StatusFilter, label: "Pending", icon: Hourglass, count: 0 },
+    { id: "confirmed" as StatusFilter, label: "Confirmed", icon: CheckCircle2, count: 0 },
+    { id: "completed" as StatusFilter, label: "Completed", icon: CheckCircle2, count: 0 },
+    { id: "cancelled" as StatusFilter, label: "Cancelled", icon: XCircle, count: 0 },
+  ];
+
+  // Calculate counts for each status
+  const statusCounts = React.useMemo(() => {
+    const counts: Record<string, number> = { all: appointmentsData?.count || 0 };
+    appointmentsData?.results?.forEach(apt => {
+      const status = apt.status.toLowerCase();
+      counts[status] = (counts[status] || 0) + 1;
+      // Also count "confirmed" if status is something else
+      if (status === "confirmed") {
+        counts.confirmed = (counts.confirmed || 0) + 1;
+      }
+    });
+    return counts;
+  }, [appointmentsData]);
+
+  const tabsWithCounts = statusTabs.map(tab => ({
+    ...tab,
+    count: statusCounts[tab.id] || 0,
+  }));
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Not set";
@@ -166,8 +199,17 @@ export default function AppointmentList() {
     setIsDialogOpen(true);
   };
 
-  const totalPages = Math.ceil((appointmentsData?.count || 0) / ITEMS_PER_PAGE);
-  const paginatedBookings = appointmentsData?.results || [];
+  // Filter by status on client side
+  const filteredBookings = React.useMemo(() => {
+    if (!appointmentsData?.results) return [];
+    if (statusFilter === "all") return appointmentsData.results;
+    return appointmentsData.results.filter(
+      apt => apt.status.toLowerCase() === statusFilter.toLowerCase()
+    );
+  }, [appointmentsData?.results, statusFilter]);
+
+  const totalPages = Math.ceil((filteredBookings.length || 0) / ITEMS_PER_PAGE);
+  const paginatedBookings = filteredBookings;
 
   return (
     <div className="animate-in fade-in min-h-screen bg-white duration-500">
@@ -197,15 +239,58 @@ export default function AppointmentList() {
           </Button>
         </div>
 
-        {/* Search Toolbar */}
-        <div className="flex justify-end">
+        {/* Tabs and Search - Same Line */}
+        <div className="mb-6 flex items-center justify-between gap-4">
+          {/* Status Filter Tabs - Rounded Pill Design */}
+          <div className="inline-flex items-center gap-2 rounded-full bg-black/5 p-1.5">
+            {tabsWithCounts.map(tab => {
+              const isActive = statusFilter === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setStatusFilter(tab.id);
+                    setSearchTerm("");
+                  }}
+                  className={cn(
+                    "group relative flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out",
+                    isActive
+                      ? "bg-white text-[#003d79]"
+                      : "text-black/60 hover:bg-white/50 hover:text-black"
+                  )}
+                >
+                  <tab.icon
+                    className={cn(
+                      "h-4 w-4 transition-colors duration-200",
+                      isActive ? "text-[#003d79]" : "text-black/50 group-hover:text-black/70"
+                    )}
+                  />
+                  <span className="whitespace-nowrap">{tab.label}</span>
+                  {tab.count > 0 && (
+                    <span
+                      className={cn(
+                        "flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-medium transition-colors duration-200",
+                        isActive
+                          ? "bg-[#003d79]/10 text-[#003d79]"
+                          : "bg-black/10 text-black/60 group-hover:bg-black/15"
+                      )}
+                    >
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Search */}
           <div className="relative w-full sm:w-64">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
             <Input
               placeholder="Search appointments..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="h-9 border-slate-200 bg-white pl-9 text-sm placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
+              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
             />
           </div>
         </div>

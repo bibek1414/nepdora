@@ -44,23 +44,13 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
         <GoogleAuthRedirectHandler />
       </SessionProvider>
 
-      <div className="mx-auto mt-8 mb-40 max-w-5xl px-6 md:px-0">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              Dashboard
-            </h1>
-            <p className="mt-1 text-base text-gray-500">
-              Welcome back, {user?.name || "Admin"}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-            <span>{new Date().toLocaleDateString()}</span>
-          </div>
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+        <div className="mb-5">
+          <h1 className="text-xl font-bold text-black">Dashboard</h1>
         </div>
 
         {isServiceSite ? (
-          <div className="space-y-8">
+          <div className="space-y-12">
             <StatsCards
               inquiriesCount={contactsData?.count}
               appointmentsCount={appointmentsData?.count}
@@ -72,7 +62,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
               }
             />
 
-            <div className="grid gap-8 md:grid-cols-2 lg:gap-4">
+            <div className="grid gap-8 md:grid-cols-2">
               <RecentInquiries />
               <RecentAppointments />
             </div>
