@@ -159,16 +159,43 @@ export default function AppointmentList() {
   }, [debouncedSearchTerm, statusFilter]);
 
   const statusTabs = [
-    { id: "all" as StatusFilter, label: "All", icon: Calendar, count: appointmentsData?.count || 0 },
-    { id: "pending" as StatusFilter, label: "Pending", icon: Hourglass, count: 0 },
-    { id: "confirmed" as StatusFilter, label: "Confirmed", icon: CheckCircle2, count: 0 },
-    { id: "completed" as StatusFilter, label: "Completed", icon: CheckCircle2, count: 0 },
-    { id: "cancelled" as StatusFilter, label: "Cancelled", icon: XCircle, count: 0 },
+    {
+      id: "all" as StatusFilter,
+      label: "All",
+      icon: Calendar,
+      count: appointmentsData?.count || 0,
+    },
+    {
+      id: "pending" as StatusFilter,
+      label: "Pending",
+      icon: Hourglass,
+      count: 0,
+    },
+    {
+      id: "confirmed" as StatusFilter,
+      label: "Confirmed",
+      icon: CheckCircle2,
+      count: 0,
+    },
+    {
+      id: "completed" as StatusFilter,
+      label: "Completed",
+      icon: CheckCircle2,
+      count: 0,
+    },
+    {
+      id: "cancelled" as StatusFilter,
+      label: "Cancelled",
+      icon: XCircle,
+      count: 0,
+    },
   ];
 
   // Calculate counts for each status
   const statusCounts = React.useMemo(() => {
-    const counts: Record<string, number> = { all: appointmentsData?.count || 0 };
+    const counts: Record<string, number> = {
+      all: appointmentsData?.count || 0,
+    };
     appointmentsData?.results?.forEach(apt => {
       const status = apt.status.toLowerCase();
       counts[status] = (counts[status] || 0) + 1;
@@ -262,7 +289,9 @@ export default function AppointmentList() {
                   <tab.icon
                     className={cn(
                       "h-4 w-4 transition-colors duration-200",
-                      isActive ? "text-[#003d79]" : "text-black/50 group-hover:text-black/70"
+                      isActive
+                        ? "text-[#003d79]"
+                        : "text-black/50 group-hover:text-black/70"
                     )}
                   />
                   <span className="whitespace-nowrap">{tab.label}</span>
