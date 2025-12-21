@@ -379,7 +379,7 @@ export default function AppointmentList() {
                                 handleStatusChange(item.id, value)
                               }
                             >
-                              <SelectTrigger className="h-8 w-[130px] border-black/5 bg-black/5 text-xs font-medium">
+                              <SelectTrigger className="h-8 w-[130px] bg-white text-xs font-medium">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
