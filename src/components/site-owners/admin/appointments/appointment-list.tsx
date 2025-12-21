@@ -18,13 +18,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { useGetAppointments } from "@/hooks/owner-site/admin/use-appointment";
+import { Appointment } from "@/types/owner-site/admin/appointment";
 import {
   Table,
   TableBody,
@@ -38,8 +33,7 @@ import {
   TableUserCell,
   TableActionButtons,
 } from "@/components/ui/custom-table";
-import { useGetAppointments } from "@/hooks/owner-site/admin/use-appointment";
-import { Appointment } from "@/types/owner-site/admin/appointment";
+import AppointmentDetailsDialog from "./appointment-details-dialog";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -97,9 +91,9 @@ export default function AppointmentList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState<Appointment | null>(
-    null
-  );
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<
+    number | null
+  >(null);
 
   // Use API hooks
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
@@ -188,7 +182,7 @@ export default function AppointmentList() {
   };
 
   const handleRowClick = (item: Appointment) => {
-    setSelectedBooking(item);
+    setSelectedAppointmentId(item.id);
     setIsDialogOpen(true);
   };
 
@@ -394,77 +388,13 @@ export default function AppointmentList() {
         </div>
 
         {/* Appointment Details Modal */}
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Appointment Details</DialogTitle>
-              <DialogDescription>
-                Manage booking status and details.
-              </DialogDescription>
-            </DialogHeader>
-
-            {selectedBooking && (
-              <div className="mt-4 space-y-6">
-                <div className="flex items-start gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-lg font-bold text-emerald-700">
-                    {getInitials(selectedBooking.full_name)}
-                  </div>
-                  <div className="flex-1 space-y-1">
-                    <h4 className="text-base font-semibold text-slate-900">
-                      {selectedBooking.full_name}
-                    </h4>
-                    <div className="text-sm text-slate-500">
-                      {selectedBooking.email}
-                    </div>
-                  </div>
-                  <StatusBadge status={selectedBooking.status} />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                      Date
-                    </label>
-                    <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white p-3 text-sm font-medium text-slate-700">
-                      <Calendar className="h-4 w-4 text-slate-400" />
-                      {formatDate(selectedBooking.date)}
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                      Time
-                    </label>
-                    <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white p-3 text-sm font-medium text-slate-700">
-                      <Clock className="h-4 w-4 text-slate-400" />
-                      {selectedBooking.time || "--:--"}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                    Service/Reason
-                  </label>
-                  <div className="rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-700">
-                    {selectedBooking.reason?.name || "General"}
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-3 pt-2">
-                  <Button
-                    variant="secondary"
-                    onClick={() => setIsDialogOpen(false)}
-                  >
-                    Close
-                  </Button>
-                  <Button className="bg-slate-900 text-white hover:bg-slate-800">
-                    Edit Booking
-                  </Button>
-                </div>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
+        <AppointmentDetailsDialog
+          appointments={appointmentsData?.results || []}
+          currentAppointmentId={selectedAppointmentId}
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          onAppointmentChange={setSelectedAppointmentId}
+        />
       </div>
     </div>
   );

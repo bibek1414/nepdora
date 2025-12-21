@@ -183,7 +183,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
   const safeAllTags = Array.isArray(allTags) ? allTags : [];
 
   return (
-    <div className="mx-auto max-w-7xl rounded-lg bg-white p-3 sm:p-4 md:p-6">
+    <div className="mx-auto max-w-4xl p-0">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -197,8 +197,8 @@ const BlogForm: React.FC<BlogFormProps> = ({
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm sm:text-base">
-                      Title *
+                    <FormLabel className="text-sm font-semibold text-[#003d79]">
+                      Blog Title
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -217,8 +217,8 @@ const BlogForm: React.FC<BlogFormProps> = ({
                 name="content"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm sm:text-base">
-                      Content *
+                    <FormLabel className="text-sm font-semibold text-[#003d79]">
+                      Content
                     </FormLabel>
                     <FormControl>
                       <div className="[&_.tiptap]:min-h-[300px] sm:[&_.tiptap]:min-h-[400px] md:[&_.tiptap]:min-h-[600px] [&_iframe]:min-h-[300px] sm:[&_iframe]:min-h-[400px] md:[&_iframe]:min-h-[600px]">
@@ -237,8 +237,10 @@ const BlogForm: React.FC<BlogFormProps> = ({
                 )}
               />
 
-              <div className="space-y-3 rounded-md border p-3 sm:space-y-4 sm:p-4">
-                <h3 className="text-base font-medium sm:text-lg">Media</h3>
+              <div className="space-y-4 rounded-lg border border-black/5 p-6">
+                <h3 className="text-sm font-semibold text-[#003d79]">
+                  Thumbnail Media
+                </h3>
                 <FormField
                   control={form.control}
                   name="thumbnail_image"
@@ -309,7 +311,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
                   name="thumbnail_image_alt_description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm sm:text-base">
+                      <FormLabel className="text-xs text-black/40">
                         Alt Description
                       </FormLabel>
                       <FormControl>
@@ -328,9 +330,9 @@ const BlogForm: React.FC<BlogFormProps> = ({
 
             {/* Right Column - SEO Information & Tags */}
             <div className="mt-8 space-y-4 sm:space-y-6 lg:sticky lg:top-20 lg:col-span-1 lg:max-h-[calc(100vh-2rem)] lg:self-start lg:overflow-y-auto">
-              <div className="space-y-3 rounded-md border p-3 sm:space-y-4 sm:p-4">
-                <h3 className="text-base font-medium sm:text-lg">
-                  SEO Information
+              <div className="space-y-4 rounded-lg border border-black/5 p-6">
+                <h3 className="text-sm font-semibold text-[#003d79]">
+                  SEO Settings
                 </h3>
                 <div className="space-y-4 sm:space-y-6 md:space-y-8">
                   <FormField
@@ -381,15 +383,15 @@ const BlogForm: React.FC<BlogFormProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-3 rounded-md border p-3 sm:space-y-4 sm:p-4">
+              <div className="space-y-4 rounded-lg border border-black/5 p-6">
                 <FormField
                   control={form.control}
                   name="tag_ids"
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-                        <FormLabel className="text-base font-medium sm:text-lg">
-                          Tags
+                        <FormLabel className="text-sm font-semibold text-[#003d79]">
+                          Categorization
                         </FormLabel>
                         <Dialog
                           open={isTagDialogOpen}
@@ -549,24 +551,24 @@ const BlogForm: React.FC<BlogFormProps> = ({
             </div>
           </div>
 
-          <div className="flex flex-col-reverse justify-end gap-2 border-t pt-4 sm:flex-row sm:gap-4 sm:pt-6">
+          <div className="flex flex-col-reverse justify-end gap-2 border-t border-black/5 pt-6 sm:flex-row sm:gap-4">
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               onClick={onCancel}
               disabled={isLoading}
-              className="w-full text-xs sm:w-auto sm:text-sm"
+              className="w-full text-black/40 hover:bg-black/5 hover:text-black sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gray-600 text-xs text-white hover:bg-gray-700 sm:w-auto sm:text-sm"
+              className="w-full bg-black text-white hover:bg-black/90 sm:w-auto"
             >
               {isLoading
                 ? "Saving..."
-                : `${isEditMode ? "Update" : "Create"} Blog`}
+                : `${isEditMode ? "Update" : "Publish"} Blog`}
             </Button>
           </div>
         </form>

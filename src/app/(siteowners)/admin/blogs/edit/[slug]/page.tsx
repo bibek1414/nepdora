@@ -63,23 +63,28 @@ const EditBlogPage = () => {
   const renderContent = () => {
     if (isLoadingBlog) {
       return (
-        <div className="mx-auto max-w-4xl space-y-8 rounded-lg bg-white p-6">
+        <div className="space-y-8 rounded-lg bg-white p-0">
           <Skeleton className="h-10 w-1/2" />
-          <Skeleton className="h-40 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-[600px] w-full" />
         </div>
       );
     }
 
     if (error || !blog) {
       return (
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900">Blog Not Found</h2>
-          <p className="mt-2 text-gray-600">
+        <div className="flex h-64 flex-col items-center justify-center text-center">
+          <h2 className="text-lg font-bold text-[#003d79]">Blog Not Found</h2>
+          <p className="mt-2 text-sm text-black/40">
             {error?.message ||
               "The blog post you're looking for doesn't exist."}
           </p>
+          <Button
+            onClick={handleCancel}
+            variant="outline"
+            className="mt-6 font-medium text-black/60"
+          >
+            Back to Blogs
+          </Button>
         </div>
       );
     }
@@ -95,15 +100,18 @@ const EditBlogPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-4xl px-6 md:px-8">
         <div className="mb-8">
           <div className="flex items-center justify-between">
-            <div>
-              <Button onClick={handleCancel} variant="outline">
-                Back to Blogs
-              </Button>
-            </div>
+            <h1 className="text-xl font-bold text-[#003d79]">Edit Blog</h1>
+            <Button
+              onClick={handleCancel}
+              variant="ghost"
+              className="text-black/60 hover:bg-black/5 hover:text-black"
+            >
+              Back to Blogs
+            </Button>
           </div>
         </div>
         {renderContent()}

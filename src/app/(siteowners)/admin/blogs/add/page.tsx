@@ -51,11 +51,16 @@ const AddBlogPage = () => {
   const handleCancel = () => router.push("/admin/blogs");
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-4xl px-6 md:px-8">
         <div className="mb-8">
           <div className="flex items-center justify-between">
-            <Button onClick={handleCancel} variant="outline">
+            <h1 className="text-xl font-bold text-[#003d79]">Add New Blog</h1>
+            <Button
+              onClick={handleCancel}
+              variant="ghost"
+              className="text-black/60 hover:bg-black/5 hover:text-black"
+            >
               Back to Blogs
             </Button>
           </div>

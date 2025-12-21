@@ -171,7 +171,7 @@ export default function TestimonialList() {
 
           <Button
             onClick={handleAdd}
-            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+            className="h-9 rounded-lg bg-black px-4 font-semibold text-white transition-all hover:bg-black/90"
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Testimonial
@@ -186,12 +186,17 @@ export default function TestimonialList() {
           isLoading={isLoadingTestimonials}
         />
 
-        {!isLoadingTestimonials && (
-          <SimplePagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
+        {!isLoadingTestimonials && totalPages > 1 && (
+          <div className="mt-6 flex items-center justify-between border-t border-black/5 bg-white px-6 py-4">
+            <div className="text-[10px] text-black/40">
+              Showing {filteredTestimonials.length} results
+            </div>
+            <SimplePagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          </div>
         )}
 
         {/* Modal */}

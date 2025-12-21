@@ -33,37 +33,42 @@ export const TestimonialsTable = ({
 
   if (isLoading) {
     return (
-      <TableWrapper>
-        <div className="flex h-64 flex-col items-center justify-center gap-3">
-          <RefreshCw className="h-8 w-8 animate-spin text-slate-500" />
-          <p className="animate-pulse text-sm text-slate-400">
-            Loading testimonials...
-          </p>
-        </div>
-      </TableWrapper>
+      <div className="flex h-64 flex-col items-center justify-center gap-3">
+        <RefreshCw className="h-8 w-8 animate-spin text-black/20" />
+        <p className="animate-pulse text-xs text-black/40">
+          Loading testimonials...
+        </p>
+      </div>
     );
   }
 
   if (!testimonials || testimonials.length === 0) {
     return (
-      <TableWrapper>
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
-            <span className="text-xl">💬</span>
-          </div>
-          <h3 className="text-sm font-medium text-slate-900">
-            No testimonials found
-          </h3>
-          <p className="mt-1 text-sm text-slate-500">
-            Add your first testimonial to get started.
-          </p>
+      <div className="flex flex-col items-center justify-center border-t border-black/5 bg-white py-12 text-center">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-black/5">
+          <span className="text-xl">💬</span>
         </div>
-      </TableWrapper>
+        <h3 className="text-sm font-medium text-black">
+          No testimonials found
+        </h3>
+        <p className="mt-1 text-xs text-black/40">
+          Add your first testimonial to get started.
+        </p>
+      </div>
     );
   }
 
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map(n => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   return (
-    <div className="rounded-lg bg-white">
+    <div className="overflow-hidden rounded-lg bg-white">
       <Table>
         <TableHeader>
           <TableRow className="border-b border-black/5">
@@ -88,14 +93,12 @@ export const TestimonialsTable = ({
               className="group border-b border-black/5 transition-colors hover:bg-black/2"
             >
               <TableCell className="px-6 py-4">
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-sm font-normal text-black">
-                    {testimonial.name}
-                  </span>
-                  <span className="text-xs text-black/50">
-                    {testimonial.designation}
-                  </span>
-                </div>
+                <TableUserCell
+                  title={testimonial.name}
+                  subtitle={testimonial.designation || ""}
+                  imageSrc={testimonial.image}
+                  fallback={getInitials(testimonial.name)}
+                />
               </TableCell>
               <TableCell className="max-w-md px-6 py-4">
                 <p className="line-clamp-2 text-xs text-black/50">

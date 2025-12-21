@@ -121,7 +121,9 @@ const TestimonialForm: React.FC<TestimonialFormProps> = ({
       className="max-h-[calc(100vh-200px)] space-y-4 overflow-y-auto sm:space-y-6"
     >
       <div>
-        <Label htmlFor="name">Name *</Label>
+        <Label htmlFor="name" className="text-sm font-semibold text-[#003d79]">
+          Name *
+        </Label>
         <Input
           id="name"
           name="name"
@@ -129,24 +131,34 @@ const TestimonialForm: React.FC<TestimonialFormProps> = ({
           onChange={handleInputChange}
           required
           placeholder="Enter customer name"
-          className="mt-1"
+          className="mt-1.5 h-9 bg-black/5 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
         />
       </div>
 
       <div>
-        <Label htmlFor="designation">Designation</Label>
+        <Label
+          htmlFor="designation"
+          className="text-sm font-semibold text-[#003d79]"
+        >
+          Designation
+        </Label>
         <Input
           id="designation"
           name="designation"
           value={formData.designation}
           onChange={handleInputChange}
           placeholder="Enter job title or designation"
-          className="mt-1"
+          className="mt-1.5 h-9 bg-black/5 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
         />
       </div>
 
       <div>
-        <Label htmlFor="comment">Comment *</Label>
+        <Label
+          htmlFor="comment"
+          className="text-sm font-semibold text-[#003d79]"
+        >
+          Comment *
+        </Label>
         <Textarea
           id="comment"
           name="comment"
@@ -155,18 +167,20 @@ const TestimonialForm: React.FC<TestimonialFormProps> = ({
           required
           rows={3}
           placeholder="Enter testimonial comment"
-          className="sm:rows-4 mt-1 resize-none"
+          className="sm:rows-4 mt-1.5 resize-none bg-black/5 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
         />
       </div>
 
       <div>
-        <Label>Profile Image</Label>
-        <div className="mt-1">
+        <Label className="text-sm font-semibold text-[#003d79]">
+          Profile Image
+        </Label>
+        <div className="mt-1.5">
           <div
-            className={`relative cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
+            className={`relative cursor-pointer rounded-lg border border-dashed p-6 text-center transition-colors ${
               isDragOver
-                ? "border-gray-400 bg-gray-50"
-                : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                ? "border-black/20 bg-black/5"
+                : "border-black/5 bg-black/2 hover:border-black/20 hover:bg-black/5"
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -189,7 +203,7 @@ const TestimonialForm: React.FC<TestimonialFormProps> = ({
                     alt="Preview"
                     width={80}
                     height={80}
-                    className="mx-auto h-20 w-20 rounded-full border-2 border-gray-200 object-cover"
+                    className="mx-auto h-20 w-20 rounded-full border border-black/5 object-cover"
                   />
                 </div>
                 <Button
@@ -207,12 +221,12 @@ const TestimonialForm: React.FC<TestimonialFormProps> = ({
               </div>
             ) : (
               <div>
-                <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                <p className="mt-2 text-sm text-gray-600">
+                <Upload className="mx-auto h-12 w-12 text-black/20" />
+                <p className="mt-2 text-sm text-black">
                   Drop an image here, or{" "}
-                  <span className="font-medium text-gray-900">browse</span>
+                  <span className="font-medium text-black/60">browse</span>
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-black/40">
                   PNG, JPG, GIF up to 10MB
                 </p>
               </div>
@@ -221,19 +235,20 @@ const TestimonialForm: React.FC<TestimonialFormProps> = ({
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 pt-4 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-3">
+      <div className="flex flex-col gap-2 border-t border-black/5 pt-6 sm:flex-row sm:justify-end sm:gap-4">
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           onClick={onCancel}
-          className="w-full sm:w-auto"
+          disabled={isLoading}
+          className="w-full text-black/40 hover:bg-black/5 hover:text-black sm:w-auto"
         >
           Cancel
         </Button>
         <Button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gray-600 text-white hover:bg-gray-700 sm:w-auto"
+          className="w-full bg-black text-white hover:bg-black/90 sm:w-auto"
         >
           {isLoading ? "Saving..." : testimonial ? "Update" : "Create"}
         </Button>
