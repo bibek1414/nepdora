@@ -81,17 +81,17 @@ const BlogsTable: React.FC<BlogsTableProps> = ({
   };
 
   return (
-    <TableWrapper>
+    <div className="rounded-lg bg-white">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-slate-100 hover:bg-transparent">
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+          <TableRow className="border-b border-black/5">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Blog Post
             </TableHead>
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Created
             </TableHead>
-            <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
               Actions
             </TableHead>
           </TableRow>
@@ -100,19 +100,21 @@ const BlogsTable: React.FC<BlogsTableProps> = ({
           {blogs.map(blog => (
             <TableRow
               key={blog.id}
-              className="group cursor-pointer border-b border-slate-50 transition-colors hover:bg-gray-50"
+              className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
               onClick={() => onEdit(blog)}
             >
               <TableCell className="px-6 py-4">
-                <TableUserCell
-                  imageSrc={blog.thumbnail_image || undefined}
-                  fallback={blog.title.substring(0, 2).toUpperCase()}
-                  title={blog.title}
-                  subtitle={blog.slug}
-                />
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-sm font-normal text-black">
+                    {blog.title}
+                  </span>
+                  <span className="text-xs text-black/50">{blog.slug}</span>
+                </div>
               </TableCell>
-              <TableCell className="px-6 py-4 whitespace-nowrap text-slate-500">
-                {formatDate(blog.created_at)}
+              <TableCell className="px-6 py-4 whitespace-nowrap">
+                <span className="text-xs text-black/40">
+                  {formatDate(blog.created_at)}
+                </span>
               </TableCell>
               <TableCell className="px-6 py-4 text-right">
                 <TableActionButtons
@@ -124,7 +126,7 @@ const BlogsTable: React.FC<BlogsTableProps> = ({
           ))}
         </TableBody>
       </Table>
-    </TableWrapper>
+    </div>
   );
 };
 

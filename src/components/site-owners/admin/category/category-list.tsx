@@ -24,7 +24,7 @@ import {
   useDeleteCategory,
 } from "@/hooks/owner-site/admin/use-category";
 import { CategoryForm } from "./category-form";
-import Pagination from "@/components/ui/pagination";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 import {
   MoreHorizontal,
   Plus,
@@ -124,44 +124,44 @@ export const CategoryList: React.FC = () => {
   }
 
   return (
-    <div className="">
-      <div className="mx-auto">
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-5 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Categories</h1>
+            <h1 className="text-xl font-bold text-[#003d79]">Categories</h1>
           </div>
           <Button
             onClick={() => setShowForm(true)}
-            className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+            className="bg-black text-white hover:bg-black/90"
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Category
           </Button>
         </div>
-        <div className="mt-10 mb-6">
-          <div className="relative max-w-md">
-            <Search className="absolute top-1/2 left-3 z-1 h-4 w-4 -translate-y-1/2 text-gray-400" />
+
+        <div className="mb-6">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
             <Input
-              placeholder="Search subcategories..."
+              placeholder="Search categories..."
               value={searchInput}
               onChange={handleSearchChange}
-              className="border-gray-200 bg-white pr-10 pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
+              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
             />
             {searchInput && (
               <button
                 type="button"
                 onClick={clearSearch}
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition hover:text-gray-600"
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-black/40 transition hover:text-black/60"
               >
                 <X className="h-4 w-4" />
               </button>
             )}
           </div>
         </div>
-        {/* Categories Card */}
-        <Card className="overflow-hidden rounded-lg border-none bg-white shadow-none">
-          <CardContent className="p-0">
+        <div className="rounded-lg bg-white">
+          <div className="p-0">
             {isLoading ? (
               <div className="space-y-4 p-6">
                 {[...Array(page_size)].map((_, i) => (
@@ -170,136 +170,118 @@ export const CategoryList: React.FC = () => {
               </div>
             ) : (
               <>
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-b border-gray-100 bg-gray-50/50">
-                      <TableHead className="px-6 py-4 text-sm font-medium text-gray-700">
-                        Image
-                      </TableHead>
-                      <TableHead className="px-6 py-4 text-sm font-medium text-gray-700">
-                        Name
-                      </TableHead>
-                      <TableHead className="px-6 py-4 text-sm font-medium text-gray-700">
-                        Description
-                      </TableHead>
-                      <TableHead className="mr-10 px-9 py-4 text-right text-sm font-medium text-gray-700">
-                        Actions
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {categories.map((category, index) => (
-                      <TableRow
-                        key={category.id}
-                        className="border-b border-gray-100 transition-colors hover:bg-gray-50/50"
-                      >
-                        <TableCell className="px-6 py-4">
-                          {category.image ? (
-                            <Image
-                              src={category.image}
-                              alt={category.name}
-                              width={48}
-                              height={48}
-                              className="h-12 w-12 rounded-lg border border-gray-200 object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-200 bg-gray-100">
-                              <ImageOff className="h-5 w-5 text-gray-400" />
-                            </div>
-                          )}
-                        </TableCell>
-
-                        <TableCell className="px-6 py-4">
-                          <div className="font-medium text-gray-900">
-                            {category.name}
-                          </div>
-                        </TableCell>
-
-                        <TableCell className="px-6 py-4">
-                          <div className="max-w-md truncate text-gray-600">
-                            {category.description}
-                          </div>
-                        </TableCell>
-
-                        <TableCell className="px-6 py-4">
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0 hover:bg-gray-100"
-                              onClick={e => {
-                                e.stopPropagation();
-                                handleEdit(category);
-                              }}
-                            >
-                              <Edit className="h-4 w-4 text-gray-600" />
-                              <span className="sr-only">Edit category</span>
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={e => {
-                                e.stopPropagation();
-                                handleDelete(category);
-                              }}
-                              className="h-8 w-8 p-0 hover:bg-red-50"
-                            >
-                              <Trash2 className="h-4 w-4 text-red-600" />
-                              <span className="sr-only">Delete category</span>
-                            </Button>
-                          </div>
-                        </TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-b border-black/5">
+                        <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                          Image
+                        </TableHead>
+                        <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                          Name
+                        </TableHead>
+                        <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                          Description
+                        </TableHead>
+                        <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
+                          Actions
+                        </TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {categories.map(category => (
+                        <TableRow
+                          key={category.id}
+                          className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                        >
+                          <TableCell className="px-6 py-4">
+                            {category.image ? (
+                              <Image
+                                src={category.image}
+                                alt={category.name}
+                                width={48}
+                                height={48}
+                                className="h-12 w-12 rounded-md object-cover"
+                              />
+                            ) : (
+                              <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-md">
+                                <ImageOff className="text-muted-foreground h-6 w-6" />
+                              </div>
+                            )}
+                          </TableCell>
 
-                {/* Empty State */}
-                {categories.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                      No categories found
-                    </h3>
-                    <p className="mb-6 max-w-sm text-gray-500">
-                      Get started by creating your first category to organize
-                      your products
-                    </p>
-                    <Button
-                      onClick={() => setShowForm(true)}
-                      className="bg-black text-white hover:bg-gray-800"
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Category
-                    </Button>
-                  </div>
-                )}
+                          <TableCell className="px-6 py-4">
+                            <span className="text-sm font-normal text-black">
+                              {category.name}
+                            </span>
+                          </TableCell>
+
+                          <TableCell className="px-6 py-4">
+                            <div className="max-w-md truncate text-xs text-black/50">
+                              {category.description}
+                            </div>
+                          </TableCell>
+
+                          <TableCell className="px-6 py-4 text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
+                                onClick={() => handleEdit(category)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDelete(category)}
+                                className="h-8 w-8 rounded-full text-black/40 hover:text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+
+                  {/* Empty State */}
+                  {categories.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                      <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                        No categories found
+                      </h3>
+                      <p className="mb-6 max-w-sm text-gray-500">
+                        Get started by creating your first category to organize
+                        your products
+                      </p>
+                      <Button
+                        onClick={() => setShowForm(true)}
+                        className="bg-black text-white hover:bg-gray-800"
+                      >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Category
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Results summary and Pagination */}
         {pagination && pagination.totalPages > 1 && (
-          <div className="mt-6 space-y-4">
-            {/* Results summary */}
-            <div className="flex justify-center">
-              <div className="text-sm text-gray-700">
-                Showing {(pagination.page - 1) * pagination.page_size + 1} to{" "}
-                {Math.min(
-                  pagination.page * pagination.page_size,
-                  pagination.total
-                )}{" "}
-                of {pagination.total} results
-              </div>
+          <div className="mt-6 flex items-center justify-between border-t border-black/5 bg-white px-6 py-4">
+            <div className="text-[10px] text-black/40">
+              Showing {categories.length} results
             </div>
-
-            {/* Pagination component */}
-            <Pagination
+            <SimplePagination
               currentPage={pagination.page}
               totalPages={pagination.totalPages}
               onPageChange={handlePageChange}
-              showFirstLast={true}
-              maxVisiblePages={7}
             />
           </div>
         )}

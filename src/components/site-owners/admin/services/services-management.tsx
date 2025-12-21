@@ -23,7 +23,10 @@ import {
   ServicesPost,
   ServicesFilters,
 } from "@/types/owner-site/admin/services";
-import Pagination from "@/components/ui/pagination";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SimplePagination } from "@/components/ui/simple-pagination";
+
 import ServicesSearch from "./services-search";
 
 const ServicesManagement = () => {
@@ -107,18 +110,23 @@ const ServicesManagement = () => {
   const services = serviceData?.results || [];
   const totalServices = serviceData?.count || 0;
   const totalPages = Math.ceil(totalServices / filters.pageSize);
-  const hasNext = !!serviceData?.next;
-  const hasPrevious = !!serviceData?.previous;
 
   return (
-    <div className="animate-in fade-in min-h-screen bg-white duration-700">
-      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
-        <ServicesHeader
-          onCreateNew={handleCreateNew}
-          onRefresh={handleRefresh}
-          servicesCount={totalServices}
-        />
-        <ServicesSearch onSearch={handleSearch} />
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+        <ServicesHeader />
+
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <ServicesSearch onSearch={handleSearch} />
+          <Button
+            onClick={handleCreateNew}
+            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Service
+          </Button>
+        </div>
+
         <ServicesTable
           services={services}
           onEdit={handleEditService}
@@ -126,21 +134,12 @@ const ServicesManagement = () => {
           isLoading={isLoadingServices}
         />
 
-        {totalPages > 1 && (
-          <div className="mt-6">
-            <Pagination
-              count={totalServices}
-              pageSize={filters.pageSize}
-              hasNext={hasNext}
-              hasPrevious={hasPrevious}
-              onPageSizeChange={handlePageSizeChange}
-              currentPage={filters.page}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-              showFirstLast={true}
-              maxVisiblePages={7}
-            />
-          </div>
+        {!isLoadingServices && (
+          <SimplePagination
+            currentPage={filters.page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         )}
       </div>
 

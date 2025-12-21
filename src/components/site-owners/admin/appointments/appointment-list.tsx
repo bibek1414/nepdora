@@ -11,7 +11,9 @@ import {
   CheckCircle2,
   Hourglass,
   XCircle,
+  X,
 } from "lucide-react";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -69,42 +71,6 @@ const StatusBadge = ({ status }: { status: string }) => {
     >
       {status}
     </span>
-  );
-};
-
-const SimplePagination = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}: {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}) => {
-  return (
-    <div className="flex items-center gap-2">
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-        disabled={currentPage <= 1}
-        className="h-8 w-8"
-      >
-        <ChevronLeft className="h-4 w-4" />
-      </Button>
-      <span className="text-sm text-slate-600">
-        Page {currentPage} of {Math.max(1, totalPages)}
-      </span>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-        disabled={currentPage >= totalPages}
-        className="h-8 w-8"
-      >
-        <ChevronRight className="h-4 w-4" />
-      </Button>
-    </div>
   );
 };
 
@@ -239,25 +205,19 @@ export default function AppointmentList() {
   const paginatedBookings = filteredBookings;
 
   return (
-    <div className="animate-in fade-in min-h-screen bg-white duration-500">
-      <div className="mx-auto max-w-5xl space-y-4 p-4 sm:p-6">
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
         {/* Page Header */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              Appointments
-            </h1>
-            <p className="text-sm text-slate-500">
-              See your appointments. {appointmentsData?.count || 0} appointments
-              available.
-            </p>
+            <h1 className="text-xl font-bold text-[#003d79]">Appointments</h1>
           </div>
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={handleRefresh}
             disabled={isLoading}
-            className="h-9 border-slate-200 bg-white"
+            className="h-9 px-3 text-xs font-normal text-black/60 hover:bg-black/2 hover:text-black"
           >
             <RefreshCw
               className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
@@ -321,116 +281,117 @@ export default function AppointmentList() {
               onChange={e => setSearchTerm(e.target.value)}
               className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
             />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm("")}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-black/40 transition hover:text-black/60"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Main Content Area - New Table Implementation */}
-        <TableWrapper>
-          {isLoading ? (
-            <div className="flex h-64 items-center justify-center">
-              <div className="text-slate-500">Loading appointments...</div>
-            </div>
-          ) : paginatedBookings.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
-                <Calendar className="h-6 w-6 text-slate-400" />
+        <div className="rounded-lg bg-white">
+          <div className="p-0">
+            {isLoading ? (
+              <div className="flex h-64 flex-col items-center justify-center gap-3">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-black/10 border-t-black/40" />
+                <p className="text-xs text-black/40">Loading data...</p>
               </div>
-              <h3 className="text-sm font-medium text-slate-900">
-                No appointments found
-              </h3>
-              <p className="mt-1 text-sm text-slate-500">
-                Try adjusting your filters or search.
-              </p>
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow className="border-b border-slate-100 hover:bg-transparent">
-                  <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                    Customer
-                  </TableHead>
-                  <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                    Date & Time
-                  </TableHead>
-                  <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                    Reason
-                  </TableHead>
-                  <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                    Status
-                  </TableHead>
-                  <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedBookings.map(item => (
-                  <TableRow
-                    key={item.id}
-                    className="group cursor-pointer border-b border-slate-50 transition-colors hover:bg-slate-50/50"
-                    onClick={() => handleRowClick(item)}
-                  >
-                    <TableCell className="px-6 py-4">
-                      <TableUserCell
-                        fallback={getInitials(item.full_name)}
-                        title={item.full_name}
-                        subtitle={item.email}
-                      />
-                    </TableCell>
-                    <TableCell className="px-6 py-4">
-                      <div className="flex flex-col">
-                        <span className="font-medium text-slate-900">
-                          {formatDate(item.date)}
-                        </span>
-                        <span className="text-xs font-normal text-slate-500">
-                          {item.time || "Time not set"}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4">
-                      <span className="inline-flex items-center rounded-md border border-slate-100 bg-slate-50/50 px-2 py-1 text-xs font-medium text-slate-600">
-                        {item.reason?.name || "General"}
-                      </span>
-                    </TableCell>
-                    <TableCell className="px-6 py-4">
-                      <StatusBadge status={item.status} />
-                    </TableCell>
-                    <TableCell className="border-l-0 px-6 py-4">
-                      <TableActionButtons
-                        onView={() => handleRowClick(item)}
-                        onEdit={() => {
-                          // Future edit logic
-                          console.log("Edit", item.id);
-                        }}
-                        onDelete={() => {
-                          // Future delete logic
-                          console.log("Delete", item.id);
-                        }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-
-          {/* Footer / Pagination integrated inside wrapper or outside? 
-                Design usually puts pagination outside or at bottom. 
-                I will put it inside the wrapper at the bottom.
-            */}
-          <div className="flex items-center justify-between border-t border-slate-100 bg-white px-6 py-4">
-            <div className="text-xs font-medium text-slate-500">
-              Showing{" "}
-              <span className="text-slate-900">{paginatedBookings.length}</span>{" "}
-              results
-            </div>
-            <SimplePagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={setPage}
-            />
+            ) : paginatedBookings.length === 0 ? (
+              <div className="flex h-64 flex-col items-center justify-center text-center">
+                <p className="text-sm text-black/60">No appointments found</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-b border-black/5">
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Customer
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Date & Time
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Reason
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Status
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
+                        Actions
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paginatedBookings.map(item => (
+                      <TableRow
+                        key={item.id}
+                        className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                        onClick={() => handleRowClick(item)}
+                      >
+                        <TableCell className="px-6 py-4">
+                          <TableUserCell
+                            title={item.full_name}
+                            subtitle={item.email}
+                            fallback={getInitials(item.full_name)}
+                          />
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-sm font-normal text-black">
+                              {formatDate(item.date)}
+                            </span>
+                            <span className="text-[10px] text-black/40">
+                              {item.time || "Time not set"}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          <span className="rounded bg-black/5 px-2 py-1 text-[10px] font-normal text-black/60">
+                            {item.reason?.name || "General"}
+                          </span>
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          <StatusBadge status={item.status} />
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleRowClick(item)}
+                              className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
+                            >
+                              <Clock className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
           </div>
-        </TableWrapper>
+
+          {/* Pagination */}
+          {!isLoading && paginatedBookings.length > 0 && (
+            <div className="flex items-center justify-between border-t border-black/5 bg-white px-6 py-4">
+              <div className="text-[10px] text-black/40">
+                Showing {paginatedBookings.length} results
+              </div>
+              <SimplePagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+              />
+            </div>
+          )}
+        </div>
 
         {/* Appointment Details Modal */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

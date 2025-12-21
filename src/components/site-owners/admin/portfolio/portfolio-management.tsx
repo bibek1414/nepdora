@@ -24,7 +24,9 @@ import {
   Portfolio,
   PortfolioFilters,
 } from "@/types/owner-site/admin/portfolio";
-import Pagination from "@/components/ui/pagination";
+import { SimplePagination } from "@/components/ui/simple-pagination";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const PortfoliosManagement = () => {
   const router = useRouter();
@@ -109,15 +111,24 @@ const PortfoliosManagement = () => {
   const hasPrevious = !!portfolioData?.previous;
 
   return (
-    <div className="animate-in fade-in min-h-screen bg-white duration-700">
-      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
-        <PortfoliosHeader
-          onCreateNew={handleCreateNew}
-          portfoliosCount={totalPortfolios}
-        />
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <PortfoliosSearch onSearch={handleSearch} />
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+        <PortfoliosHeader />
+
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <PortfoliosSearch onSearch={handleSearch} />
+          </div>
+
+          <Button
+            onClick={handleCreateNew}
+            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Project
+          </Button>
         </div>
+
         <PortfoliosTable
           portfolios={portfolios}
           onEdit={handleEditPortfolio}
@@ -125,25 +136,18 @@ const PortfoliosManagement = () => {
           isLoading={isLoadingPortfolios}
         />
 
-        {totalPages > 1 && (
-          <Pagination
-            count={totalPortfolios}
-            pageSize={filters.pageSize}
-            hasNext={hasNext}
-            hasPrevious={hasPrevious}
-            onPageSizeChange={handlePageSizeChange}
+        {!isLoadingPortfolios && (
+          <SimplePagination
             currentPage={filters.page}
             totalPages={totalPages}
             onPageChange={handlePageChange}
-            showFirstLast={true}
-            maxVisiblePages={7}
           />
         )}
       </div>
 
       <AlertDialog
         open={deleteDialog.isOpen}
-        onOpenChange={open => !open && cancelDelete()}
+        onOpenChange={(open: boolean) => !open && cancelDelete()}
       >
         <AlertDialogContent>
           <AlertDialogHeader>

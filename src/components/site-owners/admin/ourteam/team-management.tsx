@@ -5,13 +5,17 @@ import { useTeamMembers } from "@/hooks/owner-site/admin/use-team-member";
 import { TeamMemberDialog } from "./our-team-form";
 import { TeamMembersTable } from "./team-members-table";
 import { TEAM } from "@/types/owner-site/admin/team-member";
-import { Loader2, Plus, Users } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Plus, Search, X, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 
 export const TeamManagement: React.FC = () => {
   const { data: members, isLoading, error } = useTeamMembers();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<TEAM | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   const handleAddMember = () => {
     setEditingMember(null);
@@ -28,20 +32,25 @@ export const TeamManagement: React.FC = () => {
     setDialogOpen(false);
   };
 
-  const handleDialogClose = () => {
-    setEditingMember(null);
-    setDialogOpen(false);
-  };
+  const filteredMembers = (members || []).filter(
+    member =>
+      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.role.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const paginatedMembers = filteredMembers.slice(
+    (page - 1) * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE
+  );
+  const totalPages = Math.ceil(filteredMembers.length / ITEMS_PER_PAGE);
 
   if (isLoading) {
     return (
-      <div className="animate-in fade-in min-h-screen bg-white duration-700">
-        <div className="mx-auto max-w-7xl p-4 sm:p-6">
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
           <div className="flex h-64 flex-col items-center justify-center gap-3">
-            <Loader2 className="h-8 w-8 animate-spin text-slate-500" />
-            <p className="animate-pulse text-sm text-slate-400">
-              Loading team members...
-            </p>
+            <Loader2 className="h-8 w-8 animate-spin text-black/20" />
+            <p className="text-xs text-black/40">Loading team members...</p>
           </div>
         </div>
       </div>
@@ -50,28 +59,13 @@ export const TeamManagement: React.FC = () => {
 
   if (error) {
     return (
-      <div className="animate-in fade-in min-h-screen bg-white duration-700">
-        <div className="mx-auto max-w-7xl p-4 sm:p-6">
-          <div className="flex h-64 flex-col items-center justify-center gap-4 text-center">
-            <div className="rounded-full bg-red-50 p-3">
-              <Users className="h-8 w-8 text-red-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-red-600">
-                Failed to Load Team Members
-              </h3>
-              <p className="text-sm text-slate-500">
-                {error.message ||
-                  "An unexpected error occurred while loading the team members."}
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              onClick={() => window.location.reload()}
-              className="mt-2 h-9 rounded-lg border-slate-200"
-            >
-              Try Again
-            </Button>
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+          <div className="rounded-lg border border-black/5 bg-white p-12 text-center">
+            <h2 className="text-sm font-medium text-red-600">
+              Failed to load team members
+            </h2>
+            <p className="mt-1 text-xs text-black/40">{error.message}</p>
           </div>
         </div>
       </div>
@@ -79,18 +73,35 @@ export const TeamManagement: React.FC = () => {
   }
 
   return (
-    <div className="animate-in fade-in min-h-screen bg-white duration-700">
-      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
-        {/* Header Section */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              Team Management
-            </h1>
-            <p className="text-sm text-slate-500">
-              Manage your team members and their roles.
-            </p>
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+        <div className="mb-5">
+          <h1 className="text-xl font-bold text-[#003d79]">Team Management</h1>
+        </div>
+
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
+            <Input
+              placeholder="Search members..."
+              value={searchTerm}
+              onChange={e => {
+                setSearchTerm(e.target.value);
+                setPage(1);
+              }}
+              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm("")}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-black/40 transition hover:text-black/60"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
+
           <Button
             onClick={handleAddMember}
             className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
@@ -100,8 +111,16 @@ export const TeamManagement: React.FC = () => {
           </Button>
         </div>
 
-        {/* Team Members Table */}
-        <TeamMembersTable members={members || []} onEdit={handleEditMember} />
+        <TeamMembersTable
+          members={paginatedMembers}
+          onEdit={handleEditMember}
+        />
+
+        <SimplePagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
       </div>
 
       {/* Team Member Dialog */}

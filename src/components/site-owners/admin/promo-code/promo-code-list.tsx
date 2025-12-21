@@ -18,7 +18,7 @@ import {
   useDeletePromoCode,
 } from "@/hooks/owner-site/admin/use-promocode";
 import { PromoCodeForm } from "./promo-code-form";
-import Pagination from "@/components/ui/pagination";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 import {
   Plus,
   Edit,
@@ -137,219 +137,220 @@ export const PromoCodeList: React.FC = () => {
   const promoCodes = data?.results || [];
 
   return (
-    <div>
-      <div className="mb-3 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Promo Codes</h1>
-        </div>
-        <Button
-          onClick={() => setShowForm(true)}
-          className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add Promo Code
-        </Button>
-      </div>
-
-      <div className="mt-10 mb-6">
-        <div className="relative max-w-md">
-          <Search className="absolute top-1/2 left-3 z-1 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            placeholder="Search promo codes..."
-            value={searchInput}
-            onChange={handleSearchChange}
-            className="border-gray-200 bg-white pr-10 pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
-          />
-          {searchInput && (
-            <button
-              type="button"
-              onClick={clearSearch}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition hover:text-gray-600"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      <Card className="border-none shadow-none">
-        <CardContent>
-          {isLoading ? (
-            <div className="space-y-3">
-              {[...Array(page_size)].map((_, i) => (
-                <Skeleton key={i} className="h-16 w-full" />
-              ))}
-            </div>
-          ) : error ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="mb-4 rounded-full bg-red-100 p-3">
-                <AlertCircle className="h-8 w-8 text-red-600" />
-              </div>
-              <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                Failed to load promo codes
-              </h3>
-              <p className="mb-6 max-w-sm text-red-600">
-                {error instanceof Error
-                  ? error.message
-                  : "An unexpected error occurred"}
-              </p>
-              <Button
-                onClick={() => window.location.reload()}
-                className="bg-black text-white hover:bg-gray-800"
-              >
-                Try Again
-              </Button>
-            </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader className="[&_tr]:!border-b-0">
-                    <TableRow>
-                      <TableHead>Code</TableHead>
-                      <TableHead>Discount</TableHead>
-                      <TableHead>Valid Period</TableHead>
-                      <TableHead>Usage</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="w-[50px]">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-
-                  <TableBody>
-                    {promoCodes.map(promoCode => {
-                      const expired = isExpired(promoCode.valid_to);
-                      const usagePercentage = promoCode.max_uses
-                        ? (promoCode.used_count / promoCode.max_uses) * 100
-                        : 0;
-
-                      return (
-                        <TableRow
-                          key={promoCode.id}
-                          className="cursor-pointer border-none transition-colors hover:bg-gray-50"
-                          onClick={e => handleRowClick(promoCode, e)}
-                        >
-                          <TableCell className="font-mono font-bold">
-                            {promoCode.code}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1">
-                              <TrendingUp className="h-4 w-4 text-green-600" />
-                              <span className="font-semibold">
-                                {promoCode.discount_percentage}%
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="text-muted-foreground flex items-center gap-1 text-sm">
-                              <Calendar className="h-3 w-3" />
-                              <span>
-                                {formatDate(promoCode.valid_from)} -{" "}
-                                {formatDate(promoCode.valid_to)}
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Users className="h-4 w-4 text-gray-400" />
-                              <span className="text-sm">
-                                {promoCode.used_count}
-                                {promoCode.max_uses
-                                  ? ` / ${promoCode.max_uses}`
-                                  : " / ∞"}
-                              </span>
-                              {promoCode.max_uses && (
-                                <div className="ml-2 h-2 w-20 overflow-hidden rounded-full bg-gray-200">
-                                  <div
-                                    className="h-full bg-blue-500 transition-all"
-                                    style={{ width: `${usagePercentage}%` }}
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            {expired ? (
-                              <Badge variant="destructive">Expired</Badge>
-                            ) : promoCode.is_active ? (
-                              <Badge variant="default" className="bg-green-600">
-                                Active
-                              </Badge>
-                            ) : (
-                              <Badge variant="secondary">Inactive</Badge>
-                            )}
-                          </TableCell>
-                          <TableCell className="flex items-center gap-x-2">
-                            <Button
-                              variant="ghost"
-                              onClick={() => handleEdit(promoCode)}
-                              className="action-button"
-                            >
-                              <Edit className="mr-2 h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              onClick={() => handleDelete(promoCode)}
-                              className="action-button text-destructive hover:text-destructive hover:bg-transparent"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
-
-              {/* Empty State */}
-              {promoCodes.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                    No promo codes found
-                  </h3>
-                  <p className="mb-6 max-w-sm text-gray-500">
-                    Get started by creating your first promo code to offer
-                    discounts to your customers
-                  </p>
-                  <Button
-                    onClick={() => setShowForm(true)}
-                    className="bg-black text-white hover:bg-gray-800"
-                  >
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Promo Code
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Results summary and Pagination */}
-      {!error && pagination && pagination.totalPages > 1 && (
-        <div className="mt-6 space-y-4">
-          {/* Results summary */}
-          <div className="flex justify-center">
-            <div className="text-muted-foreground text-sm">
-              Showing {(pagination.page - 1) * pagination.page_size + 1} to{" "}
-              {Math.min(
-                pagination.page * pagination.page_size,
-                pagination.total
-              )}{" "}
-              of {pagination.total} results
-            </div>
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+        <div className="mb-5 flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold text-[#003d79]">Promo Codes</h1>
           </div>
-
-          {/* Pagination component */}
-          <Pagination
-            currentPage={pagination.page}
-            totalPages={pagination.totalPages}
-            onPageChange={handlePageChange}
-            showFirstLast={true}
-            maxVisiblePages={7}
-          />
+          <Button
+            onClick={() => setShowForm(true)}
+            className="bg-black text-white hover:bg-black/90"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Promo Code
+          </Button>
         </div>
-      )}
+
+        <div className="mb-6">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
+            <Input
+              placeholder="Search promo codes..."
+              value={searchInput}
+              onChange={handleSearchChange}
+              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
+            />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-black/40 transition hover:text-black/60"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="rounded-lg bg-white">
+          <div className="p-0">
+            {isLoading ? (
+              <div className="space-y-3 p-6">
+                {[...Array(page_size)].map((_, i) => (
+                  <Skeleton key={i} className="h-16 w-full" />
+                ))}
+              </div>
+            ) : error ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <div className="mb-4 rounded-full bg-red-100 p-3">
+                  <AlertCircle className="h-8 w-8 text-red-600" />
+                </div>
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                  Failed to load promo codes
+                </h3>
+                <p className="mb-6 max-w-sm text-red-600">
+                  {error instanceof Error
+                    ? error.message
+                    : "An unexpected error occurred"}
+                </p>
+                <Button
+                  onClick={() => window.location.reload()}
+                  className="bg-black text-white hover:bg-gray-800"
+                >
+                  Try Again
+                </Button>
+              </div>
+            ) : (
+              <>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-b border-black/5">
+                        <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                          Code
+                        </TableHead>
+                        <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                          Discount
+                        </TableHead>
+                        <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                          Valid Period
+                        </TableHead>
+                        <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                          Usage
+                        </TableHead>
+                        <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                          Status
+                        </TableHead>
+                        <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
+                          Actions
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+
+                    <TableBody>
+                      {promoCodes.map(promoCode => {
+                        const expired = isExpired(promoCode.valid_to);
+                        const usagePercentage = promoCode.max_uses
+                          ? (promoCode.used_count / promoCode.max_uses) * 100
+                          : 0;
+
+                        return (
+                          <TableRow
+                            key={promoCode.id}
+                            className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                            onClick={e => handleRowClick(promoCode, e)}
+                          >
+                            <TableCell className="px-6 py-4">
+                              <span className="text-sm font-bold text-[#003d79]">
+                                {promoCode.code}
+                              </span>
+                            </TableCell>
+                            <TableCell className="px-6 py-4">
+                              <div className="flex items-center gap-1">
+                                <span className="text-sm font-semibold text-black">
+                                  {promoCode.discount_percentage}%
+                                </span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="px-6 py-4">
+                              <div className="flex items-center gap-1 text-[10px] text-black/40">
+                                <span>
+                                  {formatDate(promoCode.valid_from)} -{" "}
+                                  {formatDate(promoCode.valid_to)}
+                                </span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="px-6 py-4">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-black/60">
+                                  {promoCode.used_count}
+                                  {promoCode.max_uses
+                                    ? ` / ${promoCode.max_uses}`
+                                    : " / ∞"}
+                                </span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="px-6 py-4">
+                              {expired ? (
+                                <span className="rounded bg-red-400/10 px-2 py-1 text-[10px] font-semibold text-red-700">
+                                  Expired
+                                </span>
+                              ) : promoCode.is_active ? (
+                                <span className="rounded bg-green-400/10 px-2 py-1 text-[10px] font-semibold text-green-700">
+                                  Active
+                                </span>
+                              ) : (
+                                <span className="rounded bg-black/5 px-2 py-1 text-[10px] font-semibold text-black/60">
+                                  Inactive
+                                </span>
+                              )}
+                            </TableCell>
+                            <TableCell className="px-6 py-4 text-right">
+                              <div className="flex items-center justify-end gap-1">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
+                                  onClick={() => handleEdit(promoCode)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => handleDelete(promoCode)}
+                                  className="h-8 w-8 rounded-full text-black/40 hover:text-red-600"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* Empty State */}
+                {promoCodes.length === 0 && (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                      No promo codes found
+                    </h3>
+                    <p className="mb-6 max-w-sm text-gray-500">
+                      Get started by creating your first promo code to offer
+                      discounts to your customers
+                    </p>
+                    <Button
+                      onClick={() => setShowForm(true)}
+                      className="bg-black text-white hover:bg-gray-800"
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Promo Code
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Results summary and Pagination */}
+        {!error && pagination && pagination.totalPages > 1 && (
+          <div className="mt-6 flex items-center justify-between border-t border-black/5 bg-white px-6 py-4">
+            <div className="text-[10px] text-black/40">
+              Showing {promoCodes.length} results
+            </div>
+            <SimplePagination
+              currentPage={pagination.page}
+              totalPages={pagination.totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
+      </div>
 
       {showForm && (
         <PromoCodeForm promoCode={editingPromoCode} onClose={handleCloseForm} />

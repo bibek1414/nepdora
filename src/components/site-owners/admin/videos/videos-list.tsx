@@ -21,12 +21,17 @@ import {
   Loader2,
   ExternalLink,
   RefreshCw,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  X,
 } from "lucide-react";
 import { useVideos, useDeleteVideo } from "@/hooks/owner-site/admin/use-videos";
 import { YouTubeFormTrigger } from "./videos-form";
 import { Video } from "@/types/owner-site/admin/videos";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 
 import {
   extractVideoInfo,
@@ -83,9 +88,25 @@ const PlatformIcon = ({ platform }: { platform: VideoPlatform }) => {
 export function YouTubeList() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [videoToDelete, setVideoToDelete] = useState<Video | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   const { data, isLoading, error } = useVideos();
   const deleteVideo = useDeleteVideo();
+
+  // Simple search filter for local data
+  const filteredData = (data || []).filter(
+    video =>
+      video.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      video.url.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const paginatedData = filteredData.slice(
+    (page - 1) * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE
+  );
+  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
 
   const handleDeleteClick = (video: Video, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -115,46 +136,54 @@ export function YouTubeList() {
 
   if (error) {
     return (
-      <div className="animate-in fade-in min-h-screen bg-white duration-700">
-        <div className="mx-auto max-w-7xl p-4 sm:p-6">
-          <TableWrapper>
-            <div className="flex h-64 items-center justify-center">
-              <div className="text-center">
-                <Youtube className="mx-auto mb-4 h-12 w-12 text-red-400" />
-                <p className="mb-2 text-lg font-medium text-red-600">
-                  Error loading videos
-                </p>
-                <p className="text-sm text-slate-500">
-                  Please try refreshing the page
-                </p>
-              </div>
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+          <div className="flex h-64 items-center justify-center rounded-lg border border-black/5 bg-white">
+            <div className="text-center">
+              <Youtube className="mx-auto mb-4 h-12 w-12 text-black/20" />
+              <p className="mb-2 text-sm font-medium text-red-600">
+                Error loading videos
+              </p>
+              <p className="text-xs text-black/40">
+                Please try refreshing the page
+              </p>
             </div>
-          </TableWrapper>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="animate-in fade-in min-h-screen bg-white duration-700">
-      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
         {/* Header */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              Videos
-            </h1>
-            <p className="text-sm text-slate-500">
-              Manage your video collection.{" "}
-              {data && (
-                <>
-                  <span className="font-semibold text-slate-700">
-                    {data.length}
-                  </span>{" "}
-                  {data.length === 1 ? "video" : "videos"} available.
-                </>
-              )}
-            </p>
+        <div className="mb-5">
+          <h1 className="text-xl font-bold text-[#003d79]">Videos</h1>
+        </div>
+
+        {/* Search and Add Buttons */}
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
+            <Input
+              placeholder="Search videos..."
+              value={searchTerm}
+              onChange={e => {
+                setSearchTerm(e.target.value);
+                setPage(1);
+              }}
+              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm("")}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-black/40 transition hover:text-black/60"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
 
           <YouTubeFormTrigger mode="create">
@@ -166,121 +195,136 @@ export function YouTubeList() {
         </div>
 
         {/* Videos Table */}
-        <TableWrapper>
+        <div className="rounded-lg bg-white">
           <div className="min-h-[400px]">
             {isLoading ? (
               <div className="flex h-64 flex-col items-center justify-center gap-3">
-                <RefreshCw className="h-8 w-8 animate-spin text-slate-500" />
-                <p className="animate-pulse text-sm text-slate-400">
-                  Loading videos...
-                </p>
+                <RefreshCw className="h-8 w-8 animate-spin text-black/20" />
+                <p className="text-xs text-black/40">Loading videos...</p>
               </div>
-            ) : data && data.length > 0 ? (
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-b border-slate-100 hover:bg-transparent">
-                    <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                      Video Info
-                    </TableHead>
-                    <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                      URL
-                    </TableHead>
-                    <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                      Added
-                    </TableHead>
-                    <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data.map(video => {
-                    const { platform, id } = extractVideoInfo(video.url);
-                    const thumbnail = getVideoThumbnail(platform, id);
+            ) : filteredData.length > 0 ? (
+              <>
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-b border-black/5">
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Video Info
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        URL
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Added
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
+                        Actions
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paginatedData.map(video => {
+                      const { platform, id } = extractVideoInfo(video.url);
+                      const thumbnail = getVideoThumbnail(platform, id);
 
-                    return (
-                      <TableRow
-                        key={video.id}
-                        className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
-                      >
-                        <TableCell className="px-6 py-4">
-                          <TableUserCell
-                            imageSrc={thumbnail || undefined}
-                            fallback={
-                              video.title
-                                ? video.title.substring(0, 2).toUpperCase()
-                                : "?"
-                            }
-                            title={video.title || "Untitled Video"}
-                            subtitle={
-                              platform.charAt(0).toUpperCase() +
-                              platform.slice(1)
-                            }
-                          />
-                        </TableCell>
-                        <TableCell className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            <PlatformIcon platform={platform} />
-                            <p className="max-w-[200px] truncate text-xs text-blue-600">
-                              {video.url}
-                            </p>
-                          </div>
-                        </TableCell>
-                        <TableCell className="px-6 py-4 text-xs whitespace-nowrap text-slate-500">
-                          {formatDate(video.created_at)}
-                        </TableCell>
-                        <TableCell className="px-6 py-4 text-right">
-                          <div className="flex items-center justify-end gap-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={e => {
-                                e.stopPropagation();
-                                window.open(video.url, "_blank");
-                              }}
-                              className="h-8 w-8 rounded-full text-slate-400 hover:text-blue-600"
-                              title="Open video"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                            </Button>
-                            <YouTubeFormTrigger mode="edit" video={video}>
+                      return (
+                        <TableRow
+                          key={video.id}
+                          className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                        >
+                          <TableCell className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              {thumbnail ? (
+                                <div className="h-9 w-12 overflow-hidden rounded bg-black/5">
+                                  <img
+                                    src={thumbnail}
+                                    alt=""
+                                    className="h-full w-full object-cover"
+                                  />
+                                </div>
+                              ) : (
+                                <div className="flex h-9 w-9 items-center justify-center rounded bg-black/5 text-xs font-medium text-black/60">
+                                  {video.title?.substring(0, 2).toUpperCase() ||
+                                    "?"}
+                                </div>
+                              )}
+                              <div className="flex flex-col gap-0.5">
+                                <span className="text-sm font-normal text-black">
+                                  {video.title || "Untitled Video"}
+                                </span>
+                                <span className="text-xs text-black/50">
+                                  {platform.charAt(0).toUpperCase() +
+                                    platform.slice(1)}
+                                </span>
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <PlatformIcon platform={platform} />
+                              <p className="max-w-[200px] truncate text-xs text-black/40">
+                                {video.url}
+                              </p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-6 py-4 text-xs whitespace-nowrap text-black/40">
+                            {formatDate(video.created_at)}
+                          </TableCell>
+                          <TableCell className="px-6 py-4 text-right">
+                            <div className="flex items-center justify-end gap-1">
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8 rounded-full text-slate-400 hover:text-blue-600"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  window.open(video.url, "_blank");
+                                }}
+                                className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
+                                title="Open video"
                               >
-                                <Edit className="h-4 w-4" />
+                                <ExternalLink className="h-4 w-4" />
                               </Button>
-                            </YouTubeFormTrigger>
-                            <TableActionButtons
-                              onDelete={() =>
-                                handleDeleteClick(video, {
-                                  stopPropagation: () => {},
-                                } as any)
-                              }
-                            />
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+                              <YouTubeFormTrigger mode="edit" video={video}>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                              </YouTubeFormTrigger>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={e => handleDeleteClick(video, e)}
+                                className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+                <SimplePagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={setPage}
+                />
+              </>
             ) : (
-              <div className="flex h-full min-h-[400px] flex-col items-center justify-center text-center">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
-                  <Youtube className="h-6 w-6 text-slate-400" />
+              <div className="flex h-64 flex-col items-center justify-center text-center">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-black/5">
+                  <Youtube className="h-6 w-6 text-black/20" />
                 </div>
-                <h3 className="text-sm font-medium text-slate-900">
+                <h3 className="text-sm font-medium text-black">
                   No videos found
                 </h3>
-                <p className="mt-1 text-sm text-slate-500">
-                  Get started by adding your first video.
-                </p>
               </div>
             )}
           </div>
-        </TableWrapper>
+        </div>
       </div>
 
       {/* Delete Confirmation Dialog */}

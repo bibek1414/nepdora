@@ -11,20 +11,22 @@ import {
   Testimonial,
   CreateTestimonialData,
 } from "@/types/owner-site/admin/testimonial";
-import { X, Search } from "lucide-react";
+import { X, Search, Plus } from "lucide-react";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 import { useDebouncedCallback } from "use-debounce";
 import { TestimonialsHeader } from "./testimonial-header";
 import { TestimonialsTable } from "./testimonial-table";
 import { TestimonialModal } from "./testimonial-modal";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function TestimonialList() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editingTestimonial, setEditingTestimonial] =
     useState<Testimonial | null>(null);
   const [searchInput, setSearchInput] = useState("");
-
   const [page, setPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   const [search, setSearch] = useState("");
   // TanStack Query hooks
@@ -37,10 +39,12 @@ export default function TestimonialList() {
   const createMutation = useCreateTestimonial();
   const updateMutation = useUpdateTestimonial();
   const deleteMutation = useDeleteTestimonial();
+
   const debouncedSearch = useDebouncedCallback(value => {
     setSearch(value);
     setPage(1); // Reset to first page when searching
   }, 500);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchInput(value);
@@ -52,6 +56,7 @@ export default function TestimonialList() {
     setSearch("");
     setPage(1);
   };
+
   const handleAdd = (): void => {
     setEditingTestimonial(null);
     setIsModalOpen(true);
@@ -66,7 +71,6 @@ export default function TestimonialList() {
     try {
       await deleteMutation.mutateAsync(id);
     } catch (error) {
-      // Error is already handled by the hook
       console.error("Delete failed:", error);
     }
   };
@@ -97,7 +101,6 @@ export default function TestimonialList() {
       setIsModalOpen(false);
       setEditingTestimonial(null);
     } catch (error) {
-      // Error is already handled by the hook
       console.error("Submit failed:", error);
     }
   };
@@ -109,15 +112,27 @@ export default function TestimonialList() {
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
+  const filteredTestimonials = (testimonials || []).filter(
+    t =>
+      t.name.toLowerCase().includes(search.toLowerCase()) ||
+      t.comment.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const paginatedTestimonials = filteredTestimonials.slice(
+    (page - 1) * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE
+  );
+  const totalPages = Math.ceil(filteredTestimonials.length / ITEMS_PER_PAGE);
+
   if (testimonialsError) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="container mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-8">
-          <div className="rounded-lg bg-red-50 p-4 text-center">
-            <h2 className="text-lg font-semibold text-red-800">
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+          <div className="rounded-lg bg-white p-12 text-center">
+            <h2 className="text-sm font-medium text-red-600">
               Error Loading Testimonials
             </h2>
-            <p className="mt-2 text-red-600">
+            <p className="mt-2 text-xs text-black/40">
               {testimonialsError instanceof Error
                 ? testimonialsError.message
                 : "An unexpected error occurred"}
@@ -129,42 +144,55 @@ export default function TestimonialList() {
   }
 
   return (
-    <div className="animate-in fade-in min-h-screen bg-white duration-700">
-      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
         {/* Header Section */}
-        <TestimonialsHeader
-          onAdd={handleAdd}
-          testimonialsCount={testimonials.length}
-        />
+        <TestimonialsHeader />
 
-        <div className="flex items-center justify-between gap-4">
-          <div className="relative w-full max-w-md">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
             <Input
               placeholder="Search by name..."
               value={searchInput}
               onChange={handleSearchChange}
-              className="h-9 border-slate-200 bg-white pr-10 pl-10 text-sm placeholder:text-slate-500 focus-visible:ring-1 focus-visible:ring-slate-900"
+              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
             />
             {searchInput && (
               <button
                 type="button"
                 onClick={clearSearch}
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-black/40 transition hover:text-black/60"
               >
                 <X className="h-4 w-4" />
               </button>
             )}
           </div>
+
+          <Button
+            onClick={handleAdd}
+            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Testimonial
+          </Button>
         </div>
 
         {/* Content */}
         <TestimonialsTable
-          testimonials={testimonials}
+          testimonials={paginatedTestimonials}
           onEdit={handleEdit}
           onDelete={handleDelete}
           isLoading={isLoadingTestimonials}
         />
+
+        {!isLoadingTestimonials && (
+          <SimplePagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        )}
 
         {/* Modal */}
         <TestimonialModal

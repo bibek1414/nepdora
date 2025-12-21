@@ -43,47 +43,36 @@ const ServicesTable: React.FC<ServicesTableProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <TableWrapper>
-        <div className="flex h-64 flex-col items-center justify-center gap-3">
-          <RefreshCw className="h-8 w-8 animate-spin text-slate-500" />
-          <p className="animate-pulse text-sm text-slate-400">
-            Loading services...
-          </p>
-        </div>
-      </TableWrapper>
+      <div className="flex h-64 flex-col items-center justify-center gap-3">
+        <RefreshCw className="h-8 w-8 animate-spin text-black/20" />
+        <p className="text-xs text-black/40">Loading services...</p>
+      </div>
     );
   }
 
   if (services.length === 0) {
     return (
-      <TableWrapper>
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
-            <FileText className="h-6 w-6 text-slate-400" />
-          </div>
-          <h3 className="text-sm font-medium text-slate-900">
-            No services found
-          </h3>
-          <p className="mt-1 text-sm text-slate-500">
-            Get started by creating your first service.
-          </p>
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-black/5">
+          <FileText className="h-6 w-6 text-black/20" />
         </div>
-      </TableWrapper>
+        <h3 className="text-sm font-medium text-black">No services found</h3>
+      </div>
     );
   }
 
   return (
-    <TableWrapper>
+    <div className="rounded-lg bg-white">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-slate-100 hover:bg-transparent">
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+          <TableRow className="border-b border-black/5">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Service Info
             </TableHead>
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Created
             </TableHead>
-            <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
               Actions
             </TableHead>
           </TableRow>
@@ -92,17 +81,28 @@ const ServicesTable: React.FC<ServicesTableProps> = ({
           {services.map(service => (
             <TableRow
               key={service.id}
-              className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
+              className="group border-b border-black/5 transition-colors hover:bg-black/2"
             >
               <TableCell className="px-6 py-4">
-                <TableUserCell
-                  imageSrc={service.thumbnail_image || undefined}
-                  fallback={service.title.substring(0, 2).toUpperCase()}
-                  title={service.title}
-                  subtitle={service.slug}
-                />
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 overflow-hidden rounded-md border border-black/5">
+                    <img
+                      src={service.thumbnail_image || ""}
+                      alt={service.title}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-normal text-black">
+                      {service.title}
+                    </span>
+                    <span className="text-xs text-black/40">
+                      /{service.slug}
+                    </span>
+                  </div>
+                </div>
               </TableCell>
-              <TableCell className="px-6 py-4 text-xs whitespace-nowrap text-slate-500">
+              <TableCell className="px-6 py-4 text-xs whitespace-nowrap text-black/40">
                 {new Date(service.created_at).toLocaleDateString("en-US", {
                   month: "short",
                   day: "2-digit",
@@ -119,7 +119,7 @@ const ServicesTable: React.FC<ServicesTableProps> = ({
           ))}
         </TableBody>
       </Table>
-    </TableWrapper>
+    </div>
   );
 };
 

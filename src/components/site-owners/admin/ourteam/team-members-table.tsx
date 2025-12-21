@@ -64,23 +64,23 @@ export const TeamMembersTable: React.FC<TeamMembersTableProps> = ({
   const sortedMembers = [...members].sort((a, b) => a.order - b.order);
 
   return (
-    <TableWrapper>
+    <div className="rounded-lg bg-white">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-slate-100 hover:bg-transparent">
-            <TableHead className="w-16 px-6 py-4 font-semibold text-slate-700">
+          <TableRow className="border-b border-black/5">
+            <TableHead className="w-16 px-6 py-3 text-xs font-normal text-black/60">
               Order
             </TableHead>
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Member Info
             </TableHead>
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Role
             </TableHead>
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               About
             </TableHead>
-            <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
               Actions
             </TableHead>
           </TableRow>
@@ -90,47 +90,44 @@ export const TeamMembersTable: React.FC<TeamMembersTableProps> = ({
             <TableRow>
               <TableCell
                 colSpan={5}
-                className="py-12 text-center text-slate-500"
+                className="py-12 text-center text-xs text-black/40"
               >
-                No team members found. Click "Add Team Member" to get started.
+                No team members found.
               </TableCell>
             </TableRow>
           ) : (
             sortedMembers.map(member => (
               <TableRow
                 key={member.id}
-                className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
+                className="group border-b border-black/5 transition-colors hover:bg-black/2"
               >
                 <TableCell className="px-6 py-4">
-                  <Badge
-                    variant="outline"
-                    className="border-slate-200 font-medium text-slate-600"
-                  >
-                    {member.order}
-                  </Badge>
+                  <span className="text-sm text-black/60">{member.order}</span>
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  <TableUserCell
-                    imageSrc={member.photo || undefined}
-                    fallback={member.name
-                      .split(" ")
-                      .map(n => n[0])
-                      .join("")
-                      .toUpperCase()}
-                    title={member.name}
-                    subtitle={member.department?.name}
-                  />
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 overflow-hidden rounded-full border border-black/5">
+                      <img
+                        src={member.photo || ""}
+                        alt={member.name}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-normal text-black">
+                        {member.name}
+                      </span>
+                      <span className="text-xs text-black/40">
+                        {member.department?.name}
+                      </span>
+                    </div>
+                  </div>
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  <Badge
-                    variant="secondary"
-                    className="rounded-md bg-slate-100 font-medium text-slate-600 hover:bg-slate-200"
-                  >
-                    {member.role}
-                  </Badge>
+                  <span className="text-xs text-black/60">{member.role}</span>
                 </TableCell>
                 <TableCell className="max-w-xs px-6 py-4">
-                  <p className="line-clamp-2 text-sm leading-relaxed text-slate-500">
+                  <p className="line-clamp-1 text-xs text-black/40">
                     {member.about || "No description"}
                   </p>
                 </TableCell>
@@ -171,6 +168,6 @@ export const TeamMembersTable: React.FC<TeamMembersTableProps> = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </TableWrapper>
+    </div>
   );
 };

@@ -3,6 +3,8 @@
 import React, { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   useBlogs,
   useDeleteBlog,
@@ -22,7 +24,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { BlogPost, BlogFilters } from "@/types/owner-site/admin/blog";
-import Pagination from "@/components/ui/pagination";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 
 const BlogsManagement = () => {
   const router = useRouter();
@@ -129,16 +131,24 @@ const BlogsManagement = () => {
   const hasPrevious = !!blogData?.previous;
 
   return (
-    <div className="animate-in fade-in min-h-screen bg-white duration-700">
-      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
-        <BlogsHeader
-          onCreateNew={handleCreateNew}
-          onRefresh={handleRefresh}
-          blogsCount={totalBlogs}
-        />
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <BlogsSearch onSearch={handleSearch} />
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+        <BlogsHeader onCreateNew={handleCreateNew} onRefresh={handleRefresh} />
+
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <BlogsSearch onSearch={handleSearch} />
+          </div>
+
+          <Button
+            onClick={handleCreateNew}
+            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Blog
+          </Button>
         </div>
+
         <BlogsTable
           blogs={blogs}
           onEdit={handleEditBlog}
@@ -147,18 +157,11 @@ const BlogsManagement = () => {
           isLoading={isLoadingBlogs}
         />
 
-        {totalPages > 1 && (
-          <Pagination
-            count={totalBlogs}
-            pageSize={filters.pageSize}
-            hasNext={hasNext}
-            hasPrevious={hasPrevious}
-            onPageSizeChange={handlePageSizeChange}
+        {!isLoadingBlogs && (
+          <SimplePagination
             currentPage={filters.page}
             totalPages={totalPages}
             onPageChange={handlePageChange}
-            showFirstLast={true}
-            maxVisiblePages={7}
           />
         )}
       </div>

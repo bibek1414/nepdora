@@ -61,20 +61,20 @@ const PortfoliosTable: React.FC<PortfoliosTableProps> = ({
   }
 
   return (
-    <TableWrapper>
+    <div className="rounded-lg bg-white">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-slate-100 hover:bg-transparent">
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+          <TableRow className="border-b border-black/5">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Project Info
             </TableHead>
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Category
             </TableHead>
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Created
             </TableHead>
-            <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
               Actions
             </TableHead>
           </TableRow>
@@ -83,30 +83,31 @@ const PortfoliosTable: React.FC<PortfoliosTableProps> = ({
           {portfolios.map(portfolio => (
             <TableRow
               key={portfolio.id}
-              className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
+              className="group border-b border-black/5 transition-colors hover:bg-black/2"
             >
               <TableCell className="px-6 py-4">
-                <TableUserCell
-                  imageSrc={portfolio.thumbnail_image || undefined}
-                  fallback={portfolio.title.substring(0, 2).toUpperCase()}
-                  title={portfolio.title}
-                  subtitle={portfolio.slug}
-                />
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-sm font-normal text-black">
+                    {portfolio.title}
+                  </span>
+                  <span className="text-xs text-black/50">
+                    {portfolio.slug}
+                  </span>
+                </div>
               </TableCell>
               <TableCell className="px-6 py-4">
-                <Badge
-                  variant="secondary"
-                  className="rounded-md bg-slate-100 font-medium text-slate-600 hover:bg-slate-200"
-                >
+                <span className="text-xs text-black/50">
                   {portfolio.category.name}
-                </Badge>
+                </span>
               </TableCell>
-              <TableCell className="px-6 py-4 whitespace-nowrap text-slate-500">
-                {new Date(portfolio.created_at).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "2-digit",
-                  year: "numeric",
-                })}
+              <TableCell className="px-6 py-4 whitespace-nowrap">
+                <span className="text-xs text-black/40">
+                  {new Date(portfolio.created_at).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "2-digit",
+                    year: "numeric",
+                  })}
+                </span>
               </TableCell>
               <TableCell className="px-6 py-4 text-right">
                 <TableActionButtons
@@ -118,7 +119,7 @@ const PortfoliosTable: React.FC<PortfoliosTableProps> = ({
           ))}
         </TableBody>
       </Table>
-    </TableWrapper>
+    </div>
   );
 };
 

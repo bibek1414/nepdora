@@ -19,6 +19,7 @@ import {
 } from "@/hooks/owner-site/admin/use-pricing";
 import { PricingForm } from "./pricing-form";
 import { Plus, Edit, Trash2, Search, X, Star, DollarSign } from "lucide-react";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 import { Input } from "@/components/ui/input";
 import {
   AlertDialog,
@@ -33,7 +34,6 @@ import {
 import { Pricing } from "@/types/owner-site/admin/pricing";
 import { useDebouncedCallback } from "use-debounce";
 
-import { TableWrapper, TableActionButtons } from "@/components/ui/custom-table";
 import { RefreshCw } from "lucide-react";
 
 export const PricingList: React.FC = () => {
@@ -101,13 +101,11 @@ export const PricingList: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="animate-in fade-in min-h-screen bg-white duration-700">
-        <div className="mx-auto max-w-7xl p-4 sm:p-6">
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
           <div className="flex h-64 flex-col items-center justify-center gap-3">
-            <RefreshCw className="h-8 w-8 animate-spin text-slate-500" />
-            <p className="animate-pulse text-sm text-slate-400">
-              Loading pricing plans...
-            </p>
+            <RefreshCw className="h-8 w-8 animate-spin text-black/20" />
+            <p className="text-xs text-black/40">Loading pricing plans...</p>
           </div>
         </div>
       </div>
@@ -116,29 +114,22 @@ export const PricingList: React.FC = () => {
 
   if (error) {
     return (
-      <div className="animate-in fade-in min-h-screen bg-white duration-700">
-        <div className="mx-auto max-w-7xl p-4 sm:p-6">
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
           <div className="flex h-64 flex-col items-center justify-center gap-4 text-center">
-            <div className="rounded-full bg-red-50 p-3">
-              <DollarSign className="h-8 w-8 text-red-600" />
+            <div className="rounded-full bg-black/5 p-3">
+              <DollarSign className="h-8 w-8 text-black/20" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-slate-900">
+              <h1 className="text-xl font-bold text-[#003d79]">
                 Pricing Plans
               </h1>
-              <p className="text-sm text-red-600">
+              <p className="text-xs text-red-600">
                 {error instanceof Error
                   ? error.message
                   : "Failed to load pricing plans"}
               </p>
             </div>
-            <Button
-              onClick={() => setShowForm(true)}
-              className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add Pricing Plan
-            </Button>
           </div>
         </div>
       </div>
@@ -146,34 +137,20 @@ export const PricingList: React.FC = () => {
   }
 
   return (
-    <div className="animate-in fade-in min-h-screen bg-white duration-700">
-      <div className="mx-auto max-w-5xl space-y-4 p-4">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              Pricing Plans
-            </h1>
-            <p className="text-sm text-slate-500">
-              Manage your pricing plans and features.
-            </p>
-          </div>
-          <Button
-            onClick={() => setShowForm(true)}
-            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Pricing Plan
-          </Button>
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+        <div className="mb-5">
+          <h1 className="text-xl font-bold text-[#003d79]">Pricing Plans</h1>
         </div>
 
-        <div className="mb-6 flex items-center justify-end gap-4">
+        <div className="mb-6 flex items-center justify-between gap-4">
           <div className="relative w-full sm:w-64">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
             <Input
               placeholder="Search pricing plans..."
               value={searchInput}
               onChange={handleSearchChange}
-              className="h-9 bg-black/5 pr-10 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
+              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
             />
             {searchInput && (
               <button
@@ -185,28 +162,36 @@ export const PricingList: React.FC = () => {
               </button>
             )}
           </div>
+
+          <Button
+            onClick={() => setShowForm(true)}
+            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Pricing Plan
+          </Button>
         </div>
 
-        <TableWrapper>
+        <div className="rounded-lg bg-white">
           <Table>
             <TableHeader>
-              <TableRow className="border-b border-slate-100 hover:bg-transparent">
-                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+              <TableRow className="border-b border-black/5">
+                <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                   Plan Name
                 </TableHead>
-                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                   Price
                 </TableHead>
-                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                   Description
                 </TableHead>
-                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                   Features
                 </TableHead>
-                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                   Status
                 </TableHead>
-                <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+                <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
                   Actions
                 </TableHead>
               </TableRow>
@@ -217,14 +202,11 @@ export const PricingList: React.FC = () => {
                 <TableRow>
                   <TableCell
                     colSpan={6}
-                    className="py-12 text-center text-slate-500"
+                    className="py-12 text-center text-black/40"
                   >
                     <div className="flex flex-col items-center justify-center gap-2">
-                      <DollarSign className="h-12 w-12 text-slate-200" />
-                      <p>
-                        No pricing plans found. Click "Add Pricing Plan" to get
-                        started.
-                      </p>
+                      <DollarSign className="h-12 w-12 text-black/5" />
+                      <p className="text-xs">No pricing plans found.</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -232,10 +214,10 @@ export const PricingList: React.FC = () => {
                 pricings.map(pricing => (
                   <TableRow
                     key={pricing.id}
-                    className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
+                    className="group border-b border-black/5 transition-colors hover:bg-black/2"
                   >
                     <TableCell className="px-6 py-4 font-medium">
-                      <div className="flex items-center gap-2 text-slate-900">
+                      <div className="flex items-center gap-2 text-black">
                         {pricing.name}
                         {pricing.is_popular && (
                           <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
@@ -243,49 +225,61 @@ export const PricingList: React.FC = () => {
                       </div>
                     </TableCell>
                     <TableCell className="px-6 py-4">
-                      <div className="flex items-center gap-1 text-slate-600">
-                        <span className="text-xs font-semibold">Rs.</span>
-                        <span className="font-bold">{pricing.price}</span>
-                        <span className="text-xs text-slate-400">/mo</span>
+                      <div className="flex items-center gap-1 text-black">
+                        <span className="text-[10px] font-normal text-black/40">
+                          Rs.
+                        </span>
+                        <span className="text-sm font-normal">
+                          {pricing.price}
+                        </span>
+                        <span className="text-[10px] text-black/40">/mo</span>
                       </div>
                     </TableCell>
-                    <TableCell className="max-w-[300px] truncate px-6 py-4 text-sm text-slate-500">
+                    <TableCell className="max-w-[300px] truncate px-6 py-4 text-xs text-black/50">
                       {pricing.description}
                     </TableCell>
                     <TableCell className="px-6 py-4">
-                      <Badge
-                        variant="secondary"
-                        className="rounded-md bg-slate-100 font-medium text-slate-600"
-                      >
+                      <span className="rounded bg-black/5 px-2 py-1 text-[10px] font-normal text-black/60">
                         {pricing.features.length} features
-                      </Badge>
+                      </span>
                     </TableCell>
                     <TableCell className="px-6 py-4">
                       {pricing.is_popular ? (
-                        <Badge className="bg-yellow-50 font-semibold text-yellow-700 hover:bg-yellow-100">
+                        <span className="rounded bg-yellow-400/10 px-2 py-1 text-[10px] font-semibold text-yellow-700">
                           Popular
-                        </Badge>
+                        </span>
                       ) : (
-                        <Badge
-                          variant="outline"
-                          className="border-slate-200 font-medium text-slate-500"
-                        >
+                        <span className="rounded border border-black/5 px-2 py-1 text-[10px] font-normal text-black/40">
                           Standard
-                        </Badge>
+                        </span>
                       )}
                     </TableCell>
                     <TableCell className="px-6 py-4 text-right">
-                      <TableActionButtons
-                        onEdit={() => handleEdit(pricing)}
-                        onDelete={() => handleDelete(pricing)}
-                      />
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEdit(pricing)}
+                          className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(pricing)}
+                          className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))
               )}
             </TableBody>
           </Table>
-        </TableWrapper>
+        </div>
 
         {showForm && (
           <PricingForm pricing={editingPricing} onClose={handleCloseForm} />

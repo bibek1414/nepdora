@@ -27,10 +27,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ManualOrderDialog } from "./manual-order-dialog";
-import { Package, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Order, OrderPaginationParams } from "@/types/owner-site/admin/orders";
 import { toast } from "sonner";
 import { OrderDialog } from "./order-dialog";
+import { SimplePagination } from "@/components/ui/simple-pagination";
+import { Package, Search, X } from "lucide-react";
 
 // Status configuration for filtering and display
 const STATUS_CONFIG = {
@@ -271,288 +272,243 @@ export default function OrdersPage() {
 
   if (isLoading && !ordersResponse) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="mb-2 text-3xl font-bold text-black">Orders</h1>
-          <p className="text-muted-foreground">
-            Manage and track your customer orders
-          </p>
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+          <div className="mb-5">
+            <h1 className="text-xl font-bold text-[#003d79]">Orders</h1>
+          </div>
+          <OrderTableSkeleton />
         </div>
-        <OrderTableSkeleton />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="mb-2 text-3xl font-bold text-black">Orders</h1>
-          <p className="text-muted-foreground">
-            Manage and track your customer orders
-          </p>
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+          <div className="mb-5">
+            <h1 className="text-xl font-bold text-[#003d79]">Orders</h1>
+          </div>
+          <Alert variant="destructive">
+            <AlertDescription>
+              Failed to load orders. Please try again later.
+            </AlertDescription>
+          </Alert>
         </div>
-        <Alert variant="destructive">
-          <AlertDescription>
-            Failed to load orders. Please try again later.
-          </AlertDescription>
-        </Alert>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold text-black">Orders</h1>
-        <p className="text-muted-foreground">
-          Manage and track your customer orders
-        </p>
-      </div>
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+        {/* Header */}
+        <div className="mb-5 flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold text-[#003d79]">Orders</h1>
+          </div>
+          <ManualOrderDialog />
+        </div>
 
-      {/* Search and Filters */}
-      <div className="mb-6 space-y-4">
-        {/* Search Bar */}
-        <div className="flex flex-col justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
-          <div className="flex items-center space-x-2">
-            <div className="relative w-full max-w-sm">
-              <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+        {/* Search and Filters */}
+        <div className="mb-6 space-y-4">
+          {/* Search Bar */}
+          <div className="flex flex-col justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
               <Input
                 type="search"
                 placeholder="Search orders..."
-                className="pl-9 placeholder:text-gray-400"
+                className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
               />
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <ManualOrderDialog />
-          </div>
-        </div>
-
-        {/* Status Filter Tabs */}
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant={statusFilter === "all" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setStatusFilter("all")}
-            className="flex items-center gap-2"
-          >
-            All
-          </Button>
-          <Button
-            variant={statusFilter === "pending" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setStatusFilter("pending")}
-          >
-            Pending
-          </Button>
-          <Button
-            variant={statusFilter === "confirmed" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setStatusFilter("confirmed")}
-          >
-            Confirmed
-          </Button>
-          <Button
-            variant={statusFilter === "processing" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setStatusFilter("processing")}
-          >
-            Processing
-          </Button>
-          <Button
-            variant={statusFilter === "shipped" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setStatusFilter("shipped")}
-          >
-            Shipped
-          </Button>
-          <Button
-            variant={statusFilter === "delivered" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setStatusFilter("delivered")}
-          >
-            Delivered
-          </Button>
-          <Button
-            variant={statusFilter === "cancelled" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setStatusFilter("cancelled")}
-          >
-            Cancelled
-          </Button>
-          <Button
-            variant={showManualOnly ? "default" : "outline"}
-            size="sm"
-            onClick={handleManualOrdersToggle}
-            disabled={isLoading}
-          >
-            {showManualOnly ? "Show All Orders" : "Manual Orders"}
-          </Button>
-        </div>
-      </div>
-
-      {/* Orders Table */}
-      <Card>
-        <CardContent className="p-0">
-          {orders.length === 0 ? (
-            <div className="py-12 text-center">
-              <Package className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-              <h3 className="mb-2 text-lg font-semibold">
-                {debouncedSearch || statusFilter !== "all" || showManualOnly
-                  ? "No orders found"
-                  : "No orders yet"}
-              </h3>
-              <p className="text-muted-foreground">
-                {debouncedSearch || statusFilter !== "all" || showManualOnly
-                  ? "Try adjusting your search or filter criteria."
-                  : "You haven't received any orders yet."}
-              </p>
-              {(debouncedSearch ||
-                statusFilter !== "all" ||
-                showManualOnly) && (
-                <Button
-                  variant="outline"
-                  className="mt-4"
-                  onClick={handleClearFilters}
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={() => setSearchTerm("")}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-black/40 transition hover:text-black/60"
                 >
-                  Clear filters
-                </Button>
+                  <X className="h-4 w-4" />
+                </button>
               )}
             </div>
-          ) : (
-            <div className="overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Order</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Payment</TableHead>
-                    <TableHead>Payment Type</TableHead>
-                    <TableHead>Total</TableHead>
-                    <TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {orders.map(order => (
-                    <TableRow
-                      key={order.id}
-                      className="cursor-pointer hover:bg-gray-50"
-                      onClick={e => handleRowClick(order.id, e)}
-                    >
-                      <TableCell className="font-medium text-[#4D7399]">
-                        {order.order_number}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {formatDate(order.created_at)}
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium text-[#4D7399]">
-                          {order.customer_name}
-                        </div>
-                      </TableCell>
-                      <TableCell>{getPaymentBadge(order.is_paid)}</TableCell>
-                      <TableCell>
-                        {getPaymentTypeBadge(order.payment_type)}
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        Rs.{Number(order.total_amount).toLocaleString("en-IN")}
-                      </TableCell>
-                      <TableCell>
-                        <div ref={dropdownRef}>
-                          <Select
-                            value={order.status}
-                            onValueChange={value =>
-                              handleStatusChange(order.id, value)
-                            }
-                            disabled={updateOrderStatus.isPending}
-                          >
-                            <SelectTrigger className="w-auto min-w-[120px]">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {STATUS_OPTIONS.map(option => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-6 flex items-center justify-between">
-          <div className="text-muted-foreground text-sm">
-            Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{" "}
-            {Math.min(currentPage * ITEMS_PER_PAGE, ordersResponse?.count || 0)}{" "}
-            of {ordersResponse?.count || 0} orders
           </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(currentPage - 1)}
-              disabled={currentPage <= 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Previous
-            </Button>
-            <div className="flex items-center space-x-1">
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                let pageNum;
-                if (totalPages <= 5) {
-                  pageNum = i + 1;
-                } else if (currentPage <= 3) {
-                  pageNum = i + 1;
-                } else if (currentPage >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i;
-                } else {
-                  pageNum = currentPage - 2 + i;
-                }
 
-                return (
-                  <Button
-                    key={pageNum}
-                    variant={currentPage === pageNum ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setCurrentPage(pageNum)}
-                    className="h-8 w-8 p-0"
-                  >
-                    {pageNum}
-                  </Button>
-                );
-              })}
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={currentPage >= totalPages}
+          {/* Status Filter Tabs */}
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setStatusFilter("all")}
+              className={`rounded-full px-4 py-1 text-xs font-medium transition-colors ${
+                statusFilter === "all"
+                  ? "bg-black text-white"
+                  : "bg-black/5 text-black/60 hover:bg-black/10"
+              }`}
             >
-              Next
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+              All
+            </button>
+            {STATUS_OPTIONS.map(option => (
+              <button
+                key={option.value}
+                onClick={() => setStatusFilter(option.value as any)}
+                className={`rounded-full px-4 py-1 text-xs font-medium transition-colors ${
+                  statusFilter === option.value
+                    ? "bg-black text-white"
+                    : "bg-black/5 text-black/60 hover:bg-black/10"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+            <button
+              onClick={handleManualOrdersToggle}
+              disabled={isLoading}
+              className={`rounded-full px-4 py-1 text-xs font-medium transition-colors ${
+                showManualOnly
+                  ? "bg-black text-white"
+                  : "bg-black/5 text-black/60 hover:bg-black/10"
+              }`}
+            >
+              {showManualOnly ? "Show All Orders" : "Manual Orders"}
+            </button>
           </div>
         </div>
-      )}
 
+        {/* Orders Table */}
+        <div className="rounded-lg bg-white">
+          <div className="p-0">
+            {orders.length === 0 ? (
+              <div className="flex flex-col items-center justify-center border-t border-black/5 bg-white py-12 text-center">
+                <div className="mb-4 rounded-full bg-black/5 p-4">
+                  <Package className="h-10 w-10 text-black/20" />
+                </div>
+                <h3 className="mb-1 text-sm font-medium text-black">
+                  No orders found
+                </h3>
+                <p className="text-xs text-black/40">
+                  Try adjusting your search or filters
+                </p>
+                <Button
+                  variant="link"
+                  onClick={handleClearFilters}
+                  className="mt-2 text-xs text-[#003d79]"
+                >
+                  Clear all filters
+                </Button>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-b border-black/5">
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Order
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Date
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Customer
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Payment
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Payment Type
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Total
+                      </TableHead>
+                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                        Status
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {orders.map(order => (
+                      <TableRow
+                        key={order.id}
+                        className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+                        onClick={e => handleRowClick(order.id, e)}
+                      >
+                        <TableCell className="px-6 py-4">
+                          <span className="text-sm font-bold text-[#003d79]">
+                            #{order.order_number}
+                          </span>
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          <span className="text-xs text-black/60">
+                            {formatDate(order.created_at)}
+                          </span>
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          <span className="text-sm font-normal text-black capitalize">
+                            {order.customer_name}
+                          </span>
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          {getPaymentBadge(order.is_paid)}
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          {getPaymentTypeBadge(order.payment_type)}
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          <span className="text-sm font-semibold text-black">
+                            रु {order.total_amount?.toLocaleString()}
+                          </span>
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          <div
+                            ref={dropdownRef}
+                            onClick={e => e.stopPropagation()}
+                          >
+                            <Select
+                              value={order.status}
+                              onValueChange={value =>
+                                handleStatusChange(order.id, value)
+                              }
+                            >
+                              <SelectTrigger className="h-8 w-[130px] border-black/5 bg-black/5 text-xs font-medium focus:ring-0">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {STATUS_OPTIONS.map(option => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                    className="text-xs"
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-6 flex items-center justify-between border-t border-black/5 bg-white px-6 py-4">
+            <div className="text-[10px] text-black/40">
+              Showing {orders.length} results
+            </div>
+            <SimplePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        )}
+      </div>
       {/* Order Dialog */}
       <OrderDialog
         orders={orders}

@@ -63,20 +63,20 @@ export const TestimonialsTable = ({
   }
 
   return (
-    <TableWrapper>
+    <div className="rounded-lg bg-white">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-slate-100 hover:bg-transparent">
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+          <TableRow className="border-b border-black/5">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Client
             </TableHead>
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Comment
             </TableHead>
-            <TableHead className="px-6 py-4 font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Date Added
             </TableHead>
-            <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+            <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
               Actions
             </TableHead>
           </TableRow>
@@ -85,23 +85,27 @@ export const TestimonialsTable = ({
           {testimonials.map(testimonial => (
             <TableRow
               key={testimonial.id}
-              className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
+              className="group border-b border-black/5 transition-colors hover:bg-black/2"
             >
               <TableCell className="px-6 py-4">
-                <TableUserCell
-                  imageSrc={testimonial.image}
-                  fallback={testimonial.name.charAt(0).toUpperCase()}
-                  title={testimonial.name}
-                  subtitle={testimonial.designation}
-                />
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-sm font-normal text-black">
+                    {testimonial.name}
+                  </span>
+                  <span className="text-xs text-black/50">
+                    {testimonial.designation}
+                  </span>
+                </div>
               </TableCell>
               <TableCell className="max-w-md px-6 py-4">
-                <p className="line-clamp-2 text-sm leading-relaxed text-slate-500">
+                <p className="line-clamp-2 text-xs text-black/50">
                   {testimonial.comment}
                 </p>
               </TableCell>
-              <TableCell className="px-6 py-4 text-xs whitespace-nowrap text-slate-500">
-                {formatDate(testimonial.created_at)}
+              <TableCell className="px-6 py-4">
+                <span className="text-xs text-black/40">
+                  {formatDate(testimonial.created_at)}
+                </span>
               </TableCell>
               <TableCell className="px-6 py-4 text-right">
                 <TableActionButtons
@@ -113,6 +117,6 @@ export const TestimonialsTable = ({
           ))}
         </TableBody>
       </Table>
-    </TableWrapper>
+    </div>
   );
 };

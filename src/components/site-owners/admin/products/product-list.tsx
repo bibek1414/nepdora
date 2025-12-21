@@ -20,7 +20,7 @@ import {
   useProducts,
   useDeleteProduct,
 } from "@/hooks/owner-site/admin/use-product";
-import Pagination from "@/components/ui/pagination";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 import {
   Plus,
   Edit,
@@ -136,71 +136,72 @@ const ProductList = () => {
   }
 
   return (
-    <div className="">
-      <div className="mx-auto">
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-7xl px-6 md:px-8">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-end gap-3">
-          <Link href="/admin/promo-code">
-            <Button
-              variant="outline"
-              className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
-            >
-              <Gift className="mr-2 h-4 w-4" />
-              Manage Promo Code
-            </Button>
-          </Link>
-          <Link href="/admin/categories">
-            <Button
-              variant="outline"
-              className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
-            >
-              <Folder className="mr-2 h-4 w-4" />
-              Manage Category
-            </Button>
-          </Link>
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <h1 className="text-xl font-bold text-[#003d79]">Products</h1>
 
-          <Link href="/admin/subcategories">
+          <div className="flex flex-wrap items-center gap-2">
+            <Link href="/admin/promo-code">
+              <Button
+                variant="ghost"
+                className="h-9 px-3 text-xs font-normal text-black/60 hover:bg-black/2 hover:text-black"
+              >
+                <Gift className="mr-2 h-4 w-4" />
+                Promo Codes
+              </Button>
+            </Link>
+            <Link href="/admin/categories">
+              <Button
+                variant="ghost"
+                className="h-9 px-3 text-xs font-normal text-black/60 hover:bg-black/2 hover:text-black"
+              >
+                <Folder className="mr-2 h-4 w-4" />
+                Categories
+              </Button>
+            </Link>
+            <Link href="/admin/subcategories">
+              <Button
+                variant="ghost"
+                className="h-9 px-3 text-xs font-normal text-black/60 hover:bg-black/2 hover:text-black"
+              >
+                <FolderTree className="mr-2 h-4 w-4" />
+                Subcategories
+              </Button>
+            </Link>
             <Button
-              variant="outline"
-              className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+              variant="ghost"
+              onClick={() => setShowBulkUploadDialog(true)}
+              className="h-9 px-3 text-xs font-normal text-black/60 hover:bg-black/2 hover:text-black"
             >
-              <FolderTree className="mr-2 h-4 w-4" />
-              Manage Subcategory
+              <Upload className="mr-2 h-4 w-4" />
+              Import
             </Button>
-          </Link>
-
-          <Button
-            variant="outline"
-            onClick={() => setShowBulkUploadDialog(true)}
-            className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
-          >
-            <Upload className="mr-2 h-4 w-4" />
-            Import Products
-          </Button>
-
-          <Link href="/admin/products/add">
-            <Button className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Product
-            </Button>
-          </Link>
+            <Link href="/admin/products/add">
+              <Button className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800">
+                <Plus className="mr-2 h-4 w-4" />
+                Add Product
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Search Bar */}
-        <div className="mt-10 mb-6">
-          <div className="relative max-w-md">
-            <Search className="absolute top-1/2 left-3 z-1 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
             <Input
               placeholder="Search products..."
               value={searchInput}
               onChange={handleSearchChange}
-              className="border-gray-200 bg-white pr-10 pl-10 placeholder:text-gray-500 focus:border-gray-300 focus:ring-0"
+              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
             />
             {searchInput && (
               <button
                 type="button"
                 onClick={clearSearch}
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition hover:text-gray-600"
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-black/40 transition hover:text-black/60"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -208,223 +209,164 @@ const ProductList = () => {
           </div>
         </div>
 
-        {/* Products Card */}
-        <Card className="overflow-hidden rounded-lg border-none bg-white shadow-none">
-          <CardContent className="p-0">
-            {isLoading ? (
-              <div className="space-y-4 p-6">
-                {[...Array(page_size)].map((_, i) => (
-                  <Skeleton key={i} className="h-16 w-full" />
-                ))}
-              </div>
-            ) : (
-              <>
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-b border-gray-100 bg-gray-50/50">
-                      <TableHead className="px-6 py-4 text-sm font-medium text-gray-700">
-                        Image
-                      </TableHead>
-                      <TableHead
-                        className="cursor-pointer px-6 py-4 text-sm font-medium text-gray-700 hover:text-gray-900"
-                        onClick={() => handleSortChange("name")}
-                      >
-                        Name{" "}
-                        {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
-                      </TableHead>
-                      <TableHead
-                        className="cursor-pointer px-6 py-4 text-sm font-medium text-gray-700 hover:text-gray-900"
-                        onClick={() => handleSortChange("price")}
-                      >
-                        Price{" "}
-                        {sortBy === "price" &&
-                          (sortOrder === "asc" ? "↑" : "↓")}
-                      </TableHead>
-                      <TableHead
-                        className="cursor-pointer px-6 py-4 text-sm font-medium text-gray-700 hover:text-gray-900"
-                        onClick={() => handleSortChange("stock")}
-                      >
-                        Stock{" "}
-                        {sortBy === "stock" &&
-                          (sortOrder === "asc" ? "↑" : "↓")}
-                      </TableHead>
-                      <TableHead className="px-6 py-4 text-sm font-medium text-gray-700">
-                        Category
-                      </TableHead>
-                      <TableHead className="px-6 py-4 text-sm font-medium text-gray-700">
-                        Status
-                      </TableHead>
-                      <TableHead className="px-6 py-4 text-right text-sm font-medium text-gray-700">
-                        Actions
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {products.map(product => (
-                      <TableRow
-                        key={product.id}
-                        className="cursor-pointer border-b border-gray-100 transition-colors hover:bg-gray-50/50"
-                        onClick={() =>
-                          (window.location.href = `/admin/products/edit/${product.slug}`)
-                        }
-                      >
-                        <TableCell className="px-6 py-4">
-                          {product.thumbnail_image ? (
-                            <Image
-                              src={product.thumbnail_image}
-                              alt={
-                                product.thumbnail_alt_description ||
-                                product.name
-                              }
-                              width={48}
-                              height={48}
-                              className="rounded-lg border border-gray-200 object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-200 bg-gray-100">
-                              <ImageIcon className="h-5 w-5 text-gray-400" />
-                            </div>
-                          )}
-                        </TableCell>
-
-                        <TableCell className="px-6 py-4">
-                          <div className="font-medium text-gray-900">
-                            {product.name}
-                          </div>
-                        </TableCell>
-
-                        <TableCell className="px-6 py-4">
-                          <div className="font-medium text-gray-900">
-                            NPR {product.price}
-                          </div>
-                        </TableCell>
-
-                        <TableCell className="px-6 py-4">
-                          <span
-                            className={`font-medium ${
-                              product.stock > 0
-                                ? "text-gray-900"
-                                : "text-red-600"
-                            }`}
-                          >
-                            {product.stock}
-                          </span>
-                        </TableCell>
-
-                        <TableCell className="px-6 py-4">
-                          {product.category && (
-                            <Badge
-                              variant="secondary"
-                              className="bg-gray-100 text-gray-700 hover:bg-gray-200"
-                            >
-                              {product.category.name}
-                            </Badge>
-                          )}
-                        </TableCell>
-
-                        <TableCell className="px-6 py-4">
-                          <Badge
-                            variant={
-                              product.stock > 0 ? "default" : "destructive"
-                            }
-                            className={
-                              product.stock > 0
-                                ? "bg-green-100 text-green-800 hover:bg-green-200"
-                                : "bg-red-100 text-red-800 hover:bg-red-200"
-                            }
-                          >
-                            {product.stock > 0 ? "In Stock" : "Out of Stock"}
-                          </Badge>
-                        </TableCell>
-
-                        <TableCell className="px-6 py-4">
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0 hover:bg-gray-100"
-                              onClick={e => {
-                                e.stopPropagation();
-                                window.open(
-                                  `/admin/products/edit/${product.slug}`,
-                                  "_self"
-                                );
-                              }}
-                            >
-                              <Edit className="h-4 w-4 text-gray-600" />
-                              <span className="sr-only">Edit product</span>
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={e => {
-                                e.stopPropagation();
-                                handleDelete(product);
-                              }}
-                              className="h-8 w-8 p-0 hover:bg-red-50"
-                            >
-                              <Trash2 className="h-4 w-4 text-red-600" />
-                              <span className="sr-only">Delete product</span>
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-
-                {/* Empty State */}
-                {products.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                      No products found
-                    </h3>
-                    <p className="mb-6 max-w-sm text-gray-500">
-                      {search
-                        ? "Try adjusting your search terms to find what you're looking for"
-                        : "Get started by adding your first product to the inventory"}
-                    </p>
-                    <Button
-                      asChild
-                      className="bg-black text-white hover:bg-gray-800"
-                    >
-                      <Link href="/admin/products/add">
-                        <Plus className="mr-2 h-4 w-4" />
-                        Add Product
-                      </Link>
-                    </Button>
-                  </div>
-                )}
-              </>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Results summary and Pagination */}
-        {pagination && pagination.totalPages > 1 && (
-          <div className="mt-6 space-y-4">
-            {/* Results summary */}
-            <div className="flex justify-center">
-              <div className="text-sm text-gray-700">
-                Showing {(pagination.page - 1) * pagination.page_size + 1} to{" "}
-                {Math.min(
-                  pagination.page * pagination.page_size,
-                  pagination.total
-                )}{" "}
-                of {pagination.total} results
-              </div>
+        <div className="rounded-lg bg-white">
+          {isLoading ? (
+            <div className="space-y-4 p-6">
+              {[...Array(page_size)].map((_, i) => (
+                <Skeleton key={i} className="h-16 w-full" />
+              ))}
             </div>
+          ) : (
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-b border-black/5">
+                    <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                      Image
+                    </TableHead>
+                    <TableHead
+                      className="cursor-pointer px-6 py-3 text-xs font-normal text-black/60 transition-colors hover:text-black"
+                      onClick={() => handleSortChange("name")}
+                    >
+                      Name{" "}
+                      {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
+                    </TableHead>
+                    <TableHead
+                      className="cursor-pointer px-6 py-3 text-xs font-normal text-black/60 transition-colors hover:text-black"
+                      onClick={() => handleSortChange("price")}
+                    >
+                      Price{" "}
+                      {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
+                    </TableHead>
+                    <TableHead
+                      className="cursor-pointer px-6 py-3 text-xs font-normal text-black/60 transition-colors hover:text-black"
+                      onClick={() => handleSortChange("stock")}
+                    >
+                      Stock{" "}
+                      {sortBy === "stock" && (sortOrder === "asc" ? "↑" : "↓")}
+                    </TableHead>
+                    <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                      Category
+                    </TableHead>
+                    <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                      Status
+                    </TableHead>
+                    <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
+                      Actions
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {products.map(product => (
+                    <TableRow
+                      key={product.id}
+                      className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                      onClick={() =>
+                        (window.location.href = `/admin/products/edit/${product.slug}`)
+                      }
+                    >
+                      <TableCell className="px-6 py-4">
+                        {product.thumbnail_image ? (
+                          <Image
+                            src={product.thumbnail_image}
+                            alt={
+                              product.thumbnail_alt_description || product.name
+                            }
+                            width={48}
+                            height={48}
+                            className="rounded-lg border border-gray-200 object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-200 bg-gray-100">
+                            <ImageIcon className="h-5 w-5 text-gray-400" />
+                          </div>
+                        )}
+                      </TableCell>
 
-            {/* Pagination component */}
-            <Pagination
-              currentPage={pagination.page}
-              totalPages={pagination.totalPages}
-              onPageChange={handlePageChange}
-              showFirstLast={true}
-              maxVisiblePages={7}
-            />
-          </div>
-        )}
+                      <TableCell className="px-6 py-4">
+                        <div className="font-medium text-gray-900">
+                          {product.name}
+                        </div>
+                      </TableCell>
+
+                      <TableCell className="px-6 py-4">
+                        <div className="font-medium text-gray-900">
+                          NPR {product.price}
+                        </div>
+                      </TableCell>
+
+                      <TableCell className="px-6 py-4">
+                        <span
+                          className={`font-medium ${
+                            product.stock > 0 ? "text-gray-900" : "text-red-600"
+                          }`}
+                        >
+                          {product.stock}
+                        </span>
+                      </TableCell>
+
+                      <TableCell className="px-6 py-4">
+                        {product.category && (
+                          <span className="rounded bg-black/5 px-2 py-1 text-[10px] font-normal text-black/60">
+                            {product.category.name}
+                          </span>
+                        )}
+                      </TableCell>
+
+                      <TableCell className="px-6 py-4">
+                        {product.stock > 0 ? (
+                          <span className="rounded bg-green-400/10 px-2 py-1 text-[10px] font-semibold text-green-700">
+                            In Stock
+                          </span>
+                        ) : (
+                          <span className="rounded bg-red-400/10 px-2 py-1 text-[10px] font-semibold text-red-700">
+                            Out of Stock
+                          </span>
+                        )}
+                      </TableCell>
+
+                      <TableCell className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
+                            onClick={e => {
+                              e.stopPropagation();
+                              window.location.href = `/admin/products/edit/${product.slug}`;
+                            }}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={e => {
+                              e.stopPropagation();
+                              handleDelete(product);
+                            }}
+                            className="h-8 w-8 rounded-full text-black/40 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+
+              {/* Pagination */}
+              {pagination && pagination.totalPages > 1 && (
+                <SimplePagination
+                  currentPage={page}
+                  totalPages={pagination.totalPages}
+                  onPageChange={setPage}
+                />
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       {/* Bulk Upload Dialog */}

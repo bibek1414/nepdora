@@ -32,6 +32,7 @@ import {
   X,
 } from "lucide-react";
 import { OurClientForm } from "./our-client-form";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -74,6 +75,8 @@ export default function OurClientList() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<OurClient | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   const { data: clientsData, isLoading, error } = useGetOurClients(filters);
   const deleteMutation = useDeleteOurClient();
@@ -101,15 +104,20 @@ export default function OurClientList() {
     setSearchTerm("");
   };
 
+  const filteredClients = clientsData || [];
+  const paginatedClients = filteredClients.slice(
+    (page - 1) * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE
+  );
+  const totalPages = Math.ceil(filteredClients.length / ITEMS_PER_PAGE);
+
   if (isLoading) {
     return (
-      <div className="animate-in fade-in min-h-screen bg-white duration-700">
-        <div className="mx-auto max-w-7xl p-4 sm:p-6">
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
           <div className="flex h-64 flex-col items-center justify-center gap-3">
-            <RefreshCw className="h-8 w-8 animate-spin text-slate-500" />
-            <p className="animate-pulse text-sm text-slate-400">
-              Loading clients...
-            </p>
+            <RefreshCw className="h-8 w-8 animate-spin text-black/20" />
+            <p className="text-xs text-black/40">Loading clients...</p>
           </div>
         </div>
       </div>
@@ -118,30 +126,51 @@ export default function OurClientList() {
 
   if (error) {
     return (
-      <div className="animate-in fade-in min-h-screen bg-white duration-700">
-        <div className="mx-auto max-w-7xl p-4 sm:p-6">
-          <Alert variant="destructive" className="border-red-200 bg-red-50">
-            <AlertDescription className="text-red-800">
-              Error loading clients. Please try again later.
-            </AlertDescription>
-          </Alert>
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+          <div className="rounded-lg bg-white p-12 text-center">
+            <h2 className="text-sm font-medium text-red-600">
+              Error loading clients
+            </h2>
+            <p className="mt-1 text-xs text-black/40">
+              Please try again later.
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="animate-in fade-in min-h-screen bg-white duration-700">
-      <div className="mx-auto max-w-7xl space-y-4 p-4 sm:p-6">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              Our Clients
-            </h1>
-            <p className="text-sm text-slate-500">
-              Manage your client logos and links.
-            </p>
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+        <div className="mb-5">
+          <h1 className="text-xl font-bold text-[#003d79]">Our Clients</h1>
+        </div>
+
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
+            <Input
+              placeholder="Search clients..."
+              value={searchTerm}
+              onChange={e => {
+                setSearchTerm(e.target.value);
+                setPage(1);
+              }}
+              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-black/40 transition hover:text-black/60"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
+
           <Button
             onClick={() => {
               setEditingClient(null);
@@ -153,64 +182,50 @@ export default function OurClientList() {
           </Button>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
-          <div className="relative w-full max-w-md">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <Input
-              placeholder="Search clients..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className="h-9 border-slate-200 bg-white pr-10 pl-10 text-sm placeholder:text-slate-500 focus-visible:ring-1 focus-visible:ring-slate-900"
-            />
-            {searchTerm && (
-              <button
-                type="button"
-                onClick={clearSearch}
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-        </div>
-
-        <TableWrapper>
+        <div className="rounded-lg bg-white">
           <Table>
             <TableHeader>
-              <TableRow className="border-b border-slate-100 hover:bg-transparent">
-                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+              <TableRow className="border-b border-black/5">
+                <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                   Client Info
                 </TableHead>
-                <TableHead className="px-6 py-4 font-semibold text-slate-700">
+                <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                   URL
                 </TableHead>
-                <TableHead className="px-6 py-4 text-right font-semibold text-slate-700">
+                <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
                   Actions
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {clientsData?.length === 0 ? (
+              {filteredClients.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={3}
-                    className="py-12 text-center text-slate-500"
+                    className="py-12 text-center text-xs text-black/40"
                   >
-                    No clients found. Click "Add Client" to get started.
+                    No clients found.
                   </TableCell>
                 </TableRow>
               ) : (
-                clientsData?.map(client => (
+                paginatedClients.map(client => (
                   <TableRow
                     key={client.id}
-                    className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50"
+                    className="group border-b border-black/5 transition-colors hover:bg-black/2"
                   >
                     <TableCell className="px-6 py-4">
-                      <TableUserCell
-                        imageSrc={client.logo || undefined}
-                        fallback={client.name.charAt(0).toUpperCase()}
-                        title={client.name}
-                      />
+                      <div className="flex items-center gap-3">
+                        <div className="h-9 w-9 overflow-hidden rounded-md border border-black/5">
+                          <img
+                            src={client.logo || ""}
+                            alt={client.name}
+                            className="h-full w-full object-contain"
+                          />
+                        </div>
+                        <span className="text-sm font-normal text-black">
+                          {client.name}
+                        </span>
+                      </div>
                     </TableCell>
                     <TableCell className="px-6 py-4">
                       {client.url ? (
@@ -218,13 +233,13 @@ export default function OurClientList() {
                           href={client.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                          className="flex items-center gap-1 text-xs text-[#003d79] hover:underline"
                         >
                           {client.url}
-                          <ExternalLink className="h-3 w-3" />
+                          <ExternalLink className="h-3 w-3 text-black/40" />
                         </a>
                       ) : (
-                        <span className="text-xs text-slate-400">---</span>
+                        <span className="text-xs text-black/20">---</span>
                       )}
                     </TableCell>
                     <TableCell className="px-6 py-4 text-right">
@@ -238,7 +253,12 @@ export default function OurClientList() {
               )}
             </TableBody>
           </Table>
-        </TableWrapper>
+          <SimplePagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        </div>
 
         <OurClientForm
           open={isFormOpen}
