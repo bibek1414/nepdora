@@ -29,11 +29,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   TableWrapper,
   TableUserCell,
   TableActionButtons,
 } from "@/components/ui/custom-table";
 import AppointmentDetailsDialog from "./appointment-details-dialog";
+import { useUpdateAppointment } from "@/hooks/owner-site/admin/use-appointment";
+import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -68,7 +77,6 @@ const StatusBadge = ({ status }: { status: string }) => {
   );
 };
 
-// Debounce hook
 const useDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -85,7 +93,13 @@ const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
-type StatusFilter = "all" | "pending" | "confirmed" | "completed" | "cancelled";
+const APPOINTMENT_STATUS_OPTIONS = [
+  { value: "pending", label: "Pending" },
+  { value: "completed", label: "Completed" },
+  { value: "cancelled", label: "Cancelled" },
+];
+
+type StatusFilter = "all" | "pending" | "completed" | "cancelled";
 
 export default function AppointmentList() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -94,10 +108,13 @@ export default function AppointmentList() {
   const [selectedAppointmentId, setSelectedAppointmentId] = useState<
     number | null
   >(null);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
 
   // Use API hooks
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [page, setPage] = useState(1);
+
+  const updateAppointment = useUpdateAppointment();
 
   const {
     data: appointmentsData,
@@ -111,6 +128,20 @@ export default function AppointmentList() {
 
   const handleRefresh = () => {
     refetch();
+  };
+
+  const handleStatusChange = async (
+    appointmentId: number,
+    newStatus: string
+  ) => {
+    try {
+      await updateAppointment.mutateAsync({
+        id: appointmentId,
+        data: { status: newStatus as any },
+      });
+    } catch (error) {
+      // Error is handled in the hook
+    }
   };
 
   // Reset pagination when search or filter changes
@@ -181,7 +212,14 @@ export default function AppointmentList() {
     });
   };
 
-  const handleRowClick = (item: Appointment) => {
+  const handleRowClick = (item: Appointment, event: React.MouseEvent) => {
+    // Check if the click was inside the status dropdown
+    if (
+      dropdownRef.current &&
+      dropdownRef.current.contains(event.target as Node)
+    ) {
+      return; // Don't open the dialog if clicking on the dropdown
+    }
     setSelectedAppointmentId(item.id);
     setIsDialogOpen(true);
   };
@@ -220,10 +258,9 @@ export default function AppointmentList() {
           </Button>
         </div>
 
-        {/* Tabs and Search - Same Line */}
-        <div className="mb-6 flex items-center justify-between gap-4">
-          {/* Status Filter Tabs - Rounded Pill Design */}
-          <div className="inline-flex items-center gap-2 rounded-full bg-black/5 p-1.5">
+        {/* Status Filter Buttons - Rounded Button Design like Order List */}
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap gap-2">
             {tabsWithCounts.map(tab => {
               const isActive = statusFilter === tab.id;
               return (
@@ -233,29 +270,20 @@ export default function AppointmentList() {
                     setStatusFilter(tab.id);
                     setSearchTerm("");
                   }}
-                  className={cn(
-                    "group relative flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out",
+                  className={`rounded-full px-4 py-1 text-xs font-medium transition-colors ${
                     isActive
-                      ? "bg-white text-[#003d79]"
-                      : "text-black/60 hover:bg-white/50 hover:text-black"
-                  )}
+                      ? "bg-black text-white"
+                      : "bg-black/5 text-black/60 hover:bg-black/10"
+                  }`}
                 >
-                  <tab.icon
-                    className={cn(
-                      "h-4 w-4 transition-colors duration-200",
-                      isActive
-                        ? "text-[#003d79]"
-                        : "text-black/50 group-hover:text-black/70"
-                    )}
-                  />
-                  <span className="whitespace-nowrap">{tab.label}</span>
+                  {tab.label}
                   {tab.count > 0 && (
                     <span
                       className={cn(
-                        "flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-medium transition-colors duration-200",
+                        "ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-medium",
                         isActive
-                          ? "bg-[#003d79]/10 text-[#003d79]"
-                          : "bg-black/10 text-black/60 group-hover:bg-black/15"
+                          ? "bg-white/20 text-white"
+                          : "bg-black/10 text-black/40"
                       )}
                     >
                       {tab.count}
@@ -309,14 +337,9 @@ export default function AppointmentList() {
                       <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                         Date & Time
                       </TableHead>
-                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
-                        Reason
-                      </TableHead>
+
                       <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                         Status
-                      </TableHead>
-                      <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
-                        Actions
                       </TableHead>
                     </TableRow>
                   </TableHeader>
@@ -325,7 +348,7 @@ export default function AppointmentList() {
                       <TableRow
                         key={item.id}
                         className="group border-b border-black/5 transition-colors hover:bg-black/2"
-                        onClick={() => handleRowClick(item)}
+                        onClick={e => handleRowClick(item, e)}
                       >
                         <TableCell className="px-6 py-4">
                           <TableUserCell
@@ -344,24 +367,33 @@ export default function AppointmentList() {
                             </span>
                           </div>
                         </TableCell>
+
                         <TableCell className="px-6 py-4">
-                          <span className="rounded bg-black/5 px-2 py-1 text-[10px] font-normal text-black/60">
-                            {item.reason?.name || "General"}
-                          </span>
-                        </TableCell>
-                        <TableCell className="px-6 py-4">
-                          <StatusBadge status={item.status} />
-                        </TableCell>
-                        <TableCell className="px-6 py-4 text-right">
-                          <div className="flex items-center justify-end gap-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleRowClick(item)}
-                              className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
+                          <div
+                            ref={dropdownRef}
+                            onClick={e => e.stopPropagation()}
+                          >
+                            <Select
+                              value={item.status.toLowerCase()}
+                              onValueChange={value =>
+                                handleStatusChange(item.id, value)
+                              }
                             >
-                              <Clock className="h-4 w-4" />
-                            </Button>
+                              <SelectTrigger className="h-8 w-[130px] border-black/5 bg-black/5 text-xs font-medium">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {APPOINTMENT_STATUS_OPTIONS.map(option => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                    className="text-xs"
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                         </TableCell>
                       </TableRow>

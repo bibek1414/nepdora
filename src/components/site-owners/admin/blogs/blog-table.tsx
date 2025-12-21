@@ -80,8 +80,12 @@ const BlogsTable: React.FC<BlogsTableProps> = ({
     });
   };
 
+  const getInitials = (title: string) => {
+    return title.slice(0, 2).toUpperCase();
+  };
+
   return (
-    <div className="rounded-lg bg-white">
+    <div className="overflow-hidden rounded-lg bg-white">
       <Table>
         <TableHeader>
           <TableRow className="border-b border-black/5">
@@ -104,12 +108,12 @@ const BlogsTable: React.FC<BlogsTableProps> = ({
               onClick={() => onEdit(blog)}
             >
               <TableCell className="px-6 py-4">
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-sm font-normal text-black">
-                    {blog.title}
-                  </span>
-                  <span className="text-xs text-black/50">{blog.slug}</span>
-                </div>
+                <TableUserCell
+                  title={blog.title}
+                  subtitle={blog.slug}
+                  imageSrc={blog.thumbnail_image}
+                  fallback={getInitials(blog.title)}
+                />
               </TableCell>
               <TableCell className="px-6 py-4 whitespace-nowrap">
                 <span className="text-xs text-black/40">
