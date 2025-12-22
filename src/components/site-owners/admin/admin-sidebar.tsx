@@ -25,7 +25,6 @@ import {
   IndianRupee,
   Database,
 } from "lucide-react";
-import Image from "next/image";
 import { User as UserType } from "@/hooks/use-jwt-server";
 
 interface AdminSidebarProps {
@@ -164,19 +163,23 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           )}
         >
           {collapsed ? (
-            <div className="flex w-full justify-center">
-              <Image src="/icon.svg" alt="Icon" width={32} height={32} />
-            </div>
+            // <div className="flex w-full justify-center">
+            //   <Image src="/icon.svg" alt="Icon" width={32} height={32} />
+            // </div>
+            <></>
           ) : (
             <div className="flex flex-col">
               <div className="flex items-center space-x-4">
                 <div className="shrink-0 items-center">
-                  <Image
+                  {/* <Image
                     src="/nepdora-logo.png"
                     alt="Logo"
                     width={110}
                     height={30}
-                  />
+                  /> */}
+                  <h1 className="text-xl font-bold text-[#003d79]">
+                    Admin Panel
+                  </h1>
                 </div>
               </div>
             </div>
