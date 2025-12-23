@@ -21,6 +21,7 @@ import {
   Star,
   BookOpen,
   ArrowUpRight,
+  Pencil,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -373,17 +374,31 @@ export function CollectionsList() {
                     style.shadowColor
                   )}
                 >
-                  {/* Delete Button */}
-                  <button
-                    className="absolute top-3 right-10 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-white/50 text-slate-600 opacity-0 shadow-sm backdrop-blur-sm transition-all group-hover:opacity-100 hover:bg-white hover:text-red-600"
-                    onClick={e => {
-                      e.stopPropagation();
-                      setDeleteId(String(collection.id));
-                    }}
-                    title="Delete collection"
-                  >
-                    <Trash2 className="h-4 w-4 cursor-pointer" />
-                  </button>
+                  {/* Action Buttons */}
+                  <div className="absolute top-3 right-3 z-10 flex items-center gap-2 opacity-0 transition-all group-hover:opacity-100">
+                    <button
+                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-white/50 text-slate-600 shadow-sm backdrop-blur-sm transition-all hover:bg-white hover:text-blue-600"
+                      onClick={e => {
+                        e.stopPropagation();
+                        router.push(
+                          `/admin/collections/${collection.slug}/edit`
+                        );
+                      }}
+                      title="Edit collection"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                    <button
+                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-white/50 text-slate-600 shadow-sm backdrop-blur-sm transition-all hover:bg-white hover:text-red-600"
+                      onClick={e => {
+                        e.stopPropagation();
+                        setDeleteId(String(collection.id));
+                      }}
+                      title="Delete collection"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
 
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex flex-1 flex-col gap-1">

@@ -370,6 +370,7 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
                             <SelectItem value="boolean">Boolean</SelectItem>
                             <SelectItem value="email">Email</SelectItem>
                             <SelectItem value="image">Image</SelectItem>
+                            <SelectItem value="json">JSON</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

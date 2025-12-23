@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import {
@@ -46,13 +47,16 @@ export function CollectionDataDialog({
   const [uploadingFields, setUploadingFields] = useState<
     Record<string, boolean>
   >({});
+  const [jsonErrors, setJsonErrors] = useState<Record<string, string | null>>(
+    {}
+  );
 
   const createDataMutation = useCreateCollectionData();
   const updateDataMutation = useUpdateCollectionData();
 
   useEffect(() => {
     if (editingData) {
-      // Parse stringified arrays for text/email fields
+      // Parse stringified arrays for text/email fields and JSON for json fields
       const parsedData = { ...editingData.data };
       collection.all_fields.forEach(field => {
         if (
@@ -69,6 +73,18 @@ export function CollectionDataDialog({
             // Not JSON, keep as string
           }
         }
+        // Parse JSON fields - if it's a string, try to parse and format it
+        if (
+          field.type === "json" &&
+          typeof parsedData[field.name] === "string"
+        ) {
+          try {
+            const parsed = JSON.parse(parsedData[field.name]);
+            parsedData[field.name] = JSON.stringify(parsed, null, 2);
+          } catch {
+            // Invalid JSON, keep as string
+          }
+        }
       });
       setFormData(parsedData);
     } else {
@@ -78,43 +94,79 @@ export function CollectionDataDialog({
       collection.all_fields.forEach(field => {
         if (field.type === "boolean") {
           initialData[field.name] = false;
+        } else if (field.type === "json") {
+          initialData[field.name] = "{}";
         } else {
           initialData[field.name] = "";
         }
       });
       setFormData(initialData);
     }
+    // Reset JSON errors when dialog opens/closes
+    setJsonErrors({});
   }, [editingData, collection, open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate required fields
-    const missingFields = collection.all_fields
-      .filter(f => {
-        if (!f.required) return false;
-        const value = formData[f.name];
-        // Handle image fields that can be string or array
-        if (f.type === "image") {
-          if (Array.isArray(value)) {
-            return value.length === 0;
-          }
-          return !value || value === "";
+    // Validate required fields and JSON format
+    const missingFields: string[] = [];
+    const invalidJsonFields: string[] = [];
+
+    collection.all_fields.forEach(f => {
+      if (!f.required) return;
+      const value = formData[f.name];
+
+      // Handle image fields that can be string or array
+      if (f.type === "image") {
+        if (Array.isArray(value)) {
+          if (value.length === 0) missingFields.push(f.name);
+        } else if (!value || value === "") {
+          missingFields.push(f.name);
         }
-        // Handle text/email fields that can be string or array
-        if (f.type === "text" || f.type === "email") {
-          if (Array.isArray(value)) {
-            // Check if array is empty or all values are empty strings
-            return (
-              value.length === 0 ||
-              value.every((v: string) => !v || v.trim() === "")
-            );
+        return;
+      }
+
+      // Handle text/email fields that can be string or array
+      if (f.type === "text" || f.type === "email") {
+        if (Array.isArray(value)) {
+          if (
+            value.length === 0 ||
+            value.every((v: string) => !v || v.trim() === "")
+          ) {
+            missingFields.push(f.name);
           }
-          return !value || value === "";
+        } else if (!value || value === "") {
+          missingFields.push(f.name);
         }
-        return !value;
-      })
-      .map(f => f.name);
+        return;
+      }
+
+      // Handle JSON fields - validate JSON format
+      if (f.type === "json") {
+        if (!value || value.trim() === "" || value === "{}" || value === "[]") {
+          missingFields.push(f.name);
+        } else {
+          try {
+            JSON.parse(value);
+          } catch {
+            invalidJsonFields.push(f.name);
+          }
+        }
+        return;
+      }
+
+      if (!value) {
+        missingFields.push(f.name);
+      }
+    });
+
+    if (invalidJsonFields.length > 0) {
+      toast.error(
+        `Invalid JSON format in field(s): ${invalidJsonFields.join(", ")}`
+      );
+      return;
+    }
 
     if (missingFields.length > 0) {
       toast.error(
@@ -124,7 +176,7 @@ export function CollectionDataDialog({
     }
 
     try {
-      // Process formData: stringify arrays for text/email fields
+      // Process formData: stringify arrays for text/email fields and validate JSON fields
       const processedData = { ...formData };
       collection.all_fields.forEach(field => {
         if (
@@ -133,6 +185,16 @@ export function CollectionDataDialog({
         ) {
           // Stringify array values for text fields
           processedData[field.name] = JSON.stringify(processedData[field.name]);
+        }
+        // Validate and minify JSON fields
+        if (field.type === "json" && processedData[field.name]) {
+          try {
+            const parsed = JSON.parse(processedData[field.name]);
+            // Store as minified JSON string
+            processedData[field.name] = JSON.stringify(parsed);
+          } catch (error) {
+            throw new Error(`Invalid JSON in field "${field.name}"`);
+          }
         }
       });
 
@@ -530,6 +592,48 @@ export function CollectionDataDialog({
               }
               required={field.required}
             />
+          </div>
+        );
+
+      case "json":
+        const jsonValue = typeof fieldValue === "string" ? fieldValue : "";
+        const jsonError = jsonErrors[field.name] || null;
+
+        const handleJsonChange = (value: string) => {
+          setJsonErrors(prev => ({ ...prev, [field.name]: null }));
+          updateFieldValue(field.name, value);
+
+          // Validate JSON on change (but don't block input)
+          if (value.trim() && value !== "{}" && value !== "[]") {
+            try {
+              JSON.parse(value);
+            } catch (error) {
+              setJsonErrors(prev => ({
+                ...prev,
+                [field.name]: "Invalid JSON format",
+              }));
+            }
+          }
+        };
+
+        return (
+          <div className="space-y-2">
+            <Textarea
+              value={jsonValue}
+              onChange={e => handleJsonChange(e.target.value)}
+              placeholder='{"key": "value"}'
+              required={field.required}
+              className="min-h-[200px] font-mono text-sm"
+            />
+            {jsonError && (
+              <p className="text-destructive text-sm">{jsonError}</p>
+            )}
+            {!jsonError &&
+              jsonValue.trim() &&
+              jsonValue !== "{}" &&
+              jsonValue !== "[]" && (
+                <p className="text-muted-foreground text-xs">✓ Valid JSON</p>
+              )}
           </div>
         );
 

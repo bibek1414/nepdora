@@ -4,7 +4,8 @@ export type FieldType =
   | "date"
   | "boolean"
   | "email"
-  | "image";
+  | "image"
+  | "json";
 
 export interface FieldDefinition {
   name: string;

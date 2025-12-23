@@ -103,6 +103,32 @@ export function CollectionDataManagement({
     if (value === null || value === undefined) return "-";
     if (type === "boolean") return value ? "Yes" : "No";
     if (type === "date") return new Date(value).toLocaleDateString();
+    if (type === "json") {
+      // Handle JSON fields - try to parse and format
+      if (typeof value === "string") {
+        try {
+          const parsed = JSON.parse(value);
+          // Format JSON nicely for display
+          const formatted = JSON.stringify(parsed, null, 2);
+          // Truncate if too long (show first 100 chars)
+          return formatted.length > 100
+            ? formatted.substring(0, 100) + "..."
+            : formatted;
+        } catch {
+          // Invalid JSON, return as-is but truncated
+          return value.length > 100 ? value.substring(0, 100) + "..." : value;
+        }
+      }
+      // If already an object, stringify it
+      try {
+        const formatted = JSON.stringify(value, null, 2);
+        return formatted.length > 100
+          ? formatted.substring(0, 100) + "..."
+          : formatted;
+      } catch {
+        return String(value);
+      }
+    }
     return String(value);
   };
 
