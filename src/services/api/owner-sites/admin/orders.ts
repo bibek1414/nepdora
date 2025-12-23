@@ -23,7 +23,7 @@ export const orderApi = {
           "Content-Type": "application/json",
         };
 
-    const response = await fetch(`${API_BASE_URL}/api/order/`, {
+    const response = await fetch(`${API_BASE_URL}/api/admin-order/`, {
       method: "POST",
       headers,
       body: JSON.stringify(orderData),
@@ -48,7 +48,7 @@ export const orderApi = {
     if (is_manual) queryParams.append("is_manual", "true");
 
     const response = await fetch(
-      `${API_BASE_URL}/api/order/?${queryParams.toString()}`,
+      `${API_BASE_URL}/api/admin-order/?${queryParams.toString()}`,
       {
         method: "GET",
         headers: createHeaders(),
@@ -61,7 +61,7 @@ export const orderApi = {
 
   getOrderById: async (id: number): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/order/${id}/`, {
+    const response = await fetch(`${API_BASE_URL}/api/admin-order/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
