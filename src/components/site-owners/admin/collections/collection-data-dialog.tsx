@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import {
@@ -73,14 +72,16 @@ export function CollectionDataDialog({
             // Not JSON, keep as string
           }
         }
-        // Parse JSON fields - if it's a string, try to parse and format it
+        // Parse JSON fields - if it's a string, try to parse it
+        // Keep as JSON string (will be handled in renderFieldInput)
         if (
           field.type === "json" &&
           typeof parsedData[field.name] === "string"
         ) {
           try {
             const parsed = JSON.parse(parsedData[field.name]);
-            parsedData[field.name] = JSON.stringify(parsed, null, 2);
+            // Keep as minified JSON string (will be parsed in renderFieldInput)
+            parsedData[field.name] = JSON.stringify(parsed);
           } catch {
             // Invalid JSON, keep as string
           }
@@ -95,7 +96,8 @@ export function CollectionDataDialog({
         if (field.type === "boolean") {
           initialData[field.name] = false;
         } else if (field.type === "json") {
-          initialData[field.name] = "{}";
+          // Initialize as array with one empty object for sub-fields support
+          initialData[field.name] = "[{}]";
         } else {
           initialData[field.name] = "";
         }
@@ -144,11 +146,44 @@ export function CollectionDataDialog({
 
       // Handle JSON fields - validate JSON format
       if (f.type === "json") {
-        if (!value || value.trim() === "" || value === "{}" || value === "[]") {
-          missingFields.push(f.name);
+        if (
+          !value ||
+          value.trim() === "" ||
+          value === "{}" ||
+          value === "[]" ||
+          value === "[{}]"
+        ) {
+          if (f.required) {
+            missingFields.push(f.name);
+          }
         } else {
           try {
-            JSON.parse(value);
+            const parsed = JSON.parse(value);
+            // Check if parsed JSON has at least one non-empty value when required
+            if (f.required && typeof parsed === "object" && parsed !== null) {
+              if (Array.isArray(parsed)) {
+                // For arrays, check if at least one entry has non-empty values
+                const hasValue = parsed.some((item: any) => {
+                  if (typeof item === "object" && item !== null) {
+                    return Object.values(item).some(
+                      v => v !== null && v !== undefined && v !== ""
+                    );
+                  }
+                  return false;
+                });
+                if (!hasValue) {
+                  missingFields.push(f.name);
+                }
+              } else {
+                // Single object
+                const hasValue = Object.values(parsed).some(
+                  v => v !== null && v !== undefined && v !== ""
+                );
+                if (!hasValue) {
+                  missingFields.push(f.name);
+                }
+              }
+            }
           } catch {
             invalidJsonFields.push(f.name);
           }
@@ -596,44 +631,192 @@ export function CollectionDataDialog({
         );
 
       case "json":
-        const jsonValue = typeof fieldValue === "string" ? fieldValue : "";
-        const jsonError = jsonErrors[field.name] || null;
-
-        const handleJsonChange = (value: string) => {
-          setJsonErrors(prev => ({ ...prev, [field.name]: null }));
-          updateFieldValue(field.name, value);
-
-          // Validate JSON on change (but don't block input)
-          if (value.trim() && value !== "{}" && value !== "[]") {
-            try {
-              JSON.parse(value);
-            } catch (error) {
-              setJsonErrors(prev => ({
-                ...prev,
-                [field.name]: "Invalid JSON format",
-              }));
-            }
+        // Parse field name to extract sub-fields: "price(min, max, person)" -> ["min", "max", "person"]
+        const parseJsonFieldName = (fieldName: string) => {
+          const match = fieldName.match(/^(.+?)\((.+)\)$/);
+          if (match) {
+            const subFields = match[2]
+              .split(",")
+              .map(f => f.trim())
+              .filter(f => f.length > 0);
+            return subFields;
           }
+          return [];
         };
 
+        const subFields = parseJsonFieldName(field.name);
+
+        // If field name has sub-fields format, render separate inputs
+        if (subFields.length > 0) {
+          // Parse existing JSON value - support both single object and array of objects
+          const currentJsonValue = formData[field.name];
+          let jsonArray: Record<string, any>[] = [];
+
+          if (currentJsonValue) {
+            try {
+              const parsed =
+                typeof currentJsonValue === "string"
+                  ? JSON.parse(currentJsonValue)
+                  : currentJsonValue;
+
+              if (Array.isArray(parsed)) {
+                // Already an array
+                jsonArray = parsed.filter(
+                  item =>
+                    typeof item === "object" &&
+                    item !== null &&
+                    !Array.isArray(item)
+                );
+              } else if (typeof parsed === "object" && parsed !== null) {
+                // Single object, convert to array
+                jsonArray = [parsed];
+              }
+            } catch {
+              // Invalid JSON, start fresh
+            }
+          }
+
+          // If empty, initialize with one empty object
+          if (jsonArray.length === 0) {
+            jsonArray = [{}];
+          }
+
+          const handleSubFieldChange = (
+            entryIndex: number,
+            subFieldName: string,
+            value: string
+          ) => {
+            const newArray = [...jsonArray];
+            if (!newArray[entryIndex]) {
+              newArray[entryIndex] = {};
+            }
+            newArray[entryIndex] = {
+              ...newArray[entryIndex],
+              [subFieldName]: value,
+            };
+
+            // Store as JSON string - if single entry, could be object or array
+            // For consistency, always store as array
+            updateFieldValue(field.name, JSON.stringify(newArray));
+          };
+
+          const removeJsonEntry = (index: number) => {
+            const newArray = jsonArray.filter((_, i) => i !== index);
+            if (newArray.length === 0) {
+              // Keep at least one empty entry
+              updateFieldValue(field.name, JSON.stringify([{}]));
+            } else {
+              updateFieldValue(field.name, JSON.stringify(newArray));
+            }
+          };
+
+          const addJsonEntry = () => {
+            const newArray = [...jsonArray, {}];
+            updateFieldValue(field.name, JSON.stringify(newArray));
+          };
+
+          return (
+            <div className="space-y-3">
+              <div className="rounded-md border border-blue-200 bg-blue-50 p-3">
+                <p className="text-muted-foreground text-xs font-medium">
+                  💡 JSON Format Hint: Use field name like{" "}
+                  <code className="rounded bg-blue-100 px-1 py-0.5 text-xs">
+                    fieldName(subField1, subField2)
+                  </code>{" "}
+                  to create separate inputs for each sub-field.
+                </p>
+              </div>
+
+              {jsonArray.map((jsonEntry, entryIndex) => (
+                <div
+                  key={entryIndex}
+                  className="space-y-3 rounded-lg border p-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium">
+                      Entry {entryIndex + 1}
+                    </Label>
+                    {jsonArray.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeJsonEntry(entryIndex)}
+                        className="h-8 w-8"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+
+                  <div className="grid gap-3">
+                    {subFields.map(subField => (
+                      <div key={subField} className="space-y-1">
+                        <Label
+                          htmlFor={`${field.name}-${entryIndex}-${subField}`}
+                          className="text-sm"
+                        >
+                          {subField}
+                        </Label>
+                        <Input
+                          id={`${field.name}-${entryIndex}-${subField}`}
+                          type="text"
+                          value={jsonEntry[subField] || ""}
+                          onChange={e =>
+                            handleSubFieldChange(
+                              entryIndex,
+                              subField,
+                              e.target.value
+                            )
+                          }
+                          placeholder={`Enter ${subField}`}
+                          required={field.required && entryIndex === 0}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addJsonEntry}
+                className="w-full"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add {field.name}
+              </Button>
+            </div>
+          );
+        }
+
+        // Fallback: if no sub-fields format detected, show hint only
         return (
           <div className="space-y-2">
-            <Textarea
-              value={jsonValue}
-              onChange={e => handleJsonChange(e.target.value)}
-              placeholder='{"key": "value"}'
-              required={field.required}
-              className="min-h-[200px] font-mono text-sm"
-            />
-            {jsonError && (
-              <p className="text-destructive text-sm">{jsonError}</p>
-            )}
-            {!jsonError &&
-              jsonValue.trim() &&
-              jsonValue !== "{}" &&
-              jsonValue !== "[]" && (
-                <p className="text-muted-foreground text-xs">✓ Valid JSON</p>
-              )}
+            <div className="rounded-md border border-blue-200 bg-blue-50 p-3">
+              <p className="text-muted-foreground text-xs font-medium">
+                💡 JSON Format Hint: Name your field like{" "}
+                <code className="rounded bg-blue-100 px-1 py-0.5 text-xs">
+                  price(min, max, person)
+                </code>{" "}
+                to create separate inputs. Example:{" "}
+                <code className="rounded bg-blue-100 px-1 py-0.5 text-xs">
+                  price(min, max, person)
+                </code>{" "}
+                will create inputs for min, max, and person.
+              </p>
+            </div>
+            <div className="rounded-md border border-dashed p-4 text-center">
+              <p className="text-muted-foreground text-sm">
+                Please use the format{" "}
+                <code className="bg-muted rounded px-1 py-0.5 text-xs">
+                  fieldName(subField1, subField2)
+                </code>{" "}
+                when creating this field in the collection settings.
+              </p>
+            </div>
           </div>
         );
 

@@ -350,6 +350,17 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
                           }
                           required
                         />
+                        {field.type === "json" && (
+                          <div className="rounded-md border border-blue-200 bg-blue-50 p-2">
+                            <p className="text-muted-foreground text-xs">
+                              💡 <strong>JSON Format:</strong> Use format like{" "}
+                              <code className="rounded bg-blue-100 px-1 py-0.5 text-xs">
+                                price(min, max, person)
+                              </code>{" "}
+                              to create separate inputs for each sub-field.
+                            </p>
+                          </div>
+                        )}
                       </div>
 
                       <div className="space-y-2">
