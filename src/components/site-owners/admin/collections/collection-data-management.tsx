@@ -35,6 +35,7 @@ import {
   useCollection,
   useCollectionData,
   useDeleteCollectionData,
+  useCollections,
 } from "@/hooks/owner-site/admin/use-collections";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CollectionData } from "@/types/owner-site/admin/collection";
@@ -65,6 +66,7 @@ export function CollectionDataManagement({
       ...(searchQuery && { search: searchQuery }),
     });
   const deleteDataMutation = useDeleteCollectionData();
+  const { data: collections } = useCollections();
 
   const handleDelete = async () => {
     if (!dataToDelete) return;
@@ -98,11 +100,34 @@ export function CollectionDataManagement({
     setEditingData(null);
     setShowDataDialog(true);
   };
+  // Helper to get model field display value
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const formatCellValue = (value: any, type: string) => {
+  const getModelFieldDisplayValue = (field: any, value: any) => {
+    if (!value || value === null || value === undefined) return "-";
+
+    // Find the referenced collection
+    const referencedCollection = collections?.find(
+      c => c.id === field.model_collection_id
+    );
+
+    if (!referencedCollection) {
+      return `ID: ${value}`;
+    }
+
+    // Try to find the item in the current collection data (if it's the same collection)
+    // Otherwise, we'd need to fetch it separately, which is inefficient for table display
+    // For now, just show the ID
+    return `ID: ${value}`;
+  };
+
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const formatCellValue = (value: any, type: string, field?: any) => {
     if (value === null || value === undefined) return "-";
     if (type === "boolean") return value ? "Yes" : "No";
     if (type === "date") return new Date(value).toLocaleDateString();
+    if (type === "model") {
+      return getModelFieldDisplayValue(field, value);
+    }
     if (type === "json") {
       // Handle JSON fields - try to parse and format
       if (typeof value === "string") {
@@ -293,7 +318,8 @@ export function CollectionDataManagement({
                       <TableCell className="font-medium">
                         {formatCellValue(
                           data.data[nameField.name],
-                          nameField.type
+                          nameField.type,
+                          nameField
                         )}
                       </TableCell>
                     )}
@@ -306,7 +332,11 @@ export function CollectionDataManagement({
                         <div
                           dangerouslySetInnerHTML={{
                             __html: showFifteenWordsHTML(
-                              formatCellValue(data.data[field.name], field.type)
+                              formatCellValue(
+                                data.data[field.name],
+                                field.type,
+                                field
+                              )
                             ),
                           }}
                         />

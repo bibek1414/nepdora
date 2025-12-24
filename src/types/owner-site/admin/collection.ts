@@ -5,7 +5,8 @@ export type FieldType =
   | "boolean"
   | "email"
   | "image"
-  | "json";
+  | "json"
+  | "model";
 
 export interface FieldDefinition {
   name: string;
@@ -14,6 +15,7 @@ export interface FieldDefinition {
   filterable: boolean;
   searchable: boolean;
   is_default?: boolean;
+  model_collection_id?: number;
 }
 
 export interface DefaultField {

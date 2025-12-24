@@ -17,6 +17,8 @@ import { toast } from "sonner";
 import {
   useCreateCollectionData,
   useUpdateCollectionData,
+  useCollectionData,
+  useCollections,
 } from "@/hooks/owner-site/admin/use-collections";
 import {
   Collection,
@@ -27,6 +29,13 @@ import { uploadToCloudinary } from "@/utils/cloudinary";
 import { Loader2, Upload, X, Plus } from "lucide-react";
 import Image from "next/image";
 import ReusableQuill from "@/components/ui/tip-tap";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface CollectionDataDialogProps {
   open: boolean;
@@ -98,6 +107,9 @@ export function CollectionDataDialog({
         } else if (field.type === "json") {
           // Initialize as array with one empty object for sub-fields support
           initialData[field.name] = "[{}]";
+        } else if (field.type === "model") {
+          // Initialize model field as empty string (will be converted to number when selected)
+          initialData[field.name] = "";
         } else {
           initialData[field.name] = "";
         }
@@ -191,6 +203,16 @@ export function CollectionDataDialog({
         return;
       }
 
+      // Handle model fields - validate that a collection data ID is selected
+      if (f.type === "model") {
+        if (!value || value === "" || value === null || value === undefined) {
+          if (f.required) {
+            missingFields.push(f.name);
+          }
+        }
+        return;
+      }
+
       if (!value) {
         missingFields.push(f.name);
       }
@@ -229,6 +251,15 @@ export function CollectionDataDialog({
             processedData[field.name] = JSON.stringify(parsed);
           } catch (error) {
             throw new Error(`Invalid JSON in field "${field.name}"`);
+          }
+        }
+        // Convert model field values to numbers (collection data IDs)
+        if (field.type === "model" && processedData[field.name]) {
+          const numValue = parseInt(processedData[field.name], 10);
+          if (!isNaN(numValue)) {
+            processedData[field.name] = numValue;
+          } else {
+            processedData[field.name] = null;
           }
         }
       });
@@ -820,6 +851,16 @@ export function CollectionDataDialog({
           </div>
         );
 
+      case "model":
+        // Render model field dropdown
+        return (
+          <ModelFieldInput
+            field={field}
+            value={fieldValue}
+            onChange={value => updateFieldValue(field.name, value)}
+          />
+        );
+
       default:
         return (
           <Input
@@ -829,6 +870,98 @@ export function CollectionDataDialog({
           />
         );
     }
+  };
+
+  // Helper component for model field input
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ModelFieldInput = ({
+    field,
+    value,
+    onChange,
+  }: {
+    field: any;
+    value: any;
+    onChange: (value: number | string) => void;
+  }) => {
+    const { data: collections } = useCollections();
+
+    if (!field.model_collection_id) {
+      return (
+        <div className="rounded-md border border-dashed p-4 text-center">
+          <p className="text-muted-foreground text-sm">
+            Please configure this model field with a collection reference.
+          </p>
+        </div>
+      );
+    }
+
+    // Find the referenced collection by ID
+    const referencedCollection = collections?.find(
+      c => c.id === field.model_collection_id
+    );
+
+    const { data: collectionDataResponse, isLoading } = useCollectionData(
+      referencedCollection?.slug || "",
+      {}
+    );
+
+    // Get name field for display
+    const getNameField = () => {
+      if (!referencedCollection) return null;
+      const nameField = referencedCollection.all_fields.find(
+        f => f.name.toLowerCase() === "name" || f.name.toLowerCase() === "title"
+      );
+      if (nameField) return nameField;
+      return referencedCollection.all_fields.find(f => f.type === "text");
+    };
+
+    const nameField = getNameField();
+
+    // Format display value for dropdown
+    const formatDisplayValue = (data: CollectionData) => {
+      if (nameField && data.data[nameField.name]) {
+        return String(data.data[nameField.name]);
+      }
+      return `Item #${data.id}`;
+    };
+
+    if (isLoading) {
+      return (
+        <div className="flex items-center gap-2">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span className="text-muted-foreground text-sm">
+            Loading options...
+          </span>
+        </div>
+      );
+    }
+
+    const options = collectionDataResponse?.results || [];
+
+    return (
+      <Select
+        value={value?.toString() || ""}
+        onValueChange={onChange}
+        required={field.required}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Select an item" />
+        </SelectTrigger>
+        <SelectContent>
+          {options.length === 0 ? (
+            <SelectItem value="" disabled>
+              No items available
+            </SelectItem>
+          ) : (
+            options.map(item => (
+              <SelectItem key={item.id} value={item.id.toString()}>
+                {formatDisplayValue(item)}
+              </SelectItem>
+            ))
+          )}
+        </SelectContent>
+      </Select>
+    );
   };
 
   return (

@@ -24,7 +24,10 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { useCreateCollection } from "@/hooks/owner-site/admin/use-collections";
+import {
+  useCreateCollection,
+  useCollections,
+} from "@/hooks/owner-site/admin/use-collections";
 import { FieldType } from "@/types/owner-site/admin/collection";
 
 interface FieldInput {
@@ -33,6 +36,7 @@ interface FieldInput {
   required: boolean;
   filterable: boolean;
   searchable: boolean;
+  model_collection_id?: number;
 }
 
 interface CreateCollectionDialogProps {
@@ -51,6 +55,7 @@ export function CreateCollectionDialog({
   const [adminEmail, setAdminEmail] = useState("");
 
   const createCollectionMutation = useCreateCollection();
+  const { data: collections } = useCollections();
 
   const addField = () => {
     setFields([
@@ -90,6 +95,15 @@ export function CreateCollectionDialog({
       return;
     }
 
+    // Validate model fields have a collection selected
+    const invalidModelFields = fields.filter(
+      f => f.type === "model" && !f.model_collection_id
+    );
+    if (invalidModelFields.length > 0) {
+      toast.error("Model fields must have a collection selected");
+      return;
+    }
+
     // Validate admin email if send_email is enabled
     if (sendEmail && !adminEmail.trim()) {
       toast.error(
@@ -116,6 +130,10 @@ export function CreateCollectionDialog({
           required: f.required,
           filterable: f.filterable,
           searchable: f.searchable,
+          ...(f.type === "model" &&
+            f.model_collection_id && {
+              model_collection_id: f.model_collection_id,
+            }),
         })),
         send_email: sendEmail,
         ...(sendEmail &&
@@ -272,7 +290,12 @@ export function CreateCollectionDialog({
                           <Select
                             value={field.type}
                             onValueChange={(value: FieldType) =>
-                              updateField(index, { type: value })
+                              updateField(index, {
+                                type: value,
+                                ...(value !== "model" && {
+                                  model_collection_id: undefined,
+                                }),
+                              })
                             }
                           >
                             <SelectTrigger>
@@ -286,10 +309,42 @@ export function CreateCollectionDialog({
                               <SelectItem value="email">Email</SelectItem>
                               <SelectItem value="image">Image</SelectItem>
                               <SelectItem value="json">JSON</SelectItem>
+                              <SelectItem value="model">Model</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
                       </div>
+
+                      {field.type === "model" && (
+                        <div className="space-y-2">
+                          <Label>Select Collection *</Label>
+                          <Select
+                            value={field.model_collection_id?.toString() || ""}
+                            onValueChange={value =>
+                              updateField(index, {
+                                model_collection_id: parseInt(value, 10),
+                              })
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a collection" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {collections?.map(collection => (
+                                <SelectItem
+                                  key={collection.id}
+                                  value={collection.id.toString()}
+                                >
+                                  {collection.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <p className="text-muted-foreground text-xs">
+                            Select a collection to reference its data entries
+                          </p>
+                        </div>
+                      )}
 
                       <div className="flex gap-4">
                         <div className="flex items-center space-x-2">
