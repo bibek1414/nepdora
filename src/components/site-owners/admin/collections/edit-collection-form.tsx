@@ -66,7 +66,8 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
           required: f.required,
           filterable: f.filterable,
           searchable: f.searchable,
-          model_collection_id: f.model_collection_id,
+          model_collection_id:
+            (f as any).model || (f as any).model_collection_id,
         }))
       );
       setSendEmail(collection.send_email ?? false);
@@ -149,10 +150,10 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
             required: f.required,
             filterable: f.filterable,
             searchable: f.searchable,
-            ...(f.type === "model" &&
-              f.model_collection_id && {
-                model_collection_id: f.model_collection_id,
-              }),
+            model:
+              f.type === "model" && f.model_collection_id
+                ? f.model_collection_id
+                : null,
           })),
           send_email: sendEmail,
           ...(sendEmail &&

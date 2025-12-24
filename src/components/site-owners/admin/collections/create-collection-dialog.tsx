@@ -130,10 +130,10 @@ export function CreateCollectionDialog({
           required: f.required,
           filterable: f.filterable,
           searchable: f.searchable,
-          ...(f.type === "model" &&
-            f.model_collection_id && {
-              model_collection_id: f.model_collection_id,
-            }),
+          model:
+            f.type === "model" && f.model_collection_id
+              ? f.model_collection_id
+              : null,
         })),
         send_email: sendEmail,
         ...(sendEmail &&

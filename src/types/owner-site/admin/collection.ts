@@ -15,7 +15,8 @@ export interface FieldDefinition {
   filterable: boolean;
   searchable: boolean;
   is_default?: boolean;
-  model_collection_id?: number;
+  model?: number | null;
+  model_collection_id?: number; // For backward compatibility
 }
 
 export interface DefaultField {

@@ -253,15 +253,7 @@ export function CollectionDataDialog({
             throw new Error(`Invalid JSON in field "${field.name}"`);
           }
         }
-        // Convert model field values to numbers (collection data IDs)
-        if (field.type === "model" && processedData[field.name]) {
-          const numValue = parseInt(processedData[field.name], 10);
-          if (!isNaN(numValue)) {
-            processedData[field.name] = numValue;
-          } else {
-            processedData[field.name] = null;
-          }
-        }
+        // Model fields store the name as string (no conversion needed)
       });
 
       if (editingData) {
@@ -885,7 +877,10 @@ export function CollectionDataDialog({
   }) => {
     const { data: collections } = useCollections();
 
-    if (!field.model_collection_id) {
+    // Get model collection ID from field.model or field.model_collection_id (for backward compatibility)
+    const modelCollectionId = (field as any).model || field.model_collection_id;
+
+    if (!modelCollectionId) {
       return (
         <div className="rounded-md border border-dashed p-4 text-center">
           <p className="text-muted-foreground text-sm">
@@ -897,7 +892,7 @@ export function CollectionDataDialog({
 
     // Find the referenced collection by ID
     const referencedCollection = collections?.find(
-      c => c.id === field.model_collection_id
+      c => c.id === modelCollectionId
     );
 
     const { data: collectionDataResponse, isLoading } = useCollectionData(
@@ -938,9 +933,31 @@ export function CollectionDataDialog({
 
     const options = collectionDataResponse?.results || [];
 
+    // Handle value conversion: if value is a number (ID), convert to name
+    // If value is already a string (name), use it as-is
+    let selectedValue = "";
+    if (value !== null && value !== undefined && value !== "") {
+      if (
+        typeof value === "number" ||
+        (typeof value === "string" &&
+          !isNaN(Number(value)) &&
+          value.trim() !== "")
+      ) {
+        // Value is an ID, find the item and get its name
+        const itemId = typeof value === "number" ? value : parseInt(value, 10);
+        const item = options.find(opt => opt.id === itemId);
+        if (item) {
+          selectedValue = formatDisplayValue(item);
+        }
+      } else {
+        // Value is already a name (string)
+        selectedValue = value.toString();
+      }
+    }
+
     return (
       <Select
-        value={value?.toString() || ""}
+        value={selectedValue}
         onValueChange={onChange}
         required={field.required}
       >
@@ -953,11 +970,14 @@ export function CollectionDataDialog({
               No items available
             </SelectItem>
           ) : (
-            options.map(item => (
-              <SelectItem key={item.id} value={item.id.toString()}>
-                {formatDisplayValue(item)}
-              </SelectItem>
-            ))
+            options.map(item => {
+              const displayValue = formatDisplayValue(item);
+              return (
+                <SelectItem key={item.id} value={displayValue}>
+                  {displayValue}
+                </SelectItem>
+              );
+            })
           )}
         </SelectContent>
       </Select>

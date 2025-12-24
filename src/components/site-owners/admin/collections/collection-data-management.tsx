@@ -106,8 +106,10 @@ export function CollectionDataManagement({
     if (!value || value === null || value === undefined) return "-";
 
     // Find the referenced collection
+    // Get model collection ID from field.model or field.model_collection_id (for backward compatibility)
+    const modelCollectionId = (field as any).model || field.model_collection_id;
     const referencedCollection = collections?.find(
-      c => c.id === field.model_collection_id
+      c => c.id === modelCollectionId
     );
 
     if (!referencedCollection) {
