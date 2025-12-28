@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { Search, Calendar, ChevronRight, ChevronLeft } from "lucide-react";
+import { Search, Calendar, ChevronRight, ChevronLeft, Eye } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +12,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   useBookingData,
   useTourBookingsData,
@@ -65,6 +71,9 @@ interface BookingsClientProps {
 export default function BookingsClient({ subDomain }: BookingsClientProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
+  const [selectedLicenseImage, setSelectedLicenseImage] = useState<
+    string | null
+  >(null);
   const isBatoma = subDomain === "batoma";
 
   // Debounce search
@@ -186,6 +195,9 @@ export default function BookingsClient({ subDomain }: BookingsClientProps) {
                     <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                       Number of Persons
                     </TableHead>
+                    <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                      License
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -204,6 +216,7 @@ export default function BookingsClient({ subDomain }: BookingsClientProps) {
                     const numberOfPersons =
                       bookingData["number of persons"] ||
                       bookingData["group size"];
+                    const licenseImage = bookingData["license image"];
 
                     return (
                       <TableRow
@@ -270,6 +283,23 @@ export default function BookingsClient({ subDomain }: BookingsClientProps) {
                             {numberOfPersons || "—"}
                           </span>
                         </TableCell>
+                        <TableCell className="px-6 py-4">
+                          {licenseImage ? (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                setSelectedLicenseImage(licenseImage)
+                              }
+                              className="h-8 text-xs"
+                            >
+                              <Eye className="mr-1 h-3 w-3" />
+                              View
+                            </Button>
+                          ) : (
+                            <span className="text-xs text-black/40">—</span>
+                          )}
+                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -285,6 +315,31 @@ export default function BookingsClient({ subDomain }: BookingsClientProps) {
             </>
           )}
         </div>
+
+        {/* License Image Dialog */}
+        <Dialog
+          open={!!selectedLicenseImage}
+          onOpenChange={open => !open && setSelectedLicenseImage(null)}
+        >
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>License Image</DialogTitle>
+            </DialogHeader>
+            <div className="mt-4">
+              {selectedLicenseImage && (
+                <img
+                  src={selectedLicenseImage}
+                  alt="License"
+                  className="h-auto w-full rounded-lg"
+                  onError={e => {
+                    const target = e.currentTarget as HTMLImageElement;
+                    target.src = "/placeholder-image.png";
+                  }}
+                />
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
