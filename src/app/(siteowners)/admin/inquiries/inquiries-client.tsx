@@ -6,7 +6,6 @@ import {
   Mail,
   MessageSquare,
   Bell,
-  Calendar,
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
@@ -23,17 +22,15 @@ import {
 import { cn } from "@/lib/utils";
 import { Contact } from "@/types/owner-site/admin/contact";
 import { Newsletter } from "@/types/owner-site/admin/newsletter";
-import { Appointment } from "@/types/owner-site/admin/appointment";
 import { PopUpForm } from "@/types/owner-site/admin/popup";
 
 import { useGetContacts } from "@/hooks/owner-site/admin/use-contact";
 import { usePopupForms } from "@/hooks/owner-site/admin/use-popup";
 import { useNewsletters } from "@/hooks/owner-site/admin/use-newsletter";
-import { useGetAppointments } from "@/hooks/owner-site/admin/use-appointment";
 import ContactDetailsDialog from "@/components/site-owners/admin/contact/contact-details-dialog";
 
 const ITEMS_PER_PAGE = 10;
-type InquiryType = "contact" | "popup" | "newsletter" | "booking";
+type InquiryType = "contact" | "popup" | "newsletter";
 
 const SimplePagination = ({
   currentPage,
@@ -85,7 +82,6 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [page, setPage] = useState(1);
-  const isBatoma = subDomain === "batoma";
 
   // Debounce search
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -112,10 +108,6 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
     selectedView === "newsletter"
       ? [page, ITEMS_PER_PAGE, debouncedSearch]
       : [1, 1, ""];
-  const bookingFilters =
-    selectedView === "booking"
-      ? { search: debouncedSearch, page, page_size: ITEMS_PER_PAGE }
-      : { page_size: 1 };
 
   const { data: contactsData, isLoading: loadingContacts } =
     useGetContacts(contactFilters);
@@ -123,14 +115,11 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
     usePopupForms(popupFilters);
   const { data: newslettersData, isLoading: loadingNewsletters } =
     useNewsletters(...newsletterArgs);
-  const { data: bookingsData, isLoading: loadingBookings } =
-    useGetAppointments(bookingFilters);
 
   const isLoading =
     (selectedView === "contact" && loadingContacts) ||
     (selectedView === "popup" && loadingPopups) ||
-    (selectedView === "newsletter" && loadingNewsletters) ||
-    (selectedView === "booking" && loadingBookings);
+    (selectedView === "newsletter" && loadingNewsletters);
 
   const tabs = [
     {
@@ -151,16 +140,6 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
       icon: Bell,
       count: newslettersData?.count || 0,
     },
-    ...(isBatoma
-      ? [
-          {
-            id: "booking" as InquiryType,
-            label: "Bookings",
-            icon: Calendar,
-            count: bookingsData?.count || 0,
-          },
-        ]
-      : []),
   ];
 
   const formatDate = (date?: string) =>
@@ -186,12 +165,10 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
         return popupsData?.results || [];
       case "newsletter":
         return newslettersData?.results || [];
-      case "booking":
-        return bookingsData?.results || [];
       default:
         return [];
     }
-  }, [selectedView, contactsData, popupsData, newslettersData, bookingsData]);
+  }, [selectedView, contactsData, popupsData, newslettersData]);
 
   const totalCount = useMemo(() => {
     switch (selectedView) {
@@ -201,12 +178,10 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
         return popupsData?.count || 0;
       case "newsletter":
         return newslettersData?.count || 0;
-      case "booking":
-        return bookingsData?.count || 0;
       default:
         return 0;
     }
-  }, [selectedView, contactsData, popupsData, newslettersData, bookingsData]);
+  }, [selectedView, contactsData, popupsData, newslettersData]);
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
@@ -333,70 +308,6 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
                 <TableCell className="px-6 py-4 text-right">
                   <span className="text-xs text-black/40">
                     {formatDate(item.created_at)}
-                  </span>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      );
-    }
-
-    if (selectedView === "booking") {
-      return (
-        <Table>
-          <TableHeader>
-            <TableRow className="border-b border-black/5">
-              <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
-                Customer
-              </TableHead>
-              <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
-                Date & Time
-              </TableHead>
-              <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
-                Reason
-              </TableHead>
-              <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
-                Status
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {(currentData as Appointment[]).map((item, index) => (
-              <TableRow
-                key={item.id || index}
-                className="border-b border-black/5 transition-colors hover:bg-black/2"
-              >
-                <TableCell className="px-6 py-4">
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-normal text-black capitalize">
-                      {item.full_name}
-                    </span>
-                    {item.email && (
-                      <span className="text-xs text-black/50">
-                        {item.email}
-                      </span>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-xs text-black/60">
-                      {formatDate(item.date || "")}
-                    </span>
-                    {item.time && (
-                      <span className="text-xs text-black/40">{item.time}</span>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  <span className="text-xs text-black/50">
-                    {item.reason?.name || "General"}
-                  </span>
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  <span className="text-xs text-black/50 capitalize">
-                    {item.status}
                   </span>
                 </TableCell>
               </TableRow>

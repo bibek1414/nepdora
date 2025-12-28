@@ -154,3 +154,13 @@ export const useDeleteCollectionData = () => {
     },
   });
 };
+
+// Booking Collection Data Hook (specific to booking collection)
+export const useBookingData = (filters?: Record<string, string>) => {
+  return useCollectionData("booking", filters);
+};
+
+// Tour Bookings Collection Data Hook (specific to tour-bookings collection)
+export const useTourBookingsData = (filters?: Record<string, string>) => {
+  return useCollectionData("tour-bookings", filters);
+};

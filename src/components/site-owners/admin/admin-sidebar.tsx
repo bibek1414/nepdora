@@ -24,6 +24,7 @@ import {
   Calendar,
   IndianRupee,
   Database,
+  BookOpen,
 } from "lucide-react";
 import { User as UserType } from "@/hooks/use-jwt-server";
 
@@ -71,6 +72,16 @@ const navigationGroups = [
         icon: Calendar,
       },
     ],
+  },
+  {
+    items: [
+      {
+        name: "Bookings",
+        href: "/admin/bookings",
+        icon: BookOpen,
+      },
+    ],
+    showForBatoma: true,
   },
   {
     items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
@@ -135,10 +146,14 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
     localStorage.setItem("sidebarCollapsed", JSON.stringify(collapsed));
   }, [collapsed]);
 
-  // Filter navigation groups based on website type
+  // Filter navigation groups based on website type and subdomain
   const filteredNavigationGroups = navigationGroups.filter(group => {
     // If user's website type is 'service' and this group should be hidden for service, filter it out
     if (user.websiteType === "service" && group.hideForService) {
+      return false;
+    }
+    // If group should only show for batoma subdomain
+    if (group.showForBatoma && user.subDomain !== "batoma") {
       return false;
     }
     return true;
