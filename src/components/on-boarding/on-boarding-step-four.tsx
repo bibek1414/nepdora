@@ -222,7 +222,7 @@ export const OnboardingStepFour = ({
     >
       {[...Array(6)].map((_, i) => (
         <Card key={i} className="overflow-hidden">
-          <Skeleton className="aspect-[4/3] w-full" />
+          <Skeleton className="aspect-4/3 w-full" />
           <CardContent className="space-y-2 p-4">
             <Skeleton className="h-5 w-3/4" />
             <Skeleton className="h-10 w-full" />
@@ -478,7 +478,7 @@ export const OnboardingStepFour = ({
                       className="group overflow-hidden border-2 border-gray-200 py-0 shadow-none transition-all duration-300"
                     >
                       <div
-                        className="relative aspect-[4/3] cursor-pointer overflow-hidden bg-gray-100"
+                        className="relative aspect-4/3 cursor-pointer overflow-hidden bg-gray-100"
                         onClick={() => handleTemplateSelect(template)}
                       >
                         {template.template_image ? (

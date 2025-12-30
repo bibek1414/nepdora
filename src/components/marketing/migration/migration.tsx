@@ -14,7 +14,7 @@ const Migration: React.FC = () => {
           <div className="order-2 lg:order-1">
             <Card className="border-slate-200">
               <CardContent className="p-8 md:p-10">
-                <div className="mb-8 flex items-center justify-between border-b border-slate-100 pb-6">
+                <div className="mb-2 flex items-center justify-between border-b border-slate-100 pb-6">
                   <div className="opacity-50 grayscale">
                     <p className="mb-1 text-xs font-bold tracking-wide text-slate-500 uppercase">
                       Traditional Hosting
@@ -27,13 +27,7 @@ const Migration: React.FC = () => {
                     </p>
                   </div>
                   <div className="text-right">
-                    <Badge
-                      variant="outline"
-                      className="border-primary/20 bg-primary/10 text-primary hover:bg-primary/10 mb-1"
-                    >
-                      ALL INCLUSIVE
-                    </Badge>
-                    <p className="text-primary mb-1 text-xs font-bold tracking-wide uppercase">
+                    <p className="mb-1 text-xs font-bold tracking-wide text-black uppercase">
                       Nepdora Plan
                     </p>
                     <p className="text-4xl font-bold text-slate-900">
@@ -48,12 +42,11 @@ const Migration: React.FC = () => {
                   </div>
                 </div>
 
-                <h3 className="mb-2 text-lg font-bold text-slate-900">
+                <h3 className="mb-0 text-lg font-bold text-slate-900">
                   Claim Your Free Transfer
                 </h3>
-                <p className="mb-6 text-sm text-slate-500">
-                  We'll migrate your data for free. You only start paying the
-                  flat yearly fee once you're live.
+                <p className="mb-10 text-sm text-slate-500">
+                  You only start paying the flat yearly fee once you're live.
                 </p>
 
                 <form className="space-y-4">
@@ -114,16 +107,16 @@ const Migration: React.FC = () => {
           </div>
 
           <div className="order-1 lg:order-2">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 shadow-sm">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1">
               <Zap size={14} className="text-primary fill-current" />
-              <span className="text-xs font-bold tracking-widest text-slate-700 uppercase">
+              <span className="text-xs font-bold text-slate-700">
                 Switch & Save
               </span>
             </div>
 
-            <h2 className="mb-6 text-3xl leading-tight font-bold text-slate-900 md:text-5xl">
-              One price. <br />
-              <span className="text-primary">Everything included.</span>
+            <h2 className="mb-6 text-3xl leading-tight font-normal text-slate-900 md:text-5xl">
+              One Price. <br />
+              <span className="font-bold">Everything Included.</span>
             </h2>
 
             <p className="mb-8 text-lg leading-relaxed font-light text-slate-500">
@@ -140,7 +133,7 @@ const Migration: React.FC = () => {
                 "Daily backups & Technical maintenance included",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <div className="bg-primary/10 text-primary mt-1 flex h-5 w-5 flex-none items-center justify-center rounded-full">
+                  <div className="mt-1 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-slate-100 text-slate-700">
                     <Check size={12} strokeWidth={3} />
                   </div>
                   <span className="font-medium text-slate-700">{item}</span>

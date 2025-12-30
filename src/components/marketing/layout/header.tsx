@@ -128,15 +128,12 @@ const Header: React.FC = () => {
           {!isAuthenticated ? (
             <>
               <Link href="/admin/login">
-                <Button
-                  variant="outline"
-                  className="text-muted-foreground hover:none rounded-full shadow-none hover:bg-transparent"
-                >
+                <Button variant="secondary" rounded={true}>
                   Sign In
                 </Button>
               </Link>
               <Link href="/admin/signup">
-                <Button className="bg-primary/80 rounded-full text-white transition-all duration-200">
+                <Button variant="primary" rounded={true}>
                   Create Your Website for Free
                 </Button>
               </Link>

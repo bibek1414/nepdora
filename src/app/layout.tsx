@@ -1,5 +1,5 @@
 import "./globals.css";
-import { DM_Sans, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CustomerAuthProvider } from "@/contexts/customer/AuthContext";
 import { CustomerPublishAuthProvider } from "@/contexts/customer/publish/AuthContext";
@@ -12,11 +12,6 @@ import { CartProvider } from "@/contexts/CartContext";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalyticsStatic } from "@/components/site-owners/admin/google-analytics/google-analytics-static";
 import type { Metadata } from "next";
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-});
 
 const inter = Inter({
   subsets: ["latin"],

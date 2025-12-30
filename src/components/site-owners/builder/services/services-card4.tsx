@@ -56,7 +56,7 @@ export const ServicesCard4: React.FC<ServicesPost4Props> = ({
     <CardWrapper>
       <div className="group relative rounded-xl bg-white transition-all duration-300 dark:bg-gray-800">
         {/* Image Container */}
-        <div className="relative aspect-[4/3] w-full">
+        <div className="relative aspect-4/3 w-full">
           <Image
             src={serviceImage}
             alt={services.thumbnail_image_alt_description || services.title}

@@ -54,7 +54,7 @@ export const TeamCard8: React.FC<TeamCard8Props> = ({
       onClick={onClick}
     >
       {/* Image Container */}
-      <div className="group relative mb-5 aspect-[4/3] w-full cursor-pointer overflow-hidden rounded-[24px] bg-gray-200">
+      <div className="group relative mb-5 aspect-4/3 w-full cursor-pointer overflow-hidden rounded-[24px] bg-gray-200">
         <Image
           src={member.photo}
           alt={member.name}

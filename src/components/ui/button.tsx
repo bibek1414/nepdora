@@ -16,13 +16,11 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 cursor-pointer",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 cursor-pointer",
+          "border bg-background hover:bg-accent text-primary  dark:bg-input/30 border-primary dark:border-secondary dark:hover:bg-primary/10 cursor-pointer",
         outlineHover:
-          "border bg-background shadow-xs  dark:bg-input/30 dark:border-input dark:hover:bg-input/50 cursor-pointer",
+          "border bg-background dark:bg-input/30 dark:border-input dark:hover:bg-input/50 cursor-pointer",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 cursor-pointer",
-        rounded:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 cursor-pointer rounded-full h-16",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 cursor-pointer",
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 curosr-pointer",
         link: "text-primary underline-offset-4 hover:underline cursor-pointer",
@@ -33,6 +31,10 @@ const buttonVariants = cva(
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
 
         icon: "size-9",
+      },
+      rounded: {
+        true: "rounded-full",
+        false: "rounded-lg",
       },
     },
     defaultVariants: {
@@ -51,17 +53,19 @@ function Button({
   variant,
   size,
   asChild = false,
+  rounded = false,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
+    rounded?: boolean;
   }) {
   const Comp = asChild ? Slot : "button";
 
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, className, rounded }))}
       {...props}
     />
   );

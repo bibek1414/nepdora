@@ -46,11 +46,11 @@ const CaseStudies: React.FC = () => {
   return (
     <section id="case-studies" className="py-12 sm:py-16 md:py-20 lg:py-24">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-8 flex flex-col items-start justify-between sm:mb-10 md:flex-row md:items-end">
+        <div className="mb-2 flex flex-col items-start justify-center sm:mb-10 md:flex-row md:items-end">
           <div>
-            <h2 className="mb-4 text-2xl leading-tight font-extrabold text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
-              See how other Nepali Business get value from their Website on
-              Nepdora.
+            <h2 className="text-2xl leading-tight font-bold tracking-normal text-slate-900 sm:text-3xl md:text-4xl">
+              Read How Nepdora Helped{" "}
+              <span className="font-light">Businesses Grow</span>
             </h2>
           </div>
         </div>

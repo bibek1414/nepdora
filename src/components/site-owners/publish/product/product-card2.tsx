@@ -155,7 +155,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
       <Card className="overflow-hidden border-0 bg-white/80 backdrop-blur-sm">
         <CardContent className="p-0">
           <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-            <div className="relative aspect-[4/3]">
+            <div className="relative aspect-4/3">
               <Image
                 src={productImage}
                 alt={product.thumbnail_alt_description || product.name}

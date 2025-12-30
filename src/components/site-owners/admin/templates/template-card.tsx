@@ -82,7 +82,7 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
       <div className="group">
         <Card className="gap-0 overflow-hidden border-gray-200 py-0 transition-all duration-300 hover:border-blue-300">
           <div
-            className="relative aspect-[4/3] overflow-hidden bg-gray-100"
+            className="relative aspect-4/3 overflow-hidden bg-gray-100"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >

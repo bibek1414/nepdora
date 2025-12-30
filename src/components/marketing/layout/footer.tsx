@@ -11,7 +11,7 @@ import Image from "next/image";
 export const Footer = () => {
   return (
     <footer className="w-full overflow-hidden border-t border-gray-200 bg-gray-50 px-4 pt-12 pb-6 font-sans text-gray-900 sm:px-6 sm:pt-16 sm:pb-8 md:px-10 lg:px-20">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-6xl">
         {/* Big Title Section - Made more compact (reduced margins) */}
         <motion.div
           className="relative mb-10 flex w-full justify-center sm:mb-12"
@@ -47,7 +47,7 @@ export const Footer = () => {
             <Image
               src="/nepdora-logooo.svg"
               alt="Logo"
-              width={100}
+              width={200}
               height={100}
             />
             <p className="max-w-sm text-xs leading-relaxed text-gray-600 sm:text-sm">

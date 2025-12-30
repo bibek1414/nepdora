@@ -16,10 +16,6 @@ const TestimonialsSection = dynamic(
   { loading: () => <div className="py-20" /> }
 );
 
-const ContactSection = dynamic(
-  () => import("@/components/marketing/contact-us/contact-us"),
-  { loading: () => <div className="py-16" /> }
-);
 const TemplatesPage = dynamic(
   () => import("@/components/marketing/templates/templates-page"),
   { loading: () => <div className="py-20" /> }

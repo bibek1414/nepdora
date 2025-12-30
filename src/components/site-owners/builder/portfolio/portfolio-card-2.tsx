@@ -80,7 +80,7 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
             alt={portfolio.thumbnail_image_alt_description || portfolio.title}
             width={600}
             height={400}
-            className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="aspect-4/3 w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
 
           {/* Hover overlay */}

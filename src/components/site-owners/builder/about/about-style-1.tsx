@@ -144,7 +144,7 @@ export function AboutUsTemplate1({
               data.layout === "image-left" ? "md:col-start-1" : ""
             }`}
           >
-            <div className="hover:shadow-3xl relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-2xl transition-shadow duration-300">
+            <div className="hover:shadow-3xl relative aspect-4/3 w-full overflow-hidden rounded-2xl shadow-2xl transition-shadow duration-300">
               {/* Decorative gradient overlay */}
               <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-br from-transparent via-transparent to-black/5" />
 
