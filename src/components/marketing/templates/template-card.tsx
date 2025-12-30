@@ -34,7 +34,17 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
   const handlePreview = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    openPreview(template.schema_name);
+    if (template.preview_url) {
+      window.open(template.preview_url, "_blank", "noopener,noreferrer");
+    } else {
+      openPreview(template.schema_name);
+    }
+  };
+
+  const handleUseTemplate = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = "/admin/signup";
   };
 
   return (
@@ -59,14 +69,22 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
             <span className="text-4xl text-gray-400">📄</span>
           </div>
         )}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+          <Button
+            variant="secondary"
+            size="sm"
+            className="w-32 translate-y-4 transition-transform group-hover:translate-y-0"
+            onClick={handlePreview}
+          >
+            Preview
+          </Button>
           <Button
             variant="default"
             size="sm"
-            className="translate-y-4 transition-transform group-hover:translate-y-0"
-            onClick={handlePreview}
+            className="w-32 translate-y-4 transition-transform group-hover:translate-y-0"
+            onClick={handleUseTemplate}
           >
-            Customize
+            Start with this
           </Button>
         </div>
       </div>

@@ -41,7 +41,7 @@ export function EditTemplateForm({
   onCancel,
 }: EditTemplateFormProps) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>(
+  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<string>(
     template.template_image || ""
   );
   const [selectedCategory, setSelectedCategory] = useState<number | null>(
@@ -49,6 +49,12 @@ export function EditTemplateForm({
   );
   const [selectedSubcategory, setSelectedSubcategory] = useState<number | null>(
     template.template_subcategory?.id || null
+  );
+  const [previewUrlLink, setPreviewUrlLink] = useState<string>(
+    template.preview_url || ""
+  );
+  const [description, setDescription] = useState<string>(
+    template.description || ""
   );
 
   // Category creation dialog state
@@ -94,13 +100,13 @@ export function EditTemplateForm({
 
       setSelectedImage(file);
       const objectUrl = URL.createObjectURL(file);
-      setPreviewUrl(objectUrl);
+      setThumbnailPreviewUrl(objectUrl);
     }
   };
 
   const removeImage = () => {
     setSelectedImage(null);
-    setPreviewUrl(template.template_image || "");
+    setThumbnailPreviewUrl(template.template_image || "");
   };
 
   const handleCreateCategory = async () => {
@@ -159,6 +165,8 @@ export function EditTemplateForm({
           template_image: selectedImage || undefined,
           template_category_id: selectedCategory,
           template_subcategory_id: selectedSubcategory,
+          preview_url: previewUrlLink,
+          description: description,
         },
       });
 
@@ -183,12 +191,9 @@ export function EditTemplateForm({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="h-150 space-y-6 overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Template</DialogTitle>
-          <DialogDescription>
-            Update the template image, category, and subcategory
-          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -307,11 +312,11 @@ export function EditTemplateForm({
               Upload a new image for this template
             </p>
 
-            {previewUrl && (
+            {thumbnailPreviewUrl && (
               <div className="relative mb-4 inline-block">
                 <div className="group relative">
                   <img
-                    src={previewUrl}
+                    src={thumbnailPreviewUrl}
                     alt={`${template.name} preview`}
                     className="h-32 w-32 rounded-lg border-2 border-gray-200 object-cover"
                   />
@@ -353,6 +358,29 @@ export function EditTemplateForm({
                 Selected: {selectedImage.name}
               </p>
             )}
+          </div>
+
+          {/* Preview URL */}
+          <div className="space-y-2">
+            <Label htmlFor="preview-url">Preview URL</Label>
+            <Input
+              id="preview-url"
+              placeholder="https://example.com"
+              value={previewUrlLink}
+              onChange={e => setPreviewUrlLink(e.target.value)}
+            />
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <textarea
+              id="description"
+              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              placeholder="Enter template description"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+            />
           </div>
         </div>
 

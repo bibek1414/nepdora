@@ -9,6 +9,11 @@ export interface Template {
   template_subcategory?: { id: number; slug: string; name: string } | null;
   created_at?: string;
   updated_at?: string;
+  repo_url?: string | null;
+  preview_url?: string | null;
+  description?: string | null;
+  is_template_account?: boolean;
+  domains?: string[];
 }
 
 export interface CreateTemplateRequest {
@@ -19,6 +24,8 @@ export interface UpdateTemplateRequest {
   template_image?: File;
   template_category_id?: number | null;
   template_subcategory_id?: number | null;
+  preview_url?: string | null;
+  description?: string | null;
 }
 
 export interface CreateTemplateResponse {

@@ -38,7 +38,11 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
   const { openPreview } = usePreviewTemplate();
 
   const handlePreview = () => {
-    openPreview(template.schema_name);
+    if (template.preview_url) {
+      window.open(template.preview_url, "_blank", "noopener,noreferrer");
+    } else {
+      openPreview(template.schema_name);
+    }
   };
 
   const handleUseTemplate = () => {
@@ -116,6 +120,11 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
             <h3 className="mb-1 text-lg font-semibold text-gray-900 capitalize">
               {template.name.replace(/-/g, " ")}
             </h3>
+            {template.description && (
+              <p className="mt-2 line-clamp-2 text-sm text-gray-500">
+                {template.description}
+              </p>
+            )}
           </CardContent>
 
           <div className="px-4 pb-4">

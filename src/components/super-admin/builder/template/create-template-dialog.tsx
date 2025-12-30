@@ -18,7 +18,7 @@ import { useTemplateToken } from "@/hooks/super-admin/components/use-template-to
 import { CreateTemplateAccountForm } from "@/components/auth/template/create-template-form";
 import { EditTemplateForm } from "@/components/auth/template/edit-template-form";
 import { toast } from "sonner";
-import { Loader2, Edit } from "lucide-react";
+import { Loader2, Edit, Github, ExternalLink } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import Pagination from "@/components/ui/pagination";
 import { Template } from "@/types/super-admin/components/template";
@@ -297,6 +297,40 @@ export default function CreateTemplateDialog() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    {t.repo_url && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        asChild
+                        className="hidden md:flex"
+                      >
+                        <a
+                          href={t.repo_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Github className="mr-1 h-3 w-3" />
+                          GitHub
+                        </a>
+                      </Button>
+                    )}
+                    {t.preview_url && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        asChild
+                        className="hidden md:flex"
+                      >
+                        <a
+                          href={t.preview_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="mr-1 h-3 w-3" />
+                          Preview
+                        </a>
+                      </Button>
+                    )}
                     <Button
                       variant="outline"
                       size="sm"

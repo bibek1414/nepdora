@@ -5,8 +5,9 @@ import {
   ImportTemplateRequest,
   ImportTemplateResponse,
 } from "@/types/owner-site/admin/template";
-import { getApiBaseUrl } from "@/config/site";
-
+import { getApiBaseUrl, siteConfig } from "@/config/site";
+import { getAuthToken } from "@/utils/auth";
+const API_BASE_URL = siteConfig.apiBaseUrl;
 export const templateAPI = {
   getTemplates: async (
     filters: TemplateFilters = {}
@@ -40,22 +41,24 @@ export const templateAPI = {
   importTemplate: async (
     templateId: number
   ): Promise<ImportTemplateResponse> => {
-    const BASE_API_URL = getApiBaseUrl();
+    const token = getAuthToken();
 
-    const response = await fetch(`${BASE_API_URL}/api/import-template/`, {
+    const response = await fetch(`${API_BASE_URL}/api/templates/use/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
       },
       body: JSON.stringify({
         template_id: templateId,
+        token: token,
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
-        errorData.message || `Failed to import template: ${response.status}`
+        errorData.message || `Failed to use template: ${response.status}`
       );
     }
 

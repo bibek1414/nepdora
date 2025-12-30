@@ -159,7 +159,11 @@ export const OnboardingStepFour = ({
 
   const handlePreview = (template: Template, e: React.MouseEvent) => {
     e.stopPropagation();
-    openPreview(template.schema_name);
+    if (template.preview_url) {
+      window.open(template.preview_url, "_blank", "noopener,noreferrer");
+    } else {
+      openPreview(template.schema_name);
+    }
   };
 
   const handleStartFromScratchClick = () => {

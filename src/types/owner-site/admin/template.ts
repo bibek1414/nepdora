@@ -8,6 +8,8 @@ export interface Template {
   template_image: string | null;
   is_template_account: boolean;
   domains: string[];
+  preview_url?: string | null;
+  description?: string | null;
 }
 
 export interface PaginatedTemplates {

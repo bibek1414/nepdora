@@ -35,7 +35,7 @@ export const useTemplateApi = {
       params.append("category", category);
     }
     if (subcategory) {
-      params.append("subcategory", subcategory);
+      params.append("sub_category", subcategory);
     }
     if (search) {
       params.append("search", search);
@@ -126,6 +126,12 @@ export const useTemplateApi = {
         "template_subcategory_id",
         payload.template_subcategory_id.toString()
       );
+    }
+    if (payload.preview_url !== undefined) {
+      formData.append("preview_url", payload.preview_url || "");
+    }
+    if (payload.description !== undefined) {
+      formData.append("description", payload.description || "");
     }
 
     const response = await fetch(

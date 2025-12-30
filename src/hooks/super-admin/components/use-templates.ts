@@ -20,14 +20,14 @@ export const useTemplates = ({
   search,
 }: UseTemplatesParams = {}) => {
   return useQuery({
-    queryKey: ["templates", page, pageSize, category, search],
+    queryKey: ["templates", page, pageSize, category, subcategory, search],
     queryFn: () =>
       useTemplateApi.getTemplates(
         page,
         pageSize,
         category,
-        search,
-        subcategory
+        subcategory,
+        search
       ),
   });
 };
