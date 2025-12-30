@@ -66,7 +66,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
         <div className="flex items-center space-x-4"></div>
 
         <div className="flex items-center space-x-2">
-          <Link
+          {/* <Link
             href={`/publish/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -110,7 +110,18 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
               <Pencil className="mr-2 h-4 w-4" />
               Website Builder
             </Button>
-          </Link>
+          </Link> */}
+          {user.subDomain === "bibek" && (
+            <a
+              href="https://builder.nepdora.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="ghost" size="sm">
+                Builder
+              </Button>
+            </a>
+          )}
           <a
             href="https://docs.nepdora.com"
             target="_blank"
