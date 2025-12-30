@@ -111,18 +111,18 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
               Website Builder
             </Button>
           </Link> */}
-          {user.isTemplateAccount ||
-            (user.subDomain === "bibek" && (
-              <a
-                href={`https://builder.nepdora.com/builder/${user.subDomain}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button variant="ghost" size="sm">
-                  Builder
-                </Button>
-              </a>
-            ))}
+          {(user.isTemplateAccount || user.subDomain === "bibek") && (
+            <a
+              href={`https://builder.nepdora.com/builder/${user.subDomain}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="ghost" size="sm">
+                Builder
+              </Button>
+            </a>
+          )}
+
           <a
             href="https://docs.nepdora.com"
             target="_blank"
