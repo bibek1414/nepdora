@@ -15,6 +15,7 @@ export interface User {
   isFirstLogin?: boolean;
   isOnboardingComplete?: boolean;
   websiteType?: string;
+  isTemplateAccount?: boolean;
   avatar: string;
 }
 
@@ -31,6 +32,7 @@ interface GoogleAuthUser {
   first_login: boolean;
   is_onboarding_complete: boolean;
   website_type?: string;
+  is_template_account?: boolean;
 }
 
 export async function getServerUser(): Promise<User | null> {
@@ -94,6 +96,10 @@ export async function getServerUser(): Promise<User | null> {
           false,
         websiteType:
           userData.website_type || tokenPayload?.website_type || "ecommerce",
+        isTemplateAccount:
+          userData.is_template_account ??
+          tokenPayload?.is_template_account ??
+          false,
         avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
           userData.store_name || tokenPayload?.store_name || "User"
         )}&background=3b82f6&color=ffffff&size=32&rounded=true&bold=true`,
@@ -132,6 +138,7 @@ export async function getServerUser(): Promise<User | null> {
         isFirstLogin: payload.first_login,
         isOnboardingComplete: payload.is_onboarding_complete,
         websiteType: payload.website_type || "ecommerce", // Add website_type with default
+        isTemplateAccount: payload.is_template_account ?? false,
         avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
           payload.store_name
         )}&background=3b82f6&color=ffffff&size=32&rounded=true&bold=true`,

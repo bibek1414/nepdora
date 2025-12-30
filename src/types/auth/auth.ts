@@ -14,6 +14,7 @@ export interface User {
   first_login?: boolean;
   is_onboarding_complete?: boolean;
   website_type?: string;
+  is_template_account?: boolean;
 }
 export interface AuthTokens {
   access_token: string;
