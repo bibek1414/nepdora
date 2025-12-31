@@ -7,6 +7,18 @@ import {
   servicesFormSchema,
   ServicesFormValues,
 } from "@/schemas/services.form";
+import {
+  useServiceCategories,
+  useCreateServiceCategory,
+} from "@/hooks/owner-site/admin/use-services";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,6 +37,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import ReusableQuill from "@/components/ui/tip-tap";
@@ -71,6 +84,7 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
         meta_description: service.meta_description || "",
         thumbnail_image_alt_description:
           service.thumbnail_image_alt_description || "",
+        service_category: service.service_category?.id || null,
       });
 
       setFormInitialized(true);
@@ -89,28 +103,144 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
       ...data,
       // Ensure the selected file is included
       thumbnail_image: selectedFile || data.thumbnail_image,
+      service_category: data.service_category || null,
     };
 
     onSubmit(transformedData);
+  };
+
+  const { data: categoryData } = useServiceCategories({ page_size: 100 });
+  const categories = categoryData?.results || [];
+
+  const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const createCategoryMutation = useCreateServiceCategory();
+
+  const handleQuickAddCategory = () => {
+    if (!newCategoryName) return;
+
+    createCategoryMutation.mutate(
+      { categoryData: { name: newCategoryName } },
+      {
+        onSuccess: newCategory => {
+          toast.success("Category created!");
+          form.setValue("service_category", newCategory.id);
+          setIsQuickAddOpen(false);
+          setNewCategoryName("");
+        },
+        onError: (error: any) => {
+          toast.error(error.message || "Failed to create category");
+        },
+      }
+    );
   };
 
   return (
     <div className="mx-auto max-w-4xl rounded-lg bg-white p-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title *</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter service title" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title *</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter service title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="service_category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <div className="flex gap-2">
+                    <Select
+                      onValueChange={value => field.onChange(Number(value))}
+                      value={field.value?.toString()}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {categories.map(category => (
+                          <SelectItem
+                            key={category.id}
+                            value={category.id.toString()}
+                          >
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Dialog
+                      open={isQuickAddOpen}
+                      onOpenChange={setIsQuickAddOpen}
+                    >
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setIsQuickAddOpen(true)}
+                        title="Add New Category"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>Quick Add Category</DialogTitle>
+                          <DialogDescription>
+                            Create a new category quickly.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="flex items-center space-x-2 py-4">
+                          <Input
+                            placeholder="Category Name"
+                            value={newCategoryName}
+                            onChange={e => setNewCategoryName(e.target.value)}
+                            onKeyDown={e => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                handleQuickAddCategory();
+                              }
+                            }}
+                          />
+                        </div>
+                        <DialogFooter>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setIsQuickAddOpen(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={handleQuickAddCategory}
+                            disabled={createCategoryMutation.isPending}
+                          >
+                            {createCategoryMutation.isPending && (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            )}
+                            Create
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FormField
             control={form.control}

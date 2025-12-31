@@ -13,6 +13,7 @@ export const servicesFormSchema = z.object({
     .optional(),
   thumbnail_image: z.any().optional(),
   thumbnail_image_alt_description: z.string().optional(),
+  service_category: z.number().nullable().optional(),
 });
 
 export type ServicesFormValues = z.infer<typeof servicesFormSchema>;

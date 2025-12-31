@@ -72,6 +72,9 @@ const ServicesTable: React.FC<ServicesTableProps> = ({
             <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Created
             </TableHead>
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+              Category
+            </TableHead>
             <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
               Actions
             </TableHead>
@@ -108,6 +111,11 @@ const ServicesTable: React.FC<ServicesTableProps> = ({
                   day: "2-digit",
                   year: "numeric",
                 })}
+              </TableCell>
+              <TableCell className="px-6 py-4 text-xs whitespace-nowrap text-black/40">
+                <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
+                  {service.service_category?.name || "Uncategorized"}
+                </span>
               </TableCell>
               <TableCell className="px-6 py-4 text-right">
                 <TableActionButtons

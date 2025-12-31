@@ -8,6 +8,10 @@ import {
   CreateServicesPost,
   UpdateServicesPost,
   ServicesFilters,
+  ServiceCategory,
+  PaginatedServiceCategoryResponse,
+  CreateServiceCategory,
+  UpdateServiceCategory,
 } from "@/types/owner-site/admin/services";
 
 const buildServicesFormData = (
@@ -115,6 +119,101 @@ export const servicesApi = {
         Authorization: `Bearer ${getAuthToken()}`,
       },
     });
+
+    await handleApiError(response);
+  },
+};
+
+export const serviceCategoryApi = {
+  getCategories: async (
+    filters?: ServicesFilters
+  ): Promise<PaginatedServiceCategoryResponse> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const queryParams = new URLSearchParams();
+
+    if (filters) {
+      if (filters.page) queryParams.append("page", filters.page.toString());
+      if (filters.page_size)
+        queryParams.append("page_size", filters.page_size.toString());
+      if (filters.search) queryParams.append("search", filters.search);
+      if (filters.ordering) queryParams.append("ordering", filters.ordering);
+    }
+
+    const url = `${API_BASE_URL}/api/service-category/${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: createHeaders(),
+    });
+
+    await handleApiError(response);
+    return response.json();
+  },
+
+  getCategoryBySlug: async (slug: string): Promise<ServiceCategory> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(
+      `${API_BASE_URL}/api/service-category/${slug}/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
+
+    await handleApiError(response);
+    return response.json();
+  },
+
+  create: async (
+    categoryData: CreateServiceCategory
+  ): Promise<ServiceCategory> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const formData = buildServicesFormData(categoryData as any);
+
+    const response = await fetch(`${API_BASE_URL}/api/service-category/`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      body: formData,
+    });
+
+    await handleApiError(response);
+    return response.json();
+  },
+
+  update: async (
+    slug: string,
+    categoryData: Omit<UpdateServiceCategory, "id">
+  ): Promise<ServiceCategory> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const formData = buildServicesFormData(categoryData as any);
+
+    const response = await fetch(
+      `${API_BASE_URL}/api/service-category/${slug}/`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+        body: formData,
+      }
+    );
+
+    await handleApiError(response);
+    return response.json();
+  },
+
+  delete: async (slug: string): Promise<void> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(
+      `${API_BASE_URL}/api/service-category/${slug}/`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      }
+    );
 
     await handleApiError(response);
   },

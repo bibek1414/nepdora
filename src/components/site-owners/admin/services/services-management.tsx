@@ -8,7 +8,6 @@ import {
   useDeleteService,
 } from "@/hooks/owner-site/admin/use-services";
 import ServicesTable from "@/components/site-owners/admin/services/services-table";
-import ServicesHeader from "@/components/site-owners/admin/services/services-header";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,7 +22,7 @@ import {
   ServicesPost,
   ServicesFilters,
 } from "@/types/owner-site/admin/services";
-import { Plus } from "lucide-react";
+import { Plus, ListTree } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SimplePagination } from "@/components/ui/simple-pagination";
 
@@ -112,12 +111,18 @@ const ServicesManagement = () => {
   const totalPages = Math.ceil(totalServices / filters.pageSize);
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
-        <ServicesHeader />
-
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <ServicesSearch onSearch={handleSearch} />
+    <div className="space-y-6">
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <ServicesSearch onSearch={handleSearch} />
+        <div className="flex gap-3">
+          <Button
+            onClick={() => router.push("/admin/services/category")}
+            variant="outline"
+            className="h-9 rounded-lg border-slate-200 bg-white px-4 font-semibold text-slate-700 transition-all hover:bg-slate-50"
+          >
+            <ListTree className="mr-2 h-4 w-4" />
+            Manage Categories
+          </Button>
           <Button
             onClick={handleCreateNew}
             className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
@@ -126,22 +131,22 @@ const ServicesManagement = () => {
             Add Service
           </Button>
         </div>
-
-        <ServicesTable
-          services={services}
-          onEdit={handleEditService}
-          onDelete={handleDeleteService}
-          isLoading={isLoadingServices}
-        />
-
-        {!isLoadingServices && (
-          <SimplePagination
-            currentPage={filters.page}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        )}
       </div>
+
+      <ServicesTable
+        services={services}
+        onEdit={handleEditService}
+        onDelete={handleDeleteService}
+        isLoading={isLoadingServices}
+      />
+
+      {!isLoadingServices && (
+        <SimplePagination
+          currentPage={filters.page}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
 
       <AlertDialog
         open={deleteDialog.isOpen}

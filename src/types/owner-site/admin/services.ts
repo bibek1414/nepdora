@@ -1,3 +1,32 @@
+export interface ServiceCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  thumbnail_image: string | null;
+  thumbnail_image_alt_description: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaginatedServiceCategoryResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: ServiceCategory[];
+}
+
+export interface CreateServiceCategory {
+  name: string;
+  description?: string;
+  thumbnail_image?: File | null;
+  thumbnail_image_alt_description?: string;
+}
+
+export interface UpdateServiceCategory extends Partial<CreateServiceCategory> {
+  id: number;
+}
+
 export interface ServicesPost {
   id: number;
   title: string;
@@ -7,6 +36,7 @@ export interface ServicesPost {
   thumbnail_image_alt_description: string | null;
   meta_title: string | null;
   meta_description: string | null;
+  service_category: ServiceCategory | null;
   created_at: string;
   updated_at: string;
 }
@@ -31,6 +61,7 @@ export interface CreateServicesPost {
   thumbnail_image_alt_description?: string;
   meta_title?: string;
   meta_description?: string;
+  service_category?: number | null;
 }
 
 export interface UpdateServicesPost extends Partial<CreateServicesPost> {

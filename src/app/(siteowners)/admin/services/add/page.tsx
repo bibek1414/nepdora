@@ -16,6 +16,7 @@ interface ServiceFormData {
   thumbnail_image_alt_description?: string;
   meta_title?: string;
   meta_description?: string;
+  service_category?: number | null;
 }
 
 const AddServicePage = () => {
@@ -30,6 +31,7 @@ const AddServicePage = () => {
       thumbnail_image_alt_description: data.thumbnail_image_alt_description,
       meta_title: data.meta_title,
       meta_description: data.meta_description,
+      service_category: data.service_category,
     };
 
     createServiceMutation.mutate(
