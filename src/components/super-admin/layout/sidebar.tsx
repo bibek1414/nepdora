@@ -16,6 +16,7 @@ import {
   Database,
   Shield,
   Mail,
+  FileText,
 } from "lucide-react";
 import Image from "next/image";
 import { useAuthContext } from "@/components/super-admin/auth-wrapper";
@@ -39,6 +40,7 @@ const navigationGroups = [
       { name: "FAQ", href: "/superadmin/faq", icon: HelpCircle },
       { name: "Testimonials", href: "/superadmin/testimonial", icon: Shield },
       { name: "Contact", href: "/superadmin/contact", icon: Mail },
+      { name: "Blogs", href: "/superadmin/blogs", icon: FileText },
     ],
   },
   {

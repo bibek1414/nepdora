@@ -12,7 +12,7 @@ export default function SuperAdminLayout({
     <AuthWrapper>
       <Suspense
         fallback={
-          <div className="flex min-h-screen items-center justify-center bg-gray-50">
+          <div className="flex min-h-screen items-center justify-center">
             <div className="flex items-center space-x-3">
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-red-600 border-t-transparent"></div>
               <span className="text-gray-600">Loading...</span>
@@ -20,7 +20,7 @@ export default function SuperAdminLayout({
           </div>
         }
       >
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex min-h-screen">
           {/* Sidebar */}
           <SuperAdminSidebar />
 
