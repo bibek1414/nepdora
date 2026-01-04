@@ -15,6 +15,7 @@ import {
   Settings,
   Database,
   Shield,
+  Mail,
 } from "lucide-react";
 import Image from "next/image";
 import { useAuthContext } from "@/components/super-admin/auth-wrapper";
@@ -37,6 +38,7 @@ const navigationGroups = [
       { name: "Templates", href: "/superadmin/template", icon: Layout },
       { name: "FAQ", href: "/superadmin/faq", icon: HelpCircle },
       { name: "Testimonials", href: "/superadmin/testimonial", icon: Shield },
+      { name: "Contact", href: "/superadmin/contact", icon: Mail },
     ],
   },
   {
@@ -133,7 +135,7 @@ export default function SuperAdminSidebar() {
                     >
                       <item.icon
                         className={cn(
-                          "h-4 w-4 flex-shrink-0",
+                          "h-4 w-4 shrink-0",
                           collapsed ? "mr-0" : "mr-3",
                           isActive ? "text-red-600" : ""
                         )}

@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated, user, isLoading } = useAuth(); // make sure your hook exposes isLoading
+  const { isAuthenticated, user, isLoading } = useAuth();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
@@ -19,6 +19,7 @@ const Header: React.FC = () => {
     "Pricing",
     "About",
     "Contact",
+    "Blog",
     "Docs",
   ];
 

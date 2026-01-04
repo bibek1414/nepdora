@@ -1,165 +1,151 @@
 "use client";
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Send } from "lucide-react";
+import { useSubmitContactForm } from "@/hooks/marketing/use-contact";
+import { ContactFormData } from "@/types/marketing/contact";
+import { motion, Variants } from "framer-motion";
+import { toast } from "sonner";
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
 
 export default function ContactUs() {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
+  const { mutate: submitContact, isPending } = useSubmitContactForm();
+  const [formKey, setFormKey] = useState(0);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
-  const handleSubmit = () => {
-    console.log("Form submitted:", formData);
-    alert("Message sent successfully!");
+    const firstName = formData.get("firstName") as string;
+    const lastName = formData.get("lastName") as string;
+    const email = formData.get("email") as string;
+    const phone = formData.get("phone") as string;
+    const message = formData.get("message") as string;
+
+    const submissionData: ContactFormData = {
+      name: `${firstName} ${lastName}`.trim(),
+      email: email,
+      phone_number: phone,
+      message: message,
+    };
+
+    submitContact(submissionData, {
+      onSuccess: () => {
+        toast.success("Message sent successfully");
+        setFormKey(prev => prev + 1);
+      },
+      onError: error => {
+        toast.error(
+          error instanceof Error ? error.message : "Failed to send message"
+        );
+      },
+    });
   };
 
   return (
-    <section className="mx-auto max-w-4xl px-3 py-12 sm:px-4 sm:py-16 md:py-20 lg:px-6 lg:py-24">
-      {/* Header */}
-      <div className="mb-10 text-center sm:mb-12 md:mb-16">
-        <h2 className="mb-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
-          Get in touch
-        </h2>
-        <p className="mx-auto max-w-xl text-sm text-slate-600 sm:text-base md:text-lg">
-          Have a question or want to work together?
+    <motion.section
+      className="bg-background relative space-y-8 overflow-hidden px-4 py-8 md:space-y-12 md:px-4 md:py-20"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={fadeInUp}
+    >
+      <div className="pointer-events-none absolute top-40 -left-20 z-10 hidden h-60 w-60 rounded-full bg-blue-500 opacity-10 blur-3xl md:block"></div>
+      <div className="bg-primary pointer-events-none absolute -right-20 bottom-40 z-10 hidden h-60 w-60 rounded-full opacity-10 blur-3xl md:block"></div>
+
+      <div className="relative z-20 mx-auto max-w-2xl px-4 text-center">
+        {/* <div className="flex justify-center mb-6">
+                    <div className="relative w-32 h-32 overflow-hidden rounded-2xl shadow-xl">
+                        <img
+                            src="/nepdora-logo.png"
+                            alt="Nepdora Contact"
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                </div> */}
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+          Build Smarter with Nepdora
+        </h1>
+        <p className="mx-auto mt-4 max-w-lg text-lg text-slate-600">
+          Let’s talk about your project and make it real.
         </p>
       </div>
 
-      {/* Contact Form */}
-      <div className="mx-auto max-w-2xl">
+      <div className="relative z-20 mx-auto max-w-xl">
         <form
-          onSubmit={e => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-          className="space-y-6"
+          key={formKey}
+          onSubmit={handleSubmit}
+          className="space-y-4 sm:space-y-6"
         >
-          {/* Name Fields */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
-            <div className="space-y-1.5 sm:space-y-2">
-              <label
-                htmlFor="firstName"
-                className="text-xs font-medium text-slate-700 sm:text-sm"
-              >
-                First name
-              </label>
-              <Input
-                id="firstName"
-                name="firstName"
-                type="text"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                className="h-10 border-slate-200 bg-white text-sm transition-colors focus:border-slate-400 focus:ring-slate-400 sm:h-11"
-                placeholder="John"
-                required
-              />
-            </div>
-
-            <div className="space-y-1.5 sm:space-y-2">
-              <label
-                htmlFor="lastName"
-                className="text-xs font-medium text-slate-700 sm:text-sm"
-              >
-                Last name
-              </label>
-              <Input
-                id="lastName"
-                name="lastName"
-                type="text"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                className="h-10 border-slate-200 bg-white text-sm transition-colors focus:border-slate-400 focus:ring-slate-400 sm:h-11"
-                placeholder="Doe"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Email Field */}
-          <div className="space-y-1.5 sm:space-y-2">
-            <label
-              htmlFor="email"
-              className="text-xs font-medium text-slate-700 sm:text-sm"
-            >
-              Email address
-            </label>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="h-10 border-slate-200 bg-white text-sm transition-colors focus:border-slate-400 focus:ring-slate-400 sm:h-11"
-              placeholder="john@example.com"
+              type="text"
+              name="firstName"
               required
+              label="First Name *"
+              className="bg-white/50 backdrop-blur-sm"
             />
-          </div>
-
-          {/* Phone Field */}
-          <div className="space-y-1.5 sm:space-y-2">
-            <label
-              htmlFor="phone"
-              className="text-xs font-medium text-slate-700 sm:text-sm"
-            >
-              Phone number
-              <span className="ml-1 text-slate-400">(optional)</span>
-            </label>
             <Input
-              id="phone"
-              name="phone"
-              type="tel"
-              value={formData.phone}
-              onChange={handleInputChange}
-              className="h-10 border-slate-200 bg-white text-sm transition-colors focus:border-slate-400 focus:ring-slate-400 sm:h-11"
-              placeholder="+977 986-6316114"
+              type="text"
+              name="lastName"
+              required
+              label="Last Name *"
+              className="bg-white/50 backdrop-blur-sm"
             />
           </div>
 
-          {/* Message Field */}
-          <div className="space-y-1.5 sm:space-y-2">
-            <label
-              htmlFor="message"
-              className="text-xs font-medium text-slate-700 sm:text-sm"
-            >
-              Message
-            </label>
-            <Textarea
-              id="message"
+          <Input
+            type="email"
+            name="email"
+            required
+            label="Email Address *"
+            className="bg-white/50 backdrop-blur-sm"
+          />
+
+          <Input
+            type="tel"
+            name="phone"
+            required
+            label="Phone Number *"
+            className="bg-white/50 backdrop-blur-sm"
+          />
+
+          <div className="relative">
+            <textarea
               name="message"
-              value={formData.message}
-              onChange={handleInputChange}
-              className="min-h-[120px] resize-none border-slate-200 bg-white text-sm transition-colors focus:border-slate-400 focus:ring-slate-400 sm:min-h-[140px]"
-              placeholder="Tell us about your project or question..."
+              rows={4}
+              placeholder="Tell us about your project or questions..."
+              className="peer focus:border-primary focus:ring-primary w-full resize-none rounded-xl border border-slate-200 bg-white/50 px-4 py-3 text-sm backdrop-blur-sm transition-all duration-200 outline-none placeholder:text-slate-400 focus:ring-1 sm:text-base"
               required
             />
           </div>
 
-          {/* Submit Button */}
-          <div className="pt-2 sm:pt-4">
-            <Button
-              type="submit"
-              className="h-10 w-full rounded-lg text-sm font-medium transition-all hover:shadow-md sm:h-12 sm:w-auto sm:min-w-[160px] sm:text-base"
-            >
-              Send message
-            </Button>
-          </div>
+          <Button
+            type="submit"
+            className="hover:shadow-primary/20 h-12 w-full text-base font-medium transition-all hover:shadow-lg"
+            disabled={isPending}
+          >
+            {isPending ? (
+              "Sending..."
+            ) : (
+              <>
+                Send Message <Send className="ml-2 h-4 w-4" />
+              </>
+            )}
+          </Button>
         </form>
       </div>
-    </section>
+    </motion.section>
   );
 }
