@@ -1,5 +1,5 @@
-import React from "react";
-import Blogs from "@/components/marketing/blog/blogs";
+import React, { Suspense } from "react";
+import Blogs, { BlogCardSkeleton } from "@/components/marketing/blog/blogs";
 import Sidebar from "@/components/marketing/blog/sidebar";
 import { Metadata } from "next";
 import ContactUs from "@/components/marketing/contact-us/contact-us";
@@ -18,12 +18,28 @@ const BlogPage = () => {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 xl:gap-20">
             {/* Main Feed */}
             <div className="lg:col-span-8">
-              <Blogs />
+              <Suspense
+                fallback={
+                  <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                    {[1, 2, 3, 4].map(n => (
+                      <BlogCardSkeleton key={n} />
+                    ))}
+                  </div>
+                }
+              >
+                <Blogs />
+              </Suspense>
             </div>
 
             {/* Sidebar */}
             <div className="lg:col-span-4">
-              <Sidebar />
+              <Suspense
+                fallback={
+                  <div className="h-96 animate-pulse rounded-2xl bg-gray-100" />
+                }
+              >
+                <Sidebar />
+              </Suspense>
             </div>
           </div>
         </div>
