@@ -82,7 +82,7 @@ const Blogs = () => {
       <div className="mb-8 flex items-center gap-3">
         <div className="h-1 w-10 rounded-full bg-gray-200" />
         <h2 className="text-2xl font-black tracking-tighter text-gray-900 uppercase">
-          Latest Stories
+          Blogs
         </h2>
       </div>
 
