@@ -1,6 +1,8 @@
 import React from "react";
 import Blogs from "@/components/marketing/blog/blogs";
+import Sidebar from "@/components/marketing/blog/sidebar";
 import { Metadata } from "next";
+import ContactUs from "@/components/marketing/contact-us/contact-us";
 
 export const metadata: Metadata = {
   title: "Blog | Nepdora — Latest Insights and Updates",
@@ -10,20 +12,23 @@ export const metadata: Metadata = {
 
 const BlogPage = () => {
   return (
-    <div className="min-h-screen">
-      <section className="py-20">
-        <div className="mx-auto max-w-6xl px-6 md:px-8">
-          <div className="mb-12 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div>
-              <h2 className="text-3xl font-bold text-slate-900">
-                Latest Stories
-              </h2>
+    <div className="">
+      <section className="mb-20 py-20">
+        <div className="mx-auto max-w-7xl px-10 md:px-20">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 xl:gap-20">
+            {/* Main Feed */}
+            <div className="lg:col-span-8">
+              <Blogs />
+            </div>
+
+            {/* Sidebar */}
+            <div className="lg:col-span-4">
+              <Sidebar />
             </div>
           </div>
-
-          <Blogs />
         </div>
       </section>
+      <ContactUs />
     </div>
   );
 };

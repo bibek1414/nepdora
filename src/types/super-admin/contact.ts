@@ -13,3 +13,10 @@ export interface ContactSubmission {
   phone_number: string;
   message: string;
 }
+
+export interface PaginatedContactResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: ContactMessage[];
+}

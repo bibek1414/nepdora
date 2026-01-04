@@ -8,9 +8,9 @@ const scenarios: SearchScenario[] = [
   {
     query: "accounting, auditing, consultant",
     result: {
-      site: "XInfin Consultants",
-      url: "nepdora.xinfinconsultants.com",
-      title: "XInfin - Strategic Financial Consulting",
+      site: "nepdora Consultants",
+      url: "nepdora.nepdoraconsultants.com",
+      title: "nepdora - Strategic Financial Consulting",
       desc: "Leading provider of Process Automation, Financial Advisory, Accounting & Bookkeeping, Virtual CFO, and expert tax planning services.",
     },
   },

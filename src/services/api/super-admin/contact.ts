@@ -1,5 +1,8 @@
 import { siteConfig } from "@/config/site";
-import { ContactMessage } from "@/types/super-admin/contact";
+import {
+  ContactMessage,
+  PaginatedContactResponse,
+} from "@/types/super-admin/contact";
 import { getAuthToken } from "@/utils/auth";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -7,9 +10,22 @@ import { handleApiError } from "@/utils/api-error";
 const API_BASE_URL = siteConfig.apiBaseUrl;
 
 export const superAdminContactApi = {
-  getMessages: async (): Promise<ContactMessage[]> => {
+  getMessages: async (
+    page = 1,
+    pageSize = 10,
+    search = ""
+  ): Promise<PaginatedContactResponse> => {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      page_size: pageSize.toString(),
+    });
+
+    if (search) {
+      params.append("search", search);
+    }
+
     const response = await fetch(
-      `${API_BASE_URL}/api/support/nepdora-contact`,
+      `${API_BASE_URL}/api/support/nepdora-contact/?${params}`,
       {
         method: "GET",
         headers: {

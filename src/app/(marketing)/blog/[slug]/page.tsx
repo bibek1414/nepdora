@@ -1,14 +1,9 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
 import { useSuperAdminBlog } from "@/hooks/super-admin/use-blogs";
-import RecentBlogs from "@/components/marketing/blog/recent-blogs";
-import { Calendar, Clock, User, Share2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,17 +12,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  FacebookShareButton,
-  FacebookIcon,
-  TwitterShareButton,
-  TwitterIcon,
-  LinkedinShareButton,
-  LinkedinIcon,
-  WhatsappShareButton,
-  WhatsappIcon,
-} from "next-share";
-import { sanitizeHtmlContent } from "@/utils/html-sanitizer";
+import Sidebar from "@/components/marketing/blog/sidebar";
+import ArticleContent from "@/components/marketing/blog/article-content";
+import RecentBlogs from "@/components/marketing/blog/recent-blogs";
 
 const BlogDetailPage = () => {
   const params = useParams();
@@ -39,18 +26,22 @@ const BlogDetailPage = () => {
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-4xl px-6 py-20 md:px-8">
-        <Skeleton className="mb-6 h-8 w-24" />
-        <Skeleton className="mb-8 h-12 w-3/4" />
-        <div className="mb-12 flex gap-4">
-          <Skeleton className="h-4 w-32" />
-          <Skeleton className="h-4 w-32" />
+      <div className="w-full bg-white">
+        <div className="flex h-[400px] w-full items-center justify-center bg-gray-100 sm:h-[500px] md:h-[600px]">
+          <Skeleton className="h-full w-full" />
         </div>
-        <Skeleton className="mb-12 h-[450px] w-full rounded-2xl" />
-        <div className="space-y-4">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-2/3" />
+        <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 sm:py-12 md:py-16 lg:py-24">
+          <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-12 lg:gap-16">
+            <div className="space-y-4 lg:col-span-8">
+              <Skeleton className="h-4 w-full sm:h-6" />
+              <Skeleton className="h-3 w-full sm:h-4" />
+              <Skeleton className="h-3 w-full sm:h-4" />
+              <Skeleton className="h-3 w-2/3 sm:h-4" />
+            </div>
+            <div className="lg:col-span-4">
+              <Skeleton className="h-48 w-full sm:h-64" />
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -58,155 +49,68 @@ const BlogDetailPage = () => {
 
   if (error || !blog) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
-        <h2 className="mb-4 text-2xl font-bold">Blog not found</h2>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
+        <h2 className="mb-4 text-xl font-bold sm:text-2xl">Blog not found</h2>
         <Button onClick={() => router.push("/blog")}>Back to Blog</Button>
       </div>
     );
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
-
   return (
-    <div className="bg-white">
-      <article className="mx-auto max-w-4xl px-6 py-12 md:px-8 md:py-20">
-        {/* Breadcrumbs */}
-        <Breadcrumb className="mb-8">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/">Home</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/blog">Blog</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage className="max-w-[200px] truncate">
-                {blog.title}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+    <div className="animate-in fade-in bg-white duration-500">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-16">
+        {/* Breadcrumb */}
+        <div className="mb-6 sm:mb-8">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/" className="text-xs sm:text-sm">
+                  Home
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/blog" className="text-xs sm:text-sm">
+                  Blog
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="line-clamp-1 text-xs sm:text-sm">
+                  {blog.title}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
 
-        {/* Header */}
-        <header className="mb-12">
-          <div className="mb-6 flex flex-wrap gap-2">
-            {blog.tags?.map(tag => (
-              <Badge
-                key={tag.id}
-                variant="secondary"
-                className="border-none bg-slate-100 text-slate-900"
-              >
-                {tag.name}
-              </Badge>
-            ))}
+        {/* Main Content */}
+        <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-12 lg:gap-16 xl:gap-32">
+          <div className="lg:col-span-6">
+            <article>
+              <ArticleContent post={blog} />
+            </article>
           </div>
-
-          <h1 className="mb-8 text-3xl leading-[1.15] font-extrabold text-slate-900 sm:text-4xl lg:text-5xl">
-            {blog.title}
-          </h1>
-
-          <div className="flex flex-wrap items-center justify-between gap-6 border-b border-black/5 pb-8">
-            <div className="flex items-center gap-6 text-sm text-black/60">
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 font-bold text-slate-600 uppercase">
-                  {blog.author?.first_name?.[0] || "N"}
-                </div>
-                <span>
-                  By{" "}
-                  {blog.author?.first_name
-                    ? `${blog.author.first_name} ${blog.author.last_name || ""}`
-                    : "Nepdora Team"}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 pt-0.5">
-                <Calendar className="h-4 w-4" />
-                {formatDate(blog.created_at)}
-              </div>
-              {blog.time_to_read && (
-                <div className="flex items-center gap-1.5 pt-0.5">
-                  <Clock className="h-4 w-4" />
-                  {blog.time_to_read}
-                </div>
-              )}
+          <aside className="lg:col-span-4">
+            <div className="lg:sticky lg:top-24">
+              <Sidebar />
             </div>
+          </aside>
+        </div>
 
-            <div className="flex items-center gap-2">
-              <FacebookShareButton
-                url={typeof window !== "undefined" ? window.location.href : ""}
-                quote={blog.title}
-                hashtag={"#nepdora"}
-              >
-                <FacebookIcon size={32} round />
-              </FacebookShareButton>
-              <TwitterShareButton
-                url={typeof window !== "undefined" ? window.location.href : ""}
-                title={blog.title}
-              >
-                <TwitterIcon size={32} round />
-              </TwitterShareButton>
-              <LinkedinShareButton
-                url={typeof window !== "undefined" ? window.location.href : ""}
-              >
-                <LinkedinIcon size={32} round />
-              </LinkedinShareButton>
-              <WhatsappShareButton
-                url={typeof window !== "undefined" ? window.location.href : ""}
-                title={blog.title}
-                separator=":: "
-              >
-                <WhatsappIcon size={32} round />
-              </WhatsappShareButton>
-            </div>
-          </div>
-        </header>
-
-        {/* Featured Image */}
-        {blog.thumbnail_image && (
-          <div className="relative mb-12 h-[300px] overflow-hidden rounded-2xl sm:h-[450px]">
-            <Image
-              src={blog.thumbnail_image}
-              alt={blog.thumbnail_image_alt_description || blog.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
-
-        {/* Content */}
-        <div
-          className="prose prose-slate prose-lg prose-headings:text-slate-900 prose-a:text-[#3b82f6] prose-img:rounded-2xl max-w-none"
-          dangerouslySetInnerHTML={{
-            __html: sanitizeHtmlContent(blog.content),
-          }}
-        />
-      </article>
-
-      <section className="py-20">
-        <div className="mx-auto max-w-6xl px-6 md:px-8">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold text-slate-900">
-              Continue Reading
+        {/* Recent Blogs Section */}
+        <div className="mt-12 py-20 sm:mt-16">
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+              You Might Enjoy
             </h2>
-            <p className="mt-4 text-slate-600">
-              Discover more stories from the Nepdora community.
+            <p className="mt-2 text-sm text-gray-600 sm:text-base">
+              Check out more articles and insights from our latest posts.
             </p>
           </div>
           <RecentBlogs />
         </div>
-      </section>
+      </div>
     </div>
   );
 };

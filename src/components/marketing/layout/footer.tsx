@@ -5,7 +5,11 @@ import { ChevronRight, Loader2 } from "lucide-react";
 import SocialIcons from "./social-icons";
 import { useState } from "react";
 import { useNewsletter } from "@/hooks/use-newsletter";
-import { xinfinAddress, xinfinEmail, xinfinPhone } from "@/constants/contact";
+import {
+  nepdoraAddress,
+  nepdoraEmail,
+  nepdoraPhone,
+} from "@/constants/contact";
 import Image from "next/image";
 
 export const Footer = () => {
@@ -64,11 +68,11 @@ export const Footer = () => {
                 Visit Us
               </h3>
               <address className="text-xs leading-relaxed text-gray-600 not-italic sm:text-sm">
-                {xinfinAddress}
+                {nepdoraAddress}
                 <br />
-                {xinfinEmail}
+                {nepdoraEmail}
                 <br />
-                {xinfinPhone}
+                {nepdoraPhone}
               </address>
             </div>
           </motion.div>
@@ -160,7 +164,6 @@ const NewsletterForm = () => {
 
     mutate(email, {
       onSuccess: () => {
-        toast.success("Subscribed successfully!");
         setEmail("");
       },
     });

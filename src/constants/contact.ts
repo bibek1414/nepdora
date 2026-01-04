@@ -1,3 +1,3 @@
-export const xinfinAddress = "Sankhamul,Lalitpur,Nepal";
-export const xinfinEmail = "nepdoranepal@gmail.com";
-export const xinfinPhone = "+977 9866316114";
+export const nepdoraAddress = "Sankhamul,Lalitpur,Nepal";
+export const nepdoraEmail = "nepdoranepal@gmail.com";
+export const nepdoraPhone = "+977 9866316114";

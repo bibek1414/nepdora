@@ -1,10 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { superAdminContactApi } from "@/services/api/super-admin/contact";
 
-export const useSuperAdminContactMessages = () => {
+export const useSuperAdminContactMessages = (
+  page = 1,
+  pageSize = 10,
+  search = ""
+) => {
   return useQuery({
-    queryKey: ["super-admin-contact-messages"],
-    queryFn: () => superAdminContactApi.getMessages(),
+    queryKey: ["super-admin-contact-messages", page, pageSize, search],
+    queryFn: () => superAdminContactApi.getMessages(page, pageSize, search),
   });
 };
 

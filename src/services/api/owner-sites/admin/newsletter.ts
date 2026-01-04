@@ -2,7 +2,6 @@ import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 import {
-  Newsletter,
   CreateNewsletterRequest,
   CreateNewsletterResponse,
   GetNewslettersResponse,

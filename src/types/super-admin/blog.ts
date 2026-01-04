@@ -51,6 +51,7 @@ export interface BlogFilters {
   page_size?: number;
   ordering?: string;
   is_published?: boolean;
+  category?: string;
 }
 
 export interface CreateBlogPost {

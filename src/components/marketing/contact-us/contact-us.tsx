@@ -74,12 +74,9 @@ export default function ContactUs() {
                         />
                     </div>
                 </div> */}
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
-          Build Smarter with Nepdora
-        </h1>
-        <p className="mx-auto mt-4 max-w-lg text-lg text-slate-600">
-          Let’s talk about your project and make it real.
-        </p>
+        <div className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+          Get In Touch
+        </div>
       </div>
 
       <div className="relative z-20 mx-auto max-w-xl">
