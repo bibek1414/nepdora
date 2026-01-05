@@ -100,6 +100,8 @@ export const Footer = () => {
                 <FooterLink href="/contact">Contact Us</FooterLink>
                 <FooterLink href="/privacy-policy">Privacy Policy</FooterLink>
                 <FooterLink href="/terms">Terms and Conditions</FooterLink>
+                <FooterLink href="/support">Support</FooterLink>
+                <FooterLink href="/faq">FAQ</FooterLink>
               </div>
             </div>
           </motion.div>

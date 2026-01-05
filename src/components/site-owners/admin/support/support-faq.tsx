@@ -9,39 +9,45 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  useFAQs,
-  useFAQCategories,
-} from "@/hooks/super-admin/use-faq-category";
+import { useFAQs } from "@/hooks/super-admin/use-faq-category";
+import { FAQCategory } from "@/types/super-admin/faq-category";
 
 const SupportFAQ: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-  // Fetch FAQs and Categories from API
+  // Fetch FAQs from API
   const {
     data: faqsData,
     isLoading: faqsLoading,
     error: faqsError,
   } = useFAQs();
-  const { data: categoriesData, isLoading: categoriesLoading } =
-    useFAQCategories();
+
+  // Process categories for sidebar from faqsData
+  const categories = useMemo(() => {
+    if (!faqsData) return [];
+
+    const uniqueCategories = new Map<number, { id: string; name: string }>();
+
+    faqsData.forEach(faq => {
+      if (faq.category) {
+        if (!uniqueCategories.has(faq.category.id)) {
+          uniqueCategories.set(faq.category.id, {
+            id: faq.category.id.toString(),
+            name: faq.category.name,
+          });
+        }
+      }
+    });
+
+    return Array.from(uniqueCategories.values());
+  }, [faqsData]);
 
   // Set default category to first available category
   useEffect(() => {
-    if (categoriesData && categoriesData.length > 0 && !selectedCategory) {
-      setSelectedCategory(categoriesData[0].id.toString());
+    if (categories.length > 0 && !selectedCategory) {
+      setSelectedCategory(categories[0].id);
     }
-  }, [categoriesData, selectedCategory]);
-
-  // Process categories for sidebar
-  const categories = useMemo(() => {
-    if (!categoriesData) return [];
-
-    return categoriesData.map(cat => ({
-      id: cat.id.toString(),
-      name: cat.name,
-    }));
-  }, [categoriesData]);
+  }, [categories, selectedCategory]);
 
   // Filter FAQs based on selected category
   const filteredFAQs = useMemo(() => {
@@ -53,7 +59,9 @@ const SupportFAQ: React.FC = () => {
   }, [faqsData, selectedCategory]);
 
   // Loading state
-  if (faqsLoading || categoriesLoading) {
+  const isLoading = faqsLoading;
+
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center bg-white">
         <div className="text-center">

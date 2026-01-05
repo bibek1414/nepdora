@@ -151,7 +151,7 @@ function CategoriesManager() {
               <Plus className="mr-2 h-4 w-4" /> Add Category
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="w-[400px]">
             <DialogHeader>
               <DialogTitle>Add Category</DialogTitle>
               <DialogDescription>

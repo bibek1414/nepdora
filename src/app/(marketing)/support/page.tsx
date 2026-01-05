@@ -48,7 +48,9 @@ export default function SupportPage() {
   return (
     <>
       <SupportHeader />
-      <SupportFAQ />
+      <div className="mx-auto max-w-6xl">
+        <SupportFAQ />
+      </div>
     </>
   );
 }
