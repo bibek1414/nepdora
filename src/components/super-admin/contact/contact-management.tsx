@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import {
   useSuperAdminContactMessages,
@@ -14,23 +12,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
 import { SimplePagination } from "@/components/ui/simple-pagination";
 import { Search, Mail, Phone, Calendar, User, Trash2 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import ContactDetailsDialog from "./contact-details-dialog";
 
 export default function ContactManagement() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const pageSize = 10;
+
+  // Dialog state
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedContactId, setSelectedContactId] = useState<number | null>(
+    null
+  );
 
   const { data, isLoading, error } = useSuperAdminContactMessages(
     page,
@@ -51,6 +49,10 @@ export default function ContactManagement() {
       deleteMessage(id, {
         onSuccess: () => {
           toast.success("Message deleted successfully");
+          if (selectedContactId === id) {
+            setIsDialogOpen(false);
+            setSelectedContactId(null);
+          }
         },
         onError: () => {
           toast.error("Failed to delete message");
@@ -59,38 +61,37 @@ export default function ContactManagement() {
     }
   };
 
+  const handleViewDetails = (id: number) => {
+    setSelectedContactId(id);
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedContactId(null);
+  };
+
+  const handleContactChange = (contactId: number) => {
+    setSelectedContactId(contactId);
+  };
+
   const totalPages = data ? Math.ceil(data.count / pageSize) : 0;
 
   if (error) {
     return <div className="text-red-500">Error loading contact messages</div>;
   }
 
-  // Filter local results if the API doesn't support search yet, or use them if it does.
-  // Based on hook signature `useSuperAdminContactMessages(page, pageSize)`,
-  // it seems search might not be supported in the API hook yet.
-  // If the API supports search, we should update the hook.
-  // For now, assuming the hook DOES NOT support search param based on previous view_file of page.tsx.
-  // However, the user request implies they want search.
-  // Let's implement the UI for search. If the API doesn't support it, we might need to add it to the hook or filter client side (not ideal for pagination).
-  // Checking previous context, `useNewsletters` had search. `useSuperAdminContactMessages` was just (page, pageSize).
-  // I will assume for now we just pass it to the hook even if it doesn't use it,
-  // OR I should check the hook definition.
-  // I'll stick to the plan: Create the component. I'll pass search to the hook if I can, or just leave it prepared.
-
   return (
-    <div className="space-y-6">
+    <div className="mx-auto mt-12 mb-40 min-h-screen max-w-6xl space-y-6 px-6 md:px-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
             Contact Messages
           </h1>
-          <p className="text-muted-foreground">
-            Manage and respond to messages submitted through the contact form.
-          </p>
         </div>
       </div>
 
-      <Card>
+      <Card className="border-none shadow-none">
         <CardContent>
           <div className="rounded-md">
             <Table>
@@ -118,7 +119,11 @@ export default function ContactManagement() {
                   </TableRow>
                 ) : (
                   data?.results.map(item => (
-                    <TableRow key={item.id}>
+                    <TableRow
+                      key={item.id}
+                      className="hover:bg-muted/50 cursor-pointer"
+                      onClick={() => handleViewDetails(item.id)}
+                    >
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-2">
                           <User className="text-muted-foreground h-4 w-4" />
@@ -150,15 +155,20 @@ export default function ContactManagement() {
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-muted-foreground hover:text-red-500"
-                          onClick={() => handleDelete(item.id)}
-                          disabled={isDeleting}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-muted-foreground hover:text-red-500"
+                            onClick={e => {
+                              e.stopPropagation();
+                              handleDelete(item.id);
+                            }}
+                            disabled={isDeleting}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
@@ -176,6 +186,17 @@ export default function ContactManagement() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Render the details dialog */}
+      {data && (
+        <ContactDetailsDialog
+          contacts={data.results}
+          currentContactId={selectedContactId}
+          isOpen={isDialogOpen}
+          onClose={handleCloseDialog}
+          onContactChange={handleContactChange}
+        />
+      )}
     </div>
   );
 }

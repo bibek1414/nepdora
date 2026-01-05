@@ -130,6 +130,56 @@ export function useCreateSuperAdminBlogCategory() {
   });
 }
 
+export function useUpdateSuperAdminBlogCategory() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ slug, name }: { slug: string; name: string }) =>
+      superAdminBlogApi.updateCategory(slug, { name }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: superAdminBlogKeys.categories(),
+      });
+    },
+  });
+}
+
+export function useDeleteSuperAdminBlogCategory() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (slug: string) => superAdminBlogApi.deleteCategory(slug),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: superAdminBlogKeys.categories(),
+      });
+    },
+  });
+}
+
+export function useUpdateSuperAdminBlogTag() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ slug, name }: { slug: string; name: string }) =>
+      superAdminBlogApi.updateTag(slug, { name }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: superAdminBlogKeys.tags() });
+    },
+  });
+}
+
+export function useDeleteSuperAdminBlogTag() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (slug: string) => superAdminBlogApi.deleteTag(slug),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: superAdminBlogKeys.tags() });
+    },
+  });
+}
+
 export function useCreateSuperAdminBlog() {
   const queryClient = useQueryClient();
   return useMutation({

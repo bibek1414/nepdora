@@ -209,4 +209,69 @@ export const superAdminBlogApi = {
 
     await handleApiError(response);
   },
+
+  updateCategory: async (
+    slug: string,
+    categoryData: { name: string }
+  ): Promise<BlogCategory> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(
+      `${API_BASE_URL}/api/nepdora-blog-categories/${slug}/`,
+      {
+        method: "PATCH",
+        headers: {
+          ...createHeaders(),
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify(categoryData),
+      }
+    );
+
+    await handleApiError(response);
+    return response.json();
+  },
+
+  deleteCategory: async (slug: string): Promise<void> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(
+      `${API_BASE_URL}/api/nepdora-blog-categories/${slug}/`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      }
+    );
+
+    await handleApiError(response);
+  },
+
+  updateTag: async (slug: string, tagData: CreateBlogTag): Promise<BlogTag> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/nepdora-tags/${slug}/`, {
+      method: "PATCH",
+      headers: {
+        ...createHeaders(),
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      body: JSON.stringify(tagData),
+    });
+
+    await handleApiError(response);
+    return response.json();
+  },
+
+  deleteTag: async (slug: string): Promise<void> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/nepdora-tags/${slug}/`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    });
+
+    await handleApiError(response);
+  },
 };

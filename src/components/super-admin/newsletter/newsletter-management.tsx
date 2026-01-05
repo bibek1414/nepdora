@@ -45,40 +45,31 @@ export default function NewsletterManagement() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto mt-12 mb-40 min-h-screen max-w-6xl space-y-6 px-6 md:px-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
             Newsletter Subscribers
           </h1>
-          <p className="text-muted-foreground">
-            Manage your newsletter subscriptions
-          </p>
         </div>
       </div>
 
       <div className="flex items-center space-x-2">
         <div className="relative max-w-sm flex-1">
-          <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
+          <Search className="text-muted-foreground absolute top-4 left-2.5 h-4 w-4" />
           <Input
             type="search"
             placeholder="Search emails..."
-            className="pl-8"
+            className="placeholder:text-muted-foreground pl-8"
             value={search}
             onChange={handleSearch}
           />
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Subscribers</CardTitle>
-          <CardDescription>
-            List of all users subscribed to the Nepdora newsletter.
-          </CardDescription>
-        </CardHeader>
+      <Card className="border-none shadow-none">
         <CardContent>
-          <div className="rounded-md border">
+          <div className="rounded-md border-none">
             <Table>
               <TableHeader>
                 <TableRow>

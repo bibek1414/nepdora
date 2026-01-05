@@ -135,13 +135,22 @@ const BlogsManagement = () => {
             <BlogsSearch onSearch={handleSearch} />
           </div>
 
-          <Button
-            onClick={handleCreateNew}
-            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Blog
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => router.push("/superadmin/blogs/categories")}
+              className="h-9 border-black text-gray-900"
+            >
+              Manage Categories & Tags
+            </Button>
+            <Button
+              onClick={handleCreateNew}
+              className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Blog
+            </Button>
+          </div>
         </div>
 
         <BlogsTable
