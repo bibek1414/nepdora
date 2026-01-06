@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useSuperAdminBlog } from "@/hooks/super-admin/use-blogs";
+import { useMarketingBlog } from "@/hooks/marketing/use-blogs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import Sidebar from "@/components/marketing/blog/sidebar";
+import { DetailSidebar } from "@/components/marketing/blog/sidebar";
 import ArticleContent from "@/components/marketing/blog/article-content";
 import RecentBlogs from "@/components/marketing/blog/recent-blogs";
 
@@ -22,7 +22,7 @@ const BlogDetailPage = () => {
   const slug =
     (Array.isArray(params.slug) ? params.slug[0] : params.slug) || "";
 
-  const { data: blog, isLoading, error } = useSuperAdminBlog(slug);
+  const { data: blog, isLoading, error } = useMarketingBlog(slug);
 
   if (isLoading) {
     return (
@@ -93,7 +93,7 @@ const BlogDetailPage = () => {
           </div>
           <aside className="lg:col-span-4">
             <div className="lg:sticky lg:top-24">
-              <Sidebar />
+              <DetailSidebar />
             </div>
           </aside>
         </div>

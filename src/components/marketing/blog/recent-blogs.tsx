@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSuperAdminRecentBlogs } from "@/hooks/super-admin/use-blogs";
+import { useMarketingRecentBlogs } from "@/hooks/marketing/use-blogs";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
@@ -24,7 +24,7 @@ const BlogCardSkeleton = () => (
 );
 
 const RecentBlogs = () => {
-  const { data: blogs, isLoading, error } = useSuperAdminRecentBlogs();
+  const { data: blogs, isLoading, error } = useMarketingRecentBlogs();
 
   if (isLoading) {
     return (

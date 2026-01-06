@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import Blogs, { BlogCardSkeleton } from "@/components/marketing/blog/blogs";
-import Sidebar from "@/components/marketing/blog/sidebar";
+import { Sidebar } from "@/components/marketing/blog/sidebar";
 import { Metadata } from "next";
 import ContactUs from "@/components/marketing/contact-us/contact-us";
 

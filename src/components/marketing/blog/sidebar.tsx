@@ -235,5 +235,14 @@ const Sidebar: React.FC = () => {
     </div>
   );
 };
+const DetailSidebar = () => {
+  return (
+    <div className="sticky top-24 flex flex-col gap-12">
+      <SearchBar />
 
-export default Sidebar;
+      <RecentPosts />
+    </div>
+  );
+};
+
+export { Sidebar, DetailSidebar };
