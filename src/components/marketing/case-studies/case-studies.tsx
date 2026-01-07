@@ -9,43 +9,41 @@ interface CaseStudy {
   metric: string;
   desc: string;
   image: string;
-  category: string;
+  link: string;
 }
 
 const CaseStudies: React.FC = () => {
   const studies: CaseStudy[] = [
     {
       id: 1,
-      company: "Lumière Beauty",
-      category: "Ecommerce",
-      metric: "Sales grew 140% in Month 1",
-      desc: "Switched from Shopify to handle complex logistics automatically. The AI-generated 'Clean Girl' aesthetic converted 3x better.",
-      image:
-        "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?q=80&w=800&auto=format&fit=crop",
+      company: "Brainstorm Abroad Study",
+      metric: "5000+ Students Placed",
+      desc: "Expert guidance for studying in USA, UK, Australia, Canada & New Zealand. From course selection to visa processing — we've got you covered.",
+      image: "/our-clients/brainstrom-image.png",
+      link: "https://www.brainstorm.edu.np/",
     },
     {
       id: 2,
-      company: "Studio 99",
-      category: "Portfolio",
-      metric: "#1 Ranking for 'Modern Arch'",
-      desc: "Nepdora's auto-SEO schema pushed their portfolio to the top of Google Images and Search without a single manual edit.",
-      image:
-        "https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=800&auto=format&fit=crop",
+      company: "Infin Consultants",
+      metric: "250+ Clients Worldwide",
+      desc: "Professional Accounting, Compliance & Business Setup — All in One Place. We help businesses stay compliant, manage finances, and grow.",
+      image: "/our-clients/infin-consultants.png",
+      link: "https://infinconsultants.com/",
     },
     {
       id: 3,
-      company: "Oasis Spa & Retreat",
-      category: "Service",
-      metric: "Saved 20hrs/week admin time",
-      desc: "The automated booking and inquiry system replaced their reception desk entirely. Clients book, pay, and get reminders automatically.",
-      image:
-        "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=800&auto=format&fit=crop",
+      company: "Bato Ma",
+      metric: "Best Experience",
+      desc: "Bato Ma is a trustable and affordable rental service provider for two and four wheelers Ev's in Kathmandu, Nepal.",
+      image: "/our-clients/batoma-tours.png",
+      link: "https://batomatours.com/",
     },
   ];
 
   return (
-    <section id="case-studies" className="py-12 sm:py-16 md:py-20 lg:py-24">
-      <div className="mx-auto max-w-6xl">
+    <section id="case-studies" className="px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div className="mx-auto max-w-7xl">
+        {/* Header */}
         <div className="mb-2 flex flex-col items-start justify-center sm:mb-10 md:flex-row md:items-end">
           <div>
             <h2 className="text-2xl leading-tight font-bold tracking-normal text-slate-900 sm:text-3xl md:text-4xl">
@@ -55,44 +53,62 @@ const CaseStudies: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-3">
+        {/* Grid */}
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
           {studies.map((study, idx) => (
-            <motion.div
+            <motion.article
               key={study.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
               className="group flex flex-col"
             >
-              <div className="relative mb-4 aspect-[3/4] overflow-hidden rounded-xl bg-slate-200 sm:mb-6 sm:rounded-2xl md:aspect-[4/5]">
+              {/* Image Container */}
+              <a
+                href={study.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative mb-5 block aspect-[16/9] overflow-hidden rounded-2xl bg-slate-100"
+              >
                 <img
                   src={study.image}
-                  alt={study.company}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  alt={`${study.company} case study`}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/0"></div>
 
-                <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-                  <span className="rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-slate-900 uppercase backdrop-blur-md sm:px-3 sm:text-xs sm:tracking-wider">
-                    {study.category}
-                  </span>
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="flex translate-y-4 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-slate-900 shadow-lg transition-transform duration-300 group-hover:translate-y-0">
+                    <span className="text-sm font-semibold">Visit Website</span>
+                    <ArrowUpRight className="h-4 w-4" />
+                  </div>
                 </div>
-              </div>
+              </a>
 
-              <div>
-                <h3 className="mb-2 text-lg font-bold text-slate-900 sm:text-xl">
-                  {study.company}
+              {/* Content */}
+              <div className="flex flex-1 flex-col">
+                <h3 className="mb-2 text-xl font-bold text-slate-900 transition-colors duration-200">
+                  <a
+                    href={study.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="focus:ring-primary rounded focus:ring-2 focus:ring-offset-2 focus:outline-none"
+                  >
+                    {study.company}
+                  </a>
                 </h3>
-                <div className="mb-3 flex items-center gap-2 text-xs font-medium text-slate-700 sm:text-sm">
+
+                <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-600">
                   <div className="h-1.5 w-1.5 rounded-full bg-slate-600"></div>
-                  {study.metric}
+                  <span>{study.metric}</span>
                 </div>
-                <p className="border-l-2 border-slate-200 pl-3 text-xs leading-relaxed text-slate-600 sm:pl-4 sm:text-sm">
+
+                <p className="border-l-2 border-slate-200 pl-3 text-xs leading-relaxed text-slate-600 sm:pl-4">
                   &quot;{study.desc}&quot;
                 </p>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
       </div>
