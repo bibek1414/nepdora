@@ -21,26 +21,39 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ post }) => {
 
   return (
     <div className="mx-auto max-w-7xl">
-      <div className="prose prose-lg prose-indigo prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-gray-900 prose-img:rounded-[40px] prose-img:shadow-2xl prose-a:text-indigo-600 max-w-none leading-relaxed font-normal text-gray-700">
-        <p className="mb-10 text-lg leading-[1.4] font-medium tracking-tight text-gray-900">
-          {post.title}
-        </p>
+      <div className="mb-8">
         <Image
           src={post.thumbnail_image || "/images/placeholder.svg"}
-          alt={post.title}
+          alt={post.thumbnail_image_alt_description || post.title}
           width={1000}
           height={600}
-          className="mb-6 rounded-[10px]"
+          className="mb-8 w-full rounded-[20px] object-cover"
         />
-        <div
-          className="[&>p:first-of-type]:first-letter:text-primary [&>p:first-of-type]:first-letter:float-left [&>p:first-of-type]:first-letter:mr-3 [&>p:first-of-type]:first-letter:text-7xl [&>p:first-of-type]:first-letter:leading-[0.8] [&>p:first-of-type]:first-letter:font-bold"
-          dangerouslySetInnerHTML={{
-            __html: sanitizeHtmlContent(post.content),
-          }}
-        />
+        <div className="mb-4 flex items-center space-x-2 text-sm text-gray-500">
+          <span>
+            {new Date(post.created_at).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long", // "long" will show full month name
+              day: "numeric",
+            })}
+          </span>
+
+          <span>•</span>
+          <span>
+            {post.time_to_read}{" "}
+            {post.time_to_read?.includes("min") ? "" : "min read"}
+          </span>
+        </div>
+        <h1 className="mb-4 text-xl font-bold text-gray-900">{post.title}</h1>
       </div>
 
-      <div className="mt-8 pt-8">
+      <div
+        dangerouslySetInnerHTML={{
+          __html: sanitizeHtmlContent(post.content),
+        }}
+      />
+
+      <div className="mt-12 border-t pt-8">
         <h3 className="mb-4 text-lg font-semibold text-gray-900">
           Share this article
         </h3>

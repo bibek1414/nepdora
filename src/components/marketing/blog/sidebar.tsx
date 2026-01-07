@@ -238,9 +238,10 @@ const Sidebar: React.FC = () => {
 const DetailSidebar = () => {
   return (
     <div className="sticky top-24 flex flex-col gap-12">
-      <SearchBar />
-
-      <RecentPosts />
+      <div className="space-y-6 lg:w-96">
+        <SearchBar />
+        <RecentPosts />
+      </div>
     </div>
   );
 };

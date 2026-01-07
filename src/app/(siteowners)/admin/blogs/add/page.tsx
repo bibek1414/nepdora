@@ -52,7 +52,7 @@ const AddBlogPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="mx-auto mt-12 mb-40 max-w-4xl px-6 md:px-8">
+      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold text-[#003d79]">Add New Blog</h1>

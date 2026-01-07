@@ -89,7 +89,7 @@ const RecentBlogs = () => {
               )}
             </div>
 
-            <h3 className="mb-3 text-xl leading-tight font-bold text-slate-900 transition-colors group-hover:text-[#003d79]">
+            <h3 className="group-hover:text-primary mb-3 text-xl leading-tight font-bold text-slate-900 transition-colors">
               <Link href={`/blog/${blog.slug}`}>{blog.title}</Link>
             </h3>
           </div>

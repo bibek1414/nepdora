@@ -60,6 +60,7 @@ const BlogDetailPage = () => {
     <div className="animate-in fade-in bg-white duration-500">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-16">
         {/* Breadcrumb */}
+
         <div className="mb-6 sm:mb-8">
           <Breadcrumb>
             <BreadcrumbList>
@@ -85,8 +86,8 @@ const BlogDetailPage = () => {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-12 lg:gap-16 xl:gap-32">
-          <div className="lg:col-span-6">
+        <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-8">
             <article>
               <ArticleContent post={blog} />
             </article>
