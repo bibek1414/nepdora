@@ -24,43 +24,10 @@ const BlogDetailPage = () => {
 
   const { data: blog, isLoading, error } = useMarketingBlog(slug);
 
-  if (isLoading) {
-    return (
-      <div className="w-full bg-white">
-        <div className="flex h-[400px] w-full items-center justify-center bg-gray-100 sm:h-[500px] md:h-[600px]">
-          <Skeleton className="h-full w-full" />
-        </div>
-        <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 sm:py-12 md:py-16 lg:py-24">
-          <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-12 lg:gap-16">
-            <div className="space-y-4 lg:col-span-8">
-              <Skeleton className="h-4 w-full sm:h-6" />
-              <Skeleton className="h-3 w-full sm:h-4" />
-              <Skeleton className="h-3 w-full sm:h-4" />
-              <Skeleton className="h-3 w-2/3 sm:h-4" />
-            </div>
-            <div className="lg:col-span-4">
-              <Skeleton className="h-48 w-full sm:h-64" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !blog) {
-    return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-        <h2 className="mb-4 text-xl font-bold sm:text-2xl">Blog not found</h2>
-        <Button onClick={() => router.push("/blog")}>Back to Blog</Button>
-      </div>
-    );
-  }
-
   return (
     <div className="animate-in fade-in bg-white duration-500">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-16">
         {/* Breadcrumb */}
-
         <div className="mb-6 sm:mb-8">
           <Breadcrumb>
             <BreadcrumbList>
@@ -77,9 +44,13 @@ const BlogDetailPage = () => {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage className="line-clamp-1 text-xs sm:text-sm">
-                  {blog.title}
-                </BreadcrumbPage>
+                {isLoading ? (
+                  <Skeleton className="h-4 w-32" />
+                ) : (
+                  <BreadcrumbPage className="line-clamp-1 text-xs sm:text-sm">
+                    {blog?.title || "Not Found"}
+                  </BreadcrumbPage>
+                )}
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -88,9 +59,38 @@ const BlogDetailPage = () => {
         {/* Main Content */}
         <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-8">
-            <article>
-              <ArticleContent post={blog} />
-            </article>
+            {isLoading ? (
+              <div className="space-y-4">
+                <Skeleton className="h-[400px] w-full rounded-[20px] sm:h-[500px]" />
+                <div className="space-y-4 pt-4">
+                  <div className="flex items-center space-x-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-4 rounded-full" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                  <Skeleton className="h-8 w-3/4" />
+                  <div className="space-y-2 pt-4">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-2/3" />
+                  </div>
+                </div>
+              </div>
+            ) : error || !blog ? (
+              <div className="flex min-h-[40vh] flex-col items-center justify-center text-center">
+                <h2 className="mb-4 text-xl font-bold sm:text-2xl">
+                  Blog not found
+                </h2>
+                <Button onClick={() => router.push("/blog")}>
+                  Back to Blog
+                </Button>
+              </div>
+            ) : (
+              <article>
+                <ArticleContent post={blog} />
+              </article>
+            )}
           </div>
           <aside className="lg:col-span-4">
             <div className="lg:sticky lg:top-24">

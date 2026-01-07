@@ -32,7 +32,7 @@ import { Template } from "@/types/super-admin/components/template";
 import { useRouter } from "next/navigation";
 import useDebouncer from "@/hooks/use-debouncer";
 import { LoadingScreen } from "@/components/on-boarding/loading-screen/loading-screen";
-import { useAuth } from "@/hooks/use-auth";
+
 import {
   useTemplateCategories,
   useTemplateSubcategories,
@@ -60,7 +60,7 @@ export const OnboardingStepFour = ({
   totalSteps,
 }: OnboardingStepFourProps) => {
   const router = useRouter();
-  const { user } = useAuth();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
     null
@@ -141,11 +141,7 @@ export const OnboardingStepFour = ({
           setShowLoadingScreen(true);
 
           setTimeout(() => {
-            if (user?.sub_domain) {
-              router.push(`/builder/${user.sub_domain}`);
-            } else {
-              router.push("/builder");
-            }
+            router.push("/admin");
           }, 5000);
         },
         onError: error => {
@@ -174,11 +170,7 @@ export const OnboardingStepFour = ({
     setShowScratchConfirm(false);
     setShowLoadingScreen(true);
     setTimeout(() => {
-      if (user?.sub_domain) {
-        router.push(`/builder/${user.sub_domain}`);
-      } else {
-        router.push("/builder");
-      }
+      router.push("/admin");
     }, 5000);
   };
 

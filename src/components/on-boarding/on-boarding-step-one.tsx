@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/use-auth";
+
 import { LoadingScreen } from "@/components/on-boarding/loading-screen/loading-screen";
 
 interface OnboardingStepOneProps {
@@ -32,7 +32,6 @@ export const OnboardingStepOne = ({
   const [showScratchConfirm, setShowScratchConfirm] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const router = useRouter();
-  const { user } = useAuth();
 
   const handleOptionSelect = (option: "template" | "ai" | "scratch") => {
     if (option === "scratch") {
@@ -47,11 +46,7 @@ export const OnboardingStepOne = ({
     setShowLoadingScreen(true);
 
     setTimeout(() => {
-      if (user?.sub_domain) {
-        router.push(`/builder/${user.sub_domain}`);
-      } else {
-        router.push("/builder");
-      }
+      router.push("/admin");
     }, 5000);
   };
 
@@ -59,11 +54,7 @@ export const OnboardingStepOne = ({
     setShowLoadingScreen(true);
 
     setTimeout(() => {
-      if (user?.sub_domain) {
-        router.push(`/builder/${user.sub_domain}`);
-      } else {
-        router.push("/builder");
-      }
+      router.push("/admin");
     }, 5000);
   };
 

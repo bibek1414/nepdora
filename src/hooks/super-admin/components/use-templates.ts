@@ -29,6 +29,7 @@ export const useTemplates = ({
         subcategory,
         search
       ),
+    placeholderData: previousData => previousData,
   });
 };
 

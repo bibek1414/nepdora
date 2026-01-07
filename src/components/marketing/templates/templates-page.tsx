@@ -5,8 +5,8 @@ import {
   CategoryNavigation,
   CategoryNavigationSkeleton,
 } from "./category-navigation";
-import { useTemplates } from "@/hooks/super-admin/components/use-templates";
 import { useTemplateCategories } from "@/hooks/super-admin/components/use-template-category";
+import { useTemplates } from "@/hooks/super-admin/components/use-templates";
 
 // Local interface for UI categories
 interface UICategory {
@@ -60,34 +60,9 @@ const TemplatesPage = () => {
     }
   };
 
-  if (categoriesLoading || templatesLoading) {
-    return (
-      <section className="bg-white py-12 sm:py-16 md:py-20 lg:py-24">
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
-          <div className="mb-8 flex flex-col items-center justify-center gap-4 sm:mb-10 sm:gap-6 md:mb-12">
-            <div>
-              <h2 className="mb-2 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl">
-                Featured Website Templates
-              </h2>
-              <p className="text-center text-sm text-slate-600">
-                Monthly updated templates to help you get started.
-              </p>
-            </div>
-            <CategoryNavigationSkeleton />
-          </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <TemplateCardSkeleton key={i} />
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="bg-white py-12 sm:py-16 md:py-20 lg:py-24">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
         <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:mb-10 sm:gap-6 md:mb-12">
           <div>
             <h2 className="mb-2 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl">
@@ -98,15 +73,25 @@ const TemplatesPage = () => {
             </p>
           </div>
 
-          <CategoryNavigation
-            categories={categories}
-            selectedCategory={selectedCategory}
-            onCategoryChange={handleCategoryChange}
-          />
+          {categoriesLoading ? (
+            <CategoryNavigationSkeleton />
+          ) : (
+            <CategoryNavigation
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onCategoryChange={handleCategoryChange}
+            />
+          )}
         </div>
 
         {/* Templates Grid */}
-        {templatesData?.results && templatesData.results.length > 0 ? (
+        {templatesLoading ? (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <TemplateCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : templatesData?.results && templatesData.results.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3">
             {templatesData.results.map(template => (
               <TemplateCard key={template.id} template={template} />
@@ -126,27 +111,28 @@ const TemplatesPage = () => {
         )}
 
         {/* Pagination */}
-        {(templatesData?.next || templatesData?.previous) && (
-          <div className="mt-6 flex items-center justify-center gap-3 sm:mt-8 sm:gap-4">
-            <button
-              onClick={handlePrevPage}
-              disabled={!templatesData?.previous}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-2 sm:text-sm"
-            >
-              Previous
-            </button>
-            <span className="text-xs text-slate-600 sm:text-sm">
-              Page {currentPage}
-            </span>
-            <button
-              onClick={handleNextPage}
-              disabled={!templatesData?.next}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-2 sm:text-sm"
-            >
-              Next
-            </button>
-          </div>
-        )}
+        {!templatesLoading &&
+          (templatesData?.next || templatesData?.previous) && (
+            <div className="mt-6 flex items-center justify-center gap-3 sm:mt-8 sm:gap-4">
+              <button
+                onClick={handlePrevPage}
+                disabled={!templatesData?.previous}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-2 sm:text-sm"
+              >
+                Previous
+              </button>
+              <span className="text-xs text-slate-600 sm:text-sm">
+                Page {currentPage}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={!templatesData?.next}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-2 sm:text-sm"
+              >
+                Next
+              </button>
+            </div>
+          )}
       </div>
     </section>
   );
