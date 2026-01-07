@@ -181,10 +181,7 @@ export const CreateProductSchema = z.object({
     .max(100, "Weight must be 100 characters or less")
     .optional(),
   status: z.enum(STATUS_CHOICES),
-  meta_title: z
-    .string()
-    .max(255, "Meta title must be 255 characters or less")
-    .optional(),
+  meta_title: z.string().optional(),
   meta_description: z.string().optional(),
   // Variant-related fields
   options: z.array(CreateProductOptionSchema).optional(),

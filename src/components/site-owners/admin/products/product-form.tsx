@@ -839,13 +839,19 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                           name="meta_title"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-xs font-medium">
-                                Meta Title ( Max Length - 65 )
+                              <FormLabel
+                                className={`text-xs font-medium ${
+                                  (field.value?.length || 0) > 60
+                                    ? "text-red-500"
+                                    : ""
+                                }`}
+                              >
+                                Meta Title ({field.value?.length || 0}/60)
                               </FormLabel>
+
                               <FormControl>
                                 <Input
                                   placeholder=""
-                                  maxLength={65}
                                   {...field}
                                   className="h-10 rounded-xl"
                                 />
@@ -860,14 +866,21 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                           name="meta_description"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-xs font-medium">
-                                Meta Description ( Max Length - 125 )
+                              <FormLabel
+                                className={`text-xs font-medium ${
+                                  (field.value?.length || 0) > 160
+                                    ? "text-red-500"
+                                    : ""
+                                }`}
+                              >
+                                Meta Description ({field.value?.length || 0}
+                                /160)
                               </FormLabel>
+
                               <FormControl>
                                 <Textarea
                                   placeholder=""
                                   rows={4}
-                                  maxLength={125}
                                   className="h-28 resize-none rounded-xl"
                                   {...field}
                                 />

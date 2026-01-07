@@ -42,6 +42,7 @@ import {
 import Image from "next/image";
 import ReusableQuill from "@/components/ui/tip-tap";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface ServicesFormProps {
   service?: ServicesPost | null;
@@ -274,7 +275,11 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
                   <FormControl>
                     <Input placeholder="SEO friendly title" {...field} />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription
+                    className={cn(
+                      (field.value?.length || 0) > 60 && "text-red-500"
+                    )}
+                  >
                     {field.value?.length || 0}/60 characters
                   </FormDescription>
                   <FormMessage />
@@ -294,7 +299,11 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription
+                    className={cn(
+                      (field.value?.length || 0) > 160 && "text-red-500"
+                    )}
+                  >
                     {field.value?.length || 0}/160 characters
                   </FormDescription>
                   <FormMessage />

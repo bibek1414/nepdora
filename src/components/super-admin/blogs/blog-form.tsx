@@ -405,7 +405,12 @@ const BlogForm: React.FC<BlogFormProps> = ({
                             className="text-sm sm:text-base"
                           />
                         </FormControl>
-                        <FormDescription className="text-xs sm:text-sm">
+                        <FormDescription
+                          className={cn(
+                            "text-xs sm:text-sm",
+                            (field.value?.length || 0) > 60 && "text-red-500"
+                          )}
+                        >
                           {field.value?.length || 0}/60 characters
                         </FormDescription>
                         <FormMessage />
@@ -428,7 +433,12 @@ const BlogForm: React.FC<BlogFormProps> = ({
                             className="text-sm sm:text-base"
                           />
                         </FormControl>
-                        <FormDescription className="text-xs sm:text-sm">
+                        <FormDescription
+                          className={cn(
+                            "text-xs sm:text-sm",
+                            (field.value?.length || 0) > 160 && "text-red-500"
+                          )}
+                        >
                           {field.value?.length || 0}/160 characters
                         </FormDescription>
                         <FormMessage />

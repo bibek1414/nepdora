@@ -461,7 +461,11 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
                   <FormControl>
                     <Input placeholder="SEO friendly title" {...field} />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription
+                    className={cn(
+                      (field.value?.length || 0) > 60 && "text-red-500"
+                    )}
+                  >
                     {field.value?.length || 0}/60 characters
                   </FormDescription>
                   <FormMessage />
@@ -481,7 +485,11 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription
+                    className={cn(
+                      (field.value?.length || 0) > 160 && "text-red-500"
+                    )}
+                  >
                     {field.value?.length || 0}/160 characters
                   </FormDescription>
                   <FormMessage />
