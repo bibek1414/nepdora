@@ -34,6 +34,21 @@ export const useImportTemplate = () => {
   });
 };
 
+export const useSkipOnboarding = () => {
+  return useMutation<ImportTemplateResponse, Error, string>({
+    mutationFn: (token: string) => {
+      return templateAPI.skipOnboarding(token);
+    },
+    onSuccess: data => {
+      console.log("Onboarding skipped successfully:", data);
+    },
+    onError: error => {
+      toast.error(error.message || "Failed to skip onboarding");
+      console.error("Failed to skip onboarding:", error);
+    },
+  });
+};
+
 export const usePreviewTemplate = () => {
   return {
     openPreview: (schemaName: string) => {

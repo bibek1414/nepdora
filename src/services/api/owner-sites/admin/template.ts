@@ -65,6 +65,25 @@ export const templateAPI = {
     return await response.json();
   },
 
+  skipOnboarding: async (token: string): Promise<ImportTemplateResponse> => {
+    const response = await fetch(`${API_BASE_URL}/api/templates/use/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `Failed to skip onboarding: ${response.status}`
+      );
+    }
+
+    return await response.json();
+  },
+
   getPreviewUrl: (schemaName: string): string => {
     const isDevelopment = process.env.NODE_ENV === "development";
 

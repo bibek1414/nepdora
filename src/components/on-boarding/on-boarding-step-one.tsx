@@ -17,6 +17,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { LoadingScreen } from "@/components/on-boarding/loading-screen/loading-screen";
+import { useSkipOnboarding } from "@/hooks/owner-site/admin/use-template";
+import { useAuth } from "@/hooks/use-auth";
 
 interface OnboardingStepOneProps {
   onSelectOption: (option: "template" | "ai" | "scratch") => void;
@@ -32,6 +34,8 @@ export const OnboardingStepOne = ({
   const [showScratchConfirm, setShowScratchConfirm] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const router = useRouter();
+  const { tokens } = useAuth();
+  const { mutate: skipOnboarding } = useSkipOnboarding();
 
   const handleOptionSelect = (option: "template" | "ai" | "scratch") => {
     if (option === "scratch") {
@@ -45,6 +49,10 @@ export const OnboardingStepOne = ({
     setShowScratchConfirm(false);
     setShowLoadingScreen(true);
 
+    if (tokens?.access_token) {
+      skipOnboarding(tokens.access_token);
+    }
+
     setTimeout(() => {
       router.push("/admin");
     }, 5000);
@@ -52,6 +60,10 @@ export const OnboardingStepOne = ({
 
   const handleSkip = () => {
     setShowLoadingScreen(true);
+
+    if (tokens?.access_token) {
+      skipOnboarding(tokens.access_token);
+    }
 
     setTimeout(() => {
       router.push("/admin");
