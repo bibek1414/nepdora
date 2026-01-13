@@ -18,6 +18,7 @@ interface CreateTemplateAccountData {
   phone: string;
   store_name: string;
   template_name: string;
+  website_type: "ecommerce" | "service";
 }
 
 interface TemplateAccountResponse {

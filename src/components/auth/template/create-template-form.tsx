@@ -25,6 +25,9 @@ export function CreateTemplateAccountForm({
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<FormErrorState | null>(null);
+  const [selectedWebsiteType, setSelectedWebsiteType] = useState<
+    "ecommerce" | "service" | null
+  >(null);
 
   const {
     register,
@@ -79,6 +82,7 @@ export function CreateTemplateAccountForm({
         store_name: data.store_name,
         phone: data.phone,
         template_name: data.template_name,
+        website_type: data.website_type,
       });
 
       toast.success("Template Account Created", {
@@ -242,6 +246,81 @@ export function CreateTemplateAccountForm({
             <p className="mt-2 flex items-center text-sm font-medium text-red-500">
               <AlertCircle className="mr-1 h-4 w-4" />
               {errors.email.message}
+            </p>
+          )}
+        </div>
+
+        {/* Website Type */}
+        <div className="">
+          <label className="text-xs font-medium text-gray-500">
+            Website Type
+          </label>
+          <div className="grid grid-cols-2 gap-3 py-0">
+            <label
+              className={cn(
+                "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-2 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50",
+                selectedWebsiteType === "ecommerce"
+                  ? "border-emerald-500 bg-emerald-50"
+                  : "border-gray-300 bg-white"
+              )}
+            >
+              <input
+                type="radio"
+                value="ecommerce"
+                {...register("website_type")}
+                className="hidden"
+                onChange={e => {
+                  setSelectedWebsiteType("ecommerce");
+                  handleInputChange("website_type")(e);
+                }}
+              />
+              <span
+                className={cn(
+                  "text-sm font-medium",
+                  selectedWebsiteType === "ecommerce"
+                    ? "text-emerald-700"
+                    : "text-gray-700"
+                )}
+              >
+                E-commerce
+              </span>
+            </label>
+
+            <label
+              className={cn(
+                "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-2 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50",
+                selectedWebsiteType === "service"
+                  ? "border-emerald-500 bg-emerald-50"
+                  : "border-gray-300 bg-white"
+              )}
+            >
+              <input
+                type="radio"
+                value="service"
+                {...register("website_type")}
+                className="hidden"
+                onChange={e => {
+                  setSelectedWebsiteType("service");
+                  handleInputChange("website_type")(e);
+                }}
+              />
+              <span
+                className={cn(
+                  "text-sm font-medium",
+                  selectedWebsiteType === "service"
+                    ? "text-emerald-700"
+                    : "text-gray-700"
+                )}
+              >
+                Service
+              </span>
+            </label>
+          </div>
+
+          {errors.website_type && (
+            <p className="mt-2 flex items-center text-sm font-medium text-red-500">
+              <AlertCircle className="mr-1 h-4 w-4" />
+              {errors.website_type.message}
             </p>
           )}
         </div>

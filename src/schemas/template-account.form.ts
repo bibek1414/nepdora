@@ -41,6 +41,7 @@ export const templateAccountSchema = z
         message:
           "Store name can only contain letters, numbers, spaces, hyphens, and underscores.",
       }),
+    website_type: z.enum(["ecommerce", "service"]),
   })
   .refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
