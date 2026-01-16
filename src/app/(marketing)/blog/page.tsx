@@ -1,6 +1,5 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import Blogs, { BlogCardSkeleton } from "@/components/marketing/blog/blogs";
-import { Sidebar } from "@/components/marketing/blog/sidebar";
 import { Metadata } from "next";
 import ContactUs from "@/components/marketing/contact-us/contact-us";
 
@@ -27,17 +26,6 @@ const BlogPage = () => {
           >
             <Blogs />
           </Suspense>
-
-          {/* Sidebar */}
-          {/* <div className="lg:col-span-4">
-            <Suspense
-              fallback={
-                <div className="h-96 animate-pulse rounded-2xl bg-gray-100" />
-              }
-            >
-              <Sidebar />
-            </Suspense>
-          </div> */}
         </div>
       </section>
       <ContactUs />

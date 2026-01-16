@@ -1,10 +1,27 @@
-import { BlogDetailViewWrapper } from "@/components/marketing/blog/blog-detail-view";
+import { BlogDetailView } from "@/components/marketing/blog/blog-detail-view";
 import { marketingBlogApi } from "@/services/api/marketing/blog";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }>;
 }
+
+// Generate static params for ISR
+export async function generateStaticParams() {
+  try {
+    const blogs = await marketingBlogApi.getBlogs({ page_size: 100 });
+    return blogs.results.map(blog => ({
+      slug: blog.slug,
+    }));
+  } catch (error) {
+    console.error("Error generating static params for blogs:", error);
+    return [];
+  }
+}
+
+// Revalidate every hour (3600 seconds)
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -59,6 +76,13 @@ export async function generateMetadata({
   }
 }
 
-export default function BlogDetailPage() {
-  return <BlogDetailViewWrapper />;
+export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
+  const { slug } = await params;
+
+  try {
+    const blog = await marketingBlogApi.getBlogBySlug(slug);
+    return <BlogDetailView blog={blog} />;
+  } catch (error) {
+    notFound();
+  }
 }

@@ -1,132 +1,162 @@
-import DOMPurify from "dompurify";
+import sanitizeHtml from "sanitize-html";
 
 interface SanitizerConfig {
   allowedTags?: string[];
   allowedAttributes?: string[];
-  allowedCss?: Record<string, RegExp>;
+  allowedStyles?: Record<string, Record<string, RegExp[]>>;
   enableListStyling?: boolean;
   enableSpacingPreservation?: boolean;
 }
 
-const DEFAULT_CONFIG: SanitizerConfig = {
-  allowedTags: [
-    // Headings
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6",
-    // Text formatting
-    "p",
-    "br",
-    "div",
-    "span",
-    "section",
-    "article",
-    "strong",
-    "em",
-    "b",
-    "i",
-    "u",
-    "s",
-    "sub",
-    "sup",
-    "mark",
-    "small",
-    "del",
-    "ins",
-    // Lists - IMPORTANT: Keep these for numbering
-    "ul",
-    "ol",
-    "li",
-    "dl",
-    "dt",
-    "dd",
-    // Links and media
-    "a",
-    "img",
-    "figure",
-    "figcaption",
-    // Code and quotes
-    "blockquote",
-    "cite",
-    "q",
-    "pre",
-    "code",
-    "kbd",
-    "samp",
-    // Tables
-    "table",
-    "thead",
-    "tbody",
-    "tfoot",
-    "tr",
-    "th",
-    "td",
-    "caption",
-    "colgroup",
-    "col",
-    // Other common elements
-    "hr",
-    "address",
-    "time",
-  ],
-  allowedAttributes: [
-    // Links
-    "href",
-    "target",
-    "rel",
-    "title",
-    // Media
-    "src",
-    "alt",
-    "width",
-    "height",
-    "loading",
-    // General - IMPORTANT: These preserve Quill formatting
-    "class",
-    "id",
-    "style",
-    "data-*",
-    // Tables
-    "colspan",
-    "rowspan",
-    "scope",
-    // Lists - IMPORTANT: These attributes preserve list numbering
-    "start",
-    "type",
-    "reversed",
-    // Time
-    "datetime",
-  ],
-  allowedCss: {
-    "text-align": /^(left|right|center|justify)$/,
-    "font-weight": /^(bold|normal|\d+)$/,
-    "font-style": /^(italic|normal)$/,
-    "text-decoration": /^(underline|line-through|none)$/,
-    color: /^#[0-9a-f]{3,6}$/i,
-    "background-color": /^#[0-9a-f]{3,6}$/i,
-    margin: /^[\d\s.%px-]+$/,
-    padding: /^[\d\s.%px-]+$/,
-    "list-style-type":
+const DEFAULT_ALLOWED_TAGS = [
+  // Headings
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  // Text formatting
+  "p",
+  "br",
+  "div",
+  "span",
+  "section",
+  "article",
+  "strong",
+  "em",
+  "b",
+  "i",
+  "u",
+  "s",
+  "sub",
+  "sup",
+  "mark",
+  "small",
+  "del",
+  "ins",
+  // Lists - IMPORTANT: Keep these for numbering
+  "ul",
+  "ol",
+  "li",
+  "dl",
+  "dt",
+  "dd",
+  // Links and media
+  "a",
+  "img",
+  "figure",
+  "figcaption",
+  // Code and quotes
+  "blockquote",
+  "cite",
+  "q",
+  "pre",
+  "code",
+  "kbd",
+  "samp",
+  // Tables
+  "table",
+  "thead",
+  "tbody",
+  "tfoot",
+  "tr",
+  "th",
+  "td",
+  "caption",
+  "colgroup",
+  "col",
+  // Other common elements
+  "hr",
+  "address",
+  "time",
+];
+
+// Build allowedAttributes for sanitize-html
+// sanitize-html uses an object where keys are tag names and values are arrays of allowed attributes
+const buildAllowedAttributes = (allowedAttrs: string[]): Record<string, string[]> => {
+  const commonAttrs = allowedAttrs.filter(attr => attr !== "href" && attr !== "src" && attr !== "colspan" && attr !== "start" && attr !== "datetime");
+  
+  const attributes: Record<string, string[]> = {};
+  
+  // Apply common attributes to all tags (class, id, style)
+  DEFAULT_ALLOWED_TAGS.forEach(tag => {
+    attributes[tag] = [...commonAttrs];
+  });
+
+  // Special attributes for specific tags
+  attributes["a"] = [...commonAttrs, "href", "target", "rel", "title"];
+  attributes["img"] = [...commonAttrs, "src", "alt", "width", "height", "loading"];
+  attributes["td"] = [...commonAttrs, "colspan", "rowspan"];
+  attributes["th"] = [...commonAttrs, "colspan", "rowspan", "scope"];
+  attributes["ol"] = [...commonAttrs, "start", "type", "reversed"];
+  attributes["time"] = [...commonAttrs, "datetime"];
+
+  return attributes;
+};
+
+const DEFAULT_ALLOWED_ATTRIBUTES = [
+  // Links
+  "href",
+  "target",
+  "rel",
+  "title",
+  // Media
+  "src",
+  "alt",
+  "width",
+  "height",
+  "loading",
+  // General - IMPORTANT: These preserve Quill formatting
+  "class",
+  "id",
+  "style",
+  // Tables
+  "colspan",
+  "rowspan",
+  "scope",
+  // Lists - IMPORTANT: These attributes preserve list numbering
+  "start",
+  "type",
+  "reversed",
+  // Time
+  "datetime",
+];
+
+const DEFAULT_ALLOWED_STYLES: Record<string, Record<string, RegExp[]>> = {
+  "*": {
+    "text-align": [/^(left|right|center|justify)$/],
+    "font-weight": [/^(bold|normal|\d+)$/],
+    "font-style": [/^(italic|normal)$/],
+    "text-decoration": [/^(underline|line-through|none)$/],
+    color: [/^#[0-9a-f]{3,6}$/i],
+    "background-color": [/^#[0-9a-f]{3,6}$/i],
+    margin: [/^[\d\s.%px-]+$/],
+    padding: [/^[\d\s.%px-]+$/],
+    "list-style-type": [
       /^(decimal|lower-alpha|upper-alpha|lower-roman|upper-roman|disc|circle|square|none)$/,
-    "margin-left": /^[\d.%px-]+$/,
-    "padding-left": /^[\d.%px-]+$/,
-    // Add spacing-related CSS properties
-    "min-height": /^[\d.%px-]+$/,
-    display: /^(block|inline|inline-block|list-item|none)$/,
-    content: /^['"].*['"]$/,
-    "margin-top": /^[\d.%px-]+$/,
-    "margin-bottom": /^[\d.%px-]+$/,
-    "line-height": /^[\d.%px-]+$/,
+    ],
+    "margin-left": [/^[\d.%px-]+$/],
+    "padding-left": [/^[\d.%px-]+$/],
+    "min-height": [/^[\d.%px-]+$/],
+    display: [/^(block|inline|inline-block|list-item|none)$/],
+    content: [/^['"].*['"]$/],
+    "margin-top": [/^[\d.%px-]+$/],
+    "margin-bottom": [/^[\d.%px-]+$/],
+    "line-height": [/^[\d.%px-]+$/],
   },
+};
+
+const DEFAULT_CONFIG: SanitizerConfig = {
+  allowedTags: DEFAULT_ALLOWED_TAGS,
+  allowedAttributes: DEFAULT_ALLOWED_ATTRIBUTES,
+  allowedStyles: DEFAULT_ALLOWED_STYLES,
   enableListStyling: true,
   enableSpacingPreservation: true,
 };
 
 /**
- * Sanitizes HTML content using DOMPurify with a secure configuration
+ * Sanitizes HTML content using sanitize-html with a secure configuration
  * @param htmlContent - The HTML content to sanitize
  * @param customConfig - Optional custom configuration to override defaults
  * @returns Sanitized HTML string
@@ -142,31 +172,25 @@ export function sanitizeHtmlContent(
   // Merge custom config with defaults
   const config = { ...DEFAULT_CONFIG, ...customConfig };
 
-  const dompurifyConfig = {
-    ALLOWED_TAGS: config.allowedTags,
-    ALLOWED_ATTR: config.allowedAttributes,
-    ALLOWED_CSS: config.allowedCss,
-    ALLOWED_URI_REGEXP:
-      /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
-    ADD_ATTR: ["target"],
-    FORBID_ATTR: [
-      "onerror",
-      "onload",
-      "onclick",
-      "onmouseover",
-      "onmouseout",
-      "onfocus",
-      "onblur",
-    ],
-    KEEP_CONTENT: true,
-    RETURN_DOM_FRAGMENT: false,
-    RETURN_DOM: false,
-    ALLOW_DATA_ATTR: true,
-    ALLOW_UNKNOWN_PROTOCOLS: false,
+  const allowedAttrs = config.allowedAttributes || DEFAULT_ALLOWED_ATTRIBUTES;
+  const builtAttributes = buildAllowedAttributes(allowedAttrs);
+
+  const sanitizeOptions = {
+    allowedTags: config.allowedTags || DEFAULT_ALLOWED_TAGS,
+    allowedAttributes: builtAttributes,
+    allowedStyles: config.allowedStyles || DEFAULT_ALLOWED_STYLES,
+    allowedSchemes: ["http", "https", "mailto", "tel"],
+    disallowedTagsMode: "discard" as const,
+    allowProtocolRelative: false,
+    // Remove any tags that have dangerous attributes
+    exclusiveFilter: (frame: { tag: string; attribs: Record<string, string> }) => {
+      const dangerousAttrs = ["onerror", "onload", "onclick", "onmouseover", "onmouseout", "onfocus", "onblur"];
+      return dangerousAttrs.some(attr => frame.attribs[attr] !== undefined);
+    },
   };
 
   try {
-    let sanitized = DOMPurify.sanitize(htmlContent, dompurifyConfig);
+    let sanitized = sanitizeHtml(htmlContent, sanitizeOptions);
 
     // Post-processing to enhance list styling and spacing if enabled
     if (config.enableListStyling || config.enableSpacingPreservation) {
@@ -179,7 +203,7 @@ export function sanitizeHtmlContent(
 
     return sanitized;
   } catch (error) {
-    console.error("DOMPurify sanitization error:", error);
+    console.error("HTML sanitization error:", error);
     // Return empty string on error for safety
     return "";
   }

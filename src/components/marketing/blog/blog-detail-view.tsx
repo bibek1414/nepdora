@@ -1,31 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import { useMarketingBlog } from "@/hooks/marketing/use-blogs";
 import { sanitizeContent } from "@/utils/html-sanitizer";
-import { Loader2 } from "lucide-react";
-import {
-  FacebookShareButton,
-  FacebookIcon,
-  LinkedinIcon,
-  LinkedinShareButton,
-  TwitterShareButton,
-  TwitterIcon,
-  WhatsappShareButton,
-  WhatsappIcon,
-  RedditShareButton,
-  RedditIcon,
-  TelegramShareButton,
-  TelegramIcon,
-} from "next-share";
 import { BlogPost } from "@/types/super-admin/blog";
+import { BlogShareButtons } from "./blog-share-buttons";
 
 interface BlogDetailViewProps {
   blog: BlogPost;
 }
 
 export const BlogDetailView = ({ blog }: BlogDetailViewProps) => {
-  const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || (typeof window !== "undefined" ? window.location.origin : "")}/blog/${blog.slug}`;
+  const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://www.nepdora.com"}/blog/${blog.slug}`;
 
   return (
     <div className="bg-white pt-20 pb-0">
@@ -63,39 +47,7 @@ export const BlogDetailView = ({ blog }: BlogDetailViewProps) => {
           <div className="text-sm text-gray-500">
             last updated: {new Date(blog.created_at).toLocaleDateString()}
           </div>
-          <div className="mt-4 flex items-center justify-center gap-1">
-            <span className="text-sm text-gray-500">Share this blog:</span>
-            <FacebookShareButton
-              url={shareUrl}
-              quote={blog.title}
-              hashtag={"#nepdora"}
-            >
-              <FacebookIcon size={27} round />
-            </FacebookShareButton>
-            <TwitterShareButton
-              url={shareUrl}
-              title={blog.title}
-              hashtags={["nepdora"]}
-            >
-              <TwitterIcon size={27} round />
-            </TwitterShareButton>
-            <LinkedinShareButton
-              url={shareUrl}
-              title={blog.title}
-              summary={blog.title}
-            >
-              <LinkedinIcon size={27} round />
-            </LinkedinShareButton>
-            <WhatsappShareButton url={shareUrl} title={blog.title}>
-              <WhatsappIcon size={27} round />
-            </WhatsappShareButton>
-            <RedditShareButton url={shareUrl} title={blog.title}>
-              <RedditIcon size={27} round />
-            </RedditShareButton>
-            <TelegramShareButton url={shareUrl} title={blog.title}>
-              <TelegramIcon size={27} round />
-            </TelegramShareButton>
-          </div>
+          <BlogShareButtons url={shareUrl} title={blog.title} />
         </div>
 
         {blog.thumbnail_image && (
@@ -119,23 +71,4 @@ export const BlogDetailView = ({ blog }: BlogDetailViewProps) => {
       </div>
     </div>
   );
-};
-
-export const BlogDetailViewWrapper = () => {
-  const params = useParams();
-  const slug =
-    (Array.isArray(params.slug) ? params.slug[0] : params.slug) || "";
-
-  const { data: blog, isLoading, error } = useMarketingBlog(slug);
-
-  if (isLoading)
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-      </div>
-    );
-  if (error) return <div>Error: {error.message}</div>;
-  if (!blog) return <div>Blog not found</div>;
-
-  return <BlogDetailView blog={blog} />;
 };
