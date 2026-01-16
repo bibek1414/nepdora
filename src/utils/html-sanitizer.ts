@@ -74,11 +74,20 @@ const DEFAULT_ALLOWED_TAGS = [
 
 // Build allowedAttributes for sanitize-html
 // sanitize-html uses an object where keys are tag names and values are arrays of allowed attributes
-const buildAllowedAttributes = (allowedAttrs: string[]): Record<string, string[]> => {
-  const commonAttrs = allowedAttrs.filter(attr => attr !== "href" && attr !== "src" && attr !== "colspan" && attr !== "start" && attr !== "datetime");
-  
+const buildAllowedAttributes = (
+  allowedAttrs: string[]
+): Record<string, string[]> => {
+  const commonAttrs = allowedAttrs.filter(
+    attr =>
+      attr !== "href" &&
+      attr !== "src" &&
+      attr !== "colspan" &&
+      attr !== "start" &&
+      attr !== "datetime"
+  );
+
   const attributes: Record<string, string[]> = {};
-  
+
   // Apply common attributes to all tags (class, id, style)
   DEFAULT_ALLOWED_TAGS.forEach(tag => {
     attributes[tag] = [...commonAttrs];
@@ -86,7 +95,14 @@ const buildAllowedAttributes = (allowedAttrs: string[]): Record<string, string[]
 
   // Special attributes for specific tags
   attributes["a"] = [...commonAttrs, "href", "target", "rel", "title"];
-  attributes["img"] = [...commonAttrs, "src", "alt", "width", "height", "loading"];
+  attributes["img"] = [
+    ...commonAttrs,
+    "src",
+    "alt",
+    "width",
+    "height",
+    "loading",
+  ];
   attributes["td"] = [...commonAttrs, "colspan", "rowspan"];
   attributes["th"] = [...commonAttrs, "colspan", "rowspan", "scope"];
   attributes["ol"] = [...commonAttrs, "start", "type", "reversed"];
@@ -183,8 +199,19 @@ export function sanitizeHtmlContent(
     disallowedTagsMode: "discard" as const,
     allowProtocolRelative: false,
     // Remove any tags that have dangerous attributes
-    exclusiveFilter: (frame: { tag: string; attribs: Record<string, string> }) => {
-      const dangerousAttrs = ["onerror", "onload", "onclick", "onmouseover", "onmouseout", "onfocus", "onblur"];
+    exclusiveFilter: (frame: {
+      tag: string;
+      attribs: Record<string, string>;
+    }) => {
+      const dangerousAttrs = [
+        "onerror",
+        "onload",
+        "onclick",
+        "onmouseover",
+        "onmouseout",
+        "onfocus",
+        "onblur",
+      ];
       return dangerousAttrs.some(attr => frame.attribs[attr] !== undefined);
     },
   };
