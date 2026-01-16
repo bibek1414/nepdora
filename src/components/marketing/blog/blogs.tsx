@@ -79,22 +79,24 @@ const Blogs = () => {
 
   return (
     <div>
-      <div className="mb-8 flex items-center gap-3">
-        <div className="h-1 w-10 rounded-full bg-gray-200" />
-        <h2 className="text-2xl font-black tracking-tighter text-gray-900 uppercase">
-          Blogs
+      <div className="mb-10 flex flex-col gap-1">
+        <h2 className="text-4xl font-bold text-gray-900">
+          Read Latest Blogs from Nepdora
         </h2>
+        <p className="text-gray-600">
+          Stay updated with the latest news, tips, and insights from our team.
+        </p>
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {[1, 2, 3, 4].map(n => (
             <BlogCardSkeleton key={n} />
           ))}
         </div>
       ) : blogs.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {blogs.map(blog => (
               <div key={blog.id} className="h-full">
                 <BlogCard post={blog} />

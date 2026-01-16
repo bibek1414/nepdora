@@ -13,89 +13,55 @@ interface BlogCardProps {
 
 const BlogCard: React.FC<BlogCardProps> = ({ post, className = "" }) => {
   const formattedDate = new Date(post.created_at);
-  const month = format(formattedDate, "MMM");
-  const day = format(formattedDate, "dd");
+  const formattedDateString = format(formattedDate, "dd MMM yyyy");
 
-  const excerpt =
-    post.meta_description ||
-    post.content.replace(/<[^>]*>?/gm, "").slice(0, 150) + "...";
-
-  const authorAvatar = "/icon.svg";
-  const authorName = "Team Nepdora";
+  const authorName =
+    post.author?.first_name && post.author?.last_name
+      ? `${post.author.first_name} ${post.author.last_name}`
+      : post.author?.username || "Team Nepdora";
+  const authorRole = post.author?.email ? "" : "Team Nepdora";
+  const authorAvatar = "https://avatars.githubusercontent.com/u/57863199?v=4";
 
   return (
-    <div
-      className={`block flex h-full flex-col overflow-hidden rounded-[32px] border border-gray-100 bg-white ${className}`}
-    >
-      {/* Post Image */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden">
+    <div className={`group flex h-full flex-col ${className}`}>
+      {/* Post Image Section - Separate */}
+      <div className="relative mb-4 aspect-[4/3] w-full overflow-hidden rounded-xl">
         <Link href={`/blog/${post.slug}`}>
           <Image
             src={post.thumbnail_image || "/images/placeholder.svg"}
-            alt={post.title}
+            alt={post.thumbnail_image_alt_description || post.title}
             fill
-            className="object-cover transition-transform duration-500 hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </Link>
-        <div className="absolute top-4 left-4 z-10">
-          {post.category && (
-            <Link
-              href={`/blog?category=${post.category.slug}`}
-              className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold tracking-widest text-gray-900 uppercase backdrop-blur-sm transition-colors hover:bg-white"
-            >
-              {post.category.name}
-            </Link>
-          )}
-        </div>
       </div>
 
-      {/* Post Content */}
-      <div className="flex grow flex-col p-8">
-        <div className="flex items-start gap-6">
-          {/* Date Block */}
-          <div className="flex min-w-[40px] flex-col items-center">
-            <span className="text-sm font-medium text-gray-500 uppercase">
-              {month}
-            </span>
-            <span className="text-3xl leading-tight font-bold text-gray-900">
-              {day}
-            </span>
-          </div>
-
-          {/* Title and Excerpt */}
-          <div className="flex flex-col gap-3">
-            <h3 className="line-clamp-2 cursor-pointer text-xl leading-tight font-bold text-gray-900 transition-colors">
-              <Link href={`/blog/${post.slug}`} className="hover:text-primary">
-                {post.title}
-              </Link>
-            </h3>
-            {excerpt && (
-              <p className="line-clamp-2 text-sm leading-relaxed text-gray-500">
-                {excerpt}
-              </p>
-            )}
-          </div>
+      {/* Post Content Section - Separate */}
+      <div className="flex grow flex-col">
+        {/* Date and Reading Time */}
+        <div className="mb-2 flex items-center gap-2 text-xs text-gray-400">
+          <span>{formattedDateString}</span>
+          <span>•</span>
+          <span>{post.time_to_read || "7"} min</span>
         </div>
 
+        {/* Title */}
+        <h3 className="group-hover:text-primary text-md mb-4 line-clamp-2 cursor-pointer font-semibold text-black transition-colors">
+          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+        </h3>
+
         {/* Author Footer */}
-        <div className="mt-8 flex items-center gap-3">
-          <div className="relative h-10 w-10">
-            <div className="flex h-full w-full items-center justify-center">
-              <Image
-                src={authorAvatar}
-                alt={authorName}
-                fill
-                className="object-cover"
-              />
-            </div>
+        <div className="mt-auto flex items-center gap-3">
+          <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full">
+            <Image
+              src={authorAvatar}
+              alt={authorName}
+              fill
+              className="object-cover"
+            />
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold text-gray-900">
-              {authorName}
-            </span>
-            <span className="text-xs text-gray-400">
-              {post.time_to_read} min read
-            </span>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs text-gray-600">{authorName}</p>
           </div>
         </div>
       </div>

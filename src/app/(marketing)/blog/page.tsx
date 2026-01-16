@@ -14,34 +14,30 @@ const BlogPage = () => {
   return (
     <div className="">
       <section className="mb-20 py-20">
-        <div className="mx-auto max-w-7xl px-10 md:px-20">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 xl:gap-20">
-            {/* Main Feed */}
-            <div className="lg:col-span-8">
-              <Suspense
-                fallback={
-                  <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                    {[1, 2, 3, 4].map(n => (
-                      <BlogCardSkeleton key={n} />
-                    ))}
-                  </div>
-                }
-              >
-                <Blogs />
-              </Suspense>
-            </div>
+        <div className="mx-auto max-w-6xl">
+          {/* Main Feed */}
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+                {[1, 2, 3, 4].map(n => (
+                  <BlogCardSkeleton key={n} />
+                ))}
+              </div>
+            }
+          >
+            <Blogs />
+          </Suspense>
 
-            {/* Sidebar */}
-            <div className="lg:col-span-4">
-              <Suspense
-                fallback={
-                  <div className="h-96 animate-pulse rounded-2xl bg-gray-100" />
-                }
-              >
-                <Sidebar />
-              </Suspense>
-            </div>
-          </div>
+          {/* Sidebar */}
+          {/* <div className="lg:col-span-4">
+            <Suspense
+              fallback={
+                <div className="h-96 animate-pulse rounded-2xl bg-gray-100" />
+              }
+            >
+              <Sidebar />
+            </Suspense>
+          </div> */}
         </div>
       </section>
       <ContactUs />
