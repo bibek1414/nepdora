@@ -272,3 +272,7 @@ body {
 .animate-scroll:has(.logo-item:hover) {
   animation-play-state: paused;
 }
+
+.rich-text p {
+  margin-bottom: 2rem;
+}

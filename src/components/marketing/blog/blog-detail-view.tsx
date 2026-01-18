@@ -51,7 +51,7 @@ export const BlogDetailView = ({ blog }: BlogDetailViewProps) => {
         </div>
 
         {blog.thumbnail_image && (
-          <div className="mx-auto mb-10 h-[300px] max-w-6xl overflow-hidden rounded-xl md:h-[450px]">
+          <div className="mx-auto mb-10 aspect-[16/9] h-[300px] overflow-hidden rounded-xl md:h-[450px]">
             <Image
               src={blog.thumbnail_image}
               alt={blog.thumbnail_image_alt_description ?? blog.title}
@@ -63,7 +63,7 @@ export const BlogDetailView = ({ blog }: BlogDetailViewProps) => {
           </div>
         )}
 
-        <div className="prose prose-xl prose-gray mx-auto mb-80 max-w-4xl space-y-8 leading-8">
+        <div className="prose prose-xl prose-gray rich-text mx-auto mb-80 max-w-3xl space-y-8 leading-8">
           <div
             dangerouslySetInnerHTML={{ __html: sanitizeContent(blog.content) }}
           />

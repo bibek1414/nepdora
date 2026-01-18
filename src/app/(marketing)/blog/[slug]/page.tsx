@@ -2,6 +2,7 @@ import { BlogDetailView } from "@/components/marketing/blog/blog-detail-view";
 import { marketingBlogApi } from "@/services/api/marketing/blog";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import ContactSection from "@/components/marketing/contact-us/contact-us";
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -81,7 +82,12 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
 
   try {
     const blog = await marketingBlogApi.getBlogBySlug(slug);
-    return <BlogDetailView blog={blog} />;
+    return (
+      <>
+        <BlogDetailView blog={blog} />
+        <ContactSection />
+      </>
+    );
   } catch (error) {
     notFound();
   }
