@@ -8,19 +8,6 @@ interface BlogDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Generate static params for ISR
-export async function generateStaticParams() {
-  try {
-    const blogs = await marketingBlogApi.getBlogs({ page_size: 100 });
-    return blogs.results.map(blog => ({
-      slug: blog.slug,
-    }));
-  } catch (error) {
-    console.error("Error generating static params for blogs:", error);
-    return [];
-  }
-}
-
 // Revalidate every hour (3600 seconds)
 export const revalidate = 3600;
 
