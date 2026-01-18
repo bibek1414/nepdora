@@ -12,7 +12,7 @@ export const LoadingScreen = ({ isVisible }: LoadingScreenProps) => {
       {/* Progress Bar */}
       <div className="absolute top-0 right-0 left-0 h-1 bg-gray-200">
         <div
-          className="h-full bg-blue-600 transition-all duration-[5000ms] ease-linear"
+          className="bg-primary h-full transition-all duration-[5000ms] ease-linear"
           style={{ width: "100%" }}
         />
       </div>

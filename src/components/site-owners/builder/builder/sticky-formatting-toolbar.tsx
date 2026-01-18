@@ -502,7 +502,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 />
                 <button
                   onClick={() => handleColorApply(selectionColor)}
-                  className="rounded bg-blue-500 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-blue-600"
+                  className="hover:bg-primary rounded bg-blue-500 px-3 py-1 text-xs font-medium text-white transition-colors"
                 >
                   Apply
                 </button>
@@ -562,7 +562,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 />
                 <button
                   onClick={() => applyHighlight(selectionHighlight)}
-                  className="rounded bg-blue-500 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-blue-600"
+                  className="hover:bg-primary rounded bg-blue-500 px-3 py-1 text-xs font-medium text-white transition-colors"
                 >
                   Apply
                 </button>

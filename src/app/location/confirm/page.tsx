@@ -361,7 +361,7 @@ function ConfirmLocationClient() {
               <button
                 onClick={onConfirm}
                 disabled={disabled || confirming}
-                className="w-full rounded-md bg-blue-600 py-2.5 text-sm font-medium text-white transition-all hover:bg-blue-700 active:scale-[0.99] disabled:opacity-50"
+                className="bg-primary hover:bg-primary w-full rounded-md py-2.5 text-sm font-medium text-white transition-all active:scale-[0.99] disabled:opacity-50"
               >
                 {confirming ? "Confirming..." : "Confirm Location"}
               </button>

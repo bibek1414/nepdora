@@ -249,7 +249,7 @@ export default function MessagingPage({ subDomain }: MessagingPageProps) {
           <p className="mb-4 text-red-500">{error}</p>
           <a
             href="/admin/facebook"
-            className="inline-block rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+            className="bg-primary hover:bg-primary inline-block rounded-md px-4 py-2 text-sm text-white"
           >
             Go to Integrations
           </a>
@@ -340,7 +340,7 @@ export default function MessagingPage({ subDomain }: MessagingPageProps) {
               {integrations.length === 0 && (
                 <a
                   href="/admin/settings/integrations"
-                  className="mt-4 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                  className="bg-primary hover:bg-primary mt-4 inline-block rounded-md px-4 py-2 text-sm text-white"
                 >
                   Connect Facebook Page
                 </a>

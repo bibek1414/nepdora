@@ -635,7 +635,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                   />
                   <button
                     onClick={() => applyColorToSelection(selectionColor)}
-                    className="rounded bg-blue-500 px-3 py-1 text-xs text-white hover:bg-blue-600"
+                    className="hover:bg-primary rounded bg-blue-500 px-3 py-1 text-xs text-white"
                   >
                     Apply
                   </button>
@@ -675,7 +675,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                   </span>
                   <button
                     onClick={() => applyFontSizeToSelection(selectionFontSize)}
-                    className="rounded bg-blue-500 px-3 py-1 text-xs text-white hover:bg-blue-600"
+                    className="hover:bg-primary rounded bg-blue-500 px-3 py-1 text-xs text-white"
                   >
                     Apply
                   </button>

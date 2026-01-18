@@ -85,7 +85,7 @@ export const TeamCard2: React.FC<TeamCard2Props> = ({ member, onClick }) => {
             <Button
               size="icon"
               variant="outline"
-              className="h-10 w-10 rounded-full hover:border-blue-600 hover:bg-blue-600 hover:text-white"
+              className="hover:bg-primary h-10 w-10 rounded-full hover:border-blue-600 hover:text-white"
               onClick={e => handleSocialClick(e, member.facebook)}
             >
               <Facebook className="h-4 w-4" />
@@ -105,7 +105,7 @@ export const TeamCard2: React.FC<TeamCard2Props> = ({ member, onClick }) => {
             <Button
               size="icon"
               variant="outline"
-              className="h-10 w-10 rounded-full hover:border-blue-700 hover:bg-blue-700 hover:text-white"
+              className="hover:bg-primary h-10 w-10 rounded-full hover:border-blue-700 hover:text-white"
               onClick={e => handleSocialClick(e, member.linkedin)}
             >
               <Linkedin className="h-4 w-4" />

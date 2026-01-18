@@ -99,7 +99,7 @@ export const SMSOrderButton: React.FC<SMSOrderButtonProps> = ({
   // Default styling for SMS button
   const smsClassName =
     variant === "default"
-      ? `bg-blue-600 hover:bg-blue-700 text-white ${className}`
+      ? `bg-primary hover:bg-primary text-white ${className}`
       : className;
 
   return (

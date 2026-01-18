@@ -225,7 +225,7 @@ export function VoiceRecorderModal({
             <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-4">
               <button
                 onClick={playAudio}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700"
+                className="bg-primary hover:bg-primary flex h-10 w-10 items-center justify-center rounded-full text-white"
               >
                 {isPlaying ? (
                   <Pause className="h-5 w-5" />
@@ -235,7 +235,7 @@ export function VoiceRecorderModal({
               </button>
               <div className="flex-1">
                 <div className="h-1 w-full rounded-full bg-gray-300">
-                  <div className="h-1 w-0 rounded-full bg-blue-600"></div>
+                  <div className="bg-primary h-1 w-0 rounded-full"></div>
                 </div>
               </div>
             </div>
@@ -247,7 +247,7 @@ export function VoiceRecorderModal({
           {!isRecording && !audioBlob && (
             <Button
               onClick={startRecording}
-              className="flex-1 bg-blue-600 hover:bg-blue-700"
+              className="bg-primary hover:bg-primary flex-1"
             >
               <Mic className="mr-2 h-4 w-4" />
               Start Recording
@@ -297,7 +297,7 @@ export function VoiceRecorderModal({
               <Button
                 onClick={handleSend}
                 disabled={isSending}
-                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                className="bg-primary hover:bg-primary flex-1"
               >
                 <Send className="mr-2 h-4 w-4" />
                 {isSending ? "Sending..." : "Send"}

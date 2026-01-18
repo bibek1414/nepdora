@@ -318,7 +318,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                 <div className="flex gap-3">
                   <SOButton
                     variant="default"
-                    className="flex-1 py-3 font-semibold text-white hover:bg-blue-700"
+                    className="hover:bg-primary flex-1 py-3 font-semibold text-white"
                     disabled={product.stock === 0}
                     onClick={handleAddToCart}
                     data-cart-action="true"

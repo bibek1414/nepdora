@@ -251,7 +251,7 @@ export function MessageInput({
                   size="icon"
                   disabled={!message.trim() || disabled || isSending}
                   className={cn(
-                    "mb-1 h-8 w-8 flex-shrink-0 rounded-full bg-blue-600 hover:bg-blue-700 md:h-9 md:w-9",
+                    "bg-primary hover:bg-primary mb-1 h-8 w-8 flex-shrink-0 rounded-full md:h-9 md:w-9",
                     isSending && "cursor-wait opacity-70"
                   )}
                 >

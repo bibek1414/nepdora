@@ -32,7 +32,7 @@ export const PLATFORM_CONFIG = {
   },
   facebook: {
     icon: Facebook,
-    color: "bg-blue-600",
+    color: "bg-primary",
     gradient: "from-blue-600/20 to-blue-600/5",
     textColor: "text-blue-400",
     name: "Facebook",

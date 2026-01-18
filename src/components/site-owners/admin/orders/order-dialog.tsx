@@ -411,7 +411,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                     confirmPageUrl={`${window.location.origin}/location/confirm`}
                     callbackUrl={`${apiBaseUrl}/api/order/${currentOrder.id}/`}
                     redirectUrl={`${window.location.origin}/admin/orders`}
-                    className="flex items-center gap-1 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
+                    className="bg-primary hover:bg-primary flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium text-white"
                     label="Get Location"
                   />
                 )}

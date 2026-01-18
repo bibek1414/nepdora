@@ -32,7 +32,7 @@ export default async function ResetPasswordPage({
             </p>
             <a
               href="/admin/forgot-password"
-              className="inline-block rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700"
+              className="bg-primary hover:bg-primary inline-block rounded-lg px-6 py-3 text-sm font-medium text-white"
             >
               Request New Reset Link
             </a>

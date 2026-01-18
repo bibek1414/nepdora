@@ -131,7 +131,7 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
             <Button
               onClick={handleUseTemplate}
               disabled={isPending}
-              className="w-full bg-blue-600 text-white hover:bg-blue-700"
+              className="bg-primary hover:bg-primary w-full text-white"
             >
               {isPending ? (
                 <>
@@ -170,7 +170,7 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
             <AlertDialogAction
               onClick={handleConfirmImport}
               disabled={isPending}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-primary hover:bg-primary"
             >
               {isPending ? (
                 <>

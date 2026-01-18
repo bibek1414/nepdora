@@ -200,7 +200,7 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
 
                   <Button
                     type="submit"
-                    className="group flex w-fit items-center space-x-3 rounded-full bg-[#2f45ff] py-2 pr-2 pl-6 text-white shadow-md shadow-blue-500/20 transition-all duration-300 hover:bg-blue-600"
+                    className="group hover:bg-primary flex w-fit items-center space-x-3 rounded-full bg-[#2f45ff] py-2 pr-2 pl-6 text-white shadow-md shadow-blue-500/20 transition-all duration-300"
                     disabled={isEditable || createNewsletterMutation.isPending}
                   >
                     <span className="text-sm font-medium">

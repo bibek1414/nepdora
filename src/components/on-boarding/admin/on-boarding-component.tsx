@@ -415,7 +415,7 @@ export default function OnboardingModal({
                       currentStep === step.number
                         ? "border-2 border-blue-600 bg-white text-blue-600 shadow-sm"
                         : currentStep > step.number
-                          ? "bg-blue-600 text-white"
+                          ? "bg-primary text-white"
                           : "border-2 border-gray-300 bg-white text-gray-400 hover:border-gray-400"
                     }`}
                   >

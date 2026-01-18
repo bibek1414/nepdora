@@ -139,7 +139,7 @@ export function VerificationCard({
               <p className="mb-4 text-gray-600">{message}</p>
               <button
                 onClick={() => router.push("/login")}
-                className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
+                className="bg-primary hover:bg-primary rounded-lg px-4 py-2 font-medium text-white transition-colors"
               >
                 Go to Login
               </button>

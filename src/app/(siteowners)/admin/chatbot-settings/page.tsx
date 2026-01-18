@@ -201,9 +201,7 @@ const AIChatbotSettings = () => {
         {/* Action Buttons */}
         <div className="flex justify-end space-x-3">
           <Button variant="outline">Reset to Default</Button>
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            Save Settings
-          </Button>
+          <Button className="bg-primary hover:bg-primary">Save Settings</Button>
         </div>
       </div>
     </div>

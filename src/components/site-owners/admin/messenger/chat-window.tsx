@@ -307,7 +307,7 @@ export function ChatWindow({
                             className={cn(
                               "rounded-2xl px-3 py-2 text-[15px] leading-5 shadow-sm",
                               isOwn
-                                ? "bg-blue-600 text-white"
+                                ? "bg-primary text-white"
                                 : "bg-gray-100 text-gray-900"
                             )}
                           >
@@ -326,7 +326,7 @@ export function ChatWindow({
                         className={cn(
                           "rounded-2xl px-3 py-2 text-[15px] leading-5 shadow-sm",
                           isOwn
-                            ? "bg-blue-600 text-white"
+                            ? "bg-primary text-white"
                             : "bg-gray-100 text-gray-900"
                         )}
                       >

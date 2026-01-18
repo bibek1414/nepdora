@@ -47,7 +47,7 @@ const LuckyDraw = () => {
             Create and manage lucky draw campaigns to engage customers.
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button className="bg-primary hover:bg-primary">
           <Plus className="mr-2 h-4 w-4" />
           Create New Draw
         </Button>
@@ -177,7 +177,7 @@ const LuckyDraw = () => {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+              <Button className="bg-primary hover:bg-primary w-full">
                 <Plus className="mr-2 h-4 w-4" />
                 Create New Draw
               </Button>

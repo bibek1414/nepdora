@@ -122,7 +122,7 @@ export function AboutUsTemplate19({
 
             {/* Active Blue Line */}
             <div
-              className="absolute top-8 left-[15px] w-0.5 bg-blue-600 transition-all duration-100 ease-out md:left-[19px]"
+              className="bg-primary absolute top-8 left-[15px] w-0.5 transition-all duration-100 ease-out md:left-[19px]"
               style={{ height: `calc(${progress * 100}% - 60px)` }}
             ></div>
 
@@ -170,7 +170,7 @@ export function AboutUsTemplate19({
                       <div
                         className={`mb-6 flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-500 ${
                           isActive
-                            ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                            ? "bg-primary text-white shadow-lg shadow-blue-600/20"
                             : "bg-gray-200 text-gray-500"
                         }`}
                       >

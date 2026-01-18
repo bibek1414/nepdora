@@ -98,7 +98,7 @@ const AdminProfile = () => {
           {/* Action Buttons */}
           <div className="flex justify-end space-x-3">
             <Button variant="outline">Cancel</Button>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-primary hover:bg-primary">
               Save Changes
             </Button>
           </div>
