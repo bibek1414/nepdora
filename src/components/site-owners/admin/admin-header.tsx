@@ -22,10 +22,14 @@ import {
   FileText,
   HelpCircle,
   Share,
+  FileCheck,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
 import { User as UserType } from "@/hooks/use-jwt-server";
+import { useState } from "react";
+import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
+import { toast } from "sonner";
 
 interface AdminHeaderProps {
   user: UserType;
@@ -33,7 +37,16 @@ interface AdminHeaderProps {
 
 export default function AdminHeader({ user }: AdminHeaderProps) {
   const router = useRouter();
-  const { logout } = useAuth();
+  const { logout, user: authUser, updateUser } = useAuth();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  const handleOpenOnboarding = () => setShowOnboarding(true);
+  const handleCloseOnboarding = () => setShowOnboarding(false);
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false);
+    toast.success("Onboarding completed!");
+  };
 
   const handleNavigation = (href: string) => {
     router.push(href);
@@ -111,6 +124,15 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
               Website Builder
             </Button>
           </Link> */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleOpenOnboarding}
+            className="rounded-full border-none bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+          >
+            <FileCheck className="mr-2 h-4 w-4" />
+            {user.isOnboardingComplete ? "Edit Site Info" : "Complete Setup"}
+          </Button>
           {(user.isTemplateAccount || user.subDomain === "bibek") && (
             <a
               href={`https://builder.nepdora.com/builder/${user.subDomain}`}
@@ -194,6 +216,18 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
           </DropdownMenu>
         </div>
       </div>
+      {showOnboarding && (
+        <OnboardingModal
+          userData={{
+            storeName: user.storeName || "",
+            email: user.email,
+            phoneNumber: user.phoneNumber || "",
+          }}
+          isOverlay={true}
+          onClose={handleCloseOnboarding}
+          onComplete={handleOnboardingComplete}
+        />
+      )}
     </header>
   );
 }

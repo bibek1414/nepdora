@@ -17,7 +17,6 @@ import {
   Upload,
   ExternalLink,
   ChevronDown,
-  FileCheck,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -31,8 +30,6 @@ interface TopNavigationProps {
   onPageDeleted: (deletedSlug: string) => void;
   siteUser: string;
   isSidebarCollapsed?: boolean;
-  onOpenOnboarding?: () => void;
-  isOnboardingComplete?: boolean;
 }
 
 export const TopNavigation: React.FC<TopNavigationProps> = ({
@@ -43,8 +40,6 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   onPageDeleted,
   siteUser,
   isSidebarCollapsed = false,
-  onOpenOnboarding,
-  isOnboardingComplete = false,
 }) => {
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -176,19 +171,6 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 
         {/* Right Section - Actions */}
         <div className="flex items-center space-x-2">
-          {/* Onboarding Button */}
-          {onOpenOnboarding && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onOpenOnboarding}
-              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
-            >
-              <FileCheck className="mr-2 h-4 w-4" />
-              {isOnboardingComplete ? "Edit Site Info" : "Complete Setup"}
-            </Button>
-          )}
-
           <Button
             variant="outline"
             onClick={() => setIsThemeDialogOpen(true)}

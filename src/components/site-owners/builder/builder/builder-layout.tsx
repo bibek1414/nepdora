@@ -83,7 +83,7 @@ import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
 import { useAuth } from "@/hooks/use-auth";
 import { Facebook, Twitter } from "lucide-react";
-import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
+
 interface BuilderLayoutProps {
   params: {
     siteUser: string;
@@ -97,7 +97,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { user } = useAuth();
 
   // Dialog states
-  const [showOnboarding, setShowOnboarding] = useState(false);
+
   const [isAddSectionDialogOpen, setIsAddSectionDialogOpen] = useState(false);
   const [pendingInsertIndex, setPendingInsertIndex] = useState<
     number | undefined
@@ -830,21 +830,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   };
 
-  // Onboarding handlers
-  const handleCloseOnboarding = () => {
-    setShowOnboarding(false);
-  };
-
-  const handleOnboardingComplete = () => {
-    setShowOnboarding(false);
-    // Optionally refresh user data or show success message
-    toast.success("Onboarding completed!");
-  };
-
-  const handleOpenOnboarding = () => {
-    setShowOnboarding(true);
-  };
-
   // Component click handler for Add Section Dialog
   const handleComponentClick = (componentId: string, template?: string) => {
     if (componentId === "page-templates") {
@@ -990,19 +975,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   return (
     <TextSelectionProvider>
       <DndProvider backend={HTML5Backend}>
-        {showOnboarding && user && (
-          <OnboardingModal
-            userData={{
-              storeName: user.store_name || "",
-              email: user.email,
-              phoneNumber: user.phone_number || "",
-            }}
-            isOverlay={true}
-            onClose={handleCloseOnboarding}
-            onComplete={handleOnboardingComplete}
-          />
-        )}
-
         {/* All Dialog Components */}
         <AddSectionDialog
           open={isAddSectionDialogOpen}
@@ -1033,8 +1005,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onPageChange={handlePageChange}
           onPageCreated={handlePageCreated}
           onPageDeleted={handlePageDeleted}
-          onOpenOnboarding={handleOpenOnboarding}
-          isOnboardingComplete={user?.is_onboarding_complete}
         />
 
         {/* Sticky Formatting Toolbar */}
