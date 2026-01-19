@@ -28,7 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { Loader2, Upload, X, Plus } from "lucide-react";
 import Image from "next/image";
-import ReusableQuill from "@/components/ui/tip-tap";
+import Tiptap from "@/components/ui/tip-tap";
 import {
   Select,
   SelectContent,
@@ -383,7 +383,7 @@ export function CollectionDataDialog({
 
     if (field.name === "content") {
       return (
-        <ReusableQuill
+        <Tiptap
           value={fieldValue || ""}
           onChange={content => updateFieldValue(field.name, content)}
           placeholder="Enter content..."

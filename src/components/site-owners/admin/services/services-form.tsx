@@ -40,7 +40,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import Image from "next/image";
-import ReusableQuill from "@/components/ui/tip-tap";
+import Tiptap from "@/components/ui/tip-tap";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -250,7 +250,7 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
               <FormItem>
                 <FormLabel>Description *</FormLabel>
                 <FormControl>
-                  <ReusableQuill
+                  <Tiptap
                     value={field.value || ""}
                     onChange={field.onChange}
                     placeholder="Write your service description here..."

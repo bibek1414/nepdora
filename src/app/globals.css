@@ -208,45 +208,62 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror > * + * {
+  margin-top: 0.9rem;
+}
+
+.ProseMirror p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  line-height: 1.4;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ProseMirror h1 {
+  font-size: 1rem;
+}
+.ProseMirror h2 {
+  font-size: 1.5rem;
+}
+.ProseMirror h3 {
+  font-size: 1.25rem;
+}
+
 .ProseMirror ul,
 .ProseMirror ol {
-  padding-left: 1.5rem;
-  margin: 1rem 0;
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
 }
 
 .ProseMirror ul {
-  list-style-type: disc;
+  list-style-type: disc !important;
 }
 
 .ProseMirror ol {
-  list-style-type: decimal;
+  list-style-type: decimal !important;
 }
 
 .ProseMirror li {
   margin: 0.25rem 0;
-  display: list-item;
 }
 
 .ProseMirror li p {
   margin: 0;
 }
 
-/* Nested list styles */
-.ProseMirror ul ul {
-  list-style-type: circle;
-}
-
-.ProseMirror ul ul ul {
-  list-style-type: square;
-}
-
-.ProseMirror ol ol {
-  list-style-type: lower-alpha;
-}
-
-.ProseMirror ol ol ol {
-  list-style-type: lower-roman;
-}
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -274,5 +291,5 @@ body {
 }
 
 .rich-text p {
-  margin-bottom: 2rem;
+  margin-bottom: 0.2rem;
 }

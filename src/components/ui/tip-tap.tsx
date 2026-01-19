@@ -356,7 +356,7 @@ export const TOOLBAR_CONFIGS = {
   ],
 };
 
-export interface ReusableQuillProps {
+export interface TiptapProps {
   value?: string | null | undefined;
   onChange: (content: string) => void;
   placeholder?: string;
@@ -375,7 +375,7 @@ export interface ReusableQuillProps {
   uploadFolder?: string;
 }
 
-export interface ReusableQuillRef {
+export interface TiptapRef {
   editor: Editor | null;
   focus: () => void;
   blur: () => void;
@@ -383,7 +383,7 @@ export interface ReusableQuillRef {
   setContent: (content: string) => void;
 }
 
-const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
+const Tiptap = forwardRef<TiptapRef, TiptapProps>(
   (
     {
       value,
@@ -470,9 +470,7 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
       },
       editorProps: {
         attributes: {
-          class:
-            "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none",
-          style: "list-style-position: inside;",
+          class: "tiptap focus:outline-none",
         },
       },
     });
@@ -1137,6 +1135,6 @@ const ReusableQuill = forwardRef<ReusableQuillRef, ReusableQuillProps>(
   }
 );
 
-ReusableQuill.displayName = "ReusableQuill";
+Tiptap.displayName = "Tiptap";
 
-export default ReusableQuill;
+export default Tiptap;

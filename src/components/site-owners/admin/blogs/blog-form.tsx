@@ -42,7 +42,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, ChevronsUpDown, X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import ReusableQuill from "@/components/ui/tip-tap";
+import Tiptap from "@/components/ui/tip-tap";
 import { toast } from "sonner";
 
 interface BlogFormProps {
@@ -222,7 +222,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
                     </FormLabel>
                     <FormControl>
                       <div className="[&_.tiptap]:min-h-[300px] sm:[&_.tiptap]:min-h-[400px] md:[&_.tiptap]:min-h-[600px] [&_iframe]:min-h-[300px] sm:[&_iframe]:min-h-[400px] md:[&_iframe]:min-h-[600px]">
-                        <ReusableQuill
+                        <Tiptap
                           value={field.value || ""}
                           onChange={field.onChange}
                           placeholder="Write your blog content here..."

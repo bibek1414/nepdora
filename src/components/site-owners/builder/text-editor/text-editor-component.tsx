@@ -23,7 +23,7 @@ import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import ReusableQuill from "@/components/ui/tip-tap";
+import Tiptap from "@/components/ui/tip-tap";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { sanitizeContent } from "@/utils/html-sanitizer";
 
@@ -323,7 +323,7 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
                   Text Editor Content (Auto-saves 2 seconds after you stop
                   typing)
                 </label>
-                <ReusableQuill
+                <Tiptap
                   value={data.content}
                   onChange={handleContentChange}
                   placeholder="Enter content..."

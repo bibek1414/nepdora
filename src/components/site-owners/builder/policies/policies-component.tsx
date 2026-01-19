@@ -23,7 +23,7 @@ import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import ReusableQuill from "@/components/ui/tip-tap";
+import Tiptap from "@/components/ui/tip-tap";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { sanitizeContent } from "@/utils/html-sanitizer";
@@ -336,7 +336,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
                 <label className="block text-sm font-medium text-gray-700">
                   Policy Content (Auto-saves 2 seconds after you stop typing)
                 </label>
-                <ReusableQuill
+                <Tiptap
                   value={data.content}
                   onChange={handleContentChange}
                   placeholder="Enter policy content..."

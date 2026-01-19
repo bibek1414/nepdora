@@ -59,7 +59,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, ChevronsUpDown, X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import ReusableQuill from "@/components/ui/tip-tap";
+import Tiptap from "@/components/ui/tip-tap";
 import { toast } from "sonner";
 
 interface PortfolioFormProps {
@@ -294,7 +294,7 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
               <FormItem>
                 <FormLabel>Content *</FormLabel>
                 <FormControl>
-                  <ReusableQuill
+                  <Tiptap
                     value={field.value || ""}
                     onChange={field.onChange}
                     placeholder="Write your portfolio content here..."

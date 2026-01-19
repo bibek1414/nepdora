@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import ReusableQuill from "@/components/ui/tip-tap";
+import Tiptap from "@/components/ui/tip-tap";
 import {
   Dialog,
   DialogContent,
@@ -373,7 +373,7 @@ export const TeamMemberDialog: React.FC<TeamMemberDialogProps> = ({
           {/* About Section */}
           <div className="space-y-2">
             <Label htmlFor="about">About</Label>
-            <ReusableQuill
+            <Tiptap
               value={formData.about}
               onChange={handleAboutChange}
               placeholder="Brief description about the team member..."

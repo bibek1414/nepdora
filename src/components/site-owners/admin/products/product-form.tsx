@@ -52,7 +52,7 @@ import {
   Truck,
   Check,
 } from "lucide-react";
-import ReusableQuill from "@/components/ui/tip-tap";
+import Tiptap from "@/components/ui/tip-tap";
 import InventoryVariants from "./inventory-varient";
 import { Switch } from "@/components/ui/switch";
 import type { PreviewProductData } from "./product-preview-detail";
@@ -625,7 +625,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                 Description
                               </FormLabel>
                               <FormControl>
-                                <ReusableQuill
+                                <Tiptap
                                   value={field.value || ""}
                                   onChange={field.onChange}
                                   placeholder="Write your product description here..."
