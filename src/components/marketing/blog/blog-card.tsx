@@ -46,7 +46,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className = "" }) => {
         </div>
 
         {/* Title */}
-        <h3 className="group-hover:text-primary text-md mb-4 line-clamp-2 cursor-pointer font-semibold text-black transition-colors">
+        <h3 className="text-md mb-4 line-clamp-2 cursor-pointer font-semibold text-black transition-colors">
           <Link href={`/blog/${post.slug}`}>{post.title}</Link>
         </h3>
 

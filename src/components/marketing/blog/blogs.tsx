@@ -9,7 +9,7 @@ import BlogCard from "./blog-card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const BlogCardSkeleton = () => (
-  <div className="h-[400px] overflow-hidden rounded-[32px] border border-gray-100 bg-white shadow-sm">
+  <div className="h-[400px] rounded-[32px] bg-white">
     <Skeleton className="h-64 w-full" />
     <div className="space-y-4 p-8">
       <Skeleton className="h-6 w-3/4" />
