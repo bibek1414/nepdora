@@ -1,4 +1,5 @@
 import TemplatesPage from "@/components/marketing/templates/templates-page";
+import ContactSection from "@/components/marketing/contact-us/contact-us";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -44,5 +45,12 @@ export const metadata: Metadata = {
 };
 
 export default function Templates() {
-  return <TemplatesPage />;
+  return (
+    <>
+      <TemplatesPage />
+      <div className="mb-40 py-20">
+        <ContactSection />
+      </div>
+    </>
+  );
 }

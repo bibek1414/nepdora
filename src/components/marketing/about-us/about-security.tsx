@@ -4,84 +4,109 @@ import { ShieldCheck, Lock, Server, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 
 const AboutSecurity: React.FC = () => {
-  return (
-    <motion.section
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8 }}
-      className="relative mx-4 mb-16 overflow-hidden rounded-2xl bg-slate-900 py-16 text-white sm:mb-32 sm:rounded-3xl sm:py-20 md:mx-6 md:rounded-[3rem] md:py-32 lg:mx-auto lg:max-w-6xl lg:px-20"
-    >
-      <div className="bg-primary/20 pointer-events-none absolute top-0 right-0 h-[300px] w-[300px] rounded-full blur-[120px] sm:h-[400px] sm:w-[400px] md:h-[500px] md:w-[500px]"></div>
+  const securityFeatures = [
+    {
+      icon: Lock,
+      title: "SSL Encryption",
+      description:
+        "Every Nepdora site comes with automatic SSL certificates. Your customer's data is encrypted from the moment they land on your page.",
+      delay: 0,
+    },
+    {
+      icon: Server,
+      title: "99.9% Uptime",
+      description:
+        "Our distributed cloud infrastructure ensures your shop is open 24/7, even during high traffic festivals like Dashain or Tihar.",
+      delay: 0.1,
+    },
+    {
+      icon: Globe,
+      title: "Local Data Centers",
+      description:
+        "Content delivered via CDNs optimized for South Asia, meaning your site loads instantly for customers in Kathmandu, Pokhara, and beyond.",
+      delay: 0.2,
+    },
+  ];
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 md:mb-20"
-        >
-          <div className="text-primary mb-4 flex items-center gap-2 sm:mb-6 sm:gap-3">
-            <ShieldCheck className="h-5 w-5 sm:h-6 sm:w-6" />
-            <span className="text-xs font-bold tracking-widest uppercase sm:text-sm">
-              Bank-Grade Security
-            </span>
-          </div>
-          <h2 className="mb-4 text-2xl font-bold sm:text-3xl md:text-4xl lg:text-6xl">
-            Your business is safe with us.
-          </h2>
-          <p className="max-w-2xl text-sm font-light text-slate-400 sm:text-base md:text-lg lg:text-xl">
+  return (
+    <section className="relative overflow-hidden bg-white py-24 sm:py-32">
+      {/* Background Decorative Element */}
+      <div className="pointer-events-none absolute top-0 left-1/2 h-full w-full -translate-x-1/2 overflow-hidden">
+        <div className="bg-secondary/50 absolute top-[-10%] left-[10%] h-[40%] w-[40%] rounded-full blur-[120px]" />
+        <div className="bg-primary/5 absolute right-[10%] bottom-[-10%] h-[40%] w-[40%] rounded-full blur-[120px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl lg:text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 flex justify-center"
+          >
+            <div className="bg-secondary hover:border-primary/30 inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-1.5 shadow-sm transition-all duration-300">
+              <ShieldCheck className="text-primary h-4 w-4" />
+              <span className="text-xs font-bold tracking-widest text-slate-800 uppercase">
+                Bank-Grade Security
+              </span>
+            </div>
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl"
+          >
+            Your business is <span className="text-primary italic">safe</span>{" "}
+            with us.
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-600"
+          >
             In a digital world, trust is currency. We treat your data, your
             customers, and your uptime with military-grade discipline.
-          </p>
-        </motion.div>
+          </motion.p>
+        </div>
 
-        <div className="grid grid-cols-1 gap-8 border-t border-slate-800 pt-8 sm:gap-10 sm:pt-10 md:grid-cols-3 md:gap-12 md:pt-12">
-          {[
-            {
-              icon: Lock,
-              title: "SSL Encryption",
-              description:
-                "Every Nepdora site comes with automatic SSL certificates. Your customer's data is encrypted from the moment they land on your page.",
-              delay: 0,
-            },
-            {
-              icon: Server,
-              title: "99.9% Uptime",
-              description:
-                "Our distributed cloud infrastructure ensures your shop is open 24/7, even during high traffic festivals like Dashain or Tihar.",
-              delay: 0.2,
-            },
-            {
-              icon: Globe,
-              title: "Local Data Centers",
-              description:
-                "Content delivered via CDNs optimized for South Asia, meaning your site loads instantly for customers in Kathmandu, Pokhara, and beyond.",
-              delay: 0.4,
-            },
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: item.delay }}
-            >
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 text-emerald-400 sm:h-12 sm:w-12">
-                <item.icon className="h-5 w-5 sm:h-6 sm:w-6" />
-              </div>
-              <h3 className="mb-2 text-lg font-bold sm:text-xl">
-                {item.title}
-              </h3>
-              <p className="text-xs leading-relaxed text-slate-400 sm:text-sm">
-                {item.description}
-              </p>
-            </motion.div>
-          ))}
+        <div className="mx-auto mt-20 max-w-2xl sm:mt-24 lg:mt-32 lg:max-w-none">
+          <div className="grid max-w-xl grid-cols-1 gap-x-12 gap-y-16 lg:max-w-none lg:grid-cols-3">
+            {securityFeatures.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: item.delay + 0.3 }}
+                className="group relative"
+              >
+                <div className="bg-secondary group-hover:bg-primary group-hover:shadow-primary/30 mb-8 flex h-14 w-14 items-center justify-center rounded-2xl text-slate-900 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] transition-all duration-500 group-hover:scale-110 group-hover:text-white">
+                  <item.icon className="h-7 w-7" />
+                </div>
+
+                <h3 className="group-hover:text-primary mb-4 text-2xl leading-7 font-bold text-slate-900 transition-colors duration-300">
+                  {item.title}
+                </h3>
+
+                <p className="text-lg leading-relaxed text-slate-600">
+                  {item.description}
+                </p>
+
+                {/* Subtle background accent on hover */}
+                <div className="absolute -inset-x-4 -inset-y-6 z-[-1] rounded-3xl bg-slate-50 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 };
 

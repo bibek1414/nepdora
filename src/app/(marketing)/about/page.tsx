@@ -51,14 +51,16 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div>
+    <div className="bg-white">
       <AboutHero />
       <AboutStory />
-      <AboutSecurity />
-      <AboutValues />
-      <AboutTeam />
-      <Testimonials />
-      <CTA />
+      <div className="space-y-24 pb-24 sm:space-y-32 sm:pb-32 lg:space-y-48 lg:pb-48">
+        <AboutSecurity />
+        <AboutValues />
+        <AboutTeam />
+        <Testimonials />
+        <CTA />
+      </div>
     </div>
   );
 }

@@ -63,14 +63,11 @@ const TemplatesPage = () => {
   return (
     <section className="bg-white py-12 sm:py-16 md:py-20 lg:py-24">
       <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
-        <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:mb-10 sm:gap-6 md:mb-12">
+        <div className="mb-8 flex flex-col items-center justify-between gap-4 text-center sm:mb-10 sm:gap-6 md:mb-12">
           <div>
-            <h2 className="mb-2 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl">
+            <h2 className="mb-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-6xl">
               Featured Website Templates
             </h2>
-            <p className="text-xs text-slate-600 sm:text-sm">
-              Monthly updated templates to help you get started.
-            </p>
           </div>
 
           {categoriesLoading ? (

@@ -1,380 +1,278 @@
 "use client";
 
 import React, { useState } from "react";
-// import { motion } from "framer-motion";
-// import Link from "next/link";
-// import {
-//   Check,
-//   Headphones,
-//   Shield,
-//   Clock,
-//   Zap,
-//   Star,
-//   Crown,
-//   Loader2,
-// } from "lucide-react";
-// import { usePricingPlans } from "@/hooks/use-subscription";
-// import { Plan } from "@/types/subscription";
+import { Check, Zap, Star, Crown, Sparkles, LucideIcon } from "lucide-react";
+import ContactSection from "@/components/marketing/contact-us/contact-us";
 
-// const AnimatedPricingSection = () => {
-//   const { data: plans, isLoading, error } = usePricingPlans();
-//   const [isYearly, setIsYearly] = useState(false);
+interface Feature {
+  text: string;
+}
 
-//   const topFeatures = [
-//     { icon: Headphones, text: "24/7 support" },
-//     { icon: Clock, text: "Cancel anytime" },
-//   ];
+interface Plan {
+  id: number;
+  name: string;
+  type: "free" | "premium" | "pro";
+  description: string;
+  icon: LucideIcon;
+  isPopular: boolean;
+  features: string[];
+}
 
-//   const getPlanColors = (planType: string, isPopular: boolean) => {
-//     switch (planType.toLowerCase()) {
-//       default:
-//         return {
-//           background: "bg-white border border-gray-200 ",
-//           headerBg: "bg-primary",
-//           textColor: "text-gray-900",
-//           headerText: "text-black",
-//           priceColor: "primary",
-//           buttonBg: "bg-primary hover:bg-primary/80 text-white",
-//         };
-//     }
-//   };
-//   const getPlanIcon = (planType: string) => {
-//     switch (planType.toLowerCase()) {
-//       case "free":
-//         return Zap;
-//       case "premium":
-//         return Star;
-//       case "pro":
-//         return Crown;
-//       default:
-//         return Zap;
-//     }
-//   };
-//   const calculatePrice = (monthlyPrice: string) => {
-//     const price = parseFloat(monthlyPrice);
+interface PlanColors {
+  border: string;
+  badge: string;
+  button: string;
+  iconBg: string;
+  iconColor: string;
+}
 
-//     if (isYearly) {
-//       // Calculate yearly price with 10% discount for ALL plans
-//       const yearlyPrice = price * 12 * 0.9; // 10% discount
-//       return yearlyPrice.toFixed(0);
-//     }
-//     return price.toFixed(0);
-//   };
+const AnimatedPricingSection: React.FC = () => {
+  const [isYearly, setIsYearly] = useState<boolean>(false);
 
-//   const calculateSavings = (monthlyPrice: string) => {
-//     const price = parseFloat(monthlyPrice);
-//     // Calculate savings for ALL plans (even if price is 0 now, it might change later)
-//     return (price * 12 * 0.1).toFixed(0); // 10% of yearly cost
-//   };
+  const plans: Plan[] = [
+    {
+      id: 1,
+      name: "Free",
+      type: "free",
+      description: "Get organized and set up simple sales processes",
+      icon: Zap,
+      isPopular: false,
+      features: [
+        "Up to 3 team members",
+        "Basic CRM features",
+        "Email support",
+        "5 GB storage",
+        "Basic reporting",
+        "Mobile app access",
+      ],
+    },
+    {
+      id: 2,
+      name: "Premium",
+      type: "premium",
+      description: "Everything you need to boost performance and revenue",
+      icon: Star,
+      isPopular: true,
+      features: [
+        "Up to 25 team members",
+        "Advanced CRM features",
+        "Priority support",
+        "100 GB storage",
+        "Advanced analytics",
+        "Custom integrations",
+        "Automation workflows",
+        "Team collaboration tools",
+      ],
+    },
+    {
+      id: 3,
+      name: "Pro",
+      type: "pro",
+      description: "Customize without limits and access unrivaled support",
+      icon: Crown,
+      isPopular: false,
+      features: [
+        "Unlimited team members",
+        "Enterprise CRM features",
+        "24/7 dedicated support",
+        "Unlimited storage",
+        "Custom reporting & dashboards",
+        "API access",
+        "Advanced security features",
+        "Custom training & onboarding",
+        "SLA guarantee",
+      ],
+    },
+  ];
 
-//   const formatPrice = (price: string) => {
-//     const num = parseFloat(price);
-//     return num.toLocaleString("en-NP");
-//   };
+  const getPlanColors = (
+    type: Plan["type"],
+    isPopular: boolean
+  ): PlanColors => {
+    if (isPopular) {
+      return {
+        border: "border-blue-500",
+        badge: "bg-primary",
+        button: "bg-primary hover:opacity-90",
+        iconBg: "bg-blue-100",
+        iconColor: "text-blue-600",
+      };
+    }
+    return {
+      border: "border-gray-200",
+      badge: "bg-gray-800",
+      button: "bg-gray-900 hover:bg-gray-800",
+      iconBg: "bg-gray-100",
+      iconColor: "text-gray-600",
+    };
+  };
 
-//   const getPeriodDisplay = () => {
-//     return isYearly ? "/year" : "/month";
-//   };
-
-//   const sortPlans = (plans: Plan[]) => {
-//     const order = { free: 1, premium: 2, pro: 3 };
-//     return [...plans].sort((a, b) => {
-//       const orderA =
-//         order[a.plan_type.toLowerCase() as keyof typeof order] || 999;
-//       const orderB =
-//         order[b.plan_type.toLowerCase() as keyof typeof order] || 999;
-//       return orderA - orderB;
-//     });
-//   };
-
-//   if (isLoading) {
-//     return (
-//       <section className="min-h-screen bg-gray-50 px-4 py-16 transition-colors">
-//         <div className="mx-auto max-w-7xl">
-//           <div className="flex items-center justify-center py-20">
-//             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-//           </div>
-//         </div>
-//       </section>
-//     );
-//   }
-
-//   if (error) {
-//     return (
-//       <section className="min-h-screen bg-gray-50 px-4 py-16 transition-colors">
-//         <div className="mx-auto max-w-7xl">
-//           <div className="py-20 text-center">
-//             <p className="text-red-600">
-//               Failed to load pricing plans. Please try again later.
-//             </p>
-//           </div>
-//         </div>
-//       </section>
-//     );
-//   }
-
-//   const sortedPlans = plans ? sortPlans(plans) : [];
-
-//   return (
-//     <section className="relative min-h-screen px-4 py-16 transition-colors">
-//       <div className="from-primary to-secondary pointer-events-none absolute top-40 -left-20 z-50 h-40 w-40 rounded-full bg-gradient-to-tr opacity-50 blur-3xl"></div>
-
-//       {/* Top Right */}
-//       <div className="from-primary to-secondary pointer-events-none absolute -right-20 z-50 h-40 w-40 rounded-full bg-gradient-to-tr opacity-50 blur-3xl"></div>
-
-//       {/* Split Background */}
-//       <div className="absolute inset-0">
-//         <div className="h-[45%] bg-[#2d2e30]"></div>
-//         <div className="h-[55%] bg-white"></div>
-//       </div>
-
-//       <div className="relative z-10 mx-auto max-w-7xl">
-//         {/* Header */}
-//         <div className="mb-16 text-center">
-//           <motion.h1
-//             initial={{ opacity: 0, y: -20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.5 }}
-//             className="mb-4 text-2xl font-extrabold tracking-tight text-white sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
-//           >
-//             Pick a plan that&apos;s right for you
-//           </motion.h1>
-//           <motion.p
-//             initial={{ opacity: 0, y: -20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.5, delay: 0.1 }}
-//             className="mx-auto mb-8 max-w-2xl text-lg text-white"
-//           >
-//             All of our plans are customized to fit the needs of small and large
-//             teams.
-//           </motion.p>
-
-//           {/* Billing Toggle */}
-//           <motion.div
-//             initial={{ opacity: 0 }}
-//             animate={{ opacity: 1 }}
-//             transition={{ duration: 0.5, delay: 0.2 }}
-//             className="mb-12 flex items-center justify-center gap-4"
-//           >
-//             <span className="font-medium text-white transition-colors duration-200">
-//               Monthly
-//             </span>
-//             <button
-//               onClick={() => setIsYearly(!isYearly)}
-//               className={`focus:ring-primary relative h-7 w-14 rounded-full transition-all duration-300 focus:ring-2 focus:ring-offset-2 focus:outline-none ${
-//                 isYearly ? "bg-primary" : "bg-gray-300"
-//               }`}
-//               aria-label="Toggle billing period"
-//             >
-//               <motion.span
-//                 animate={{ x: isYearly ? 28 : 0 }}
-//                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-//                 className="absolute top-1 left-1 h-5 w-5 rounded-full bg-white shadow-md"
-//               />
-//             </button>
-//             <span className="font-medium text-white transition-colors duration-200">
-//               Yearly
-//             </span>
-//             <motion.span
-//               initial={{ scale: 0, opacity: 0 }}
-//               animate={{
-//                 scale: isYearly ? 1 : 0,
-//                 opacity: isYearly ? 1 : 0,
-//               }}
-//               transition={{ duration: 0.2 }}
-//               className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800"
-//             >
-//               SAVE 10%
-//             </motion.span>
-//           </motion.div>
-
-//           {/* Top Features */}
-//           <motion.div
-//             initial={{ opacity: 0 }}
-//             animate={{ opacity: 1 }}
-//             transition={{ duration: 0.5, delay: 0.3 }}
-//             className="flex flex-wrap justify-center gap-8 text-sm text-white"
-//           >
-//             {topFeatures.map((feature, index) => (
-//               <motion.div
-//                 key={index}
-//                 initial={{ opacity: 0, y: 10 }}
-//                 animate={{ opacity: 1, y: 0 }}
-//                 transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
-//                 className="flex items-center gap-2"
-//               >
-//                 <feature.icon className="h-4 w-4 text-blue-600" />
-//                 <span>{feature.text}</span>
-//               </motion.div>
-//             ))}
-//           </motion.div>
-//         </div>
-
-//         {/* Pricing Cards */}
-//         <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-8 lg:grid-cols-3">
-//           {sortedPlans.map((plan, index) => {
-//             const colors = getPlanColors(plan.plan_type, plan.is_popular);
-
-//             // Show all features without filtering, just sort by order
-//             const availableFeatures = plan.features.sort(
-//               (a, b) => a.order - b.order
-//             );
-
-//             const isCenterCard = plan.plan_type.toLowerCase() === "premium";
-//             const displayPrice = calculatePrice(plan.price);
-//             const savings = calculateSavings(plan.price);
-
-//             return (
-//               <motion.div
-//                 key={plan.id}
-//                 initial={{ opacity: 0, y: 20 }}
-//                 animate={{ opacity: 1, y: 0 }}
-//                 transition={{ duration: 0.3, delay: index * 0.1 }}
-//                 whileHover={{ scale: 1.05 }}
-//                 className={`relative flex h-full flex-col rounded-2xl ${colors.background} overflow-hidden ${
-//                   isCenterCard ? "scale-105" : "mt-15 scale-100"
-//                 } duration-300`}
-//               >
-//                 {/* Popular Badge */}
-//                 {plan.is_popular && (
-//                   <motion.div
-//                     initial={{ opacity: 0, y: -20 }}
-//                     animate={{ opacity: 1, y: 0 }}
-//                     transition={{ duration: 0.5, delay: 0.2 }}
-//                     className="absolute top-0 left-0 z-10 w-full -translate-y-1/2"
-//                   >
-//                     <div className="bg-primary w-full px-6 py-4 text-center text-sm font-bold text-white shadow-lg">
-//                       <div className="mt-10">RECOMMENDED</div>
-//                     </div>
-//                   </motion.div>
-//                 )}
-//                 {!plan.is_popular && (
-//                   <motion.div
-//                     initial={{ opacity: 0, y: -20 }}
-//                     animate={{ opacity: 1, y: 0 }}
-//                     transition={{ duration: 0.5, delay: 0.2 }}
-//                     className="absolute top-0 left-0 z-10 w-full -translate-y-1/2"
-//                   >
-//                     <div className="bg-primary w-full px-6 py-2 text-center text-sm font-bold text-white shadow-lg"></div>
-//                   </motion.div>
-//                 )}
-
-//                 {/* Card Header */}
-//                 <div
-//                   className={` ${colors.headerText} mt-6 p-6 text-center ${
-//                     isCenterCard ? "pb-8" : "pb-6"
-//                   }`}
-//                 >
-//                   <div className="mb-2 flex items-center justify-center gap-2">
-//                     <h3
-//                       className={`font-bold ${isCenterCard ? "text-2xl" : "text-xl"}`}
-//                     >
-//                       {plan.name}
-//                     </h3>
-//                   </div>
-//                   <p className="text-sm text-black/90">
-//                     {plan.plan_type.toLowerCase() === "free"
-//                       ? "Get organized and set up simple sales processes"
-//                       : plan.plan_type.toLowerCase() === "premium"
-//                         ? "Everything you need to boost performance and revenue"
-//                         : "Customize without limits and access unrivaled support"}
-//                   </p>
-//                 </div>
-
-//                 {/* Price Section */}
-//                 <div
-//                   className={`border-b border-gray-200 p-2 text-center ${
-//                     isCenterCard ? "pb-8" : "pb-6"
-//                   }`}
-//                 >
-//                   <div className="mb-4 flex items-baseline justify-center gap-1">
-//                     <span className="font-medium text-gray-600">Rs.</span>
-//                     <motion.span
-//                       key={`${plan.id}-${isYearly}`}
-//                       initial={{ opacity: 0, y: -10 }}
-//                       animate={{ opacity: 1, y: 0 }}
-//                       transition={{ duration: 0.3 }}
-//                       className={`text-primary font-mono font-bold ${
-//                         isCenterCard ? "text-4xl" : "text-4xl"
-//                       }`}
-//                     >
-//                       {formatPrice(displayPrice)}
-//                     </motion.span>
-//                     <span className="font-medium text-gray-600">
-//                       {getPeriodDisplay()}
-//                     </span>
-//                   </div>
-
-//                   {/* Show savings for ALL plans when yearly billing is selected and savings > 0 */}
-//                   {isYearly && parseFloat(savings) > 0 && (
-//                     <motion.p
-//                       initial={{ opacity: 0 }}
-//                       animate={{ opacity: 1 }}
-//                       transition={{ duration: 0.3 }}
-//                       className="mb-3 text-xs font-medium text-green-600"
-//                     >
-//                       Save Rs. {formatPrice(savings)} per year!
-//                     </motion.p>
-//                   )}
-
-//                   <Link href="/admin/signup">
-//                     <motion.button
-//                       whileHover={{ scale: 1.05 }}
-//                       whileTap={{ scale: 0.95 }}
-//                       className={`rounded-full px-20 font-semibold transition-all duration-200 ${
-//                         colors.buttonBg
-//                       } ${isCenterCard ? "py-3 text-lg" : "py-3 text-base"}`}
-//                     >
-//                       {plan.plan_type.toLowerCase() === "free"
-//                         ? "Get Started Free"
-//                         : "Try for Free"}
-//                     </motion.button>
-//                   </Link>
-//                 </div>
-
-//                 {/* Features List */}
-//                 <div className={`flex-1 p-6 ${isCenterCard ? "pb-8" : "pb-6"}`}>
-//                   <div className="space-y-4">
-//                     {availableFeatures.map((feature, idx) => (
-//                       <motion.div
-//                         key={feature.id}
-//                         initial={{ opacity: 0, x: -10 }}
-//                         animate={{ opacity: 1, x: 0 }}
-//                         transition={{ duration: 0.3, delay: idx * 0.05 }}
-//                         className="flex items-start gap-3"
-//                       >
-//                         <div
-//                           className={`bg-primary relative z-10 flex h-6 w-6 items-center justify-center rounded-full transition-transform hover:scale-110`}
-//                         >
-//                           <Check className="h-4 w-4 text-white" />
-//                         </div>
-//                         <span className="text-sm text-gray-700">
-//                           {feature.feature}
-//                         </span>
-//                       </motion.div>
-//                     ))}
-//                   </div>
-//                 </div>
-//               </motion.div>
-//             );
-//           })}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// };
-
-// export default AnimatedPricingSection;
-
-const AnimatedPricingSection = () => {
   return (
-    <section className="relative flex min-h-screen items-center justify-center px-4 py-16 text-center transition-colors">
-      <div className="from-primary to-secondary pointer-events-none absolute top-40 -left-20 z-50 h-40 w-40 rounded-full bg-gradient-to-tr opacity-50 blur-3xl"></div>
+    <>
+      <section className="relative min-h-screen bg-linear-to-b from-gray-50 to-white px-4 py-16">
+        {/* Decorative Blurs */}
+        <div className="pointer-events-none absolute top-20 -left-20 h-64 w-64 rounded-full bg-blue-400 opacity-20 blur-3xl"></div>
+        <div className="pointer-events-none absolute top-40 -right-20 h-64 w-64 rounded-full bg-purple-400 opacity-20 blur-3xl"></div>
 
-      <h1 className="text-5xl font-bold tracking-tight md:text-7xl">
-        Coming <span className="text-primary">Soon..</span>
-      </h1>
-    </section>
+        <div className="relative mx-auto max-w-5xl">
+          {/* Header */}
+          <div className="mb-12 text-center">
+            <h1 className="mb-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Pick a plan that's right for{" "}
+              <span className="text-primary">you</span>
+            </h1>
+
+            <p className="mx-auto mb-6 max-w-xl text-sm text-gray-600">
+              All of our plans are customized to fit the needs of small and
+              large teams.
+            </p>
+
+            {/* Billing Toggle */}
+            <div className="mb-6 flex items-center justify-center gap-3">
+              <span
+                className={`text-sm font-medium transition-colors ${!isYearly ? "text-gray-900" : "text-gray-500"}`}
+              >
+                Monthly
+              </span>
+              <button
+                onClick={() => setIsYearly(!isYearly)}
+                className={`relative h-7 w-14 rounded-full transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none ${
+                  isYearly ? "bg-primary" : "bg-gray-300"
+                }`}
+                aria-label="Toggle billing period"
+              >
+                <span
+                  className={`absolute top-1 left-1 h-5 w-5 rounded-full bg-white transition-transform duration-300 ${
+                    isYearly ? "translate-x-7" : "translate-x-0"
+                  }`}
+                />
+              </button>
+              <span
+                className={`text-sm font-medium transition-colors ${isYearly ? "text-gray-900" : "text-gray-500"}`}
+              >
+                Yearly
+              </span>
+              {isYearly && (
+                <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
+                  SAVE 10%
+                </span>
+              )}
+            </div>
+
+            {/* Top Features */}
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-600">
+              <div className="flex items-center gap-2">
+                <Check className="h-3.5 w-3.5 text-green-600" />
+                <span>24/7 support</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Check className="h-3.5 w-3.5 text-green-600" />
+                <span>Cancel anytime</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Check className="h-3.5 w-3.5 text-green-600" />
+                <span>No credit card required</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Pricing Cards */}
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 lg:grid-cols-3">
+            {plans.map((plan: Plan, index: number) => {
+              const colors = getPlanColors(plan.type, plan.isPopular);
+              const Icon = plan.icon;
+
+              return (
+                <div
+                  key={plan.id}
+                  className={`relative flex flex-col rounded-xl border-2 bg-white transition-all duration-300 ${
+                    colors.border
+                  } ${plan.isPopular ? "scale-105 lg:scale-105" : ""}`}
+                >
+                  {/* Popular Badge */}
+                  {plan.isPopular && (
+                    <div className="absolute -top-4 right-0 left-0 mx-auto w-max">
+                      <div
+                        className={`rounded-full ${colors.badge} px-4 py-1.5 text-xs font-bold text-white shadow-lg`}
+                      >
+                        MOST POPULAR
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="p-6">
+                    {/* Icon & Title */}
+                    <div className="mb-5">
+                      <div
+                        className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg ${colors.iconBg}`}
+                      >
+                        <Icon className={`h-5 w-5 ${colors.iconColor}`} />
+                      </div>
+                      <h3 className="mb-1.5 text-xl font-bold text-gray-900">
+                        {plan.name}
+                      </h3>
+                    </div>
+
+                    {/* Price */}
+                    <div className="mb-5 border-t border-b border-gray-200 py-5">
+                      <div className="mb-1.5 flex items-baseline justify-start gap-1">
+                        <span className="text-2xl font-bold text-gray-900">
+                          Coming Soon
+                        </span>
+                      </div>
+                      <p className="text-start text-xs text-gray-500">
+                        {isYearly ? "Billed annually" : "Billed monthly"}
+                      </p>
+                    </div>
+
+                    {/* CTA Button */}
+                    <button
+                      className={`mb-5 w-full rounded-lg ${colors.button} px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:scale-105`}
+                    >
+                      {plan.type === "free"
+                        ? "Get Started Free"
+                        : "Start Free Trial"}
+                    </button>
+
+                    {/* Features */}
+                    <div className="space-y-2.5">
+                      <p className="text-xs font-semibold text-gray-900">
+                        What's included:
+                      </p>
+                      {plan.features.map((feature: string, idx: number) => (
+                        <div key={idx} className="flex items-start gap-2.5">
+                          <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-green-100">
+                            <Check className="h-3 w-3 text-green-600" />
+                          </div>
+                          <span className="text-xs text-gray-700">
+                            {feature}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="mt-12 text-center">
+            <p className="text-xs text-gray-600">
+              Need a custom plan?{" "}
+              <a
+                href="#contact"
+                className="font-semibold text-blue-600 hover:text-blue-700"
+              >
+                Contact our sales team
+              </a>
+            </p>
+          </div>
+        </div>
+      </section>
+      <ContactSection />
+      <div className="mb-40"></div>
+    </>
   );
 };
 
