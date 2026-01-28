@@ -29,6 +29,7 @@ import { siteConfigAPI } from "@/services/api/owner-sites/admin/site-config";
 import { onboardingAPI } from "@/services/auth/onboarding";
 import { SiteConfig } from "@/types/owner-site/admin/site-config";
 import { decodeJwt } from "@/lib/utils";
+import Tiptap from "@/components/ui/tip-tap";
 
 interface OnboardingModalProps {
   userData: {
@@ -49,6 +50,7 @@ interface OnboardingFormData {
   phone: string;
   email: string;
   workingHours: string;
+  businessDescription: string;
   socialLinks: string[];
 }
 
@@ -118,6 +120,7 @@ export default function OnboardingModal({
     phone: userData.phoneNumber || "",
     email: userData.email || "",
     workingHours: "",
+    businessDescription: "",
     socialLinks: Array(socialPlatforms.length).fill(""),
   });
 
@@ -144,6 +147,7 @@ export default function OnboardingModal({
             phone: config.phone || userData.phoneNumber || "",
             email: config.email || userData.email || "",
             workingHours: config.working_hours || "",
+            businessDescription: config.business_details || "",
             socialLinks: socialPlatforms.map(
               platform =>
                 (config[platform.field as keyof SiteConfig] as string) || ""
@@ -307,6 +311,12 @@ export default function OnboardingModal({
       if (formData.workingHours) {
         siteConfigFormData.append("working_hours", formData.workingHours);
       }
+      if (formData.businessDescription) {
+        siteConfigFormData.append(
+          "business_details",
+          formData.businessDescription
+        );
+      }
       if (formData.logo) {
         siteConfigFormData.append("logo", formData.logo);
       }
@@ -463,8 +473,27 @@ export default function OnboardingModal({
                         value={formData.businessName}
                         onChange={handleInputChange}
                         className="mt-1"
-                        disabled
+                        placeholder="e.g. My Awesome Store"
                       />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="businessDescription">
+                        Business details
+                      </Label>
+                      <div className="mt-1">
+                        <Tiptap
+                          value={formData.businessDescription}
+                          onChange={content =>
+                            setFormData(prev => ({
+                              ...prev,
+                              businessDescription: content,
+                            }))
+                          }
+                          placeholder="Describe your business..."
+                          minHeight="300px"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -679,6 +708,20 @@ export default function OnboardingModal({
                       <p className="text-sm text-gray-500">Business Name</p>
                       <p className="font-medium">{formData.businessName}</p>
                     </div>
+
+                    {formData.businessDescription && (
+                      <div>
+                        <p className="text-sm text-gray-500">
+                          Business Description
+                        </p>
+                        <div
+                          className="prose prose-sm mt-1 max-h-32 overflow-y-auto rounded-md border bg-gray-50 p-3"
+                          dangerouslySetInnerHTML={{
+                            __html: formData.businessDescription,
+                          }}
+                        />
+                      </div>
+                    )}
 
                     <div className="grid grid-cols-2 gap-6">
                       {/* Logo Preview */}

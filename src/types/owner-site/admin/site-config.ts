@@ -5,7 +5,7 @@ export interface SiteConfig {
 
   // Business info
   business_name: string;
-  business_description?: string | null;
+  business_details?: string | null;
 
   // Contact info
   address?: string | null;
@@ -28,7 +28,7 @@ export interface SiteConfigFormData {
 
   // Business info
   business_name?: string;
-  business_description?: string;
+  business_details?: string;
 
   // Contact info
   address?: string;
