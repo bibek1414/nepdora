@@ -133,7 +133,9 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             <FileCheck className="mr-2 h-4 w-4" />
             {user.isOnboardingComplete ? "Edit Site Info" : "Complete Setup"}
           </Button>
-          {(user.isTemplateAccount || user.subDomain === "bibek") && (
+          {(user.isTemplateAccount ||
+            user.subDomain === "bibek" ||
+            user.subDomain === "urs-collection") && (
             <a
               href={`https://builder.nepdora.com/builder/${user.subDomain}`}
               target="_blank"
