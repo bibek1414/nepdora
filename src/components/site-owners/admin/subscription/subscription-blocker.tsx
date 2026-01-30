@@ -23,12 +23,13 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Check, Crown, Sparkles, Lock, ArrowLeft } from "lucide-react";
+import { Check, Sparkles, Lock, ArrowLeft, LogOut } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth"; // Import useAuth for logout
 
 // Payment method types
 const PAYMENT_METHODS = [
@@ -52,6 +53,7 @@ export function SubscriptionBlocker() {
     isLoading: statusLoading,
   } = useSubscription();
   const { data: plans, isLoading: plansLoading } = usePricingPlans();
+  const { logout } = useAuth(); // Get logout function
   const [open, setOpen] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,6 +70,7 @@ export function SubscriptionBlocker() {
       setOpen(false);
     }
   }, [isActive, statusLoading]);
+
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChoosePlan = (plan: any) => {
     if (plan.plan_type === "free") return;
@@ -106,6 +109,15 @@ export function SubscriptionBlocker() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push("/login");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   // Don't render anything while loading initial status
   if (statusLoading) {
     return null;
@@ -114,11 +126,23 @@ export function SubscriptionBlocker() {
   return (
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
-        className="max-h-[90vh] !max-w-5xl scale-85"
+        className="h-[115vh] !max-w-5xl scale-85 overflow-y-auto"
         onInteractOutside={e => e.preventDefault()}
+        onKeyDown={e => e.preventDefault()}
         onEscapeKeyDown={e => e.preventDefault()}
         showCloseButton={false}
       >
+        {/* Logout Button - Positioned at top right */}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleLogout}
+          className="text-muted-foreground hover:text-foreground absolute top-4 right-4"
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </Button>
+
         <AnimatePresence mode="wait">
           {!showPaymentDialog ? (
             // Plans Selection View
@@ -128,23 +152,24 @@ export function SubscriptionBlocker() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.3 }}
+              className="pt-8"
             >
               <DialogHeader>
                 <div className="mb-2 flex items-center justify-center gap-2">
-                  <DialogTitle className="text-3xl font-bold">
+                  <DialogTitle className="text-2xl font-bold md:text-3xl">
                     Upgrade Your Plan
                   </DialogTitle>
                 </div>
-                <DialogDescription className="text-center text-base">
+                <DialogDescription className="text-center text-sm md:text-base">
                   {subscription?.status === "expired"
                     ? `Your subscription expired on ${new Date(subscription.expires_on).toLocaleDateString()}. Choose a plan to continue using all features.`
                     : "You need an active subscription to access admin features. Choose a plan to get started."}
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="py-6">
+              <div className="py-4 md:py-6">
                 {plansLoading ? (
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                     {[1, 2, 3].map(i => (
                       <Card key={i}>
                         <CardHeader>
@@ -161,7 +186,7 @@ export function SubscriptionBlocker() {
                     ))}
                   </div>
                 ) : plans && plans.length > 0 ? (
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                     {plans.map(plan => (
                       <Card
                         key={plan.id}
@@ -169,7 +194,7 @@ export function SubscriptionBlocker() {
                       >
                         {plan.is_popular && (
                           <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                            <Badge className="flex items-center gap-1 px-3 py-1">
+                            <Badge className="flex items-center gap-1 px-3 py-1 text-xs">
                               <Sparkles className="h-3 w-3" />
                               POPULAR
                             </Badge>
@@ -177,17 +202,20 @@ export function SubscriptionBlocker() {
                         )}
 
                         <CardHeader>
-                          <CardTitle className="flex items-center justify-between text-xl">
+                          <CardTitle className="flex flex-col justify-between text-lg md:flex-row md:items-center md:text-xl">
                             {plan.name}
-                            <Badge variant="outline" className="text-xs">
+                            <Badge
+                              variant="outline"
+                              className="mt-1 text-xs md:mt-0"
+                            >
                               {plan.plan_type.toUpperCase()}
                             </Badge>
                           </CardTitle>
-                          <CardDescription className="mb-2 text-sm">
+                          <CardDescription className="mb-2 text-xs md:text-sm">
                             {plan.tagline}
                           </CardDescription>
                           <div className="pt-2">
-                            <span className="text-foreground text-4xl font-bold">
+                            <span className="text-foreground text-3xl font-bold md:text-4xl">
                               {Number(plan.price).toLocaleString("en-IN")}
                             </span>
                             <span className="text-muted-foreground ml-1 text-sm">
@@ -204,7 +232,7 @@ export function SubscriptionBlocker() {
                           <Button
                             className="mb-2 w-full shadow-none"
                             variant={plan.is_popular ? "default" : "outline"}
-                            size="lg"
+                            size={window.innerWidth < 768 ? "sm" : "lg"}
                             onClick={() => handleChoosePlan(plan)}
                             disabled={plan.plan_type === "free"}
                           >
@@ -220,16 +248,10 @@ export function SubscriptionBlocker() {
                               .map(feature => (
                                 <li
                                   key={feature.id}
-                                  className={`flex items-start gap-2 ${
-                                    !feature.is_available ? "opacity-50" : ""
-                                  }`}
+                                  className={`flex items-start gap-2 ${!feature.is_available ? "opacity-50" : ""}`}
                                 >
                                   <Check
-                                    className={`mt-0.5 h-5 w-5 flex-shrink-0 ${
-                                      feature.is_available
-                                        ? "text-green-500"
-                                        : "text-gray-400"
-                                    }`}
+                                    className={`mt-0.5 h-4 w-4 flex-shrink-0 md:h-5 md:w-5 ${feature.is_available ? "text-green-500" : "text-gray-400"}`}
                                   />
                                   <div className="flex-1">
                                     <span className="text-xs">
@@ -249,12 +271,12 @@ export function SubscriptionBlocker() {
                     ))}
                   </div>
                 ) : (
-                  <div className="py-12 text-center">
-                    <Lock className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-                    <h3 className="mb-2 text-xl font-semibold">
+                  <div className="py-8 text-center md:py-12">
+                    <Lock className="text-muted-foreground mx-auto mb-4 h-12 w-12 md:h-16 md:w-16" />
+                    <h3 className="mb-2 text-lg font-semibold md:text-xl">
                       No Plans Available
                     </h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground text-sm md:text-base">
                       Please contact support to activate your subscription.
                     </p>
                   </div>
@@ -269,6 +291,7 @@ export function SubscriptionBlocker() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
+              className="pt-8"
             >
               <DialogHeader>
                 <Button
@@ -281,34 +304,34 @@ export function SubscriptionBlocker() {
                   Back
                 </Button>
                 <div className="mb-2 flex flex-col items-center justify-center gap-2 pt-8">
-                  <DialogTitle className="text-3xl font-bold">
+                  <DialogTitle className="text-2xl font-bold md:text-3xl">
                     Choose Payment Method
                   </DialogTitle>
                 </div>
-                <DialogDescription className="text-center text-base">
+                <DialogDescription className="text-center text-sm md:text-base">
                   Select how you&apos;d like to pay for your{" "}
                   {selectedPlan?.name} subscription
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="py-6">
+              <div className="py-4 md:py-6">
                 {/* Selected Plan Summary */}
-                <Card className="border-primary/20 bg-primary/5 mb-6 border-2">
-                  <CardContent className="pt-6">
-                    <div className="flex items-center justify-between">
+                <Card className="border-primary/20 bg-primary/5 mb-4 border-2 md:mb-6">
+                  <CardContent className="pt-4 md:pt-6">
+                    <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
                       <div>
-                        <h3 className="text-lg font-semibold">
+                        <h3 className="text-base font-semibold md:text-lg">
                           {selectedPlan?.name}
                         </h3>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-muted-foreground text-xs md:text-sm">
                           {selectedPlan?.tagline}
                         </p>
                       </div>
-                      <div className="text-right">
-                        <div className="text-3xl font-bold">
+                      <div className="text-left md:text-right">
+                        <div className="text-2xl font-bold md:text-3xl">
                           Rs.{selectedPlan?.price}
                         </div>
-                        <div className="text-muted-foreground text-sm">
+                        <div className="text-muted-foreground text-xs md:text-sm">
                           per {selectedPlan?.unit}
                         </div>
                       </div>
@@ -317,13 +340,15 @@ export function SubscriptionBlocker() {
                 </Card>
 
                 {/* Payment Methods */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Payment Options</h3>
-                  <p className="text-muted-foreground text-sm">
+                <div className="space-y-3 md:space-y-4">
+                  <h3 className="text-base font-semibold md:text-lg">
+                    Payment Options
+                  </h3>
+                  <p className="text-muted-foreground text-xs md:text-sm">
                     Select your preferred payment method
                   </p>
 
-                  <div className="grid gap-3">
+                  <div className="grid gap-2 md:gap-3">
                     <AnimatePresence mode="wait">
                       {PAYMENT_METHODS.map(method => (
                         <motion.div
@@ -338,36 +363,36 @@ export function SubscriptionBlocker() {
                             type="button"
                             variant="ghost"
                             className={cn(
-                              "relative h-20 w-full justify-start overflow-hidden border text-left font-normal transition-all duration-300",
+                              "relative h-16 w-full justify-start overflow-hidden border text-left font-normal transition-all duration-300 md:h-20",
                               selectedPaymentMethod === method.id
                                 ? "border-primary bg-primary/10 border-2"
                                 : "border border-gray-300"
                             )}
                             onClick={() => setSelectedPaymentMethod(method.id)}
                           >
-                            <div className="relative z-10 flex items-center gap-4">
-                              <div className="relative h-12 w-12 flex-shrink-0">
+                            <div className="relative z-10 flex items-center gap-3 md:gap-4">
+                              <div className="relative h-8 w-8 flex-shrink-0 md:h-12 md:w-12">
                                 <Image
                                   src={method.image}
                                   alt={method.name}
                                   fill
                                   className="object-contain"
-                                  sizes="48px"
+                                  sizes="(max-width: 768px) 32px, 48px"
                                 />
                               </div>
-                              <span className="text-lg font-medium">
+                              <span className="text-sm font-medium md:text-lg">
                                 {method.name}
                               </span>
                             </div>
 
                             {selectedPaymentMethod === method.id && (
                               <motion.div
-                                className="absolute top-1/2 right-4 -translate-y-1/2"
+                                className="absolute top-1/2 right-3 -translate-y-1/2 md:right-4"
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                                 transition={{ duration: 0.2 }}
                               >
-                                <Check className="text-primary h-6 w-6" />
+                                <Check className="text-primary h-5 w-5 md:h-6 md:w-6" />
                               </motion.div>
                             )}
                           </Button>
@@ -378,10 +403,10 @@ export function SubscriptionBlocker() {
                 </div>
 
                 {/* Confirm Button */}
-                <div className="mt-8 space-y-3">
+                <div className="mt-6 space-y-3 md:mt-8">
                   <Button
                     className="w-full"
-                    size="lg"
+                    size={window.innerWidth < 768 ? "sm" : "lg"}
                     onClick={handleConfirmPayment}
                     disabled={!selectedPaymentMethod}
                   >
@@ -398,7 +423,7 @@ export function SubscriptionBlocker() {
                 </div>
               </div>
 
-              <div className="text-muted-foreground border-t pt-4 text-center text-sm">
+              <div className="text-muted-foreground border-t pt-4 text-center text-xs md:text-sm">
                 <p>🔒 All payments are secure and encrypted</p>
               </div>
             </motion.div>

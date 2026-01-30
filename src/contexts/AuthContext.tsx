@@ -261,8 +261,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       // Check localStorage
-      const storedTokens = localStorage.getItem("authTokens");
-      const storedUser = localStorage.getItem("authUser");
+      let storedTokens = localStorage.getItem("authTokens");
+      let storedUser = localStorage.getItem("authUser");
+
+      // Check cookies if localStorage is empty (e.g. after middleware redirect on new subdomain)
+      if (!storedTokens) {
+        const cookieAuthToken = getCookie("authToken");
+        const cookieRefreshToken = getCookie("refreshToken");
+        const cookieAuthUser = getCookie("authUser");
+
+        if (cookieAuthToken) {
+          console.log("[AuthContext] Initializing from cookies...");
+          const tokenData: AuthTokens = {
+            access_token: cookieAuthToken,
+            refresh_token: cookieRefreshToken || "",
+          };
+          storedTokens = JSON.stringify(tokenData);
+          localStorage.setItem("authTokens", storedTokens);
+
+          if (cookieAuthUser) {
+            try {
+              const decodedUser = JSON.parse(
+                decodeURIComponent(cookieAuthUser)
+              );
+              storedUser = JSON.stringify(decodedUser);
+              localStorage.setItem("authUser", storedUser);
+            } catch (e) {
+              // Try raw parse if URL decoded fails
+              try {
+                storedUser = cookieAuthUser;
+                localStorage.setItem("authUser", storedUser);
+              } catch (e2) {
+                console.error(
+                  "[AuthContext] Failed to parse authUser cookie:",
+                  e2
+                );
+              }
+            }
+          }
+        }
+      }
 
       if (storedTokens) {
         try {

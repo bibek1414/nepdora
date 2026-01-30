@@ -87,6 +87,105 @@ function isRootDomain(request: NextRequest): boolean {
  * proxy: rewrites subdomain routes and redirects authenticated users
  */
 export async function proxy(request: NextRequest) {
+  const url = new URL(request.url);
+  const authToken = url.searchParams.get("auth_token");
+  const refreshToken = url.searchParams.get("refresh_token");
+
+  if (authToken) {
+    console.log(
+      "[Proxy] Found auth_token in URL, setting cookies and redirecting..."
+    );
+
+    // Determine where to redirect (same URL without tokens)
+    const nextUrl = new URL(request.url);
+    nextUrl.searchParams.delete("auth_token");
+    nextUrl.searchParams.delete("refresh_token");
+
+    const response = NextResponse.redirect(nextUrl);
+
+    // Set cookies for both current domain and base domain
+    const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
+    const isProd = process.env.NODE_ENV === "production";
+
+    // Calculate expiration from JWT if possible, or default to 7 days
+    let maxAge = 7 * 24 * 60 * 60; // 7 days default
+
+    try {
+      const [, payloadBase64] = authToken.split(".");
+      if (payloadBase64) {
+        // Use atob for Edge runtime compatibility
+        const payload = JSON.parse(
+          atob(payloadBase64.replace(/-/g, "+").replace(/_/g, "/"))
+        );
+        if (payload.exp) {
+          maxAge = Math.max(0, payload.exp - Math.floor(Date.now() / 1000));
+        }
+
+        const persistedUser = {
+          user_id: payload.user_id,
+          email: payload.email,
+          store_name: payload.store_name,
+          has_profile: payload.has_profile,
+          role: payload.role,
+          phone_number: payload.phone_number,
+          domain: payload.domain,
+          sub_domain: payload.sub_domain,
+          has_profile_completed: payload.has_profile_completed,
+          is_onboarding_complete: payload.is_onboarding_complete,
+          first_login: payload.first_login,
+          website_type: payload.website_type,
+        };
+        const authUserStr = JSON.stringify(persistedUser);
+
+        const userCookieOptions = {
+          path: "/",
+          secure: isProd,
+          sameSite: "lax" as const,
+          maxAge,
+        };
+
+        response.cookies.set("authUser", authUserStr, userCookieOptions);
+        if (baseDomain && !url.hostname.includes("localhost")) {
+          response.cookies.set("authUser", authUserStr, {
+            ...userCookieOptions,
+            domain: `.${baseDomain}`,
+          });
+        }
+      }
+    } catch (e) {
+      console.warn("[Proxy] Failed to parse JWT for expiration/authUser:", e);
+    }
+
+    const cookieOptions = {
+      path: "/",
+      secure: isProd,
+      sameSite: "lax" as const,
+      maxAge: maxAge,
+    };
+
+    // Set for current subdomain/domain
+    response.cookies.set("authToken", authToken, cookieOptions);
+    if (refreshToken) {
+      response.cookies.set("refreshToken", refreshToken, cookieOptions);
+    }
+
+    // Also set for base domain if not localhost
+    if (baseDomain && !url.hostname.includes("localhost")) {
+      response.cookies.set("authToken", authToken, {
+        ...cookieOptions,
+        domain: `.${baseDomain}`,
+      });
+      if (refreshToken) {
+        response.cookies.set("refreshToken", refreshToken, {
+          ...cookieOptions,
+          domain: `.${baseDomain}`,
+        });
+      }
+    }
+
+    return response;
+  }
+
   const { pathname } = request.nextUrl;
   const subdomain = extractSubdomain(request);
 
