@@ -374,6 +374,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           />
         );
         break;
+      case "text_editor":
         componentElement = (
           <TextEditorComponent
             key={`text_editor-${component.id}`}
