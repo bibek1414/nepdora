@@ -79,11 +79,19 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
         <div className="flex items-center space-x-4"></div>
 
         <div className="flex items-center space-x-2">
-          {/* <Link
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleOpenOnboarding}
+            className="rounded-full border-none bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+          >
+            <FileCheck className="mr-2 h-4 w-4" />
+            {user.isOnboardingComplete ? "Edit Site Info" : "Complete Setup"}
+          </Button>
+          <Link
             href={`/publish/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden"
           >
             <Button
               variant="outline"
@@ -98,7 +106,6 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             href={`/preview/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden"
           >
             <Button
               variant="outline"
@@ -113,7 +120,6 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             href={`/builder/${user.subDomain}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden"
           >
             <Button
               variant="outline"
@@ -123,16 +129,8 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
               <Pencil className="mr-2 h-4 w-4" />
               Website Builder
             </Button>
-          </Link> */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleOpenOnboarding}
-            className="rounded-full border-none bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
-          >
-            <FileCheck className="mr-2 h-4 w-4" />
-            {user.isOnboardingComplete ? "Edit Site Info" : "Complete Setup"}
-          </Button>
+          </Link>
+
           {(user.isTemplateAccount ||
             user.subDomain === "bibek" ||
             user.subDomain === "urs-collection") && (
