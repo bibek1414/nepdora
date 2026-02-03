@@ -196,20 +196,20 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                   </div> */}
                 </div>
               </DropdownMenuLabel>
-              {/* <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => handleNavigation("/admin/profile")}
               >
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
+
               <DropdownMenuItem
-                onClick={() => handleNavigation("/admin/settings")}
+                onClick={() => handleNavigation("/admin/change-password")}
               >
                 <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+                <span>Change Password</span>
               </DropdownMenuItem>
-              <DropdownMenuSeparator /> */}
+              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
