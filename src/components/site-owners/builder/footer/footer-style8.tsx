@@ -14,6 +14,10 @@ import {
 } from "lucide-react";
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface FooterStyle8Props {
   footerData: FooterData;
@@ -48,7 +52,13 @@ const renderSocialIcon = (social: SocialLink) => {
   return <Facebook className="h-4 w-4" />;
 };
 
-const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
+const FooterLogo = ({
+  footerData,
+  getImageUrl,
+}: {
+  footerData: FooterData;
+  getImageUrl: any;
+}) => {
   const { logoType, logoImage, logoText, companyName } = footerData;
 
   if (logoType === "text") {
@@ -62,7 +72,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
   if (logoType === "image") {
     return logoImage ? (
       <img
-        src={logoImage}
+        src={getImageUrl(logoImage)}
         alt={companyName}
         className="h-8 w-auto object-contain"
       />
@@ -77,7 +87,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     <div className="flex items-center gap-3">
       {logoImage && (
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-8 w-auto object-contain"
         />
@@ -94,18 +104,28 @@ export function FooterStyle8({
   isEditable,
   siteUser,
 }: FooterStyle8Props) {
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref;
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
   };
 
+  const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
+  const pathname = usePathname();
+
   // Split sections into two columns if possible
-  const section1 = footerData.sections[0];
-  const section2 = footerData.sections[1];
+  const section1 = data.sections[0];
+  const section2 = data.sections[1];
 
   return (
     <footer className="border-t border-gray-800 bg-[#1A1A1A] font-sans text-white">
@@ -115,10 +135,10 @@ export function FooterStyle8({
           {/* Column 1: Brand Info */}
           <div className="w-full border-b border-gray-800 p-8 lg:w-[40%] lg:border-r lg:border-b-0 lg:p-16">
             <div className="mb-6 flex items-center gap-3">
-              <FooterLogo footerData={footerData} />
+              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
             <p className="max-w-md text-lg leading-relaxed text-gray-400">
-              {footerData.description}
+              {data.description}
             </p>
           </div>
 
@@ -141,7 +161,12 @@ export function FooterStyle8({
                           </span>
                         ) : (
                           <Link
-                            href={generateLinkHref(link.href || "")}
+                            href={generateLinkHref(
+                              link.href || "",
+                              siteUser,
+                              pathname,
+                              isEditable
+                            )}
                             className="font-medium text-gray-400 transition-colors hover:text-white"
                           >
                             {link.text}
@@ -168,7 +193,12 @@ export function FooterStyle8({
                           </span>
                         ) : (
                           <Link
-                            href={generateLinkHref(link.href || "")}
+                            href={generateLinkHref(
+                              link.href || "",
+                              siteUser,
+                              pathname,
+                              isEditable
+                            )}
                             className="font-medium text-gray-400 transition-colors hover:text-white"
                           >
                             {link.text}
@@ -183,14 +213,14 @@ export function FooterStyle8({
 
             {/* Contact Column */}
             <div className="flex flex-1 flex-col justify-start gap-8 p-8 lg:p-16">
-              {footerData.contactInfo.address && (
+              {data.contactInfo.address && (
                 <div className="flex items-start gap-4">
                   <div className="mt-1">
                     <MapPin className="h-6 w-6 stroke-[1.5] text-white" />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-lg leading-snug font-medium text-white">
-                      {footerData.contactInfo.address}
+                      {data.contactInfo.address}
                     </span>
                   </div>
                 </div>
@@ -201,20 +231,20 @@ export function FooterStyle8({
                   <Mail className="h-6 w-6 stroke-[1.5] text-white" />
                 </div>
                 <div className="flex flex-col">
-                  {footerData.contactInfo.email && (
+                  {data.contactInfo.email && (
                     <a
-                      href={`mailto:${footerData.contactInfo.email}`}
+                      href={`mailto:${data.contactInfo.email}`}
                       className="text-lg font-medium text-white transition-colors hover:text-gray-300"
                     >
-                      {footerData.contactInfo.email}
+                      {data.contactInfo.email}
                     </a>
                   )}
-                  {footerData.contactInfo.phone && (
+                  {data.contactInfo.phone && (
                     <a
-                      href={`tel:${footerData.contactInfo.phone}`}
+                      href={`tel:${data.contactInfo.phone}`}
                       className="mt-1 text-lg font-medium text-white transition-colors hover:text-gray-300"
                     >
-                      {footerData.contactInfo.phone}
+                      {data.contactInfo.phone}
                     </a>
                   )}
                 </div>
@@ -227,7 +257,7 @@ export function FooterStyle8({
         <div className="flex flex-col items-start justify-between gap-6 border-t border-gray-800 px-8 py-8 md:flex-row md:items-center lg:px-16">
           {/* Social Links */}
           <div className="flex items-center gap-6 font-medium text-white">
-            {footerData.socialLinks.map(social => (
+            {data.socialLinks.map(social => (
               <a
                 key={social.id}
                 href={social.href || "#"}
@@ -243,7 +273,7 @@ export function FooterStyle8({
 
           {/* Copyright */}
           <div className="text-right text-sm leading-relaxed text-gray-300 md:text-base">
-            <p>{footerData.copyright}</p>
+            <p>{data.copyright}</p>
             <p>
               Powered By <span className="font-medium text-white">Nepdora</span>
             </p>

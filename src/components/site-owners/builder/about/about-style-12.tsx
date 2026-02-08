@@ -4,6 +4,7 @@ import { AboutUs12Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { ChevronRight, Map } from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate12Props {
   aboutUsData: AboutUs12Data;
@@ -16,48 +17,22 @@ export function AboutUsTemplate12({
   isEditable = false,
   onUpdate,
 }: AboutUsTemplate12Props) {
-  const [data, setData] = useState(aboutUsData);
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(aboutUsData, onUpdate);
+
   const [activeMemberId, setActiveMemberId] = useState<string | null>(
     data.teamMembers[0]?.id || null
   );
 
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs12Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs12Data>);
-  };
-
-  // Handle image updates
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  // Handle alt text updates
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
-  };
-
   // Handle team member updates
   const handleMemberUpdate =
     (memberId: string, field: "name" | "role") => (value: string) => {
-      const updatedMembers = data.teamMembers.map(member =>
-        member.id === memberId ? { ...member, [field]: value } : member
-      );
-      const updatedData = { ...data, teamMembers: updatedMembers };
-      setData(updatedData);
-      onUpdate?.({ teamMembers: updatedMembers });
+      handleArrayItemUpdate("teamMembers", memberId)({ [field]: value });
     };
 
   return (
@@ -147,8 +122,8 @@ export function AboutUsTemplate12({
             <EditableImage
               src={data.imageUrl}
               alt={data.imageAlt}
-              onImageChange={handleImageUpdate}
-              onAltChange={handleAltUpdate}
+              onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+              onAltChange={handleAltUpdate("imageAlt")}
               isEditable={isEditable}
               className="h-full w-full object-cover"
               width={800}

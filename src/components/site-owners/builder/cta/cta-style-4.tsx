@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo } from "react";
 import { CheckCircle2 } from "lucide-react";
 
 import {
@@ -11,6 +11,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface CTATemplate4Props {
   ctaData: CTATemplate4Data;
@@ -51,60 +52,29 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const normalizedData = useMemo(() => normalizeCTAData(ctaData), [ctaData]);
-  const [data, setData] = useState(normalizedData);
-
-  useEffect(() => {
-    setData(normalizedData);
-  }, [normalizedData]);
   const { data: themeResponse } = useThemeQuery();
-
   const theme = themeResponse?.data?.[0]?.data?.theme;
+
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(normalizeCTAData(ctaData), onUpdate);
+
   const primaryBackground =
     data.backgroundColor || theme?.colors?.primary || "#1D4ED8";
   const textColor = theme?.colors?.primaryForeground || "#FFFFFF";
   const buttonTextColor = theme?.colors?.primary || "#1D4ED8";
 
-  const handleFieldUpdate =
-    (field: keyof CTATemplate4Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<CTATemplate4Data>);
-    };
-
   const handleButtonUpdate = (text: string, href: string) => {
     const updatedButton = { ...data.button, text, href };
-    const updatedData = { ...data, button: updatedButton };
-    setData(updatedData);
     onUpdate?.({ button: updatedButton });
   };
 
   const handleFeatureUpdate = (featureId: string) => (value: string) => {
-    const updatedFeatures = data.features.map(feature =>
-      feature.id === featureId ? { ...feature, text: value } : feature
-    );
-    const updatedData = { ...data, features: updatedFeatures };
-    setData(updatedData);
-    onUpdate?.({ features: updatedFeatures });
-  };
-
-  const handleImageChange = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    });
-  };
-
-  const handleAltChange = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
+    handleArrayItemUpdate("features", featureId)({ text: value });
   };
 
   const overlayBackground = data.overlayColor || "#0F172A";
@@ -120,7 +90,7 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
           <div className="relative z-10 p-12 text-white lg:w-1/2 lg:p-20">
             <EditableText
               value={data.eyebrow}
-              onChange={handleFieldUpdate("eyebrow")}
+              onChange={handleTextUpdate("eyebrow")}
               as="div"
               className="text-xs font-bold tracking-[0.3em] uppercase opacity-80"
               isEditable={isEditable}
@@ -130,7 +100,7 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
             <h2 className="mb-6 text-4xl leading-tight font-semibold text-white lg:text-5xl">
               <EditableText
                 value={data.title}
-                onChange={handleFieldUpdate("title")}
+                onChange={handleTextUpdate("title")}
                 as="span"
                 className="block"
                 isEditable={isEditable}
@@ -178,8 +148,8 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
               <EditableImage
                 src={data.imageUrl}
                 alt={data.imageAlt || "CTA image"}
-                onImageChange={handleImageChange}
-                onAltChange={handleAltChange}
+                onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+                onAltChange={handleAltUpdate("imageAlt")}
                 isEditable={isEditable}
                 className="h-full w-full"
                 width={800}

@@ -1,4 +1,4 @@
-import OrderConfirmationPage from "@/components/site-owners/publish/checkout/order-confirmation-page";
+import OrderConfirmationPage from "@/components/site-owners/builder/checkout/order-confirmation-page";
 import { use } from "react";
 import { generatePublishPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";

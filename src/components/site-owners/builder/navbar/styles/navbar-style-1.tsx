@@ -6,12 +6,15 @@ import {
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
 import { getButtonVariant } from "@/lib/utils";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 const EditableItem: React.FC<{
   onEdit: () => void;
@@ -52,10 +55,6 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
   onToggleCart,
   disableClicks = false,
 }) => {
-  const { links, buttons, showCart } = navbarData;
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
-  // Get theme data
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -72,6 +71,10 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
     },
   };
 
+  const { data } = useBuilderLogic(navbarData, undefined);
+  const { links, buttons, showCart } = data;
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
   const toggleCart = () => {
     if (disableClicks) return;
     setIsCartOpen(!isCartOpen);
@@ -81,16 +84,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
     setIsCartOpen(false);
   };
 
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable || disableClicks) return "#";
-
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const pathname = usePathname();
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
     if (disableClicks || isEditable) {
@@ -149,7 +143,13 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
               ) : (
                 <Link
                   key={link.id}
-                  href={generateLinkHref(link.href)}
+                  href={generateLinkHref(
+                    link.href,
+                    siteUser,
+                    pathname,
+                    isEditable,
+                    disableClicks
+                  )}
                   onClick={e => handleLinkClick(e, link.href)}
                   className={`text-sm font-medium transition-colors ${
                     disableClicks
@@ -186,12 +186,6 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                   onClick={e => e.preventDefault()}
                   variant={getButtonVariant(button.variant)}
                   size="sm"
-                  className="cursor-pointer"
-                  style={{
-                    backgroundColor: theme.colors.primary,
-                    color: theme.colors.primaryForeground,
-                    fontFamily: theme.fonts.heading,
-                  }}
                 >
                   {button.text}
                 </Button>
@@ -202,18 +196,20 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                 variant={getButtonVariant(button.variant)}
                 size="sm"
                 onClick={disableClicks ? e => e.preventDefault() : undefined}
-                className={`${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  color: theme.colors.primaryForeground,
-                  fontFamily: theme.fonts.heading,
-                }}
                 asChild={!disableClicks}
               >
                 {disableClicks ? (
                   button.text
                 ) : (
-                  <Link href={generateLinkHref(button.href)}>
+                  <Link
+                    href={generateLinkHref(
+                      button.href,
+                      siteUser,
+                      pathname,
+                      isEditable,
+                      disableClicks
+                    )}
+                  >
                     {button.text}
                   </Link>
                 )}

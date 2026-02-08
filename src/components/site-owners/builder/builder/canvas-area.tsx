@@ -76,6 +76,7 @@ interface CanvasAreaProps {
   error: Error | null;
 
   onAddSection: (position?: "above" | "below", index?: number) => void;
+  onReplaceSection: (componentId: string) => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -87,6 +88,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   isLoading,
   error,
   onAddSection,
+  onReplaceSection,
 }) => {
   // Local state to manage component order optimistically
   const [pageComponents, setPageComponents] = useState<ComponentResponse[]>(
@@ -190,21 +192,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     [handleReorder, pageComponents.length]
   );
 
-  // Handle add section above/below with proper index calculation
+  // Handle add section above/below by delegating to parent
   const handleAddSection = useCallback(
     (position: "above" | "below", index: number) => {
-      let insertIndex: number;
-
-      if (position === "above") {
-        // Insert at the current index (pushes current item down)
-        insertIndex = index;
-      } else {
-        // Insert after the current index
-        insertIndex = index + 1;
-      }
-
-      // Call the parent's onAddSection with the calculated insert index
-      onAddSection(position, insertIndex);
+      onAddSection(position, index);
     },
     [onAddSection]
   );
@@ -214,6 +205,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     const commonProps = {
       isEditable: true,
       pageSlug: currentPageSlug,
+      onReplace: onReplaceSection,
     };
 
     let componentElement: React.ReactNode;
@@ -374,7 +366,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           />
         );
         break;
-      case "text_editor":
         componentElement = (
           <TextEditorComponent
             key={`text_editor-${component.id}`}
@@ -497,34 +488,35 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             onMouseEnter={() => setHoveredComponentIndex(index)}
             onMouseLeave={() => setHoveredComponentIndex(null)}
           >
-            {/* Add Section Above Button - Show when not first and hovered */}
-            {!isFirst && isHovered && (
-              <div className="absolute -top-6 left-1/2 z-30 -translate-x-1/2 transform">
-                <Button
-                  onClick={() => handleAddSection("above", index)}
-                  variant="outline"
-                  size="sm"
-                  className="gap-1 border border-dashed border-blue-300 bg-white text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
-                >
-                  <Plus className="h-3 w-3" />
-                  Add Section Above
-                </Button>
-              </div>
-            )}
+            {/* Hover Add Section Controls */}
+            {isHovered && (
+              <>
+                {/* Add Section Above Button */}
+                <div className="absolute -top-6 left-1/2 z-30 -translate-x-1/2 transform">
+                  <Button
+                    onClick={() => handleAddSection("above", index)}
+                    variant="outline"
+                    size="sm"
+                    className="gap-1 border border-dashed border-blue-300 bg-white text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+                  >
+                    <Plus className="h-3 w-3" />
+                    Add Section Above
+                  </Button>
+                </div>
 
-            {/* Add Section Below Button - Show when hovered and either not last OR no footer */}
-            {isHovered && (!isLastComponent || !footer) && (
-              <div className="absolute -bottom-6 left-1/2 z-30 -translate-x-1/2 transform">
-                <Button
-                  onClick={() => handleAddSection("below", index)}
-                  variant="outline"
-                  size="sm"
-                  className="gap-1 border border-dashed border-blue-300 bg-white text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
-                >
-                  <Plus className="h-3 w-3" />
-                  Add Section Below
-                </Button>
-              </div>
+                {/* Add Section Below Button */}
+                <div className="absolute -bottom-6 left-1/2 z-30 -translate-x-1/2 transform">
+                  <Button
+                    onClick={() => handleAddSection("below", index)}
+                    variant="outline"
+                    size="sm"
+                    className="gap-1 border border-dashed border-blue-300 bg-white text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+                  >
+                    <Plus className="h-3 w-3" />
+                    Add Section Below
+                  </Button>
+                </div>
+              </>
             )}
 
             {/* Control buttons container */}
@@ -614,21 +606,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         </div>
       ) : null}
 
-      {/* Add Section Button at the Top */}
-      <div className="border-b border-dashed border-gray-300 bg-gray-50/50">
-        <div className="flex items-center justify-center p-4">
-          <Button
-            onClick={() => handleAddSection("above", 0)}
-            variant="outline"
-            size="sm"
-            className="gap-2 border-2 border-dashed border-blue-300 bg-white text-blue-600 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
-          >
-            <Plus className="h-4 w-4" />
-            Add New Section
-          </Button>
-        </div>
-      </div>
-
       {/* Main Content Area with Drag and Drop */}
       <div className="min-h-[400px]">
         {/* Loading state */}
@@ -673,25 +650,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
               )}
             </Droppable>
           </DragDropContext>
-        )}
-
-        {/* Add Section button at the bottom (before footer) */}
-        {pageComponents.length > 0 && (
-          <div className="border-t border-dashed border-gray-300 bg-gray-50/50">
-            <div className="flex items-center justify-center p-4">
-              <Button
-                onClick={() =>
-                  handleAddSection("below", pageComponents.length - 1)
-                }
-                variant="outline"
-                size="sm"
-                className="gap-2 border-2 border-dashed border-blue-300 bg-white text-blue-600 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
-              >
-                <Plus className="h-4 w-4" />
-                Add New Section
-              </Button>
-            </div>
-          </div>
         )}
 
         {/* Empty state */}

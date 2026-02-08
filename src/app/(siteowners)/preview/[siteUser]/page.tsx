@@ -4,9 +4,9 @@ import React from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { use } from "react";
 import { usePages } from "@/hooks/owner-site/use-page";
-import { usePagePreview } from "@/hooks/preview/use-page-preview";
-import { PageComponentRenderer } from "@/components/site-owners/preview/page-component-render";
-import { LoadingSpinner } from "@/components/site-owners/preview/loading-spinner";
+import { usePageData } from "@/hooks/owner-site/use-page-data";
+import { PageComponentRenderer } from "@/components/site-owners/shared/page-component-renderer";
+import { LoadingSpinner } from "@/components/site-owners/shared/loading-spinner";
 
 interface PreviewPageProps {
   params: Promise<{ siteUser: string }>;
@@ -24,15 +24,16 @@ export default function PreviewPage({ params }: PreviewPageProps) {
 
   const {
     pageComponents,
-    isComponentsLoading,
+    isLoading: isComponentsLoading,
     handleBacktoHome,
     handleProductClick,
     handleBlogClick,
-    handleComponentUpdate,
     handleServiceClick,
     handleCategoryClick,
     handleSubCategoryClick,
-  } = usePagePreview(siteUser, homePageSlug);
+  } = usePageData(siteUser, homePageSlug);
+
+  const handleComponentUpdate = () => {};
 
   if (isPagesLoading || isComponentsLoading) {
     return <LoadingSpinner message="Loading preview..." />;

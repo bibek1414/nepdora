@@ -18,6 +18,8 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableLink } from "@/components/ui/navbar/editable-link";
 import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 const EditableItem: React.FC<{
   onEdit: () => void;
   onDelete?: () => void;
@@ -71,17 +73,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
       heading: "Poppins",
     },
   };
-
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable || disableClicks) return "#";
-
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const pathname = usePathname();
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
     if (disableClicks || isEditable) {
@@ -166,7 +158,13 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                       </EditableItem>
                     ) : (
                       <Link
-                        href={generateLinkHref(link.href)}
+                        href={generateLinkHref(
+                          link.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
                         onClick={e => handleLinkClick(e, link.href)}
                         className={`hover:text-primary font-medium text-gray-700 ${
                           disableClicks

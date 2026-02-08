@@ -3,9 +3,12 @@ import { ArrowUpRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import { CheckCircle, AlertCircle, Facebook } from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface FooterStyle10Props {
   footerData: FooterData;
@@ -38,8 +41,11 @@ const renderSocialIcon = (social: SocialLink) => {
 export const FooterStyle10: React.FC<FooterStyle10Props> = ({
   footerData,
   isEditable,
+  onUpdate,
   siteUser,
 }) => {
+  const { data } = useBuilderLogic(footerData, onUpdate);
+
   const [email, setEmail] = useState("");
   const [subscriptionStatus, setSubscriptionStatus] = useState<
     "idle" | "success" | "error"
@@ -47,18 +53,9 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
   const [errorMessage, setErrorMessage] = useState("");
 
   const createNewsletterMutation = useCreateNewsletter();
+  const pathname = usePathname();
 
   // Function to generate the correct href for links
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref;
-
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,8 +96,8 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
     }
   };
 
-  const mainSection1 = footerData.sections[0];
-  const mainSection2 = footerData.sections[1];
+  const mainSection1 = data.sections[0];
+  const mainSection2 = data.sections[1];
 
   return (
     <footer className="w-full overflow-hidden border-t border-gray-200 bg-gray-50 px-6 pt-16 pb-8 font-sans text-gray-900 transition-colors duration-300 md:px-12 lg:px-24 dark:border-white/5 dark:bg-[#020205] dark:text-white">
@@ -110,8 +107,8 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
           {/* Subtle glow effect behind the text */}
           <div className="pointer-events-none absolute top-1/2 left-1/2 h-24 w-3/4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/5 blur-[80px] transition-colors duration-300 dark:bg-blue-900/10" />
 
-          <h1 className="bg-gradient-to-b from-gray-900 via-gray-400 to-gray-50 bg-clip-text text-center font-serif text-[13.5vw] leading-[0.8] font-medium tracking-tighter text-transparent transition-all duration-300 select-none dark:from-white dark:via-gray-500 dark:to-[#020205]">
-            {footerData.logoText}
+          <h1 className="bg-linear-to-b from-gray-900 via-gray-400 to-gray-50 bg-clip-text text-center font-serif text-[13.5vw] leading-[0.8] font-medium tracking-tighter text-transparent transition-all duration-300 select-none dark:from-white dark:via-gray-500 dark:to-[#020205]">
+            {data.logoText}
           </h1>
         </div>
 
@@ -120,7 +117,7 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
           {/* Column 1: Info & Address */}
           <div className="flex flex-col space-y-6 pr-0 lg:col-span-4 lg:pr-12">
             <p className="max-w-sm text-sm leading-relaxed text-gray-600 transition-colors duration-300 dark:text-gray-400">
-              {footerData.description ||
+              {data.description ||
                 "We're committed to delivering exceptional care with compassion, trust, and integrity. From your first visit to long-term support, your health and comfort are always our priority."}
             </p>
 
@@ -131,7 +128,7 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
                 Visit Us
               </h3>
               <address className="text-sm leading-relaxed whitespace-pre-line text-gray-600 not-italic transition-colors duration-300 dark:text-gray-400">
-                {footerData.contactInfo.address ||
+                {data.contactInfo.address ||
                   "123 Wellness Avenue, Suite\n405, New York, NY 10016\nUnited States"}
               </address>
             </div>
@@ -147,7 +144,12 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
                 {(mainSection1?.links || []).map(link => (
                   <FooterLink
                     key={link.id}
-                    href={generateLinkHref(link.href || "")}
+                    href={generateLinkHref(
+                      link.href || "",
+                      siteUser,
+                      pathname,
+                      isEditable
+                    )}
                     isEditable={isEditable}
                   >
                     {link.text}
@@ -158,7 +160,12 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
                 {(mainSection2?.links || []).map(link => (
                   <FooterLink
                     key={link.id}
-                    href={generateLinkHref(link.href || "")}
+                    href={generateLinkHref(
+                      link.href || "",
+                      siteUser,
+                      pathname,
+                      isEditable
+                    )}
                     isEditable={isEditable}
                   >
                     {link.text}
@@ -171,14 +178,14 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
           {/* Column 3: Newsletter */}
           <div className="pl-0 lg:col-span-4 lg:pl-8">
             <h3 className="mb-4 text-xl font-semibold text-gray-900 transition-colors duration-300 dark:text-white">
-              {footerData.newsletter.title || "Newsletter"}
+              {data.newsletter.title || "Newsletter"}
             </h3>
             <p className="mb-6 max-w-xs text-sm text-gray-600 transition-colors duration-300 dark:text-gray-400">
-              {footerData.newsletter.description ||
+              {data.newsletter.description ||
                 "Let's transform your vision into results and discuss your vision with us."}
             </p>
 
-            {footerData.newsletter.enabled ? (
+            {data.newsletter.enabled ? (
               subscriptionStatus === "success" ? (
                 <div className="flex items-center gap-2 text-sm text-green-600">
                   <CheckCircle className="h-4 w-4" />
@@ -232,10 +239,10 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
         {/* Bottom Bar */}
         <div className="flex flex-col items-center justify-between space-y-4 border-t border-gray-200 pt-6 transition-colors duration-300 md:flex-row md:space-y-0 dark:border-gray-900">
           <p className="text-xs text-gray-500">
-            {footerData.copyright || "© Copyright 2025 All rights reserved."}
+            {data.copyright || "© Copyright 2025 All rights reserved."}
           </p>
           <div className="flex items-center gap-3">
-            {footerData.socialLinks.map(social => (
+            {data.socialLinks.map(social => (
               <Link
                 key={social.id}
                 href={social.href || "#"}

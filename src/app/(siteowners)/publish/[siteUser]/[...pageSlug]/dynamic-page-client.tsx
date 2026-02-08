@@ -3,9 +3,9 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/site-owners/button";
-import { usePagePublished } from "@/hooks/publish/use-page-publish";
+import { usePageData } from "@/hooks/owner-site/use-page-data";
 import { useDomains } from "@/hooks/super-admin/use-domain";
-import { PageComponentRenderer } from "@/components/site-owners/publish/page-component-render";
+import { PageComponentRenderer } from "@/components/site-owners/shared/page-component-renderer";
 
 interface DynamicPageClientProps {
   siteUser: string;
@@ -21,15 +21,18 @@ export default function DynamicPageClient({
 
   const {
     pageComponents,
-    isComponentsLoading,
+    isLoading: isComponentsLoading,
     handleBacktoHome,
     handleProductClick,
     handleBlogClick,
     handleServiceClick,
     handleCategoryClick,
     handleSubCategoryClick,
-    handleComponentUpdate,
-  } = usePagePublished(siteUser, currentPageSlug);
+  } = usePageData(siteUser, currentPageSlug);
+
+  const handleComponentUpdate = () => {
+    // Component update handlers (not used in publish mode)
+  };
 
   const hasContent = pageComponents.length > 0;
   const domainExists = domainsData?.results?.some(

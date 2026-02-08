@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { HeroTemplate1Data } from "@/types/owner-site/components/hero";
-import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface HeroTemplate1Props {
   heroData: HeroTemplate1Data;
@@ -22,7 +22,6 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(heroData);
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -40,101 +39,28 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
     },
   };
 
-  // Type-safe handlers - only update fields that exist in HeroTemplate1Data
-  const handleTextUpdate =
-    (field: keyof HeroTemplate1Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate1Data>);
-    };
-
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
-  };
-
-  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text, href } : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
-  };
-
-  const getButtonClasses = (variant: string) => {
-    const baseClasses =
-      "inline-block px-4 py-2.5 sm:px-6 sm:py-3 font-bold transition-colors min-w-[100px] sm:min-w-[120px] text-center text-sm sm:text-base";
-
-    const buttonStyles = {
-      backgroundColor:
-        variant === "primary"
-          ? theme.colors.primary
-          : variant === "secondary"
-            ? theme.colors.secondary
-            : "transparent",
-      color:
-        variant === "primary"
-          ? theme.colors.primaryForeground
-          : variant === "secondary"
-            ? theme.colors.secondaryForeground
-            : theme.colors.text,
-      border:
-        variant === "outline" ? `1px solid ${theme.colors.primary}` : "none",
-      borderRadius: "9999px",
-      fontFamily: theme.fonts.body,
-    };
-
-    return { className: baseClasses, style: buttonStyles };
-  };
-
-  const getLayoutClasses = () => {
-    switch (data.layout) {
-      case "text-left":
-        return "text-left items-start";
-      case "text-right":
-        return "text-right items-end";
-      default:
-        return "text-center items-center";
-    }
-  };
-
-  const getImageUrl = () => {
-    if (!data.imageUrl) return "";
-    return optimizeCloudinaryUrl(convertUnsplashUrl(data.imageUrl), {
-      width: 600,
-      quality: "auto",
-      format: "auto",
-    });
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleButtonUpdate,
+    getImageUrl,
+  } = useBuilderLogic(heroData, onUpdate);
 
   return (
     <section className="relative flex min-h-[50vh] items-center justify-center overflow-hidden px-4 py-12 sm:min-h-[60vh] sm:px-6 sm:py-16 md:py-20 lg:px-8">
       <div className="relative z-10 container mx-auto w-full max-w-6xl">
-        <div className={`flex flex-col ${getLayoutClasses()} gap-4 sm:gap-6`}>
+        <div className={`flex flex-col gap-4 sm:gap-6`}>
           {/* Hero Image */}
           {data.showImage && data.imageUrl && (
             <div className="mb-4 w-full sm:mb-6">
               <div className="mx-auto h-[300px] max-w-full overflow-hidden rounded-lg sm:max-w-md">
                 <EditableImage
-                  src={getImageUrl()}
+                  src={getImageUrl(data.imageUrl)}
                   alt={data.imageAlt || "Hero image"}
-                  onImageChange={handleImageUpdate}
-                  onAltChange={handleAltUpdate}
+                  onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+                  onAltChange={handleAltUpdate("imageAlt")}
                   isEditable={isEditable}
                   className="h-full w-full object-cover"
                   width={600}
@@ -184,7 +110,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="text-3xl leading-tight font-bold sm:text-4xl md:text-5xl lg:text-6xl"
+            className="text-center"
             isEditable={isEditable}
             placeholder="Enter your hero title..."
           />
@@ -204,26 +130,50 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
 
           {/* Buttons */}
           {data.buttons.length > 0 && (
-            <div className="mt-2 flex flex-wrap justify-center gap-3 font-semibold sm:mt-4 sm:justify-start sm:gap-4">
-              {data.buttons.map(button => {
-                const buttonClass = getButtonClasses(button.variant);
-                return (
-                  <EditableLink
-                    key={button.id}
-                    text={button.text || "Button text"}
-                    href={button.href || "#"}
-                    onChange={(text, href) =>
-                      handleButtonUpdate(button.id, text, href)
-                    }
-                    isEditable={isEditable}
-                    siteUser={siteUser}
-                    className={buttonClass.className}
-                    style={buttonClass.style}
-                    textPlaceholder="Button text..."
-                    hrefPlaceholder="Enter URL..."
-                  />
-                );
-              })}
+            <div className="flex items-center justify-center gap-4">
+              {data.buttons[0] && (
+                <EditableLink
+                  key={data.buttons[0].id}
+                  text={data.buttons[0].text || "Button text"}
+                  href={data.buttons[0].href || "#"}
+                  onChange={(text, href) =>
+                    handleButtonUpdate("buttons")(
+                      data.buttons[0].id,
+                      text,
+                      href
+                    )
+                  }
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                    fontFamily: theme.fonts.body,
+                  }}
+                  isEditable={isEditable}
+                  siteUser={siteUser}
+                  className="h-10 items-center justify-center !px-4 !py-8 text-center !text-white"
+                  textPlaceholder="Button text..."
+                  hrefPlaceholder="Enter URL..."
+                />
+              )}
+              {data.buttons[1] && (
+                <EditableLink
+                  key={data.buttons[1].id}
+                  text={data.buttons[1].text || "Button text"}
+                  href={data.buttons[1].href || "#"}
+                  onChange={(text, href) =>
+                    handleButtonUpdate("buttons")(
+                      data.buttons[1].id,
+                      text,
+                      href
+                    )
+                  }
+                  isEditable={isEditable}
+                  siteUser={siteUser}
+                  className="h-10 items-center justify-center border !px-4 !py-8 text-center"
+                  textPlaceholder="Button text..."
+                  hrefPlaceholder="Enter URL..."
+                />
+              )}
             </div>
           )}
         </div>

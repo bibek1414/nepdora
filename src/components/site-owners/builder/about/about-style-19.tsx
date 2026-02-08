@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { Search, Puzzle, Rocket } from "lucide-react";
 import { AboutUs19Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate19Props {
   aboutUsData: AboutUs19Data;
@@ -26,7 +27,11 @@ export function AboutUsTemplate19({
   isEditable = false,
   onUpdate,
 }: AboutUsTemplate19Props) {
-  const [data, setData] = useState(aboutUsData);
+  const { data, handleTextUpdate, handleArrayItemUpdate } = useBuilderLogic(
+    aboutUsData,
+    onUpdate
+  );
+
   const sectionRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
 
@@ -53,19 +58,8 @@ export function AboutUsTemplate19({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleTextUpdate = (field: keyof AboutUs19Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs19Data>);
-  };
-
   const handleStepUpdate = (stepId: string, field: string, value: string) => {
-    const updatedSteps = data.steps.map(step =>
-      step.id === stepId ? { ...step, [field]: value } : step
-    );
-    const updatedData = { ...data, steps: updatedSteps };
-    setData(updatedData);
-    onUpdate?.({ steps: updatedSteps });
+    handleArrayItemUpdate("steps", stepId)({ [field]: value });
   };
 
   // Helper to render italic word in title

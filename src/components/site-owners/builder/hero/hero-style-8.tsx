@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate8Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { Loader2, ImagePlus } from "lucide-react";
@@ -41,25 +42,9 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
     customerText: "Trusted by 1000+ customers worldwide",
   };
 
-  const [data, setData] = useState<HeroTemplate8Data>(() => ({
-    ...heroData,
-    buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-    features: heroData.features || defaultFeatures,
-    trustIndicators: heroData.trustIndicators || defaultTrustIndicators,
-  }));
-
   const [isUploading, setIsUploading] = useState<string | null>(null);
   const [hoveredImage, setHoveredImage] = useState<string | null>(null);
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    setData({
-      ...heroData,
-      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-      features: heroData.features || defaultFeatures,
-      trustIndicators: heroData.trustIndicators || defaultTrustIndicators,
-    });
-  }, [heroData]);
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -77,64 +62,20 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate =
-    (field: keyof HeroTemplate8Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate8Data>);
-    };
-
-  // Handle button updates
-  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text, href } : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
-  };
-
-  // Handle feature updates
-  const handleFeatureUpdate = (featureId: string, text: string) => {
-    const updatedFeatures = (data.features || []).map(feature =>
-      feature.id === featureId ? { ...feature, text } : feature
-    );
-    const updatedData = { ...data, features: updatedFeatures };
-    setData(updatedData);
-    onUpdate?.({ features: updatedFeatures });
-  };
-
-  // Handle trust indicator updates - Fixed to ensure proper typing
-  const handleTrustIndicatorUpdate = (
-    field: keyof typeof defaultTrustIndicators,
-    value: string | string[]
-  ) => {
-    const currentTrustIndicators =
-      data.trustIndicators || defaultTrustIndicators;
-
-    let updatedTrustIndicators;
-
-    if (field === "features") {
-      // Handle features array specially
-      const featuresArray =
-        typeof value === "string" ? value.split(",").map(f => f.trim()) : value;
-      updatedTrustIndicators = {
-        ...currentTrustIndicators,
-        [field]: featuresArray,
-      };
-    } else {
-      // Handle other fields as strings
-      updatedTrustIndicators = {
-        ...currentTrustIndicators,
-        [field]: value as string,
-      };
-    }
-
-    const updatedData = { ...data, trustIndicators: updatedTrustIndicators };
-    setData(updatedData);
-    onUpdate?.({ trustIndicators: updatedTrustIndicators });
-  };
+  const {
+    data,
+    setData,
+    handleTextUpdate,
+    handleButtonUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(
+    {
+      ...heroData,
+      features: heroData.features || defaultFeatures,
+      trustIndicators: heroData.trustIndicators || defaultTrustIndicators,
+    },
+    onUpdate
+  );
 
   // Handle image uploads
   const handleImageUpload = async (
@@ -326,7 +267,11 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     text={data.buttons[1]?.text || "View Menu"}
                     href={data.buttons[1]?.href || "#"}
                     onChange={(text, href) =>
-                      handleButtonUpdate(data.buttons[1]?.id || "2", text, href)
+                      handleButtonUpdate("buttons")(
+                        data.buttons[1]?.id || "2",
+                        text,
+                        href
+                      )
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
@@ -346,7 +291,11 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     text={data.buttons[0]?.text || "Order Now"}
                     href={data.buttons[0]?.href || "#"}
                     onChange={(text, href) =>
-                      handleButtonUpdate(data.buttons[0]?.id || "1", text, href)
+                      handleButtonUpdate("buttons")(
+                        data.buttons[0]?.id || "1",
+                        text,
+                        href
+                      )
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
@@ -535,7 +484,11 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     text={data.buttons[1]?.text || "View Menu"}
                     href={data.buttons[1]?.href || "#"}
                     onChange={(text, href) =>
-                      handleButtonUpdate(data.buttons[1]?.id || "2", text, href)
+                      handleButtonUpdate("buttons")(
+                        data.buttons[1]?.id || "2",
+                        text,
+                        href
+                      )
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
@@ -559,7 +512,11 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     text={data.buttons[0]?.text || "Order Now"}
                     href={data.buttons[0]?.href || "#"}
                     onChange={(text, href) =>
-                      handleButtonUpdate(data.buttons[0]?.id || "1", text, href)
+                      handleButtonUpdate("buttons")(
+                        data.buttons[0]?.id || "1",
+                        text,
+                        href
+                      )
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}

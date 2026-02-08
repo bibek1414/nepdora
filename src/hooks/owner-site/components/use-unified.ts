@@ -59,13 +59,20 @@ export const useCreateComponentMutation = <T extends keyof ComponentTypeMap>(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: ComponentTypeMap[T]) => {
+    mutationFn: async ({
+      data,
+      insertIndex,
+    }: {
+      data: ComponentTypeMap[T];
+      insertIndex?: number;
+    }) => {
       const existingComponents =
         await componentsApi.getPageComponents(pageSlug);
       return componentsApi.createComponent(
         pageSlug,
         { component_type: componentType, data },
-        existingComponents
+        existingComponents,
+        insertIndex
       );
     },
     onSuccess: () => {
@@ -141,6 +148,42 @@ export const useDeleteComponentMutation = (
         error instanceof Error
           ? error.message
           : `Failed to delete ${componentType} component`;
+      toast.error(errorMessage);
+    },
+  });
+};
+
+// Generic hook for replacing components
+export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
+  pageSlug: string,
+  componentType: T
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      componentId,
+      data,
+    }: {
+      componentId: string;
+      data: ComponentTypeMap[T];
+    }) =>
+      componentsApi.replaceComponent(pageSlug, componentId, {
+        component_type: componentType,
+        data,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
+      queryClient.invalidateQueries({
+        queryKey: ["pageComponents", pageSlug, componentType],
+      });
+      toast.success(`${componentType} component replaced successfully!`);
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : `Failed to replace ${componentType} component`;
       toast.error(errorMessage);
     },
   });

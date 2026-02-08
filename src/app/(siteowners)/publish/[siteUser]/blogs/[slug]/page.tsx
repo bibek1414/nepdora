@@ -1,5 +1,5 @@
 import React from "react";
-import { BlogDetail } from "@/components/site-owners/publish/blog/blog-details";
+import { BlogDetail } from "@/components/site-owners/builder/blog/blog-details";
 import { use } from "react";
 import { generatePublishPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";

@@ -6,6 +6,7 @@ import {
 import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2 } from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
@@ -22,27 +23,29 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(galleryData);
+  const { data, setData, handleArrayItemUpdate } = useBuilderLogic(
+    galleryData,
+    onUpdate
+  );
+
   const [isUploading, setIsUploading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
 
   const componentId = React.useId();
 
-  const handleImageUpdate = (
+  const handleImageUpdateLocal = (
     index: number,
     imageUrl: string,
     altText?: string
   ) => {
-    const updatedImages = [...data.images];
-    updatedImages[index] = {
-      ...updatedImages[index],
+    const imgId = data.images[index].id;
+    handleArrayItemUpdate(
+      "images",
+      imgId
+    )({
       image: imageUrl,
-      image_alt_description:
-        altText || updatedImages[index].image_alt_description,
-    };
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+      image_alt_description: altText,
+    });
   };
 
   const handleImageFileChange = async (
@@ -73,7 +76,7 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
       });
 
       if (index !== undefined) {
-        handleImageUpdate(index, imageUrl, `Gallery image: ${file.name}`);
+        handleImageUpdateLocal(index, imageUrl, `Gallery image: ${file.name}`);
       } else {
         handleAddImage(imageUrl);
       }
@@ -146,7 +149,7 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
                     src={getImageUrl(image.image)}
                     alt={image.image_alt_description}
                     onImageChange={(imageUrl, altText) =>
-                      handleImageUpdate(actualIndex, imageUrl, altText)
+                      handleImageUpdateLocal(actualIndex, imageUrl, altText)
                     }
                     isEditable={isEditable}
                     className="h-120 w-full object-cover"

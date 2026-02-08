@@ -37,6 +37,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 const EditableItem: React.FC<{
   onEdit: () => void;
@@ -107,17 +109,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
   const closeCart = () => {
     setIsCartOpen(false);
   };
-
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable || disableClicks) return "#";
-
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const pathname = usePathname();
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
     if (disableClicks || isEditable) {
@@ -131,24 +123,24 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
 
     switch (action) {
       case "profile":
-        router.push(`/preview/${siteUser}/profile`);
+        router.push(generateLinkHref("/profile", siteUser, pathname));
         break;
       case "wishlist":
-        router.push(`/preview/${siteUser}/wishlist`);
+        router.push(generateLinkHref("/wishlist", siteUser, pathname));
         break;
       case "orders":
-        router.push(`/preview/${siteUser}/orders`);
+        router.push(generateLinkHref("/orders", siteUser, pathname));
         break;
       case "logout":
         logout();
-        router.push(`/preview/${siteUser}`);
+        router.push(generateLinkHref("/", siteUser, pathname));
         break;
     }
   };
 
   const handleLoginClick = () => {
     if (isEditable || disableClicks) return;
-    router.push(`/preview/${siteUser}/login`);
+    router.push(generateLinkHref("/login", siteUser, pathname));
   };
 
   // Social media icon mapping
@@ -227,7 +219,13 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                       </EditableItem>
                     ) : (
                       <Link
-                        href={generateLinkHref(link.href)}
+                        href={generateLinkHref(
+                          link.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
                         onClick={e => handleLinkClick(e, link.href)}
                         className={`hover:text-primary font-medium text-gray-700 ${
                           disableClicks
@@ -295,7 +293,9 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                     size="sm"
                     onClick={() =>
                       !disableClicks &&
-                      router.push(`/preview/${siteUser}/wishlist`)
+                      router.push(
+                        generateLinkHref("/wishlist", siteUser, pathname)
+                      )
                     }
                     className={`relative flex items-center gap-1 ${
                       disableClicks

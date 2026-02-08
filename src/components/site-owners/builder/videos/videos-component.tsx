@@ -5,6 +5,7 @@ import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { VideosCard1 } from "./videos-card-1";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -19,8 +20,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, Play, Plus } from "lucide-react";
+import { AlertCircle, Trash2, Play, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { EditableText } from "@/components/ui/editable-text";
 import { YouTubeFormTrigger } from "../../admin/videos/videos-form";
 
@@ -30,6 +32,7 @@ interface VideosComponentProps {
   siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: VideosComponentData) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const VidoesComponent: React.FC<VideosComponentProps> = ({
@@ -38,14 +41,30 @@ export const VidoesComponent: React.FC<VideosComponentProps> = ({
   siteUser,
   pageSlug,
   onUpdate,
+  onReplace,
 }) => {
+  const { data: builderData, handleTextUpdate } = useBuilderLogic(
+    component.data,
+    updatedData => {
+      if (onUpdate) {
+        onUpdate(component.component_id, {
+          ...component,
+          data: {
+            ...component.data,
+            ...updatedData,
+          },
+        });
+      }
+    }
+  );
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
     title = "Our Videos",
     subtitle,
     style = "videos-1",
-  } = component.data || {};
+  } = builderData || {};
 
   // Use unified mutation hooks
   const deleteVideosComponent = useDeleteComponentMutation(
@@ -80,22 +99,11 @@ export const VidoesComponent: React.FC<VideosComponentProps> = ({
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("title")(newTitle);
 
-    updateVideosComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        title: newTitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateVideosComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           title: newTitle,
@@ -105,22 +113,11 @@ export const VidoesComponent: React.FC<VideosComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("subtitle")(newSubtitle);
 
-    updateVideosComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        subtitle: newSubtitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateVideosComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           subtitle: newSubtitle,
@@ -145,13 +142,27 @@ export const VidoesComponent: React.FC<VideosComponentProps> = ({
       <div className="group relative">
         {/* Delete Control */}
         <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
-          <div className="flex items-center gap-2">
-            <YouTubeFormTrigger mode="create">
-              <Button className="bg-white text-gray-800 hover:bg-white hover:text-gray-900">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Video
+          <div className="flex flex-col gap-2">
+            <Link href="/admin/videos/" target="_blank" rel="noopener">
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full justify-start"
+              >
+                Manage Videos
               </Button>
-            </YouTubeFormTrigger>
+            </Link>
+
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onReplace?.(component.component_id)}
+              className="h-8 w-fit justify-start bg-white px-3"
+            >
+              <RefreshCw className="mr-1 h-4 w-4" />
+              Replace
+            </Button>
+
             <AlertDialog
               open={isDeleteDialogOpen}
               onOpenChange={setIsDeleteDialogOpen}
@@ -161,7 +172,7 @@ export const VidoesComponent: React.FC<VideosComponentProps> = ({
                   onClick={handleDeleteClick}
                   variant="destructive"
                   size="sm"
-                  className="h-8 px-3"
+                  className="h-8 w-fit justify-start px-3"
                   disabled={deleteVideosComponent.isPending}
                 >
                   <Trash2 className="mr-1 h-4 w-4" />

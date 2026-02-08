@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { CTATemplate3Data } from "@/types/owner-site/components/cta";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface CTATemplate3Props {
   ctaData: CTATemplate3Data;
@@ -19,7 +20,6 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(ctaData);
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -37,23 +37,12 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
     },
   };
 
-  const handleTextUpdate =
-    (field: keyof CTATemplate3Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<CTATemplate3Data>);
-    };
+  const { data, handleTextUpdate, handleButtonUpdate } = useBuilderLogic(
+    ctaData,
+    onUpdate
+  );
 
-  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text, href } : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
-  };
-
-  const getButtonClasses = (variant: string) => {
+  const getButtonClassesLocal = (variant: string) => {
     const baseClasses =
       "inline-block px-6 py-3 font-bold transition-colors min-w-[120px] text-center rounded-lg";
 
@@ -147,14 +136,14 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
             {data.buttons.length > 0 && (
               <div className="flex flex-wrap justify-center gap-4">
                 {data.buttons.map(button => {
-                  const buttonClass = getButtonClasses(button.variant);
+                  const buttonClass = getButtonClassesLocal(button.variant);
                   return (
                     <EditableLink
                       key={button.id}
                       text={button.text || "Button text"}
                       href={button.href || "#"}
                       onChange={(text, href) =>
-                        handleButtonUpdate(button.id, text, href)
+                        handleButtonUpdate("buttons")(button.id, text, href)
                       }
                       isEditable={isEditable}
                       siteUser={siteUser}

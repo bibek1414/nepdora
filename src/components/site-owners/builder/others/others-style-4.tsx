@@ -6,6 +6,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { ChevronRight } from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface OthersTemplate4Props {
   othersData: OthersTemplate4Data;
@@ -91,12 +92,7 @@ export const OthersTemplate4: React.FC<OthersTemplate4Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(othersData);
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    setData(othersData);
-  }, [othersData]);
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -113,18 +109,13 @@ export const OthersTemplate4: React.FC<OthersTemplate4Props> = ({
     },
   };
 
-  const handleUpdate = (newData: Partial<OthersTemplate4Data>) => {
-    const updatedData = { ...data, ...newData };
-    setData(updatedData);
-    if (onUpdate) {
-      onUpdate(updatedData);
-    }
-  };
+  const { data, handleTextUpdate, handleButtonUpdate, getImageUrl } =
+    useBuilderLogic(othersData, onUpdate);
 
   const handleCountryCardUpdate = (index: number, value: string) => {
     const newCards = [...data.countryCards];
     newCards[index] = { ...newCards[index], label: value };
-    handleUpdate({ countryCards: newCards });
+    onUpdate?.({ countryCards: newCards });
   };
 
   return (
@@ -154,7 +145,7 @@ export const OthersTemplate4: React.FC<OthersTemplate4Props> = ({
             <div className="flex items-center gap-3">
               <EditableText
                 value={data.subHeading}
-                onChange={val => handleUpdate({ subHeading: val })}
+                onChange={handleTextUpdate("subHeading")}
                 isEditable={isEditable}
                 className="text-xs font-bold tracking-[0.2em] uppercase"
                 style={{
@@ -169,7 +160,7 @@ export const OthersTemplate4: React.FC<OthersTemplate4Props> = ({
 
             <EditableText
               value={data.heading}
-              onChange={val => handleUpdate({ heading: val })}
+              onChange={handleTextUpdate("heading")}
               isEditable={isEditable}
               as="h1"
               className="text-4xl leading-[1.1] font-bold tracking-tight whitespace-pre-line lg:text-6xl"
@@ -193,11 +184,13 @@ export const OthersTemplate4: React.FC<OthersTemplate4Props> = ({
                     href={data.buttons[0].href || "#"}
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    onChange={(text, href) => {
-                      const newButtons = [...data.buttons];
-                      newButtons[0] = { ...newButtons[0], text, href };
-                      handleUpdate({ buttons: newButtons });
-                    }}
+                    onChange={(text, href) =>
+                      handleButtonUpdate("buttons")(
+                        data.buttons[0].id,
+                        text,
+                        href
+                      )
+                    }
                     className="inline-flex items-center gap-2"
                   />
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

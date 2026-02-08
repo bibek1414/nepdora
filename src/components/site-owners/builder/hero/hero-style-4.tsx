@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ChevronRight } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate4Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface HeroTemplate4Props {
   heroData: HeroTemplate4Data;
@@ -22,13 +22,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(heroData);
   const { data: themeResponse } = useThemeQuery();
-
-  // Sync with prop changes
-  useEffect(() => {
-    setData(heroData);
-  }, [heroData]);
 
   // Get theme colors with updated structure, fallback to defaults if not available
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -46,47 +40,13 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate =
-    (field: keyof HeroTemplate4Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate4Data>);
-    };
-
-  // Handle main image updates
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  // Handle button updates
-  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text, href } : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
-  };
-
-  // Get optimized image URL
-  const getImageUrl = () => {
-    if (!data.imageUrl) return "/api/placeholder/500/500";
-    return optimizeCloudinaryUrl(convertUnsplashUrl(data.imageUrl), {
-      width: 800,
-      quality: "auto",
-      format: "auto",
-    });
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleButtonUpdate,
+    getImageUrl,
+  } = useBuilderLogic(heroData, onUpdate);
 
   // Parse stats - if statsLabel contains "|", split it for two stats
   const statsParts = data.statsLabel?.split("|") || [];
@@ -153,7 +113,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                       text={data.buttons[0]?.text || "Shop Now"}
                       href={data.buttons[0]?.href || "#"}
                       onChange={(text, href) =>
-                        handleButtonUpdate(
+                        handleButtonUpdate("buttons")(
                           data.buttons[0]?.id || "1",
                           text,
                           href
@@ -246,9 +206,9 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
               {/* Main Product Image */}
               {data.showImage ? (
                 <EditableImage
-                  src={getImageUrl()}
+                  src={getImageUrl(data.imageUrl, { width: 800 })}
                   alt={data.imageAlt || "Hero image"}
-                  onImageChange={handleImageUpdate}
+                  onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
                   isEditable={isEditable}
                   className="relative z-10 h-auto w-full rounded-lg shadow-2xl"
                   width={800}
@@ -268,7 +228,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   <EditableImage
                     src=""
                     alt="Hero image placeholder"
-                    onImageChange={handleImageUpdate}
+                    onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
                     isEditable={isEditable}
                     className="h-full w-full rounded-lg object-cover"
                     width={800}

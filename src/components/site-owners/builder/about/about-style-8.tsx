@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { AboutUs8Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate8Props {
   aboutUsData: AboutUs8Data;
@@ -16,47 +17,29 @@ export const AboutUsTemplate8: React.FC<AboutUsTemplate8Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(aboutUsData);
-
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs8Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs8Data>);
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(aboutUsData, onUpdate);
 
   // Handle feature updates
   const handleFeatureUpdate =
     (featureId: string, field: "name" | "description") => (value: string) => {
-      const updatedFeatures = data.features.map(feature =>
-        feature.id === featureId ? { ...feature, [field]: value } : feature
-      );
-      const updatedData = { ...data, features: updatedFeatures };
-      setData(updatedData);
-      onUpdate?.({ features: updatedFeatures });
+      handleArrayItemUpdate("features", featureId)({ [field]: value });
     };
 
   // Handle image updates
-  const handleImageUpdate =
+  const handleImageUpdateLocal =
     (imageId: string) => (imageUrl: string, altText?: string) => {
-      const updatedImages = data.images.map(image =>
-        image.id === imageId
-          ? { ...image, url: imageUrl, alt: altText || image.alt }
-          : image
-      );
-      const updatedData = { ...data, images: updatedImages };
-      setData(updatedData);
-      onUpdate?.({ images: updatedImages });
+      handleArrayItemUpdate("images", imageId)({ url: imageUrl, alt: altText });
     };
 
   // Handle alt text updates
-  const handleAltUpdate = (imageId: string) => (altText: string) => {
-    const updatedImages = data.images.map(image =>
-      image.id === imageId ? { ...image, alt: altText } : image
-    );
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+  const handleAltUpdateLocal = (imageId: string) => (altText: string) => {
+    handleArrayItemUpdate("images", imageId)({ alt: altText });
   };
 
   return (
@@ -114,8 +97,8 @@ export const AboutUsTemplate8: React.FC<AboutUsTemplate8Props> = ({
               <EditableImage
                 src={image.url}
                 alt={image.alt}
-                onImageChange={handleImageUpdate(image.id)}
-                onAltChange={handleAltUpdate(image.id)}
+                onImageChange={handleImageUpdateLocal(image.id)}
+                onAltChange={handleAltUpdateLocal(image.id)}
                 isEditable={isEditable}
                 className="h-full w-full object-cover"
                 width={600}

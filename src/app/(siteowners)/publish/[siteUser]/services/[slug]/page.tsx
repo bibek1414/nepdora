@@ -1,5 +1,5 @@
 import React from "react";
-import { ServiceDetail } from "@/components/site-owners/publish/services/services-details";
+import { ServiceDetail } from "@/components/site-owners/builder/services/services-details";
 import { use } from "react";
 import { generatePublishPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";

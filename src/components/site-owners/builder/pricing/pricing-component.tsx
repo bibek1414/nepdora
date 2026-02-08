@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { PricingComponentData } from "@/types/owner-site/components/pricing";
 import { usePricings } from "@/hooks/owner-site/admin/use-pricing";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -22,7 +23,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, DollarSign } from "lucide-react";
+import { AlertCircle, Trash2, DollarSign, RefreshCw } from "lucide-react";
 import { Pricing } from "@/types/owner-site/admin/pricing";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
@@ -34,6 +35,7 @@ interface PricingComponentProps {
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: PricingComponentData) => void;
   onPricingClick?: (pricingId: number, order: number) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const PricingComponent: React.FC<PricingComponentProps> = ({
@@ -42,14 +44,30 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
   pageSlug,
   onUpdate,
   onPricingClick,
+  onReplace,
 }) => {
+  const { data: builderData, handleTextUpdate } = useBuilderLogic(
+    component.data,
+    updatedData => {
+      if (onUpdate) {
+        onUpdate(component.component_id, {
+          ...component,
+          data: {
+            ...component.data,
+            ...updatedData,
+          },
+        });
+      }
+    }
+  );
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
     title = "Our Pricing Plans",
     subtitle,
     style = "pricing-1",
-  } = component.data || {};
+  } = builderData || {};
 
   const deletePricingComponent = useDeleteComponentMutation(
     pageSlug || "",
@@ -90,22 +108,11 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("title")(newTitle);
 
-    updatePricingComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        title: newTitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updatePricingComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           title: newTitle,
@@ -115,22 +122,11 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("subtitle")(newSubtitle);
 
-    updatePricingComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        subtitle: newSubtitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updatePricingComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           subtitle: newSubtitle,
@@ -166,23 +162,38 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
   if (isEditable) {
     return (
       <div className="group relative">
-        <div className="absolute -right-1 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2">
               <Link href="/admin/pricing/" target="_blank" rel="noopener">
-                <Button size="sm" variant="outline" className="text-sm">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full justify-start"
+                >
                   Manage Pricing
                 </Button>
               </Link>
+
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onReplace?.(component.component_id)}
+                className="h-8 w-fit justify-start bg-white px-3"
+              >
+                <RefreshCw className="mr-1 h-4 w-4" />
+                Replace
+              </Button>
+
               <AlertDialogTrigger asChild>
                 <Button
                   onClick={handleDeleteClick}
                   variant="destructive"
                   size="sm"
-                  className="h-8 px-3 text-sm"
+                  className="h-8 w-fit justify-start px-3"
                   disabled={deletePricingComponent.isPending}
                 >
                   <Trash2 className="mr-1 h-4 w-4" />

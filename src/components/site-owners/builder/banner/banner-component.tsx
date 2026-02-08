@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, RefreshCw } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +33,7 @@ interface BannerComponentProps {
   pageSlug: string;
   siteUser: string;
   onUpdate?: (componentId: string, updatedData: BannerComponentData) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const BannerComponent: React.FC<BannerComponentProps> = ({
@@ -41,6 +42,7 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
   pageSlug,
   siteUser,
   onUpdate,
+  onReplace,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteBannerMutation = useDeleteComponentMutation(pageSlug, "banner");
@@ -160,16 +162,28 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
       {/* Edit Controls - Only show when editable */}
       {isEditable && (
         <>
-          <div className="bg-background/80 absolute -right-30 z-30 flex gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="absolute -right-5 z-30 flex flex-col gap-2 rounded-lg p-1 opacity-0 transition-opacity group-hover:opacity-100">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                onReplace?.(component.component_id || component.id.toString())
+              }
+              className="h-8 w-fit justify-start bg-white px-3"
+            >
+              <RefreshCw className="mr-1 h-4 w-4" />
+              Replace
+            </Button>
+
             <Button
               size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
               disabled={deleteBannerMutation.isPending}
-              className="h-8"
+              className="h-8 w-fit justify-start px-3"
             >
               <Trash2 className="mr-1 h-4 w-4" />
-              Delete
+              {deleteBannerMutation.isPending ? "Deleting..." : "Delete"}
             </Button>
           </div>
 

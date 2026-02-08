@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate9Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface HeroTemplate9Props {
   heroData: HeroTemplate9Data;
@@ -46,35 +47,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
 }) => {
   const componentId = React.useId();
 
-  const [data, setData] = useState<HeroTemplate9Data>(() => {
-    // Ensure we have proper sliderImages data structure
-    const initialSliderImages =
-      heroData.sliderImages && heroData.sliderImages.length > 0
-        ? heroData.sliderImages
-        : defaultCollageImages;
-
-    return {
-      ...heroData,
-      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-      sliderImages: initialSliderImages.map(img => ({ ...img })), // Ensure deep copy
-    };
-  });
-
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    // Update data when heroData changes, ensuring sliderImages is properly handled
-    const updatedSliderImages =
-      heroData.sliderImages && heroData.sliderImages.length > 0
-        ? heroData.sliderImages
-        : defaultCollageImages;
-
-    setData({
-      ...heroData,
-      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-      sliderImages: updatedSliderImages.map(img => ({ ...img })),
-    });
-  }, [heroData]);
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -90,6 +63,18 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
       heading: "sans-serif",
     },
   };
+
+  const { data, handleTextUpdate, handleButtonUpdate, handleArrayItemUpdate } =
+    useBuilderLogic(
+      {
+        ...heroData,
+        sliderImages:
+          heroData.sliderImages && heroData.sliderImages.length > 0
+            ? heroData.sliderImages
+            : defaultCollageImages,
+      },
+      onUpdate
+    );
 
   // Get collage images - ensure we always have exactly 4 images
   const getCollageImages = () => {
@@ -112,13 +97,6 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
 
   const collageImages = getCollageImages();
 
-  const handleTextUpdate =
-    (field: keyof HeroTemplate9Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate9Data>);
-    };
-
   const handleImageUpdate = (
     imageUrl: string,
     altText?: string,
@@ -129,25 +107,13 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
       return;
     }
 
-    const updatedSliderImages = [...collageImages];
-    updatedSliderImages[index] = {
-      ...updatedSliderImages[index],
+    handleArrayItemUpdate(
+      "sliderImages",
+      collageImages[index].id
+    )({
       url: imageUrl,
-      alt: altText || updatedSliderImages[index].alt,
-    };
-
-    const updatedData = { ...data, sliderImages: updatedSliderImages };
-    setData(updatedData);
-    onUpdate?.({ sliderImages: updatedSliderImages });
-  };
-
-  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text, href } : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
+      alt: altText,
+    });
   };
 
   return (
@@ -199,7 +165,11 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                   text={data.buttons[0]?.text || "Get Started"}
                   href={data.buttons[0]?.href || "#"}
                   onChange={(text, href) =>
-                    handleButtonUpdate(data.buttons[0]?.id || "1", text, href)
+                    handleButtonUpdate("buttons")(
+                      data.buttons[0]?.id || "1",
+                      text,
+                      href
+                    )
                   }
                   isEditable={isEditable}
                   siteUser={siteUser}

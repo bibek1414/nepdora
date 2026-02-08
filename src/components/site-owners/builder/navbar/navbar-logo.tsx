@@ -1,7 +1,10 @@
 import React from "react";
 import { NavbarData } from "@/types/owner-site/components/navbar";
-import { optimizeCloudinaryUrl } from "@/utils/cloudinary";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface NavbarLogoProps {
   data: NavbarData;
@@ -12,12 +15,13 @@ interface NavbarLogoProps {
 }
 
 export const NavbarLogo: React.FC<NavbarLogoProps> = ({
-  data,
+  data: navbarData,
   isEditable,
   onEdit,
   className = "",
   siteUser,
 }) => {
+  const { data, getImageUrl } = useBuilderLogic(navbarData);
   const { logoText, logoImage, logoType } = data;
 
   const renderLogo = () => {
@@ -25,7 +29,7 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
       case "image":
         return logoImage ? (
           <img
-            src={optimizeCloudinaryUrl(logoImage, {
+            src={getImageUrl(logoImage, {
               height: 40,
               crop: "fill",
               quality: "auto",
@@ -47,7 +51,7 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
           <div className="flex items-center gap-3">
             {logoImage ? (
               <img
-                src={optimizeCloudinaryUrl(logoImage, {
+                src={getImageUrl(logoImage, {
                   height: 32,
                   crop: "fill",
                   quality: "auto",
@@ -73,6 +77,8 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
     }
   };
 
+  const pathname = usePathname();
+
   const logoElement =
     isEditable && onEdit ? (
       <span
@@ -82,7 +88,10 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
         {renderLogo()}
       </span>
     ) : (
-      <Link href={`/preview/${siteUser}`} className={className}>
+      <Link
+        href={generateLinkHref("/", siteUser, pathname, isEditable)}
+        className={className}
+      >
         {renderLogo()}
       </Link>
     );

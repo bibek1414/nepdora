@@ -23,6 +23,9 @@ import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-foote
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface FooterStyle3Props {
   footerData: FooterData;
@@ -61,7 +64,13 @@ const renderSocialIcon = (social: SocialLink) => {
 };
 
 // Logo component
-const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
+const FooterLogo = ({
+  footerData,
+  getImageUrl,
+}: {
+  footerData: FooterData;
+  getImageUrl: any;
+}) => {
   const { logoType, logoImage, logoText, companyName } = footerData;
 
   if (logoType === "text") {
@@ -78,7 +87,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     return logoImage ? (
       <div className="flex items-center">
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-8 w-auto object-contain"
         />
@@ -95,7 +104,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     <div className="flex items-center gap-3">
       {logoImage && (
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-8 w-auto object-contain"
         />
@@ -113,15 +122,6 @@ export function FooterStyle3({
   onEditClick,
   siteUser,
 }: FooterStyle3Props) {
-  const [email, setEmail] = useState("");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const deleteFooterMutation = useDeleteFooterMutation();
-  const createNewsletterMutation = useCreateNewsletter();
-
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -138,16 +138,18 @@ export function FooterStyle3({
     },
   };
 
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref;
+  const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
+  const [email, setEmail] = useState("");
+  const [subscriptionStatus, setSubscriptionStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const deleteFooterMutation = useDeleteFooterMutation();
+  const createNewsletterMutation = useCreateNewsletter();
+
+  const pathname = usePathname();
 
   const handleDelete = () => {
     deleteFooterMutation.mutate();
@@ -193,7 +195,7 @@ export function FooterStyle3({
   };
 
   // Get the first three sections for the grid layout
-  const mainSections = footerData.sections.slice(0, 3);
+  const mainSections = data.sections.slice(0, 3);
 
   return (
     <div className="group relative">
@@ -227,7 +229,12 @@ export function FooterStyle3({
                         </button>
                       ) : (
                         <Link
-                          href={generateLinkHref(link.href || "")}
+                          href={generateLinkHref(
+                            link.href || "",
+                            siteUser,
+                            pathname,
+                            isEditable
+                          )}
                           className="block text-white/80 transition-colors hover:text-white"
                         >
                           {link.text}
@@ -240,13 +247,13 @@ export function FooterStyle3({
             ))}
 
             {/* Newsletter Section */}
-            {footerData.newsletter.enabled && (
+            {data.newsletter.enabled && (
               <div className="col-span-2 lg:col-span-2">
                 <h3 className="mb-4 text-xl font-semibold text-white">
-                  {footerData.newsletter.title}
+                  {data.newsletter.title}
                 </h3>
                 <p className="mb-4 text-sm text-white/80">
-                  {footerData.newsletter.description}
+                  {data.newsletter.description}
                 </p>
 
                 {subscriptionStatus === "success" ? (
@@ -302,17 +309,17 @@ export function FooterStyle3({
           <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 text-sm text-gray-200 md:flex-row">
             {/* Logo and Company Name */}
             <div className="mb-4 flex items-center md:mb-0">
-              <FooterLogo footerData={footerData} />
+              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
 
             {/* Copyright */}
             <div className="mb-4 text-center md:mb-0 md:text-left">
-              <p>{footerData.copyright}</p>
+              <p>{data.copyright}</p>
             </div>
 
             {/* Social links */}
             <div className="flex items-center space-x-4">
-              {footerData.socialLinks.map(social => (
+              {data.socialLinks.map(social => (
                 <Link
                   key={social.id}
                   href={social.href || "#"}

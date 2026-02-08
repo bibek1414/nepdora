@@ -7,6 +7,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -24,7 +25,6 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [data, setData] = useState(aboutUsData);
   const [isUploading, setIsUploading] = useState<number | null>(null);
   const { data: themeResponse } = useThemeQuery();
 
@@ -48,37 +48,29 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs7Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs7Data>);
-  };
+  const { data, handleTextUpdate, handleArrayItemUpdate } = useBuilderLogic(
+    aboutUsData,
+    onUpdate
+  );
 
   // Handle training item updates
   const handleTrainingUpdate =
     (index: number, field: "title" | "description") => (value: string) => {
-      const updatedTrainings = [...data.trainings];
-      updatedTrainings[index] = { ...updatedTrainings[index], [field]: value };
-
-      const updatedData = { ...data, trainings: updatedTrainings };
-      setData(updatedData);
-      onUpdate?.({ trainings: updatedTrainings } as Partial<AboutUs7Data>);
+      const trainingId = data.trainings[index].id;
+      handleArrayItemUpdate("trainings", trainingId)({ [field]: value });
     };
 
   // Handle training image updates
   const handleTrainingImageUpdate =
     (index: number) => (imageUrl: string, altText?: string) => {
-      const updatedTrainings = [...data.trainings];
-      updatedTrainings[index] = {
-        ...updatedTrainings[index],
+      const trainingId = data.trainings[index].id;
+      handleArrayItemUpdate(
+        "trainings",
+        trainingId
+      )({
         imageUrl,
-        imageAlt: altText || updatedTrainings[index].imageAlt,
-      };
-
-      const updatedData = { ...data, trainings: updatedTrainings };
-      setData(updatedData);
-      onUpdate?.({ trainings: updatedTrainings } as Partial<AboutUs7Data>);
+        imageAlt: altText,
+      });
     };
 
   // Handle file upload for training images
@@ -129,16 +121,11 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
 
   // Handle button link updates
   const handleButtonLinkUpdate = (text: string, href: string) => {
-    const updatedData = {
-      ...data,
+    const update = {
       buttonText: text,
       buttonLink: href,
     };
-    setData(updatedData);
-    onUpdate?.({
-      buttonText: text,
-      buttonLink: href,
-    });
+    onUpdate?.(update);
   };
 
   return (

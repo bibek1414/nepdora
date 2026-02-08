@@ -32,6 +32,7 @@ import { FooterStyle8 } from "./footer-style8";
 import { FooterStyle9 } from "./footer-style9";
 import { FooterStyle10 } from "./footer-style10";
 import { FooterEditorDialog } from "./footer-editor-dialog";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import {
   FooterData,
   Footer as FooterType,
@@ -157,7 +158,11 @@ export function Footer({
   footerId,
   siteUser,
 }: FooterProps) {
-  const [currentFooterData, setCurrentFooterData] = useState(footerData);
+  const { data: currentFooterData, setData: setCurrentFooterData } =
+    useBuilderLogic(footerData, updatedData => {
+      onUpdate?.(componentId, { footerData: updatedData });
+    });
+
   const [showEditor, setShowEditor] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [existingFooterId, setExistingFooterId] = useState<string | null>(
@@ -171,11 +176,6 @@ export function Footer({
   const createFooterMutation = useCreateFooterMutation();
   const deleteFooterMutation = useDeleteFooterMutation();
   const { data: existingFooter } = useFooterQuery();
-
-  // Update local state when footerData prop changes
-  useEffect(() => {
-    setCurrentFooterData(footerData);
-  }, [footerData]);
 
   // Sync with site config for logo and social links
   useEffect(() => {
@@ -218,7 +218,7 @@ export function Footer({
         setCurrentFooterData(updatedFooterData);
       }
     }
-  }, [siteConfig, currentFooterData]);
+  }, [siteConfig, currentFooterData, setCurrentFooterData]);
 
   // Set existing footer ID from query if available
   useEffect(() => {
@@ -362,12 +362,13 @@ export function Footer({
     <div className="group relative">
       {/* Centralized Edit/Delete Controls */}
       {isEditable && (
-        <div className="absolute -right-5 z-20 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+        <div className="absolute -right-5 z-20 flex translate-x-full flex-col gap-2 rounded-lg p-1 opacity-0 transition-opacity group-hover:opacity-100">
           <Button
             size="sm"
             variant="outline"
             onClick={handleEditClick}
             disabled={isLoading}
+            className="w-full justify-start"
           >
             <Edit className="mr-2 h-4 w-4" />
             Edit Footer
@@ -378,8 +379,9 @@ export function Footer({
             variant="destructive"
             onClick={handleDeleteClick}
             disabled={isLoading}
+            className="h-8 w-fit justify-start px-3"
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="mr-2 h-4 w-4" />
             {deleteFooterMutation.isPending ? "Deleting..." : "Delete"}
           </Button>
         </div>
@@ -388,9 +390,12 @@ export function Footer({
       {/* Footer Component - Pass isEditable as false to prevent individual delete buttons */}
       <FooterComponent
         footerData={processedFooterData}
-        isEditable={false} // Always false since we handle editing centrally
+        isEditable={isEditable}
         onEditClick={handleEditClick}
         siteUser={siteUser}
+        onUpdate={newData => {
+          setCurrentFooterData({ ...currentFooterData, ...newData });
+        }}
       />
 
       {/* Editor Dialog */}

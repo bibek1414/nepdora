@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -166,18 +167,9 @@ const PageSelector: React.FC<PageSelectorProps> = ({
     <Card className="absolute top-full right-0 z-50 mt-1 w-80 bg-white py-0 shadow-xl">
       <CardContent className="p-0">
         {/* Search Input */}
-        <div className="border-b p-2">
-          <Input
-            type="text"
-            placeholder="Search pages..."
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-            className="bg-white"
-          />
-        </div>
 
         {/* Existing Pages - Scrollable Area */}
-        <ScrollArea className="max-h-60">
+        <ScrollArea className="max-h-60 overflow-y-auto">
           {isLoading ? (
             <div className="text-muted-foreground p-4 text-center">
               Loading pages...
@@ -255,20 +247,6 @@ const PageSelector: React.FC<PageSelectorProps> = ({
               </div>
             </div>
           )}
-        </div>
-
-        <Separator />
-
-        {/* External URL Option */}
-        <div className="bg-white p-2">
-          <Button
-            onClick={handleExternalUrl}
-            variant="ghost"
-            className="w-full justify-start text-blue-700 hover:bg-blue-50 hover:text-blue-700"
-          >
-            <ExternalLink className="mr-2 h-4 w-4" />
-            <span>External URL</span>
-          </Button>
         </div>
 
         <Separator />
@@ -362,7 +340,26 @@ export function FooterEditorDialog({
   }, [siteConfig]);
 
   const handleSave = () => {
-    onSave(editingData);
+    // Process sections and links to ensure internal links have -draft suffix
+    const processedSections = editingData.sections.map(section => ({
+      ...section,
+      links: section.links.map(link => {
+        if (
+          link.href &&
+          link.href.startsWith("/") &&
+          !link.href.endsWith("-draft") &&
+          link.href !== "/"
+        ) {
+          return { ...link, href: `${link.href}-draft` };
+        }
+        return link;
+      }),
+    }));
+
+    onSave({
+      ...editingData,
+      sections: processedSections,
+    });
   };
 
   // Handle logo image upload and update site config
@@ -565,6 +562,21 @@ export function FooterEditorDialog({
     field: string,
     value: string
   ) => {
+    let finalValue = value;
+
+    // Ensure internal links start with /
+    if (
+      field === "href" &&
+      value.length > 0 &&
+      !value.startsWith("/") &&
+      !value.startsWith("http") &&
+      !value.startsWith("mailto:") &&
+      !value.startsWith("tel:") &&
+      !value.startsWith("#")
+    ) {
+      finalValue = `/${value}`;
+    }
+
     setEditingData(prev => ({
       ...prev,
       sections: prev.sections.map(section =>
@@ -572,7 +584,7 @@ export function FooterEditorDialog({
           ? {
               ...section,
               links: section.links.map(link =>
-                link.id === linkId ? { ...link, [field]: value } : link
+                link.id === linkId ? { ...link, [field]: finalValue } : link
               ),
             }
           : section
@@ -754,26 +766,19 @@ export function FooterEditorDialog({
           <div className="mt-4 max-h-[60vh] overflow-y-auto">
             {/* Logo Tab */}
             <TabsContent value="logo" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between text-lg">
-                    Footer Logo Settings
-                    {siteConfig?.logo && (
-                      <Badge variant="outline" className="text-green-600">
-                        Consistent across all pages
-                      </Badge>
-                    )}
-                  </CardTitle>
-                </CardHeader>
+              <Card className="border-none">
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="footer-logo-text">Logo Text</Label>
+                    <Label className="text-xs" htmlFor="footer-logo-text">
+                      Logo Text
+                    </Label>
                     <Input
                       id="footer-logo-text"
                       value={editingData.logoText}
                       onChange={e =>
                         updateBasicInfo("logoText", e.target.value)
                       }
+                      className="h-9 text-sm"
                       placeholder="Enter your brand name"
                       disabled={isLoading}
                     />
@@ -870,14 +875,20 @@ export function FooterEditorDialog({
                   </div>
 
                   <div className="space-y-3">
-                    <Label>Logo Display</Label>
+                    <Label className="text-xs">Logo Display</Label>
                     <RadioGroup
                       value={editingData.logoType || "text"}
                       onValueChange={handleLogoTypeChange}
+                      className="flex gap-4"
                     >
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="text" id="footer-text-only" />
-                        <Label htmlFor="footer-text-only">Text Only</Label>
+                        <Label
+                          className="text-sm font-normal"
+                          htmlFor="footer-text-only"
+                        >
+                          Text
+                        </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem
@@ -887,9 +898,12 @@ export function FooterEditorDialog({
                         />
                         <Label
                           htmlFor="footer-image-only"
-                          className={!editingData.logoImage ? "opacity-50" : ""}
+                          className={cn(
+                            "text-sm font-normal",
+                            !editingData.logoImage ? "opacity-50" : ""
+                          )}
                         >
-                          Image Only
+                          Image
                         </Label>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -900,9 +914,12 @@ export function FooterEditorDialog({
                         />
                         <Label
                           htmlFor="footer-both"
-                          className={!editingData.logoImage ? "opacity-50" : ""}
+                          className={cn(
+                            "text-sm font-normal",
+                            !editingData.logoImage ? "opacity-50" : ""
+                          )}
                         >
-                          Text & Image
+                          Both
                         </Label>
                       </div>
                     </RadioGroup>
@@ -913,13 +930,10 @@ export function FooterEditorDialog({
 
             {/* Company Information Tab */}
             <TabsContent value="company" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Company Information</CardTitle>
-                </CardHeader>
+              <Card className="border-none shadow-none">
                 <CardContent className="space-y-4">
                   <div>
-                    <label className="mb-2 block text-sm font-medium">
+                    <label className="mb-1 block text-xs font-medium">
                       Company Name
                     </label>
                     <Input
@@ -927,12 +941,13 @@ export function FooterEditorDialog({
                       onChange={e =>
                         updateBasicInfo("companyName", e.target.value)
                       }
+                      className="h-9 text-sm"
                       placeholder="Your Company"
                       disabled={isLoading}
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium">
+                    <label className="mb-1 block text-xs font-medium">
                       Description
                     </label>
                     <Textarea
@@ -940,13 +955,14 @@ export function FooterEditorDialog({
                       onChange={e =>
                         updateBasicInfo("description", e.target.value)
                       }
+                      className="text-sm"
                       placeholder="Company description"
-                      rows={4}
+                      rows={3}
                       disabled={isLoading}
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium">
+                    <label className="mb-1 block text-xs font-medium">
                       Copyright Text
                     </label>
                     <Input
@@ -954,6 +970,7 @@ export function FooterEditorDialog({
                       onChange={e =>
                         updateBasicInfo("copyright", e.target.value)
                       }
+                      className="h-9 text-sm"
                       placeholder="© 2025 Your Company. All rights reserved."
                       disabled={isLoading}
                     />
@@ -964,36 +981,35 @@ export function FooterEditorDialog({
 
             {/* Contact Information Tab */}
             <TabsContent value="contact" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Contact Information</CardTitle>
-                </CardHeader>
+              <Card className="border-none shadow-none">
                 <CardContent className="space-y-4">
                   <div>
-                    <label className="mb-2 block text-sm font-medium">
+                    <label className="mb-1 block text-xs font-medium">
                       Email
                     </label>
                     <Input
                       value={editingData.contactInfo.email || ""}
                       onChange={e => updateContactInfo("email", e.target.value)}
+                      className="h-9 text-sm"
                       placeholder="hello@company.com"
                       type="email"
                       disabled={isLoading}
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium">
+                    <label className="mb-1 block text-xs font-medium">
                       Phone
                     </label>
                     <Input
                       value={editingData.contactInfo.phone || ""}
                       onChange={e => updateContactInfo("phone", e.target.value)}
+                      className="h-9 text-sm"
                       placeholder="+977 1234567890"
                       disabled={isLoading}
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium">
+                    <label className="mb-1 block text-xs font-medium">
                       Address
                     </label>
                     <Textarea
@@ -1001,8 +1017,9 @@ export function FooterEditorDialog({
                       onChange={e =>
                         updateContactInfo("address", e.target.value)
                       }
+                      className="text-sm"
                       placeholder="Sankhapur, Kathmandu, Nepal"
-                      rows={3}
+                      rows={2}
                       disabled={isLoading}
                     />
                   </div>
@@ -1013,7 +1030,7 @@ export function FooterEditorDialog({
             {/* Newsletter Tab - Only show if not FooterStyle5 */}
             {showNewsletter && (
               <TabsContent value="newsletter" className="space-y-4">
-                <Card>
+                <Card className="border-none shadow-none">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg">
                       Newsletter Settings
@@ -1048,7 +1065,7 @@ export function FooterEditorDialog({
                     {editingData.newsletter.enabled && (
                       <>
                         <div>
-                          <label className="mb-2 block text-sm font-medium">
+                          <label className="mb-1 block text-xs font-medium">
                             Newsletter Title
                           </label>
                           <Input
@@ -1056,12 +1073,13 @@ export function FooterEditorDialog({
                             onChange={e =>
                               updateNewsletter("title", e.target.value)
                             }
+                            className="h-9 text-sm"
                             placeholder="Stay Updated"
                             disabled={isLoading}
                           />
                         </div>
                         <div>
-                          <label className="mb-2 block text-sm font-medium">
+                          <label className="mb-1 block text-xs font-medium">
                             Newsletter Description
                           </label>
                           <Textarea
@@ -1069,8 +1087,9 @@ export function FooterEditorDialog({
                             onChange={e =>
                               updateNewsletter("description", e.target.value)
                             }
+                            className="text-sm"
                             placeholder="Subscribe to our newsletter for the latest updates and news."
-                            rows={3}
+                            rows={2}
                             disabled={isLoading}
                           />
                         </div>
@@ -1083,7 +1102,7 @@ export function FooterEditorDialog({
 
             {/* Footer Sections Tab */}
             <TabsContent value="sections" className="space-y-4">
-              <Card>
+              <Card className="border-none shadow-none">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between text-lg">
                     Footer Sections
@@ -1102,7 +1121,7 @@ export function FooterEditorDialog({
                           onChange={e =>
                             updateSection(section.id, "title", e.target.value)
                           }
-                          className="font-medium"
+                          className="h-9 text-sm font-medium"
                           placeholder="Section Title"
                           disabled={isLoading}
                         />
@@ -1116,9 +1135,9 @@ export function FooterEditorDialog({
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         {section.links.map(link => (
-                          <div key={link.id} className="relative flex gap-2">
+                          <div key={link.id} className="relative flex gap-1.5">
                             <Input
                               value={link.text}
                               onChange={e =>
@@ -1130,7 +1149,7 @@ export function FooterEditorDialog({
                                 )
                               }
                               placeholder="Link Text"
-                              className="flex-1"
+                              className="h-9 flex-1 text-sm"
                               disabled={isLoading}
                             />
                             <div className="relative flex-1">
@@ -1145,7 +1164,7 @@ export function FooterEditorDialog({
                                   )
                                 }
                                 placeholder="Select or enter URL"
-                                className="pr-8"
+                                className="h-9 pr-8 text-sm"
                                 disabled={isLoading}
                               />
                               <Button
@@ -1154,10 +1173,15 @@ export function FooterEditorDialog({
                                 size="icon"
                                 className="absolute top-0 right-0 h-full px-2"
                                 onClick={() =>
-                                  setShowPageSelectorFor({
-                                    sectionId: section.id,
-                                    linkId: link.id,
-                                  })
+                                  setShowPageSelectorFor(prev =>
+                                    prev?.sectionId === section.id &&
+                                    prev?.linkId === link.id
+                                      ? null
+                                      : {
+                                          sectionId: section.id,
+                                          linkId: link.id,
+                                        }
+                                  )
                                 }
                                 disabled={isLoading}
                               >
@@ -1252,7 +1276,7 @@ export function FooterEditorDialog({
                                 e.target.value
                               )
                             }
-                            className="border-border bg-background w-full rounded-md border px-3 py-2"
+                            className="border-border bg-background w-full rounded-md border px-2 py-1.5 text-sm"
                             disabled={
                               isLoading || patchSiteConfigMutation.isPending
                             }
@@ -1270,7 +1294,7 @@ export function FooterEditorDialog({
                             updateSocialLink(social.id, "href", e.target.value)
                           }
                           placeholder={`Enter ${social.platform} URL`}
-                          className="flex-1"
+                          className="h-9 flex-1 text-sm"
                           disabled={
                             isLoading || patchSiteConfigMutation.isPending
                           }

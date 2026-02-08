@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useMemo } from "react";
 import { FileText } from "lucide-react";
 import { BannerData } from "@/types/owner-site/components/banner";
 import { EditableText } from "@/components/ui/editable-text";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface BannerTemplateProps {
   bannerData: BannerData;
@@ -251,7 +252,6 @@ export const BannerTemplate5: React.FC<BannerTemplateProps> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(bannerData);
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -274,8 +274,12 @@ export const BannerTemplate5: React.FC<BannerTemplateProps> = ({
     [themeResponse]
   );
 
+  const { data, handleTextUpdate, handleArrayItemUpdate } = useBuilderLogic(
+    bannerData,
+    onUpdate
+  );
+
   // Parse cards data from bannerData
-  // We'll store cards as JSON string in subtitle or use a custom approach
   const defaultCards: ProcessCardData[] = [
     {
       id: 1,
@@ -297,74 +301,32 @@ export const BannerTemplate5: React.FC<BannerTemplateProps> = ({
     },
   ];
 
-  // Parse cards from data - store as JSON in a custom field or use images metadata
-  // For now, we'll use a simple approach: store in subtitle as JSON or use default
+  // Parse cards from data
   const parseCards = (dataToParse: BannerData): ProcessCardData[] => {
     try {
-      // Try to parse from a custom field stored in images metadata
       const firstImage = dataToParse.images?.[0];
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (firstImage && (firstImage as any).cardsData) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return JSON.parse((firstImage as any).cardsData);
       }
-      // Fallback: try parsing from subtitle if it's JSON
       if (dataToParse.subtitle && dataToParse.subtitle.startsWith("[")) {
         return JSON.parse(dataToParse.subtitle);
       }
-    } catch (e) {
-      // If parsing fails, use default
-    }
+    } catch (e) {}
     return defaultCards;
   };
 
-  const [cards, setCards] = useState<ProcessCardData[]>(() =>
-    parseCards(bannerData)
-  );
-
-  // Sync cards when bannerData changes
-  useEffect(() => {
-    setData(bannerData);
-    const parsedCards = parseCards(bannerData);
-    setCards(parsedCards);
-  }, [bannerData]);
-
-  // Save cards to data
-  const saveCards = (updatedCards: ProcessCardData[]) => {
-    setCards(updatedCards);
-    // Store cards data in first image's metadata
-    const updatedImages = [...(data.images || [])];
-    if (updatedImages.length === 0) {
-      updatedImages.push({
-        id: 1,
-        image: "",
-        image_alt_description: "",
-        link: "",
-        is_active: true,
-      });
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (updatedImages[0] as any).cardsData = JSON.stringify(updatedCards);
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
-  };
+  const cards = parseCards(data);
 
   // Handle section tag update
   const handleSectionTagUpdate = (value: string) => {
-    // Don't overwrite if it's JSON cards data
     if (!value.startsWith("[")) {
-      const updatedData = { ...data, subtitle: value };
-      setData(updatedData);
-      onUpdate?.({ subtitle: value });
+      handleTextUpdate("subtitle")(value);
     }
   };
 
   // Handle title update
   const handleTitleUpdate = (value: string) => {
-    const updatedData = { ...data, title: value };
-    setData(updatedData);
-    onUpdate?.({ title: value });
+    handleTextUpdate("title")(value);
   };
 
   // Handle card update
@@ -375,7 +337,17 @@ export const BannerTemplate5: React.FC<BannerTemplateProps> = ({
   ) => {
     const updatedCards = [...cards];
     updatedCards[index] = { ...updatedCards[index], [field]: value };
-    saveCards(updatedCards);
+
+    // Store cards data in first image's metadata
+    const firstImageId = data.images?.[0]?.id || 1;
+    if (firstImageId !== undefined) {
+      handleArrayItemUpdate(
+        "images",
+        firstImageId
+      )({
+        cardsData: JSON.stringify(updatedCards),
+      });
+    }
   };
 
   // Get section tag and title

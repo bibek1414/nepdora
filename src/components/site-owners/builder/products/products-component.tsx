@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -27,7 +28,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, ShoppingBag, Filter } from "lucide-react";
+import {
+  AlertCircle,
+  Trash2,
+  ShoppingBag,
+  Filter,
+  RefreshCw,
+} from "lucide-react";
 import { Product } from "@/types/owner-site/admin/product";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
@@ -52,6 +59,7 @@ interface ProductsComponentProps {
   onUpdate?: (componentId: string, newData: ProductsComponentData) => void;
   onProductClick?: (productId: number, order: number) => void;
   showSidebar?: boolean;
+  onReplace?: (componentId: string) => void;
 }
 
 export const ProductsComponent: React.FC<ProductsComponentProps> = ({
@@ -62,7 +70,23 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   onUpdate,
   onProductClick,
   showSidebar = true,
+  onReplace,
 }) => {
+  const { data: builderData, handleTextUpdate } = useBuilderLogic(
+    component.data,
+    updatedData => {
+      if (onUpdate) {
+        onUpdate(component.component_id, {
+          ...component,
+          data: {
+            ...component.data,
+            ...updatedData,
+          },
+        });
+      }
+    }
+  );
+
   const productFilters = useProductFilters();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
@@ -75,7 +99,7 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
     style = "grid-1",
     categoryId,
     subCategoryId,
-  } = component.data || {};
+  } = builderData || {};
 
   // Determine if we should show sidebar based on style
   const shouldShowSidebar = showSidebar && style === "product-4";
@@ -144,22 +168,11 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("title")(newTitle);
 
-    updateProductsComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        title: newTitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateProductsComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           title: newTitle,
@@ -169,22 +182,11 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("subtitle")(newSubtitle);
 
-    updateProductsComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        subtitle: newSubtitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateProductsComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           subtitle: newSubtitle,
@@ -278,23 +280,38 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
               open={isDeleteDialogOpen}
               onOpenChange={setIsDeleteDialogOpen}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col gap-2">
                 <Link
-                  href="/admin/products"
+                  href="/admin/products/"
                   target="_blank"
+                  rel="noopener"
                   onClick={e => e.stopPropagation()}
-                  className="z-30"
                 >
-                  <Button variant="outline" size="sm">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full justify-start"
+                  >
                     Manage Products
                   </Button>
                 </Link>
+
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onReplace?.(component.component_id)}
+                  className="h-8 w-fit justify-start bg-white px-3"
+                >
+                  <RefreshCw className="mr-1 h-4 w-4" />
+                  Replace
+                </Button>
+
                 <AlertDialogTrigger asChild>
                   <Button
                     onClick={handleDeleteClick}
                     variant="destructive"
                     size="sm"
-                    className="z-30 h-8 px-3"
+                    className="h-8 w-fit justify-start px-3"
                     disabled={deleteProductsComponent.isPending}
                   >
                     <Trash2 className="mr-1 h-4 w-4" />

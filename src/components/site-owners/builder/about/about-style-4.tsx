@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { AboutUs4Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
+
 interface AboutUsTemplate4Props {
   aboutUsData: AboutUs4Data;
   isEditable?: boolean;
@@ -15,35 +17,8 @@ export const AboutUsTemplate4: React.FC<AboutUsTemplate4Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(aboutUsData);
-
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs4Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs4Data>);
-  };
-
-  // Handle image updates
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  // Handle alt text updates
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
-  };
+  const { data, handleTextUpdate, handleImageUpdate, handleAltUpdate } =
+    useBuilderLogic(aboutUsData, onUpdate);
 
   return (
     <section className="relative overflow-hidden bg-white py-16 sm:py-24 lg:py-32">
@@ -53,8 +28,8 @@ export const AboutUsTemplate4: React.FC<AboutUsTemplate4Props> = ({
             <EditableImage
               src={data.imageUrl}
               alt={data.imageAlt}
-              onImageChange={handleImageUpdate}
-              onAltChange={handleAltUpdate}
+              onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+              onAltChange={handleAltUpdate("imageAlt")}
               isEditable={isEditable}
               className="relative mx-auto w-full max-w-xl overflow-hidden rounded-xl lg:max-w-none"
               width={700}

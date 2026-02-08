@@ -1,4 +1,4 @@
-import { PublishLayoutWrapper } from "@/components/site-owners/publish/publish-layout-wrapper";
+import { SiteLayoutWrapper } from "@/components/site-owners/shared/site-layout-wrapper";
 import { WhatsApp } from "@/components/site-owners/builder/whatsapp/whatsapp";
 import PopupManager from "@/components/site-owners/builder/popup/popup-manager";
 import { DynamicFontProvider } from "@/providers/dynamic-font-provider";
@@ -34,9 +34,7 @@ export default async function PublishLayout({
       <DynamicFavicon />
       <GoogleAnalytics />
       <DynamicFontProvider>
-        <PublishLayoutWrapper siteUser={siteUser}>
-          {children}
-        </PublishLayoutWrapper>
+        <SiteLayoutWrapper siteUser={siteUser}>{children}</SiteLayoutWrapper>
         <WhatsApp />
         <PopupManager />
       </DynamicFontProvider>

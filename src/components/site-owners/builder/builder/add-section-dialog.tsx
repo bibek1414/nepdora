@@ -1490,6 +1490,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
                   id="component-search"
                   type="text"
                   value={query}
+                  autoFocus
                   onChange={event => setQuery(event.target.value)}
                   placeholder="Search components..."
                   className="border-muted focus-visible:ring-ring focus-visible:ring-offset-background w-full rounded-md border bg-white py-2 pr-3 pl-9 text-sm outline-none focus-visible:ring-2 focus-visible:ring-offset-2"

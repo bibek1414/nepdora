@@ -26,6 +26,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 export const StickyFormattingToolbar: React.FC = () => {
   const {
     selection,
+    setSelection,
     clearSelection,
     applyFormatting,
     applyColor,
@@ -148,7 +149,14 @@ export const StickyFormattingToolbar: React.FC = () => {
           document.execCommand("backColor", false, color);
         }
 
-        sel.removeAllRanges();
+        // Update context with the current selection after DOM modification
+        const currentSel = window.getSelection();
+        if (currentSel && currentSel.rangeCount > 0) {
+          setSelection({
+            ...selection,
+            range: currentSel.getRangeAt(0),
+          });
+        }
       }
     }
     setShowHighlightPicker(false);
@@ -158,20 +166,28 @@ export const StickyFormattingToolbar: React.FC = () => {
   const applyFontFamily = (font: string) => {
     if (selection?.range) {
       const sel = window.getSelection();
-      sel?.removeAllRanges();
-      sel?.addRange(selection.range.cloneRange());
+      if (sel) {
+        sel.removeAllRanges();
+        sel.addRange(selection.range.cloneRange());
 
-      try {
-        document.execCommand("fontName", false, font);
-        setSelectedFont(font);
-      } catch (error) {
-        console.warn("Font family application failed:", error);
-        // Fallback: use CSS styling
-        document.execCommand("styleWithCSS", false, "true");
-        document.execCommand("fontName", false, font);
+        try {
+          document.execCommand("fontName", false, font);
+          setSelectedFont(font);
+        } catch (error) {
+          console.warn("Font family application failed:", error);
+          // Fallback: use CSS styling
+          document.execCommand("styleWithCSS", false, "true");
+          document.execCommand("fontName", false, font);
+        }
+
+        // Update context with potentially new range
+        if (sel.rangeCount > 0) {
+          setSelection({
+            ...selection,
+            range: sel.getRangeAt(0),
+          });
+        }
       }
-
-      sel?.removeAllRanges();
     }
     setShowFontPicker(false);
   };
@@ -201,16 +217,23 @@ export const StickyFormattingToolbar: React.FC = () => {
   const handleFormatting = (format: string) => {
     if (selection?.range) {
       const sel = window.getSelection();
-      sel?.removeAllRanges();
-      sel?.addRange(selection.range.cloneRange());
+      if (sel) {
+        sel.removeAllRanges();
+        sel.addRange(selection.range.cloneRange());
 
-      try {
-        document.execCommand(format, false);
-      } catch (error) {
-        console.warn(`Formatting ${format} failed:`, error);
+        try {
+          document.execCommand(format, false);
+          // Update context with potentially new range if browser updated it
+          if (sel.rangeCount > 0) {
+            setSelection({
+              ...selection,
+              range: sel.getRangeAt(0),
+            });
+          }
+        } catch (error) {
+          console.warn(`Formatting ${format} failed:`, error);
+        }
       }
-
-      sel?.removeAllRanges();
     }
   };
 
@@ -218,19 +241,27 @@ export const StickyFormattingToolbar: React.FC = () => {
   const handleColorApply = (color: string) => {
     if (selection?.range) {
       const sel = window.getSelection();
-      sel?.removeAllRanges();
-      sel?.addRange(selection.range.cloneRange());
+      if (sel) {
+        sel.removeAllRanges();
+        sel.addRange(selection.range.cloneRange());
 
-      try {
-        document.execCommand("styleWithCSS", false, "true");
-        document.execCommand("foreColor", false, color);
-        setSelectionColor(color);
-      } catch (error) {
-        console.warn("Color application failed:", error);
-        document.execCommand("foreColor", false, color);
+        try {
+          document.execCommand("styleWithCSS", false, "true");
+          document.execCommand("foreColor", false, color);
+          setSelectionColor(color);
+
+          if (sel.rangeCount > 0) {
+            setSelection({
+              ...selection,
+              range: sel.getRangeAt(0),
+              color: color,
+            });
+          }
+        } catch (error) {
+          console.warn("Color application failed:", error);
+          document.execCommand("foreColor", false, color);
+        }
       }
-
-      sel?.removeAllRanges();
     }
     setShowColorPicker(false);
   };
@@ -240,37 +271,65 @@ export const StickyFormattingToolbar: React.FC = () => {
     if (selection?.range) {
       const sel = window.getSelection();
       if (!sel) return;
-      sel?.removeAllRanges();
-      sel?.addRange(selection.range.cloneRange());
 
       try {
-        document.execCommand("fontSize", false, "7"); // Clear existing size
-        document.execCommand("styleWithCSS", false, "true");
-
-        // Create a span with the desired font size
-        const span = document.createElement("span");
-        span.style.fontSize = size;
-
         const range = sel.getRangeAt(0);
         if (!range.collapsed) {
+          // Create a span with the desired font size
+          const span = document.createElement("span");
+          span.style.fontSize = size;
+
           try {
             const content = range.extractContents();
-            span.appendChild(content);
+
+            // Clean up any existing font-size spans within the extracted content
+            // to prevent nesting.
+            const tempDiv = document.createElement("div");
+            tempDiv.appendChild(content);
+            const redundantSpans = tempDiv.querySelectorAll(
+              'span[style*="font-size"]'
+            );
+            redundantSpans.forEach(s => {
+              const element = s as HTMLElement;
+              element.style.fontSize = "";
+              // If the span has no other styles, we can unwrap it later or now
+              if (
+                !element.getAttribute("style") ||
+                element.style.length === 0
+              ) {
+                while (element.firstChild) {
+                  element.parentNode?.insertBefore(element.firstChild, element);
+                }
+                element.parentNode?.removeChild(element);
+              }
+            });
+
+            span.appendChild(tempDiv.firstChild || tempDiv);
             range.insertNode(span);
+
+            // Re-select the newly created span to persist selection
+            const newRange = document.createRange();
+            newRange.selectNodeContents(span);
+            sel.removeAllRanges();
+            sel.addRange(newRange);
+
+            // Update context so toolbar re-syncs
+            setSelection({
+              ...selection,
+              range: newRange,
+              fontSize: size,
+            });
           } catch (e) {
-            // Fallback to traditional method
-            document.execCommand("fontSize", false, "7");
+            console.warn("Manual span wrapping failed, falling back:", e);
+            document.execCommand("styleWithCSS", false, "true");
+            document.execCommand("fontSize", false, "4"); // Mid size fallback
           }
         }
 
         setSelectionFontSize(size);
       } catch (error) {
         console.warn("Font size application failed:", error);
-        // Fallback
-        applyFontSize(size);
       }
-
-      sel?.removeAllRanges();
     }
     setShowFontSizePicker(false);
   };
@@ -283,6 +342,26 @@ export const StickyFormattingToolbar: React.FC = () => {
       setShowFontSizePicker(false);
       setShowFontPicker(false);
       setShowAlignPicker(false);
+    } else {
+      if (selection.fontSize) {
+        setSelectionFontSize(selection.fontSize);
+      }
+      if (selection.color) {
+        // Convert RGB to HEX for the color picker if needed
+        if (selection.color.startsWith("rgb")) {
+          const rgb = selection.color.match(/\d+/g);
+          if (rgb && rgb.length >= 3) {
+            const hex =
+              "#" +
+              [rgb[0], rgb[1], rgb[2]]
+                .map(x => parseInt(x).toString(16).padStart(2, "0"))
+                .join("");
+            setSelectionColor(hex);
+          }
+        } else {
+          setSelectionColor(selection.color);
+        }
+      }
     }
   }, [selection]);
 

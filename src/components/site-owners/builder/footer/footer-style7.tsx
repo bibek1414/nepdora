@@ -22,6 +22,9 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import { EditableText } from "@/components/ui/editable-text";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface FooterStyle7Props {
   footerData: FooterData;
@@ -61,7 +64,13 @@ const renderSocialIcon = (social: SocialLink) => {
 };
 
 // Logo component
-const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
+const FooterLogo = ({
+  footerData,
+  getImageUrl,
+}: {
+  footerData: FooterData;
+  getImageUrl: any;
+}) => {
   const { logoType, logoImage, logoText, companyName } = footerData;
 
   if (logoType === "text") {
@@ -78,7 +87,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     return logoImage ? (
       <div className="flex items-center">
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-6 w-auto object-contain sm:h-7 md:h-8"
         />
@@ -97,7 +106,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
       {logoImage && (
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-6 w-auto object-contain sm:h-7 md:h-8"
         />
@@ -116,15 +125,6 @@ export function FooterStyle7({
   onUpdate,
   siteUser,
 }: FooterStyle7Props) {
-  const [email, setEmail] = useState("");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const deleteFooterMutation = useDeleteFooterMutation();
-  const createNewsletterMutation = useCreateNewsletter();
-
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -141,6 +141,20 @@ export function FooterStyle7({
     },
   };
 
+  const { data, getImageUrl, handleTextUpdate } = useBuilderLogic(
+    footerData,
+    onUpdate
+  );
+
+  const [email, setEmail] = useState("");
+  const [subscriptionStatus, setSubscriptionStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const deleteFooterMutation = useDeleteFooterMutation();
+  const createNewsletterMutation = useCreateNewsletter();
+
   // Get colors from theme with fallbacks
   const primaryColor = theme.colors?.primary || "#3B82F6";
   const secondaryColor = theme.colors?.secondary || "#F59E0B";
@@ -155,36 +169,14 @@ export function FooterStyle7({
   };
 
   // Extract CTA text from footer data or use defaults
-  const extendedFooterData = footerData as ExtendedFooterData;
+  const extendedFooterData = data as ExtendedFooterData;
   const ctaText1 =
     extendedFooterData.ctaText1 || "Need Any Support For\nTour And Visa?";
   const ctaText2 =
     extendedFooterData.ctaText2 || "Are You Ready For Get\nStarted Travelling?";
-
-  // Handle CTA text updates - ONLY THESE TWO FIELDS ARE INLINE EDITABLE
-  const handleCtaText1Update = (value: string) => {
-    if (onUpdate) {
-      onUpdate({ ctaText1: value } as Partial<FooterData>);
-    }
-  };
-
-  const handleCtaText2Update = (value: string) => {
-    if (onUpdate) {
-      onUpdate({ ctaText2: value } as Partial<FooterData>);
-    }
-  };
+  const pathname = usePathname();
 
   // Function to generate the correct href for links
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref;
-
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
 
   const handleDelete = () => {
     deleteFooterMutation.mutate();
@@ -230,19 +222,19 @@ export function FooterStyle7({
   };
 
   // Find sections by title
-  const servicesSection = footerData.sections.find(
+  const servicesSection = data.sections.find(
     section =>
       section.title.toLowerCase().includes("service") ||
       section.title === "Company"
   );
 
-  const usefulLinksSection = footerData.sections.find(
+  const usefulLinksSection = data.sections.find(
     section =>
       section.title.toLowerCase().includes("useful") ||
       section.title === "Resources"
   );
 
-  const legalSection = footerData.sections.find(
+  const legalSection = data.sections.find(
     section =>
       section.title.toLowerCase().includes("legal") || section.title === "Legal"
   );
@@ -278,7 +270,7 @@ export function FooterStyle7({
             <h3 className="md:text-md text-base leading-tight font-bold whitespace-pre-line sm:text-lg lg:text-xl">
               <EditableText
                 value={ctaText1}
-                onChange={handleCtaText1Update}
+                onChange={handleTextUpdate("ctaText1" as any)}
                 as="span"
                 isEditable={isEditable}
                 placeholder="Need Any Support For\nTour And Visa?"
@@ -287,7 +279,7 @@ export function FooterStyle7({
             </h3>
           </div>
 
-          <div className="mx-4 hidden h-8 w-[1px] bg-white/20 sm:mx-6 sm:h-10 md:mx-8 md:block md:h-12"></div>
+          <div className="mx-4 hidden h-8 w-px bg-white/20 sm:mx-6 sm:h-10 md:mx-8 md:block md:h-12"></div>
 
           <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
             <div
@@ -313,7 +305,7 @@ export function FooterStyle7({
             <h3 className="text-base leading-tight font-bold whitespace-pre-line sm:text-lg md:text-xl lg:text-2xl">
               <EditableText
                 value={ctaText2}
-                onChange={handleCtaText2Update}
+                onChange={handleTextUpdate("ctaText2" as any)}
                 as="span"
                 isEditable={isEditable}
                 placeholder="Are You Ready For Get\nStarted Travelling?"
@@ -342,13 +334,13 @@ export function FooterStyle7({
                   className="-rotate-45 fill-current sm:h-5 sm:w-5 md:h-5 md:w-5"
                 />
               </div>
-              <FooterLogo footerData={footerData} />
+              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
             <p className="text-xs leading-relaxed text-white sm:text-sm">
-              {footerData.description}
+              {data.description}
             </p>
             <div className="flex gap-2.5 sm:gap-3 md:gap-4">
-              {footerData.socialLinks.map(social => (
+              {data.socialLinks.map(social => (
                 <Link
                   key={social.id}
                   href={social.href || "#"}
@@ -387,7 +379,12 @@ export function FooterStyle7({
                 >
                   <span style={{ color: secondaryColor }}>✓</span>
                   <Link
-                    href={generateLinkHref(link.href || "")}
+                    href={generateLinkHref(
+                      link.href || "",
+                      siteUser,
+                      pathname,
+                      isEditable
+                    )}
                     className="transition-colors hover:text-inherit"
                     style={
                       {
@@ -422,7 +419,12 @@ export function FooterStyle7({
                 >
                   <span style={{ color: secondaryColor }}>&gt;</span>
                   <Link
-                    href={generateLinkHref(link.href || "")}
+                    href={generateLinkHref(
+                      link.href || "",
+                      siteUser,
+                      pathname,
+                      isEditable
+                    )}
                     className="transition-colors hover:text-inherit"
                     style={
                       {
@@ -441,13 +443,13 @@ export function FooterStyle7({
           {/* Newsletter */}
           <div>
             <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
-              {footerData.newsletter.title}
+              {data.newsletter.title}
             </h4>
             <p className="mb-3 text-xs leading-relaxed text-white/90 sm:mb-4 sm:text-sm">
-              {footerData.newsletter.description}
+              {data.newsletter.description}
             </p>
 
-            {footerData.newsletter.enabled ? (
+            {data.newsletter.enabled ? (
               subscriptionStatus === "success" ? (
                 <div className="flex items-center justify-center gap-2 text-green-400">
                   <CheckCircle className="h-5 w-5" />
@@ -501,12 +503,17 @@ export function FooterStyle7({
           className="flex flex-col items-center justify-between gap-3 px-3 py-6 text-[10px] leading-relaxed sm:gap-4 sm:px-4 sm:py-7 sm:text-xs md:flex-row md:gap-0 md:px-6 md:py-8 lg:px-12"
           style={{ color: `${primaryForeground}80` }}
         >
-          <p>{footerData.copyright}</p>
+          <p>{data.copyright}</p>
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:justify-start md:gap-8">
             {(legalSection?.links || []).map(link => (
               <Link
                 key={link.id}
-                href={generateLinkHref(link.href || "")}
+                href={generateLinkHref(
+                  link.href || "",
+                  siteUser,
+                  pathname,
+                  isEditable
+                )}
                 className="transition-colors hover:text-white"
                 style={{ color: "inherit" }}
                 onClick={isEditable ? e => e.preventDefault() : undefined}

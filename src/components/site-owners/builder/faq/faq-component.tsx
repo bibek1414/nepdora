@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
 import { useFAQs } from "@/hooks/owner-site/admin/use-faq";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -27,8 +28,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, HelpCircle, Plus } from "lucide-react";
+import { AlertCircle, Trash2, HelpCircle, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { EditableText } from "@/components/ui/editable-text";
 import { FAQForm } from "../../admin/faq/faq-form";
 
@@ -38,6 +40,7 @@ interface FAQComponentProps {
   siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: FAQComponentData) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const FAQComponent: React.FC<FAQComponentProps> = ({
@@ -46,7 +49,23 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   siteUser,
   pageSlug,
   onUpdate,
+  onReplace,
 }) => {
+  const { data: builderData, handleTextUpdate } = useBuilderLogic(
+    component.data,
+    updatedData => {
+      if (onUpdate) {
+        onUpdate(component.component_id, {
+          ...component,
+          data: {
+            ...component.data,
+            ...updatedData,
+          },
+        });
+      }
+    }
+  );
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
@@ -54,7 +73,7 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     title = "Frequently Asked Questions",
     subtitle,
     style = "accordion",
-  } = component.data || {};
+  } = builderData || {};
 
   // Use unified mutation hooks
   const deleteFAQComponent = useDeleteComponentMutation(pageSlug || "", "faq");
@@ -83,22 +102,11 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("title")(newTitle);
 
-    updateFAQComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        title: newTitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateFAQComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           title: newTitle,
@@ -113,22 +121,11 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("subtitle")(newSubtitle);
 
-    updateFAQComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        subtitle: newSubtitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateFAQComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           subtitle: newSubtitle,
@@ -138,22 +135,11 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   };
 
   const handleContactTitleChange = (newContactTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("contactTitle" as any)(newContactTitle);
 
-    updateFAQComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        contactTitle: newContactTitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateFAQComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           contactTitle: newContactTitle,
@@ -163,22 +149,11 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   };
 
   const handleContactDescriptionChange = (newContactDescription: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("contactDescription" as any)(newContactDescription);
 
-    updateFAQComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        contactDescription: newContactDescription,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateFAQComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           contactDescription: newContactDescription,
@@ -188,22 +163,11 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   };
 
   const handleButtonTextChange = (newButtonText: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("buttonText" as any)(newButtonText);
 
-    updateFAQComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        buttonText: newButtonText,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateFAQComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           buttonText: newButtonText,
@@ -377,11 +341,25 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
     return (
       <div className="group relative">
         {/* Controls */}
-        <div className="absolute -right-5 z-20 flex translate-x-full gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-          {/* Add Button */}
-          <Button onClick={handleAddClick} variant="outline" size="sm">
-            <Plus className="mr-1 h-4 w-4" />
-            FAQ
+        <div className="absolute -right-5 z-20 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <Link href="/admin/faq/" target="_blank" rel="noopener">
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full justify-start"
+            >
+              Manage FAQ
+            </Button>
+          </Link>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onReplace?.(component.component_id)}
+            className="h-8 w-fit justify-start bg-white px-3"
+          >
+            <RefreshCw className="mr-1 h-4 w-4" />
+            Replace
           </Button>
 
           {/* Delete Button */}
@@ -393,7 +371,7 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
               <Button
                 variant="destructive"
                 size="sm"
-                className="h-8 px-3"
+                className="h-8 w-fit justify-start px-3"
                 disabled={deleteFAQComponent.isPending}
               >
                 <Trash2 className="mr-1 h-4 w-4" />

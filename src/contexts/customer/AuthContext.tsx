@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useEffect, ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import {
   User,
@@ -32,9 +32,10 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   const [tokens, setTokens] = useState<AuthTokens | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    const storedTokens = localStorage.getItem("customer-authTokens"); // Updated key
+    const storedTokens = localStorage.getItem("customer-authTokens");
     if (storedTokens) {
       try {
         const parsedTokens: AuthTokens = JSON.parse(storedTokens);
@@ -42,8 +43,9 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
           parsedTokens.access
         );
 
-        if (decodedAccess.exp * 1000 > Date.now()) {
-          setTokens(parsedTokens);
+        // Check if token is expired
+        const currentTime = Date.now() / 1000;
+        if (decodedAccess.exp > currentTime) {
           setUser({
             id: decodedAccess.user_id,
             email: decodedAccess.email,
@@ -53,14 +55,14 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
             phone: decodedAccess.phone,
             address: decodedAccess.address,
           });
+          setTokens(parsedTokens);
         } else {
-          // Token expired
-          localStorage.removeItem("customer-authTokens"); // Updated key
+          localStorage.removeItem("customer-authTokens");
           toast.error("Session expired. Please log in again.");
         }
       } catch (error) {
         console.error("Failed to parse stored tokens or decode token:", error);
-        localStorage.removeItem("customer-authTokens"); // Updated key
+        localStorage.removeItem("customer-authTokens");
       }
     }
     setIsLoading(false);
@@ -69,13 +71,12 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   const handleAuthSuccess = (userData: User, tokenData: AuthTokens) => {
     setUser(userData);
     setTokens(tokenData);
-    // Store with updated key and access_token format for compatibility
     const tokensToStore = {
       access: tokenData.access,
       refresh: tokenData.refresh,
-      access_token: tokenData.access, // For backward compatibility
+      access_token: tokenData.access,
     };
-    localStorage.setItem("customer-authTokens", JSON.stringify(tokensToStore)); // Updated key
+    localStorage.setItem("customer-authTokens", JSON.stringify(tokensToStore));
   };
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,77 +85,33 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
       const status = error.response.status;
       const data = error.response.data;
 
-      // Handle errors array format: {status: 400, errors: [{message: "...", code: "..."}]}
       if (
         data?.errors &&
         Array.isArray(data.errors) &&
         data.errors.length > 0
       ) {
         const firstError = data.errors[0];
-
-        // Check for specific error codes
-        if (firstError.code === "too_many_login_attempts") {
-          return "Too many failed login attempts. Please wait a few minutes before trying again.";
-        }
-
-        if (firstError.code === "invalid_credentials") {
-          return "Invalid email or password. Please check your credentials and try again.";
-        }
-
-        if (firstError.code === "user_not_found") {
-          return "Account not found. Please check your email address or sign up for a new account.";
-        }
-
-        if (firstError.code === "account_disabled") {
-          return "Your account has been disabled. Please contact support for assistance.";
-        }
-
-        return firstError.message || "Login failed. Please try again.";
+        if (firstError.code === "too_many_login_attempts")
+          return "Too many failed login attempts.";
+        if (firstError.code === "invalid_credentials")
+          return "Invalid email or password.";
+        return firstError.message || "Login failed.";
       }
 
-      // Fallback to status code based handling
       switch (status) {
         case 401:
-          return "Invalid email or password. Please check your credentials and try again.";
-        case 400:
-          return (
-            data?.message ||
-            data?.error ||
-            data?.detail ||
-            "Invalid login credentials. Please check your email and password."
-          );
+          return "Invalid email or password.";
         case 403:
-          return "Your account has been suspended or disabled. Please contact support.";
+          return "Your account has been suspended.";
         case 404:
-          return "Account not found. Please check your email address or sign up for a new account.";
-        case 429:
-          return "Too many login attempts. Please wait a few minutes before trying again.";
-        case 500:
-          return "Server error occurred. Please try again later.";
+          return "Account not found.";
         default:
-          return (
-            data?.message ||
-            data?.error ||
-            data?.detail ||
-            "Login failed. Please try again."
-          );
+          return data?.message || data?.error || "Login failed.";
       }
     } else if (error.request) {
-      return "Network error. Please check your internet connection and try again.";
+      return "Network error. Please check your connection.";
     } else {
-      return error.message || "An unexpected error occurred. Please try again.";
-    }
-  };
-
-  // Helper function to check if a page exists (you might need to implement this based on your API)
-  const checkPageExists = async (
-    siteUser: string,
-    page: string
-  ): Promise<boolean> => {
-    try {
-      return page === "home";
-    } catch (error) {
-      return false;
+      return error.message || "An unexpected error occurred.";
     }
   };
 
@@ -163,14 +120,10 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       const response = await loginUser(data);
-
-      // Access tokens from the correct path in the response
       const accessToken = response.tokens.access;
       const refreshToken = response.tokens.refresh;
 
-      if (!accessToken) {
-        throw new Error("No access token received from server");
-      }
+      if (!accessToken) throw new Error("No access token received");
 
       const decodedAccess = jwtDecode<DecodedAccessToken>(accessToken);
       const loggedInUser: User = {
@@ -188,83 +141,48 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
         refresh: refreshToken,
       });
 
-      toast.success("Login successful! Welcome back!");
+      toast.success("Login successful!");
 
-      // Handle redirect after successful login
-      if (typeof window !== "undefined") {
-        // Check for redirect URL in sessionStorage first
-        const redirectUrl = sessionStorage.getItem("redirectAfterLogin");
+      // Handle redirect
+      const isPreview = pathname?.startsWith("/preview");
+      const isPublish = pathname?.startsWith("/publish");
+      const pathSegments = pathname.split("/").filter(Boolean);
 
-        if (redirectUrl) {
-          // Clear the stored redirect URL
-          sessionStorage.removeItem("redirectAfterLogin");
-          // Redirect to the stored URL
-          router.push(redirectUrl);
-        } else {
-          // Check URL parameters as fallback
-          const urlParams = new URLSearchParams(window.location.search);
-          const redirectParam = urlParams.get("redirect");
-
-          if (redirectParam) {
-            router.push(decodeURIComponent(redirectParam));
-          } else {
-            // FIXED: Extract siteUser from current URL path instead of using email
-            const currentPath = window.location.pathname;
-            const pathSegments = currentPath.split("/");
-
-            // Find the siteUser from the URL pattern /preview/{siteUser}/login
-            let originalSiteUser = null;
-            const previewIndex = pathSegments.indexOf("preview");
-            if (previewIndex !== -1 && previewIndex + 1 < pathSegments.length) {
-              originalSiteUser = pathSegments[previewIndex + 1];
-            }
-
-            // Use the original siteUser from URL, or fallback to user ID/email
-            const siteUser =
-              originalSiteUser ||
-              loggedInUser.id?.toString() ||
-              loggedInUser.email;
-
-            try {
-              // Try to check if home page exists
-              const homePageExists = await checkPageExists(siteUser, "home");
-
-              if (homePageExists) {
-                router.push(`/preview/${siteUser}/home`);
-              } else {
-                // Fallback to base preview URL
-                router.push(`/preview/${siteUser}`);
-              }
-            } catch (error) {
-              console.warn(
-                "Could not check page existence, using fallback:",
-                error
-              );
-              // If page check fails, try home first, then fallback
-              router.push(`/preview/${siteUser}/home`);
-            }
-          }
+      let siteUser = null;
+      if (isPreview) {
+        const previewIndex = pathSegments.indexOf("preview");
+        if (previewIndex !== -1 && previewIndex + 1 < pathSegments.length) {
+          siteUser = pathSegments[previewIndex + 1];
         }
-      } else {
-        // Fallback for server-side rendering - try to extract from router
-        // You might need to adjust this based on your Next.js setup
-        const siteUser = loggedInUser.id?.toString() || loggedInUser.email;
-        router.push(`/preview/${siteUser}/home`);
+      } else if (isPublish) {
+        const publishIndex = pathSegments.indexOf("publish");
+        if (publishIndex !== -1 && publishIndex + 1 < pathSegments.length) {
+          siteUser = pathSegments[publishIndex + 1];
+        }
       }
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+      // Fallback for subdomain
+      if (!siteUser && typeof window !== "undefined") {
+        const hostname = window.location.hostname;
+        if (hostname.includes(".localhost")) siteUser = hostname.split(".")[0];
+        else if (
+          hostname.includes(".nepdora.com") &&
+          hostname !== "nepdora.com"
+        )
+          siteUser = hostname.split(".")[0];
+      }
+
+      let routePrefix = "";
+      if (isPreview && siteUser) {
+        routePrefix = `/preview/${siteUser}`;
+      } else if (isPublish && siteUser) {
+        routePrefix = `/publish/${siteUser}`;
+      }
+
+      if (siteUser) router.push(`${routePrefix}/home`);
+      else router.push("/");
     } catch (error: any) {
-      const errorMessage = getErrorMessage(error);
-
-      toast.error(errorMessage);
-
-      console.error("Login error:", {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-        error,
-      });
-
-      // Re-throw the error so the form can handle it
+      toast.error(getErrorMessage(error));
       throw error;
     } finally {
       setIsLoading(false);
@@ -272,56 +190,39 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const signup = async (data: any) => {
     setIsLoading(true);
     try {
-      const signupData = {
-        ...data,
-        password: data.password,
-      };
-
+      const signupData = { ...data };
       delete signupData.confirmPassword;
+      await signupUser(signupData);
 
-      const response = await signupUser(signupData);
+      toast.success("Account created successfully! Please log in.");
 
-      // Don't auto-login after signup, just redirect to login page
-      toast.success("Account created successfully! Please log in to continue.");
+      const isPreview = pathname?.startsWith("/preview");
+      const isPublish = pathname?.startsWith("/publish");
+      const pathSegments = pathname.split("/").filter(Boolean);
 
-      // FIXED: Extract siteUser from current URL path and redirect to preview-specific login
-      if (typeof window !== "undefined") {
-        const currentPath = window.location.pathname;
-        const pathSegments = currentPath.split("/");
-
-        // Find the siteUser from the URL pattern /preview/{siteUser}/signup
-        let siteUser = null;
+      let siteUser = null;
+      if (isPreview) {
         const previewIndex = pathSegments.indexOf("preview");
-        if (previewIndex !== -1 && previewIndex + 1 < pathSegments.length) {
+        if (previewIndex !== -1 && previewIndex + 1 < pathSegments.length)
           siteUser = pathSegments[previewIndex + 1];
-        }
-
-        if (siteUser) {
-          router.push(`/preview/${siteUser}/login`);
-        } else {
-          // Fallback to general login page if siteUser cannot be determined
-          router.push("/login");
-        }
-      } else {
-        // Fallback for server-side rendering
-        router.push("/login");
+      } else if (isPublish) {
+        const publishIndex = pathSegments.indexOf("publish");
+        if (publishIndex !== -1 && publishIndex + 1 < pathSegments.length)
+          siteUser = pathSegments[publishIndex + 1];
       }
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+      let loginPath = "/login";
+      if (isPreview && siteUser) {
+        loginPath = `/preview/${siteUser}/login`;
+      } else if (isPublish && siteUser) {
+        loginPath = `/publish/${siteUser}/login`;
+      }
+      router.push(loginPath);
     } catch (error: any) {
-      const errorMessage = getErrorMessage(error);
-
-      toast.error(errorMessage);
-
-      console.error("Signup error:", {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-        error,
-      });
+      toast.error(getErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -330,12 +231,8 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     setTokens(null);
-    localStorage.removeItem("customer-authTokens"); // Updated key
-    // Clear any pending redirects
-    if (typeof window !== "undefined") {
-      sessionStorage.removeItem("redirectAfterLogin");
-    }
-    toast.success("You have been successfully logged out.");
+    localStorage.removeItem("customer-authTokens");
+    toast.success("Logged out successfully.");
     router.push("/login");
   };
 

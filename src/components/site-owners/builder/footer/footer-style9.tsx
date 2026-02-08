@@ -8,6 +8,10 @@ import {
 } from "lucide-react";
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
 import Link from "next/link";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface FooterStyle9Props {
   footerData: FooterData;
@@ -32,14 +36,7 @@ const LinkItem: React.FC<{
   isEditable?: boolean;
   siteUser?: string;
 }> = ({ label, href, isEditable, siteUser }) => {
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref;
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const pathname = usePathname();
 
   return (
     <li className="mb-3">
@@ -53,7 +50,7 @@ const LinkItem: React.FC<{
         </span>
       ) : (
         <Link
-          href={generateLinkHref(href)}
+          href={generateLinkHref(href, siteUser, pathname, isEditable)}
           className="group flex items-center text-[15px] font-medium text-gray-300 transition-colors duration-200 hover:text-white"
         >
           <ChevronRight
@@ -80,7 +77,13 @@ const SocialButton: React.FC<{
   </a>
 );
 
-const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
+const FooterLogo = ({
+  footerData,
+  getImageUrl,
+}: {
+  footerData: FooterData;
+  getImageUrl: any;
+}) => {
   const { logoType, logoImage, logoText, companyName } = footerData;
 
   if (logoType === "text") {
@@ -94,7 +97,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
   if (logoType === "image") {
     return logoImage ? (
       <img
-        src={logoImage}
+        src={getImageUrl(logoImage)}
         alt={companyName}
         className="h-10 w-auto object-contain"
       />
@@ -109,7 +112,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     <div className="flex items-center gap-3">
       {logoImage && (
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-10 w-auto object-contain"
         />
@@ -126,13 +129,31 @@ export function FooterStyle9({
   isEditable,
   siteUser,
 }: FooterStyle9Props) {
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
+  const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
+
   // Map sections to specific columns
-  const studentServices = footerData.sections[0];
-  const aboutLinks = footerData.sections[1];
-  const quickLinks = footerData.sections[2];
+  const studentServices = data.sections[0];
+  const aboutLinks = data.sections[1];
+  const quickLinks = data.sections[2];
 
   // Default policy links if not provided
-  const policyLinks = footerData.policyLinks || [
+  const policyLinks = data.policyLinks || [
     { id: "p1", text: "Privacy Policy", href: "#" },
     { id: "p2", text: "Terms & Conditions", href: "#" },
     { id: "p3", text: "Code of Conduct", href: "#" },
@@ -220,7 +241,7 @@ export function FooterStyle9({
           <div className="flex flex-col items-start space-y-8 lg:col-span-3 lg:items-end">
             {/* Social Icons */}
             <div className="flex gap-3">
-              {footerData.socialLinks.map(social => (
+              {data.socialLinks.map(social => (
                 <SocialButton
                   key={social.id}
                   icon={social.icon}
@@ -231,11 +252,11 @@ export function FooterStyle9({
 
             {/* Logo */}
             <div className="mt-4 cursor-pointer opacity-90 transition-opacity hover:opacity-100">
-              <FooterLogo footerData={footerData} />
+              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
 
             {/* Decorative bottom graphic hint */}
-            <div className="mt-auto hidden h-32 w-full translate-y-12 rounded-t-full bg-gradient-to-t from-white/5 to-transparent opacity-20 blur-xl lg:block"></div>
+            <div className="mt-auto hidden h-32 w-full translate-y-12 rounded-t-full bg-linear-to-t from-white/5 to-transparent opacity-20 blur-xl lg:block"></div>
           </div>
         </div>
 
@@ -246,7 +267,7 @@ export function FooterStyle9({
         <div className="flex flex-col items-center justify-between gap-4 text-sm text-gray-400 md:flex-row">
           {/* Left: Copyright */}
           <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
-            <p>{footerData.copyright}</p>
+            <p>{data.copyright}</p>
             <p>Powered By Nepdora</p>
           </div>
 

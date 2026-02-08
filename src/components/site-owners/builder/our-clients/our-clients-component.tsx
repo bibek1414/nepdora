@@ -7,6 +7,7 @@ import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { OurClients1 } from "./our-clients-1";
 import { OurClients2 } from "./our-clients-2";
 import { OurClients3 } from "./our-clients-3";
@@ -22,8 +23,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { EditableText } from "@/components/ui/editable-text";
-import { Trash2 } from "lucide-react";
+import { Trash2, RefreshCw } from "lucide-react";
 
 interface OurClientsComponentProps {
   component: OurClientsComponentData;
@@ -31,6 +33,7 @@ interface OurClientsComponentProps {
   siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: OurClientsComponentData) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
@@ -39,14 +42,30 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
   siteUser,
   pageSlug,
   onUpdate,
+  onReplace,
 }) => {
+  const { data: builderData, handleTextUpdate } = useBuilderLogic(
+    component.data,
+    updatedData => {
+      if (onUpdate) {
+        onUpdate(component.component_id, {
+          ...component,
+          data: {
+            ...component.data,
+            ...updatedData,
+          },
+        });
+      }
+    }
+  );
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
     title = "Our Clients",
     subtitle,
     style = "our-clients-1",
-  } = component.data || {};
+  } = builderData || {};
 
   // Use unified mutation hooks
   const deleteOurClientsComponent = useDeleteComponentMutation(
@@ -78,24 +97,11 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("title")(newTitle);
 
-    // Update component data via unified API
-    updateOurClientsComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        title: newTitle,
-      },
-    });
-
-    // Also update local state if onUpdate is provided
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateOurClientsComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           title: newTitle,
@@ -105,24 +111,11 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("subtitle")(newSubtitle);
 
-    // Update component data via unified API
-    updateOurClientsComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        subtitle: newSubtitle,
-      },
-    });
-
-    // Also update local state if onUpdate is provided
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateOurClientsComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           subtitle: newSubtitle,
@@ -133,7 +126,7 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
 
   const renderOurClients = () => {
     const props = {
-      data: component.data,
+      data: builderData,
     };
 
     switch (style) {
@@ -157,18 +150,42 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <AlertDialogTrigger asChild>
+            <div className="flex flex-col gap-2">
+              <Link href="/admin/our-clients/" target="_blank" rel="noopener">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full justify-start"
+                >
+                  Manage Our Clients
+                </Button>
+              </Link>
+
               <Button
-                onClick={handleDeleteClick}
-                variant="destructive"
                 size="sm"
-                className="h-8 px-3"
-                disabled={deleteOurClientsComponent.isPending}
+                variant="outline"
+                onClick={() => onReplace?.(component.component_id)}
+                className="h-8 w-fit justify-start bg-white px-3"
               >
-                <Trash2 className="mr-1 h-4 w-4" />
-                {deleteOurClientsComponent.isPending ? "Deleting..." : "Delete"}
+                <RefreshCw className="mr-1 h-4 w-4" />
+                Replace
               </Button>
-            </AlertDialogTrigger>
+
+              <AlertDialogTrigger asChild>
+                <Button
+                  onClick={handleDeleteClick}
+                  variant="destructive"
+                  size="sm"
+                  className="h-8 w-fit justify-start px-3"
+                  disabled={deleteOurClientsComponent.isPending}
+                >
+                  <Trash2 className="mr-1 h-4 w-4" />
+                  {deleteOurClientsComponent.isPending
+                    ? "Deleting..."
+                    : "Delete"}
+                </Button>
+              </AlertDialogTrigger>
+            </div>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="flex items-center gap-2">

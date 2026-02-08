@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ChevronRight, Play } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate12Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import EiffelTowerBg from "../../../ui/eiffle-tower-bg";
 
 interface HeroTemplate12Props {
@@ -23,19 +23,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState<HeroTemplate12Data>(() => ({
-    ...heroData,
-    buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-  }));
-
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    setData({
-      ...heroData,
-      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-    });
-  }, [heroData]);
 
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -53,54 +41,14 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate =
-    (field: keyof HeroTemplate12Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate12Data>);
-    };
-
-  // Handle image updates
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  // Handle alt text updates
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
-  };
-
-  // Handle button updates
-  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text, href } : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
-  };
-
-  // Get optimized image URL
-  const getImageUrl = () => {
-    if (!data.imageUrl) return "";
-    return optimizeCloudinaryUrl(convertUnsplashUrl(data.imageUrl), {
-      width: 800,
-      quality: "auto",
-      format: "auto",
-    });
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleButtonUpdate,
+    getImageUrl,
+  } = useBuilderLogic(heroData, onUpdate);
 
   // Ensure we have buttons
   const primaryButton = data.buttons?.find(
@@ -165,7 +113,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                 text={primaryButton.text}
                 href={primaryButton.href || "#"}
                 onChange={(text, href) => {
-                  handleButtonUpdate(primaryButton.id, text, href);
+                  handleButtonUpdate("buttons")(primaryButton.id, text, href);
                 }}
                 isEditable={isEditable}
                 siteUser={siteUser}
@@ -185,7 +133,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                 text={secondaryButton.text}
                 href={secondaryButton.href || "#"}
                 onChange={(text, href) => {
-                  handleButtonUpdate(secondaryButton.id, text, href);
+                  handleButtonUpdate("buttons")(secondaryButton.id, text, href);
                 }}
                 isEditable={isEditable}
                 siteUser={siteUser}
@@ -214,10 +162,10 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
           <div className="relative flex h-full w-full items-center justify-center lg:justify-end">
             <div className="relative z-10 h-full w-full max-w-xs overflow-hidden rounded-lg border-[2px] border-white/10 shadow-2xl sm:max-w-sm sm:rounded-xl sm:border-[3px] md:max-w-md md:rounded-xl md:border-[4px] lg:rounded-2xl lg:border-[5px] xl:max-w-lg xl:border-[6px] 2xl:border-[8px]">
               <EditableImage
-                src={getImageUrl() || imageUrl}
+                src={getImageUrl(data.imageUrl, { width: 800 }) || imageUrl}
                 alt={data.imageAlt || "Happy traveler in Paris"}
-                onImageChange={handleImageUpdate}
-                onAltChange={handleAltUpdate}
+                onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+                onAltChange={handleAltUpdate("imageAlt")}
                 isEditable={isEditable}
                 className="h-150 w-full object-cover"
                 width={600}

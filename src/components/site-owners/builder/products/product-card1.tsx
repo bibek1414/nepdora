@@ -16,6 +16,9 @@ import {
 import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
+
 interface ProductCard1Props {
   product: Product;
   siteUser?: string;
@@ -29,6 +32,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
   onClick,
   onWishlistToggle,
 }) => {
+  const pathname = usePathname();
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const { data: wishlistItems } = useWishlist();
@@ -125,11 +129,11 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
   };
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/products-draft/${product.slug}`;
-    } else {
-      return `/preview/products-draft/${product.slug}`;
-    }
+    return generateLinkHref(
+      `/products-draft/${product.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const handleClick = () => {
@@ -170,7 +174,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
                 fill
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
             </div>
 
             {/* Always Visible Wishlist Button */}

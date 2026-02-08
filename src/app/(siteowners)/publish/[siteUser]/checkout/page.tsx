@@ -1,4 +1,4 @@
-import CheckoutPage from "@/components/site-owners/publish/checkout/checkout-page";
+import CheckoutPage from "@/components/site-owners/builder/checkout/checkout-page";
 import { generatePublishPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 

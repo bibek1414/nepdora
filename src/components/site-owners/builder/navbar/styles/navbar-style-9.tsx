@@ -24,6 +24,8 @@ import {
 } from "lucide-react";
 import { NavbarLogo } from "../navbar-logo";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 const EditableItem: React.FC<{
   onEdit: () => void;
   onDelete?: () => void;
@@ -67,17 +69,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
     if (disableClicks) return;
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable || !siteUser || disableClicks) return "#";
-
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const pathname = usePathname();
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
     if (disableClicks || isEditable) {
@@ -97,7 +89,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
         {/* Logo - Left side */}
         <div className="flex min-w-0 flex-1 items-center lg:gap-6">
           <div
-            className={`flex-shrink-0 ${disableClicks ? "pointer-events-auto" : ""}`}
+            className={`shrink-0 ${disableClicks ? "pointer-events-auto" : ""}`}
           >
             {isEditable && onEditLogo ? (
               <EditableItem onEdit={onEditLogo}>
@@ -118,7 +110,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
         </div>
 
         {/* Desktop Navigation - Right side */}
-        <div className="hidden flex-shrink-0 items-center gap-4 lg:flex">
+        <div className="hidden shrink-0 items-center gap-4 lg:flex">
           {/* Desktop Links */}
           <div className="hidden items-center gap-6 lg:flex">
             {links.map(link =>
@@ -139,7 +131,13 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
               ) : (
                 <Link
                   key={link.id}
-                  href={generateLinkHref(link.href)}
+                  href={generateLinkHref(
+                    link.href,
+                    siteUser,
+                    pathname,
+                    isEditable,
+                    disableClicks
+                  )}
                   onClick={e => handleLinkClick(e, link.href)}
                   className={`text-base font-medium whitespace-nowrap transition-colors ${
                     disableClicks
@@ -187,7 +185,15 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   {disableClicks ? (
                     button.text
                   ) : (
-                    <Link href={generateLinkHref(button.href)}>
+                    <Link
+                      href={generateLinkHref(
+                        button.href,
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        disableClicks
+                      )}
+                    >
                       {button.text}
                     </Link>
                   )}
@@ -246,7 +252,13 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                       asChild={!disableClicks}
                     >
                       <Link
-                        href={generateLinkHref(link.href)}
+                        href={generateLinkHref(
+                          link.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
                         onClick={e => handleLinkClick(e, link.href)}
                         className={`w-full text-left ${
                           disableClicks ? "pointer-events-none opacity-60" : ""
@@ -297,7 +309,13 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                         <span>{button.text}</span>
                       ) : (
                         <Link
-                          href={generateLinkHref(button.href)}
+                          href={generateLinkHref(
+                            button.href,
+                            siteUser,
+                            pathname,
+                            isEditable,
+                            disableClicks
+                          )}
                           className="w-full text-center"
                         >
                           {button.text}

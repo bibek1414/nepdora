@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, RefreshCw } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -65,12 +65,14 @@ interface AboutUsComponentProps {
   component: AboutUsComponentData;
   isEditable?: boolean;
   pageSlug: string;
+  onReplace?: (componentId: string) => void;
 }
 
 export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
   component,
   isEditable = false,
   pageSlug,
+  onReplace,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -208,14 +210,28 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
       {/* Simplified delete button for all templates */}
       {isEditable && (
         <>
-          <div className="absolute -right-5 z-30 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 rounded-lg p-1 opacity-0 transition-opacity group-hover:opacity-100">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                onReplace?.(component.component_id || component.id.toString())
+              }
+              className="h-8 w-fit justify-start bg-white px-3"
+            >
+              <RefreshCw className="mr-1 h-4 w-4" />
+              Replace
+            </Button>
+
             <Button
               size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
+              className="h-8 w-fit justify-start px-3"
+              disabled={deleteAboutUsMutation.isPending}
             >
-              <Trash2 className="h-4 w-4" />
-              Delete
+              <Trash2 className="mr-1 h-4 w-4" />
+              {deleteAboutUsMutation.isPending ? "Deleting..." : "Delete"}
             </Button>
           </div>
 

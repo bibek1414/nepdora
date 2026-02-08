@@ -25,7 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, Rss } from "lucide-react";
+import { AlertCircle, Trash2, Rss, RefreshCw } from "lucide-react";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -39,6 +39,7 @@ interface BlogComponentProps {
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: BlogComponentData) => void;
   onBlogClick?: (blogSlug: string, order: number) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const BlogComponent: React.FC<BlogComponentProps> = ({
@@ -48,6 +49,7 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
   pageSlug,
   onUpdate,
   onBlogClick,
+  onReplace,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -239,18 +241,31 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2">
               <Link href="/admin/blogs/" target="_blank" rel="noopener">
-                <Button size="sm" variant="outline">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full justify-start"
+                >
                   Manage Blogs
                 </Button>
               </Link>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onReplace?.(component.component_id)}
+                className="h-8 w-fit justify-start bg-white px-3"
+              >
+                <RefreshCw className="mr-1 h-4 w-4" />
+                Replace
+              </Button>
               <AlertDialogTrigger asChild>
                 <Button
                   onClick={handleDeleteClick}
                   variant="destructive"
                   size="sm"
-                  className="h-8 px-3"
+                  className="h-8 w-fit justify-start px-3"
                   disabled={deleteBlogComponent.isPending}
                 >
                   <Trash2 className="mr-1 h-4 w-4" />

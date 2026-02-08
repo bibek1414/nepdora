@@ -25,6 +25,9 @@ import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-foote
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface FooterStyle2Props {
   footerData: FooterData;
@@ -63,7 +66,13 @@ const renderSocialIcon = (social: SocialLink) => {
 };
 
 // Logo component
-const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
+const FooterLogo = ({
+  footerData,
+  getImageUrl,
+}: {
+  footerData: FooterData;
+  getImageUrl: any;
+}) => {
   const { logoType, logoImage, logoText, companyName } = footerData;
 
   if (logoType === "text") {
@@ -80,7 +89,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     return logoImage ? (
       <div className="flex items-center">
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-8 w-auto object-contain"
         />
@@ -97,7 +106,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     <div className="flex items-center gap-3">
       {logoImage && (
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-8 w-auto object-contain"
         />
@@ -115,15 +124,6 @@ export function FooterStyle2({
   onEditClick,
   siteUser,
 }: FooterStyle2Props) {
-  const [email, setEmail] = useState("");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const deleteFooterMutation = useDeleteFooterMutation();
-  const createNewsletterMutation = useCreateNewsletter();
-
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -140,21 +140,17 @@ export function FooterStyle2({
     },
   };
 
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref;
+  const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
-    if (!siteUser) {
-      console.warn("siteUser is required for preview mode");
-      return originalHref;
-    }
+  const [email, setEmail] = useState("");
+  const [subscriptionStatus, setSubscriptionStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const deleteFooterMutation = useDeleteFooterMutation();
+  const createNewsletterMutation = useCreateNewsletter();
+  const pathname = usePathname();
 
   const handleDelete = () => {
     deleteFooterMutation.mutate();
@@ -211,7 +207,7 @@ export function FooterStyle2({
                 <div className="lg:col-span-1">
                   {/* Logo */}
                   <div className="mb-4">
-                    <FooterLogo footerData={footerData} />
+                    <FooterLogo footerData={data} getImageUrl={getImageUrl} />
                   </div>
 
                   <Badge
@@ -220,15 +216,15 @@ export function FooterStyle2({
                       backgroundColor: theme.colors.primary,
                     }}
                   >
-                    {footerData.companyName}
+                    {data.companyName}
                   </Badge>
                   <p className="text-muted-foreground mb-6">
-                    {footerData.description}
+                    {data.description}
                   </p>
 
                   {/* Social Links */}
                   <div className="flex flex-wrap gap-2">
-                    {footerData.socialLinks.map(social => (
+                    {data.socialLinks.map(social => (
                       <Link
                         key={social.id}
                         href={social.href || "#"}
@@ -250,7 +246,7 @@ export function FooterStyle2({
 
                 {/* Links Grid */}
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:col-span-2">
-                  {footerData.sections.map(section => (
+                  {data.sections.map(section => (
                     <div key={section.id}>
                       <h4 className="text-foreground mb-4 flex items-center font-semibold">
                         {section.title}
@@ -279,7 +275,14 @@ export function FooterStyle2({
                                 className="text-muted-foreground hover:text-foreground h-auto justify-start p-0 font-normal"
                                 asChild
                               >
-                                <Link href={generateLinkHref(link.href || "")}>
+                                <Link
+                                  href={generateLinkHref(
+                                    link.href || "",
+                                    siteUser,
+                                    pathname,
+                                    isEditable
+                                  )}
+                                >
                                   {link.text}
                                 </Link>
                               </Button>
@@ -295,16 +298,16 @@ export function FooterStyle2({
           </Card>
 
           {/* Newsletter Card */}
-          {footerData.newsletter.enabled && (
+          {data.newsletter.enabled && (
             <Card className="mb-8">
               <CardContent className="p-6">
                 <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-2">
                   <div>
                     <h4 className="text-foreground mb-2 font-semibold">
-                      {footerData.newsletter.title}
+                      {data.newsletter.title}
                     </h4>
                     <p className="text-muted-foreground text-sm">
-                      {footerData.newsletter.description}
+                      {data.newsletter.description}
                     </p>
                   </div>
 
@@ -360,7 +363,7 @@ export function FooterStyle2({
           <Card>
             <CardContent className="p-6">
               <div className="grid grid-cols-1 items-center gap-6 text-center md:grid-cols-3 md:text-left">
-                {footerData.contactInfo.email && (
+                {data.contactInfo.email && (
                   <div className="flex items-center justify-center md:justify-start">
                     <Mail
                       style={{
@@ -369,11 +372,11 @@ export function FooterStyle2({
                       className="mr-2 h-4 w-4"
                     />
                     <span className="text-muted-foreground text-sm">
-                      {footerData.contactInfo.email}
+                      {data.contactInfo.email}
                     </span>
                   </div>
                 )}
-                {footerData.contactInfo.phone && (
+                {data.contactInfo.phone && (
                   <div className="flex items-center justify-center md:justify-start">
                     <Phone
                       style={{
@@ -382,13 +385,13 @@ export function FooterStyle2({
                       className="mr-2 h-4 w-4"
                     />
                     <span className="text-muted-foreground text-sm">
-                      {footerData.contactInfo.phone}
+                      {data.contactInfo.phone}
                     </span>
                   </div>
                 )}
                 <div className="text-center md:text-right">
                   <p className="text-muted-foreground flex items-center justify-center gap-1 text-sm md:justify-end">
-                    {footerData.copyright}
+                    {data.copyright}
                     <Heart
                       style={{
                         color: theme.colors.primary,

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { OthersTemplate3Data } from "@/types/owner-site/components/others";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableText } from "@/components/ui/editable-text";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import {
   ShieldCheck,
   BarChart3,
@@ -62,12 +63,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(othersData);
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    setData(othersData);
-  }, [othersData]);
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -84,13 +80,8 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
     },
   };
 
-  const handleUpdate = (newData: Partial<OthersTemplate3Data>) => {
-    const updatedData = { ...data, ...newData };
-    setData(updatedData);
-    if (onUpdate) {
-      onUpdate(updatedData);
-    }
-  };
+  const { data, handleTextUpdate, getImageUrl, handleArrayItemUpdate } =
+    useBuilderLogic(othersData, onUpdate);
 
   const handleProcessItemUpdate = (
     index: number,
@@ -99,7 +90,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
   ) => {
     const newItems = [...data.processItems];
     newItems[index] = { ...newItems[index], [field]: value };
-    handleUpdate({ processItems: newItems });
+    onUpdate?.({ processItems: newItems });
   };
 
   const handleStatUpdate = (
@@ -109,7 +100,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
   ) => {
     const newStats = [...data.statistics];
     newStats[index] = { ...newStats[index], [field]: value };
-    handleUpdate({ statistics: newStats });
+    onUpdate?.({ statistics: newStats });
   };
 
   return (
@@ -148,7 +139,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
                   />
                   <EditableText
                     value={data.processLabel}
-                    onChange={val => handleUpdate({ processLabel: val })}
+                    onChange={handleTextUpdate("processLabel")}
                     isEditable={isEditable}
                     className="text-xs font-semibold tracking-[0.1em] uppercase"
                     style={{ color: theme.colors.primary }}
@@ -158,7 +149,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
 
                 <EditableText
                   value={data.heading}
-                  onChange={val => handleUpdate({ heading: val })}
+                  onChange={handleTextUpdate("heading")}
                   isEditable={isEditable}
                   as="h2"
                   className="mx-auto max-w-[700px] text-3xl leading-tight font-bold md:text-[40px] lg:text-[48px]"
@@ -280,7 +271,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
                 <div className="mb-3 flex items-center gap-3">
                   <EditableText
                     value={data.successLabel}
-                    onChange={val => handleUpdate({ successLabel: val })}
+                    onChange={handleTextUpdate("successLabel")}
                     isEditable={isEditable}
                     className="text-xs font-semibold tracking-[0.1em] uppercase"
                     style={{ color: "#FFFFFF" }}
@@ -290,7 +281,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
 
                 <EditableText
                   value={data.successHeading}
-                  onChange={val => handleUpdate({ successHeading: val })}
+                  onChange={handleTextUpdate("successHeading")}
                   isEditable={isEditable}
                   as="h3"
                   className="mb-4 text-3xl leading-tight font-bold md:text-[40px] lg:text-[44px]"
@@ -302,7 +293,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
 
                 <EditableText
                   value={data.successDescription}
-                  onChange={val => handleUpdate({ successDescription: val })}
+                  onChange={handleTextUpdate("successDescription")}
                   isEditable={isEditable}
                   className="max-w-md text-sm leading-7 text-white/90"
                 />

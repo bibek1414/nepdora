@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Category } from "@/types/owner-site/admin/product";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface CategoryCard5Props {
   category: Category;
@@ -17,6 +19,7 @@ export const CategoryCard5: React.FC<CategoryCard5Props> = ({
   onClick,
   className = "",
 }) => {
+  const pathname = usePathname();
   const { data: themeResponse } = useThemeQuery();
   // ✅ fallback theme
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -39,11 +42,11 @@ export const CategoryCard5: React.FC<CategoryCard5Props> = ({
     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop";
 
   const getCategoryUrl = (): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/collections?category=${category.slug}`;
-    } else {
-      return `/preview/collections?category=${category.slug}`;
-    }
+    return generateLinkHref(
+      `/collections?category=${category.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const handleClick = () => {

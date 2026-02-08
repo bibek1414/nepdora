@@ -6,6 +6,8 @@ interface TextSelection {
   text: string;
   range: Range;
   element?: HTMLElement;
+  fontSize?: string;
+  color?: string;
 }
 
 interface TextSelectionContextType {
@@ -43,10 +45,10 @@ export const TextSelectionProvider: React.FC<{ children: React.ReactNode }> = ({
 
         // Apply formatting
         document.execCommand(command, false, value);
-        clearSelection();
+        // Don't clearSelection() to keep the toolbar open
       }
     },
-    [selection, clearSelection]
+    [selection]
   );
 
   const applyColor = useCallback(
@@ -62,10 +64,10 @@ export const TextSelectionProvider: React.FC<{ children: React.ReactNode }> = ({
         // Apply color
         document.execCommand("styleWithCSS", false, "true");
         document.execCommand("foreColor", false, color);
-        clearSelection();
+        // Don't clearSelection() to keep the toolbar open
       }
     },
-    [selection, clearSelection]
+    [selection]
   );
 
   const applyFontSize = useCallback(

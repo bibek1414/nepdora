@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate7Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import Image from "next/image";
 
 interface HeroTemplate7Props {
   heroData: HeroTemplate7Data;
@@ -50,22 +50,9 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
       buttonHref: "#",
     },
   ];
-  const [data, setData] = useState<HeroTemplate7Data>(() => ({
-    ...heroData,
-    buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-    collections: heroData.collections || defaultCollections,
-  }));
 
   const [isUploading, setIsUploading] = useState<string | null>(null);
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    setData({
-      ...heroData,
-      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-      collections: heroData.collections || defaultCollections,
-    });
-  }, [heroData]);
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -83,17 +70,15 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
     },
   };
 
-  // Default collections data
+  const { data, handleArrayItemUpdate } = useBuilderLogic(
+    {
+      ...heroData,
+      collections: heroData.collections || defaultCollections,
+    },
+    onUpdate
+  );
 
   const collections = data.collections || defaultCollections;
-
-  // Handle text field updates
-  const handleTextUpdate =
-    (field: keyof HeroTemplate7Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate7Data>);
-    };
 
   // Handle collection updates
   const handleCollectionUpdate = (
@@ -101,14 +86,12 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
     field: string,
     value: string
   ) => {
-    const updatedCollections = collections.map(collection =>
-      collection.id === collectionId
-        ? { ...collection, [field]: value }
-        : collection
-    );
-    const updatedData = { ...data, collections: updatedCollections };
-    setData(updatedData);
-    onUpdate?.({ collections: updatedCollections });
+    handleArrayItemUpdate(
+      "collections" as any,
+      collectionId
+    )({
+      [field]: value,
+    });
   };
 
   // Handle collection image update
@@ -117,14 +100,13 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
     imageUrl: string,
     altText?: string
   ) => {
-    const updatedCollections = collections.map(collection =>
-      collection.id === collectionId
-        ? { ...collection, imageUrl, imageAlt: altText || collection.imageAlt }
-        : collection
-    );
-    const updatedData = { ...data, collections: updatedCollections };
-    setData(updatedData);
-    onUpdate?.({ collections: updatedCollections });
+    handleArrayItemUpdate(
+      "collections" as any,
+      collectionId
+    )({
+      imageUrl,
+      imageAlt: altText,
+    });
   };
 
   // Handle collection button update
@@ -133,14 +115,13 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
     text: string,
     href: string
   ) => {
-    const updatedCollections = collections.map(collection =>
-      collection.id === collectionId
-        ? { ...collection, buttonText: text, buttonHref: href }
-        : collection
-    );
-    const updatedData = { ...data, collections: updatedCollections };
-    setData(updatedData);
-    onUpdate?.({ collections: updatedCollections });
+    handleArrayItemUpdate(
+      "collections" as any,
+      collectionId
+    )({
+      buttonText: text,
+      buttonHref: href,
+    });
   };
 
   const handleImageUpload = async (

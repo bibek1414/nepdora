@@ -5,6 +5,8 @@ import { ChevronRight } from "lucide-react";
 import { Category } from "@/types/owner-site/admin/product";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Button } from "@/components/ui/button"; // ✅ shadcn button
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface CategoryCard3Props {
   category: Category;
@@ -19,6 +21,7 @@ export const CategoryCard3: React.FC<CategoryCard3Props> = ({
   onClick,
   index = 0,
 }) => {
+  const pathname = usePathname();
   // Theme
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -47,11 +50,11 @@ export const CategoryCard3: React.FC<CategoryCard3Props> = ({
   };
 
   const getCategoryUrl = (): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/collections?category=${category.slug}`;
-    } else {
-      return `/preview/collections?category=${category.slug}`;
-    }
+    return generateLinkHref(
+      `/collections?category=${category.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const handleClick = () => {

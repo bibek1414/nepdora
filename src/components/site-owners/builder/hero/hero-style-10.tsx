@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate10Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface HeroTemplate10Props {
   heroData: HeroTemplate10Data;
@@ -23,21 +23,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
 }) => {
   const componentId = React.useId();
 
-  const [data, setData] = useState<HeroTemplate10Data>(() => ({
-    ...heroData,
-    buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-    sliderImages: heroData.sliderImages?.map(img => ({ ...img })) || [],
-  }));
-
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    setData({
-      ...heroData,
-      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-      sliderImages: heroData.sliderImages?.map(img => ({ ...img })) || [],
-    });
-  }, [heroData]);
 
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -54,6 +40,15 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
       heading: "Poppins",
     },
   };
+
+  const {
+    data,
+    setData,
+    handleTextUpdate,
+    handleButtonUpdate,
+    handleArrayItemUpdate,
+    getImageUrl,
+  } = useBuilderLogic(heroData, onUpdate);
 
   // Default grid images (7 images total)
   const defaultGridImages = [
@@ -111,14 +106,6 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
     });
   }
 
-  // Handle text field updates
-  const handleTextUpdate =
-    (field: keyof HeroTemplate10Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate10Data>);
-    };
-
   // Handle grid image updates
   const handleGridImageUpdate = (
     index: number,
@@ -158,31 +145,10 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
       });
     }
 
-    const updatedData = { ...data, sliderImages: currentImages };
-    setData(updatedData);
-    onUpdate?.({ sliderImages: currentImages });
-  };
-
-  // Handle button updates
-  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text, href } : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
-  };
-
-  // Get optimized image URL
-  const getImageUrl = (url: string) => {
-    if (!url) return "";
-    return optimizeCloudinaryUrl(convertUnsplashUrl(url), {
-      width: 400,
-      height: 600,
-      quality: "auto",
-      format: "auto",
-      crop: "fill",
-    });
+    handleArrayItemUpdate(
+      "sliderImages" as any,
+      currentImages[index].id
+    )(currentImages[index]);
   };
 
   // Ensure we have at least one button for the button to always render
@@ -241,7 +207,11 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                       >
                         <EditableImage
                           key={`grid-${componentId}-0-${finalGridImages[0].url}`}
-                          src={getImageUrl(finalGridImages[0].url)}
+                          src={getImageUrl(finalGridImages[0].url, {
+                            width: 400,
+                            height: 600,
+                            crop: "fill",
+                          })}
                           alt={finalGridImages[0].alt}
                           onImageChange={(url, alt) =>
                             handleGridImageUpdate(0, url, alt)
@@ -274,7 +244,11 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                       >
                         <EditableImage
                           key={`grid-${componentId}-1-${finalGridImages[1].url}`}
-                          src={getImageUrl(finalGridImages[1].url)}
+                          src={getImageUrl(finalGridImages[1].url, {
+                            width: 400,
+                            height: 600,
+                            crop: "fill",
+                          })}
                           alt={finalGridImages[1].alt}
                           onImageChange={(url, alt) =>
                             handleGridImageUpdate(1, url, alt)
@@ -310,7 +284,11 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                       >
                         <EditableImage
                           key={`grid-${componentId}-2-${finalGridImages[2].url}`}
-                          src={getImageUrl(finalGridImages[2].url)}
+                          src={getImageUrl(finalGridImages[2].url, {
+                            width: 400,
+                            height: 600,
+                            crop: "fill",
+                          })}
                           alt={finalGridImages[2].alt}
                           onImageChange={(url, alt) =>
                             handleGridImageUpdate(2, url, alt)
@@ -343,7 +321,11 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                       >
                         <EditableImage
                           key={`grid-${componentId}-3-${finalGridImages[3].url}`}
-                          src={getImageUrl(finalGridImages[3].url)}
+                          src={getImageUrl(finalGridImages[3].url, {
+                            width: 400,
+                            height: 600,
+                            crop: "fill",
+                          })}
                           alt={finalGridImages[3].alt}
                           onImageChange={(url, alt) =>
                             handleGridImageUpdate(3, url, alt)
@@ -376,7 +358,11 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                       >
                         <EditableImage
                           key={`grid-${componentId}-4-${finalGridImages[4].url}`}
-                          src={getImageUrl(finalGridImages[4].url)}
+                          src={getImageUrl(finalGridImages[4].url, {
+                            width: 400,
+                            height: 600,
+                            crop: "fill",
+                          })}
                           alt={finalGridImages[4].alt}
                           onImageChange={(url, alt) =>
                             handleGridImageUpdate(4, url, alt)
@@ -412,7 +398,11 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                       >
                         <EditableImage
                           key={`grid-${componentId}-5-${finalGridImages[5].url}`}
-                          src={getImageUrl(finalGridImages[5].url)}
+                          src={getImageUrl(finalGridImages[5].url, {
+                            width: 400,
+                            height: 600,
+                            crop: "fill",
+                          })}
                           alt={finalGridImages[5].alt}
                           onImageChange={(url, alt) =>
                             handleGridImageUpdate(5, url, alt)
@@ -445,7 +435,11 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                       >
                         <EditableImage
                           key={`grid-${componentId}-6-${finalGridImages[6].url}`}
-                          src={getImageUrl(finalGridImages[6].url)}
+                          src={getImageUrl(finalGridImages[6].url, {
+                            width: 400,
+                            height: 600,
+                            crop: "fill",
+                          })}
                           alt={finalGridImages[6].alt}
                           onImageChange={(url, alt) =>
                             handleGridImageUpdate(6, url, alt)
@@ -495,7 +489,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                     setData(updatedData);
                     onUpdate?.({ buttons: [newButton] });
                   } else {
-                    handleButtonUpdate(button.id, text, href);
+                    handleButtonUpdate("buttons")(button.id, text, href);
                   }
                 }}
                 isEditable={isEditable}

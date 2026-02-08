@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { X, Plus, Minus, ShoppingBag, Trash2 } from "lucide-react";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
 import Image from "next/image";
-import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-
+import Link from "next/link";
 interface SideCartProps {
   isOpen: boolean;
   onClose: () => void;
@@ -15,6 +16,7 @@ interface SideCartProps {
 }
 
 const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
+  const pathname = usePathname();
   const { cartItems, removeFromCart, updateQuantity, itemCount } = useCart();
   const { data: themeResponse } = useThemeQuery();
 
@@ -43,21 +45,21 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
   }, 0);
 
   // Generate checkout URL with siteUser
-  const checkoutUrl = `/preview/${siteUser}/checkout`;
+  const checkoutUrl = generateLinkHref("/checkout", siteUser, pathname);
 
   return (
     <>
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-[60] bg-black/60 transition-opacity duration-300"
+          className="fixed inset-0 z-60 bg-black/60 transition-opacity duration-300"
           onClick={onClose}
         />
       )}
 
       {/* Side Cart */}
       <div
-        className={`fixed top-0 right-0 z-[60] h-full w-full transform bg-white transition-transform duration-300 ease-in-out sm:w-[380px] md:w-[400px] ${
+        className={`fixed top-0 right-0 z-60 h-full w-full transform bg-white transition-transform duration-300 ease-in-out sm:w-[380px] md:w-[400px] ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -106,7 +108,7 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
                       className="flex gap-3 border-b border-gray-100 pb-3 last:border-b-0 sm:gap-4 sm:pb-4"
                     >
                       {/* Product Image */}
-                      <div className="flex-shrink-0">
+                      <div className="shrink-0">
                         <Image
                           src={item.product.thumbnail_image || ""}
                           alt={item.product.name}
@@ -174,7 +176,7 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
                             >
                               <Minus className="h-3 w-3 sm:h-4 sm:w-4" />
                             </Button>
-                            <span className="min-w-[2rem] text-center text-sm font-medium sm:text-base">
+                            <span className="min-w-8 text-center text-sm font-medium sm:text-base">
                               {item.quantity}
                             </span>
                             <Button

@@ -1,6 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2, Briefcase, ChevronLeft, ChevronRight } from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import {
+  Trash2,
+  Briefcase,
+  ChevronLeft,
+  ChevronRight,
+  RefreshCw,
+} from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,6 +47,7 @@ interface PortfolioComponentProps {
   siteUser: string;
   onUpdate?: (componentId: string, newData: PortfolioComponentData) => void;
   onPortfolioClick?: (portfolioSlug: string, order: number) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
@@ -48,7 +56,16 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   pageSlug,
   siteUser,
   onPortfolioClick,
+  onReplace,
 }) => {
+  const { data: builderData, handleTextUpdate } = useBuilderLogic(
+    component.data,
+    updatedData => {
+      const componentId = component.component_id || component.id.toString();
+      // No direct onUpdate here, but we could add it if needed
+    }
+  );
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -66,7 +83,7 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
     title = "Our Portfolio",
     subtitle,
     style = "portfolio-1",
-  } = component.data || {};
+  } = builderData || {};
 
   // Fetch portfolios from API
   const { data, isLoading, error } = usePortfolios({
@@ -98,6 +115,7 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   };
 
   const handleTitleChange = (newTitle: string) => {
+    handleTextUpdate("title")(newTitle);
     handleUpdate({
       ...component.data,
       title: newTitle,
@@ -105,6 +123,7 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
+    handleTextUpdate("subtitle")(newSubtitle);
     handleUpdate({
       ...component.data,
       subtitle: newSubtitle,
@@ -204,18 +223,35 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2">
               <Link href="/admin/portfolio/" target="_blank" rel="noopener">
-                <Button size="sm" variant="outline">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full justify-start"
+                >
                   Manage Portfolio
                 </Button>
               </Link>
+
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  onReplace?.(component.component_id || component.id.toString())
+                }
+                className="h-8 w-fit justify-start bg-white px-3"
+              >
+                <RefreshCw className="mr-1 h-4 w-4" />
+                Replace
+              </Button>
+
               <AlertDialogTrigger asChild>
                 <Button
                   onClick={handleDeleteClick}
                   variant="destructive"
                   size="sm"
-                  className="h-8 px-3"
+                  className="h-8 w-fit justify-start px-3"
                   disabled={deletePortfolioMutation.isPending}
                 >
                   <Trash2 className="mr-1 h-4 w-4" />

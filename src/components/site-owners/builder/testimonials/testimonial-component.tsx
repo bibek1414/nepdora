@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
 import { useTestimonials } from "@/hooks/owner-site/admin/use-testimonials";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -15,6 +16,7 @@ import { TestimonialCard9 } from "./testimonial-card-9";
 import { TestimonialCard10 } from "./testimonial-card-10";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { RefreshCw } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
@@ -40,6 +42,7 @@ import {
 } from "@/types/owner-site/admin/testimonial";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
+import Link from "next/link";
 import TestimonialForm from "@/components/site-owners/admin/testimonials/testimonial-form";
 import { useCreateTestimonial } from "@/hooks/owner-site/admin/use-testimonials";
 import { TestimonialCard7 } from "./testimonial-card-7";
@@ -53,6 +56,7 @@ interface TestimonialsComponentProps {
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: TestimonialsComponentData) => void;
   onTestimonialClick?: (testimonialId: number, order: number) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
@@ -62,7 +66,24 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   pageSlug,
   onUpdate,
   onTestimonialClick,
+  onReplace,
 }) => {
+  const {
+    data: builderData,
+    handleTextUpdate,
+    handleImageUpdate,
+  } = useBuilderLogic(component.data, updatedData => {
+    if (onUpdate) {
+      onUpdate(component.component_id, {
+        ...component,
+        data: {
+          ...component.data,
+          ...updatedData,
+        },
+      });
+    }
+  });
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
@@ -72,7 +93,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
     subtitle,
     style = "testimonial-1",
     backgroundImage,
-  } = component.data || {};
+  } = builderData || {};
 
   // Use unified mutation hooks
   const deleteTestimonialsComponent = useDeleteComponentMutation(
@@ -132,22 +153,11 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("title")(newTitle);
 
-    updateTestimonialsComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        title: newTitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateTestimonialsComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           title: newTitle,
@@ -157,22 +167,11 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("subtitle")(newSubtitle);
 
-    updateTestimonialsComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        subtitle: newSubtitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateTestimonialsComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           subtitle: newSubtitle,
@@ -182,25 +181,15 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
   };
 
   const handleBackgroundImageChange = (imageUrl: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleImageUpdate("backgroundImage" as any)(imageUrl);
 
-    const updatedData = {
-      ...component.data,
-      backgroundImage: imageUrl,
-    };
-
-    updateTestimonialsComponent.mutate({
-      componentId: component.component_id,
-      data: updatedData,
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
-        data: updatedData,
+    if (pageSlug) {
+      updateTestimonialsComponent.mutate({
+        componentId: component.component_id,
+        data: {
+          ...component.data,
+          backgroundImage: imageUrl,
+        },
       });
     }
   };
@@ -312,14 +301,27 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
         )}
         <div className="group relative">
           {/* Control Buttons */}
-          <div className="absolute -right-5 z-30 flex translate-x-full gap-2 transition-opacity">
-            {/* Add Button */}
-            <Button onClick={handleAddClick} variant="outline" size="sm">
-              <Plus className="mr-1 h-4 w-4" />
-              Testimonial
+          <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 transition-opacity group-hover:opacity-100">
+            <Link href="/admin/testimonials/" target="_blank" rel="noopener">
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full justify-start"
+              >
+                Manage Testimonials
+              </Button>
+            </Link>
+
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onReplace?.(component.component_id)}
+              className="h-8 w-fit justify-start bg-white px-3"
+            >
+              <RefreshCw className="mr-1 h-4 w-4" />
+              Replace
             </Button>
 
-            {/* Delete Button */}
             <AlertDialog
               open={isDeleteDialogOpen}
               onOpenChange={setIsDeleteDialogOpen}
@@ -329,7 +331,7 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
                   onClick={handleDeleteClick}
                   variant="destructive"
                   size="sm"
-                  className="h-8 px-3"
+                  className="h-8 w-fit justify-start px-3"
                   disabled={deleteTestimonialsComponent.isPending}
                 >
                   <Trash2 className="mr-1 h-4 w-4" />

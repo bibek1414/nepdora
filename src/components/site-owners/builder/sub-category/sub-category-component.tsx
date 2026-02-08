@@ -5,6 +5,7 @@ import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SubCategoryCard1 } from "./sub-category-card-1";
 import { SubCategoryCard2 } from "./sub-category-card-2";
 import { SubCategoryCard3 } from "./sub-category-card-3";
@@ -21,7 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, FolderOpen } from "lucide-react";
+import { AlertCircle, Trash2, FolderOpen, RefreshCw } from "lucide-react";
 import { SubCategory } from "@/types/owner-site/admin/product";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
@@ -35,6 +36,7 @@ interface SubCategoryComponentProps {
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: SubCategoryComponentData) => void;
   onSubCategoryClick?: (subcategoryId: number, order: number) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
@@ -44,7 +46,23 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
   pageSlug,
   onUpdate,
   onSubCategoryClick,
+  onReplace,
 }) => {
+  const { data: builderData, handleTextUpdate } = useBuilderLogic(
+    component.data,
+    updatedData => {
+      if (onUpdate) {
+        onUpdate(component.component_id, {
+          ...component,
+          data: {
+            ...component.data,
+            ...updatedData,
+          },
+        });
+      }
+    }
+  );
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -52,7 +70,7 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
     title = "Our SubCategories",
     subtitle,
     style = "grid-1",
-  } = component.data || {};
+  } = builderData || {};
 
   // Use unified mutation hooks
   const deleteSubCategoryComponent = useDeleteComponentMutation(
@@ -97,24 +115,11 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("title")(newTitle);
 
-    // Update component data via unified API
-    updateSubCategoryComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        title: newTitle,
-      },
-    });
-
-    // Also update local state if onUpdate is provided
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateSubCategoryComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           title: newTitle,
@@ -124,24 +129,11 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("subtitle")(newSubtitle);
 
-    // Update component data via unified API
-    updateSubCategoryComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        subtitle: newSubtitle,
-      },
-    });
-
-    // Also update local state if onUpdate is provided
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateSubCategoryComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           subtitle: newSubtitle,
@@ -193,12 +185,12 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
     return (
       <div className="group relative">
         {/* Delete Control with AlertDialog */}
-        <div className="absolute -right-1 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2">
               <Link href="/admin/subcategories/" target="_blank" rel="noopener">
                 <Button size="sm" variant="outline" className="text-sm">
                   Manage Subcategories
@@ -218,6 +210,15 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
                     : "Delete"}
                 </Button>
               </AlertDialogTrigger>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onReplace?.(component.component_id)}
+                className="h-8 w-fit justify-start bg-white px-3"
+              >
+                <RefreshCw className="mr-1 h-4 w-4" />
+                Replace
+              </Button>
             </div>
             <AlertDialogContent>
               <AlertDialogHeader>

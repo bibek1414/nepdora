@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React from "react";
 import { AboutUs5Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate5Props {
   aboutUsData: AboutUs5Data;
@@ -21,7 +21,6 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [data, setData] = useState(aboutUsData);
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -40,85 +39,13 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs5Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs5Data>);
-  };
-
-  // Handle image updates
-  const handleImageUpdate =
-    (field: string) => (imageUrl: string, altText?: string) => {
-      const updatedData = {
-        ...data,
-        [field]: imageUrl,
-        [`${field}Alt`]:
-          altText || (data[`${field}Alt` as keyof AboutUs5Data] as string),
-      };
-      setData(updatedData);
-      onUpdate?.({
-        [field]: imageUrl,
-        [`${field}Alt`]: updatedData[`${field}Alt` as keyof AboutUs5Data],
-      } as Partial<AboutUs5Data>);
-    };
-
-  // Handle alt text updates
-  const handleAltUpdate = (field: string) => (altText: string) => {
-    const updatedData = { ...data, [`${field}Alt`]: altText };
-    setData(updatedData);
-    onUpdate?.({ [`${field}Alt`]: altText } as Partial<AboutUs5Data>);
-  };
-
-  // Handle stat updates
-  const handleStatUpdate =
-    (index: number, field: "value" | "label") => (value: string) => {
-      const updatedStats = [...data.stats];
-      updatedStats[index] = { ...updatedStats[index], [field]: value };
-
-      const updatedData = { ...data, stats: updatedStats };
-      setData(updatedData);
-      onUpdate?.({ stats: updatedStats } as Partial<AboutUs5Data>);
-    };
-
-  // Handle avatar updates
-  const handleAvatarUpdate =
-    (index: number) => (imageUrl: string, altText?: string) => {
-      const updatedAvatars = [...data.avatars];
-      updatedAvatars[index] = {
-        ...updatedAvatars[index],
-        imageUrl,
-        alt: altText || updatedAvatars[index].alt,
-      };
-
-      const updatedData = { ...data, avatars: updatedAvatars };
-      setData(updatedData);
-      onUpdate?.({ avatars: updatedAvatars } as Partial<AboutUs5Data>);
-    };
-
-  // Handle avatar alt updates
-  const handleAvatarAltUpdate = (index: number) => (altText: string) => {
-    const updatedAvatars = [...data.avatars];
-    updatedAvatars[index] = { ...updatedAvatars[index], alt: altText };
-
-    const updatedData = { ...data, avatars: updatedAvatars };
-    setData(updatedData);
-    onUpdate?.({ avatars: updatedAvatars } as Partial<AboutUs5Data>);
-  };
-
-  // Handle video link updates
-  const handleVideoLinkUpdate = (text: string, href: string) => {
-    const updatedData = {
-      ...data,
-      videoLinkText: text,
-      videoLink: href,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      videoLinkText: text,
-      videoLink: href,
-    });
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(aboutUsData, onUpdate);
 
   return (
     <div className="relative bg-gray-900 text-white">
@@ -169,8 +96,8 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
                 <EditableImage
                   src={data.image1Url}
                   alt={data.image1Alt}
-                  onImageChange={handleImageUpdate("image1Url")}
-                  onAltChange={handleAltUpdate("image1Url")}
+                  onImageChange={handleImageUpdate("image1Url", "image1Alt")}
+                  onAltChange={handleAltUpdate("image1Alt")}
                   isEditable={isEditable}
                   className="object-cover"
                   cloudinaryOptions={{
@@ -203,8 +130,8 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
                 <EditableImage
                   src={data.image2Url}
                   alt={data.image2Alt}
-                  onImageChange={handleImageUpdate("image2Url")}
-                  onAltChange={handleAltUpdate("image2Url")}
+                  onImageChange={handleImageUpdate("image2Url", "image2Alt")}
+                  onAltChange={handleAltUpdate("image2Alt")}
                   isEditable={isEditable}
                   className="object-cover"
                   cloudinaryOptions={{
@@ -227,8 +154,8 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
             <EditableImage
               src={data.teamImageUrl}
               alt={data.teamImageAlt}
-              onImageChange={handleImageUpdate("teamImageUrl")}
-              onAltChange={handleAltUpdate("teamImageUrl")}
+              onImageChange={handleImageUpdate("teamImageUrl", "teamImageAlt")}
+              onAltChange={handleAltUpdate("teamImageAlt")}
               isEditable={isEditable}
               className="object-cover"
               cloudinaryOptions={{

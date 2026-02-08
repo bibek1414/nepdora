@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { ChevronRight } from "lucide-react";
 import { AboutUs17Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate17Props {
   aboutUsData: AboutUs17Data;
@@ -156,7 +157,6 @@ export function AboutUsTemplate17({
   onUpdate,
   siteUser,
 }: AboutUsTemplate17Props) {
-  const [data, setData] = useState(aboutUsData);
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -179,25 +179,12 @@ export function AboutUsTemplate17({
     [themeResponse]
   );
 
-  const handleTextUpdate = (field: keyof AboutUs17Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs17Data>);
-  };
-
-  const handleImageUpdate = (url: string) => {
-    const updatedData = { ...data, imageUrl: url };
-    setData(updatedData);
-    onUpdate?.({ imageUrl: url });
-  };
+  const { data, handleTextUpdate, handleImageUpdate } = useBuilderLogic(
+    aboutUsData,
+    onUpdate
+  );
 
   const handleButton1LinkUpdate = (text: string, href: string) => {
-    const updatedData = {
-      ...data,
-      button1Text: text,
-      button1Link: href,
-    };
-    setData(updatedData);
     onUpdate?.({
       button1Text: text,
       button1Link: href,
@@ -205,12 +192,6 @@ export function AboutUsTemplate17({
   };
 
   const handleButton2LinkUpdate = (text: string, href: string) => {
-    const updatedData = {
-      ...data,
-      button2Text: text,
-      button2Link: href,
-    };
-    setData(updatedData);
     onUpdate?.({
       button2Text: text,
       button2Link: href,
@@ -422,7 +403,7 @@ export function AboutUsTemplate17({
           <EditableImage
             src={data.imageUrl}
             alt={data.imageAlt}
-            onImageChange={handleImageUpdate}
+            onImageChange={handleImageUpdate("imageUrl")}
             isEditable={isEditable}
             className="h-full w-full object-cover"
             width={418}

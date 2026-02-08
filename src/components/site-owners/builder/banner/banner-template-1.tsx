@@ -4,6 +4,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2 } from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 
@@ -20,40 +21,42 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(bannerData);
+  const { data, setData, handleArrayItemUpdate } = useBuilderLogic(
+    bannerData,
+    onUpdate
+  );
+
   const [isUploading, setIsUploading] = useState(false);
 
   const componentId = React.useId();
 
   const handleLinkUpdate = (index: number, href: string) => {
-    const updatedImages = [...data.images];
-    updatedImages[index] = { ...updatedImages[index], link: href };
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+    const imgId = data.images[index].id;
+    if (imgId !== undefined) {
+      handleArrayItemUpdate("images", imgId)({ link: href });
+    }
   };
 
-  const handleImageUpdate = (
+  const handleImageUpdateLocal = (
     index: number,
     imageUrl: string,
     altText?: string
   ) => {
-    const updatedImages = [...data.images];
-    updatedImages[index] = {
-      ...updatedImages[index],
-      image: imageUrl,
-      image_alt_description:
-        altText || updatedImages[index].image_alt_description,
-    };
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+    const imgId = data.images[index].id;
+    if (imgId !== undefined) {
+      handleArrayItemUpdate(
+        "images",
+        imgId
+      )({
+        image: imageUrl,
+        image_alt_description: altText,
+      });
+    }
   };
 
   const handleRemoveImage = (index: number) => {
     const updatedImages = data.images.filter((_, idx) => idx !== index);
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
+    setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
 
@@ -67,8 +70,7 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
       is_active: true,
     };
     const updatedImages = [...data.images, newImage];
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
+    setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
 
@@ -102,7 +104,7 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
         resourceType: "image",
       });
 
-      handleImageUpdate(0, imageUrl, `Banner image: ${file.name}`);
+      handleImageUpdateLocal(0, imageUrl, `Banner image: ${file.name}`);
       toast.success("Banner image uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
@@ -202,7 +204,7 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
                   src={getImageUrl(activeImage.image)}
                   alt={activeImage.image_alt_description || "Top banner"}
                   onImageChange={(imageUrl, altText) =>
-                    handleImageUpdate(0, imageUrl, altText)
+                    handleImageUpdateLocal(0, imageUrl, altText)
                   }
                   isEditable={isEditable}
                   className="h-full w-full object-cover"
@@ -220,7 +222,7 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
                   src={getImageUrl(activeImage.image)}
                   alt={activeImage.image_alt_description || "Top banner"}
                   onImageChange={(imageUrl, altText) =>
-                    handleImageUpdate(0, imageUrl, altText)
+                    handleImageUpdateLocal(0, imageUrl, altText)
                   }
                   isEditable={isEditable}
                   className="h-full w-full object-cover"

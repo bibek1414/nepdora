@@ -23,6 +23,9 @@ import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-foote
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface FooterStyle4Props {
   footerData: FooterData;
@@ -61,7 +64,13 @@ const renderSocialIcon = (social: SocialLink) => {
 };
 
 // Logo component
-const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
+const FooterLogo = ({
+  footerData,
+  getImageUrl,
+}: {
+  footerData: FooterData;
+  getImageUrl: any;
+}) => {
   const { logoType, logoImage, logoText, companyName } = footerData;
 
   if (logoType === "text") {
@@ -78,7 +87,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     return logoImage ? (
       <div className="flex items-center">
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-8 w-auto object-contain"
         />
@@ -95,7 +104,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     <div className="flex items-center gap-3">
       {logoImage && (
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-8 w-auto object-contain"
         />
@@ -113,15 +122,6 @@ export function FooterStyle4({
   onEditClick,
   siteUser,
 }: FooterStyle4Props) {
-  const [email, setEmail] = useState("");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const deleteFooterMutation = useDeleteFooterMutation();
-  const createNewsletterMutation = useCreateNewsletter();
-
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -138,16 +138,17 @@ export function FooterStyle4({
     },
   };
 
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref;
+  const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
+  const [email, setEmail] = useState("");
+  const [subscriptionStatus, setSubscriptionStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const deleteFooterMutation = useDeleteFooterMutation();
+  const createNewsletterMutation = useCreateNewsletter();
+  const pathname = usePathname();
 
   const handleDelete = () => {
     deleteFooterMutation.mutate();
@@ -207,36 +208,36 @@ export function FooterStyle4({
             <div className="lg:col-span-2">
               {/* Logo */}
               <div className="mb-6">
-                <FooterLogo footerData={footerData} />
+                <FooterLogo footerData={data} getImageUrl={getImageUrl} />
               </div>
 
               <p className="mb-6 text-lg leading-relaxed text-white/90">
-                {footerData.description}
+                {data.description}
               </p>
 
               {/* Contact Info */}
               <div className="space-y-3">
-                {footerData.contactInfo.email && (
+                {data.contactInfo.email && (
                   <div className="flex items-center">
                     <Mail className="mr-3 h-5 w-5 text-white/80" />
                     <span className="text-white/90">
-                      {footerData.contactInfo.email}
+                      {data.contactInfo.email}
                     </span>
                   </div>
                 )}
-                {footerData.contactInfo.phone && (
+                {data.contactInfo.phone && (
                   <div className="flex items-center">
                     <Phone className="mr-3 h-5 w-5 text-white/80" />
                     <span className="text-white/90">
-                      {footerData.contactInfo.phone}
+                      {data.contactInfo.phone}
                     </span>
                   </div>
                 )}
-                {footerData.contactInfo.address && (
+                {data.contactInfo.address && (
                   <div className="flex items-center">
                     <MapPin className="mr-3 h-5 w-5 text-white/80" />
                     <span className="text-white/90">
-                      {footerData.contactInfo.address}
+                      {data.contactInfo.address}
                     </span>
                   </div>
                 )}
@@ -244,7 +245,7 @@ export function FooterStyle4({
             </div>
 
             {/* Link Sections */}
-            {footerData.sections.map(section => (
+            {data.sections.map(section => (
               <div key={section.id}>
                 <h4 className="mb-6 text-xl font-semibold">{section.title}</h4>
                 <ul className="space-y-3">
@@ -261,7 +262,12 @@ export function FooterStyle4({
                         </button>
                       ) : (
                         <Link
-                          href={generateLinkHref(link.href || "")}
+                          href={generateLinkHref(
+                            link.href || "",
+                            siteUser,
+                            pathname,
+                            isEditable
+                          )}
                           className="block text-white/80 transition-all hover:translate-x-1 hover:text-white"
                         >
                           {link.text}
@@ -275,15 +281,15 @@ export function FooterStyle4({
           </div>
 
           {/* Newsletter Section */}
-          {footerData.newsletter.enabled && (
+          {data.newsletter.enabled && (
             <div className="mt-16 rounded-2xl bg-white/10 p-8 backdrop-blur-sm">
               <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
                 <div>
                   <h4 className="mb-3 text-2xl font-bold">
-                    {footerData.newsletter.title}
+                    {data.newsletter.title}
                   </h4>
                   <p className="text-lg text-white/80">
-                    {footerData.newsletter.description}
+                    {data.newsletter.description}
                   </p>
                 </div>
 
@@ -340,14 +346,14 @@ export function FooterStyle4({
             {/* Copyright */}
             <div className="mb-4 flex items-center md:mb-0">
               <p className="text-white/80">
-                {footerData.copyright}
+                {data.copyright}
                 <Heart className="ml-1 inline h-4 w-4 text-red-400" />
               </p>
             </div>
 
             {/* Social Links */}
             <div className="flex items-center space-x-4">
-              {footerData.socialLinks.map(social => (
+              {data.socialLinks.map(social => (
                 <Link
                   key={social.id}
                   href={social.href || "#"}

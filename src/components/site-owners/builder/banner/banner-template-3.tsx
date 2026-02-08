@@ -4,6 +4,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2 } from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 
@@ -20,7 +21,11 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(bannerData);
+  const { data, setData, handleArrayItemUpdate } = useBuilderLogic(
+    bannerData,
+    onUpdate
+  );
+
   const [isUploading, setIsUploading] = useState<number | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -47,8 +52,7 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
         link: "",
         is_active: true,
       }));
-      const updatedData = { ...data, images: defaultImageObjects };
-      setData(updatedData);
+      setData({ ...data, images: defaultImageObjects });
       onUpdate?.({ images: defaultImageObjects });
       setIsInitialized(true);
     } else if (!isInitialized) {
@@ -58,34 +62,32 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
   }, []);
 
   const handleLinkUpdate = (index: number, href: string) => {
-    const updatedImages = [...data.images];
-    updatedImages[index] = { ...updatedImages[index], link: href };
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+    const imgId = data.images[index].id;
+    if (imgId !== undefined) {
+      handleArrayItemUpdate("images", imgId)({ link: href });
+    }
   };
 
-  const handleImageUpdate = (
+  const handleImageUpdateLocal = (
     index: number,
     imageUrl: string,
     altText?: string
   ) => {
-    const updatedImages = [...data.images];
-    updatedImages[index] = {
-      ...updatedImages[index],
-      image: imageUrl,
-      image_alt_description:
-        altText || updatedImages[index].image_alt_description,
-    };
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+    const imgId = data.images[index].id;
+    if (imgId !== undefined) {
+      handleArrayItemUpdate(
+        "images",
+        imgId
+      )({
+        image: imageUrl,
+        image_alt_description: altText,
+      });
+    }
   };
 
   const handleRemoveImage = (index: number) => {
     const updatedImages = data.images.filter((_, idx) => idx !== index);
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
+    setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
 
@@ -99,8 +101,7 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
       is_active: true,
     };
     const updatedImages = [...data.images, newImage];
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
+    setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
 
@@ -135,7 +136,7 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
         resourceType: "image",
       });
 
-      handleImageUpdate(index, imageUrl, `Banner image: ${file.name}`);
+      handleImageUpdateLocal(index, imageUrl, `Banner image: ${file.name}`);
       toast.success("Banner image uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
@@ -247,7 +248,11 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                                 image.image_alt_description || "Banner image"
                               }
                               onImageChange={(imageUrl, altText) =>
-                                handleImageUpdate(safeIndex, imageUrl, altText)
+                                handleImageUpdateLocal(
+                                  safeIndex,
+                                  imageUrl,
+                                  altText
+                                )
                               }
                               isEditable={isEditable}
                               className="w-full bg-white object-cover transition-opacity hover:opacity-75 max-sm:h-96 sm:h-[400px] lg:h-[500px]"
@@ -266,7 +271,11 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                             src={getImageUrl(image.image)}
                             alt={image.image_alt_description || "Banner image"}
                             onImageChange={(imageUrl, altText) =>
-                              handleImageUpdate(safeIndex, imageUrl, altText)
+                              handleImageUpdateLocal(
+                                safeIndex,
+                                imageUrl,
+                                altText
+                              )
                             }
                             isEditable={isEditable}
                             className="w-full bg-white object-cover transition-opacity hover:opacity-75 max-sm:h-96 sm:h-[400px] lg:h-[500px]"

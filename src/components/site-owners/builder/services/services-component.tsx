@@ -4,6 +4,7 @@ import {
   ServicesData,
 } from "@/types/owner-site/components/services";
 import { useServices } from "@/hooks/owner-site/admin/use-services";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -27,7 +28,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, Briefcase } from "lucide-react";
+import { AlertCircle, Trash2, Briefcase, RefreshCw } from "lucide-react";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -41,6 +42,7 @@ interface ServicesComponentProps {
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: ServicesComponentData) => void;
   onServiceClick?: (serviceSlug: string, order: number) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const ServicesComponent: React.FC<ServicesComponentProps> = ({
@@ -50,10 +52,27 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
   pageSlug,
   onUpdate,
   onServiceClick,
+  onReplace,
 }) => {
+  const { data: builderData, handleTextUpdate } = useBuilderLogic(
+    component.data,
+    updatedData => {
+      const componentId = component.component_id || component.id?.toString();
+      if (onUpdate && componentId) {
+        onUpdate(componentId, {
+          ...component,
+          data: {
+            ...component.data,
+            ...updatedData,
+          },
+        });
+      }
+    }
+  );
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const componentData: ServicesData = component.data || {
+  const componentData: ServicesData = builderData || {
     component_type: "services",
     style: "services-1",
     title: "Latest Services",
@@ -91,78 +110,36 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
   const totalPages = Math.ceil(totalServices / pageSize);
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("title")(newTitle);
 
-    const componentId = component.component_id || component.id?.toString();
-    if (!componentId) return;
-
-    updateServicesComponent.mutate(
-      {
-        componentId,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
-      },
-      {
-        onError: error => {
-          toast.error("Failed to update title", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
+    if (pageSlug) {
+      const componentId = component.component_id || component.id?.toString();
+      if (componentId) {
+        updateServicesComponent.mutate({
+          componentId,
+          data: {
+            ...component.data,
+            title: newTitle,
+          },
+        });
       }
-    );
-
-    if (onUpdate) {
-      onUpdate(componentId, {
-        ...component,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
-      });
     }
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("subtitle")(newSubtitle);
 
-    const componentId = component.component_id || component.id?.toString();
-    if (!componentId) return;
-
-    updateServicesComponent.mutate(
-      {
-        componentId,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
-      },
-      {
-        onError: error => {
-          toast.error("Failed to update subtitle", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
+    if (pageSlug) {
+      const componentId = component.component_id || component.id?.toString();
+      if (componentId) {
+        updateServicesComponent.mutate({
+          componentId,
+          data: {
+            ...component.data,
+            subtitle: newSubtitle,
+          },
+        });
       }
-    );
-
-    if (onUpdate) {
-      onUpdate(componentId, {
-        ...component,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
-      });
     }
   };
 
@@ -244,18 +221,31 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2">
               <Link href="/admin/services/" target="_blank" rel="noopener">
-                <Button size="sm" variant="outline">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full justify-start"
+                >
                   Manage Services
                 </Button>
               </Link>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onReplace?.(component.component_id)}
+                className="h-8 w-fit justify-start bg-white px-3"
+              >
+                <RefreshCw className="mr-1 h-4 w-4" />
+                Replace
+              </Button>
               <AlertDialogTrigger asChild>
                 <Button
                   onClick={handleDeleteClick}
                   variant="destructive"
                   size="sm"
-                  className="h-8 px-3"
+                  className="h-8 w-fit justify-start px-3"
                   disabled={deleteServicesComponent.isPending}
                 >
                   <Trash2 className="mr-1 h-4 w-4" />
@@ -348,18 +338,31 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2">
               <Link href="/admin/services/" target="_blank" rel="noopener">
-                <Button size="sm" variant="outline">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full justify-start"
+                >
                   Manage Services
                 </Button>
               </Link>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onReplace?.(component.component_id)}
+                className="h-8 w-fit justify-start bg-white px-3"
+              >
+                <RefreshCw className="mr-1 h-4 w-4" />
+                Replace
+              </Button>
               <AlertDialogTrigger asChild>
                 <Button
                   onClick={handleDeleteClick}
                   variant="destructive"
                   size="sm"
-                  className="h-8 px-3"
+                  className="h-8 w-fit justify-start px-3"
                   disabled={deleteServicesComponent.isPending}
                 >
                   <Trash2 className="mr-1 h-4 w-4" />

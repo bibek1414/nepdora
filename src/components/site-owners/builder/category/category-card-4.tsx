@@ -9,6 +9,9 @@ import { Category, SubCategory } from "@/types/owner-site/admin/product";
 import { FeaturedContent } from "@/types/owner-site/components/category";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface CategoryCard4Props {
   isEditable?: boolean;
@@ -23,6 +26,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
   initialFeaturedContent,
   onFeaturedContentUpdate,
 }) => {
+  const pathname = usePathname();
   // Hooks for real data
   const { data: categoriesData, isLoading: categoriesLoading } =
     useCategories();
@@ -46,6 +50,31 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
     },
   };
 
+  const defaultFeaturedContent: Required<FeaturedContent> = {
+    title: "Discover Amazing Products",
+    subtitle: "Premium Quality & Best Prices",
+    description:
+      "Explore our wide range of products and find exactly what you're looking for.",
+    buttonText: "Shop now",
+    buttonHref: "/products",
+    backgroundImages: [
+      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1560472355-536de3962603?w=1200&h=800&fit=crop",
+    ],
+    currentImageIndex: 0,
+  };
+
+  const {
+    data: featuredContent,
+    setData: setFeaturedContent,
+    handleTextUpdate,
+    getImageUrl,
+  } = useBuilderLogic(
+    { ...defaultFeaturedContent, ...initialFeaturedContent },
+    onFeaturedContentUpdate
+  );
+
   // Extract real data
   const categories: Category[] = categoriesData?.results || [];
   const subCategories: SubCategory[] = subCategoriesData?.results || [];
@@ -57,26 +86,6 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
   const [activeMobileCategoryId, setActiveMobileCategoryId] = useState<
     number | null
   >(null);
-
-  // Featured category content (editable) - Initialize all required properties
-  const [featuredContent, setFeaturedContent] = useState<
-    Required<FeaturedContent>
-  >({
-    title: initialFeaturedContent?.title || "Discover Amazing Products",
-    subtitle:
-      initialFeaturedContent?.subtitle || "Premium Quality & Best Prices",
-    description:
-      initialFeaturedContent?.description ||
-      "Explore our wide range of products and find exactly what you're looking for.",
-    buttonText: initialFeaturedContent?.buttonText || "Shop now",
-    buttonHref: initialFeaturedContent?.buttonHref || "/products",
-    backgroundImages: initialFeaturedContent?.backgroundImages || [
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1560472355-536de3962603?w=1200&h=800&fit=crop",
-    ],
-    currentImageIndex: initialFeaturedContent?.currentImageIndex || 0,
-  });
 
   // Generate unique component ID for this instance
   const componentId = React.useId();
@@ -94,7 +103,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
 
       return () => clearInterval(interval);
     }
-  }, [isEditable, featuredContent.backgroundImages.length]);
+  }, [isEditable, featuredContent.backgroundImages.length, setFeaturedContent]);
 
   // Helper functions
   const getSubCategoriesForCategory = (categoryId: number): SubCategory[] => {
@@ -104,15 +113,6 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
       }
       return parseInt(subCat.category as string) === categoryId;
     });
-  };
-
-  const handleContentUpdate = (field: keyof FeaturedContent, value: string) => {
-    const updatedContent = {
-      ...featuredContent,
-      [field]: value,
-    };
-    setFeaturedContent(updatedContent);
-    onFeaturedContentUpdate?.(updatedContent);
   };
 
   const handleButtonUpdate = (text: string, href: string) => {
@@ -238,22 +238,22 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
   };
 
   const getCategoryUrl = (category: Category): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/collections?category=${category.slug}`;
-    } else {
-      return `/collections?category=${category.slug}`;
-    }
+    return generateLinkHref(
+      `/collections?category=${category.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const getSubCategoryUrl = (
     subcategory: SubCategory,
     category: Category
   ): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/collections?category=${category.slug}&sub_category=${subcategory.slug}`;
-    } else {
-      return `/collections?category=${category.slug}&sub_category=${subcategory.slug}`;
-    }
+    return generateLinkHref(
+      `/collections?category=${category.slug}&sub_category=${subcategory.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const handleCategoryClick = (category: Category) => {
@@ -329,7 +329,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
           </button>
         </div>
         {isMobileCategoriesOpen && (
-          <div className="max-h-[22rem] overflow-y-auto px-4 pb-4">
+          <div className="max-h-88 overflow-y-auto px-4 pb-4">
             {categories.length === 0 ? (
               <div className="py-6 text-center text-sm text-gray-500">
                 <p>No categories available</p>
@@ -364,10 +364,11 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
                         <div className="flex flex-1 items-center gap-3">
                           <img
                             key={`mobile-cat-img-${componentId}-${category.id}`}
-                            src={
+                            src={getImageUrl(
                               category.image ||
-                              "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=32&h=32&fit=crop"
-                            }
+                                "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=32&h=32&fit=crop",
+                              { width: 64 }
+                            )}
                             alt={category.name}
                             className="h-9 w-9 rounded object-cover"
                             onError={e => {
@@ -429,7 +430,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
       </div>
 
       {/* Left Sidebar - Categories (Desktop) */}
-      <div className="relative z-20 hidden w-full flex-col border-b border-gray-200 bg-white md:flex md:w-60 md:flex-shrink-0 md:border-r md:border-b-0">
+      <div className="relative z-20 hidden w-full flex-col border-b border-gray-200 bg-white md:flex md:w-60 md:shrink-0 md:border-r md:border-b-0">
         <div className="flex-1">
           <div className="p-4">
             {categories.length === 0 ? (
@@ -478,13 +479,14 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
                         }}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="flex-shrink-0">
+                          <div className="shrink-0">
                             <img
                               key={`cat-img-${componentId}-${category.id}`}
-                              src={
+                              src={getImageUrl(
                                 category.image ||
-                                "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=32&h=32&fit=crop"
-                              }
+                                  "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=32&h=32&fit=crop",
+                                { width: 64 }
+                              )}
                               alt={category.name}
                               className="h-8 w-8 rounded object-cover"
                               onError={e => {
@@ -546,7 +548,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
           className="relative flex min-h-[420px] flex-1 items-center sm:min-h-[460px] md:min-h-[500px]"
           style={{
             background: currentBackgroundImage
-              ? `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${currentBackgroundImage})`
+              ? `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${getImageUrl(currentBackgroundImage, { width: 1200 })})`
               : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
             backgroundSize: "cover",
             backgroundPosition: "center",
@@ -555,7 +557,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
         >
           {/* Background Change Button - Only visible when editable */}
           {isEditable && (
-            <div className="absolute top-4 right-4 z-10 flex w-[11.5rem] flex-col gap-2 sm:top-6 sm:right-6">
+            <div className="absolute top-4 right-4 z-10 flex w-46 flex-col gap-2 sm:top-6 sm:right-6">
               <label
                 htmlFor={`background-upload-${componentId}`}
                 className={`cursor-pointer rounded bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
@@ -624,7 +626,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
               <EditableText
                 key={`subtitle-${componentId}`}
                 value={featuredContent.subtitle}
-                onChange={value => handleContentUpdate("subtitle", value)}
+                onChange={handleTextUpdate("subtitle")}
                 placeholder="Enter subtitle..."
                 className="mb-3 text-sm font-medium opacity-90 sm:mb-4 sm:text-base md:text-lg"
                 isEditable={isEditable}
@@ -635,7 +637,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
               <EditableText
                 key={`title-${componentId}`}
                 value={featuredContent.title}
-                onChange={value => handleContentUpdate("title", value)}
+                onChange={handleTextUpdate("title")}
                 placeholder="Enter main title..."
                 className="mb-4 text-4xl leading-tight font-bold sm:mb-6 sm:text-5xl md:text-6xl"
                 isEditable={isEditable}
@@ -646,7 +648,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
               <EditableText
                 key={`desc-${componentId}`}
                 value={featuredContent.description}
-                onChange={value => handleContentUpdate("description", value)}
+                onChange={handleTextUpdate("description")}
                 placeholder="Enter description..."
                 className="mb-6 text-base leading-relaxed opacity-90 sm:mb-8 sm:text-lg md:text-xl"
                 isEditable={isEditable}

@@ -19,6 +19,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref as getCentralizedHref } from "@/lib/link-utils";
 interface EditableLinkProps {
   text: string;
   href: string;
@@ -232,27 +234,11 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
   const textInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const pathname = usePathname();
+
   // Generate the actual href for navigation
   const generateLinkHref = (originalHref: string) => {
-    if (originalHref.startsWith("http") || originalHref.startsWith("mailto:")) {
-      return originalHref;
-    }
-
-    if (isEditable || !siteUser) {
-      return originalHref;
-    }
-
-    if (
-      originalHref === "/" ||
-      originalHref === "#" ||
-      originalHref === "" ||
-      originalHref === "home"
-    ) {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
+    return getCentralizedHref(originalHref, siteUser, pathname, isEditable);
   };
 
   // Handle page selection from dropdown

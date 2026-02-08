@@ -18,6 +18,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 const EditableItem: React.FC<{
   onEdit: () => void;
@@ -90,17 +92,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
   const closeCart = () => {
     setIsCartOpen(false);
   };
-
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable || disableClicks) return "#";
-
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const pathname = usePathname();
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
     if (disableClicks || isEditable) {
@@ -210,7 +202,13 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                           </EditableItem>
                         ) : (
                           <Link
-                            href={generateLinkHref(link.href)}
+                            href={generateLinkHref(
+                              link.href,
+                              siteUser,
+                              pathname,
+                              isEditable,
+                              disableClicks
+                            )}
                             onClick={e => handleLinkClick(e, link.href)}
                             className={`flex items-center text-sm font-medium hover:text-gray-800 ${
                               disableClicks
@@ -246,7 +244,13 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                       ) : (
                         <Link
                           key={button.id}
-                          href={generateLinkHref(button.href)}
+                          href={generateLinkHref(
+                            button.href,
+                            siteUser,
+                            pathname,
+                            isEditable,
+                            disableClicks
+                          )}
                           onClick={e => handleLinkClick(e, button.href)}
                           className={`text-sm font-medium hover:text-gray-800 ${
                             disableClicks
@@ -344,7 +348,13 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                 ) : (
                   <div className="flow-root" key={link.id}>
                     <Link
-                      href={generateLinkHref(link.href)}
+                      href={generateLinkHref(
+                        link.href,
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        disableClicks
+                      )}
                       onClick={e => handleLinkClick(e, link.href)}
                       className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
                     >
@@ -378,7 +388,13 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                   ) : (
                     <div className="flow-root" key={button.id}>
                       <Link
-                        href={generateLinkHref(button.href)}
+                        href={generateLinkHref(
+                          button.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
                         onClick={e => handleLinkClick(e, button.href)}
                         className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
                       >

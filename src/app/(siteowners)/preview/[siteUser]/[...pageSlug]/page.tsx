@@ -3,9 +3,9 @@
 import React from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { use } from "react";
-import { usePagePreview } from "@/hooks/preview/use-page-preview";
-import { PageComponentRenderer } from "@/components/site-owners/preview/page-component-render";
-import { LoadingSpinner } from "@/components/site-owners/preview/loading-spinner";
+import { usePageData } from "@/hooks/owner-site/use-page-data";
+import { PageComponentRenderer } from "@/components/site-owners/shared/page-component-renderer";
+import { LoadingSpinner } from "@/components/site-owners/shared/loading-spinner";
 interface DynamicPageProps {
   params: Promise<{
     siteUser: string;
@@ -21,15 +21,18 @@ export default function DynamicPage({ params }: DynamicPageProps) {
 
   const {
     pageComponents,
-    isComponentsLoading,
+    isLoading: isComponentsLoading,
     handleBacktoHome,
     handleProductClick,
     handleBlogClick,
     handleServiceClick,
     handleCategoryClick,
     handleSubCategoryClick,
-    handleComponentUpdate,
-  } = usePagePreview(siteUser, currentPageSlug);
+  } = usePageData(siteUser, currentPageSlug);
+
+  const handleComponentUpdate = () => {
+    // Component update handlers (not used in preview mode)
+  };
 
   if (isComponentsLoading) {
     return <LoadingSpinner message={`Loading ${currentPageSlug} page...`} />;

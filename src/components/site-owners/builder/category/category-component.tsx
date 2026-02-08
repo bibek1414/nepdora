@@ -8,6 +8,7 @@ import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { CategoryCard1 } from "./category-card-1";
 import { CategoryCard2 } from "./category-card-2";
 import { CategoryCard3 } from "./category-card-3";
@@ -27,7 +28,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, FolderOpen } from "lucide-react";
+import { AlertCircle, Trash2, FolderOpen, RefreshCw } from "lucide-react";
 import { Category } from "@/types/owner-site/admin/product";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";
@@ -40,6 +41,7 @@ interface CategoryComponentProps {
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: CategoryComponentData) => void;
   onCategoryClick?: (categoryId: number, order: number) => void;
+  onReplace?: (componentId: string) => void;
 }
 const useDebouncedCallback = <T extends unknown[]>(
   callback: (...args: T) => void,
@@ -67,7 +69,23 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   pageSlug,
   onUpdate,
   onCategoryClick,
+  onReplace,
 }) => {
+  const { data: builderData, handleTextUpdate } = useBuilderLogic(
+    component.data,
+    updatedData => {
+      if (onUpdate) {
+        onUpdate(component.component_id, {
+          ...component,
+          data: {
+            ...component.data,
+            ...updatedData,
+          },
+        });
+      }
+    }
+  );
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -75,7 +93,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
     title = "Our Categories",
     subtitle,
     style = "category-1",
-  } = component.data || {};
+  } = builderData || {};
 
   // Use unified mutation hooks
   const deleteCategoryComponent = useDeleteComponentMutation(
@@ -152,24 +170,11 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("title")(newTitle);
 
-    // Update component data via unified API
-    updateCategoryComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        title: newTitle,
-      },
-    });
-
-    // Also update local state if onUpdate is provided
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateCategoryComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           title: newTitle,
@@ -179,24 +184,11 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("subtitle")(newSubtitle);
 
-    // Update component data via unified API
-    updateCategoryComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        subtitle: newSubtitle,
-      },
-    });
-
-    // Also update local state if onUpdate is provided
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateCategoryComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           subtitle: newSubtitle,
@@ -255,14 +247,14 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
       <CategoryCard4
         isEditable={isEditable}
         siteUser={siteUser}
-        initialFeaturedContent={component.data.featuredContent}
+        initialFeaturedContent={builderData.featuredContent}
         onFeaturedContentUpdate={updatedData => {
           if (!pageSlug || !isEditable) return;
 
           const updatedComponentData = {
-            ...component.data,
+            ...builderData,
             featuredContent: {
-              ...(component.data.featuredContent || {}),
+              ...(builderData.featuredContent || {}),
               ...updatedData,
             },
           };
@@ -293,18 +285,33 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2">
               <Link href="/admin/categories/" target="_blank" rel="noopener">
-                <Button size="sm" variant="outline">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full justify-start"
+                >
                   Manage Categories
                 </Button>
               </Link>
+
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onReplace?.(component.component_id)}
+                className="h-8 w-fit justify-start bg-white px-3"
+              >
+                <RefreshCw className="mr-1 h-4 w-4" />
+                Replace
+              </Button>
+
               <AlertDialogTrigger asChild>
                 <Button
                   onClick={handleDeleteClick}
                   variant="destructive"
                   size="sm"
-                  className="h-8 px-3"
+                  className="h-8 w-fit justify-start px-3"
                   disabled={deleteCategoryComponent.isPending}
                 >
                   <Trash2 className="mr-1 h-4 w-4" />

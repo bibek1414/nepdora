@@ -2,7 +2,6 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CustomerAuthProvider } from "@/contexts/customer/AuthContext";
-import { CustomerPublishAuthProvider } from "@/contexts/customer/publish/AuthContext";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { QueryProvider } from "@/providers/query-provider";
 import TopLoader from "@/components/top-loader";
@@ -66,25 +65,23 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <CustomerAuthProvider>
-            <CustomerPublishAuthProvider>
-              <QueryProvider>
-                <TextSelectionProvider>
-                  <CartProvider>
-                    <Suspense fallback={null}>
-                      <TopLoader />
-                    </Suspense>
-                    {children}
-                    <Analytics />
-                    <Toaster
-                      position="bottom-right"
-                      richColors
-                      closeButton
-                      duration={3000}
-                    />
-                  </CartProvider>
-                </TextSelectionProvider>
-              </QueryProvider>
-            </CustomerPublishAuthProvider>
+            <QueryProvider>
+              <TextSelectionProvider>
+                <CartProvider>
+                  <Suspense fallback={null}>
+                    <TopLoader />
+                  </Suspense>
+                  {children}
+                  <Analytics />
+                  <Toaster
+                    position="bottom-right"
+                    richColors
+                    closeButton
+                    duration={3000}
+                  />
+                </CartProvider>
+              </TextSelectionProvider>
+            </QueryProvider>
           </CustomerAuthProvider>
         </AuthProvider>
       </body>

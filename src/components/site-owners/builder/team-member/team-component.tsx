@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 import Image from "next/image";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import {
   useTeamMembers,
   useUpdateTeamMember,
@@ -42,9 +43,11 @@ import {
   Linkedin,
   Twitter,
   Mail,
+  RefreshCw,
 } from "lucide-react";
 import { TEAM } from "@/types/owner-site/admin/team-member";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { EditableText } from "@/components/ui/editable-text";
 import { TeamMemberDialog } from "../../admin/ourteam/our-team-form";
 import { defaultTeamData } from "@/types/owner-site/components/team";
@@ -59,6 +62,7 @@ interface TeamComponentProps {
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: TeamComponentData) => void;
   onMemberClick?: (memberId: number, order: number) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const TeamComponent: React.FC<TeamComponentProps> = ({
@@ -68,7 +72,23 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
   pageSlug,
   onUpdate,
   onMemberClick,
+  onReplace,
 }) => {
+  const { data: builderData, handleTextUpdate } = useBuilderLogic(
+    component.data,
+    updatedData => {
+      if (onUpdate) {
+        onUpdate(component.component_id, {
+          ...component,
+          data: {
+            ...component.data,
+            ...updatedData,
+          },
+        });
+      }
+    }
+  );
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [activeMemberId, setActiveMemberId] = useState<number | null>(null);
@@ -86,7 +106,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
     title: rawTitle,
     subtitle: rawSubtitle,
     style = "team-1",
-  } = component.data || {};
+  } = builderData || {};
   const title = rawTitle ?? "Meet Our Team";
   const subtitle = rawSubtitle;
 
@@ -180,22 +200,11 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
   };
 
   const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("title")(newTitle);
 
-    updateTeamComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        title: newTitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateTeamComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           title: newTitle,
@@ -205,22 +214,11 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
   };
 
   const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    handleTextUpdate("subtitle")(newSubtitle);
 
-    updateTeamComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        subtitle: newSubtitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
+    if (pageSlug) {
+      updateTeamComponent.mutate({
+        componentId: component.component_id,
         data: {
           ...component.data,
           subtitle: newSubtitle,
@@ -319,13 +317,25 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       <div className="group relative">
         {/* Delete Control */}
         <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2">
+            <Link href="/admin/ourteam/" target="_blank" rel="noopener">
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full justify-start"
+              >
+                Manage Team
+              </Button>
+            </Link>
+
             <Button
-              onClick={handleAddMember}
-              className="bg-white text-gray-800 hover:bg-white hover:text-gray-900"
+              size="sm"
+              variant="outline"
+              onClick={() => onReplace?.(component.component_id)}
+              className="h-8 w-fit justify-start bg-white px-3"
             >
-              <Plus className="h-4 w-4" />
-              Team Member
+              <RefreshCw className="mr-1 h-4 w-4" />
+              Replace
             </Button>
 
             <AlertDialog
@@ -337,7 +347,7 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
                   onClick={handleDeleteClick}
                   variant="destructive"
                   size="sm"
-                  className="h-8 px-3"
+                  className="h-8 w-fit justify-start px-3"
                   disabled={deleteTeamComponent.isPending}
                 >
                   <Trash2 className="mr-1 h-4 w-4" />

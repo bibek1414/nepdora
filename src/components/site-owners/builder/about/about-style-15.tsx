@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Puzzle, TrendingUp, Lightbulb, ArrowUpRight } from "lucide-react";
 import {
   AboutUs15Data,
@@ -10,6 +10,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate15Props {
   aboutUsData: AboutUs15Data;
@@ -30,7 +31,6 @@ export const AboutUsTemplate15: React.FC<AboutUsTemplate15Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [data, setData] = useState(aboutUsData);
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -53,53 +53,22 @@ export const AboutUsTemplate15: React.FC<AboutUsTemplate15Props> = ({
     [themeResponse]
   );
 
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs15Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs15Data>);
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(aboutUsData, onUpdate);
 
   // Handle card updates
   const handleCardUpdate =
     (cardId: string, field: keyof AboutUs15Card) => (value: string) => {
-      const updatedCards = data.cards.map(card =>
-        card.id === cardId ? { ...card, [field]: value } : card
-      );
-      const updatedData = { ...data, cards: updatedCards };
-      setData(updatedData);
-      onUpdate?.({ cards: updatedCards });
+      handleArrayItemUpdate("cards", cardId)({ [field]: value });
     };
-
-  // Handle image updates
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  // Handle alt text updates
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
-  };
 
   // Handle button link updates
   const handleButtonLinkUpdate = (text: string, href: string) => {
-    const updatedData = {
-      ...data,
-      buttonText: text,
-      buttonLink: href,
-    };
-    setData(updatedData);
     onUpdate?.({
       buttonText: text,
       buttonLink: href,
@@ -266,8 +235,8 @@ export const AboutUsTemplate15: React.FC<AboutUsTemplate15Props> = ({
                 <EditableImage
                   src={data.imageUrl}
                   alt={data.imageAlt}
-                  onImageChange={handleImageUpdate}
-                  onAltChange={handleAltUpdate}
+                  onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+                  onAltChange={handleAltUpdate("imageAlt")}
                   isEditable={isEditable}
                   className="h-full w-full object-cover"
                   width={380}

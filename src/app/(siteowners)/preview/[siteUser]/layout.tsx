@@ -1,4 +1,4 @@
-import { PreviewLayoutWrapper } from "@/components/site-owners/preview/preview-layout-wrapper";
+import { SiteLayoutWrapper } from "@/components/site-owners/shared/site-layout-wrapper";
 import { DynamicFontProvider } from "@/providers/dynamic-font-provider";
 import { WhatsApp } from "@/components/site-owners/builder/whatsapp/whatsapp";
 import PopupManager from "@/components/site-owners/builder/popup/popup-manager";
@@ -36,9 +36,7 @@ export default async function PreviewLayout({
       <DynamicFavicon />
       <GoogleAnalytics />
       <DynamicFontProvider>
-        <PreviewLayoutWrapper siteUser={siteUser}>
-          {children}
-        </PreviewLayoutWrapper>
+        <SiteLayoutWrapper siteUser={siteUser}>{children}</SiteLayoutWrapper>
         <WhatsApp />
         <PopupManager />
       </DynamicFontProvider>

@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { Button as CButton } from "@/components/ui/button";
-import { Trash2, Calendar, Save } from "lucide-react";
+import { Trash2, Calendar, Save, RefreshCw } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +33,7 @@ interface PolicyComponentProps {
   isEditable?: boolean;
   pageSlug: string;
   siteUser: string;
+  onReplace?: (componentId: string) => void;
 }
 
 export const PolicyComponent: React.FC<PolicyComponentProps> = ({
@@ -40,6 +41,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
   isEditable = false,
   pageSlug,
   siteUser,
+  onReplace,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [data, setData] = useState(component.data);
@@ -262,7 +264,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
           )}
 
           {/* Delete Button */}
-          <div className="absolute -right-5 z-30 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
             <CButton
               size="sm"
               variant="destructive"
@@ -271,6 +273,17 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
             >
               <Trash2 className="h-4 w-4" />
               Delete
+            </CButton>
+            <CButton
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                onReplace?.(component.component_id || component.id.toString())
+              }
+              className="h-8 w-fit justify-start bg-white px-3"
+            >
+              <RefreshCw className="mr-1 h-4 w-4" />
+              Replace
             </CButton>
           </div>
 

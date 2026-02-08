@@ -89,7 +89,7 @@ export const ComponentOutlineSidebar: React.FC<
   );
 
   return (
-    <div className="sticky top-15 right-0 z-20 h-screen w-40 shrink-0 border-l bg-white">
+    <div className="sticky top-15 right-0 z-20 h-[calc(100vh-4rem)] w-40 shrink-0 overflow-y-auto border-l bg-white pb-10">
       <div className="flex items-center gap-2 border-b px-3 py-2 text-xs font-medium">
         <div className="leading-none">
           Components <br />

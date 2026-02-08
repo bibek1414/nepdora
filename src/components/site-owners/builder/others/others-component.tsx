@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, RefreshCw } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,6 +44,7 @@ interface OthersComponentProps {
   isEditable?: boolean;
   pageSlug: string;
   siteUser: string;
+  onReplace?: (componentId: string) => void;
 }
 
 export const OthersComponent: React.FC<OthersComponentProps> = ({
@@ -51,6 +52,7 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
   isEditable = false,
   pageSlug,
   siteUser,
+  onReplace,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteOthersMutation = useDeleteComponentMutation(pageSlug, "others");
@@ -148,15 +150,27 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
     <div className="group relative">
       {isEditable && (
         <>
-          <div className="bg-background/80 absolute -right-5 z-30 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 rounded-lg p-1 opacity-0 transition-opacity group-hover:opacity-100">
             <Button
               size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
               disabled={deleteOthersMutation.isPending}
+              className="h-8 w-fit justify-start px-3"
             >
-              <Trash2 className="h-4 w-4" />
-              Delete
+              <Trash2 className="mr-1 h-4 w-4" />
+              {deleteOthersMutation.isPending ? "Deleting..." : "Delete"}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                onReplace?.(component.component_id || component.id.toString())
+              }
+              className="h-8 w-fit justify-start bg-white px-3"
+            >
+              <RefreshCw className="mr-1 h-4 w-4" />
+              Replace
             </Button>
           </div>
 

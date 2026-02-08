@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { ChevronRight, CheckSquare, Send } from "lucide-react";
 import { AboutUs18Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate18Props {
   aboutUsData: AboutUs18Data;
@@ -21,7 +22,6 @@ export function AboutUsTemplate18({
   onUpdate,
   siteUser,
 }: AboutUsTemplate18Props) {
-  const [data, setData] = useState(aboutUsData);
   const { data: themeResponse } = useThemeQuery();
 
   const theme = useMemo(
@@ -43,27 +43,10 @@ export function AboutUsTemplate18({
     [themeResponse]
   );
 
-  const handleTextUpdate = (field: keyof AboutUs18Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs18Data>);
-  };
-
-  const handleMainImageUpdate = (url: string) => {
-    const updatedData = { ...data, mainImageUrl: url };
-    setData(updatedData);
-    onUpdate?.({ mainImageUrl: url });
-  };
-
-  const handleSecondaryImageUpdate = (url: string) => {
-    const updatedData = { ...data, secondaryImageUrl: url };
-    setData(updatedData);
-    onUpdate?.({ secondaryImageUrl: url });
-  };
+  const { data, handleTextUpdate, handleImageUpdate, handleArrayItemUpdate } =
+    useBuilderLogic(aboutUsData, onUpdate);
 
   const handleButtonLinkUpdate = (text: string, href: string) => {
-    const updatedData = { ...data, buttonText: text, buttonLink: href };
-    setData(updatedData);
     onUpdate?.({ buttonText: text, buttonLink: href });
   };
 
@@ -72,14 +55,8 @@ export function AboutUsTemplate18({
     field: "title" | "description",
     value: string
   ) => {
-    const updatedFeatures = [...data.features];
-    updatedFeatures[index] = {
-      ...updatedFeatures[index],
-      [field]: value,
-    };
-    const updatedData = { ...data, features: updatedFeatures };
-    setData(updatedData);
-    onUpdate?.({ features: updatedFeatures });
+    const featureId = data.features[index].id;
+    handleArrayItemUpdate("features", featureId)({ [field]: value });
   };
 
   return (
@@ -100,7 +77,7 @@ export function AboutUsTemplate18({
               <EditableImage
                 src={data.mainImageUrl}
                 alt={data.mainImageAlt}
-                onImageChange={handleMainImageUpdate}
+                onImageChange={handleImageUpdate("mainImageUrl")}
                 isEditable={isEditable}
                 className="h-full w-full object-cover"
                 width={600}
@@ -122,7 +99,7 @@ export function AboutUsTemplate18({
               <EditableImage
                 src={data.secondaryImageUrl}
                 alt={data.secondaryImageAlt}
-                onImageChange={handleSecondaryImageUpdate}
+                onImageChange={handleImageUpdate("secondaryImageUrl")}
                 isEditable={isEditable}
                 className="h-full w-full object-cover"
                 width={600}

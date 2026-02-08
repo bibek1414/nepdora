@@ -10,6 +10,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { Check, ArrowUpRight } from "lucide-react";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate14Props {
   aboutUsData: AboutUs14Data;
@@ -24,8 +25,6 @@ export function AboutUsTemplate14({
   onUpdate,
   siteUser,
 }: AboutUsTemplate14Props) {
-  const [data, setData] = useState(aboutUsData);
-  const [activeService, setActiveService] = useState(0);
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -48,55 +47,41 @@ export function AboutUsTemplate14({
     [themeResponse]
   );
 
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs14Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs14Data>);
-  };
+  const { data, handleTextUpdate, handleArrayItemUpdate } = useBuilderLogic(
+    aboutUsData,
+    onUpdate
+  );
+
+  const [activeService, setActiveService] = useState(0);
 
   // Handle service updates
   const handleServiceUpdate =
     (serviceId: string, field: keyof AboutUs14Service, pointIndex?: number) =>
     (value: string) => {
-      const updatedServices = data.services.map(service => {
-        if (service.id === serviceId) {
-          if (field === "points" && typeof pointIndex === "number") {
-            const newPoints = [...service.points];
-            newPoints[pointIndex] = value;
-            return { ...service, points: newPoints };
-          }
-          return { ...service, [field]: value };
-        }
-        return service;
-      });
-      const updatedData = { ...data, services: updatedServices };
-      setData(updatedData);
-      onUpdate?.({ services: updatedServices });
+      const service = data.services.find(s => s.id === serviceId);
+      if (!service) return;
+
+      if (field === "points" && typeof pointIndex === "number") {
+        const newPoints = [...service.points];
+        newPoints[pointIndex] = value;
+        handleArrayItemUpdate("services", serviceId)({ points: newPoints });
+      } else {
+        handleArrayItemUpdate("services", serviceId)({ [field]: value });
+      }
     };
 
   // Handle image updates
-  const handleImageUpdate = (serviceId: string) => (imageUrl: string) => {
-    const updatedServices = data.services.map(service =>
-      service.id === serviceId ? { ...service, image: imageUrl } : service
-    );
-    const updatedData = { ...data, services: updatedServices };
-    setData(updatedData);
-    onUpdate?.({ services: updatedServices });
+  const handleImageUpdateLocal = (serviceId: string) => (imageUrl: string) => {
+    handleArrayItemUpdate("services", serviceId)({ image: imageUrl });
   };
 
   // Handle button link updates
   const handleButtonLinkUpdate = (text: string, href: string) => {
-    const updatedData = {
-      ...data,
+    const update = {
       buttonText: text,
       buttonLink: href,
     };
-    setData(updatedData);
-    onUpdate?.({
-      buttonText: text,
-      buttonLink: href,
-    });
+    onUpdate?.(update);
   };
 
   const fadeInUp = {
@@ -280,7 +265,7 @@ export function AboutUsTemplate14({
               <EditableImage
                 src={data.services[activeService].image}
                 alt={data.services[activeService].title}
-                onImageChange={handleImageUpdate(
+                onImageChange={handleImageUpdateLocal(
                   data.services[activeService].id
                 )}
                 isEditable={isEditable}

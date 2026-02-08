@@ -7,6 +7,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { Globe, ChevronRight } from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface OthersTemplate2Props {
   othersData: OthersTemplate2Data;
@@ -21,12 +22,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(othersData);
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    setData(othersData);
-  }, [othersData]);
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -43,13 +39,13 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
     },
   };
 
-  const handleUpdate = (newData: Partial<OthersTemplate2Data>) => {
-    const updatedData = { ...data, ...newData };
-    setData(updatedData);
-    if (onUpdate) {
-      onUpdate(updatedData);
-    }
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleButtonUpdate,
+    getImageUrl,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(othersData, onUpdate);
 
   const handleStatUpdate = (
     index: number,
@@ -58,7 +54,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
   ) => {
     const newStats = [...data.statistics];
     newStats[index] = { ...newStats[index], [field]: value };
-    handleUpdate({ statistics: newStats });
+    onUpdate?.({ statistics: newStats });
   };
 
   // Default images for the gray areas
@@ -91,11 +87,11 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
           <div className="lg:col-span-5">
             <div className="relative h-auto min-h-[300px] w-full sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px]">
               <EditableImage
-                src={data.leftImage?.url || defaultLeftImage}
+                src={getImageUrl(data.leftImage?.url || defaultLeftImage)}
                 alt={data.leftImage?.alt || "Team collaboration"}
                 isEditable={isEditable}
                 onImageChange={(url, alt) =>
-                  handleUpdate({
+                  onUpdate?.({
                     leftImage: { url, alt: alt || data.leftImage.alt },
                   })
                 }
@@ -132,7 +128,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                 {/* Heading */}
                 <EditableText
                   value={data.heading || "Get our best offers quickly"}
-                  onChange={val => handleUpdate({ heading: val })}
+                  onChange={handleTextUpdate("heading")}
                   isEditable={isEditable}
                   as="h2"
                   className="mb-3 text-xl leading-tight font-bold sm:mb-4 sm:text-2xl md:text-3xl lg:text-4xl"
@@ -148,7 +144,7 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                     data.description ||
                     "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standard dummy"
                   }
-                  onChange={val => handleUpdate({ description: val })}
+                  onChange={handleTextUpdate("description")}
                   isEditable={isEditable}
                   className="mb-6 text-xs text-gray-500 sm:mb-8 sm:text-sm md:text-base"
                 />
@@ -161,11 +157,13 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                       href={data.buttons[0].href || "#"}
                       isEditable={isEditable}
                       siteUser={siteUser}
-                      onChange={(text, href) => {
-                        const newButtons = [...data.buttons];
-                        newButtons[0] = { ...newButtons[0], text, href };
-                        handleUpdate({ buttons: newButtons });
-                      }}
+                      onChange={(text, href) =>
+                        handleButtonUpdate("buttons")(
+                          data.buttons[0].id,
+                          text,
+                          href
+                        )
+                      }
                       className="inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-medium transition-all hover:bg-gray-50 sm:px-6 sm:py-2.5 sm:text-sm"
                       style={{
                         borderColor: "#E5E7EB",
@@ -183,11 +181,11 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
               {/* Right Small Image */}
               <div className="relative h-auto min-h-[250px] [clip-path:none] sm:min-h-[300px] md:[clip-path:polygon(0_0,100%_0,100%_100%,10%_100%)]">
                 <EditableImage
-                  src={data.rightImage?.url || defaultRightImage}
+                  src={getImageUrl(data.rightImage?.url || defaultRightImage)}
                   alt={data.rightImage?.alt || "Business meeting"}
                   isEditable={isEditable}
                   onImageChange={(url, alt) =>
-                    handleUpdate({
+                    onUpdate?.({
                       rightImage: { url, alt: alt || data.rightImage.alt },
                     })
                   }

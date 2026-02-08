@@ -12,6 +12,8 @@ import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 const EditableItem: React.FC<{
   onEdit: () => void;
@@ -81,17 +83,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   const closeCart = () => {
     setIsCartOpen(false);
   };
-
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable || !siteUser || disableClicks) return "#";
-
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const pathname = usePathname();
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
     if (disableClicks || isEditable) {
@@ -131,7 +123,13 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
             ) : (
               <Link
                 key={link.id}
-                href={generateLinkHref(link.href)}
+                href={generateLinkHref(
+                  link.href,
+                  siteUser,
+                  pathname,
+                  isEditable,
+                  disableClicks
+                )}
                 onClick={e => handleLinkClick(e, link.href)}
                 className={`text-sm font-medium transition-colors ${
                   disableClicks
@@ -184,7 +182,13 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
             ) : (
               <Link
                 key={link.id}
-                href={generateLinkHref(link.href)}
+                href={generateLinkHref(
+                  link.href,
+                  siteUser,
+                  pathname,
+                  isEditable,
+                  disableClicks
+                )}
                 onClick={e => handleLinkClick(e, link.href)}
                 className={`text-sm font-medium transition-colors ${
                   disableClicks
@@ -239,7 +243,15 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 {disableClicks ? (
                   button.text
                 ) : (
-                  <Link href={generateLinkHref(button.href)}>
+                  <Link
+                    href={generateLinkHref(
+                      button.href,
+                      siteUser,
+                      pathname,
+                      isEditable,
+                      disableClicks
+                    )}
+                  >
                     {button.text}
                   </Link>
                 )}

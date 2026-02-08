@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { AboutUs1Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate1Props {
   aboutUsData: AboutUs1Data;
@@ -15,46 +16,19 @@ export function AboutUsTemplate1({
   isEditable = false,
   onUpdate,
 }: AboutUsTemplate1Props) {
-  const [data, setData] = useState(aboutUsData);
-
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs1Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs1Data>);
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(aboutUsData, onUpdate);
 
   // Handle stats updates
   const handleStatsUpdate =
     (statId: string, field: "value" | "label") => (value: string) => {
-      const updatedStats = data.stats.map(stat =>
-        stat.id === statId ? { ...stat, [field]: value } : stat
-      );
-      const updatedData = { ...data, stats: updatedStats };
-      setData(updatedData);
-      onUpdate?.({ stats: updatedStats });
+      handleArrayItemUpdate("stats", statId)({ [field]: value });
     };
-
-  // Handle image updates
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  // Handle alt text updates
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
-  };
 
   return (
     <section className="bg-background py-20 md:py-28">
@@ -151,8 +125,8 @@ export function AboutUsTemplate1({
               <EditableImage
                 src={data.imageUrl}
                 alt={data.imageAlt || data.title}
-                onImageChange={handleImageUpdate}
-                onAltChange={handleAltUpdate}
+                onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+                onAltChange={handleAltUpdate("imageAlt")}
                 isEditable={isEditable}
                 className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                 width={600}

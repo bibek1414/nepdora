@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { motion, Variants } from "framer-motion";
 import { FaTree } from "react-icons/fa";
 import { AboutUs16Data } from "@/types/owner-site/components/about";
@@ -7,6 +7,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate16Props {
   aboutUsData: AboutUs16Data;
@@ -21,7 +22,6 @@ export function AboutUsTemplate16({
   onUpdate,
   siteUser,
 }: AboutUsTemplate16Props) {
-  const [data, setData] = useState(aboutUsData);
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -44,25 +44,12 @@ export function AboutUsTemplate16({
     [themeResponse]
   );
 
-  const handleTextUpdate = (field: keyof AboutUs16Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs16Data>);
-  };
-
-  const handleImageUpdate = (field: keyof AboutUs16Data) => (url: string) => {
-    const updatedData = { ...data, [field]: url };
-    setData(updatedData);
-    onUpdate?.({ [field]: url } as Partial<AboutUs16Data>);
-  };
+  const { data, handleTextUpdate, handleImageUpdate } = useBuilderLogic(
+    aboutUsData,
+    onUpdate
+  );
 
   const handleButtonLinkUpdate = (text: string, href: string) => {
-    const updatedData = {
-      ...data,
-      buttonText: text,
-      buttonLink: href,
-    };
-    setData(updatedData);
     onUpdate?.({
       buttonText: text,
       buttonLink: href,

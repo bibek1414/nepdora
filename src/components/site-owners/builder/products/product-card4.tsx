@@ -16,6 +16,8 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface ProductCard4Props {
   product: Product;
@@ -30,6 +32,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
   onClick,
   onWishlistToggle,
 }) => {
+  const pathname = usePathname();
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const { data: wishlistItems } = useWishlist();
@@ -128,11 +131,11 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
   };
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/products-draft/${product.slug}`;
-    } else {
-      return `/preview/products-draft/${product.slug}`;
-    }
+    return generateLinkHref(
+      `/products-draft/${product.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const detailsUrl = getDetailsUrl();
@@ -158,7 +161,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
                     "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop";
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent transition-all duration-300" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/10 to-transparent transition-all duration-300" />
             </div>
 
             {/* Floating Badges */}

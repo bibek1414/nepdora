@@ -12,6 +12,9 @@ import {
 import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface FooterStyle6Props {
   footerData: FooterData;
@@ -52,7 +55,13 @@ const renderSocialIcon = (social: SocialLink) => {
 };
 
 // Logo component
-const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
+const FooterLogo = ({
+  footerData,
+  getImageUrl,
+}: {
+  footerData: FooterData;
+  getImageUrl: any;
+}) => {
   const { logoType, logoImage, logoText, companyName } = footerData;
 
   if (logoType === "text") {
@@ -69,7 +78,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     return logoImage ? (
       <div className="flex items-center">
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-10 w-auto object-contain"
         />
@@ -86,7 +95,7 @@ const FooterLogo = ({ footerData }: { footerData: FooterData }) => {
     <div className="flex items-center gap-3">
       {logoImage && (
         <img
-          src={logoImage}
+          src={getImageUrl(logoImage)}
           alt={companyName}
           className="h-10 w-auto object-contain"
         />
@@ -120,6 +129,8 @@ export function FooterStyle6({
     },
   };
 
+  const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
+
   // Helper function to darken a hex color
   const darkenColor = (hex: string, percent: number): string => {
     // Ensure hex has # prefix
@@ -141,21 +152,12 @@ export function FooterStyle6({
   const darkerPrimary = darkenColor(primaryColor, -40); // Darken by 40%
 
   // Function to generate the correct href for links
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable) return originalHref;
-
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const pathname = usePathname();
 
   // Get copyright text or generate default
   const copyrightText =
-    footerData.copyright ||
-    `Copyright © ${new Date().getFullYear()} ${footerData.companyName}. All rights reserved.`;
+    data.copyright ||
+    `Copyright © ${new Date().getFullYear()} ${data.companyName}. All rights reserved.`;
 
   return (
     <>
@@ -175,7 +177,7 @@ export function FooterStyle6({
       >
         {/* Logo */}
         <div className="mb-4">
-          <FooterLogo footerData={footerData} />
+          <FooterLogo footerData={data} getImageUrl={getImageUrl} />
         </div>
 
         {/* Copyright */}
@@ -183,7 +185,7 @@ export function FooterStyle6({
 
         {/* Social Links */}
         <div className="mt-5 flex items-center gap-4">
-          {footerData.socialLinks.map(social => (
+          {data.socialLinks.map(social => (
             <Link
               key={social.id}
               href={social.href || "#"}

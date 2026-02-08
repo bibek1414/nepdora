@@ -1,4 +1,4 @@
-import { CollectionsPage } from "@/components/site-owners/publish/collections/collections-page";
+import { CollectionsPage } from "@/components/site-owners/builder/collections/collections-page";
 import { use } from "react";
 import { generatePublishPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";

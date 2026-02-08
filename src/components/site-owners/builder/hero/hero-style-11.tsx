@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate11Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface HeroTemplate11Props {
   heroData: HeroTemplate11Data;
@@ -21,19 +21,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState<HeroTemplate11Data>(() => ({
-    ...heroData,
-    buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-  }));
-
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    setData({
-      ...heroData,
-      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-    });
-  }, [heroData]);
 
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -51,54 +39,15 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate =
-    (field: keyof HeroTemplate11Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate11Data>);
-    };
-
-  // Handle image updates
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  // Handle alt text updates
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
-  };
-
-  // Handle button updates
-  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text, href } : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
-  };
-
-  // Get optimized image URL
-  const getImageUrl = () => {
-    if (!data.imageUrl) return "";
-    return optimizeCloudinaryUrl(convertUnsplashUrl(data.imageUrl), {
-      width: 800,
-      quality: "auto",
-      format: "auto",
-    });
-  };
+  const {
+    data,
+    setData,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleButtonUpdate,
+    getImageUrl,
+  } = useBuilderLogic(heroData, onUpdate);
 
   // Ensure we have at least one button
   const button =
@@ -207,7 +156,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
                     setData(updatedData);
                     onUpdate?.({ buttons: [newButton] });
                   } else {
-                    handleButtonUpdate(button.id, text, href);
+                    handleButtonUpdate("buttons")(button.id, text, href);
                   }
                 }}
                 isEditable={isEditable}
@@ -227,10 +176,12 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
           {/* Right Image */}
           <div className="relative hidden w-full md:-mt-8 md:block lg:-mt-12">
             <EditableImage
-              src={getImageUrl() || defaultImageUrl}
+              src={
+                getImageUrl(data.imageUrl, { width: 800 }) || defaultImageUrl
+              }
               alt={data.imageAlt || "Business strategy meeting"}
-              onImageChange={handleImageUpdate}
-              onAltChange={handleAltUpdate}
+              onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+              onAltChange={handleAltUpdate("imageAlt")}
               isEditable={isEditable}
               className="h-auto w-full rounded-lg object-cover shadow-xl"
               width={800}

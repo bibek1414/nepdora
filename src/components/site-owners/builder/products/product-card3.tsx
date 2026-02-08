@@ -15,6 +15,8 @@ import {
 import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface ProductCard3Props {
   product: Product;
@@ -29,6 +31,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   onClick,
   onWishlistToggle,
 }) => {
+  const pathname = usePathname();
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const { data: wishlistItems } = useWishlist();
@@ -111,11 +114,11 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   };
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/products-draft/${product.slug}`;
-    } else {
-      return `/preview/products-draft/${product.slug}`;
-    }
+    return generateLinkHref(
+      `/products-draft/${product.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const detailsUrl = getDetailsUrl();
@@ -126,11 +129,11 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
 
   return (
     <Link href={detailsUrl} className="block">
-      <Card className="overflow-hidden border border-gray-200 bg-gradient-to-r from-white to-gray-50">
+      <Card className="overflow-hidden border border-gray-200 bg-linear-to-r from-white to-gray-50">
         <CardContent className="p-0">
           <div className="flex flex-col sm:flex-row">
             {/* Image Section */}
-            <div className="relative flex-shrink-0 overflow-hidden sm:w-64">
+            <div className="relative shrink-0 overflow-hidden sm:w-64">
               <div className="relative aspect-square sm:h-64">
                 <Image
                   src={productImage}
@@ -142,7 +145,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop";
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/20" />
+                <div className="absolute inset-0 bg-linear-to-br from-transparent via-transparent to-black/20" />
               </div>
 
               {/* Corner Accent */}

@@ -9,6 +9,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { AboutUs13Data } from "@/types/owner-site/components/about";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate13Props {
   aboutUsData: AboutUs13Data;
@@ -23,10 +24,6 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [data, setData] = useState(aboutUsData);
-  const [activeTab, setActiveTab] = useState(
-    aboutUsData.tabs?.[0]?.id ?? "tab-1"
-  );
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -49,69 +46,35 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
     [themeResponse]
   );
 
-  const updateData = (partial: Partial<AboutUs13Data>) => {
-    const updated = { ...data, ...partial };
-    setData(updated);
-    onUpdate?.(partial);
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(aboutUsData, onUpdate);
 
-  const handleTextUpdate =
-    (field: keyof AboutUs13Data) =>
-    (value: string): void => {
-      updateData({ [field]: value } as Partial<AboutUs13Data>);
-    };
+  const [activeTab, setActiveTab] = useState(data.tabs?.[0]?.id ?? "tab-1");
 
   const handleTabTitleUpdate = (tabId: string) => (value: string) => {
-    const updatedTabs = data.tabs.map(tab =>
-      tab.id === tabId ? { ...tab, title: value } : tab
-    );
-    updateData({ tabs: updatedTabs });
+    handleArrayItemUpdate("tabs", tabId)({ title: value });
   };
 
   const handleTabDescriptionUpdate = (tabId: string) => (value: string) => {
-    const updatedTabs = data.tabs.map(tab =>
-      tab.id === tabId ? { ...tab, description: value } : tab
-    );
-    updateData({ tabs: updatedTabs });
+    handleArrayItemUpdate("tabs", tabId)({ description: value });
   };
 
   const handleTabImageUpdate =
     (tabId: string) => (imageUrl: string, altText?: string) => {
-      const updatedTabs = data.tabs.map(tab =>
-        tab.id === tabId
-          ? { ...tab, imageUrl, imageAlt: altText || tab.imageAlt }
-          : tab
-      );
-      updateData({ tabs: updatedTabs });
+      handleArrayItemUpdate("tabs", tabId)({ imageUrl, imageAlt: altText });
     };
 
   const handleTabAltUpdate = (tabId: string) => (altText: string) => {
-    const updatedTabs = data.tabs.map(tab =>
-      tab.id === tabId ? { ...tab, imageAlt: altText } : tab
-    );
-    updateData({ tabs: updatedTabs });
-  };
-
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    updateData({
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    });
-  };
-
-  const handleAltUpdate = (altText: string) => {
-    updateData({ imageAlt: altText });
-  };
-
-  const handleLinkUpdate = (text: string, href: string) => {
-    updateData({
-      buttonText: text,
-      buttonLink: href,
-    });
+    handleArrayItemUpdate("tabs", tabId)({ imageAlt: altText });
   };
 
   const handleOverlayLinkUpdate = (text: string, href: string) => {
-    updateData({
+    onUpdate?.({
       ctaText: text,
       ctaLink: href,
     });
@@ -158,12 +121,12 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               onImageChange={
                 activeTabData
                   ? handleTabImageUpdate(activeTabData.id)
-                  : handleImageUpdate
+                  : handleImageUpdate("imageUrl", "imageAlt")
               }
               onAltChange={
                 activeTabData
                   ? handleTabAltUpdate(activeTabData.id)
-                  : handleAltUpdate
+                  : handleAltUpdate("imageAlt")
               }
               isEditable={isEditable}
               className="h-full w-full object-cover"

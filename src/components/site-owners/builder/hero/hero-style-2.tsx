@@ -1,18 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { HeroTemplate2Data } from "@/types/owner-site/components/hero";
-import {
-  convertUnsplashUrl,
-  optimizeCloudinaryUrl,
-  uploadToCloudinary,
-} from "@/utils/cloudinary";
+import { uploadToCloudinary } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { toast } from "sonner";
 
 interface HeroTemplate2Props {
@@ -29,21 +26,8 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
   siteUser,
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [data, setData] = useState<HeroTemplate2Data>(() => ({
-    ...heroData,
-    buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-    sliderImages: heroData.sliderImages?.map(img => ({ ...img })) || [],
-  }));
   const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    setData({
-      ...heroData,
-      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-      sliderImages: heroData.sliderImages?.map(img => ({ ...img })) || [],
-    });
-  }, [heroData]);
 
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -61,61 +45,41 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     },
   };
 
+  const {
+    data,
+    setData,
+    handleTextUpdate,
+    handleButtonUpdate,
+    handleArrayItemUpdate,
+    getImageUrl,
+  } = useBuilderLogic(heroData, onUpdate);
+
   const componentId = React.useId();
 
-  // Handle text field updates
-  const handleTextUpdate =
-    (field: keyof HeroTemplate2Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate2Data>);
-    };
-
-  // Handle button text and href updates
-  const handleButtonUpdate = (
-    buttonId: string,
-    text: string,
-    href?: string
-  ) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId
-        ? { ...btn, text, ...(href !== undefined && { href }) }
-        : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
-  };
-
-  // Handle slider image updates
   const handleSliderImageUpdate = (
     index: number,
     imageUrl: string,
     altText?: string
   ) => {
-    const updatedSliderImages =
-      data.sliderImages?.map((img, idx) =>
-        idx === index ? { ...img, url: imageUrl, alt: altText || img.alt } : img
-      ) || [];
-    const updatedData = { ...data, sliderImages: updatedSliderImages };
-    setData(updatedData);
-    onUpdate?.({ sliderImages: updatedSliderImages });
+    const imgId = data.sliderImages?.[index]?.id || `slide-${index}`;
+    handleArrayItemUpdate(
+      "sliderImages",
+      imgId
+    )({
+      url: imageUrl,
+      alt: altText || data.sliderImages?.[index]?.alt,
+    });
   };
 
   const handleBackgroundImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
+    const update = {
       backgroundType: "image" as const,
       backgroundImageUrl: imageUrl,
       imageAlt: altText || data.imageAlt,
     };
+    const updatedData = { ...data, ...update };
     setData(updatedData);
-
-    onUpdate?.({
-      backgroundType: "image" as const,
-      backgroundImageUrl: imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
+    onUpdate?.(update);
   };
 
   const handleBackgroundFileChange = async (
@@ -172,32 +136,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     return {
       backgroundColor: data.backgroundColor || theme.colors.background,
     };
-  };
-
-  const getLayoutClasses = () => {
-    let classes = "";
-    switch (data.layout) {
-      case "text-left":
-        classes += "text-left items-start";
-        break;
-      case "text-right":
-        classes += "text-right items-end";
-        break;
-      default:
-        classes += "text-center items-center";
-        break;
-    }
-    return classes;
-  };
-
-  const getSliderImageUrl = (url: string) => {
-    return optimizeCloudinaryUrl(convertUnsplashUrl(url), {
-      width: 600,
-      height: 400,
-      quality: "auto",
-      format: "auto",
-      crop: "fill",
-    });
   };
 
   const nextSlide = () => {
@@ -285,7 +223,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
       {/* Background EditableImage */}
       {data.backgroundType === "image" && data.backgroundImageUrl && (
         <EditableImage
-          key={`bg-${componentId}-${data.backgroundImageUrl}`}
           src={data.backgroundImageUrl}
           alt={data.imageAlt || "Background image"}
           onImageChange={handleBackgroundImageUpdate}
@@ -324,9 +261,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
       {/* Main Content Container */}
       <div className="relative z-10 container mx-auto flex w-full max-w-7xl flex-col gap-6 sm:gap-8 lg:flex-row lg:items-center">
         {/* Text Content */}
-        <div
-          className={`flex flex-col gap-3 sm:gap-4 ${getLayoutClasses()} w-full lg:flex-1`}
-        >
+        <div className={`flex w-full flex-col gap-3 sm:gap-4 lg:flex-1`}>
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
@@ -375,7 +310,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                 key={`btn-${componentId}-${btn.id}`}
                 variant={btn.variant === "primary" ? "default" : btn.variant}
                 size="default"
-                className="px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base"
+                className="!h-16 px-4 py-2 text-sm !text-white sm:px-6 sm:py-3 sm:text-base"
                 style={{
                   backgroundColor:
                     btn.variant === "primary"
@@ -393,7 +328,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                   text={btn.text}
                   href={btn.href || "#"}
                   onChange={(text, href) =>
-                    handleButtonUpdate(btn.id, text, href)
+                    handleButtonUpdate("buttons")(btn.id, text, href)
                   }
                   isEditable={isEditable}
                   siteUser={siteUser}
@@ -422,24 +357,22 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                     >
                       <EditableImage
                         key={`slide-img-${componentId}-${index}-${img.url}`}
-                        src={getSliderImageUrl(img.url)}
+                        src={getImageUrl(img.url, {
+                          width: 600,
+                          height: 400,
+                          crop: "fill",
+                        })}
                         alt={img.alt || `Slide ${index + 1}`}
                         onImageChange={(imageUrl, altText) =>
                           handleSliderImageUpdate(index, imageUrl, altText)
                         }
                         onAltChange={altText => {
-                          const updatedSliderImages =
-                            data.sliderImages?.map((sliderImg, idx) =>
-                              idx === index
-                                ? { ...sliderImg, alt: altText }
-                                : sliderImg
-                            ) || [];
-                          const updatedData = {
-                            ...data,
-                            sliderImages: updatedSliderImages,
-                          };
-                          setData(updatedData);
-                          onUpdate?.({ sliderImages: updatedSliderImages });
+                          const imgId =
+                            data.sliderImages?.[index]?.id || `slide-${index}`;
+                          handleArrayItemUpdate(
+                            "sliderImages",
+                            imgId
+                          )({ alt: altText });
                         }}
                         isEditable={isEditable}
                         className="h-56 w-full object-cover sm:h-72 md:h-80 lg:h-96"

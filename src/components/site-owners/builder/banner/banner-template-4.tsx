@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Pin, Plus, X } from "lucide-react";
 import { BannerData } from "@/types/owner-site/components/banner";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface BannerTemplateProps {
   bannerData: BannerData;
@@ -21,7 +22,6 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [data, setData] = useState(bannerData);
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -44,15 +44,19 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
     [themeResponse]
   );
 
+  const { data, handleTextUpdate, handleArrayItemUpdate } = useBuilderLogic(
+    bannerData,
+    onUpdate
+  );
+
   // Extract section tag, title, and italic word from title/subtitle
-  // Format: subtitle = "[Our Process]", title = "Optimo Your Strategic Growth Partner", italicWord = "Partner"
   const sectionTag = data.subtitle || "[Our Process]";
   const fullTitle = data.title || "Optimo Your Strategic Growth Partner";
   const titleParts = fullTitle.split(" ");
   const italicWord = titleParts[titleParts.length - 1] || "Partner";
   const titleWithoutItalic = titleParts.slice(0, -1).join(" ");
 
-  // Get main image (first image from images array)
+  // Get main image
   const mainImage = data.images?.[0] || {
     id: 1,
     image:
@@ -62,22 +66,18 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
     is_active: true,
   };
 
-  // Floating card items - stored as comma-separated string in image_alt_description or as separate data
-  // For now, we'll use a default list and allow editing
   const defaultItems = [
     "Strategic Planning",
     "Operational Excellence",
     "Market Expansion",
     "Risk Management",
   ];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const imageData = mainImage as any;
   const showFloatingCard =
     imageData.showFloatingCard !== undefined
       ? imageData.showFloatingCard
       : true;
-  const cardItemsString =
-    imageData.cardItems || defaultItems.join(",") || defaultItems.join(",");
+  const cardItemsString = imageData.cardItems || defaultItems.join(",");
   const cardItems = cardItemsString
     .split(",")
     .map((item: string) => item.trim())
@@ -85,74 +85,52 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
 
   // Handle section tag update
   const handleSectionTagUpdate = (value: string) => {
-    const updatedData = { ...data, subtitle: value };
-    setData(updatedData);
-    onUpdate?.({ subtitle: value });
+    handleTextUpdate("subtitle")(value);
   };
 
   // Handle title update
   const handleTitleUpdate = (value: string) => {
-    const updatedData = { ...data, title: value };
-    setData(updatedData);
-    onUpdate?.({ title: value });
-  };
-
-  // Handle italic word update
-  const handleItalicWordUpdate = (value: string) => {
-    const parts = fullTitle.split(" ");
-    parts[parts.length - 1] = value;
-    const updatedTitle = parts.join(" ");
-    const updatedData = { ...data, title: updatedTitle };
-    setData(updatedData);
-    onUpdate?.({ title: updatedTitle });
+    handleTextUpdate("title")(value);
   };
 
   // Handle image update
   const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedImages = [
-      {
-        ...mainImage,
+    if (mainImage.id !== undefined) {
+      handleArrayItemUpdate(
+        "images",
+        mainImage.id
+      )({
         image: imageUrl,
-        image_alt_description: altText || mainImage.image_alt_description,
-      },
-      ...(data.images?.slice(1) || []),
-    ];
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+        image_alt_description: altText,
+      });
+    }
   };
 
   // Handle card item update
   const handleCardItemUpdate = (index: number, value: string) => {
     const updatedItems = [...cardItems];
     updatedItems[index] = value;
-    const updatedCardItems = updatedItems.join(",");
-    const updatedImages = [
-      {
-        ...mainImage,
-        cardItems: updatedCardItems,
-      },
-      ...(data.images?.slice(1) || []),
-    ];
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+    if (mainImage.id !== undefined) {
+      handleArrayItemUpdate(
+        "images",
+        mainImage.id
+      )({
+        cardItems: updatedItems.join(","),
+      });
+    }
   };
 
   // Handle add card item
   const handleAddCardItem = () => {
     const updatedItems = [...cardItems, "New Item"];
-    const updatedCardItems = updatedItems.join(",");
-    const updatedImages = [
-      {
-        ...mainImage,
-        cardItems: updatedCardItems,
-      },
-      ...(data.images?.slice(1) || []),
-    ];
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+    if (mainImage.id !== undefined) {
+      handleArrayItemUpdate(
+        "images",
+        mainImage.id
+      )({
+        cardItems: updatedItems.join(","),
+      });
+    }
   };
 
   // Handle remove card item
@@ -160,51 +138,40 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
     const updatedItems = cardItems.filter(
       (_: string, i: number) => i !== index
     );
-    const updatedCardItems = updatedItems.join(",");
-    const updatedImages = [
-      {
-        ...mainImage,
-        cardItems: updatedCardItems,
+    if (mainImage.id !== undefined) {
+      handleArrayItemUpdate(
+        "images",
+        mainImage.id
+      )({
+        cardItems: updatedItems.join(","),
         showFloatingCard: updatedItems.length > 0 ? showFloatingCard : false,
-      },
-      ...(data.images?.slice(1) || []),
-    ];
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+      });
+    }
   };
 
   // Handle remove entire floating card
   const handleRemoveFloatingCard = () => {
-    const updatedImages = [
-      {
-        ...mainImage,
+    if (mainImage.id !== undefined) {
+      handleArrayItemUpdate(
+        "images",
+        mainImage.id
+      )({
         showFloatingCard: false,
-      },
-      ...(data.images?.slice(1) || []),
-    ];
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+      });
+    }
   };
 
   // Handle show floating card again
   const handleShowFloatingCard = () => {
-    const updatedImages = [
-      {
-        ...mainImage,
+    if (mainImage.id !== undefined) {
+      handleArrayItemUpdate(
+        "images",
+        mainImage.id
+      )({
         showFloatingCard: true,
-        cardItems:
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (mainImage as any).cardItems ||
-          defaultItems.join(",") ||
-          defaultItems.join(","),
-      },
-      ...(data.images?.slice(1) || []),
-    ];
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+        cardItems: imageData.cardItems || defaultItems.join(","),
+      });
+    }
   };
 
   return (

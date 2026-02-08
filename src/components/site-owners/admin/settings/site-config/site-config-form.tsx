@@ -310,7 +310,7 @@ export const SiteConfigForm: React.FC = () => {
       </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Branding Section */}
-        <Card>
+        <Card className="p-4">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <ImageIcon className="h-5 w-5" />
@@ -384,7 +384,7 @@ export const SiteConfigForm: React.FC = () => {
         </Card>
 
         {/* Social Media Section */}
-        <Card>
+        <Card className="p-4">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <LinkIcon className="h-5 w-5" />

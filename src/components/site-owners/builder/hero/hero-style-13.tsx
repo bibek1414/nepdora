@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useId, useMemo, useState } from "react";
+import React, { useId, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Loader2 } from "lucide-react";
 import {
@@ -10,11 +10,8 @@ import {
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
-import {
-  convertUnsplashUrl,
-  optimizeCloudinaryUrl,
-  uploadToCloudinary,
-} from "@/utils/cloudinary";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 
 interface HeroTemplate13Props {
@@ -55,16 +52,6 @@ const DEFAULT_BUTTON: HeroButton = {
   href: "#",
 };
 
-const createInitialData = (
-  incoming: HeroTemplate13Data
-): HeroTemplate13Data => ({
-  ...incoming,
-  buttons:
-    incoming.buttons?.length && incoming.buttons[0]
-      ? [{ ...incoming.buttons[0] }]
-      : [{ ...DEFAULT_BUTTON }],
-});
-
 export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
   heroData,
   isEditable = false,
@@ -72,69 +59,44 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
   onUpdate,
 }) => {
   const componentId = useId();
-  const [data, setData] = useState<HeroTemplate13Data>(() =>
-    createInitialData(heroData)
-  );
   const [isUploadingBackground, setIsUploadingBackground] = useState(false);
 
-  useEffect(() => {
-    setData(createInitialData(heroData));
-  }, [heroData]);
-
-  const defaultBackground = "https://picsum.photos/seed/office1/1920/1080";
-
-  const resolvedBackground =
-    data.backgroundImageUrl || heroData.backgroundImageUrl || defaultBackground;
-
-  const backgroundImage = useMemo(() => {
-    if (!resolvedBackground) return resolvedBackground;
-    const converted = convertUnsplashUrl(resolvedBackground);
-    return optimizeCloudinaryUrl(converted, {
-      width: 1920,
-      quality: "auto",
-      format: "auto",
-    });
-  }, [resolvedBackground]);
-
-  const handleTextUpdate =
-    (field: keyof HeroTemplate13Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate13Data>);
-    };
+  const {
+    data,
+    setData,
+    handleTextUpdate,
+    handleButtonUpdate,
+    handleAltUpdate,
+    getImageUrl,
+  } = useBuilderLogic(
+    {
+      ...heroData,
+      buttons:
+        heroData.buttons?.length && heroData.buttons[0]
+          ? [{ ...heroData.buttons[0] }]
+          : [{ ...DEFAULT_BUTTON }],
+    },
+    onUpdate
+  );
 
   const handlePrimaryButtonUpdate = (text: string, href: string) => {
     const existingButton = data.buttons[0] || DEFAULT_BUTTON;
-    const updatedButton = {
-      ...existingButton,
-      id: existingButton.id || DEFAULT_BUTTON.id,
+    handleButtonUpdate("buttons")(
+      existingButton.id || DEFAULT_BUTTON.id,
       text,
-      href,
-    };
-    const updatedData = { ...data, buttons: [updatedButton] };
-    setData(updatedData);
-    onUpdate?.({ buttons: [updatedButton] });
+      href
+    );
   };
 
   const handleBackgroundUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
+    const update = {
       backgroundType: "image" as const,
       backgroundImageUrl: imageUrl,
       imageAlt: altText || data.imageAlt || "Hero background image",
     };
+    const updatedData = { ...data, ...update };
     setData(updatedData);
-    onUpdate?.({
-      backgroundType: "image" as const,
-      backgroundImageUrl: imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
+    onUpdate?.(update);
   };
 
   const getButtonVariant = (variant?: string): CTAButtonVariant => {
@@ -263,10 +225,10 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <EditableImage
-          src={backgroundImage}
+          src={getImageUrl(data.backgroundImageUrl, { width: 1920 })}
           alt={data.imageAlt || "Office meeting background"}
           onImageChange={handleBackgroundUpdate}
-          onAltChange={handleAltUpdate}
+          onAltChange={handleAltUpdate("imageAlt")}
           isEditable={isEditable}
           className="h-full w-full opacity-60"
           width={1920}

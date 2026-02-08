@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React from "react";
 import { ChevronRight } from "lucide-react";
 import { AboutUs2Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate2Props {
   aboutUsData: AboutUs2Data;
@@ -22,7 +22,6 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [data, setData] = useState(aboutUsData);
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -41,67 +40,16 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs2Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs2Data>);
-  };
-
-  // Handle image updates
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      heroImageUrl: imageUrl,
-      heroImageAlt: altText || data.heroImageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      heroImageUrl: imageUrl,
-      heroImageAlt: updatedData.heroImageAlt,
-    });
-  };
-
-  // Handle alt text updates
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, heroImageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ heroImageAlt: altText });
-  };
-
-  // Handle journey image updates
-  const handleJourneyImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      journeyImageUrl: imageUrl,
-      journeyImageAlt: altText || data.journeyImageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      journeyImageUrl: imageUrl,
-      journeyImageAlt: updatedData.journeyImageAlt,
-    });
-  };
-
-  // Handle journey alt text updates
-  const handleJourneyAltUpdate = (altText: string) => {
-    const updatedData = { ...data, journeyImageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ journeyImageAlt: altText });
-  };
+  const { data, handleTextUpdate, handleImageUpdate, handleAltUpdate } =
+    useBuilderLogic(aboutUsData, onUpdate);
 
   // Handle link updates
   const handleLinkUpdate = (text: string, href: string) => {
-    const updatedData = {
-      ...data,
+    const update = {
       ctaText: text,
       ctaLink: href,
     };
-    setData(updatedData);
-    onUpdate?.({
-      ctaText: text,
-      ctaLink: href,
-    });
+    onUpdate?.(update);
   };
 
   return (
@@ -115,8 +63,8 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
           <EditableImage
             src={data.heroImageUrl}
             alt={data.heroImageAlt}
-            onImageChange={handleImageUpdate}
-            onAltChange={handleAltUpdate}
+            onImageChange={handleImageUpdate("heroImageUrl", "heroImageAlt")}
+            onAltChange={handleAltUpdate("heroImageAlt")}
             isEditable={isEditable}
             className="object-cover opacity-30"
             cloudinaryOptions={{
@@ -171,8 +119,11 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
                 <EditableImage
                   src={data.journeyImageUrl}
                   alt={data.journeyImageAlt}
-                  onImageChange={handleJourneyImageUpdate}
-                  onAltChange={handleJourneyAltUpdate}
+                  onImageChange={handleImageUpdate(
+                    "journeyImageUrl",
+                    "journeyImageAlt"
+                  )}
+                  onAltChange={handleAltUpdate("journeyImageAlt")}
                   isEditable={isEditable}
                   className="-rotate-12 transform rounded-xl object-cover shadow-lg transition-transform duration-500 hover:rotate-0"
                   width={400}

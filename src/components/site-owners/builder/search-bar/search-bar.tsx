@@ -12,6 +12,8 @@ import {
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import Image from "next/image";
 import { Product } from "@/types/owner-site/admin/product";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface SearchResults {
   results: Product[];
@@ -29,6 +31,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   isEditable = false,
   className = "",
 }) => {
+  const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
@@ -72,7 +75,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   // Generate product URL
   const getProductUrl = (product: Product): string => {
-    return `/preview/${siteUser}/products-draft/${product.slug}`;
+    return generateLinkHref(
+      `/products-draft/${product.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   // Handle product click navigation
@@ -181,7 +188,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       setShowDropdown(false);
       setIsSearchFocused(false);
       // Navigate to products page with search
-      window.location.href = `/preview/${siteUser}/collections?search=${encodeURIComponent(searchQuery.trim())}`;
+      window.location.href = generateLinkHref(
+        `/collections?search=${encodeURIComponent(searchQuery.trim())}`,
+        siteUser,
+        pathname
+      );
     }
   };
 
@@ -228,7 +239,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleViewAllResults = (): void => {
     closeSearchResults();
-    window.location.href = `/preview/${siteUser}/collections?search=${encodeURIComponent(searchQuery.trim())}`;
+    window.location.href = generateLinkHref(
+      `/collections?search=${encodeURIComponent(searchQuery.trim())}`,
+      siteUser,
+      pathname
+    );
   };
 
   const page_sizeedProducts = sortedProducts.slice(0, 5);
@@ -240,10 +255,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div ref={searchRef} className={`relative w-full max-w-md ${className}`}>
       <form onSubmit={handleSearchSubmit} className="relative">
-        <div
-          className="relative rounded-xl p-[1px]"
-          style={createGradientStyle()}
-        >
+        <div className="relative rounded-xl p-px" style={createGradientStyle()}>
           <div className="relative rounded-xl bg-white">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
@@ -281,7 +293,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </form>
 
       {showDropdown && !isEditable && (
-        <Card className="absolute right-0 left-0 z-[9999] mt-2 min-w-[320px] border-2">
+        <Card className="absolute right-0 left-0 z-9999 mt-2 min-w-[320px] border-2">
           <CardContent className="p-0">
             <ScrollArea className="max-h-[500px]">
               <div className="p-4">
@@ -317,7 +329,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                             onClick={() => handleProductClick(product)}
                             className="flex w-full cursor-pointer items-center gap-3 rounded-lg p-2 text-left transition-colors hover:bg-gray-50"
                           >
-                            <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                            <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100">
                               {product.thumbnail_image && (
                                 <Image
                                   src={product.thumbnail_image}
@@ -416,7 +428,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                                   onClick={() => handleProductClick(product)}
                                   className="flex w-full cursor-pointer items-center gap-3 rounded-lg p-2 text-left transition-colors hover:bg-gray-50"
                                 >
-                                  <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100">
                                     {product.thumbnail_image && (
                                       <Image
                                         src={product.thumbnail_image}

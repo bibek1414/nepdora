@@ -22,8 +22,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { EditableText } from "@/components/ui/editable-text";
-import { Trash2 } from "lucide-react";
+import { Trash2, RefreshCw } from "lucide-react";
 
 interface AppointmentComponentProps {
   component: AppointmentComponentData;
@@ -31,6 +32,7 @@ interface AppointmentComponentProps {
   siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: AppointmentComponentData) => void;
+  onReplace?: (componentId: string) => void;
 }
 
 export const AppointmentComponent: React.FC<AppointmentComponentProps> = ({
@@ -39,6 +41,7 @@ export const AppointmentComponent: React.FC<AppointmentComponentProps> = ({
   siteUser,
   pageSlug,
   onUpdate,
+  onReplace,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -176,20 +179,42 @@ export const AppointmentComponent: React.FC<AppointmentComponentProps> = ({
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <AlertDialogTrigger asChild>
+            <div className="flex flex-col gap-2">
+              <Link href="/admin/appointments/" target="_blank" rel="noopener">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full justify-start"
+                >
+                  Manage Appointments
+                </Button>
+              </Link>
+
               <Button
-                onClick={handleDeleteClick}
-                variant="destructive"
                 size="sm"
-                className="h-8 px-3"
-                disabled={deleteAppointmentComponent.isPending}
+                variant="outline"
+                onClick={() => onReplace?.(component.component_id)}
+                className="h-8 w-fit justify-start bg-white px-3"
               >
-                <Trash2 className="mr-1 h-4 w-4" />
-                {deleteAppointmentComponent.isPending
-                  ? "Deleting..."
-                  : "Delete"}
+                <RefreshCw className="mr-1 h-4 w-4" />
+                Replace
               </Button>
-            </AlertDialogTrigger>
+
+              <AlertDialogTrigger asChild>
+                <Button
+                  onClick={handleDeleteClick}
+                  variant="destructive"
+                  size="sm"
+                  className="h-8 w-fit justify-start px-3"
+                  disabled={deleteAppointmentComponent.isPending}
+                >
+                  <Trash2 className="mr-1 h-4 w-4" />
+                  {deleteAppointmentComponent.isPending
+                    ? "Deleting..."
+                    : "Delete"}
+                </Button>
+              </AlertDialogTrigger>
+            </div>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="flex items-center gap-2">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -21,6 +21,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { AboutUs11Data } from "@/types/owner-site/components/about";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate11Props {
   aboutUsData: AboutUs11Data;
@@ -75,7 +76,6 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [data, setData] = useState(aboutUsData);
   const { data: themeResponse } = useThemeQuery();
 
   const theme = useMemo(
@@ -97,45 +97,25 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
     [themeResponse]
   );
 
-  const updateData = (updated: Partial<AboutUs11Data>) => {
-    setData(prev => ({ ...prev, ...updated }));
-    onUpdate?.(updated);
-  };
-
-  const handleTextUpdate =
-    (field: TextFieldKey) =>
-    (value: string): void => {
-      updateData({ [field]: value } as Partial<AboutUs11Data>);
-    };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(aboutUsData, onUpdate);
 
   const handleBulletUpdate = (id: string) => (value: string) => {
-    const updatedBullets = data.bulletPoints.map(point =>
-      point.id === id ? { ...point, text: value } : point
-    );
-    updateData({ bulletPoints: updatedBullets });
+    handleArrayItemUpdate("bulletPoints", id)({ text: value });
   };
 
   const handleStatUpdate =
     (id: string, field: "value" | "label") => (value: string) => {
-      const updatedStats = data.stats.map(stat =>
-        stat.id === id ? { ...stat, [field]: value } : stat
-      );
-      updateData({ stats: updatedStats });
+      handleArrayItemUpdate("stats", id)({ [field]: value });
     };
 
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    updateData({
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    });
-  };
-
-  const handleAltUpdate = (altText: string) => {
-    updateData({ imageAlt: altText });
-  };
-
   const handleButtonUpdate = (text: string, href: string) => {
-    updateData({
+    onUpdate?.({
       ctaText: text,
       ctaLink: href,
     });
@@ -226,8 +206,8 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
               <EditableImage
                 src={data.imageUrl}
                 alt={data.imageAlt}
-                onImageChange={handleImageUpdate}
-                onAltChange={handleAltUpdate}
+                onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+                onAltChange={handleAltUpdate("imageAlt")}
                 isEditable={isEditable}
                 className="h-full w-full object-cover"
                 width={1000}

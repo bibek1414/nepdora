@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
 import { HeroTemplate3Data } from "@/types/owner-site/components/hero";
-import { convertUnsplashUrl, optimizeCloudinaryUrl } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface HeroTemplate3Props {
   heroData: HeroTemplate3Data;
@@ -24,13 +24,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [data, setData] = useState(heroData);
   const { data: themeResponse } = useThemeQuery();
-
-  // Sync with prop changes
-  useEffect(() => {
-    setData(heroData);
-  }, [heroData]);
 
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -48,59 +42,14 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate =
-    (field: keyof HeroTemplate3Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate3Data>);
-    };
-
-  // Handle image updates
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  // Handle alt text updates
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
-  };
-
-  // Handle button text and href updates
-  const handleButtonUpdate = (
-    buttonId: string,
-    text: string,
-    href?: string
-  ) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId
-        ? { ...btn, text, ...(href !== undefined && { href }) }
-        : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
-  };
-
-  const getImageUrl = () => {
-    if (!data.imageUrl) return "";
-    return optimizeCloudinaryUrl(convertUnsplashUrl(data.imageUrl), {
-      width: 800,
-      quality: "auto",
-      format: "auto",
-    });
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleButtonUpdate,
+    getImageUrl,
+  } = useBuilderLogic(heroData, onUpdate);
 
   return (
     <section className="relative w-full overflow-hidden">
@@ -169,7 +118,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                       text={button.text}
                       href={button.href || "#"}
                       onChange={(text, href) =>
-                        handleButtonUpdate(button.id, text, href)
+                        handleButtonUpdate("buttons")(button.id, text, href)
                       }
                       isEditable={isEditable}
                       siteUser={siteUser}
@@ -220,10 +169,10 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                   }}
                 >
                   <EditableImage
-                    src={getImageUrl()}
+                    src={getImageUrl(data.imageUrl, { width: 800 })}
                     alt={data.imageAlt || "Hero image"}
-                    onImageChange={handleImageUpdate}
-                    onAltChange={handleAltUpdate}
+                    onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+                    onAltChange={handleAltUpdate("imageAlt")}
                     isEditable={isEditable}
                     className="h-64 w-full rounded-lg object-contain sm:h-80 md:h-96"
                     width={800}
@@ -253,8 +202,8 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                   <EditableImage
                     src=""
                     alt="Hero illustration"
-                    onImageChange={handleImageUpdate}
-                    onAltChange={handleAltUpdate}
+                    onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+                    onAltChange={handleAltUpdate("imageAlt")}
                     isEditable={isEditable}
                     className="h-full w-full rounded-lg object-contain"
                     width={800}

@@ -7,6 +7,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { CheckCircle2, Phone } from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface OthersTemplate1Props {
   othersData: OthersTemplate1Data;
@@ -21,12 +22,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(othersData);
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    setData(othersData);
-  }, [othersData]);
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -43,13 +39,13 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
     },
   };
 
-  const handleUpdate = (newData: Partial<OthersTemplate1Data>) => {
-    const updatedData = { ...data, ...newData };
-    setData(updatedData);
-    if (onUpdate) {
-      onUpdate(updatedData);
-    }
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleButtonUpdate,
+    getImageUrl,
+  } = useBuilderLogic(othersData, onUpdate);
 
   const handleFeatureUpdate = (
     index: number,
@@ -58,7 +54,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
   ) => {
     const newFeatures = [...data.features];
     newFeatures[index] = { ...newFeatures[index], [field]: value };
-    handleUpdate({ features: newFeatures });
+    onUpdate?.({ features: newFeatures });
   };
 
   return (
@@ -87,11 +83,11 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
               {/* Main Image */}
               <div className="relative overflow-hidden rounded-3xl bg-gray-100 shadow-xl">
                 <EditableImage
-                  src={data.image.url}
+                  src={getImageUrl(data.image.url)}
                   alt={data.image.alt}
                   isEditable={isEditable}
                   onImageChange={(url, alt) =>
-                    handleUpdate({ image: { url, alt: alt || data.image.alt } })
+                    onUpdate?.({ image: { url, alt: alt || data.image.alt } })
                   }
                   className="aspect-[4/5] w-full object-cover"
                 />
@@ -114,7 +110,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
                 <EditableText
                   value={data.experienceBadge.count}
                   onChange={val =>
-                    handleUpdate({
+                    onUpdate?.({
                       experienceBadge: { ...data.experienceBadge, count: val },
                     })
                   }
@@ -124,7 +120,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
                 <EditableText
                   value={data.experienceBadge.text}
                   onChange={val =>
-                    handleUpdate({
+                    onUpdate?.({
                       experienceBadge: { ...data.experienceBadge, text: val },
                     })
                   }
@@ -141,7 +137,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
             <div className="mb-4 flex items-center">
               <EditableText
                 value={data.subHeading}
-                onChange={val => handleUpdate({ subHeading: val })}
+                onChange={handleTextUpdate("subHeading")}
                 isEditable={isEditable}
                 className="text-sm font-bold tracking-wider uppercase"
                 style={{ color: theme.colors.text }}
@@ -164,7 +160,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
             {/* Heading */}
             <EditableText
               value={data.heading}
-              onChange={val => handleUpdate({ heading: val })}
+              onChange={handleTextUpdate("heading")}
               isEditable={isEditable}
               as="h2"
               className="mb-8 text-4xl leading-tight font-bold md:text-5xl"
@@ -215,11 +211,13 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
                   href={data.buttons[0].href || "#"}
                   isEditable={isEditable}
                   siteUser={siteUser}
-                  onChange={(text, href) => {
-                    const newButtons = [...data.buttons];
-                    newButtons[0] = { ...newButtons[0], text, href };
-                    handleUpdate({ buttons: newButtons });
-                  }}
+                  onChange={(text, href) =>
+                    handleButtonUpdate("buttons")(
+                      data.buttons[0].id,
+                      text,
+                      href
+                    )
+                  }
                   className="inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-semibold transition-transform hover:scale-105"
                   style={{
                     backgroundColor: theme.colors.secondary,
@@ -243,7 +241,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
                   <EditableText
                     value={data.contact.label}
                     onChange={val =>
-                      handleUpdate({
+                      onUpdate?.({
                         contact: { ...data.contact, label: val },
                       })
                     }
@@ -253,7 +251,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
                   <EditableText
                     value={data.contact.phone}
                     onChange={val =>
-                      handleUpdate({
+                      onUpdate?.({
                         contact: { ...data.contact, phone: val },
                       })
                     }

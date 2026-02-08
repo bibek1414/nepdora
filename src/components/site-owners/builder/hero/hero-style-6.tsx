@@ -6,6 +6,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate6Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -33,24 +34,33 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
   // Generate unique component ID to prevent conflicts
   const componentId = React.useId();
 
-  const [data, setData] = useState<HeroTemplate6Data>(() => ({
-    ...heroData,
-    buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-    sliderImages: heroData.sliderImages?.map(img => ({ ...img })) || [],
-  }));
-
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const { data: themeResponse } = useThemeQuery();
 
-  useEffect(() => {
-    setData({
-      ...heroData,
-      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-      sliderImages: heroData.sliderImages?.map(img => ({ ...img })) || [],
-    });
-  }, [heroData]);
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#FFFFFF",
+      primary: "#FFFFFF",
+      primaryForeground: "#000000",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#000000",
+    },
+    fonts: {
+      body: "sans-serif",
+      heading: "sans-serif",
+    },
+  };
+
+  const {
+    data,
+    setData,
+    handleTextUpdate,
+    handleButtonUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(heroData, onUpdate);
 
   useEffect(() => {
     if (!api) return;
@@ -71,21 +81,6 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
 
     return () => clearInterval(interval);
   }, [api, isEditable]);
-
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#FFFFFF",
-      primary: "#FFFFFF",
-      primaryForeground: "#000000",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#000000",
-    },
-    fonts: {
-      body: "sans-serif",
-      heading: "sans-serif",
-    },
-  };
 
   // Default slides if no slider images are provided
   const defaultSlides = [
@@ -116,14 +111,6 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
       ? data.sliderImages
       : defaultSlides;
 
-  // Handle text field updates
-  const handleTextUpdate =
-    (field: keyof HeroTemplate6Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate6Data>);
-    };
-
   // Handle slider image updates
   const handleSliderImageUpdate = (
     imageUrl: string,
@@ -133,33 +120,27 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
     const updatedSliderImages = [...slides];
 
     if (index !== undefined && index < updatedSliderImages.length) {
-      updatedSliderImages[index] = {
-        ...updatedSliderImages[index],
+      handleArrayItemUpdate(
+        "sliderImages",
+        updatedSliderImages[index].id
+      )({
         url: imageUrl,
         alt: altText || updatedSliderImages[index].alt,
-      };
+      });
     } else {
       // Add new image
-      updatedSliderImages.push({
+      const newSlide = {
         id: `slide-${Date.now()}`,
         url: imageUrl,
         alt: altText || "Slider image",
-      });
+      };
+      const updatedData = {
+        ...data,
+        sliderImages: [...(data.sliderImages || []), newSlide],
+      };
+      setData(updatedData);
+      onUpdate?.({ sliderImages: updatedData.sliderImages });
     }
-
-    const updatedData = { ...data, sliderImages: updatedSliderImages };
-    setData(updatedData);
-    onUpdate?.({ sliderImages: updatedSliderImages });
-  };
-
-  // Handle button updates
-  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text, href } : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
   };
 
   // Handle slide addition/removal
@@ -386,7 +367,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
                           text={data.buttons[0]?.text || "SHOP COLLECTION"}
                           href={data.buttons[0]?.href || "#"}
                           onChange={(text, href) =>
-                            handleButtonUpdate(
+                            handleButtonUpdate("buttons")(
                               data.buttons[0]?.id || "1",
                               text,
                               href

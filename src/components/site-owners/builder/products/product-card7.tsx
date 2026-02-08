@@ -5,6 +5,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { Product } from "@/types/owner-site/admin/product";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface ProductCard7Props {
   products?: Product[];
@@ -21,6 +23,7 @@ export const ProductCard7: React.FC<ProductCard7Props> = ({
   title = "Best Sellers",
   subtitle = "Our most popular products right now",
 }) => {
+  const pathname = usePathname();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -36,11 +39,11 @@ export const ProductCard7: React.FC<ProductCard7Props> = ({
   ];
 
   const getDetailsUrl = (product: Product): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/products-draft/${product.slug}`;
-    } else {
-      return `/preview/products-draft/${product.slug}`;
-    }
+    return generateLinkHref(
+      `/products-draft/${product.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const checkScroll = () => {
@@ -172,7 +175,7 @@ export const ProductCard7: React.FC<ProductCard7Props> = ({
                 <Link
                   href={getDetailsUrl(product)}
                   key={`${product.id}-${index}`}
-                  className="w-64 flex-shrink-0 sm:w-72"
+                  className="w-64 shrink-0 sm:w-72"
                 >
                   <div className="group flex h-full cursor-pointer flex-col">
                     {/* Image Container */}

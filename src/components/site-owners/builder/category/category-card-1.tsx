@@ -2,6 +2,8 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Category } from "@/types/owner-site/admin/product";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface CategoryCard1Props {
   category: Category;
@@ -14,17 +16,18 @@ export const CategoryCard1: React.FC<CategoryCard1Props> = ({
   siteUser,
   onClick,
 }) => {
+  const pathname = usePathname();
   // Use actual category data
   const categoryImage =
     category.image ||
     "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop";
 
   const getCategoryUrl = (): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/collections?category=${category.slug}`;
-    } else {
-      return `/preview/collections?category=${category.slug}`;
-    }
+    return generateLinkHref(
+      `/collections?category=${category.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const handleClick = () => {

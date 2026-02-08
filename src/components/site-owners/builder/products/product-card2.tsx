@@ -16,6 +16,8 @@ import {
 } from "@/hooks/customer/use-wishlist";
 import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface ProductCard2Props {
   product: Product;
@@ -30,6 +32,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
   onClick,
   onWishlistToggle,
 }) => {
+  const pathname = usePathname();
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const { data: wishlistItems } = useWishlist();
@@ -118,11 +121,11 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
   };
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/products-draft/${product.slug}`;
-    } else {
-      return `/preview/products-draft/${product.slug}`;
-    }
+    return generateLinkHref(
+      `/products-draft/${product.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const handleClick = () => {
@@ -154,7 +157,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
     <CardWrapper>
       <Card className="overflow-hidden border-0 bg-white/80 backdrop-blur-sm">
         <CardContent className="p-0">
-          <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+          <div className="relative overflow-hidden bg-linear-to-br from-gray-50 to-gray-100">
             <div className="relative aspect-4/3">
               <Image
                 src={productImage}
@@ -166,7 +169,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
                     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop";
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-white/10 via-transparent to-black/5" />
+              <div className="absolute inset-0 bg-linear-to-t from-white/10 via-transparent to-black/5" />
             </div>
 
             {/* Always Visible Actions */}

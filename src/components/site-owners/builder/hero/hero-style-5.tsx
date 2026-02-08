@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate5Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -26,20 +27,8 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
   // Generate unique component ID to prevent conflicts
   const componentId = React.useId();
 
-  const [data, setData] = useState<HeroTemplate5Data>(() => ({
-    ...heroData,
-    buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-  }));
-
   const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const { data: themeResponse } = useThemeQuery();
-
-  useEffect(() => {
-    setData({
-      ...heroData,
-      buttons: heroData.buttons?.map(btn => ({ ...btn })) || [],
-    });
-  }, [heroData]);
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -56,39 +45,23 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate =
-    (field: keyof HeroTemplate5Data) => (value: string) => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<HeroTemplate5Data>);
-    };
+  const {
+    data,
+    setData,
+    handleTextUpdate,
+    handleButtonUpdate,
+    handleImageUpdate: baseHandleImageUpdate,
+  } = useBuilderLogic(heroData, onUpdate);
 
   const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
+    const update = {
       backgroundType: "image" as const,
       backgroundImageUrl: imageUrl,
       imageAlt: altText || data.imageAlt,
     };
+    const updatedData = { ...data, ...update };
     setData(updatedData);
-
-    // Only update the specific background fields for this component
-    onUpdate?.({
-      backgroundType: "image" as const,
-      backgroundImageUrl: imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  // Handle button updates
-  const handleButtonUpdate = (buttonId: string, text: string, href: string) => {
-    const updatedButtons = data.buttons.map(btn =>
-      btn.id === buttonId ? { ...btn, text, href } : btn
-    );
-    const updatedData = { ...data, buttons: updatedButtons };
-    setData(updatedData);
-    onUpdate?.({ buttons: updatedButtons });
+    onUpdate?.(update);
   };
 
   const handleBackgroundFileChange = async (
@@ -281,7 +254,11 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
               text={data.buttons[0]?.text || "Discover More"}
               href={data.buttons[0]?.href || "#"}
               onChange={(text, href) =>
-                handleButtonUpdate(data.buttons[0]?.id || "1", text, href)
+                handleButtonUpdate("buttons")(
+                  data.buttons[0]?.id || "1",
+                  text,
+                  href
+                )
               }
               isEditable={isEditable}
               siteUser={siteUser}
@@ -302,7 +279,11 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
               text={data.buttons[1]?.text || "Explore Collection"}
               href={data.buttons[1]?.href || "#"}
               onChange={(text, href) =>
-                handleButtonUpdate(data.buttons[1]?.id || "2", text, href)
+                handleButtonUpdate("buttons")(
+                  data.buttons[1]?.id || "2",
+                  text,
+                  href
+                )
               }
               isEditable={isEditable}
               siteUser={siteUser}

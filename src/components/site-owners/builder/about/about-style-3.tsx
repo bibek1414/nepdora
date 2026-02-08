@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { AboutUs3Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate3Props {
   aboutUsData: AboutUs3Data;
@@ -34,14 +35,8 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
     },
   };
 
-  const [data, setData] = useState(aboutUsData);
-
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs3Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs3Data>);
-  };
+  const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
+    useBuilderLogic(aboutUsData, onUpdate);
 
   // Handle stats updates
   const handleStatsUpdate =
@@ -62,12 +57,7 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
 
   // Handle features updates
   const handleFeatureUpdate = (featureId: string) => (value: string) => {
-    const updatedFeatures = data.features.map(feature =>
-      feature.id === featureId ? { ...feature, text: value } : feature
-    );
-    const updatedData = { ...data, features: updatedFeatures };
-    setData(updatedData);
-    onUpdate?.({ features: updatedFeatures });
+    handleArrayItemUpdate("features", featureId)({ text: value });
   };
 
   return (

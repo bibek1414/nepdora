@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React from "react";
 import { Coffee, Heart, Zap, Box, Lightbulb } from "lucide-react";
 import { AboutUs6Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate6Props {
   aboutUsData: AboutUs6Data;
@@ -22,7 +22,6 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [data, setData] = useState(aboutUsData);
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -41,59 +40,28 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs6Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs6Data>);
-  };
-
-  // Handle image updates
-  const handleImageUpdate =
-    (field: string) => (imageUrl: string, altText?: string) => {
-      const updatedData = {
-        ...data,
-        [field]: imageUrl,
-        [`${field}Alt`]:
-          altText || (data[`${field}Alt` as keyof AboutUs6Data] as string),
-      };
-      setData(updatedData);
-      onUpdate?.({
-        [field]: imageUrl,
-        [`${field}Alt`]: updatedData[`${field}Alt` as keyof AboutUs6Data],
-      } as Partial<AboutUs6Data>);
-    };
-
-  // Handle alt text updates
-  const handleAltUpdate = (field: string) => (altText: string) => {
-    const updatedData = { ...data, [`${field}Alt`]: altText };
-    setData(updatedData);
-    onUpdate?.({ [`${field}Alt`]: altText } as Partial<AboutUs6Data>);
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(aboutUsData, onUpdate);
 
   // Handle stat updates
   const handleStatUpdate =
     (index: number, field: "value" | "label") => (value: string) => {
-      const updatedStats = [...data.stats];
-      updatedStats[index] = { ...updatedStats[index], [field]: value };
-
-      const updatedData = { ...data, stats: updatedStats };
-      setData(updatedData);
-      onUpdate?.({ stats: updatedStats } as Partial<AboutUs6Data>);
+      const statId = data.stats[index].id;
+      handleArrayItemUpdate("stats", statId)({ [field]: value });
     };
 
   // Handle button link updates
   const handleButtonLinkUpdate = (text: string, href: string) => {
-    const updatedData = {
-      ...data,
+    const update = {
       buttonText: text,
       buttonLink: href,
     };
-    setData(updatedData);
-    onUpdate?.({
-      buttonText: text,
-      buttonLink: href,
-    });
+    onUpdate?.(update);
   };
 
   // Get icon component based on name
@@ -197,8 +165,8 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
               <EditableImage
                 src={data.image1Url}
                 alt={data.image1Alt}
-                onImageChange={handleImageUpdate("image1Url")}
-                onAltChange={handleAltUpdate("image1Url")}
+                onImageChange={handleImageUpdate("image1Url", "image1Alt")}
+                onAltChange={handleAltUpdate("image1Alt")}
                 isEditable={isEditable}
                 className="h-full w-full object-cover"
                 width={600}
@@ -222,8 +190,11 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
             <EditableImage
               src={data.centerImageUrl}
               alt={data.centerImageAlt}
-              onImageChange={handleImageUpdate("centerImageUrl")}
-              onAltChange={handleAltUpdate("centerImageUrl")}
+              onImageChange={handleImageUpdate(
+                "centerImageUrl",
+                "centerImageAlt"
+              )}
+              onAltChange={handleAltUpdate("centerImageAlt")}
               isEditable={isEditable}
               className="h-full w-full object-cover"
               width={600}
@@ -282,8 +253,8 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
               <EditableImage
                 src={data.image2Url}
                 alt={data.image2Alt}
-                onImageChange={handleImageUpdate("image2Url")}
-                onAltChange={handleAltUpdate("image2Url")}
+                onImageChange={handleImageUpdate("image2Url", "image2Alt")}
+                onAltChange={handleAltUpdate("image2Alt")}
                 isEditable={isEditable}
                 className="h-full w-full object-cover"
                 width={600}

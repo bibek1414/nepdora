@@ -7,6 +7,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { EditableText } from "@/components/ui/editable-text";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2, ZoomIn } from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
@@ -23,39 +24,27 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(galleryData);
+  const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
+    useBuilderLogic(galleryData, onUpdate);
+
   const [isUploading, setIsUploading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
 
   const componentId = React.useId();
 
-  const handleTitleUpdate = (newTitle: string) => {
-    const updatedData = { ...data, title: newTitle };
-    setData(updatedData);
-    onUpdate?.({ title: newTitle });
-  };
-
-  const handleSubtitleUpdate = (newSubtitle: string) => {
-    const updatedData = { ...data, subtitle: newSubtitle };
-    setData(updatedData);
-    onUpdate?.({ subtitle: newSubtitle });
-  };
-
-  const handleImageUpdate = (
+  const handleImageUpdateLocal = (
     index: number,
     imageUrl: string,
     altText?: string
   ) => {
-    const updatedImages = [...data.images];
-    updatedImages[index] = {
-      ...updatedImages[index],
+    const imgId = data.images[index].id;
+    handleArrayItemUpdate(
+      "images",
+      imgId
+    )({
       image: imageUrl,
-      image_alt_description:
-        altText || updatedImages[index].image_alt_description,
-    };
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+      image_alt_description: altText,
+    });
   };
 
   const handleImageFileChange = async (
@@ -86,7 +75,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
       });
 
       if (index !== undefined) {
-        handleImageUpdate(index, imageUrl, `Gallery image: ${file.name}`);
+        handleImageUpdateLocal(index, imageUrl, `Gallery image: ${file.name}`);
       } else {
         handleAddImage(imageUrl);
       }
@@ -113,24 +102,19 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
       is_active: true,
     };
     const updatedImages = [...data.images, newImage];
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
+    setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
 
   const handleRemoveImage = (index: number) => {
     const updatedImages = data.images.filter((_, idx) => idx !== index);
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
+    setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
 
   const handleImageTitleUpdate = (index: number, title: string) => {
-    const updatedImages = [...data.images];
-    updatedImages[index] = { ...updatedImages[index], title };
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+    const imgId = data.images[index].id;
+    handleArrayItemUpdate("images", imgId)({ title });
   };
 
   const getImageUrl = (image: string | File): string => {
@@ -146,7 +130,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
         <h1 className="mx-auto text-center text-3xl font-semibold">
           <EditableText
             value={data.title || "Our Latest Creations"}
-            onChange={handleTitleUpdate}
+            onChange={handleTextUpdate("title")}
             isEditable={isEditable}
           />
         </h1>
@@ -156,7 +140,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
               data.subtitle ||
               "A visual collection of our most recent works - each piece crafted with intention, emotion, and style."
             }
-            onChange={handleSubtitleUpdate}
+            onChange={handleTextUpdate("subtitle")}
             isEditable={isEditable}
           />
         </div>
@@ -185,7 +169,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                     src={getImageUrl(image.image)}
                     alt={image.image_alt_description}
                     onImageChange={(imageUrl, altText) =>
-                      handleImageUpdate(actualIndex, imageUrl, altText)
+                      handleImageUpdateLocal(actualIndex, imageUrl, altText)
                     }
                     isEditable={isEditable}
                     className="size-56 object-cover object-top"

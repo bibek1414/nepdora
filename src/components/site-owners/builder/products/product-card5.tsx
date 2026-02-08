@@ -15,6 +15,8 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface ProductCard5Props {
   product: Product;
@@ -29,6 +31,7 @@ export const ProductCard5: React.FC<ProductCard5Props> = ({
   onClick,
   onWishlistToggle,
 }) => {
+  const pathname = usePathname();
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const { data: wishlistItems } = useWishlist();
@@ -128,11 +131,11 @@ export const ProductCard5: React.FC<ProductCard5Props> = ({
   };
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/products-draft/${product.slug}`;
-    } else {
-      return `/preview/products-draft/${product.slug}`;
-    }
+    return generateLinkHref(
+      `/products-draft/${product.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const handleClick = () => {

@@ -5,6 +5,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { ChevronLeft, ChevronRight, Plus, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 
@@ -21,41 +22,43 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
   isEditable = false,
   onUpdate,
 }) => {
+  const { data, setData, handleArrayItemUpdate } = useBuilderLogic(
+    bannerData,
+    onUpdate
+  );
+
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [data, setData] = useState(bannerData);
   const [isUploading, setIsUploading] = useState(false);
 
   const componentId = React.useId();
 
   const handleLinkUpdate = (index: number, href: string) => {
-    const updatedImages = [...data.images];
-    updatedImages[index] = { ...updatedImages[index], link: href };
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+    const imgId = data.images[index].id;
+    if (imgId !== undefined) {
+      handleArrayItemUpdate("images", imgId)({ link: href });
+    }
   };
 
-  const handleImageUpdate = (
+  const handleImageUpdateLocal = (
     index: number,
     imageUrl: string,
     altText?: string
   ) => {
-    const updatedImages = [...data.images];
-    updatedImages[index] = {
-      ...updatedImages[index],
-      image: imageUrl,
-      image_alt_description:
-        altText || updatedImages[index].image_alt_description,
-    };
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+    const imgId = data.images[index].id;
+    if (imgId !== undefined) {
+      handleArrayItemUpdate(
+        "images",
+        imgId
+      )({
+        image: imageUrl,
+        image_alt_description: altText,
+      });
+    }
   };
 
   const handleRemoveImage = (index: number) => {
     const updatedImages = data.images.filter((_, idx) => idx !== index);
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
+    setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
 
     // Adjust current slide if needed
@@ -74,8 +77,7 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
       is_active: true,
     };
     const updatedImages = [...data.images, newImage];
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
+    setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
 
@@ -109,7 +111,11 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
         resourceType: "image",
       });
 
-      handleImageUpdate(currentSlide, imageUrl, `Slider image: ${file.name}`);
+      handleImageUpdateLocal(
+        currentSlide,
+        imageUrl,
+        `Slider image: ${file.name}`
+      );
       toast.success("Slider image uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
@@ -221,7 +227,7 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
                     src={getImageSrc(image.image)}
                     alt={image.image_alt_description || "Slider image"}
                     onImageChange={(imageUrl, altText) =>
-                      handleImageUpdate(imageIndex, imageUrl, altText)
+                      handleImageUpdateLocal(imageIndex, imageUrl, altText)
                     }
                     isEditable={isEditable}
                     className="h-auto w-full object-contain"

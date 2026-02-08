@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { AboutUs9Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
@@ -35,7 +36,6 @@ export const AboutUsTemplate9: React.FC<AboutUsTemplate9Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(aboutUsData);
   const [isUploading, setIsUploading] = useState(false);
   const uploadInputId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -56,31 +56,17 @@ export const AboutUsTemplate9: React.FC<AboutUsTemplate9Props> = ({
     },
   };
 
-  type TextFieldKeys =
-    | "eyebrow"
-    | "title"
-    | "descriptionPrimary"
-    | "descriptionSecondary";
-
-  const handleTextUpdate =
-    (field: TextFieldKeys) =>
-    (value: string): void => {
-      const updatedData = { ...data, [field]: value };
-      setData(updatedData);
-      onUpdate?.({ [field]: value } as Partial<AboutUs9Data>);
-    };
+  const { data, setData, handleTextUpdate } = useBuilderLogic(
+    aboutUsData,
+    onUpdate
+  );
 
   const handleButtonUpdate = (text: string, href: string) => {
-    const updatedData = {
-      ...data,
+    const update = {
       buttonText: text,
       buttonLink: href,
     };
-    setData(updatedData);
-    onUpdate?.({
-      buttonText: text,
-      buttonLink: href,
-    });
+    onUpdate?.(update);
   };
 
   const triggerMediaUpload = () => {

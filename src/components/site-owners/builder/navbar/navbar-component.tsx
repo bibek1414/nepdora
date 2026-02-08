@@ -168,12 +168,12 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
       }
     >
       {isEditable && (
-        <div className="absolute -right-5 z-30 flex translate-x-full gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
           <Button
             size="sm"
             variant="outline"
             onClick={() => setIsEditorOpen(true)}
-            className=""
+            className="w-full justify-start"
           >
             <Edit className="mr-2 h-4 w-4" />
             Edit Navbar
@@ -184,11 +184,11 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
               <Button
                 size="sm"
                 variant="destructive"
-                className="rounded-md p-0"
+                className="h-8 w-fit justify-start px-3"
                 disabled={isDeleting}
               >
-                <Trash2 className="h-4 w-4" />
-                Delete
+                <Trash2 className="mr-1 h-4 w-4" />
+                {isDeleting ? "Deleting..." : "Delete"}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>

@@ -69,6 +69,8 @@ const getDefaultLineHeight = (tag: string): string => {
       return "1.4";
     case "h6":
       return "1.4";
+    case "p":
+      return "1.2";
     default:
       return "";
   }
@@ -170,10 +172,28 @@ export const EditableText: React.FC<EditableTextProps> = ({
     if (selection && selection.toString().trim().length > 0) {
       const range = selection.getRangeAt(0);
 
+      // Extract styles from the selection
+      let fontSize = undefined;
+      let color = undefined;
+
+      const container = range.startContainer;
+      const parentElement =
+        container.nodeType === 1
+          ? (container as HTMLElement)
+          : container.parentElement;
+
+      if (parentElement) {
+        const style = window.getComputedStyle(parentElement);
+        fontSize = style.fontSize;
+        color = style.color;
+      }
+
       setSelection({
         text: selection.toString(),
         range: range,
         element: textRef.current || undefined,
+        fontSize,
+        color,
       });
     } else {
       setSelection(null);

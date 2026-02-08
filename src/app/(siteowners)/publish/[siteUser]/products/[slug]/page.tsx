@@ -1,5 +1,5 @@
 import React from "react";
-import { ProductDetail } from "@/components/site-owners/publish/product/product-details";
+import { ProductDetail } from "@/components/site-owners/builder/products/product-details";
 import { use } from "react";
 import { generatePublishPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";

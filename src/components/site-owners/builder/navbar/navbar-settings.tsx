@@ -20,6 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import {
   Plus,
   Trash2,
@@ -42,7 +44,7 @@ import {
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { usePages, useCreatePage } from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -116,17 +118,33 @@ const PageSelector: React.FC<PageSelectorProps> = ({
     }
   };
 
+  // Close page selector when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (
+        !target.closest(".page-selector-container") &&
+        !target.closest(".chevron-toggle-button")
+      ) {
+        onCancel();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [onCancel]);
+
   return (
-    <Card className="absolute top-full right-0 z-50 mt-1 w-80 gap-0 bg-white py-0 shadow-xl">
+    <Card className="page-selector-container absolute top-full right-0 z-50 mt-1 w-80 gap-0 bg-white py-0 shadow-xl">
       <CardContent className="p-0">
         {/* Existing Pages - Scrollable Area */}
-        <ScrollArea className="h-60">
+        <ScrollArea className="max-h-60 overflow-y-auto">
           {isLoading ? (
             <div className="text-muted-foreground p-4 text-center">
               Loading pages...
             </div>
           ) : filteredPages.length > 0 ? (
-            <div className="overflow-y-auto p-1">
+            <div className="p-1">
               {filteredPages.map((page: Page) => (
                 <Button
                   key={page.id}
@@ -199,8 +217,6 @@ const PageSelector: React.FC<PageSelectorProps> = ({
             </div>
           )}
         </div>
-
-        <Separator />
 
         <Separator />
 
@@ -369,14 +385,19 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
     field: keyof NavbarLink,
     value: string
   ) => {
-    // If updating href field and user manually typed it, append -draft
     let finalValue = value;
+
+    // Ensure internal links start with /
     if (
       field === "href" &&
-      value.startsWith("/") &&
-      !value.endsWith("-draft")
+      value.length > 0 &&
+      !value.startsWith("/") &&
+      !value.startsWith("http") &&
+      !value.startsWith("mailto:") &&
+      !value.startsWith("tel:") &&
+      !value.startsWith("#")
     ) {
-      finalValue = `${value}-draft`;
+      finalValue = `/${value}`;
     }
 
     setNavbarData(prev => ({
@@ -413,14 +434,19 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
     field: keyof NavbarButton,
     value: string
   ) => {
-    // If updating href field and user manually typed it, append -draft
     let finalValue = value;
+
+    // Ensure internal links start with /
     if (
       field === "href" &&
-      value.startsWith("/") &&
-      !value.endsWith("-draft")
+      value.length > 0 &&
+      !value.startsWith("/") &&
+      !value.startsWith("http") &&
+      !value.startsWith("mailto:") &&
+      !value.startsWith("tel:") &&
+      !value.startsWith("#")
     ) {
-      finalValue = `${value}-draft`;
+      finalValue = `/${value}`;
     }
 
     setNavbarData(prev => ({
@@ -461,13 +487,40 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
 
   // Handle save
   const handleSave = () => {
-    onSave(navbarData);
+    // Process links and buttons to ensure internal links have -draft suffix
+    const processedLinks = navbarData.links.map(link => {
+      if (
+        link.href.startsWith("/") &&
+        !link.href.endsWith("-draft") &&
+        link.href !== "/"
+      ) {
+        return { ...link, href: `${link.href}-draft` };
+      }
+      return link;
+    });
+
+    const processedButtons = navbarData.buttons.map(button => {
+      if (
+        button.href.startsWith("/") &&
+        !button.href.endsWith("-draft") &&
+        button.href !== "/"
+      ) {
+        return { ...button, href: `${button.href}-draft` };
+      }
+      return button;
+    });
+
+    onSave({
+      ...navbarData,
+      links: processedLinks,
+      buttons: processedButtons,
+    });
     onClose();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="flex h-[80vh] max-w-4xl flex-col">
+      <DialogContent className="max-h-[85vh] max-w-4xl">
         <DialogHeader>
           <DialogTitle>Navbar Editor</DialogTitle>
           <DialogDescription>
@@ -475,275 +528,241 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-1 gap-6 overflow-hidden">
-          {/* Sidebar Navigation */}
-          <div className="w-48 border-r pr-4">
-            <nav className="space-y-1">
-              <button
-                onClick={() => setActiveTab("logo")}
-                className={`flex w-full items-center rounded-md px-3 py-2 text-left ${
-                  activeTab === "logo"
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-accent"
-                }`}
-              >
-                <Type className="mr-2 h-4 w-4" />
-                Logo
-                {siteConfig?.logo && (
-                  <span className="ml-auto h-2 w-2 rounded-full bg-green-500" />
-                )}
-              </button>
-              <button
-                onClick={() => setActiveTab("links")}
-                className={`flex w-full items-center rounded-md px-3 py-2 text-left ${
-                  activeTab === "links"
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-accent"
-                }`}
-              >
-                <LinkIcon className="mr-2 h-4 w-4" />
-                Links
-              </button>
-              <button
-                onClick={() => setActiveTab("buttons")}
-                className={`flex w-full items-center rounded-md px-3 py-2 text-left ${
-                  activeTab === "buttons"
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-accent"
-                }`}
-              >
-                <SquareMousePointer className="mr-2 h-4 w-4" />
-                Buttons
-              </button>
-              <button
-                onClick={() => setActiveTab("settings")}
-                className={`flex w-full items-center rounded-md px-3 py-2 text-left ${
-                  activeTab === "settings"
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-accent"
-                }`}
-              >
-                <Settings className="mr-2 h-4 w-4" />
-                Settings
-              </button>
-            </nav>
-          </div>
+        <Tabs defaultValue="logo" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="logo" className="flex items-center gap-1">
+              <Type className="h-4 w-4" />
+              Logo
+              {siteConfig?.logo && (
+                <span className="ml-1 h-2 w-2 rounded-full bg-green-500" />
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="links" className="flex items-center gap-1">
+              <LinkIcon className="h-4 w-4" />
+              Links
+            </TabsTrigger>
+            <TabsTrigger value="buttons" className="flex items-center gap-1">
+              <SquareMousePointer className="h-4 w-4" />
+              Buttons
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center gap-1">
+              <Settings className="h-4 w-4" />
+              Settings
+            </TabsTrigger>
+          </TabsList>
 
-          {/* Content Area */}
-          <div className="flex-1 overflow-y-auto">
-            {activeTab === "logo" && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium">Logo Settings</h3>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="logo-text">Logo Text</Label>
-                  <Input
-                    id="logo-text"
-                    value={navbarData.logoText}
-                    onChange={e =>
-                      handleInputChange("logoText", e.target.value)
-                    }
-                    placeholder="Enter your brand name"
-                  />
-                </div>
-
-                <div className="space-y-3">
-                  <Label>Logo Image</Label>
-
-                  {/* Site Config Status */}
-                  {isSiteConfigLoading && (
-                    <div className="text-sm text-blue-600">
-                      Loading site configuration...
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() =>
-                        document.getElementById("logo-upload")?.click()
+          <div className="mt-4 max-h-[60vh] overflow-y-auto pr-2">
+            <TabsContent value="logo" className="space-y-6">
+              <Card className="border-none shadow-none">
+                <CardContent className="space-y-6 px-0">
+                  <div className="space-y-2">
+                    <Label className="text-xs" htmlFor="logo-text">
+                      Logo Text
+                    </Label>
+                    <Input
+                      id="logo-text"
+                      value={navbarData.logoText}
+                      onChange={e =>
+                        handleInputChange("logoText", e.target.value)
                       }
-                      disabled={isUploading || isSiteConfigLoading}
-                      className="flex items-center gap-2"
-                    >
-                      {isUploading ? (
-                        <>
-                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                          Uploading...
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="h-4 w-4" />
-                          Upload Image
-                        </>
-                      )}
-                    </Button>
+                      className="h-9 text-sm"
+                      placeholder="Enter your brand name"
+                    />
+                  </div>
 
-                    {navbarData.logoImage && (
+                  <div className="space-y-3">
+                    <Label className="text-xs">Logo Image</Label>
+
+                    {/* Site Config Status */}
+                    {isSiteConfigLoading && (
+                      <div className="text-sm text-blue-600">
+                        Loading site configuration...
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-3">
                       <Button
                         type="button"
                         variant="outline"
-                        size="sm"
-                        onClick={handleRemoveLogo}
-                        disabled={patchSiteConfigMutation.isPending}
-                        className="text-destructive hover:text-destructive"
+                        onClick={() =>
+                          document.getElementById("logo-upload")?.click()
+                        }
+                        disabled={isUploading || isSiteConfigLoading}
+                        className="flex items-center gap-2"
                       >
-                        {patchSiteConfigMutation.isPending ? (
-                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                        {isUploading ? (
+                          <>
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                            Uploading...
+                          </>
                         ) : (
-                          <X className="h-4 w-4" />
+                          <>
+                            <Upload className="h-4 w-4" />
+                            Upload Image
+                          </>
                         )}
                       </Button>
+
+                      {navbarData.logoImage && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={handleRemoveLogo}
+                          disabled={patchSiteConfigMutation.isPending}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          {patchSiteConfigMutation.isPending ? (
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                          ) : (
+                            <X className="h-4 w-4" />
+                          )}
+                        </Button>
+                      )}
+                    </div>
+
+                    <input
+                      id="logo-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+
+                    {navbarData.logoImage && (
+                      <div className="flex items-center gap-3 rounded-lg border p-3">
+                        <div className="h-12 w-12 overflow-hidden rounded-full border">
+                          <img
+                            src={navbarData.logoImage}
+                            alt="Logo preview"
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">Logo uploaded</p>
+                          <p className="text-muted-foreground text-xs">
+                            {siteConfig?.logo
+                              ? "Saved to site configuration"
+                              : "Ready to use"}
+                          </p>
+                        </div>
+                      </div>
                     )}
+
+                    {uploadError && (
+                      <p className="text-destructive text-sm">{uploadError}</p>
+                    )}
+
+                    <p className="text-muted-foreground text-xs">
+                      Recommended: Square image, max 2MB (JPG, PNG, WebP)
+                    </p>
                   </div>
 
-                  <input
-                    id="logo-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-
-                  {navbarData.logoImage && (
-                    <div className="flex items-center gap-3 rounded-lg border p-3">
-                      <div className="h-12 w-12 overflow-hidden rounded-full border">
-                        <img
-                          src={navbarData.logoImage}
-                          alt="Logo preview"
-                          className="h-full w-full object-cover"
+                  <div className="space-y-3">
+                    <Label className="text-xs">Logo Display</Label>
+                    <RadioGroup
+                      value={navbarData.logoType || "text"}
+                      onValueChange={handleLogoTypeChange}
+                      className="flex gap-4"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="text" id="text-only" />
+                        <Label
+                          className="text-sm font-normal"
+                          htmlFor="text-only"
+                        >
+                          Text Only
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="image"
+                          id="image-only"
+                          disabled={!navbarData.logoImage}
                         />
+                        <Label
+                          htmlFor="image-only"
+                          className={cn(
+                            "text-sm font-normal",
+                            !navbarData.logoImage ? "opacity-50" : ""
+                          )}
+                        >
+                          Image Only
+                        </Label>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">Logo uploaded</p>
-                        <p className="text-muted-foreground text-xs">
-                          {siteConfig?.logo
-                            ? "Saved to site configuration"
-                            : "Ready to use"}
-                        </p>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="both"
+                          id="both"
+                          disabled={!navbarData.logoImage}
+                        />
+                        <Label
+                          htmlFor="both"
+                          className={cn(
+                            "text-sm font-normal",
+                            !navbarData.logoImage ? "opacity-50" : ""
+                          )}
+                        >
+                          Text & Image
+                        </Label>
                       </div>
-                    </div>
-                  )}
+                    </RadioGroup>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-                  {uploadError && (
-                    <p className="text-destructive text-sm">{uploadError}</p>
-                  )}
-
-                  <p className="text-muted-foreground text-xs">
-                    Recommended: Square image, max 2MB (JPG, PNG, WebP)
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  <Label>Logo Display</Label>
-                  <RadioGroup
-                    value={navbarData.logoType || "text"}
-                    onValueChange={handleLogoTypeChange}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="text" id="text-only" />
-                      <Label htmlFor="text-only">Text Only</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem
-                        value="image"
-                        id="image-only"
-                        disabled={!navbarData.logoImage}
-                      />
-                      <Label
-                        htmlFor="image-only"
-                        className={!navbarData.logoImage ? "opacity-50" : ""}
-                      >
-                        Image Only
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem
-                        value="both"
-                        id="both"
-                        disabled={!navbarData.logoImage}
-                      />
-                      <Label
-                        htmlFor="both"
-                        className={!navbarData.logoImage ? "opacity-50" : ""}
-                      >
-                        Text & Image
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "links" && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium">Navigation Links</h3>
+            <TabsContent value="links" className="space-y-6">
+              <Card className="border-none shadow-none">
+                <CardHeader className="flex flex-row items-center justify-between px-0 py-4">
+                  <CardTitle className="text-lg font-medium">
+                    Navigation Links
+                  </CardTitle>
                   <Button onClick={handleAddLink} size="sm">
                     <Plus className="mr-2 h-4 w-4" />
                     Add Link
                   </Button>
-                </div>
-
-                <div className="space-y-4">
+                </CardHeader>
+                <CardContent className="space-y-4 px-0">
                   {navbarData.links.map(link => (
                     <div
                       key={link.id}
-                      className="relative flex items-center gap-3 rounded-md border p-3"
+                      className="relative flex items-center gap-1.5"
                     >
-                      <div className="grid flex-1 grid-cols-2 gap-3">
-                        <div className="space-y-1">
-                          <Label
-                            className="capitalize"
-                            htmlFor={`link-text-${link.id}`}
-                          >
-                            Text
-                          </Label>
-                          <Input
-                            id={`link-text-${link.id}`}
-                            value={link.text}
-                            onChange={e =>
-                              handleUpdateLink(link.id, "text", e.target.value)
-                            }
-                            className="capitalize"
-                            placeholder="Link text"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <Label htmlFor={`link-url-${link.id}`}>URL</Label>
-                          <div className="relative">
-                            <Input
-                              id={`link-url-${link.id}`}
-                              value={link.href}
-                              onChange={e =>
-                                handleUpdateLink(
-                                  link.id,
-                                  "href",
-                                  e.target.value
-                                )
-                              }
-                              placeholder="Select or enter URL"
-                              className="pr-8"
-                            />
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="absolute top-0 right-0 h-full px-2"
-                              onClick={() =>
-                                setShowPageSelectorFor({
-                                  type: "link",
-                                  id: link.id,
-                                })
-                              }
-                            >
-                              <ChevronDown className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
+                      <Input
+                        id={`link-text-${link.id}`}
+                        value={link.text}
+                        onChange={e =>
+                          handleUpdateLink(link.id, "text", e.target.value)
+                        }
+                        className="h-9 flex-1 text-sm capitalize"
+                        placeholder="Link text"
+                      />
+                      <div className="relative flex-1">
+                        <Input
+                          id={`link-url-${link.id}`}
+                          value={link.href}
+                          onChange={e =>
+                            handleUpdateLink(link.id, "href", e.target.value)
+                          }
+                          placeholder="Select or enter URL"
+                          className="h-9 pr-8 text-sm"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="chevron-toggle-button absolute top-0 right-0 h-full px-2"
+                          onClick={() =>
+                            setShowPageSelectorFor(prev =>
+                              prev?.id === link.id
+                                ? null
+                                : { type: "link", id: link.id }
+                            )
+                          }
+                        >
+                          <ChevronDown className="h-4 w-4" />
+                        </Button>
                       </div>
                       <Button
                         variant="ghost"
@@ -773,100 +792,84 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                       <p>No links added yet</p>
                     </div>
                   )}
-                </div>
-              </div>
-            )}
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-            {activeTab === "buttons" && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium">Action Buttons</h3>
+            <TabsContent value="buttons" className="space-y-6">
+              <Card className="border-none shadow-none">
+                <CardHeader className="flex flex-row items-center justify-between px-0 py-4">
+                  <CardTitle className="text-lg font-medium">
+                    Action Buttons
+                  </CardTitle>
                   <Button onClick={handleAddButton} size="sm">
                     <Plus className="mr-2 h-4 w-4" />
                     Add Button
                   </Button>
-                </div>
-
-                <div className="space-y-4">
+                </CardHeader>
+                <CardContent className="space-y-4 px-0">
                   {navbarData.buttons.map(button => (
                     <div
                       key={button.id}
-                      className="relative flex items-center gap-3 rounded-md border p-3"
+                      className="relative flex items-center gap-1.5"
                     >
-                      <div className="grid flex-1 grid-cols-3 gap-3">
-                        <div className="space-y-1">
-                          <Label htmlFor={`button-text-${button.id}`}>
-                            Text
-                          </Label>
-                          <Input
-                            id={`button-text-${button.id}`}
-                            value={button.text}
-                            onChange={e =>
-                              handleUpdateButton(
-                                button.id,
-                                "text",
-                                e.target.value
-                              )
-                            }
-                            placeholder="Button text"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <Label htmlFor={`button-url-${button.id}`}>URL</Label>
-                          <div className="relative">
-                            <Input
-                              id={`button-url-${button.id}`}
-                              value={button.href}
-                              onChange={e =>
-                                handleUpdateButton(
-                                  button.id,
-                                  "href",
-                                  e.target.value
-                                )
-                              }
-                              placeholder="Select or enter URL"
-                              className="pr-8"
-                            />
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="absolute top-0 right-0 h-full px-2"
-                              onClick={() =>
-                                setShowPageSelectorFor({
-                                  type: "button",
-                                  id: button.id,
-                                })
-                              }
-                            >
-                              <ChevronDown className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        <div className="space-y-1">
-                          <Label htmlFor={`button-variant-${button.id}`}>
-                            Style
-                          </Label>
-                          <Select
-                            value={button.variant}
-                            onValueChange={value =>
-                              handleUpdateButton(button.id, "variant", value)
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select style" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="default">Default</SelectItem>
-                              <SelectItem value="primary">Primary</SelectItem>
-                              <SelectItem value="secondary">
-                                Secondary
-                              </SelectItem>
-                              <SelectItem value="outline">Outline</SelectItem>
-                              <SelectItem value="ghost">Ghost</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                      <Input
+                        id={`button-text-${button.id}`}
+                        value={button.text}
+                        onChange={e =>
+                          handleUpdateButton(button.id, "text", e.target.value)
+                        }
+                        className="h-9 flex-1 text-sm"
+                        placeholder="Button text"
+                      />
+                      <div className="relative flex-1">
+                        <Input
+                          id={`button-url-${button.id}`}
+                          value={button.href}
+                          onChange={e =>
+                            handleUpdateButton(
+                              button.id,
+                              "href",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Select or enter URL"
+                          className="h-9 pr-8 text-sm"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="chevron-toggle-button absolute top-0 right-0 h-full px-2"
+                          onClick={() =>
+                            setShowPageSelectorFor(prev =>
+                              prev?.id === button.id
+                                ? null
+                                : { type: "button", id: button.id }
+                            )
+                          }
+                        >
+                          <ChevronDown className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="w-32">
+                        <Select
+                          value={button.variant}
+                          onValueChange={value =>
+                            handleUpdateButton(button.id, "variant", value)
+                          }
+                        >
+                          <SelectTrigger className="h-9 text-sm">
+                            <SelectValue placeholder="Style" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="default">Default</SelectItem>
+                            <SelectItem value="primary">Primary</SelectItem>
+                            <SelectItem value="secondary">Secondary</SelectItem>
+                            <SelectItem value="outline">Outline</SelectItem>
+                            <SelectItem value="ghost">Ghost</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       <Button
                         variant="ghost"
@@ -896,15 +899,18 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                       <p>No buttons added yet</p>
                     </div>
                   )}
-                </div>
-              </div>
-            )}
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-            {activeTab === "settings" && (
-              <div className="space-y-6">
-                <h3 className="text-lg font-medium">Navbar Settings</h3>
-
-                <div className="space-y-4">
+            <TabsContent value="settings" className="space-y-6">
+              <Card className="border-none shadow-none">
+                <CardHeader className="px-0 py-4">
+                  <CardTitle className="text-lg font-medium">
+                    Navbar Settings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 px-0">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label className="text-sm font-medium">
@@ -921,11 +927,11 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                       }
                     />
                   </div>
-                </div>
-              </div>
-            )}
+                </CardContent>
+              </Card>
+            </TabsContent>
           </div>
-        </div>
+        </Tabs>
 
         <div className="flex justify-end gap-3 border-t pt-4">
           <Button variant="outline" onClick={onClose}>

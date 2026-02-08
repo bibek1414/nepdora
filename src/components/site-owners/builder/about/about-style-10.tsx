@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { AboutUs10Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { Check, ChevronRight, Phone, MoveUpRight, Map } from "lucide-react";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate10Props {
   aboutUsData: AboutUs10Data;
@@ -30,7 +31,6 @@ export function AboutUsTemplate10({
   isEditable = false,
   onUpdate,
 }: AboutUsTemplate10Props) {
-  const [data, setData] = useState(aboutUsData);
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -48,59 +48,33 @@ export function AboutUsTemplate10({
     },
   };
 
-  // Handle text field updates
-  const handleTextUpdate = (field: keyof AboutUs10Data) => (value: string) => {
-    const updatedData = { ...data, [field]: value };
-    setData(updatedData);
-    onUpdate?.({ [field]: value } as Partial<AboutUs10Data>);
-  };
-
-  // Handle image updates
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
-    const updatedData = {
-      ...data,
-      imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    setData(updatedData);
-    onUpdate?.({
-      imageUrl,
-      imageAlt: updatedData.imageAlt,
-    });
-  };
-
-  // Handle alt text updates
-  const handleAltUpdate = (altText: string) => {
-    const updatedData = { ...data, imageAlt: altText };
-    setData(updatedData);
-    onUpdate?.({ imageAlt: altText });
-  };
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(aboutUsData, onUpdate);
 
   // Handle feature updates
   const handleFeatureUpdate =
     (featureId: string, field: "title" | "items", itemIndex?: number) =>
     (value: string) => {
-      const updatedFeatures = data.features.map(feature => {
-        if (feature.id === featureId) {
-          if (field === "items" && typeof itemIndex === "number") {
-            const newItems = [...feature.items];
-            newItems[itemIndex] = value;
-            return { ...feature, items: newItems };
-          }
-          return { ...feature, [field]: value };
-        }
-        return feature;
-      });
-      const updatedData = { ...data, features: updatedFeatures };
-      setData(updatedData);
-      onUpdate?.({ features: updatedFeatures });
+      const feature = data.features.find(f => f.id === featureId);
+      if (!feature) return;
+
+      if (field === "items" && typeof itemIndex === "number") {
+        const newItems = [...feature.items];
+        newItems[itemIndex] = value;
+        handleArrayItemUpdate("features", featureId)({ items: newItems });
+      } else {
+        handleArrayItemUpdate("features", featureId)({ [field]: value });
+      }
     };
 
   // Handle circular stamp text update
   const handleStampTextUpdate = (value: string) => {
-    const updatedData = { ...data, circularStampText: value };
-    setData(updatedData);
-    onUpdate?.({ circularStampText: value });
+    handleTextUpdate("circularStampText")(value);
   };
 
   return (
@@ -114,8 +88,8 @@ export function AboutUsTemplate10({
                 <EditableImage
                   src={data.imageUrl}
                   alt={data.imageAlt}
-                  onImageChange={handleImageUpdate}
-                  onAltChange={handleAltUpdate}
+                  onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+                  onAltChange={handleAltUpdate("imageAlt")}
                   isEditable={isEditable}
                   className="absolute inset-0 aspect-[1/1] object-cover transition-transform duration-700 group-hover:scale-105"
                   width={800}

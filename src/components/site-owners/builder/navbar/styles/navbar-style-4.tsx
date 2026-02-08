@@ -38,6 +38,8 @@ import { SearchBar } from "@/components/site-owners/builder/search-bar/search-ba
 import { useRouter } from "next/navigation";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 const EditableItem: React.FC<{
   onEdit: () => void;
@@ -115,21 +117,16 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     setIsCartOpen(false);
   };
 
-  const generateLinkHref = (originalHref: string) => {
-    if (isEditable || disableClicks) return "#";
-
-    if (originalHref === "/" || originalHref === "#" || originalHref === "") {
-      return `/preview/${siteUser}`;
-    }
-
-    const cleanHref = originalHref.replace(/^[#/]+/, "");
-    return `/preview/${siteUser}/${cleanHref}`;
-  };
+  const pathname = usePathname();
 
   const handleCategoryFilter = (categorySlug: string, categoryName: string) => {
     if (isEditable || disableClicks) return;
 
-    const filterUrl = `/preview/${siteUser}/collections/products?category=${categorySlug}`;
+    const filterUrl = generateLinkHref(
+      `/collections/products?category=${categorySlug}`,
+      siteUser,
+      pathname
+    );
     router.push(filterUrl);
   };
 
@@ -139,7 +136,11 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   ) => {
     if (isEditable || disableClicks) return;
 
-    const filterUrl = `/preview/${siteUser}/collections/products?sub_category=${subCategorySlug}`;
+    const filterUrl = generateLinkHref(
+      `/collections/products?sub_category=${subCategorySlug}`,
+      siteUser,
+      pathname
+    );
     router.push(filterUrl);
   };
 
@@ -149,18 +150,26 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   ) => {
     if (isEditable || disableClicks) return;
 
-    const filterUrl = `/preview/${siteUser}/collections/products?category=${categorySlug}&sub_category=${subCategorySlug}`;
+    const filterUrl = generateLinkHref(
+      `/collections/products?category=${categorySlug}&sub_category=${subCategorySlug}`,
+      siteUser,
+      pathname
+    );
     router.push(filterUrl);
   };
 
   const generateCategoryHref = (categorySlug: string) => {
     if (isEditable || disableClicks) return "#";
-    return `/preview/${siteUser}/category/${categorySlug}`;
+    return generateLinkHref(`/category/${categorySlug}`, siteUser, pathname);
   };
 
   const generateSubCategoryHref = (subCategorySlug: string) => {
     if (isEditable || disableClicks) return "#";
-    return `/preview/${siteUser}/subcategory/${subCategorySlug}`;
+    return generateLinkHref(
+      `/subcategory/${subCategorySlug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
@@ -172,7 +181,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
 
   const handleLoginClick = () => {
     if (isEditable || disableClicks) return;
-    router.push(`/preview/${siteUser}/login`);
+    router.push(generateLinkHref("/login", siteUser, pathname));
   };
 
   const handleProfileAction = (action: string) => {
@@ -180,17 +189,17 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
 
     switch (action) {
       case "profile":
-        router.push(`/preview/${siteUser}/profile`);
+        router.push(generateLinkHref("/profile", siteUser, pathname));
         break;
       case "wishlist":
-        router.push(`/preview/${siteUser}/wishlist`);
+        router.push(generateLinkHref("/wishlist", siteUser, pathname));
         break;
       case "orders":
-        router.push(`/preview/${siteUser}/orders`);
+        router.push(generateLinkHref("/orders", siteUser, pathname));
         break;
       case "logout":
         logout();
-        router.push(`/preview/${siteUser}`);
+        router.push(generateLinkHref("/", siteUser, pathname));
         break;
     }
   };
@@ -264,7 +273,13 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
               ) : (
                 <Link
                   key={link.id}
-                  href={generateLinkHref(link.href)}
+                  href={generateLinkHref(
+                    link.href,
+                    siteUser,
+                    pathname,
+                    isEditable,
+                    disableClicks
+                  )}
                   onClick={e => handleLinkClick(e, link.href)}
                   className={`text-sm font-medium transition-colors ${
                     disableClicks
@@ -399,7 +414,15 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                 {disableClicks ? (
                   button.text
                 ) : (
-                  <Link href={generateLinkHref(button.href)}>
+                  <Link
+                    href={generateLinkHref(
+                      button.href,
+                      siteUser,
+                      pathname,
+                      isEditable,
+                      disableClicks
+                    )}
+                  >
                     {button.text}
                   </Link>
                 )}

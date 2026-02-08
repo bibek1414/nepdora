@@ -102,6 +102,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [pendingInsertIndex, setPendingInsertIndex] = useState<
     number | undefined
   >(undefined);
+  const [pendingReplaceId, setPendingReplaceId] = useState<string | null>(null);
 
   // Dialog states
   // Dialog states
@@ -232,12 +233,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     insertIndex?: number
   ) => {
     const displayName = getComponentDisplayName(componentType);
-    const toastId = `add-${componentType}-${Date.now()}`;
+    const mode = pendingReplaceId ? "replace" : "add";
+    const toastId = `${mode}-${componentType}-${Date.now()}`;
 
     try {
-      toast.loading(`Adding ${displayName}...`, { id: toastId });
+      toast.loading(
+        `${mode === "replace" ? "Replacing" : "Adding"} ${displayName}...`,
+        { id: toastId }
+      );
 
       setIsAddSectionDialogOpen(false);
+      const replaceId = pendingReplaceId;
+      setPendingReplaceId(null);
       setPendingInsertIndex(undefined);
 
       const currentComponents =
@@ -246,25 +253,41 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           currentPage,
         ]) || pageComponents;
 
-      // The API now handles order updates internally
-      await componentsApi.createComponent(
-        currentPage,
-        {
+      if (mode === "replace" && replaceId) {
+        const componentToReplace = currentComponents.find(
+          c => c.component_id === replaceId
+        );
+        const order = componentToReplace?.order ?? 0;
+
+        await componentsApi.replaceComponent(currentPage, replaceId, {
           component_type: componentType,
           data,
-          order: insertIndex ?? currentComponents.length,
-        },
-        currentComponents,
-        insertIndex
-      );
+          order,
+        });
+      } else {
+        // The API now handles order updates internally
+        await componentsApi.createComponent(
+          currentPage,
+          {
+            component_type: componentType,
+            data,
+            order: insertIndex ?? currentComponents.length,
+          },
+          currentComponents,
+          insertIndex
+        );
+      }
 
       await queryClient.invalidateQueries({
         queryKey: ["pageComponents", currentPage],
       });
 
-      toast.success(`${displayName} added successfully!`, { id: toastId });
+      toast.success(
+        `${displayName} ${mode === "replace" ? "replaced" : "added"} successfully!`,
+        { id: toastId }
+      );
     } catch (error) {
-      console.error(`Failed to create ${componentType} component:`, error);
+      console.error(`Failed to ${mode} ${componentType} component:`, error);
 
       await queryClient.invalidateQueries({
         queryKey: ["pageComponents", currentPage],
@@ -354,6 +377,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
 
     setPendingInsertIndex(insertIndex);
+    setIsAddSectionDialogOpen(true);
+  };
+
+  const handleReplaceSection = (componentId: string) => {
+    setPendingReplaceId(componentId);
+    setPendingInsertIndex(undefined);
     setIsAddSectionDialogOpen(true);
   };
 
@@ -1033,6 +1062,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                     isLoading={isPageComponentsLoading}
                     error={pageComponentsError}
                     onAddSection={handleAddSection}
+                    onReplaceSection={handleReplaceSection}
                   />
                 </div>
               </div>

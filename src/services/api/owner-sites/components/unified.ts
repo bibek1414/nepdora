@@ -225,6 +225,46 @@ export const componentsApi = {
     }
   },
 
+  // Replace a component
+  replaceComponent: async <T extends keyof ComponentTypeMap>(
+    pageSlug: string,
+    componentId: string,
+    payload: CreateComponentRequest<T>
+  ): Promise<ComponentResponse<T>> => {
+    try {
+      const componentPayload = {
+        ...payload,
+        component_id:
+          payload.component_id || `${payload.component_type}-${Date.now()}`,
+      };
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/pages/${pageSlug}/components/replace/${componentId}/`,
+        {
+          method: "POST",
+          headers: createHeaders(),
+          body: JSON.stringify(componentPayload),
+        }
+      );
+
+      await handleApiError(response);
+      const data = await response.json();
+
+      return {
+        id: data.id || data.data?.id,
+        component_id: data.component_id || data.data?.component_id,
+        component_type: data.component_type || data.data?.component_type,
+        data: data.data?.data || data.data || data,
+        order: data.order || data.data?.order || 0,
+        page: data.page || data.data?.page,
+      };
+    } catch (error) {
+      throw new Error(
+        `Failed to replace component: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  },
+
   // Get components by type
   getComponentsByType: async <T extends keyof ComponentTypeMap>(
     pageSlug: string,

@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2 } from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 
@@ -28,7 +29,9 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const [data, setData] = useState(galleryData);
+  const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
+    useBuilderLogic(galleryData, onUpdate);
+
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -44,33 +47,19 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
     };
   }, []);
 
-  const handleTitleUpdate = (newTitle: string) => {
-    const updatedData = { ...data, title: newTitle };
-    setData(updatedData);
-    onUpdate?.({ title: newTitle });
-  };
-
-  const handleSubtitleUpdate = (newSubtitle: string) => {
-    const updatedData = { ...data, subtitle: newSubtitle };
-    setData(updatedData);
-    onUpdate?.({ subtitle: newSubtitle });
-  };
-
-  const handleImageUpdate = (
+  const handleImageUpdateLocal = (
     index: number,
     imageUrl: string,
     altText?: string
   ) => {
-    const updatedImages = [...data.images];
-    updatedImages[index] = {
-      ...updatedImages[index],
+    const imgId = data.images[index].id;
+    handleArrayItemUpdate(
+      "images",
+      imgId
+    )({
       image: imageUrl,
-      image_alt_description:
-        altText || updatedImages[index].image_alt_description,
-    };
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
-    onUpdate?.({ images: updatedImages });
+      image_alt_description: altText,
+    });
   };
 
   const handleImageFileChange = async (
@@ -95,7 +84,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
       });
 
       if (index !== undefined) {
-        handleImageUpdate(index, imageUrl, `Gallery image: ${file.name}`);
+        handleImageUpdateLocal(index, imageUrl, `Gallery image: ${file.name}`);
       } else {
         handleAddImage(imageUrl);
       }
@@ -122,15 +111,13 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
       is_active: true,
     };
     const updatedImages = [...data.images, newImage];
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
+    setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
 
   const handleRemoveImage = (index: number) => {
     const updatedImages = data.images.filter((_, idx) => idx !== index);
-    const updatedData = { ...data, images: updatedImages };
-    setData(updatedData);
+    setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
 
@@ -217,14 +204,14 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
         <div className="mb-6 text-center">
           <EditableText
             value={data.title}
-            onChange={handleTitleUpdate}
+            onChange={handleTextUpdate("title")}
             isEditable={isEditable}
             className="mb-2 text-4xl font-bold"
           />
           {data.subtitle && (
             <EditableText
               value={data.subtitle}
-              onChange={handleSubtitleUpdate}
+              onChange={handleTextUpdate("subtitle")}
               isEditable={isEditable}
               className="text-sm text-gray-600"
             />
