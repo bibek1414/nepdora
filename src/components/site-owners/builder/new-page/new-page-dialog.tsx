@@ -16,14 +16,34 @@ import { Page } from "@/types/owner-site/components/page";
 
 interface NewPageDialogProps {
   onPageCreated?: (page: Page) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const NewPageDialog: React.FC<NewPageDialogProps> = ({
   onPageCreated,
+  open,
+  onOpenChange,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [pageTitle, setPageTitle] = useState("");
   const [error, setError] = useState("");
+
+  const isControlled = open !== undefined && onOpenChange !== undefined;
+  const isOpen = isControlled ? open : internalIsOpen;
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (isControlled) {
+      onOpenChange(newOpen);
+    } else {
+      setInternalIsOpen(newOpen);
+    }
+
+    if (!newOpen) {
+      setPageTitle("");
+      setError("");
+    }
+  };
 
   const createPageMutation = useCreatePage();
 
@@ -46,7 +66,7 @@ export const NewPageDialog: React.FC<NewPageDialogProps> = ({
       {
         onSuccess: (data: Page) => {
           console.log("Page created successfully:", data);
-          setIsOpen(false);
+          handleOpenChange(false);
           setPageTitle("");
           setError("");
           onPageCreated?.(data);
@@ -68,26 +88,20 @@ export const NewPageDialog: React.FC<NewPageDialogProps> = ({
     );
   };
 
-  const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
-    if (!open) {
-      setPageTitle("");
-      setError("");
-    }
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="text-muted-foreground hover:text-foreground hover:border-primary border-2 border-dashed text-xs transition-colors"
-          size="sm"
-        >
-          <Plus className="mr-1 h-4 w-4" />
-          New Page
-        </Button>
-      </DialogTrigger>
+      {!isControlled && (
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="text-muted-foreground hover:text-foreground hover:border-primary border-2 border-dashed text-xs transition-colors"
+            size="sm"
+          >
+            <Plus className="mr-1 h-4 w-4" />
+            New Page
+          </Button>
+        </DialogTrigger>
+      )}
 
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -128,7 +142,7 @@ export const NewPageDialog: React.FC<NewPageDialogProps> = ({
             <Button
               type="button"
               variant="outline"
-              onClick={() => setIsOpen(false)}
+              onClick={() => handleOpenChange(false)}
               disabled={createPageMutation.isPending}
             >
               Cancel

@@ -30,12 +30,26 @@ import {
   Settings,
   LinkIcon,
   SquareMousePointer,
-  ShoppingCart,
   Type,
   ImageIcon,
   ChevronDown,
-  ExternalLink,
+  Check,
+  ChevronsUpDown,
 } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { NewPageDialog } from "../new-page/new-page-dialog";
 import {
   NavbarData,
   NavbarLink,
@@ -63,176 +77,92 @@ interface NavbarEditorDialogProps {
 // Page Selector Component for Links and Buttons
 interface PageSelectorProps {
   onSelect: (href: string, text?: string) => void;
-  onCancel: () => void;
   currentHref: string;
   currentText?: string;
 }
 
 const PageSelector: React.FC<PageSelectorProps> = ({
   onSelect,
-  onCancel,
   currentHref,
   currentText,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [newPageTitle, setNewPageTitle] = useState("");
-  const [isCreating, setIsCreating] = useState(false);
-
+  const [open, setOpen] = useState(false);
+  const [showNewPageDialog, setShowNewPageDialog] = useState(false);
   const { data: pages = [], isLoading } = usePages();
-  const createPageMutation = useCreatePage();
-
-  // Filter pages based on search term
-  const filteredPages = pages.filter(
-    (page: Page) =>
-      page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      page.slug.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   // Handle page selection
   const handlePageSelect = (page: Page) => {
     onSelect(`/${page.slug}`, page.title);
+    setOpen(false);
   };
-
-  // Handle new page creation
-  const handleCreatePage = async () => {
-    if (!newPageTitle.trim()) return;
-
-    setIsCreating(true);
-    try {
-      const pageData = {
-        title: newPageTitle.trim(),
-      };
-
-      const newPage = await createPageMutation.mutateAsync(pageData);
-      onSelect(`/${newPage.slug}`, `${newPage.title}-draft`);
-
-      // Reset form
-      setNewPageTitle("");
-      setShowCreateForm(false);
-    } catch (error) {
-      console.error("Failed to create page:", error);
-      alert("Failed to create page. Please try again.");
-    } finally {
-      setIsCreating(false);
-    }
-  };
-
-  // Close page selector when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (
-        !target.closest(".page-selector-container") &&
-        !target.closest(".chevron-toggle-button")
-      ) {
-        onCancel();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onCancel]);
 
   return (
-    <Card className="page-selector-container absolute top-full right-0 z-50 mt-1 w-80 gap-0 bg-white py-0 shadow-xl">
-      <CardContent className="p-0">
-        {/* Existing Pages - Scrollable Area */}
-        <ScrollArea className="max-h-60 overflow-y-auto">
-          {isLoading ? (
-            <div className="text-muted-foreground p-4 text-center">
-              Loading pages...
-            </div>
-          ) : filteredPages.length > 0 ? (
-            <div className="p-1">
-              {filteredPages.map((page: Page) => (
-                <Button
-                  key={page.id}
-                  onClick={() => handlePageSelect(page)}
-                  variant={
-                    currentHref === `/${page.slug}` ? "secondary" : "ghost"
-                  }
-                  className="h-auto w-full justify-start p-2 text-left"
-                >
-                  <div className="flex-1">
-                    <div className="font-medium capitalize">{page.title}</div>
-                    <div className="text-muted-foreground text-xs">
-                      /{page.slug}
-                    </div>
-                  </div>
-                </Button>
-              ))}
-            </div>
-          ) : searchTerm && !isLoading ? (
-            <div className="text-muted-foreground p-4 text-center">
-              No pages found matching &quot;{searchTerm}&quot;
-            </div>
-          ) : null}
-        </ScrollArea>
-
-        <Separator />
-
-        {/* Create New Page Section */}
-        <div className="bg-white p-2">
-          {!showCreateForm ? (
-            <Button
-              onClick={() => setShowCreateForm(true)}
-              variant="ghost"
-              className="w-full justify-start text-green-700 hover:bg-green-50 hover:text-green-700"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              <span>Create New Page</span>
-            </Button>
-          ) : (
-            <div className="space-y-2 rounded bg-white p-2">
-              <div className="text-sm font-medium">Create New Page</div>
-              <Input
-                type="text"
-                placeholder="Page title..."
-                value={newPageTitle}
-                onChange={e => setNewPageTitle(e.target.value)}
-                className="bg-white"
-              />
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleCreatePage}
-                  variant="default"
-                  disabled={!newPageTitle.trim() || isCreating}
-                  className="flex-1"
-                  size="sm"
-                >
-                  {isCreating ? "Creating..." : "Create & Link"}
-                </Button>
-                <Button
-                  onClick={() => {
-                    setShowCreateForm(false);
-                    setNewPageTitle("");
-                  }}
-                  variant="outline"
-                  size="sm"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <Separator />
-
-        {/* Footer */}
-        <div className="bg-muted/30 p-2">
+    <>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
           <Button
-            onClick={onCancel}
             variant="ghost"
-            className="w-full"
-            size="sm"
+            size="icon"
+            role="combobox"
+            aria-expanded={open}
+            className="chevron-toggle-button absolute top-0 right-0 h-full px-2"
           >
-            Cancel
+            <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
           </Button>
-        </div>
-      </CardContent>
-    </Card>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0" align="end">
+          <Command>
+            <CommandInput placeholder="Search pages..." />
+            <CommandList>
+              <CommandEmpty>No page found.</CommandEmpty>
+              <CommandGroup heading="Pages">
+                {isLoading ? (
+                  <CommandItem disabled>Loading...</CommandItem>
+                ) : (
+                  pages.map((page: Page) => (
+                    <CommandItem
+                      key={page.id}
+                      value={page.title}
+                      onSelect={() => handlePageSelect(page)}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          currentHref === `/${page.slug}`
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                      {page.title}
+                    </CommandItem>
+                  ))
+                )}
+              </CommandGroup>
+              <CommandGroup>
+                <CommandItem
+                  onSelect={() => {
+                    setOpen(false);
+                    setShowNewPageDialog(true);
+                  }}
+                  className="text-green-600"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Create New Page
+                </CommandItem>
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      <NewPageDialog
+        open={showNewPageDialog}
+        onOpenChange={setShowNewPageDialog}
+        onPageCreated={page => {
+          onSelect(`/${page.slug}`, `${page.title}-draft`);
+        }}
+      />
+    </>
   );
 };
 
@@ -247,10 +177,8 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
   const [activeTab, setActiveTab] = useState("logo");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [showPageSelectorFor, setShowPageSelectorFor] = useState<{
-    type: "link" | "button";
-    id: string;
-  } | null>(null);
+
+  // We don't need showPageSelectorFor anymore as the Popover is local to each PageSelector instance
 
   // Use site config hooks
   const { data: siteConfig, isLoading: isSiteConfigLoading } = useSiteConfig();
@@ -462,27 +390,6 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
       ...prev,
       buttons: prev.buttons.filter(button => button.id !== id),
     }));
-  };
-
-  // Handle page selection for links and buttons
-  const handlePageSelect = (href: string, text?: string) => {
-    if (showPageSelectorFor) {
-      const { type, id } = showPageSelectorFor;
-
-      if (type === "link") {
-        handleUpdateLink(id, "href", href);
-        if (text) {
-          handleUpdateLink(id, "text", text);
-        }
-      } else if (type === "button") {
-        handleUpdateButton(id, "href", href);
-        if (text) {
-          handleUpdateButton(id, "text", text);
-        }
-      }
-
-      setShowPageSelectorFor(null);
-    }
   };
 
   // Handle save
@@ -735,7 +642,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                         onChange={e =>
                           handleUpdateLink(link.id, "text", e.target.value)
                         }
-                        className="h-9 flex-1 text-sm capitalize"
+                        className="h-9 flex-1 text-sm"
                         placeholder="Link text"
                       />
                       <div className="relative flex-1">
@@ -748,41 +655,30 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                           placeholder="Select or enter URL"
                           className="h-9 pr-8 text-sm"
                         />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="chevron-toggle-button absolute top-0 right-0 h-full px-2"
-                          onClick={() =>
-                            setShowPageSelectorFor(prev =>
-                              prev?.id === link.id
-                                ? null
-                                : { type: "link", id: link.id }
-                            )
-                          }
-                        >
-                          <ChevronDown className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteLink(link.id)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                        <PageSelector
+                          onSelect={(href, text) => {
+                            let shouldUpdateText = false;
+                            const linkToUpdate = navbarData.links.find(
+                              l => l.id === link.id
+                            );
 
-                      {/* Page Selector Dropdown */}
-                      {showPageSelectorFor?.type === "link" &&
-                        showPageSelectorFor?.id === link.id && (
-                          <PageSelector
-                            onSelect={handlePageSelect}
-                            onCancel={() => setShowPageSelectorFor(null)}
-                            currentHref={link.href}
-                            currentText={link.text}
-                          />
-                        )}
+                            if (
+                              linkToUpdate &&
+                              (!linkToUpdate.text ||
+                                linkToUpdate.text === "New Link")
+                            ) {
+                              shouldUpdateText = true;
+                            }
+
+                            handleUpdateLink(link.id, "href", href);
+                            if (text && shouldUpdateText) {
+                              handleUpdateLink(link.id, "text", text);
+                            }
+                          }}
+                          currentHref={link.href}
+                          currentText={link.text}
+                        />
+                      </div>
                     </div>
                   ))}
 
@@ -836,60 +732,30 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                           placeholder="Select or enter URL"
                           className="h-9 pr-8 text-sm"
                         />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="chevron-toggle-button absolute top-0 right-0 h-full px-2"
-                          onClick={() =>
-                            setShowPageSelectorFor(prev =>
-                              prev?.id === button.id
-                                ? null
-                                : { type: "button", id: button.id }
-                            )
-                          }
-                        >
-                          <ChevronDown className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <div className="w-32">
-                        <Select
-                          value={button.variant}
-                          onValueChange={value =>
-                            handleUpdateButton(button.id, "variant", value)
-                          }
-                        >
-                          <SelectTrigger className="h-9 text-sm">
-                            <SelectValue placeholder="Style" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="default">Default</SelectItem>
-                            <SelectItem value="primary">Primary</SelectItem>
-                            <SelectItem value="secondary">Secondary</SelectItem>
-                            <SelectItem value="outline">Outline</SelectItem>
-                            <SelectItem value="ghost">Ghost</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteButton(button.id)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                        <PageSelector
+                          onSelect={(href, text) => {
+                            let shouldUpdateText = false;
+                            const buttonToUpdate = navbarData.buttons.find(
+                              b => b.id === button.id
+                            );
 
-                      {/* Page Selector Dropdown */}
-                      {showPageSelectorFor?.type === "button" &&
-                        showPageSelectorFor?.id === button.id && (
-                          <PageSelector
-                            onSelect={handlePageSelect}
-                            onCancel={() => setShowPageSelectorFor(null)}
-                            currentHref={button.href}
-                            currentText={button.text}
-                          />
-                        )}
+                            if (
+                              buttonToUpdate &&
+                              (!buttonToUpdate.text ||
+                                buttonToUpdate.text === "New Button")
+                            ) {
+                              shouldUpdateText = true;
+                            }
+
+                            handleUpdateButton(button.id, "href", href);
+                            if (text && shouldUpdateText) {
+                              handleUpdateButton(button.id, "text", text);
+                            }
+                          }}
+                          currentHref={button.href}
+                          currentText={button.text}
+                        />
+                      </div>
                     </div>
                   ))}
 

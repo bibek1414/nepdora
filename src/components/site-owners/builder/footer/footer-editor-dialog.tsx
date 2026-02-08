@@ -11,6 +11,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Facebook,
@@ -35,7 +36,23 @@ import {
   X,
   Type,
   ImageIcon,
+  Check,
+  ChevronsUpDown,
 } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { NewPageDialog } from "../new-page/new-page-dialog";
 import {
   FooterData,
   FooterSection,
@@ -100,170 +117,93 @@ const socialPlatforms = [
 // Page Selector Component for Footer Links
 interface PageSelectorProps {
   onSelect: (href: string, text?: string) => void;
-  onCancel: () => void;
   currentHref: string;
   currentText?: string;
 }
 
 const PageSelector: React.FC<PageSelectorProps> = ({
   onSelect,
-  onCancel,
   currentHref,
   currentText,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [newPageTitle, setNewPageTitle] = useState("");
-  const [isCreating, setIsCreating] = useState(false);
-
+  const [open, setOpen] = useState(false);
+  const [showNewPageDialog, setShowNewPageDialog] = useState(false);
   const { data: pages = [], isLoading } = usePages();
-  const createPageMutation = useCreatePage();
-
-  // Filter pages based on search term
-  const filteredPages = pages.filter(
-    (page: Page) =>
-      page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      page.slug.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   // Handle page selection
   const handlePageSelect = (page: Page) => {
     onSelect(`/${page.slug}`, page.title);
-  };
-
-  // Handle external URL selection
-  const handleExternalUrl = () => {
-    const url = prompt("Enter external URL (including https://):");
-    if (url) {
-      onSelect(url, url);
-    }
-  };
-
-  // Handle new page creation
-  const handleCreatePage = async () => {
-    if (!newPageTitle.trim()) return;
-
-    setIsCreating(true);
-    try {
-      const pageData = {
-        title: newPageTitle.trim(),
-      };
-
-      const newPage = await createPageMutation.mutateAsync(pageData);
-      onSelect(`/${newPage.slug}`, `${newPage.title}-draft`);
-
-      // Reset form
-      setNewPageTitle("");
-      setShowCreateForm(false);
-    } catch (error) {
-      console.error("Failed to create page:", error);
-      alert("Failed to create page. Please try again.");
-    } finally {
-      setIsCreating(false);
-    }
+    setOpen(false);
   };
 
   return (
-    <Card className="absolute top-full right-0 z-50 mt-1 w-80 bg-white py-0 shadow-xl">
-      <CardContent className="p-0">
-        {/* Search Input */}
-
-        {/* Existing Pages - Scrollable Area */}
-        <ScrollArea className="max-h-60 overflow-y-auto">
-          {isLoading ? (
-            <div className="text-muted-foreground p-4 text-center">
-              Loading pages...
-            </div>
-          ) : filteredPages.length > 0 ? (
-            <div className="p-1">
-              {filteredPages.map((page: Page) => (
-                <Button
-                  key={page.id}
-                  onClick={() => handlePageSelect(page)}
-                  variant={
-                    currentHref === `/${page.slug}` ? "secondary" : "ghost"
-                  }
-                  className="h-auto w-full justify-start p-2 text-left"
-                >
-                  <div className="flex-1">
-                    <div className="font-medium capitalize">{page.title}</div>
-                    <div className="text-muted-foreground text-xs">
-                      /{page.slug}
-                    </div>
-                  </div>
-                </Button>
-              ))}
-            </div>
-          ) : searchTerm && !isLoading ? (
-            <div className="text-muted-foreground p-4 text-center">
-              No pages found matching &quot;{searchTerm}&quot;
-            </div>
-          ) : null}
-        </ScrollArea>
-
-        <Separator />
-
-        {/* Create New Page Section */}
-        <div className="bg-white p-2">
-          {!showCreateForm ? (
-            <Button
-              onClick={() => setShowCreateForm(true)}
-              variant="ghost"
-              className="w-full justify-start text-green-700 hover:bg-green-50 hover:text-green-700"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              <span>Create New Page</span>
-            </Button>
-          ) : (
-            <div className="space-y-2 rounded bg-white p-2">
-              <div className="text-sm font-medium">Create New Page</div>
-              <Input
-                type="text"
-                placeholder="Page title..."
-                value={newPageTitle}
-                onChange={e => setNewPageTitle(e.target.value)}
-                className="bg-white"
-              />
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleCreatePage}
-                  variant="default"
-                  disabled={!newPageTitle.trim() || isCreating}
-                  className="flex-1"
-                  size="sm"
-                >
-                  {isCreating ? "Creating..." : "Create & Link"}
-                </Button>
-                <Button
-                  onClick={() => {
-                    setShowCreateForm(false);
-                    setNewPageTitle("");
-                  }}
-                  variant="outline"
-                  size="sm"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <Separator />
-
-        {/* Footer */}
-        <div className="bg-muted/30 p-2">
+    <>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
           <Button
-            onClick={onCancel}
             variant="ghost"
-            className="w-full"
-            size="sm"
+            size="icon"
+            role="combobox"
+            aria-expanded={open}
+            className="chevron-toggle-button absolute top-0 right-0 h-full px-2"
           >
-            Cancel
+            <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
           </Button>
-        </div>
-      </CardContent>
-    </Card>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0" align="end">
+          <Command>
+            <CommandInput placeholder="Search pages..." />
+            <CommandList>
+              <CommandEmpty>No page found.</CommandEmpty>
+              <CommandGroup heading="Pages">
+                {isLoading ? (
+                  <CommandItem disabled>Loading...</CommandItem>
+                ) : (
+                  pages.map((page: Page) => (
+                    <CommandItem
+                      key={page.id}
+                      value={page.title}
+                      onSelect={() => handlePageSelect(page)}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          currentHref === `/${page.slug}`
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                      {page.title}
+                    </CommandItem>
+                  ))
+                )}
+              </CommandGroup>
+              <Separator />
+              <CommandGroup>
+                <CommandItem
+                  onSelect={() => {
+                    setOpen(false);
+                    setShowNewPageDialog(true);
+                  }}
+                  className="text-green-600"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Create New Page
+                </CommandItem>
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      <NewPageDialog
+        open={showNewPageDialog}
+        onOpenChange={setShowNewPageDialog}
+        onPageCreated={page => {
+          onSelect(`/${page.slug}`, `${page.title}-draft`);
+        }}
+      />
+    </>
   );
 };
 
@@ -277,10 +217,6 @@ export function FooterEditorDialog({
   siteUser,
 }: FooterEditorDialogProps) {
   const [editingData, setEditingData] = useState<FooterData>(footerData);
-  const [showPageSelectorFor, setShowPageSelectorFor] = useState<{
-    sectionId: string;
-    linkId: string;
-  } | null>(null);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [uploadLogoError, setUploadLogoError] = useState<string | null>(null);
 
@@ -685,20 +621,6 @@ export function FooterEditorDialog({
     }
   };
 
-  // Handle page selection for footer links
-  const handlePageSelect = (href: string, text?: string) => {
-    if (showPageSelectorFor) {
-      const { sectionId, linkId } = showPageSelectorFor;
-
-      updateLink(sectionId, linkId, "href", href);
-      if (text) {
-        updateLink(sectionId, linkId, "text", text);
-      }
-
-      setShowPageSelectorFor(null);
-    }
-  };
-
   // Get available platforms for dropdown (platforms not already used)
   const getAvailablePlatforms = () => {
     const usedPlatforms = new Set(
@@ -716,11 +638,6 @@ export function FooterEditorDialog({
           <DialogTitle className="flex items-center gap-2">
             <Edit3 className="h-5 w-5" />
             Edit Footer Content
-            {siteConfig && (
-              <Badge variant="secondary" className="ml-2">
-                Consistent Logo & Social Links
-              </Badge>
-            )}
           </DialogTitle>
         </DialogHeader>
 
@@ -1167,47 +1084,34 @@ export function FooterEditorDialog({
                                 className="h-9 pr-8 text-sm"
                                 disabled={isLoading}
                               />
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="absolute top-0 right-0 h-full px-2"
-                                onClick={() =>
-                                  setShowPageSelectorFor(prev =>
-                                    prev?.sectionId === section.id &&
-                                    prev?.linkId === link.id
-                                      ? null
-                                      : {
-                                          sectionId: section.id,
-                                          linkId: link.id,
-                                        }
-                                  )
-                                }
-                                disabled={isLoading}
-                              >
-                                <ChevronDown className="h-4 w-4" />
-                              </Button>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => removeLink(section.id, link.id)}
-                              className="text-destructive hover:text-destructive"
-                              disabled={isLoading}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
+                              <PageSelector
+                                onSelect={(href, text) => {
+                                  let shouldUpdateText = false;
+                                  const linkToUpdate = section.links.find(
+                                    l => l.id === link.id
+                                  );
+                                  if (
+                                    linkToUpdate &&
+                                    (!linkToUpdate.text ||
+                                      linkToUpdate.text === "New Link")
+                                  ) {
+                                    shouldUpdateText = true;
+                                  }
 
-                            {/* Page Selector Dropdown */}
-                            {showPageSelectorFor?.sectionId === section.id &&
-                              showPageSelectorFor?.linkId === link.id && (
-                                <PageSelector
-                                  onSelect={handlePageSelect}
-                                  onCancel={() => setShowPageSelectorFor(null)}
-                                  currentHref={link.href || ""}
-                                  currentText={link.text}
-                                />
-                              )}
+                                  updateLink(section.id, link.id, "href", href);
+                                  if (text && shouldUpdateText) {
+                                    updateLink(
+                                      section.id,
+                                      link.id,
+                                      "text",
+                                      text
+                                    );
+                                  }
+                                }}
+                                currentHref={link.href || ""}
+                                currentText={link.text}
+                              />
+                            </div>
                           </div>
                         ))}
                         <Button
@@ -1234,11 +1138,6 @@ export function FooterEditorDialog({
                   <CardTitle className="flex items-center justify-between text-lg">
                     Social Links
                     <div className="flex items-center gap-2">
-                      {siteConfig && (
-                        <Badge variant="outline" className="text-xs">
-                          Site Config
-                        </Badge>
-                      )}
                       <Button
                         onClick={addSocialLink}
                         size="sm"
