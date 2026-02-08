@@ -254,11 +254,13 @@ const PreviewOrderConfirmationPage: React.FC<
 
                       <div className="text-right">
                         <p className="font-medium">
-                          Rs.{Number(itemPrice).toFixed(2)}
+                          Rs.{Number(itemPrice).toLocaleString("en-IN")}
                         </p>
                         <p className="text-sm text-gray-600">
                           Total: Rs.
-                          {(Number(itemPrice) * item.quantity).toFixed(2)}
+                          {(Number(itemPrice) * item.quantity).toLocaleString(
+                            "en-IN"
+                          )}
                         </p>
                       </div>
                     </div>
@@ -278,7 +280,7 @@ const PreviewOrderConfirmationPage: React.FC<
                   {(
                     Number(order.total_amount) -
                     Number(order.delivery_charge || 0)
-                  ).toFixed(2)}
+                  ).toLocaleString("en-IN")}
                 </span>
               </div>
 
@@ -286,7 +288,7 @@ const PreviewOrderConfirmationPage: React.FC<
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-600">Delivery Charge:</span>
                   <span className="font-medium">
-                    Rs.{Number(order.delivery_charge).toFixed(2)}
+                    Rs.{Number(order.delivery_charge).toLocaleString("en-IN")}
                   </span>
                 </div>
               )}
@@ -295,7 +297,9 @@ const PreviewOrderConfirmationPage: React.FC<
 
               <div className="flex items-center justify-between text-lg font-semibold">
                 <span>Total Amount:</span>
-                <span>Rs.{Number(order.total_amount).toFixed(2)}</span>
+                <span>
+                  Rs.{Number(order.total_amount).toLocaleString("en-IN")}
+                </span>
               </div>
             </div>
           </CardContent>
@@ -309,7 +313,7 @@ const PreviewOrderConfirmationPage: React.FC<
           <CardContent className="space-y-4">
             <div className="flex items-start space-x-3">
               <div
-                className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full"
+                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
                 style={{ backgroundColor: subtlePrimaryBg }}
               >
                 <span
@@ -330,7 +334,7 @@ const PreviewOrderConfirmationPage: React.FC<
 
             <div className="flex items-start space-x-3">
               <div
-                className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full"
+                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
                 style={{ backgroundColor: subtlePrimaryBg }}
               >
                 <span
@@ -351,7 +355,7 @@ const PreviewOrderConfirmationPage: React.FC<
 
             <div className="flex items-start space-x-3">
               <div
-                className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full"
+                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
                 style={{ backgroundColor: subtlePrimaryBg }}
               >
                 <span

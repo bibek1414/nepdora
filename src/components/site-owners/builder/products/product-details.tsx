@@ -461,31 +461,35 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 }}
               />
             </div>
-            <div className="mt-4 grid grid-cols-5 gap-2">
-              {productImages.slice(0, 5).map((img, idx) => (
-                <Button
-                  key={idx}
-                  variant="outline"
-                  className="relative aspect-square overflow-hidden p-0"
-                  style={
-                    selectedImage === img
-                      ? { outline: `2px solid ${theme.colors.primary}` }
-                      : undefined
-                  }
-                  onClick={() => setSelectedImage(img)}
-                >
-                  <Image
-                    src={img}
-                    alt={`${product.name} view ${idx + 1}`}
-                    fill
-                    className="object-cover"
-                    onError={e => {
-                      const target = e.currentTarget as HTMLImageElement;
-                      target.src = defaultImage;
-                    }}
-                  />
-                </Button>
-              ))}
+            <div className="mt-6 overflow-hidden rounded-xl">
+              <div className="grid grid-cols-4 gap-1">
+                {productImages.slice(0, 4).map((img, idx) => (
+                  <button
+                    key={idx}
+                    className="relative aspect-square w-full overflow-hidden transition-all focus:outline-none"
+                    onClick={() => setSelectedImage(img)}
+                  >
+                    <div
+                      className={`absolute inset-0 z-10 transition-colors ${
+                        selectedImage === img
+                          ? "bg-transparent ring-1 ring-inset"
+                          : "hover:bg-transparent"
+                      }`}
+                    />
+                    <Image
+                      src={img}
+                      alt={`${product.name} view ${idx + 1}`}
+                      height={100}
+                      width={100}
+                      className="mx-auto object-cover"
+                      onError={e => {
+                        const target = e.currentTarget as HTMLImageElement;
+                        target.src = defaultImage;
+                      }}
+                    />
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -634,12 +638,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 className="text-4xl font-extrabold"
                 style={{ color: theme.colors.primary }}
               >
-                ${discountedPrice}
+                Rs.{Number(discountedPrice).toLocaleString("en-IN")}
               </span>
               {marketPrice && discountPercentage > 0 && (
                 <>
                   <span className="text-muted-foreground ml-3 text-xl line-through">
-                    ${marketPrice.toFixed(2)}
+                    Rs.{Number(marketPrice).toLocaleString("en-IN")}
                   </span>
                   <Badge variant="destructive" className="ml-3">
                     {discountPercentage}% OFF

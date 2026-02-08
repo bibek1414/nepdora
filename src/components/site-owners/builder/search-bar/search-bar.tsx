@@ -354,7 +354,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                                     fontFamily: theme.fonts.heading,
                                   }}
                                 >
-                                  ₹{product.price}
+                                  Rs.{" "}
+                                  {Number(product.price).toLocaleString(
+                                    "en-IN"
+                                  )}
                                 </span>
                               </div>
                             </div>
@@ -453,7 +456,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                                           fontFamily: theme.fonts.heading,
                                         }}
                                       >
-                                        ₹{product.price}
+                                        Rs.{" "}
+                                        {Number(product.price).toLocaleString(
+                                          "en-IN"
+                                        )}
                                       </span>
                                     </div>
                                   </div>

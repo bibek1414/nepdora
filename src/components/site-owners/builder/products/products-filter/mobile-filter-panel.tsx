@@ -160,7 +160,7 @@ export default function MobileFilterPanel({
               <div className="space-y-2">
                 <button
                   onClick={() => handleCategoryClick("all")}
-                  className={`w-full rounded-lg px-3 py-2 text-left text-sm transition-colors ${selectedCategory === "all" ? "from-primary to-primary bg-gradient-to-r text-white" : "bg-gray-50 text-gray-700 hover:bg-gray-100"}`}
+                  className={`w-full rounded-lg px-3 py-2 text-left text-sm transition-colors ${selectedCategory === "all" ? "from-primary to-primary bg-linear-to-r text-white" : "bg-gray-50 text-gray-700 hover:bg-gray-100"}`}
                 >
                   All Categories
                 </button>
@@ -168,7 +168,7 @@ export default function MobileFilterPanel({
                   <div key={category.slug}>
                     <button
                       onClick={() => handleCategoryClick(category.slug)}
-                      className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors ${selectedCategory === category.slug ? "from-primary to-primary bg-gradient-to-r text-white" : "bg-gray-50 text-gray-700 hover:bg-gray-100"}`}
+                      className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors ${selectedCategory === category.slug ? "from-primary to-primary bg-linear-to-r text-white" : "bg-gray-50 text-gray-700 hover:bg-gray-100"}`}
                     >
                       <span>{category.name}</span>
                       {selectedCategory === category.slug &&
@@ -238,8 +238,8 @@ export default function MobileFilterPanel({
                   />
                 </div>
                 <div className="flex justify-between text-xs text-gray-600">
-                  <span>${priceRange.min}</span>
-                  <span>${priceRange.max}</span>
+                  <span>Rs. {priceRange.min.toLocaleString("en-IN")}</span>
+                  <span>Rs. {priceRange.max.toLocaleString("en-IN")}</span>
                 </div>
               </div>
             </div>

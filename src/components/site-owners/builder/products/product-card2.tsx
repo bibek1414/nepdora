@@ -281,7 +281,9 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-gray-500">Free shipping over $50</p>
+                <p className="text-xs text-gray-500">
+                  Free shipping over Rs. 5,000
+                </p>
               </div>
             </div>
 

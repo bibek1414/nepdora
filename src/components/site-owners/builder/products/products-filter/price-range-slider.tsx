@@ -115,8 +115,8 @@ export default function PriceRangeSlider({
           className="mt-2 flex justify-between text-xs"
           style={{ color: theme.colors.text }}
         >
-          <span>₹{value.min.toLocaleString()}</span>
-          <span>₹{value.max.toLocaleString()}</span>
+          <span>Rs. {value.min.toLocaleString("en-IN")}</span>
+          <span>Rs. {value.max.toLocaleString("en-IN")}</span>
         </div>
       </div>
 
@@ -138,7 +138,7 @@ export default function PriceRangeSlider({
             >
               {generateOptions(type === "min").map(step => (
                 <option key={`${type}-${step}`} value={step}>
-                  ₹{step.toLocaleString()}
+                  Rs. {step.toLocaleString("en-IN")}
                   {step === max ? "+" : ""}
                 </option>
               ))}

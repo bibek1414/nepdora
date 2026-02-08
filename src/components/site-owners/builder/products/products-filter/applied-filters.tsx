@@ -79,7 +79,7 @@ const AppliedFilters: React.FC<AppliedFiltersProps> = ({
     !isPriceDefault && {
       key: "price",
       label: "Price",
-      value: `₹${priceRange.min} - ₹${priceRange.max}`,
+      value: `Rs. ${priceRange.min.toLocaleString("en-IN")} - Rs. ${priceRange.max.toLocaleString("en-IN")}`,
       onClear: () => setPriceRange({ min: minPrice, max: maxPrice }),
     },
   ].filter(Boolean);
