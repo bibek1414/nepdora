@@ -39,11 +39,7 @@ export const ProductCard7: React.FC<ProductCard7Props> = ({
   ];
 
   const getDetailsUrl = (product: Product): string => {
-    return generateLinkHref(
-      `/products-draft/${product.slug}`,
-      siteUser,
-      pathname
-    );
+    return generateLinkHref(`/products/${product.slug}`, siteUser, pathname);
   };
 
   const checkScroll = () => {

@@ -38,9 +38,7 @@ export const generateLinkHref = (
   }
 
   if (isPublishMode && siteUser) {
-    return isHomePage
-      ? `/publish/${siteUser}`
-      : `/publish/${siteUser}/${cleanHref}`;
+    return isHomePage ? `` : `${cleanHref}`;
   }
 
   // Published mode on custom domain or fallback
@@ -51,8 +49,20 @@ export const getLinkPrefix = (
   siteUser: string | undefined,
   pathname: string | null
 ) => {
+  // Try to recover siteUser from pathname if not provided
+  if (
+    !siteUser &&
+    pathname &&
+    (pathname.includes("/preview/") || pathname.includes("/publish/"))
+  ) {
+    const parts = pathname.split("/");
+    if (parts.length >= 3) {
+      siteUser = parts[2];
+    }
+  }
+
   if (!siteUser) return "";
   if (pathname?.includes("/preview/")) return `/preview/${siteUser}`;
-  if (pathname?.includes("/publish/")) return `/publish/${siteUser}`;
+  if (pathname?.includes("/publish/")) return ``;
   return "";
 };

@@ -6,6 +6,7 @@ import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
 
 interface BlogCard4Props {
   blog: BlogPost;
@@ -38,12 +39,19 @@ export const BlogCard4: React.FC<BlogCard4Props> = ({
     },
   };
 
+  const pathname = usePathname();
+
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/blogs/${blog.slug}`;
-    } else {
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/blogs/${blog.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/blogs/${blog.slug}`;
+      }
       return `/blogs/${blog.slug}`;
     }
+    return `/blogs/${blog.slug}`;
   };
 
   const handleClick = () => {
@@ -69,7 +77,7 @@ export const BlogCard4: React.FC<BlogCard4Props> = ({
     <CardWrapper>
       <div className="flex gap-6 rounded-lg bg-gray-100 p-8 dark:bg-zinc-800">
         {/* Image */}
-        <div className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-lg">
+        <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-lg">
           <Image
             src={blogImage}
             alt={blog.thumbnail_image_alt_description || blog.title}

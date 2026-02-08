@@ -29,7 +29,10 @@ interface BlogDetailProps {
   siteUser?: string;
 }
 
+import { usePathname } from "next/navigation";
+
 export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
+  const pathname = usePathname();
   const { data: blog, isLoading, error } = useBlog(slug); // Assuming useBlog hook fetches a single blog post by slug
 
   // Default fallback image
@@ -114,7 +117,15 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={`/preview/${siteUser}/home`}
+                  href={
+                    siteUser
+                      ? pathname?.includes("/preview/")
+                        ? `/preview/${siteUser}`
+                        : pathname?.includes("/publish/")
+                          ? ``
+                          : "/"
+                      : "/"
+                  }
                   className="flex items-center gap-2"
                 >
                   <Home className="h-4 w-4" />
@@ -125,7 +136,19 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/preview/${siteUser}/blogs`}>Blogs</Link>
+                <Link
+                  href={
+                    siteUser
+                      ? pathname?.includes("/preview/")
+                        ? `/preview/${siteUser}/blogs`
+                        : pathname?.includes("/publish/")
+                          ? `/blogs`
+                          : "/blogs"
+                      : "/blogs"
+                  }
+                >
+                  Blogs
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

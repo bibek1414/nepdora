@@ -129,11 +129,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
   };
 
   const getDetailsUrl = (): string => {
-    return generateLinkHref(
-      `/products-draft/${product.slug}`,
-      siteUser,
-      pathname
-    );
+    return generateLinkHref(`/products/${product.slug}`, siteUser, pathname);
   };
 
   const handleClick = () => {

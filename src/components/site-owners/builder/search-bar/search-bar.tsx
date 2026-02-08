@@ -75,11 +75,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   // Generate product URL
   const getProductUrl = (product: Product): string => {
-    return generateLinkHref(
-      `/products-draft/${product.slug}`,
-      siteUser,
-      pathname
-    );
+    return generateLinkHref(`/products/${product.slug}`, siteUser, pathname);
   };
 
   // Handle product click navigation

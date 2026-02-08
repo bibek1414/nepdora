@@ -123,7 +123,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     if (isEditable || disableClicks) return;
 
     const filterUrl = generateLinkHref(
-      `/collections/products?category=${categorySlug}`,
+      `/collections/?category=${categorySlug}`,
       siteUser,
       pathname
     );
@@ -137,7 +137,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     if (isEditable || disableClicks) return;
 
     const filterUrl = generateLinkHref(
-      `/collections/products?sub_category=${subCategorySlug}`,
+      `/collections/?sub_category=${subCategorySlug}`,
       siteUser,
       pathname
     );
@@ -151,7 +151,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     if (isEditable || disableClicks) return;
 
     const filterUrl = generateLinkHref(
-      `/collections/products?category=${categorySlug}&sub_category=${subCategorySlug}`,
+      `/collections/?category=${categorySlug}&sub_category=${subCategorySlug}`,
       siteUser,
       pathname
     );

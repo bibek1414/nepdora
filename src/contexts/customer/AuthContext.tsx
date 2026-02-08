@@ -176,7 +176,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
       if (isPreview && siteUser) {
         routePrefix = `/preview/${siteUser}`;
       } else if (isPublish && siteUser) {
-        routePrefix = `/publish/${siteUser}`;
+        routePrefix = ``;
       }
 
       if (siteUser) router.push(`${routePrefix}/home`);
@@ -218,7 +218,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
       if (isPreview && siteUser) {
         loginPath = `/preview/${siteUser}/login`;
       } else if (isPublish && siteUser) {
-        loginPath = `/publish/${siteUser}/login`;
+        loginPath = `/login`;
       }
       router.push(loginPath);
     } catch (error: any) {

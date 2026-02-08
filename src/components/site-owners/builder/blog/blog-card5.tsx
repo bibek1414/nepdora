@@ -5,6 +5,7 @@ import { Calendar, User, ChevronRight } from "lucide-react";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { usePathname } from "next/navigation";
 
 interface BlogCard5Props {
   blog: BlogPost;
@@ -37,12 +38,19 @@ export const BlogCard5: React.FC<BlogCard5Props> = ({
     },
   };
 
+  const pathname = usePathname();
+
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/blogs/${blog.slug}`;
-    } else {
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/blogs/${blog.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/blogs/${blog.slug}`;
+      }
       return `/blogs/${blog.slug}`;
     }
+    return `/blogs/${blog.slug}`;
   };
 
   const handleClick = () => {

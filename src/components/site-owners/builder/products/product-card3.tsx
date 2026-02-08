@@ -114,11 +114,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   };
 
   const getDetailsUrl = (): string => {
-    return generateLinkHref(
-      `/products-draft/${product.slug}`,
-      siteUser,
-      pathname
-    );
+    return generateLinkHref(`/products/${product.slug}`, siteUser, pathname);
   };
 
   const detailsUrl = getDetailsUrl();

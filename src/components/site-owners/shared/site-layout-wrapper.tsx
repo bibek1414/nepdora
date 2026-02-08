@@ -57,7 +57,7 @@ export function SiteLayoutWrapper({
     let title = "";
 
     const previewPrefix = `/preview/${siteUser}`;
-    const publishInternalPrefix = `/publish/${siteUser}`;
+    const publishInternalPrefix = ``;
     const publishPrefix = `/${siteUser}`;
 
     if (

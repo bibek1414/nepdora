@@ -4,6 +4,7 @@ import Link from "next/link";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { usePathname } from "next/navigation";
 
 interface BlogCard2Props {
   blog: BlogPost;
@@ -34,12 +35,19 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
     blog.thumbnail_image ||
     "https://images.unsplash.com/photo-1507925921958-8186109cbb5a?w=600&h=400&fit=crop";
 
+  const pathname = usePathname();
+
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/blogs/${blog.slug}`;
-    } else {
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/blogs/${blog.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/blogs/${blog.slug}`;
+      }
       return `/blogs/${blog.slug}`;
     }
+    return `/blogs/${blog.slug}`;
   };
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -82,7 +90,7 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
       <article className="group relative flex h-full flex-col items-start justify-between overflow-hidden">
         <div className="relative w-full">
           {/* Image Container */}
-          <div className="relative aspect-[1/1] w-full overflow-hidden rounded-2xl bg-gray-100 sm:aspect-[3/4] lg:aspect-[1/1] dark:bg-gray-800">
+          <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-gray-100 sm:aspect-3/4 lg:aspect-square dark:bg-gray-800">
             <Image
               src={blogImage}
               alt={blog.thumbnail_image_alt_description || blog.title}
@@ -96,7 +104,7 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
           <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-gray-900/10 ring-inset dark:ring-white/10"></div>
 
           {/* Gradient overlay from bottom */}
-          <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-t from-gray-900/80 to-transparent"></div>
+          <div className="pointer-events-none absolute inset-0 rounded-2xl bg-linear-to-t from-gray-900/80 to-transparent"></div>
 
           {/* Text overlay at bottom */}
           <div className="absolute right-0 bottom-0 left-0 p-6 text-white">

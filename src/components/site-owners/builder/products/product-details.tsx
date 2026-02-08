@@ -40,6 +40,7 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { usePathname } from "next/navigation";
 
 interface ProductDetailProps {
   slug: string;
@@ -50,6 +51,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   slug,
   siteUser,
 }) => {
+  const pathname = usePathname();
   const { data: product, isLoading, error } = useProduct(slug);
   const [selectedImage, setSelectedImage] = React.useState<string>("");
   const { addToCart } = useCart();
@@ -247,7 +249,18 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/" className="flex items-center gap-2">
+                  <Link
+                    href={
+                      siteUser
+                        ? pathname?.includes("/preview/")
+                          ? `/preview/${siteUser}`
+                          : pathname?.includes("/publish/")
+                            ? ``
+                            : "/"
+                        : "/"
+                    }
+                    className="flex items-center gap-2"
+                  >
                     <Home className="h-4 w-4" />
                     Home
                   </Link>
@@ -256,7 +269,19 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/products">Products</Link>
+                  <Link
+                    href={
+                      siteUser
+                        ? pathname?.includes("/preview/")
+                          ? `/preview/${siteUser}/collections`
+                          : pathname?.includes("/publish/")
+                            ? `/collections`
+                            : "/collections"
+                        : "/collections"
+                    }
+                  >
+                    Collections
+                  </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
@@ -357,7 +382,15 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={`/preview/${siteUser}`}
+                  href={
+                    siteUser
+                      ? pathname?.includes("/preview/")
+                        ? `/preview/${siteUser}`
+                        : pathname?.includes("/publish/")
+                          ? ``
+                          : "/"
+                      : "/"
+                  }
                   className="flex items-center gap-2"
                 >
                   <Home className="h-4 w-4" />
@@ -368,8 +401,18 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/preview/${siteUser}/products-draft`}>
-                  Products
+                <Link
+                  href={
+                    siteUser
+                      ? pathname?.includes("/preview/")
+                        ? `/preview/${siteUser}/collections`
+                        : pathname?.includes("/publish/")
+                          ? `/collections`
+                          : "/collections"
+                      : "/collections"
+                  }
+                >
+                  Collections
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -379,7 +422,15 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
                     <Link
-                      href={`/preview/${siteUser}/products-draft?category=${product.category.slug}`}
+                      href={
+                        siteUser
+                          ? pathname?.includes("/preview/")
+                            ? `/preview/${siteUser}/collections?${product.category.slug ? `category=${product.category.slug}` : `category_id=${product.category.id}`}`
+                            : pathname?.includes("/publish/")
+                              ? `/collections?${product.category.slug ? `category=${product.category.slug}` : `category_id=${product.category.id}`}`
+                              : `/collections?${product.category.slug ? `category=${product.category.slug}` : `category_id=${product.category.id}`}`
+                          : `/collections?${product.category.slug ? `category=${product.category.slug}` : `category_id=${product.category.id}`}`
+                      }
                     >
                       {product.category.name}
                     </Link>

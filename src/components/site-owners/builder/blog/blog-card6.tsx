@@ -12,6 +12,7 @@ import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBlogs } from "@/hooks/owner-site/admin/use-blogs";
+import { usePathname } from "next/navigation";
 
 interface BlogCard6Props {
   blogs: BlogPost[];
@@ -33,7 +34,7 @@ const BlogSidebar6: React.FC<{
   onSearchSubmit: () => void;
 }> = ({ colors, fonts, searchValue, onSearchChange, onSearchSubmit }) => {
   return (
-    <div className="w-full flex-shrink-0 md:w-[300px]">
+    <div className="w-full shrink-0 md:w-[300px]">
       {/* Search Widget */}
       <div className="relative">
         <input
@@ -120,8 +121,16 @@ const BlogPostCard6: React.FC<{
       : text;
   };
 
+  const pathname = usePathname();
+
   const getDetailsUrl = (): string => {
     if (siteUser) {
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/blogs/${blog.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/blogs/${blog.slug}`;
+      }
       return `/blogs/${blog.slug}`;
     }
     return `/blogs/${blog.slug}`;
@@ -209,7 +218,7 @@ const BlogPostCard6: React.FC<{
           }}
         >
           <span className="text-[13px] font-semibold">Learn More</span>
-          <ChevronRight className="h-3 w-3 stroke-[3]" />
+          <ChevronRight className="h-3 w-3 stroke-3" />
         </button>
       </article>
     </Wrapper>

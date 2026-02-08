@@ -95,11 +95,11 @@ export function usePageData(siteUser: string, pageSlug: string) {
     );
   }, [pageComponentsResponse]);
 
-  const routePrefix = isPreview ? `/preview/${siteUser}` : `/${siteUser}`;
+  const routePrefix = isPreview ? `/preview/${siteUser}` : `/`;
 
   const navigation = {
     handleBacktoHome: () => {
-      router.push(isPreview ? `/preview/${siteUser}` : `/${siteUser}`);
+      router.push(isPreview ? `/preview/${siteUser}` : `/`);
     },
     handleProductClick: (productId: number) => {
       router.push(`${routePrefix}/products/${productId}`);

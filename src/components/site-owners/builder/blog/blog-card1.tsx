@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/utils/date";
 import { BlogPost } from "@/types/owner-site/admin/blog";
+import { usePathname } from "next/navigation";
 
 interface BlogCard1Props {
   blog: BlogPost;
@@ -52,12 +53,19 @@ export const BlogCard1: React.FC<BlogCard1Props> = ({
     blog.thumbnail_image ||
     "https://images.unsplash.com/photo-1492538368677-f6e0ac4024a1?w=600&h=400&fit=crop";
 
+  const pathname = usePathname();
+
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/blogs/${blog.slug}`;
-    } else {
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/blogs/${blog.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/blogs/${blog.slug}`;
+      }
       return `/blogs/${blog.slug}`;
     }
+    return `/blogs/${blog.slug}`;
   };
 
   const handleClick = () => {

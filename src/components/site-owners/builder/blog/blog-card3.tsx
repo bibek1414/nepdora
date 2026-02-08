@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
+import { usePathname } from "next/navigation";
 
 interface BlogCard3Props {
   blog: BlogPost;
@@ -54,12 +55,19 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
     blog.thumbnail_image ||
     "https://images.unsplash.com/photo-1516251193007-4560f385c53b?w=800&h=450&fit=crop";
 
+  const pathname = usePathname();
+
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/blogs/${blog.slug}`;
-    } else {
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/blogs/${blog.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/blogs/${blog.slug}`;
+      }
       return `/blogs/${blog.slug}`;
     }
+    return `/blogs/${blog.slug}`;
   };
 
   const handleClick = () => {
@@ -91,7 +99,7 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
       <article className="mx-auto flex max-w-5xl flex-col items-center gap-8 md:flex-row md:items-center lg:gap-12">
         {/* Image */}
         <div className="md:w-1/3">
-          <div className="relative aspect-[6/5] w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+          <div className="relative aspect-6/5 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
             <Image
               src={blogImage}
               alt={blog.thumbnail_image_alt_description || blog.title}

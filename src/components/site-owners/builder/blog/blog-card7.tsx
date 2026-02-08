@@ -7,6 +7,7 @@ import { Calendar, User, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { usePathname } from "next/navigation";
 
 interface BlogCard7Props {
   blog: BlogPost;
@@ -62,12 +63,19 @@ export const BlogCard7: React.FC<BlogCard7Props> = ({
     blog.thumbnail_image ||
     "https://images.unsplash.com/photo-1492538368677-f6e0ac4024a1?w=600&h=400&fit=crop";
 
+  const pathname = usePathname();
+
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/blogs/${blog.slug}`;
-    } else {
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/blogs/${blog.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/blogs/${blog.slug}`;
+      }
       return `/blogs/${blog.slug}`;
     }
+    return `/blogs/${blog.slug}`;
   };
 
   const handleClick = () => {
@@ -113,7 +121,7 @@ export const BlogCard7: React.FC<BlogCard7Props> = ({
             />
           </div>
 
-          <CardContent className="flex flex-grow flex-col p-0 pt-6">
+          <CardContent className="flex grow flex-col p-0 pt-6">
             {/* Meta Information */}
             <div className="mb-3 flex items-center gap-6">
               <Badge

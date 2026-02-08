@@ -61,7 +61,7 @@ export const orderApi = {
 
   getOrderById: async (id: number): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/admin-order/${id}/`, {
+    const response = await fetch(`${API_BASE_URL}/api/order/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
