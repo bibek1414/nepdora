@@ -783,14 +783,15 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                     <div className="flex justify-between">
                       <span className="font-medium">Price:</span>
                       <span className="text-muted-foreground">
-                        ${discountedPrice}
+                        Rs.{Number(discountedPrice).toLocaleString("en-IN")}
                       </span>
                     </div>
                     {product.market_price && (
                       <div className="flex justify-between">
                         <span className="font-medium">Market Price:</span>
                         <span className="text-muted-foreground">
-                          ${product.market_price}
+                          Rs.
+                          {Number(product.market_price).toLocaleString("en-IN")}
                         </span>
                       </div>
                     )}
