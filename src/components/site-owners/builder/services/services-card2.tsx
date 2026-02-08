@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 import { formatDate } from "@/utils/date";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -17,16 +18,22 @@ export const ServicesCard2: React.FC<ServicesCard2Props> = ({
   siteUser,
   onClick,
 }) => {
+  const pathname = usePathname();
   const servicesImage =
     services.thumbnail_image ||
     "https://images.unsplash.com/photo-1507925921958-8186109cbb5a?w=600&h=400&fit=crop";
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/servicess/${services.slug}`;
-    } else {
-      return `/servicess/${services.slug}`;
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/services/${services.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/services/${services.slug}`;
+      }
+      return `/services/${services.slug}`;
     }
+    return `/services/${services.slug}`;
   };
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {

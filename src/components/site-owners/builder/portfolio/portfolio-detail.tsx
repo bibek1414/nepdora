@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { usePortfolio } from "@/hooks/owner-site/admin/use-portfolio";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -36,6 +37,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
   slug,
   siteUser,
 }) => {
+  const pathname = usePathname();
   const { data: portfolio, isLoading, error } = usePortfolio(slug);
   const { data: themeResponse } = useThemeQuery();
 
@@ -93,7 +95,15 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
                   <Link
-                    href={`/preview/${siteUser}/home`}
+                    href={
+                      siteUser
+                        ? pathname?.includes("/preview/")
+                          ? `/preview/${siteUser}`
+                          : pathname?.includes("/publish/")
+                            ? ``
+                            : "/"
+                        : "/"
+                    }
                     className="flex items-center gap-2"
                   >
                     <Home className="h-4 w-4" />
@@ -104,7 +114,19 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href={`/preview/${siteUser}/portfolio`}>Portfolio</Link>
+                  <Link
+                    href={
+                      siteUser
+                        ? pathname?.includes("/preview/")
+                          ? `/preview/${siteUser}/portfolio`
+                          : pathname?.includes("/publish/")
+                            ? `/portfolio`
+                            : "/portfolio"
+                        : "/portfolio"
+                    }
+                  >
+                    Portfolio
+                  </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
@@ -138,7 +160,15 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={`/preview/${siteUser}/home`}
+                  href={
+                    siteUser
+                      ? pathname?.includes("/preview/")
+                        ? `/preview/${siteUser}`
+                        : pathname?.includes("/publish/")
+                          ? ``
+                          : "/"
+                      : "/"
+                  }
                   className="flex items-center gap-2"
                 >
                   <Home className="h-4 w-4" />
@@ -149,7 +179,19 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/preview/${siteUser}/portfolio`}>Portfolio</Link>
+                <Link
+                  href={
+                    siteUser
+                      ? pathname?.includes("/preview/")
+                        ? `/preview/${siteUser}/portfolio`
+                        : pathname?.includes("/publish/")
+                          ? `/portfolio`
+                          : "/portfolio"
+                      : "/portfolio"
+                  }
+                >
+                  Portfolio
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

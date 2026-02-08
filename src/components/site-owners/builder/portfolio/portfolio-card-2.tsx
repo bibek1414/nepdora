@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ExternalLink, Github } from "lucide-react";
 import { Portfolio } from "@/types/owner-site/admin/portfolio";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -16,6 +17,7 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
   siteUser,
   onClick,
 }) => {
+  const pathname = usePathname();
   // ✅ Fallback image
   const portfolioImage =
     portfolio.thumbnail_image ||
@@ -40,7 +42,11 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
 
   // ✅ Generate portfolio details URL
   const detailsUrl = siteUser
-    ? `/preview/${siteUser}/portfolio/${portfolio.slug}`
+    ? pathname?.includes("/preview/")
+      ? `/preview/${siteUser}/portfolio/${portfolio.slug}`
+      : pathname?.includes("/publish/")
+        ? `/portfolio/${portfolio.slug}`
+        : `/portfolio/${portfolio.slug}`
     : `/portfolio/${portfolio.slug}`;
 
   // ✅ Click handler

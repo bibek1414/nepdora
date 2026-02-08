@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { formatDate } from "@/utils/date";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 
@@ -16,16 +17,22 @@ export const ServicesCard1: React.FC<ServicesCard1Props> = ({
   siteUser,
   onClick,
 }) => {
+  const pathname = usePathname();
   const servicesImage =
     services.thumbnail_image ||
     "https://images.unsplash.com/photo-1492538368677-f6e0ac4024a1?w=600&h=400&fit=crop";
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/servicess/${services.slug}`;
-    } else {
-      return `/servicess/${services.slug}`;
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/services/${services.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/services/${services.slug}`;
+      }
+      return `/services/${services.slug}`;
     }
+    return `/services/${services.slug}`;
   };
 
   const handleClick = () => {

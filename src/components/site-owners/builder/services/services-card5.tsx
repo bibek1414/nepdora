@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { ChevronRight, Briefcase } from "lucide-react";
 import { ServicesPost } from "@/types/owner-site/admin/services";
@@ -56,6 +57,7 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
   siteUser,
   onClick,
 }) => {
+  const pathname = usePathname();
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || DEFAULT_THEME;
 
@@ -75,7 +77,13 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/services/${services.slug}`;
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/services/${services.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/services/${services.slug}`;
+      }
+      return `/services/${services.slug}`;
     }
     return `/services/${services.slug}`;
   };

@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github, Tag, ChevronRight } from "lucide-react";
@@ -18,16 +19,22 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
   siteUser,
   onClick,
 }) => {
+  const pathname = usePathname();
   const portfolioImage =
     portfolio.thumbnail_image ||
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop";
 
   const getDetailsUrl = (): string => {
     if (siteUser) {
-      return `/preview/${siteUser}/portfolio/${portfolio.slug}`;
-    } else {
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/portfolio/${portfolio.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/portfolio/${portfolio.slug}`;
+      }
       return `/portfolio/${portfolio.slug}`;
     }
+    return `/portfolio/${portfolio.slug}`;
   };
 
   const { data: themeResponse } = useThemeQuery();

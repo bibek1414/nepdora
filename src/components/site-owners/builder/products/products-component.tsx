@@ -48,8 +48,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { ProductsFilterDialog } from "./products-filter-dialog";
-import { getProductsBySelection } from "@/components/site-owners/builder/products/filter-product";
 
 interface ProductsComponentProps {
   component: ProductsComponentData;
@@ -482,8 +480,8 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                             </CarouselItem>
                           ))}
                         </CarouselContent>
-                        <CarouselPrevious className="left-0" />
-                        <CarouselNext className="right-0" />
+                        <CarouselPrevious className="left-2 bg-white/80 shadow-md hover:bg-white" />
+                        <CarouselNext className="right-2 bg-white/80 shadow-md hover:bg-white" />
                       </Carousel>
                     ) : (
                       <div className={`grid ${getGridClass()} gap-6`}>
@@ -658,8 +656,8 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
                         </CarouselItem>
                       ))}
                     </CarouselContent>
-                    <CarouselPrevious className="left-0" />
-                    <CarouselNext className="right-0" />
+                    <CarouselPrevious className="left-2 bg-white/80 shadow-md hover:bg-white" />
+                    <CarouselNext className="right-2 bg-white/80 shadow-md hover:bg-white" />
                   </Carousel>
                 ) : (
                   <div className={`grid ${getGridClass()} gap-8`}>

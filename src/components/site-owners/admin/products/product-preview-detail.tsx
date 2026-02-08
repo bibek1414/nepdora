@@ -508,43 +508,6 @@ export const ProductPreviewDetail: React.FC<ProductPreviewDetailProps> = ({
               </div>
             </div>
 
-            <div className="mt-8 grid grid-cols-1 gap-4 text-center text-sm sm:grid-cols-3">
-              <div className="bg-muted/50 flex flex-col items-center gap-2 rounded-lg p-4">
-                <Truck
-                  className="h-6 w-6"
-                  style={{ color: theme.colors.primary }}
-                />
-                <span className="text-foreground font-medium">
-                  Fast Shipping
-                </span>
-              </div>
-              <div className="bg-muted/50 flex flex-col items-center gap-2 rounded-lg p-4">
-                <ShieldCheck
-                  className="h-6 w-6"
-                  style={{ color: theme.colors.primary }}
-                />
-                <span className="text-foreground font-medium">
-                  1 Year Warranty
-                </span>
-              </div>
-              <div className="bg-muted/50 flex flex-col items-center gap-2 rounded-lg p-4">
-                <PackageCheck
-                  className="h-6 w-6"
-                  style={{ color: theme.colors.primary }}
-                />
-                <span
-                  className="font-medium"
-                  style={
-                    currentStock > 0
-                      ? { color: theme.colors.secondary }
-                      : undefined
-                  }
-                >
-                  {currentStock > 0 ? "In Stock" : "Out of Stock"}
-                </span>
-              </div>
-            </div>
-
             <Accordion type="single" collapsible className="mt-6 w-full">
               <AccordionItem value="specifications">
                 <AccordionTrigger>Product Specifications</AccordionTrigger>

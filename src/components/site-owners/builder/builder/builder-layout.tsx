@@ -370,10 +370,15 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleAddSection = (position?: "above" | "below", index?: number) => {
     let insertIndex: number;
 
-    if (index !== undefined) {
-      insertIndex = position === "above" ? index : index + 1;
+    if (index !== undefined && pageComponents[index]) {
+      const currentOrder = pageComponents[index].order;
+      insertIndex = position === "above" ? currentOrder : currentOrder + 1;
+    } else if (pageComponents.length > 0) {
+      // If index is undefined but we have components, add to the end
+      const maxOrder = Math.max(...pageComponents.map(c => c.order || 0));
+      insertIndex = maxOrder + 1;
     } else {
-      insertIndex = pageComponents.length;
+      insertIndex = 0;
     }
 
     setPendingInsertIndex(insertIndex);

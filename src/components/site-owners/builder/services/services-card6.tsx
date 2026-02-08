@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Send } from "lucide-react";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
@@ -11,9 +13,29 @@ interface ServiceCardProps {
   service: ServicesPost;
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   theme: any;
+  siteUser?: string;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ service, theme }) => {
+const ServiceCard: React.FC<ServiceCardProps & { pathname: string | null }> = ({
+  service,
+  theme,
+  siteUser,
+  pathname,
+}) => {
+  const getDetailsUrl = (): string => {
+    if (siteUser) {
+      if (pathname?.includes("/preview/")) {
+        return `/preview/${siteUser}/services/${service.slug}`;
+      }
+      if (pathname?.includes("/publish/")) {
+        return `/services/${service.slug}`;
+      }
+      return `/services/${service.slug}`;
+    }
+    return `/services/${service.slug}`;
+  };
+
+  const detailsUrl = getDetailsUrl();
   // Strip HTML from description
   const stripHtml = (html: string) =>
     html
@@ -59,6 +81,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, theme }) => {
       <p className="text-xs leading-relaxed text-gray-500 sm:text-sm md:text-sm lg:text-base">
         {stripHtml(service.description || "")}
       </p>
+
+      {/* Learn More Link */}
+      <Link
+        href={detailsUrl}
+        className="mt-4 text-sm font-semibold transition-opacity hover:opacity-80"
+        style={{ color: theme.colors.primary }}
+      >
+        Learn More →
+      </Link>
     </div>
   );
 };
@@ -77,7 +108,9 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
   component,
   services,
   onServiceClick,
+  siteUser,
 }) => {
+  const pathname = usePathname();
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -135,7 +168,13 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
         {/* Cards Container */}
         <div className="relative grid grid-cols-1 items-stretch justify-center gap-4 sm:gap-5 md:grid-cols-2 md:gap-6 lg:flex lg:flex-row lg:gap-8">
           {services.map((service, index) => (
-            <ServiceCard key={service.id} service={service} theme={theme} />
+            <ServiceCard
+              key={service.id}
+              service={service}
+              theme={theme}
+              siteUser={siteUser}
+              pathname={pathname}
+            />
           ))}
         </div>
       </div>

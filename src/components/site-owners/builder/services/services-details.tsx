@@ -14,6 +14,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { AlertCircle, Home } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 interface ServiceDetailProps {
   slug: string;
@@ -24,6 +25,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
   slug,
   siteUser,
 }) => {
+  const pathname = usePathname();
   const { data: service, isLoading, error } = useService(slug);
 
   // Default fallback image
@@ -65,7 +67,18 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/" className="flex items-center gap-2">
+                  <Link
+                    href={
+                      siteUser
+                        ? pathname?.includes("/preview/")
+                          ? `/preview/${siteUser}`
+                          : pathname?.includes("/publish/")
+                            ? ``
+                            : "/"
+                        : "/"
+                    }
+                    className="flex items-center gap-2"
+                  >
                     <Home className="h-4 w-4" />
                     Home
                   </Link>
@@ -74,7 +87,19 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/services">Services</Link>
+                  <Link
+                    href={
+                      siteUser
+                        ? pathname?.includes("/preview/")
+                          ? `/preview/${siteUser}/services`
+                          : pathname?.includes("/publish/")
+                            ? `/services`
+                            : "/services"
+                        : "/services"
+                    }
+                  >
+                    Services
+                  </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
@@ -108,7 +133,15 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={`/preview/${siteUser}/home`}
+                  href={
+                    siteUser
+                      ? pathname?.includes("/preview/")
+                        ? `/preview/${siteUser}`
+                        : pathname?.includes("/publish/")
+                          ? ``
+                          : "/"
+                      : "/"
+                  }
                   className="flex items-center gap-2"
                 >
                   <Home className="h-4 w-4" />
@@ -119,7 +152,19 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/preview/${siteUser}/services`}>Services</Link>
+                <Link
+                  href={
+                    siteUser
+                      ? pathname?.includes("/preview/")
+                        ? `/preview/${siteUser}/services`
+                        : pathname?.includes("/publish/")
+                          ? `/services`
+                          : "/services"
+                      : "/services"
+                  }
+                >
+                  Services
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
