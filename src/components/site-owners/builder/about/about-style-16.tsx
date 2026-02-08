@@ -8,6 +8,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { ChevronRight } from "lucide-react";
 
 interface AboutUsTemplate16Props {
   aboutUsData: AboutUs16Data;
@@ -255,9 +256,12 @@ export function AboutUsTemplate16({
                 onChange={handleButtonLinkUpdate}
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="inline-block rounded px-8 py-4 text-sm font-semibold tracking-wide text-white shadow-md transition-colors hover:opacity-90"
+                className="text-white"
                 style={{ backgroundColor: theme.colors.primary }}
-              />
+              >
+                <span>{data.buttonText}</span>
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </EditableLink>
             </motion.div>
           </motion.div>
         </div>

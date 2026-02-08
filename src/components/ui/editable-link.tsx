@@ -381,7 +381,7 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
           "inline-flex items-center gap-1",
           className,
           isEditable && [
-            "hover:bg-primary/10 cursor-pointer rounded px-1 transition-colors",
+            "hover:bg-primary/10 h-16 cursor-pointer rounded px-2 py-3 transition-colors",
             isEmpty && "text-muted-foreground italic",
           ]
         )}

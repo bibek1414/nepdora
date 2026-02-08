@@ -124,7 +124,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                       siteUser={siteUser}
                       textPlaceholder="Button text..."
                       hrefPlaceholder="Enter button URL..."
-                      className="flex items-center gap-2"
                     >
                       {index === 1 && (
                         <Play size={16} className="sm:h-[18px] sm:w-[18px]" />

@@ -53,7 +53,21 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
   onUpdate,
 }) => {
   const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme;
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   const {
     data,
@@ -63,10 +77,8 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
     handleArrayItemUpdate,
   } = useBuilderLogic(normalizeCTAData(ctaData), onUpdate);
 
-  const primaryBackground =
-    data.backgroundColor || theme?.colors?.primary || "#1D4ED8";
-  const textColor = theme?.colors?.primaryForeground || "#FFFFFF";
-  const buttonTextColor = theme?.colors?.primary || "#1D4ED8";
+  const primaryBackground = theme.colors?.primary;
+  const buttonTextColor = theme.colors.primary;
 
   const handleButtonUpdate = (text: string, href: string) => {
     const updatedButton = { ...data.button, text, href };
@@ -84,7 +96,7 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
     <section className="bg-white py-12">
       <div className="container mx-auto max-w-7xl px-[23px]">
         <div
-          className="relative flex flex-col overflow-hidden rounded-3xl bg-blue-700 lg:flex-row"
+          className="relative flex flex-col overflow-hidden rounded-3xl lg:flex-row"
           style={{ backgroundColor: primaryBackground }}
         >
           <div className="relative z-10 p-12 text-white lg:w-1/2 lg:p-20">
@@ -94,7 +106,6 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
               as="div"
               className="text-xs font-bold tracking-[0.3em] uppercase opacity-80"
               isEditable={isEditable}
-              style={{ color: textColor }}
             />
 
             <h2 className="mb-6 text-4xl leading-tight font-semibold text-white lg:text-5xl">
@@ -104,7 +115,6 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
                 as="span"
                 className="block"
                 isEditable={isEditable}
-                style={{ color: textColor }}
                 multiline
               />
             </h2>
@@ -117,8 +127,7 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
               siteUser={siteUser}
               className="mb-10 inline-flex rounded-full px-8 py-3 text-base font-semibold shadow-lg"
               style={{
-                backgroundColor: "#FFFFFF",
-                color: buttonTextColor,
+                backgroundColor: theme.colors.secondary,
               }}
               textPlaceholder="Button text..."
               hrefPlaceholder="Enter URL..."
@@ -136,7 +145,6 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
                     onChange={handleFeatureUpdate(feature.id)}
                     as="span"
                     isEditable={isEditable}
-                    style={{ color: textColor }}
                   />
                 </div>
               ))}
