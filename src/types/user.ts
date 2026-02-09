@@ -11,6 +11,7 @@ export interface UpdateUserProfile {
   first_name?: string;
   last_name?: string;
   phone_number?: string;
+  website_type?: "ecommerce" | "service";
 }
 
 export interface ChangePasswordRequest {

@@ -36,10 +36,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
+
 const profileSchema = z.object({
   first_name: z.string().min(1, "First name is required"),
   last_name: z.string().min(1, "Last name is required"),
   phone_number: z.string().min(10, "Phone number must be at least 10 digits"),
+  website_type: z.enum(["ecommerce", "service"]),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -47,6 +52,8 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 export const ProfileForm = () => {
   const { data: profile, isLoading, isError } = useUserProfile();
   const updateProfile = useUpdateUserProfile();
+  const { clearAuthData } = useAuth();
+  const router = useRouter();
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -54,6 +61,7 @@ export const ProfileForm = () => {
       first_name: "",
       last_name: "",
       phone_number: "",
+      website_type: "ecommerce", // Default value to avoid controlled/uncontrolled warning
     },
   });
 
@@ -63,6 +71,8 @@ export const ProfileForm = () => {
         first_name: profile.first_name || "",
         last_name: profile.last_name || "",
         phone_number: profile.phone_number || "",
+        website_type:
+          (profile.website_type as "ecommerce" | "service") || "ecommerce",
       });
     }
   }, [profile, form]);
@@ -73,6 +83,21 @@ export const ProfileForm = () => {
         toast.success("Profile updated successfully", {
           icon: <CheckCircle className="h-4 w-4 text-green-500" />,
         });
+
+        if (
+          profile?.website_type &&
+          values.website_type !== profile.website_type
+        ) {
+          toast.info("Website type changed! Redirecting to login...", {
+            duration: 2000,
+          });
+
+          // Small delay to let the toast show
+          setTimeout(() => {
+            clearAuthData();
+            router.push("/admin/login");
+          }, 1500);
+        }
       },
       onError: error => {
         toast.error(error.message || "Failed to update profile");
@@ -202,6 +227,58 @@ export const ProfileForm = () => {
                         )}
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <h3 className="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">
+                      Website Configuration
+                    </h3>
+                    <FormField
+                      control={form.control}
+                      name="website_type"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3">
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Website Type
+                          </FormLabel>
+                          <FormControl>
+                            <RadioGroup
+                              onValueChange={field.onChange}
+                              value={field.value}
+                              className="flex flex-col space-y-1"
+                            >
+                              <FormItem className="flex items-center space-y-0 space-x-3">
+                                <FormControl>
+                                  <RadioGroupItem value="ecommerce" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  E-commerce
+                                  {profile?.website_type === "ecommerce" && (
+                                    <span className="ml-2 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800">
+                                      Currently Active
+                                    </span>
+                                  )}
+                                </FormLabel>
+                              </FormItem>
+                              <FormItem className="flex items-center space-y-0 space-x-3">
+                                <FormControl>
+                                  <RadioGroupItem value="service" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  Service
+                                  {profile?.website_type === "service" && (
+                                    <span className="ml-2 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800">
+                                      Currently Active
+                                    </span>
+                                  )}
+                                </FormLabel>
+                              </FormItem>
+                            </RadioGroup>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </div>
 
