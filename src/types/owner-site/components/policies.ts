@@ -302,3 +302,10 @@ export const defaultTermsData: PolicyData = {
     </ul>
   `,
 };
+
+export const DEFAULT_POLICIES_MAP: Record<string, PolicyData> = {
+  "privacy-policy": defaultPrivacyData,
+  "terms-conditions": defaultTermsData,
+  "shipping-policy": defaultShippingData,
+  "return-exchange": defaultReturnExchangeData,
+};

@@ -296,3 +296,15 @@ export const defaultContactData8: ContactData = {
   image_alt: "Traveler smiling",
   button_label: "Send Message",
 };
+
+export const DEFAULT_CONTACT_MAP: Record<ContactData["style"], ContactData> = {
+  "contact-1": defaultContactData,
+  "contact-2": defaultContactData2,
+  "contact-3": defaultContactData3,
+  "contact-4": defaultContactData4,
+  "contact-5": defaultContactData5,
+  "contact-6": defaultContactData6,
+  "contact-7": defaultContactData7,
+  "contact-8": defaultContactData8,
+  "contact-9": defaultContactData9,
+};

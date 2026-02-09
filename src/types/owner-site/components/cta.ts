@@ -152,20 +152,12 @@ export const defaultCTATemplate4Data: CTATemplate4Data = {
   overlayOpacity: 0.2,
 };
 
-// Helper functions
-export const getDefaultCTAData = (template: CTAData["template"]): CTAData => {
-  switch (template) {
-    case "cta-1":
-      return defaultCTATemplate1Data;
-    case "cta-2":
-      return defaultCTATemplate2Data;
-    case "cta-3":
-      return defaultCTATemplate3Data;
-    case "cta-4":
-      return defaultCTATemplate4Data;
-    default:
-      return defaultCTATemplate1Data;
-  }
+// Default data map for all CTA templates
+export const DEFAULT_CTA_MAP: Record<CTAData["template"], CTAData> = {
+  "cta-1": defaultCTATemplate1Data,
+  "cta-2": defaultCTATemplate2Data,
+  "cta-3": defaultCTATemplate3Data,
+  "cta-4": defaultCTATemplate4Data,
 };
 
 // Type guards for each template

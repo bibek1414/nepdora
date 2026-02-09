@@ -49,3 +49,12 @@ export const defaultOurClientsData3: OurClientsData = {
   show_all: true,
   limit: 6,
 };
+
+export const DEFAULT_OUR_CLIENTS_MAP: Record<
+  OurClientsData["style"],
+  OurClientsData
+> = {
+  "our-clients-1": defaultOurClientsData,
+  "our-clients-2": defaultOurClientsData2,
+  "our-clients-3": defaultOurClientsData3,
+};

@@ -1038,52 +1038,27 @@ export const defaultAboutUs19Data: AboutUs19Data = {
   ],
 };
 
-// Helper functions
-export const getDefaultAboutUsData = (
-  template: AboutUsData["template"]
-): AboutUsData => {
-  switch (template) {
-    case "about-1":
-      return defaultAboutUs1Data;
-    case "about-2":
-      return defaultAboutUs2Data;
-    case "about-3":
-      return defaultAboutUs3Data;
-    case "about-4":
-      return defaultAboutUs4Data;
-    case "about-5":
-      return defaultAboutUs5Data;
-    case "about-6":
-      return defaultAboutUs6Data;
-    case "about-7":
-      return defaultAboutUs7Data;
-    case "about-8":
-      return defaultAboutUs8Data;
-    case "about-9":
-      return defaultAboutUs9Data;
-    case "about-10":
-      return defaultAboutUs10Data;
-    case "about-11":
-      return defaultAboutUs11Data;
-    case "about-12":
-      return defaultAboutUs12Data;
-    case "about-13":
-      return defaultAboutUs13Data;
-    case "about-14":
-      return defaultAboutUs14Data;
-    case "about-15":
-      return defaultAboutUs15Data;
-    case "about-16":
-      return defaultAboutUs16Data;
-    case "about-17":
-      return defaultAboutUs17Data;
-    case "about-18":
-      return defaultAboutUs18Data;
-    case "about-19":
-      return defaultAboutUs19Data;
-    default:
-      return defaultAboutUs1Data;
-  }
+// Default data map for all about us templates
+export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
+  "about-1": defaultAboutUs1Data,
+  "about-2": defaultAboutUs2Data,
+  "about-3": defaultAboutUs3Data,
+  "about-4": defaultAboutUs4Data,
+  "about-5": defaultAboutUs5Data,
+  "about-6": defaultAboutUs6Data,
+  "about-7": defaultAboutUs7Data,
+  "about-8": defaultAboutUs8Data,
+  "about-9": defaultAboutUs9Data,
+  "about-10": defaultAboutUs10Data,
+  "about-11": defaultAboutUs11Data,
+  "about-12": defaultAboutUs12Data,
+  "about-13": defaultAboutUs13Data,
+  "about-14": defaultAboutUs14Data,
+  "about-15": defaultAboutUs15Data,
+  "about-16": defaultAboutUs16Data,
+  "about-17": defaultAboutUs17Data,
+  "about-18": defaultAboutUs18Data,
+  "about-19": defaultAboutUs19Data,
 };
 
 // Type guards for each template

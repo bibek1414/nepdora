@@ -54,3 +54,7 @@ export const defaultTextEditorData: TextEditorData = {
     },
   ],
 };
+
+export const DEFAULT_TEXT_EDITOR_MAP: Record<string, TextEditorData> = {
+  default: defaultTextEditorData,
+};

@@ -85,3 +85,14 @@ export const defaultGalleryData: GalleryData = {
   ],
   template: "gallery-1",
 };
+
+export const DEFAULT_GALLERY_MAP: Record<GalleryData["template"], GalleryData> =
+  {
+    "gallery-1": { ...defaultGalleryData, template: "gallery-1" },
+    "gallery-2": { ...defaultGalleryData, template: "gallery-2" },
+    "gallery-3": { ...defaultGalleryData, template: "gallery-3" },
+    "gallery-4": { ...defaultGalleryData, template: "gallery-4" },
+    "gallery-5": { ...defaultGalleryData, template: "gallery-5" },
+    "gallery-6": { ...defaultGalleryData, template: "gallery-6" },
+    "gallery-7": { ...defaultGalleryData, template: "gallery-7" },
+  };

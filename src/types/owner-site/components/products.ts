@@ -32,3 +32,15 @@ export const defaultProductsData: ProductsData = {
   title: "Our Products",
   subtitle: "Discover our amazing collection of products",
 };
+
+export const DEFAULT_PRODUCTS_MAP: Record<ProductsData["style"], ProductsData> =
+  {
+    "product-1": { ...defaultProductsData, style: "product-1" },
+    "product-2": { ...defaultProductsData, style: "product-2" },
+    "product-3": { ...defaultProductsData, style: "product-3" },
+    "product-4": { ...defaultProductsData, style: "product-4" },
+    "product-5": { ...defaultProductsData, style: "product-5" },
+    "product-6": { ...defaultProductsData, style: "product-6" },
+    "product-7": { ...defaultProductsData, style: "product-7" },
+    "product-8": { ...defaultProductsData, style: "product-8" },
+  };

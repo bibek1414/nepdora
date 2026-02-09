@@ -20,3 +20,10 @@ export const defaultPricingData: PricingData = {
   title: "Our Pricing Plans",
   subtitle: "Choose the perfect plan for your needs",
 };
+
+export const DEFAULT_PRICING_MAP: Record<PricingData["style"], PricingData> = {
+  "pricing-1": { ...defaultPricingData, style: "pricing-1" },
+  "pricing-2": { ...defaultPricingData, style: "pricing-2" },
+  "pricing-3": { ...defaultPricingData, style: "pricing-3" },
+  "pricing-4": { ...defaultPricingData, style: "pricing-4" },
+};

@@ -30,6 +30,12 @@ export const defaultVideosData: VideosData = {
   subtitle: "Watch our latest content and updates",
 };
 
+export const DEFAULT_VIDEOS_MAP: Record<VideosData["style"], VideosData> = {
+  "videos-1": { ...defaultVideosData, style: "videos-1" },
+  "videos-2": { ...defaultVideosData, style: "videos-2" },
+  "videos-3": { ...defaultVideosData, style: "videos-3" },
+};
+
 // Re-export utilities for backward compatibility or convenience
 export { extractVideoInfo, getVideoEmbedUrl, getVideoThumbnail };
 

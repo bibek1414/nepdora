@@ -70,3 +70,13 @@ export const defaultAppointmentData: AppointmentData = {
     sunday: "Closed",
   },
 };
+
+export const DEFAULT_APPOINTMENT_MAP: Record<
+  AppointmentData["style"],
+  AppointmentData
+> = {
+  "appointment-1": { ...defaultAppointmentData, style: "appointment-1" },
+  "appointment-2": { ...defaultAppointmentData, style: "appointment-2" },
+  "appointment-3": { ...defaultAppointmentData, style: "appointment-3" },
+  "appointment-4": { ...defaultAppointmentData, style: "appointment-4" },
+};

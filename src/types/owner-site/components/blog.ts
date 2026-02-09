@@ -27,3 +27,13 @@ export const defaultBlogData: BlogData = {
   title: "Latest Blog Posts",
   subtitle: "Stay updated with our newest articles and insights.",
 };
+
+export const DEFAULT_BLOG_MAP: Record<BlogData["style"], BlogData> = {
+  "blog-1": { ...defaultBlogData, style: "blog-1" },
+  "blog-2": { ...defaultBlogData, style: "blog-2" },
+  "blog-3": { ...defaultBlogData, style: "blog-3" },
+  "blog-4": { ...defaultBlogData, style: "blog-4" },
+  "blog-5": { ...defaultBlogData, style: "blog-5" },
+  "blog-6": { ...defaultBlogData, style: "blog-6" },
+  "blog-7": { ...defaultBlogData, style: "blog-7" },
+};

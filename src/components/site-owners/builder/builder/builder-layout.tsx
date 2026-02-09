@@ -12,7 +12,6 @@ import {
   useCreateNavbarMutation,
   useReplaceNavbarMutation,
 } from "@/hooks/owner-site/components/use-navbar";
-import { CTAData } from "@/types/owner-site/components/cta";
 import { NavbarData } from "@/types/owner-site/components/navbar";
 import { NavbarTemplateDialog } from "@/components/site-owners/builder/navbar/navbar-template-dialog";
 import { usePages } from "@/hooks/owner-site/use-page";
@@ -24,59 +23,12 @@ import {
   useReplaceFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
 import { ComponentOutlineSidebar } from "@/components/site-owners/builder/builder/component-outline-sidebar";
-import { defaultGalleryData } from "@/types/owner-site/components/gallery";
 import { useQueryClient } from "@tanstack/react-query";
-import { defaultTextEditorData } from "@/types/owner-site/components/text-editor";
-import { defaultPricingData } from "@/types/owner-site/components/pricing";
-
-import {
-  defaultReturnExchangeData,
-  defaultShippingData,
-  defaultPrivacyData,
-  defaultTermsData,
-} from "@/types/owner-site/components/policies";
 import { toast } from "sonner";
 import {
   ComponentResponse,
   ComponentTypeMap,
 } from "@/types/owner-site/components/components";
-import {
-  ContactData,
-  defaultContactData,
-  defaultContactData2,
-  defaultContactData3,
-  defaultContactData4,
-  defaultContactData5,
-  defaultContactData6,
-  defaultContactData7,
-  defaultContactData8,
-  defaultContactData9,
-} from "@/types/owner-site/components/contact";
-import { getDefaultCTAData } from "@/types/owner-site/components/cta";
-import {
-  getDefaultHeroData,
-  HeroData,
-} from "@/types/owner-site/components/hero";
-import {
-  getDefaultOthersData,
-  OthersData,
-} from "@/types/owner-site/components/others";
-import {
-  getDefaultAboutUsData,
-  AboutUsData,
-} from "@/types/owner-site/components/about";
-import { defaultProductsData } from "@/types/owner-site/components/products";
-import { defaultBlogData } from "@/types/owner-site/components/blog";
-import { defaultOurClientsData } from "@/types/owner-site/components/our-client";
-import { defaultServicesData } from "@/types/owner-site/components/services";
-import { defaultAppointmentData } from "@/types/owner-site/components/appointment";
-import { defaultTeamData } from "@/types/owner-site/components/team";
-import { defaultTestimonialsData } from "@/types/owner-site/components/testimonials";
-import { defaultFAQData } from "@/types/owner-site/components/faq";
-import { defaultPortfolioData } from "@/types/owner-site/components/portfolio";
-import { defaultBannerData } from "@/types/owner-site/components/banner";
-import { defaultNewsletterData } from "@/types/owner-site/components/newsletter";
-import { defaultVideosData } from "@/types/owner-site/components/videos";
 import { PageTemplateDialog } from "@/components/site-owners/builder/templates/page-template-dialog";
 import { PageTemplate } from "@/types/owner-site/components/page-template";
 import {
@@ -88,6 +40,7 @@ import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
 import { useAuth } from "@/hooks/use-auth";
 import { Facebook, Twitter } from "lucide-react";
+import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
 
 interface BuilderLayoutProps {
   params: {
@@ -102,7 +55,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { user } = useAuth();
 
   // Dialog states
-
   const [isAddSectionDialogOpen, setIsAddSectionDialogOpen] = useState(false);
   const [pendingInsertIndex, setPendingInsertIndex] = useState<
     number | undefined
@@ -116,6 +68,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
   const [isPageTemplateDialogOpen, setIsPageTemplateDialogOpen] =
     useState(false);
+
   // Queries and Mutations
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const createNavbarMutation = useCreateNavbarMutation();
@@ -168,31 +121,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       (component: ComponentResponse) => {
         const hasValidType =
           component.component_type &&
-          [
-            "hero",
-            "others",
-            "about",
-            "products",
-            "category",
-            "subcategory",
-            "blog",
-            "services",
-            "contact",
-            "appointment",
-            "our_clients",
-            "cta",
-            "team",
-            "testimonials",
-            "faq",
-            "portfolio",
-            "banner",
-            "newsletter",
-            "videos",
-            "gallery",
-            "policies",
-            "pricing",
-            "text_editor",
-          ].includes(component.component_type);
+          Object.keys(COMPONENT_REGISTRY).includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
         return hasValidType && hasValidData && hasValidId;
@@ -212,32 +141,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   // Helper function to get component display name
   const getComponentDisplayName = (componentType: string): string => {
-    const names: Record<string, string> = {
-      hero: "Hero",
-      others: "Others",
-      about: "About Us",
-      products: "Products",
-      category: "Category",
-      subcategory: "SubCategory",
-      blog: "Blog",
-      services: "Services",
-      contact: "Contact",
-      cta: "CTA",
-      appointment: "Appointment",
-      our_clients: "Our Clients",
-      team: "Team",
-      testimonials: "Testimonials",
-      faq: "FAQ",
-      portfolio: "Portfolio",
-      banner: "Banner",
-      newsletter: "Newsletter",
-      videos: "Videos",
-      gallery: "Gallery",
-      policies: "Policies",
-      pricing: "Pricing",
-      text_editor: "Text Editor",
-    };
-    return names[componentType] || componentType;
+    return (
+      COMPONENT_REGISTRY[componentType as keyof ComponentTypeMap]
+        ?.displayName || componentType
+    );
   };
 
   const createComponentWithIndex = async (
@@ -447,11 +354,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       },
     });
   };
-  const handleCTATemplateSelect = async (template: CTAData["template"]) => {
-    const ctaData = getDefaultCTAData(template);
 
-    await createComponentWithIndex("cta", ctaData, pendingInsertIndex);
-  };
   const handleFooterSelectFromDialog = (
     footerStyle:
       | "style-1"
@@ -534,307 +437,23 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       });
     }
   };
+
   // Add handler for opening CTA dialog
   const handleAddCTA = (insertIndex?: number) => {
     setPendingInsertIndex(insertIndex);
-
-    handleCTATemplateSelect("cta-1");
+    handleTemplateSelect("cta", "cta-1");
   };
 
-  // Template selection handlers with insertIndex support
-  const handleHeroTemplateSelect = async (template: HeroData["template"]) => {
-    // Get ONLY the data needed for this specific template
-    const heroData = getDefaultHeroData(template);
-
-    // This will now send only the necessary fields for the selected template
-    await createComponentWithIndex("hero", heroData, pendingInsertIndex);
-  };
-  const handleOthersTemplateSelect = async (
-    template: OthersData["template"]
+  // Generic template selection handler
+  const handleTemplateSelect = async (
+    type: keyof ComponentTypeMap,
+    template: string
   ) => {
-    const othersData = getDefaultOthersData(template);
+    const config = COMPONENT_REGISTRY[type];
+    if (!config) return;
 
-    await createComponentWithIndex("others", othersData, pendingInsertIndex);
-  };
-
-  const handleAboutUsTemplateSelect = async (
-    template: AboutUsData["template"]
-  ) => {
-    const aboutUsData = getDefaultAboutUsData(template);
-
-    await createComponentWithIndex("about", aboutUsData, pendingInsertIndex);
-  };
-
-  const handleProductsTemplateSelect = async (
-    template:
-      | "product-1"
-      | "product-2"
-      | "product-3"
-      | "product-4"
-      | "product-5"
-      | "product-6"
-      | "product-7"
-  ) => {
-    const productsData = { ...defaultProductsData, style: template };
-
-    await createComponentWithIndex(
-      "products",
-      productsData,
-      pendingInsertIndex
-    );
-  };
-
-  const handleCategoryTemplateSelect = async (
-    template:
-      | "category-1"
-      | "category-2"
-      | "category-3"
-      | "category-4"
-      | "category-5"
-  ) => {
-    const categoryData = {
-      page_size: 8,
-      component_type: "category" as const,
-      title: "Our Categories",
-      subtitle: "Browse our product categories",
-      style: template,
-    };
-
-    await createComponentWithIndex(
-      "category",
-      categoryData,
-      pendingInsertIndex
-    );
-  };
-
-  const handleSubCategoryTemplateSelect = async (
-    template: "subcategory-1" | "subcategory-2" | "subcategory-3"
-  ) => {
-    const subCategoryData = {
-      component_type: "subcategory" as const,
-      page_size: 8,
-      title: "Our SubCategories",
-      subtitle: "Explore our product subcategories",
-      style: template,
-    };
-
-    await createComponentWithIndex(
-      "subcategory",
-      subCategoryData,
-      pendingInsertIndex
-    );
-  };
-
-  const handleBlogTemplateSelect = async (
-    template: "blog-1" | "blog-2" | "blog-3" | "blog-4" | "blog-5" | "blog-6"
-  ) => {
-    const blogData = { ...defaultBlogData, style: template };
-
-    await createComponentWithIndex("blog", blogData, pendingInsertIndex);
-  };
-
-  const handleOurClientsTemplateSelect = async (
-    template: "our-clients-1" | "our-clients-2" | "our-clients-3"
-  ) => {
-    const ourClientsData = { ...defaultOurClientsData, style: template };
-
-    await createComponentWithIndex(
-      "our_clients",
-      ourClientsData,
-      pendingInsertIndex
-    );
-  };
-  const handleServicesTemplateSelect = async (
-    template:
-      | "services-1"
-      | "services-2"
-      | "services-3"
-      | "services-4"
-      | "services-5"
-      | "services-6"
-  ) => {
-    const servicesData = { ...defaultServicesData, style: template };
-
-    await createComponentWithIndex(
-      "services",
-      servicesData,
-      pendingInsertIndex
-    );
-  };
-  const defaultContactMap: Record<ContactData["style"], ContactData> = {
-    "contact-1": defaultContactData,
-    "contact-2": defaultContactData2,
-    "contact-3": defaultContactData3,
-    "contact-4": defaultContactData4,
-    "contact-5": defaultContactData5,
-    "contact-6": defaultContactData6,
-    "contact-7": defaultContactData7,
-    "contact-8": defaultContactData8,
-    "contact-9": defaultContactData9,
-  };
-
-  const handleContactTemplateSelect = async (
-    template: ContactData["style"]
-  ) => {
-    const contactData = defaultContactMap[template];
-
-    await createComponentWithIndex("contact", contactData, pendingInsertIndex);
-  };
-
-  const handleTeamTemplateSelect = async (
-    template: "team-1" | "team-2" | "team-3" | "team-4" | "team-5" | "team-6"
-  ) => {
-    const teamData: ComponentTypeMap["team"] = {
-      ...defaultTeamData,
-      style: template as ComponentTypeMap["team"]["style"],
-    };
-
-    await createComponentWithIndex("team", teamData, pendingInsertIndex);
-  };
-  const handleAppointmentTemplateSelect = async (
-    template: "appointment-1" | "appointment-2" | "appointment-3"
-  ) => {
-    const appointmentData: ComponentTypeMap["appointment"] = {
-      ...defaultAppointmentData,
-      style: template as ComponentTypeMap["appointment"]["style"],
-    };
-
-    await createComponentWithIndex(
-      "appointment",
-      appointmentData,
-      pendingInsertIndex
-    );
-  };
-
-  const handleTestimonialsTemplateSelect = async (
-    template:
-      | "testimonial-1"
-      | "testimonial-2"
-      | "testimonial-3"
-      | "testimonial-4"
-      | "testimonial-5"
-      | "testimonial-6"
-      | "testimonial-7"
-      | "testimonial-8"
-      | "testimonial-9"
-      | "testimonial-10"
-  ) => {
-    const testimonialsData = { ...defaultTestimonialsData, style: template };
-
-    await createComponentWithIndex(
-      "testimonials",
-      testimonialsData,
-      pendingInsertIndex
-    );
-  };
-
-  const handleFAQTemplateSelect = async (
-    template:
-      | "faq-1"
-      | "faq-2"
-      | "faq-3"
-      | "faq-4"
-      | "faq-5"
-      | "faq-6"
-      | "faq-7"
-  ) => {
-    const faqData = { ...defaultFAQData, style: template };
-
-    await createComponentWithIndex("faq", faqData, pendingInsertIndex);
-  };
-
-  const handlePortfolioTemplateSelect = async (
-    template: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4"
-  ) => {
-    const portfolioData = { ...defaultPortfolioData, style: template };
-
-    await createComponentWithIndex(
-      "portfolio",
-      portfolioData,
-      pendingInsertIndex
-    );
-  };
-
-  const handleBannerTemplateSelect = async (
-    template: "banner-1" | "banner-2" | "banner-3" | "banner-4"
-  ) => {
-    const bannerData = { ...defaultBannerData, template: template };
-
-    await createComponentWithIndex("banner", bannerData, pendingInsertIndex);
-  };
-
-  const handleNewsletterTemplateSelect = async (
-    template: "newsletter-1" | "newsletter-2" | "newsletter-3"
-  ) => {
-    const newsletterData = { ...defaultNewsletterData, style: template };
-
-    await createComponentWithIndex(
-      "newsletter",
-      newsletterData,
-      pendingInsertIndex
-    );
-  };
-
-  const handlevideosTemplateSelect = async (
-    template: "videos-1" | "videos-2" | "videos-3"
-  ) => {
-    const videosData = { ...defaultVideosData, style: template };
-
-    await createComponentWithIndex("videos", videosData, pendingInsertIndex);
-  };
-
-  const handleGalleryTemplateSelect = async (
-    template:
-      | "gallery-1"
-      | "gallery-2"
-      | "gallery-3"
-      | "gallery-4"
-      | "gallery-5"
-      | "gallery-6"
-  ) => {
-    const galleryData = { ...defaultGalleryData, template: template };
-
-    await createComponentWithIndex("gallery", galleryData, pendingInsertIndex);
-  };
-
-  const handlePoliciesTemplateSelect = async (
-    template: "policies-1" | "policies-2" | "policies-3" | "policies-4"
-  ) => {
-    let policyData;
-    switch (template) {
-      case "policies-1":
-        policyData = defaultReturnExchangeData;
-        break;
-      case "policies-2":
-        policyData = defaultShippingData;
-        break;
-      case "policies-3":
-        policyData = defaultPrivacyData;
-        break;
-      case "policies-4":
-        policyData = defaultTermsData;
-        break;
-      default:
-        policyData = defaultReturnExchangeData;
-    }
-
-    await createComponentWithIndex("policies", policyData, pendingInsertIndex);
-  };
-
-  const handleTextEditorTemplateSelect = async () => {
-    await createComponentWithIndex(
-      "text_editor",
-      defaultTextEditorData,
-      pendingInsertIndex
-    );
-  };
-
-  const handlePricingTemplateSelect = async (
-    template: "pricing-1" | "pricing-2" | "pricing-3"
-  ) => {
-    const pricingData = { ...defaultPricingData, style: template };
-
-    await createComponentWithIndex("pricing", pricingData, pendingInsertIndex);
+    const data = config.getDefaultData(template);
+    await createComponentWithIndex(type, data, pendingInsertIndex);
   };
 
   // Page template handler
@@ -874,122 +493,41 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   // Component click handler for Add Section Dialog
-  const handleComponentClick = (componentId: string, template?: string) => {
-    if (componentId === "page-templates") {
+  const handleComponentClick = (sectionId: string, template?: string) => {
+    if (sectionId === "page-templates") {
       setIsPageTemplateDialogOpen(true);
-    } else if (componentId === "hero-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleHeroTemplateSelect(template as any);
-      }
-    } else if (componentId === "others-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleOthersTemplateSelect(template as any);
-      }
-    } else if (componentId === "about-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleAboutUsTemplateSelect(template as any);
-      }
-    } else if (componentId === "cta-sections") {
-      if (template) {
-        handleCTATemplateSelect(template as CTAData["template"]);
-      }
-    } else if (componentId === "pricing-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handlePricingTemplateSelect(template as any);
-      }
-    } else if (componentId === "products-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleProductsTemplateSelect(template as any);
-      }
-    } else if (componentId === "categories-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleCategoryTemplateSelect(template as any);
-      }
-    } else if (componentId === "subcategories-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleSubCategoryTemplateSelect(template as any);
-      }
-    } else if (componentId === "services-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleServicesTemplateSelect(template as any);
-      }
-    } else if (componentId === "our-clients-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleOurClientsTemplateSelect(template as any);
-      }
-    } else if (componentId === "contact-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleContactTemplateSelect(template as any);
-      }
-    } else if (componentId === "appointment-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleAppointmentTemplateSelect(template as any);
-      }
-    } else if (componentId === "team-members-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleTeamTemplateSelect(template as any);
-      }
-    } else if (componentId === "testimonials-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleTestimonialsTemplateSelect(template as any);
-      }
-    } else if (componentId === "gallery-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleGalleryTemplateSelect(template as any);
-      }
-    } else if (componentId === "blog-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleBlogTemplateSelect(template as any);
-      }
-    } else if (componentId === "faq-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleFAQTemplateSelect(template as any);
-      }
-    } else if (componentId === "portfolio-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handlePortfolioTemplateSelect(template as any);
-      }
-    } else if (componentId === "banner-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleBannerTemplateSelect(template as any);
-      }
-    } else if (componentId === "videos-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handlevideosTemplateSelect(template as any);
-      }
-    } else if (componentId === "newsletter-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handleNewsletterTemplateSelect(template as any);
-      }
-    } else if (componentId === "policies-sections") {
-      if (template) {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handlePoliciesTemplateSelect(template as any);
-      }
-    } else if (componentId === "text-editor-sections") {
-      if (template) {
-        handleTextEditorTemplateSelect();
-      }
+      return;
+    }
+
+    const sectionToType: Record<string, keyof ComponentTypeMap> = {
+      "hero-sections": "hero",
+      "others-sections": "others",
+      "about-sections": "about",
+      "cta-sections": "cta",
+      "pricing-sections": "pricing",
+      "products-sections": "products",
+      "categories-sections": "category",
+      "subcategories-sections": "subcategory",
+      "services-sections": "services",
+      "our-clients-sections": "our_clients",
+      "contact-sections": "contact",
+      "appointment-sections": "appointment",
+      "team-members-sections": "team",
+      "testimonials-sections": "testimonials",
+      "gallery-sections": "gallery",
+      "blog-sections": "blog",
+      "faq-sections": "faq",
+      "portfolio-sections": "portfolio",
+      "banner-sections": "banner",
+      "videos-sections": "videos",
+      "newsletter-sections": "newsletter",
+      "policies-sections": "policies",
+      "text-editor-sections": "text_editor",
+    };
+
+    const type = sectionToType[sectionId];
+    if (type && template) {
+      handleTemplateSelect(type, template);
     }
   };
 

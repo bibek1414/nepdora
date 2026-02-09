@@ -20,3 +20,13 @@ export const defaultPortfolioData: PortfolioData = {
   title: "Our Portfolio",
   subtitle: "Check out our latest projects",
 };
+
+export const DEFAULT_PORTFOLIO_MAP: Record<
+  PortfolioData["style"],
+  PortfolioData
+> = {
+  "portfolio-1": { ...defaultPortfolioData, style: "portfolio-1" },
+  "portfolio-2": { ...defaultPortfolioData, style: "portfolio-2" },
+  "portfolio-3": { ...defaultPortfolioData, style: "portfolio-3" },
+  "portfolio-4": { ...defaultPortfolioData, style: "portfolio-4" },
+};

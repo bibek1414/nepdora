@@ -684,42 +684,22 @@ export const defaultHeroTemplate14Data: HeroTemplate14Data = {
   backgroundType: "color",
   backgroundColor: "#FFFFFF",
 };
-// Helper functions
-export const getDefaultHeroData = (
-  template: HeroData["template"]
-): HeroData => {
-  switch (template) {
-    case "hero-1":
-      return defaultHeroTemplate1Data;
-    case "hero-2":
-      return defaultHeroTemplate2Data;
-    case "hero-3":
-      return defaultHeroTemplate3Data;
-    case "hero-4":
-      return defaultHeroTemplate4Data;
-    case "hero-5":
-      return defaultHeroTemplate5Data;
-    case "hero-6":
-      return defaultHeroTemplate6Data;
-    case "hero-7":
-      return defaultHeroTemplate7Data;
-    case "hero-8":
-      return defaultHeroTemplate8Data;
-    case "hero-9":
-      return defaultHeroTemplate9Data;
-    case "hero-10":
-      return defaultHeroTemplate10Data;
-    case "hero-11":
-      return defaultHeroTemplate11Data;
-    case "hero-12":
-      return defaultHeroTemplate12Data;
-    case "hero-13":
-      return defaultHeroTemplate13Data;
-    case "hero-14":
-      return defaultHeroTemplate14Data;
-    default:
-      return defaultHeroTemplate1Data;
-  }
+// Default data map for all hero templates
+export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
+  "hero-1": defaultHeroTemplate1Data,
+  "hero-2": defaultHeroTemplate2Data,
+  "hero-3": defaultHeroTemplate3Data,
+  "hero-4": defaultHeroTemplate4Data,
+  "hero-5": defaultHeroTemplate5Data,
+  "hero-6": defaultHeroTemplate6Data,
+  "hero-7": defaultHeroTemplate7Data,
+  "hero-8": defaultHeroTemplate8Data,
+  "hero-9": defaultHeroTemplate9Data,
+  "hero-10": defaultHeroTemplate10Data,
+  "hero-11": defaultHeroTemplate11Data,
+  "hero-12": defaultHeroTemplate12Data,
+  "hero-13": defaultHeroTemplate13Data,
+  "hero-14": defaultHeroTemplate14Data,
 };
 
 // Type guards for each template

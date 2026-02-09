@@ -68,3 +68,12 @@ export const defaultNewsletter3Data: NewsletterData = {
     "Join thousands of professionals who trust us for industry insights and best practices.",
   show_privacy_note: false,
 };
+
+export const DEFAULT_NEWSLETTER_MAP: Record<
+  NewsletterData["style"],
+  NewsletterData
+> = {
+  "newsletter-1": defaultNewsletter1Data,
+  "newsletter-2": defaultNewsletter2Data,
+  "newsletter-3": defaultNewsletter3Data,
+};

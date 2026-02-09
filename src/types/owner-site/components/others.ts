@@ -264,22 +264,12 @@ export const defaultOthersTemplate4Data: OthersTemplate4Data = {
   backgroundColor: "#EDE8E3",
 };
 
-// Helper functions
-export const getDefaultOthersData = (
-  template: OthersData["template"]
-): OthersData => {
-  switch (template) {
-    case "others-1":
-      return defaultOthersTemplate1Data;
-    case "others-2":
-      return defaultOthersTemplate2Data;
-    case "others-3":
-      return defaultOthersTemplate3Data;
-    case "others-4":
-      return defaultOthersTemplate4Data;
-    default:
-      return defaultOthersTemplate1Data;
-  }
+// Default data map for all others templates
+export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
+  "others-1": defaultOthersTemplate1Data,
+  "others-2": defaultOthersTemplate2Data,
+  "others-3": defaultOthersTemplate3Data,
+  "others-4": defaultOthersTemplate4Data,
 };
 
 // Type guards

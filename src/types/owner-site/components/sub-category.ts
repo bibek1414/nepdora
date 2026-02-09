@@ -22,3 +22,13 @@ export const defaultSubCategoryData: SubCategoryData = {
   title: "Our SubCategories",
   subtitle: "Explore specific product subcategories",
 };
+
+export const DEFAULT_SUB_CATEGORY_MAP: Record<
+  SubCategoryData["style"],
+  SubCategoryData
+> = {
+  "subcategory-1": { ...defaultSubCategoryData, style: "subcategory-1" },
+  "subcategory-2": { ...defaultSubCategoryData, style: "subcategory-2" },
+  "subcategory-3": { ...defaultSubCategoryData, style: "subcategory-3" },
+  "subcategory-4": { ...defaultSubCategoryData, style: "subcategory-4" },
+};

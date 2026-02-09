@@ -44,3 +44,11 @@ export const defaultBannerData: BannerData = {
   ],
   template: "banner-1",
 };
+
+export const DEFAULT_BANNER_MAP: Record<BannerData["template"], BannerData> = {
+  "banner-1": { ...defaultBannerData, template: "banner-1" },
+  "banner-2": { ...defaultBannerData, template: "banner-2" },
+  "banner-3": { ...defaultBannerData, template: "banner-3" },
+  "banner-4": { ...defaultBannerData, template: "banner-4" },
+  "banner-5": { ...defaultBannerData, template: "banner-5" },
+};

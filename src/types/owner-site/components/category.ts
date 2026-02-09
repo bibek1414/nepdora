@@ -13,6 +13,15 @@ export const defaultCategoryData: CategoryData = {
   subtitle: "Browse our product categories",
 };
 
+export const DEFAULT_CATEGORY_MAP: Record<CategoryData["style"], CategoryData> =
+  {
+    "category-1": { ...defaultCategoryData, style: "category-1" },
+    "category-2": { ...defaultCategoryData, style: "category-2" },
+    "category-3": { ...defaultCategoryData, style: "category-3" },
+    "category-4": { ...defaultCategoryData, style: "category-4" },
+    "category-5": { ...defaultCategoryData, style: "category-5" },
+  };
+
 export interface FeaturedContent {
   title?: string;
   subtitle?: string;
