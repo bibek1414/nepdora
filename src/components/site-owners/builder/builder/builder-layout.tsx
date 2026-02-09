@@ -79,8 +79,11 @@ import { defaultNewsletterData } from "@/types/owner-site/components/newsletter"
 import { defaultVideosData } from "@/types/owner-site/components/videos";
 import { PageTemplateDialog } from "@/components/site-owners/builder/templates/page-template-dialog";
 import { PageTemplate } from "@/types/owner-site/components/page-template";
-import { usePageComponentsQuery } from "@/hooks/owner-site/components/use-unified";
-import { componentsApi } from "@/services/api/owner-sites/components/unified";
+import {
+  usePageComponentsQuery,
+  useCreateComponentMutation,
+  useGenericReplaceComponentMutation,
+} from "@/hooks/owner-site/components/use-unified";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
 import { useAuth } from "@/hooks/use-auth";
@@ -110,7 +113,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [pendingReplaceId, setPendingReplaceId] = useState<string | null>(null);
 
   // Dialog states
-  // Dialog states
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
   const [isPageTemplateDialogOpen, setIsPageTemplateDialogOpen] =
     useState(false);
@@ -137,6 +139,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   const currentPage = pageSlug;
   const queryClient = useQueryClient();
+
+  // Mutations
+  const createComponentMutation = useCreateComponentMutation(pageSlug);
+  const replaceComponentMutation = useGenericReplaceComponentMutation(pageSlug);
 
   // Process page components
   const pageComponents = React.useMemo(() => {
@@ -254,47 +260,25 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       setPendingReplaceId(null);
       setPendingInsertIndex(undefined);
 
-      const currentComponents =
-        queryClient.getQueryData<ComponentResponse[]>([
-          "pageComponents",
-          currentPage,
-        ]) || pageComponents;
-
       let componentId = "";
+
       if (mode === "replace" && replaceId) {
-        const componentToReplace = currentComponents.find(
-          c => c.component_id === replaceId
-        );
-        const order = componentToReplace?.order ?? 0;
-
-        const replacedComponent = await componentsApi.replaceComponent(
-          currentPage,
-          replaceId,
-          {
-            component_type: componentType,
-            data,
-            order,
-          }
-        );
-        componentId = replacedComponent.component_id;
+        const result = await replaceComponentMutation.mutateAsync({
+          componentId: replaceId,
+          componentType,
+          data,
+          order:
+            pageComponents.find(c => c.component_id === replaceId)?.order ?? 0,
+        });
+        componentId = result.component_id;
       } else {
-        // The API now handles order updates internally
-        const newComponent = await componentsApi.createComponent(
-          currentPage,
-          {
-            component_type: componentType,
-            data,
-            order: insertIndex ?? currentComponents.length,
-          },
-          currentComponents,
-          insertIndex
-        );
-        componentId = newComponent.component_id;
+        const result = await createComponentMutation.mutateAsync({
+          componentType,
+          data,
+          insertIndex,
+        });
+        componentId = result.component_id;
       }
-
-      await queryClient.invalidateQueries({
-        queryKey: ["pageComponents", currentPage],
-      });
 
       // Scroll to the new/replaced component after a short delay to allow it to render
       if (componentId) {
@@ -312,13 +296,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       );
     } catch (error) {
       console.error(`Failed to ${mode} ${componentType} component:`, error);
-
-      await queryClient.invalidateQueries({
-        queryKey: ["pageComponents", currentPage],
-      });
-
-      toast.error(`Failed to add ${displayName}`, { id: toastId });
-      throw error;
+      toast.error(`Failed to ${mode} ${displayName}`, { id: toastId });
     }
   };
 
@@ -620,9 +598,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       title: "Our Categories",
       subtitle: "Browse our product categories",
       style: template,
-      showDescription: true,
-      showProductCount: true,
-      itemsPerRow: 4,
     };
 
     await createComponentWithIndex(
@@ -641,10 +616,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       title: "Our SubCategories",
       subtitle: "Explore our product subcategories",
       style: template,
-      showDescription: true,
-      showProductCount: true,
-      showParentCategory: true,
-      itemsPerRow: 4,
     };
 
     await createComponentWithIndex(
@@ -876,30 +847,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       const newPage = await createPageMutation.mutateAsync({
         title: template.name,
       });
-      const existingComponents = await componentsApi.getPageComponents(
-        newPage.slug
-      );
 
       for (const component of template.components) {
-        const componentData = {
-          ...component.defaultData,
-          order: component.order,
-        };
-        await componentsApi.createComponent(
-          newPage.slug,
-          {
-            component_type: component.type as keyof ComponentTypeMap,
-            data: componentData,
+        await createComponentMutation.mutateAsync({
+          componentType: component.type as keyof ComponentTypeMap,
+          data: {
+            ...component.defaultData,
             order: component.order,
           },
-          existingComponents
-        );
+          insertIndex: component.order,
+        });
       }
 
-      queryClient.invalidateQueries({
-        queryKey: ["pageComponents", newPage.slug],
-      });
-      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       router.push(`/builder/${siteUser}/${newPage.slug}`);
       setIsPageTemplateDialogOpen(false);
       toast.success(

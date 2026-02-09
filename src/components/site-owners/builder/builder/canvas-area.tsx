@@ -54,7 +54,7 @@ import { GalleryComponent } from "@/components/site-owners/builder/gallery/galle
 import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { Plus, ChevronUp, ChevronDown } from "lucide-react";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { Button } from "@/components/ui/site-owners/button";
+import { Button } from "@/components/ui/button";
 import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
 import { PolicyComponentData } from "@/types/owner-site/components/policies";
 import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
@@ -97,23 +97,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const [hoveredComponentIndex, setHoveredComponentIndex] = useState<
     number | null
   >(null);
-
-  const { data: themeResponse } = useThemeQuery();
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   React.useEffect(() => {
     setPageComponents(
@@ -366,6 +349,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           />
         );
         break;
+
+      case "text_editor":
         componentElement = (
           <TextEditorComponent
             key={`text_editor-${component.id}`}
@@ -568,36 +553,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     );
   };
 
-  // Calculate component statistics
-  const hasHero = pageComponents.some(c => c.component_type === "hero");
-  const hasOthers = pageComponents.some(c => c.component_type === "others");
-  const hasAbout = pageComponents.some(c => c.component_type === "about");
-  const hasProducts = pageComponents.some(c => c.component_type === "products");
-  const hasCategories = pageComponents.some(
-    c => c.component_type === "category"
-  );
-  const hasSubCategories = pageComponents.some(
-    c => c.component_type === "subcategory"
-  );
-  const hasBlog = pageComponents.some(c => c.component_type === "blog");
-  const hasServices = pageComponents.some(c => c.component_type === "services");
-  const hasContact = pageComponents.some(c => c.component_type === "contact");
-  const hasAppointment = pageComponents.some(
-    c => c.component_type === "appointment"
-  );
-  const hasTeam = pageComponents.some(c => c.component_type === "team");
-  const hasTestimonials = pageComponents.some(
-    c => c.component_type === "testimonials"
-  );
-  const hasFAQ = pageComponents.some(c => c.component_type === "faq");
-  const hasNewsletter = pageComponents.some(
-    c => c.component_type === "newsletter"
-  );
-  const hasPricing = pageComponents.some(c => c.component_type === "pricing");
-  const hasOurClients = pageComponents.some(
-    c => c.component_type === "our_clients"
-  );
-
   return (
     <div className="rounded-lg border-2 border-dashed bg-white transition-colors">
       {/* Navbar Section */}
@@ -662,19 +617,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <div className="p-8">
             <PlaceholderManager
               isLoading={isLoading}
-              navbar={navbar}
-              hasHero={hasHero}
-              hasAbout={hasAbout}
-              hasTeam={hasTeam}
-              hasTestimonials={hasTestimonials}
-              hasProducts={hasProducts}
-              hasCategories={hasCategories}
-              hasSubCategories={hasSubCategories}
-              hasBlog={hasBlog}
-              hasContact={hasContact}
-              hasFAQ={hasFAQ}
               pageComponentsLength={pageComponents.length}
-              droppedComponentsLength={droppedComponents.length}
               onAddSection={() => handleAddSection("below", 0)}
             />
           </div>

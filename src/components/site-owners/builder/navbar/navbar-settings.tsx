@@ -679,6 +679,14 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                           currentText={link.text}
                         />
                       </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteLink(link.id)}
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive h-9 w-9"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   ))}
 
@@ -756,6 +764,14 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                           currentText={button.text}
                         />
                       </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteButton(button.id)}
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive h-9 w-9"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   ))}
 

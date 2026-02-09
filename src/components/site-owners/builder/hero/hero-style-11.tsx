@@ -66,7 +66,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
   const imageUrl = data.imageUrl || defaultImageUrl;
 
   return (
-    <section className="relative w-full overflow-hidden bg-white">
+    <section className="relative overflow-hidden bg-white">
       {/* Background Stripes */}
       <div className="pointer-events-none absolute inset-0 z-0 h-full w-full">
         <div className="grid h-full w-full grid-cols-6 gap-0 md:grid-cols-12">
@@ -81,7 +81,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
         </div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-12 md:px-6 md:py-24 lg:py-32">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-24 lg:py-32">
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
           {/* Left Content */}
           <div className="flex max-w-2xl flex-col space-y-8">

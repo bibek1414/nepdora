@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import {
   NavbarData,
   NavbarLink,
