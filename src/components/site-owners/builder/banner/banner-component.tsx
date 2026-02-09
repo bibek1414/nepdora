@@ -12,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+
 import {
   BannerData,
   BannerComponentData,
@@ -64,40 +64,18 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
     }
 
     // Also trigger the mutation for server sync
-    updateBannerMutation.mutate(
-      {
-        componentId,
-        data: updatedData,
-      },
-      {
-        onError: error => {
-          toast.error("Failed to update banner", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    updateBannerMutation.mutate({
+      componentId,
+      data: updatedData,
+    });
   };
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
 
-    // Show loading toast
-    const loadingToast = toast.loading("Deleting banner...");
-
     deleteBannerMutation.mutate(componentId, {
       onSuccess: () => {
-        toast.dismiss(loadingToast);
-        toast.success("Banner deleted successfully");
         setIsDeleteDialogOpen(false);
-      },
-      onError: error => {
-        toast.dismiss(loadingToast);
-        toast.error("Failed to delete banner", {
-          description:
-            error instanceof Error ? error.message : "Please try again",
-        });
       },
     });
   };
@@ -162,7 +140,7 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
       {/* Edit Controls - Only show when editable */}
       {isEditable && (
         <>
-          <div className="absolute -right-5 z-30 flex flex-col gap-2 rounded-lg p-1 opacity-0 transition-opacity group-hover:opacity-100">
+          <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
             <Button
               size="sm"
               variant="outline"

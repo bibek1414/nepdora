@@ -12,7 +12,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
 import {
   HeroData,
   isHeroTemplate1,
@@ -80,38 +79,18 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
   const handleUpdate = (updatedData: Partial<HeroData>) => {
     const componentId = component.component_id || component.id.toString();
 
-    updateHeroMutation.mutate(
-      {
-        componentId,
-        data: updatedData,
-      },
-      {
-        onError: error => {
-          toast.error("Failed to update hero section", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    updateHeroMutation.mutate({
+      componentId,
+      data: updatedData,
+    });
   };
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
-    const loadingToast = toast.loading("Deleting hero section...");
 
     deleteHeroMutation.mutate(componentId, {
       onSuccess: () => {
-        toast.dismiss(loadingToast);
-        toast.success("Hero section deleted successfully");
         setIsDeleteDialogOpen(false);
-      },
-      onError: error => {
-        toast.dismiss(loadingToast);
-        toast.error("Failed to delete hero section", {
-          description:
-            error instanceof Error ? error.message : "Please try again",
-        });
       },
     });
   };

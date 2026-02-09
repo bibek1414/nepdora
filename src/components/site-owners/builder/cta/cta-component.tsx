@@ -12,7 +12,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
 import {
   CTAData,
   isCTATemplate1,
@@ -62,38 +61,18 @@ export const CTAComponent: React.FC<CTAComponentProps> = ({
   const handleUpdate = (updatedData: Partial<CTAData>) => {
     const componentId = component.component_id || component.id.toString();
 
-    updateCTAMutation.mutate(
-      {
-        componentId,
-        data: updatedData,
-      },
-      {
-        onError: error => {
-          toast.error("Failed to update CTA section", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    updateCTAMutation.mutate({
+      componentId,
+      data: updatedData,
+    });
   };
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
-    const loadingToast = toast.loading("Deleting CTA section...");
 
     deleteCTAMutation.mutate(componentId, {
       onSuccess: () => {
-        toast.dismiss(loadingToast);
-        toast.success("CTA section deleted successfully");
         setIsDeleteDialogOpen(false);
-      },
-      onError: error => {
-        toast.dismiss(loadingToast);
-        toast.error("Failed to delete CTA section", {
-          description:
-            error instanceof Error ? error.message : "Please try again",
-        });
       },
     });
   };

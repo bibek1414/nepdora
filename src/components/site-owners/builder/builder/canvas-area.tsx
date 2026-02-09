@@ -9,60 +9,15 @@ import {
 } from "@hello-pangea/dnd";
 import { NavbarComponent } from "@/components/site-owners/builder/navbar/navbar-component";
 import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer-component";
-import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
-import { OthersComponent } from "@/components/site-owners/builder/others/others-component";
-import { AboutUsComponent } from "@/components/site-owners/builder/about/about-component";
-import { ProductsComponent } from "@/components/site-owners/builder/products/products-component";
-import { CategoryComponent } from "@/components/site-owners/builder/category/category-component";
-import { SubCategoryComponent } from "@/components/site-owners/builder/sub-category/sub-category-component";
-import { BlogComponent } from "@/components/site-owners/builder/blog/blog-components";
-import { ServicesComponent } from "@/components/site-owners/builder/services/services-component";
-import { TeamComponent } from "@/components/site-owners/builder/team-member/team-component";
-import { ContactComponent } from "@/components/site-owners/builder/contact/contact-component";
-import { AppointmentComponent } from "@/components/site-owners/builder/appointment/appointment-component";
-import { TestimonialsComponent } from "@/components/site-owners/builder/testimonials/testimonial-component";
-import { CTAComponent } from "@/components/site-owners/builder/cta/cta-component";
-import { CTAComponentData } from "@/types/owner-site/components/cta";
-import { FAQComponent } from "@/components/site-owners/builder/faq/faq-component";
-import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
-import { NewsletterComponent } from "@/components/site-owners/builder/newsletter/newsletter-component";
 import { PlaceholderManager } from "@/components/ui/content-placeholder";
 import { Navbar } from "@/types/owner-site/components/navbar";
 import { Footer } from "@/types/owner-site/components/footer";
 import { ComponentResponse } from "@/types/owner-site/components/components";
-import { HeroComponentData } from "@/types/owner-site/components/hero";
-import { OthersComponentData } from "@/types/owner-site/components/others";
-import { AboutUsComponentData } from "@/types/owner-site/components/about";
-import { ProductsComponentData } from "@/types/owner-site/components/products";
-import { CategoryComponentData } from "@/types/owner-site/components/category";
-import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
-import { BlogComponentData } from "@/types/owner-site/components/blog";
-import { ServicesComponentData } from "@/types/owner-site/components/services";
-import { TeamComponentData } from "@/types/owner-site/components/team";
-import { ContactComponentData } from "@/types/owner-site/components/contact";
-import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
-import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
-import { FAQComponentData } from "@/types/owner-site/components/faq";
-import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
-import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
 import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/use-unified";
-import { BannerComponentData } from "@/types/owner-site/components/banner";
-import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
-import { VidoesComponent } from "@/components/site-owners/builder/videos/videos-component";
-import { VideosComponentData } from "@/types/owner-site/components/videos";
-import { GalleryComponent } from "@/components/site-owners/builder/gallery/gallery-component";
-import { GalleryComponentData } from "@/types/owner-site/components/gallery";
 import { Plus, ChevronUp, ChevronDown } from "lucide-react";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Button } from "@/components/ui/button";
-import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
-import { PolicyComponentData } from "@/types/owner-site/components/policies";
-import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
-import { TextEditorComponent } from "@/components/site-owners/builder/text-editor/text-editor-component";
-import { PricingComponent } from "@/components/site-owners/builder/pricing/pricing-component";
-import { PricingComponentData } from "@/types/owner-site/components/pricing";
-import { OurClientsComponent } from "@/components/site-owners/builder/our-clients/our-clients-component";
-import { OurClientsComponentData } from "@/types/owner-site/components/our-client";
+import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
+import { ComponentTypeMap } from "@/types/owner-site/components/components";
 
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
@@ -185,266 +140,40 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
   // Component renderer with proper typing
   const renderComponent = (component: ComponentResponse, index: number) => {
+    const type = component.component_type as keyof ComponentTypeMap;
+    const config = COMPONENT_REGISTRY[type];
+
+    if (!config) {
+      console.warn(`Unknown component type: ${component.component_type}`);
+      return null;
+    }
+
+    const Component = config.component;
+
+    // Common props for builder mode
     const commonProps = {
+      key: `${component.component_type}-${component.id}`,
+      component: component,
       isEditable: true,
+      siteUser: "", // siteUser not needed in builder cards for most components
       pageSlug: currentPageSlug,
       onReplace: onReplaceSection,
+      onUpdate: () => {}, // Handled by individual components internally via hooks
     };
 
-    let componentElement: React.ReactNode;
+    // Specific props (empty handlers for builder mode)
+    const specificProps = {
+      onProductClick: () => {},
+      onBlogClick: () => {},
+      onServiceClick: () => {},
+      onCategoryClick: () => {},
+      onSubCategoryClick: () => {},
+      onMemberClick: () => {},
+      onPricingClick: () => {},
+      onTestimonialClick: () => {},
+    };
 
-    switch (component.component_type) {
-      case "hero":
-        componentElement = (
-          <HeroComponent
-            key={`hero-${component.id}`}
-            component={component as HeroComponentData}
-            siteUser=""
-            {...commonProps}
-          />
-        );
-        break;
-      case "others":
-        componentElement = (
-          <OthersComponent
-            key={`others-${component.id}`}
-            siteUser=""
-            component={component as OthersComponentData}
-            {...commonProps}
-          />
-        );
-        break;
-      case "about":
-        componentElement = (
-          <AboutUsComponent
-            key={`about-${component.id}`}
-            component={component as AboutUsComponentData}
-            {...commonProps}
-          />
-        );
-        break;
-      case "gallery":
-        componentElement = (
-          <GalleryComponent
-            key={`gallery-${component.id}`}
-            component={component as GalleryComponentData}
-            siteUser=""
-            {...commonProps}
-          />
-        );
-        break;
-      case "products":
-        componentElement = (
-          <ProductsComponent
-            key={`products-${component.id}`}
-            component={component as ProductsComponentData}
-            onUpdate={() => {}}
-            onProductClick={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "category":
-        componentElement = (
-          <CategoryComponent
-            key={`category-${component.id}`}
-            component={component as CategoryComponentData}
-            onUpdate={() => {}}
-            onCategoryClick={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "subcategory":
-        componentElement = (
-          <SubCategoryComponent
-            key={`subcategory-${component.id}`}
-            component={component as SubCategoryComponentData}
-            onUpdate={() => {}}
-            onSubCategoryClick={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "blog":
-        componentElement = (
-          <BlogComponent
-            key={`blog-${component.id}`}
-            component={component as BlogComponentData}
-            onUpdate={() => {}}
-            onBlogClick={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "our_clients":
-        componentElement = (
-          <OurClientsComponent
-            key={`our-clients-${component.id}`}
-            component={component as OurClientsComponentData}
-            onUpdate={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "services":
-        componentElement = (
-          <ServicesComponent
-            key={`services-${component.id}`}
-            component={component as ServicesComponentData}
-            onUpdate={() => {}}
-            onServiceClick={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "contact":
-        componentElement = (
-          <ContactComponent
-            key={`contact-${component.id}`}
-            component={component as ContactComponentData}
-            onUpdate={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "appointment":
-        componentElement = (
-          <AppointmentComponent
-            key={`appointment-${component.id}`}
-            component={component as AppointmentComponentData}
-            onUpdate={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "cta":
-        componentElement = (
-          <CTAComponent
-            key={`cta-${component.id}`}
-            component={component as CTAComponentData}
-            siteUser=""
-            {...commonProps}
-          />
-        );
-        break;
-      case "team":
-        componentElement = (
-          <TeamComponent
-            key={`team-${component.id}`}
-            component={component as TeamComponentData}
-            onUpdate={() => {}}
-            onMemberClick={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "policies":
-        componentElement = (
-          <PolicyComponent
-            key={`policies-${component.id}`}
-            component={component as PolicyComponentData}
-            siteUser=""
-            {...commonProps}
-          />
-        );
-        break;
-
-      case "text_editor":
-        componentElement = (
-          <TextEditorComponent
-            key={`text_editor-${component.id}`}
-            component={component as TextEditorComponentData}
-            siteUser=""
-            {...commonProps}
-          />
-        );
-        break;
-      case "pricing":
-        componentElement = (
-          <PricingComponent
-            key={`pricing-${component.id}`}
-            component={component as PricingComponentData}
-            onUpdate={() => {}}
-            onPricingClick={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "our_clients":
-        componentElement = (
-          <OurClientsComponent
-            key={`our_clients-${component.id}`}
-            component={component as OurClientsComponentData}
-            onUpdate={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "videos":
-        componentElement = (
-          <VidoesComponent
-            key={`videos-${component.id}`}
-            component={component as VideosComponentData}
-            onUpdate={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "testimonials":
-        componentElement = (
-          <TestimonialsComponent
-            key={`testimonials-${component.id}`}
-            component={component as TestimonialsComponentData}
-            onUpdate={() => {}}
-            onTestimonialClick={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "faq":
-        componentElement = (
-          <FAQComponent
-            key={`faq-${component.id}`}
-            component={component as FAQComponentData}
-            onUpdate={() => {}}
-            {...commonProps}
-          />
-        );
-        break;
-      case "portfolio":
-        componentElement = (
-          <PortfolioComponent
-            key={`portfolio-${component.id}`}
-            component={component as PortfolioComponentData}
-            siteUser=""
-            {...commonProps}
-          />
-        );
-        break;
-      case "newsletter":
-        componentElement = (
-          <NewsletterComponent
-            key={`newsletter-${component.id}`}
-            component={component as NewsletterComponentData}
-            siteUser=""
-            {...commonProps}
-          />
-        );
-        break;
-      case "banner":
-        componentElement = (
-          <BannerComponent
-            key={`banner-${component.id}`}
-            component={component as BannerComponentData}
-            siteUser=""
-            {...commonProps}
-          />
-        );
-        break;
-      default:
-        return null;
-    }
+    const componentElement = <Component {...commonProps} {...specificProps} />;
 
     const isFirst = index === 0;
     const isLastComponent = index === pageComponents.length - 1;

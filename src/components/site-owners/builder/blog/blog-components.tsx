@@ -30,7 +30,6 @@ import { BlogPost } from "@/types/owner-site/admin/blog";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { EditableText } from "@/components/ui/editable-text";
-import { toast } from "sonner";
 
 interface BlogComponentProps {
   component: BlogComponentData;
@@ -94,23 +93,13 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     const componentId = component.component_id || component.id?.toString();
     if (!componentId) return;
 
-    updateBlogComponent.mutate(
-      {
-        componentId,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
+    updateBlogComponent.mutate({
+      componentId,
+      data: {
+        ...component.data,
+        title: newTitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update title", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     if (onUpdate) {
       onUpdate(componentId, {
@@ -132,23 +121,13 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
     const componentId = component.component_id || component.id?.toString();
     if (!componentId) return;
 
-    updateBlogComponent.mutate(
-      {
-        componentId,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
+    updateBlogComponent.mutate({
+      componentId,
+      data: {
+        ...component.data,
+        subtitle: newSubtitle,
       },
-      {
-        onError: error => {
-          toast.error("Failed to update subtitle", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    });
 
     if (onUpdate) {
       onUpdate(componentId, {

@@ -97,8 +97,11 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
       return;
     }
 
-    deleteContactComponent.mutate(component.component_id);
-    setIsDeleteDialogOpen(false);
+    deleteContactComponent.mutate(component.component_id, {
+      onSuccess: () => {
+        setIsDeleteDialogOpen(false);
+      },
+    });
   };
 
   const handleTitleChange = (newTitle: string) => {

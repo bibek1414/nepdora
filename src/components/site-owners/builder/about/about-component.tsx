@@ -45,7 +45,6 @@ import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { toast } from "sonner";
 import { AboutUsTemplate6 } from "./about-style-6";
 import { AboutUsTemplate7 } from "./about-style-7";
 import { AboutUsTemplate8 } from "./about-style-8";
@@ -81,28 +80,21 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
-    deleteAboutUsMutation.mutate(componentId);
+    deleteAboutUsMutation.mutate(componentId, {
+      onSuccess: () => {
+        setIsDeleteDialogOpen(false);
+      },
+    });
   };
 
   const handleUpdate = (updatedData: Partial<AboutUsData>) => {
     const componentId = component.component_id || component.id.toString();
     const mergedData = { ...component.data, ...updatedData };
 
-    updateAboutUsMutation.mutate(
-      { componentId, data: mergedData as UpdateAboutUsRequest["data"] },
-      {
-        onSuccess: () => {
-          toast.success("About Us component updated.");
-        },
-        onError: error => {
-          if (error instanceof Error) {
-            toast.error(`Failed to update: ${error.message}`);
-          } else {
-            toast.error("Failed to update: Unknown error");
-          }
-        },
-      }
-    );
+    updateAboutUsMutation.mutate({
+      componentId,
+      data: mergedData as UpdateAboutUsRequest["data"],
+    });
   };
 
   const renderTemplate = () => {

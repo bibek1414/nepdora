@@ -33,7 +33,6 @@ import { ServicesPost } from "@/types/owner-site/admin/services";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { EditableText } from "@/components/ui/editable-text";
-import { toast } from "sonner";
 
 interface ServicesComponentProps {
   component: ServicesComponentData;

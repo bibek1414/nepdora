@@ -8,7 +8,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { Category, SubCategory } from "@/types/owner-site/admin/product";
 import { FeaturedContent } from "@/types/owner-site/components/category";
 import { uploadToCloudinary } from "@/utils/cloudinary";
-import { toast } from "sonner";
+
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
@@ -146,16 +146,12 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
     // Validate file type
     const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
     if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        `Please select a valid image file (${allowedTypes.join(", ")})`
-      );
       return;
     }
 
     // Validate file size (5MB limit)
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      toast.error("Image size must be less than 5MB");
       return;
     }
 
@@ -169,10 +165,8 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
       });
 
       handleBackgroundImageUpdate(imageUrl);
-      toast.success("Background image uploaded successfully!");
     } catch (error) {
       console.error("Background upload failed:", error);
-      toast.error("Failed to upload background image. Please try again.");
     } finally {
       setIsUploadingBackground(false);
       // Reset file input

@@ -23,7 +23,6 @@ import {
   useReplaceFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
 import { ComponentOutlineSidebar } from "@/components/site-owners/builder/builder/component-outline-sidebar";
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   ComponentResponse,
@@ -91,7 +90,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   >([]);
 
   const currentPage = pageSlug;
-  const queryClient = useQueryClient();
 
   // Mutations
   const createComponentMutation = useCreateComponentMutation(pageSlug);
@@ -154,21 +152,15 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   ) => {
     const displayName = getComponentDisplayName(componentType);
     const mode = pendingReplaceId ? "replace" : "add";
-    const toastId = `${mode}-${componentType}-${Date.now()}`;
+
+    setIsAddSectionDialogOpen(false);
+    const replaceId = pendingReplaceId;
+    setPendingReplaceId(null);
+    setPendingInsertIndex(undefined);
+
+    let componentId = "";
 
     try {
-      toast.loading(
-        `${mode === "replace" ? "Replacing" : "Adding"} ${displayName}...`,
-        { id: toastId }
-      );
-
-      setIsAddSectionDialogOpen(false);
-      const replaceId = pendingReplaceId;
-      setPendingReplaceId(null);
-      setPendingInsertIndex(undefined);
-
-      let componentId = "";
-
       if (mode === "replace" && replaceId) {
         const result = await replaceComponentMutation.mutateAsync({
           componentId: replaceId,
@@ -196,14 +188,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           }
         }, 100);
       }
-
-      toast.success(
-        `${displayName} ${mode === "replace" ? "replaced" : "added"} successfully!`,
-        { id: toastId }
-      );
     } catch (error) {
       console.error(`Failed to ${mode} ${componentType} component:`, error);
-      toast.error(`Failed to ${mode} ${displayName}`, { id: toastId });
+      // Toast is handled by the mutation hook
     }
   };
 
@@ -325,9 +312,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       });
     } else {
       createNavbarMutation.mutate(payload, {
-        onSuccess: () => {
-          toast.success("Navbar added successfully!", { id: toastId });
-        },
+        onSuccess: () => {},
         onError: error => {
           toast.error("Failed to create navbar", { id: toastId });
         },
@@ -347,7 +332,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     createNavbarMutation.mutate(payload, {
       onSuccess: () => {
         setIsNavbarDialogOpen(false);
-        toast.success("Navbar added successfully!", { id: toastId });
       },
       onError: () => {
         toast.error("Failed to add navbar", { id: toastId });
@@ -475,6 +459,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             order: component.order,
           },
           insertIndex: component.order,
+          silent: true,
         });
       }
 

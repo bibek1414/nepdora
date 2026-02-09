@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+
 import {
   TextEditorData,
   TextEditorComponentData,
@@ -120,16 +120,9 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
           setOriginalContent(data.content);
           setHasContentChanges(false);
           setIsSaving(false);
-          toast.success("Changes saved automatically", {
-            duration: 2000,
-          });
         },
-        onError: error => {
+        onError: () => {
           setIsSaving(false);
-          toast.error("Auto-save failed", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
         },
       }
     );
@@ -155,11 +148,7 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
         data: updatedData,
       },
       {
-        onError: error => {
-          toast.error("Failed to update title", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
+        onError: () => {
           // Revert on error
           setData(prev => ({ ...prev, title: data.title }));
         },
@@ -191,25 +180,14 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
 
     setData(prev => ({ ...prev, content: originalContent }));
     setHasContentChanges(false);
-    toast.info("Changes discarded");
   };
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
 
-    const loadingToast = toast.loading("Deleting text editor...");
-
     deleteTextEditorMutation.mutate(componentId, {
       onSuccess: () => {
-        toast.dismiss(loadingToast);
         setIsDeleteDialogOpen(false);
-      },
-      onError: error => {
-        toast.dismiss(loadingToast);
-        toast.error("Failed to delete text editor", {
-          description:
-            error instanceof Error ? error.message : "Please try again",
-        });
       },
     });
   };

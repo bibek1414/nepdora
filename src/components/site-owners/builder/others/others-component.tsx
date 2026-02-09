@@ -12,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+
 import {
   OthersData,
   isOthersTemplate1,
@@ -61,38 +61,18 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
   const handleUpdate = (updatedData: Partial<OthersData>) => {
     const componentId = component.component_id || component.id.toString();
 
-    updateOthersMutation.mutate(
-      {
-        componentId,
-        data: updatedData,
-      },
-      {
-        onError: error => {
-          toast.error("Failed to update others section", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    updateOthersMutation.mutate({
+      componentId,
+      data: updatedData,
+    });
   };
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
-    const loadingToast = toast.loading("Deleting others section...");
 
     deleteOthersMutation.mutate(componentId, {
       onSuccess: () => {
-        toast.dismiss(loadingToast);
-        toast.success("Others section deleted successfully");
         setIsDeleteDialogOpen(false);
-      },
-      onError: error => {
-        toast.dismiss(loadingToast);
-        toast.error("Failed to delete others section", {
-          description:
-            error instanceof Error ? error.message : "Please try again",
-        });
       },
     });
   };

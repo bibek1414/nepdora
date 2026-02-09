@@ -20,6 +20,7 @@ import {
   ComponentResponse,
   ApiListResponse,
 } from "@/types/owner-site/components/components";
+import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
 
 export function usePageData(siteUser: string, pageSlug: string) {
   const pathname = usePathname();
@@ -61,31 +62,7 @@ export function usePageData(siteUser: string, pageSlug: string) {
       components = response.data || response.components || [];
     }
 
-    const validTypes = [
-      "hero",
-      "about",
-      "products",
-      "blog",
-      "services",
-      "contact",
-      "team",
-      "others",
-      "faq",
-      "testimonials",
-      "category",
-      "newsletter",
-      "subcategory",
-      "portfolio",
-      "our_clients",
-      "appointment",
-      "cta",
-      "videos",
-      "banner",
-      "gallery",
-      "policies",
-      "text_editor",
-      "pricing",
-    ];
+    const validTypes = Object.keys(COMPONENT_REGISTRY);
 
     return components.filter(
       component =>

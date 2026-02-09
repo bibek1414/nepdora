@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+
 import {
   PolicyData,
   PolicyComponentData,
@@ -118,12 +118,8 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
           setHasContentChanges(false);
           setIsSaving(false);
         },
-        onError: error => {
+        onError: () => {
           setIsSaving(false);
-          toast.error("Auto-save failed", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
         },
       }
     );
@@ -149,11 +145,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
         data: updatedData,
       },
       {
-        onError: error => {
-          toast.error("Failed to update title", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
+        onError: () => {
           // Revert on error
           setData(prev => ({ ...prev, title: data.title }));
         },
@@ -185,25 +177,14 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
 
     setData(prev => ({ ...prev, content: originalContent }));
     setHasContentChanges(false);
-    toast.info("Changes discarded");
   };
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
 
-    const loadingToast = toast.loading("Deleting policy...");
-
     deletePolicyMutation.mutate(componentId, {
       onSuccess: () => {
-        toast.dismiss(loadingToast);
         setIsDeleteDialogOpen(false);
-      },
-      onError: error => {
-        toast.dismiss(loadingToast);
-        toast.error("Failed to delete policy", {
-          description:
-            error instanceof Error ? error.message : "Please try again",
-        });
       },
     });
   };

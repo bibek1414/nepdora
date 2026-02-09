@@ -65,6 +65,7 @@ export const useCreateComponentMutation = (pageSlug: string) => {
       componentType: keyof ComponentTypeMap;
       data: ComponentTypeMap[keyof ComponentTypeMap];
       insertIndex?: number;
+      silent?: boolean;
     }) => {
       const existingComponents =
         await componentsApi.getPageComponents(pageSlug);
@@ -75,14 +76,44 @@ export const useCreateComponentMutation = (pageSlug: string) => {
         insertIndex
       );
     },
-    onSuccess: (_, variables) => {
+    onMutate: variables => {
+      if (!variables.silent) {
+        return {
+          toastId: toast.loading(
+            `Adding ${
+              variables.componentType.charAt(0).toUpperCase() +
+              variables.componentType.slice(1)
+            } component...`
+          ),
+        };
+      }
+    },
+    onSuccess: (_, variables, context) => {
       if (invalidationTimeout) clearTimeout(invalidationTimeout);
 
       invalidationTimeout = setTimeout(() => {
         queryClient.invalidateQueries({
           queryKey: ["pageComponents", pageSlug],
         });
+        if (!variables.silent) {
+          toast.success(
+            `${
+              variables.componentType.charAt(0).toUpperCase() +
+              variables.componentType.slice(1)
+            } component added successfully!`,
+            { id: context?.toastId }
+          );
+        }
       }, 300);
+    },
+    onError: (error: unknown, variables, context) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : `Failed to add ${variables.componentType} component`;
+      if (!variables.silent) {
+        toast.error(errorMessage, { id: context?.toastId });
+      }
     },
   });
 };
@@ -113,7 +144,11 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
       queryClient.invalidateQueries({
         queryKey: ["pageComponents", pageSlug, componentType],
       });
-      toast.success(`${componentType} component updated successfully!`);
+      toast.success(
+        `${
+          componentType.charAt(0).toUpperCase() + componentType.slice(1)
+        } component updated successfully!`
+      );
     },
     onError: (error: unknown) => {
       const errorMessage =
@@ -135,18 +170,33 @@ export const useDeleteComponentMutation = (
   return useMutation({
     mutationFn: (componentId: string) =>
       componentsApi.deleteComponent(pageSlug, componentId, componentType),
-    onSuccess: () => {
+    onMutate: () => {
+      return {
+        toastId: toast.loading(
+          `Deleting ${
+            componentType.charAt(0).toUpperCase() + componentType.slice(1)
+          } component...`
+        ),
+      };
+    },
+    onSuccess: (_, __, context) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
       queryClient.invalidateQueries({
         queryKey: ["pageComponents", pageSlug, componentType],
       });
+      toast.success(
+        `${
+          componentType.charAt(0).toUpperCase() + componentType.slice(1)
+        } component deleted successfully!`,
+        { id: context?.toastId }
+      );
     },
-    onError: (error: unknown) => {
+    onError: (error: unknown, __, context) => {
       const errorMessage =
         error instanceof Error
           ? error.message
           : `Failed to delete ${componentType} component`;
-      toast.error(errorMessage);
+      toast.error(errorMessage, { id: context?.toastId });
     },
   });
 };
@@ -170,19 +220,26 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
         component_type: componentType,
         data,
       }),
-    onSuccess: () => {
+    onMutate: () => {
+      return {
+        toastId: toast.loading(`${componentType} component replacing...`),
+      };
+    },
+    onSuccess: (_, __, context) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
       queryClient.invalidateQueries({
         queryKey: ["pageComponents", pageSlug, componentType],
       });
-      toast.success(`${componentType} component replaced successfully!`);
+      toast.success(`${componentType} component replaced successfully!`, {
+        id: context?.toastId,
+      });
     },
-    onError: (error: unknown) => {
+    onError: (error: unknown, __, context) => {
       const errorMessage =
         error instanceof Error
           ? error.message
           : `Failed to replace ${componentType} component`;
-      toast.error(errorMessage);
+      toast.error(errorMessage, { id: context?.toastId });
     },
   });
 };
@@ -208,21 +265,29 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
         data,
         order,
       }),
-    onSuccess: (_, variables) => {
+    onMutate: variables => {
+      return {
+        toastId: toast.loading(
+          `Replacing ${variables.componentType} component...`
+        ),
+      };
+    },
+    onSuccess: (_, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
       queryClient.invalidateQueries({
         queryKey: ["pageComponents", pageSlug, variables.componentType],
       });
       toast.success(
-        `${variables.componentType} component replaced successfully!`
+        `${variables.componentType} component replaced successfully!`,
+        { id: context?.toastId }
       );
     },
-    onError: (error: unknown, variables) => {
+    onError: (error: unknown, variables, context) => {
       const errorMessage =
         error instanceof Error
           ? error.message
           : `Failed to replace ${variables.componentType} component`;
-      toast.error(errorMessage);
+      toast.error(errorMessage, { id: context?.toastId });
     },
   });
 };
@@ -238,19 +303,26 @@ export const useDeletePortfolioComponentMutation = () => {
       pageSlug: string;
       componentId: string;
     }) => componentsApi.deleteComponent(pageSlug, componentId, "portfolio"),
-    onSuccess: (_, variables) => {
+    onMutate: () => {
+      return {
+        toastId: toast.loading("Removing portfolio section..."),
+      };
+    },
+    onSuccess: (_, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
       queryClient.invalidateQueries({
         queryKey: ["pageComponents", variables.pageSlug],
       });
-      toast.success("Portfolio section removed successfully!");
+      toast.success("Portfolio section removed successfully!", {
+        id: context?.toastId,
+      });
     },
-    onError: (error: unknown) => {
+    onError: (error: unknown, __, context) => {
       const errorMessage =
         error instanceof Error
           ? error.message
           : "Failed to remove portfolio section";
-      toast.error(errorMessage);
+      toast.error(errorMessage, { id: context?.toastId });
     },
   });
 };

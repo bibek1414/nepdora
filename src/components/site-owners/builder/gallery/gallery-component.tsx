@@ -13,7 +13,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
 import {
   GalleryData,
   GalleryComponentData,
@@ -65,38 +64,18 @@ export const GalleryComponent: React.FC<GalleryComponentProps> = ({
       onUpdate(componentId, updatedComponent);
     }
 
-    updateGalleryMutation.mutate(
-      {
-        componentId,
-        data: updatedData,
-      },
-      {
-        onError: error => {
-          toast.error("Failed to update gallery", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    updateGalleryMutation.mutate({
+      componentId,
+      data: updatedData,
+    });
   };
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
-    const loadingToast = toast.loading("Deleting gallery...");
 
     deleteGalleryMutation.mutate(componentId, {
       onSuccess: () => {
-        toast.dismiss(loadingToast);
-        toast.success("Gallery deleted successfully");
         setIsDeleteDialogOpen(false);
-      },
-      onError: error => {
-        toast.dismiss(loadingToast);
-        toast.error("Failed to delete gallery", {
-          description:
-            error instanceof Error ? error.message : "Please try again",
-        });
       },
     });
   };

@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
 import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 import {
@@ -98,20 +97,10 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   const handleUpdate = (updatedData: Partial<PortfolioData>) => {
     const componentId = component.component_id || component.id.toString();
 
-    updatePortfolioMutation.mutate(
-      {
-        componentId,
-        data: updatedData,
-      },
-      {
-        onError: error => {
-          toast.error("Failed to update portfolio section", {
-            description:
-              error instanceof Error ? error.message : "Please try again",
-          });
-        },
-      }
-    );
+    updatePortfolioMutation.mutate({
+      componentId,
+      data: updatedData,
+    });
   };
 
   const handleTitleChange = (newTitle: string) => {
@@ -137,20 +126,10 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
-    const loadingToast = toast.loading("Deleting portfolio section...");
 
     deletePortfolioMutation.mutate(componentId, {
       onSuccess: () => {
-        toast.dismiss(loadingToast);
-        toast.success("Portfolio section deleted successfully");
         setIsDeleteDialogOpen(false);
-      },
-      onError: error => {
-        toast.dismiss(loadingToast);
-        toast.error("Failed to delete portfolio section", {
-          description:
-            error instanceof Error ? error.message : "Please try again",
-        });
       },
     });
   };

@@ -9,37 +9,16 @@ import {
 } from "@hello-pangea/dnd";
 import { GripVertical } from "lucide-react";
 import { useUpdateComponentOrderMutation } from "@/hooks/owner-site/components/use-unified";
-import { ComponentResponse } from "@/types/owner-site/components/components";
+import {
+  ComponentResponse,
+  ComponentTypeMap,
+} from "@/types/owner-site/components/components";
+import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
 
 interface ComponentOutlineSidebarProps {
   currentPageSlug: string;
   components: ComponentResponse[];
 }
-
-const typeToLabel: Record<string, string> = {
-  hero: "Hero",
-  about: "About",
-  products: "Products",
-  category: "Categories",
-  subcategory: "Subcategories",
-  blog: "Blog",
-  services: "Services",
-  contact: "Contact",
-  appointment: "Appointment",
-  our_clients: "Our Clients",
-  team: "Team",
-  testimonials: "Testimonials",
-  faq: "FAQ",
-  cta: "CTA",
-  portfolio: "Portfolio",
-  banner: "Banner",
-  newsletter: "Newsletter",
-  videos: "Videos",
-  gallery: "Gallery",
-  policies: "Policies",
-  pricing: "Pricing",
-  text_editor: "Text Editor",
-};
 
 export const ComponentOutlineSidebar: React.FC<
   ComponentOutlineSidebarProps
@@ -129,9 +108,11 @@ export const ComponentOutlineSidebar: React.FC<
                         item => item.component_type === c.component_type
                       ).length;
 
-                    // Get the base label
+                    // Get the base label from registry
                     const baseLabel =
-                      typeToLabel[c.component_type] || c.component_type;
+                      COMPONENT_REGISTRY[
+                        c.component_type as keyof ComponentTypeMap
+                      ]?.displayName || c.component_type;
 
                     // Add number if there are multiple components of the same type
                     const displayLabel =
