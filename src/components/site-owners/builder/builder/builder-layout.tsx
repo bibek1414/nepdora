@@ -253,20 +253,26 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           currentPage,
         ]) || pageComponents;
 
+      let componentId = "";
       if (mode === "replace" && replaceId) {
         const componentToReplace = currentComponents.find(
           c => c.component_id === replaceId
         );
         const order = componentToReplace?.order ?? 0;
 
-        await componentsApi.replaceComponent(currentPage, replaceId, {
-          component_type: componentType,
-          data,
-          order,
-        });
+        const replacedComponent = await componentsApi.replaceComponent(
+          currentPage,
+          replaceId,
+          {
+            component_type: componentType,
+            data,
+            order,
+          }
+        );
+        componentId = replacedComponent.component_id;
       } else {
         // The API now handles order updates internally
-        await componentsApi.createComponent(
+        const newComponent = await componentsApi.createComponent(
           currentPage,
           {
             component_type: componentType,
@@ -276,11 +282,22 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           currentComponents,
           insertIndex
         );
+        componentId = newComponent.component_id;
       }
 
       await queryClient.invalidateQueries({
         queryKey: ["pageComponents", currentPage],
       });
+
+      // Scroll to the new/replaced component after a short delay to allow it to render
+      if (componentId) {
+        setTimeout(() => {
+          const element = document.getElementById(componentId);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }, 100);
+      }
 
       toast.success(
         `${displayName} ${mode === "replace" ? "replaced" : "added"} successfully!`,

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import {
   NavbarData,
   NavbarLink,
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
 import { getButtonVariant } from "@/lib/utils";
-import { Plus, Edit, Trash2, Menu, Search, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import { SearchBar } from "@/components/site-owners/builder/search-bar/search-bar";
@@ -17,12 +17,8 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 
 const EditableItem: React.FC<{
-  onEdit: () => void;
-  onDelete?: () => void;
   children: React.ReactNode;
-}> = ({ onEdit, onDelete, children }) => (
-  <div className="group relative">{children}</div>
-);
+}> = ({ children }) => <div className="group relative">{children}</div>;
 
 interface NavbarStyleProps {
   navbarData: NavbarData;
@@ -44,10 +40,8 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
   isEditable,
   siteUser,
   onEditLogo,
-  onAddLink,
   onEditLink,
   onDeleteLink,
-  onAddButton,
   onEditButton,
   onDeleteButton,
   onEditCart,
@@ -108,7 +102,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
             className={`shrink-0 ${disableClicks ? "pointer-events-auto" : ""}`}
           >
             {isEditable && onEditLogo ? (
-              <EditableItem onEdit={onEditLogo}>
+              <EditableItem>
                 <NavbarLogo
                   data={navbarData}
                   isEditable={isEditable}
@@ -135,7 +129,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
           </div>
         </div>
 
-        <div className="flex flex-shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <div
             className={`md:hidden ${disableClicks ? "pointer-events-auto" : ""}`}
           >
@@ -159,19 +153,11 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
           <div className="hidden items-center gap-4 lg:flex">
             {links.map(link =>
               isEditable && onEditLink && onDeleteLink ? (
-                <EditableItem
-                  key={link.id}
-                  onEdit={() => onEditLink(link)}
-                  onDelete={() => onDeleteLink(link.id)}
-                >
+                <EditableItem key={link.id}>
                   <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
-                    className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium whitespace-nowrap transition-colors"
-                    style={{
-                      color: theme.colors.primary,
-                      fontFamily: theme.fonts.heading,
-                    }}
+                    className="cursor-pointer text-sm font-medium whitespace-nowrap text-black transition-colors hover:text-black/80"
                   >
                     {link.text}
                   </Link>
@@ -202,21 +188,12 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
           <div className="flex items-center gap-2">
             {buttons.map(button =>
               isEditable && onEditButton && onDeleteButton ? (
-                <EditableItem
-                  key={button.id}
-                  onEdit={() => onEditButton(button)}
-                  onDelete={() => onDeleteButton(button.id)}
-                >
+                <EditableItem key={button.id}>
                   <Button
                     onClick={e => e.preventDefault()}
                     variant={getButtonVariant(button.variant)}
                     size="sm"
                     className="cursor-pointer"
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.primaryForeground,
-                      fontFamily: theme.fonts.heading,
-                    }}
                   >
                     {button.text}
                   </Button>
@@ -228,11 +205,6 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                   size="sm"
                   onClick={disableClicks ? e => e.preventDefault() : undefined}
                   className={`${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
-                  style={{
-                    backgroundColor: theme.colors.primary,
-                    color: theme.colors.primaryForeground,
-                    fontFamily: theme.fonts.heading,
-                  }}
                   asChild={!disableClicks}
                 >
                   {disableClicks ? (
@@ -258,7 +230,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
           {showCart && (
             <div className={disableClicks ? "pointer-events-auto" : ""}>
               {isEditable && onEditCart ? (
-                <EditableItem onEdit={onEditCart}>
+                <EditableItem>
                   <Button
                     variant="ghost"
                     size="sm"

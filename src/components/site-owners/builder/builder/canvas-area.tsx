@@ -475,7 +475,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
-            className={`group relative ${snapshot.isDragging ? "l z-50" : ""}`}
+            id={component.component_id}
+            className={`group relative scroll-mt-24 ${snapshot.isDragging ? "l z-50" : ""}`}
             style={{
               ...provided.draggableProps.style,
               ...(snapshot.isDragging && {

@@ -5,6 +5,7 @@ import { Search, Puzzle, Rocket } from "lucide-react";
 import { AboutUs19Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface AboutUsTemplate19Props {
   aboutUsData: AboutUs19Data;
@@ -31,6 +32,13 @@ export function AboutUsTemplate19({
     aboutUsData,
     onUpdate
   );
+
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#2563EB",
+    },
+  };
 
   const sectionRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
@@ -88,7 +96,8 @@ export function AboutUsTemplate19({
               value={data.sectionTag}
               onChange={handleTextUpdate("sectionTag")}
               isEditable={isEditable}
-              className="mb-4 block text-sm font-medium text-blue-600"
+              className="mb-4 block text-sm font-medium"
+              style={{ color: theme.colors.primary }}
             />
             <h2 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl">
               {isEditable ? (
@@ -116,8 +125,11 @@ export function AboutUsTemplate19({
 
             {/* Active Blue Line */}
             <div
-              className="bg-primary absolute top-8 left-[15px] w-0.5 transition-all duration-100 ease-out md:left-[19px]"
-              style={{ height: `calc(${progress * 100}% - 60px)` }}
+              className="absolute top-8 left-[15px] w-0.5 transition-all duration-100 ease-out md:left-[19px]"
+              style={{
+                height: `calc(${progress * 100}% - 60px)`,
+                backgroundColor: theme.colors.primary,
+              }}
             ></div>
 
             <div className="space-y-12">
@@ -139,19 +151,35 @@ export function AboutUsTemplate19({
                     <div
                       className={`absolute top-6 -left-[41px] h-4 w-4 rounded-full border-4 transition-colors duration-500 md:-left-[45px] ${
                         isActive
-                          ? "scale-125 border-blue-600 bg-white"
+                          ? "scale-125 bg-white"
                           : "border-gray-100 bg-gray-100"
                       }`}
+                      style={{
+                        borderColor: isActive
+                          ? theme.colors.primary
+                          : undefined,
+                      }}
                     ></div>
 
                     <div
                       className={`group relative overflow-hidden rounded-2xl border p-8 transition-all duration-500 ${
                         isActive
-                          ? "border-blue-200 bg-white shadow-lg"
+                          ? "bg-white shadow-lg"
                           : "border-gray-50 bg-gray-50"
                       }`}
+                      style={{
+                        borderColor: isActive
+                          ? theme.colors.primary + "4D"
+                          : undefined,
+                      }}
                     >
-                      <div className="absolute top-4 right-4 rounded-md bg-blue-50 px-2 py-1 text-xs font-bold text-blue-600">
+                      <div
+                        className="absolute top-4 right-4 rounded-md px-2 py-1 text-xs font-bold"
+                        style={{
+                          backgroundColor: theme.colors.primary + "1A",
+                          color: theme.colors.primary,
+                        }}
+                      >
                         <EditableText
                           value={step.stepNumber}
                           onChange={value =>
@@ -164,9 +192,17 @@ export function AboutUsTemplate19({
                       <div
                         className={`mb-6 flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-500 ${
                           isActive
-                            ? "bg-primary text-white shadow-lg shadow-blue-600/20"
+                            ? "text-white shadow-lg"
                             : "bg-gray-200 text-gray-500"
                         }`}
+                        style={
+                          isActive
+                            ? {
+                                backgroundColor: theme.colors.primary,
+                                boxShadow: `0 10px 15px -3px ${theme.colors.primary}33`,
+                              }
+                            : undefined
+                        }
                       >
                         <IconComponent size={20} />
                       </div>

@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import {
   NavbarData,
   NavbarLink,
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
-import {
-  Plus,
-  Facebook,
-  Instagram,
-  Twitter,
-  Linkedin,
-  Youtube,
-} from "lucide-react";
+import { Facebook, Instagram, Twitter, Linkedin, Youtube } from "lucide-react";
 import { NavbarLogo } from "../navbar-logo";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableLink } from "@/components/ui/navbar/editable-link";
@@ -21,8 +14,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 const EditableItem: React.FC<{
-  onEdit: () => void;
-  onDelete?: () => void;
   children: React.ReactNode;
 }> = ({ children }) => (
   <div className="group relative flex items-center">{children}</div>
@@ -114,7 +105,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                 className={`flex ${disableClicks ? "pointer-events-auto" : ""}`}
               >
                 {isEditable && onEditLogo ? (
-                  <EditableItem onEdit={onEditLogo}>
+                  <EditableItem>
                     <NavbarLogo
                       data={navbarData}
                       isEditable={isEditable}
@@ -137,10 +128,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                 {links.map((link, index) => (
                   <React.Fragment key={link.id}>
                     {isEditable ? (
-                      <EditableItem
-                        onEdit={() => onEditLink && onEditLink(link)}
-                        onDelete={() => onDeleteLink && onDeleteLink(link.id)}
-                      >
+                      <EditableItem key={link.id}>
                         <EditableLink
                           text={link.text}
                           href={link.href}
@@ -151,7 +139,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                           }}
                           isEditable={isEditable}
                           siteUser={siteUser}
-                          className="hover:text-primary flex cursor-pointer items-center gap-1.5 font-medium text-gray-700"
+                          className="flex cursor-pointer items-center gap-1.5 font-medium text-black transition-colors hover:text-black/80"
                           textPlaceholder="Link text..."
                           hrefPlaceholder="Enter URL..."
                         />
@@ -166,7 +154,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                           disableClicks
                         )}
                         onClick={e => handleLinkClick(e, link.href)}
-                        className={`hover:text-primary font-medium text-gray-700 ${
+                        className={`font-medium text-black transition-colors hover:text-black/80 ${
                           disableClicks
                             ? "cursor-default opacity-60"
                             : "cursor-pointer"
@@ -185,7 +173,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                     size="sm"
                     className="pointer-events-auto h-7 px-2"
                   >
-                    <Plus className="h-3 w-3" />
+                    Link
                   </Button>
                 )}
               </div>
@@ -215,10 +203,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                           }`}
                           aria-label={social.label}
                         >
-                          <Icon
-                            className="h-5 w-5"
-                            style={{ color: theme.colors.primary }}
-                          />
+                          <Icon className="h-5 w-5 text-black hover:text-black/80" />
                         </Link>
                       );
                     })}

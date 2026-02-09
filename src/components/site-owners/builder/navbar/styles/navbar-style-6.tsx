@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import {
   NavbarData,
   NavbarLink,
@@ -7,7 +7,6 @@ import {
   TopBarItem,
 } from "@/types/owner-site/components/navbar";
 import {
-  Plus,
   Edit,
   Trash2,
   MapPin,
@@ -40,10 +39,8 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 
 const EditableItem: React.FC<{
-  onEdit: () => void;
-  onDelete?: () => void;
   children: React.ReactNode;
-}> = ({ onEdit, onDelete, children }) => (
+}> = ({ children }) => (
   <div className="group relative flex items-center">{children}</div>
 );
 
@@ -209,16 +206,13 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
   return (
     <>
       <div className="bg-white">
-        <div style={{ backgroundColor: theme.colors.primary }}>
+        <div className="bg-black">
           <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-4 text-xs sm:px-6 lg:px-8">
             <div className="flex items-center gap-4">
               {links.slice(0, 3).map((link, index) => (
                 <React.Fragment key={link.id}>
                   {isEditable ? (
-                    <EditableItem
-                      onEdit={() => onEditLink && onEditLink(link)}
-                      onDelete={() => onDeleteLink && onDeleteLink(link.id)}
-                    >
+                    <EditableItem>
                       <EditableLink
                         text={link.text}
                         href={link.href}
@@ -267,7 +261,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   size="sm"
                   className="pointer-events-auto h-7 px-2 text-white hover:bg-white/20 hover:text-white"
                 >
-                  <Plus className="h-3 w-3" />
+                  Link
                 </Button>
               )}
             </div>
@@ -340,7 +334,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   size="sm"
                   className="pointer-events-auto h-7 px-2 text-white hover:bg-white/20 hover:text-white"
                 >
-                  <Plus className="h-3 w-3" />
+                  Add Item
                 </Button>
               )}
             </div>
@@ -360,7 +354,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                 className={`flex ${disableClicks ? "pointer-events-auto" : ""}`}
               >
                 {isEditable && onEditLogo ? (
-                  <EditableItem onEdit={onEditLogo}>
+                  <EditableItem>
                     <NavbarLogo
                       data={navbarData}
                       isEditable={isEditable}
@@ -419,7 +413,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                     className={`${disableClicks ? "pointer-events-auto" : ""}`}
                   >
                     {isEditable && onEditCart ? (
-                      <EditableItem onEdit={onEditCart}>
+                      <EditableItem>
                         <Button
                           variant="ghost"
                           size="sm"

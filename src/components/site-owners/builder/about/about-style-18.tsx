@@ -88,7 +88,7 @@ export function AboutUsTemplate18({
 
           {/* SECONDARY IMAGE */}
           <div
-            className="absolute right-4 bottom-0 z-20 h-[50%] w-[55%] overflow-hidden rounded-xl shadow-2xl"
+            className="absolute right-4 bottom-0 z-20 h-[55%] w-[55%] overflow-hidden rounded-xl shadow-2xl"
             style={{
               clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0% 100%)",
               backgroundColor: "#00000010",
@@ -99,11 +99,9 @@ export function AboutUsTemplate18({
               <EditableImage
                 src={data.secondaryImageUrl}
                 alt={data.secondaryImageAlt}
+                className="h-full w-full object-cover"
                 onImageChange={handleImageUpdate("secondaryImageUrl")}
                 isEditable={isEditable}
-                className="h-full w-full object-cover"
-                width={600}
-                height={600}
               />
             </div>
           </div>

@@ -762,7 +762,7 @@ export function FooterEditorDialog({
 
                     {editingData.logoImage && (
                       <div className="flex items-center gap-3 rounded-lg border p-3">
-                        <div className="h-16 w-16 overflow-hidden rounded border">
+                        <div className="overflow-hidden rounded border">
                           <img
                             src={editingData.logoImage}
                             alt="Logo preview"

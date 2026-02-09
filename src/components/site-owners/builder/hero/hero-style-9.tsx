@@ -133,7 +133,6 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
               as="h1"
               className="mx-auto mb-2 text-xl leading-tight font-bold sm:mb-4 sm:text-3xl md:mb-6 md:text-4xl lg:text-5xl xl:text-6xl"
               style={{
-                color: theme.colors.primary,
                 fontFamily: theme.fonts.heading,
               }}
               isEditable={isEditable}
@@ -148,10 +147,6 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                 onChange={handleTextUpdate("description")}
                 as="p"
                 className="mx-auto mb-4 max-w-xl text-xs leading-relaxed sm:mb-6 sm:text-sm md:mb-8 md:text-base lg:text-lg"
-                style={{
-                  fontFamily: theme.fonts.body,
-                  color: theme.colors.text,
-                }}
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -173,9 +168,9 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                   }
                   isEditable={isEditable}
                   siteUser={siteUser}
-                  className="inline-block rounded-full px-4 py-2 text-xs font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl sm:px-6 sm:py-2.5 sm:text-xs md:px-8 md:py-3 md:text-sm lg:px-10 lg:py-3.5 lg:text-base"
+                  className="rounded-full px-4 py-2 text-xs font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl sm:px-6 sm:py-2.5 sm:text-xs md:px-8 md:py-3 md:text-sm lg:px-10 lg:py-3.5 lg:text-base"
                   style={{
-                    background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
+                    background: theme.colors.primary,
                     color: theme.colors.primaryForeground,
                     fontFamily: theme.fonts.body,
                   }}

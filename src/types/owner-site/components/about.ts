@@ -984,7 +984,7 @@ export const defaultAboutUs18Data: AboutUs18Data = {
     "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=2070&auto=format&fit=crop",
   mainImageAlt: "Wooden boat on turquoise mountain lake",
   secondaryImageUrl:
-    "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=2070&auto=format&fit=crop",
   secondaryImageAlt: "Travel essentials flat lay with map and camera",
 };
 

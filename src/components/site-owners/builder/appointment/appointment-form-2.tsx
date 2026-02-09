@@ -126,8 +126,14 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
               <div className="space-y-4">
                 {data.contact_info?.email && (
                   <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
-                      <Mail className="h-5 w-5 text-blue-600" />
+                    <div
+                      className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full"
+                      style={{ backgroundColor: `${theme.colors.primary}15` }}
+                    >
+                      <Mail
+                        className="h-5 w-5"
+                        style={{ color: theme.colors.primary }}
+                      />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-500">Email</p>
@@ -151,8 +157,14 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
 
                 {data.contact_info?.phone && (
                   <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
-                      <Phone className="h-5 w-5 text-green-600" />
+                    <div
+                      className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full"
+                      style={{ backgroundColor: `${theme.colors.primary}15` }}
+                    >
+                      <Phone
+                        className="h-5 w-5"
+                        style={{ color: theme.colors.primary }}
+                      />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-500">Phone</p>
@@ -176,8 +188,14 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
 
                 {data.contact_info?.address && (
                   <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-purple-100">
-                      <MapPin className="h-5 w-5 text-purple-600" />
+                    <div
+                      className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full"
+                      style={{ backgroundColor: `${theme.colors.primary}15` }}
+                    >
+                      <MapPin
+                        className="h-5 w-5"
+                        style={{ color: theme.colors.primary }}
+                      />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-500">
@@ -220,7 +238,7 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                       data.business_hours?.[
                         key as keyof typeof data.business_hours
                       ];
-                    if (!hours) return null;
+                    if (hours === undefined && !isEditable) return null;
 
                     return (
                       <div
@@ -230,7 +248,27 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                         <span className="font-medium text-gray-700">
                           {label}
                         </span>
-                        <span className="text-gray-600">{hours}</span>
+                        {isEditable ? (
+                          <EditableText
+                            value={hours || ""}
+                            onChange={value => {
+                              if (onDataChange) {
+                                onDataChange({
+                                  ...data,
+                                  business_hours: {
+                                    ...data.business_hours,
+                                    [key]: value,
+                                  },
+                                });
+                              }
+                            }}
+                            className="text-right text-gray-600"
+                            isEditable={true}
+                            placeholder="Closed"
+                          />
+                        ) : (
+                          <span className="text-gray-600">{hours}</span>
+                        )}
                       </div>
                     );
                   })}
@@ -405,6 +443,10 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                 variant="default"
                 disabled={submitAppointment.isPending || isPreview}
                 className="w-full"
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  color: theme.colors.primaryForeground,
+                }}
               >
                 {submitAppointment.isPending ? (
                   <>

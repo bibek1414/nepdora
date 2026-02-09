@@ -6,7 +6,6 @@ import {
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
 import { getButtonVariant } from "@/lib/utils";
-import { Plus } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
@@ -17,12 +16,8 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 
 const EditableItem: React.FC<{
-  onEdit: () => void;
-  onDelete?: () => void;
   children: React.ReactNode;
-}> = ({ onEdit, onDelete, children }) => (
-  <div className="group relative">{children}</div>
-);
+}> = ({ children }) => <div className="group relative">{children}</div>;
 
 interface NavbarStyleProps {
   navbarData: NavbarData;
@@ -104,7 +99,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
         <div className="flex items-center gap-8">
           <div className={disableClicks ? "pointer-events-auto" : ""}>
             {isEditable && onEditLogo ? (
-              <EditableItem onEdit={onEditLogo}>
+              <EditableItem>
                 <NavbarLogo
                   data={navbarData}
                   isEditable={isEditable}
@@ -123,19 +118,11 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
           <div className="hidden items-center gap-4 md:flex">
             {links.map(link =>
               isEditable && onEditLink && onDeleteLink ? (
-                <EditableItem
-                  key={link.id}
-                  onEdit={() => onEditLink(link)}
-                  onDelete={() => onDeleteLink(link.id)}
-                >
+                <EditableItem key={link.id}>
                   <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
-                    className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium transition-colors"
-                    style={{
-                      color: theme.colors.primary,
-                      fontFamily: theme.fonts.heading,
-                    }}
+                    className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
                   >
                     {link.text}
                   </Link>
@@ -161,27 +148,13 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                 </Link>
               )
             )}
-            {isEditable && onAddLink && (
-              <Button
-                onClick={onAddLink}
-                variant="outline"
-                size="sm"
-                className="pointer-events-auto"
-              >
-                <Plus className="mr-2 h-4 w-4" /> Link
-              </Button>
-            )}
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           {buttons.map(button =>
             isEditable && onEditButton && onDeleteButton ? (
-              <EditableItem
-                key={button.id}
-                onEdit={() => onEditButton(button)}
-                onDelete={() => onDeleteButton(button.id)}
-              >
+              <EditableItem key={button.id}>
                 <Button
                   onClick={e => e.preventDefault()}
                   variant={getButtonVariant(button.variant)}
@@ -216,22 +189,12 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
               </Button>
             )
           )}
-          {isEditable && onAddButton && (
-            <Button
-              onClick={onAddButton}
-              variant="outline"
-              size="sm"
-              className="pointer-events-auto"
-            >
-              <Plus className="mr-2 h-4 w-4" /> Button
-            </Button>
-          )}
 
           {/* Cart Icon with Editable Wrapper */}
           {showCart && (
             <div className={disableClicks ? "pointer-events-auto" : ""}>
               {isEditable && onEditCart ? (
-                <EditableItem onEdit={onEditCart}>
+                <EditableItem>
                   <CartIcon onToggleCart={() => {}} />
                 </EditableItem>
               ) : (

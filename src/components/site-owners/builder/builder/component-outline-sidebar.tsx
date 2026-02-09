@@ -78,6 +78,13 @@ export const ComponentOutlineSidebar: React.FC<
     [localItems, commitOrder]
   );
 
+  const handleScrollTo = (componentId: string) => {
+    const element = document.getElementById(componentId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   const onDragEnd = useCallback(
     (result: DropResult) => {
       const { destination, source } = result;
@@ -144,7 +151,8 @@ export const ComponentOutlineSidebar: React.FC<
                           <div
                             ref={p.innerRef}
                             {...p.draggableProps}
-                            className={`flex items-center gap-2 rounded-md bg-gray-50 p-2 text-xs transition ${
+                            onClick={() => handleScrollTo(c.component_id)}
+                            className={`flex cursor-pointer items-center gap-2 rounded-md bg-gray-50 p-2 text-xs transition hover:bg-gray-100 ${
                               s.isDragging ? "ring-primary/50 ring-1" : ""
                             }`}
                           >

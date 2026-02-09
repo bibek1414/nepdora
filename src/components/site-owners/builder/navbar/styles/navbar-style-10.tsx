@@ -23,12 +23,8 @@ import { AppointmentForm } from "@/components/site-owners/builder/appointment/na
 import { defaultAppointmentData } from "@/types/owner-site/components/appointment";
 
 const EditableItem: React.FC<{
-  onEdit: () => void;
-  onDelete?: () => void;
   children: React.ReactNode;
-}> = ({ onEdit, onDelete, children }) => (
-  <div className="group relative">{children}</div>
-);
+}> = ({ children }) => <div className="group relative">{children}</div>;
 
 interface NavbarStyleProps {
   navbarData: NavbarData;
@@ -86,7 +82,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
             className={`shrink-0 ${disableClicks ? "pointer-events-auto" : ""}`}
           >
             {isEditable && onEditLogo ? (
-              <EditableItem onEdit={onEditLogo}>
+              <EditableItem>
                 <NavbarLogo
                   data={navbarData}
                   isEditable={isEditable}
@@ -109,15 +105,11 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
           <div className="hidden items-center gap-6 lg:flex">
             {links.map(link =>
               isEditable && onEditLink && onDeleteLink ? (
-                <EditableItem
-                  key={link.id}
-                  onEdit={() => onEditLink(link)}
-                  onDelete={() => onDeleteLink(link.id)}
-                >
+                <EditableItem key={link.id}>
                   <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
-                    className="text-muted-foreground hover:text-foreground cursor-pointer text-base font-medium whitespace-nowrap transition-colors"
+                    className="cursor-pointer text-base font-medium text-black transition-colors hover:text-black/80"
                   >
                     {link.text}
                   </Link>
@@ -133,10 +125,10 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                     disableClicks
                   )}
                   onClick={e => handleLinkClick(e, link.href)}
-                  className={`text-base font-medium whitespace-nowrap transition-colors ${
+                  className={`text-base font-medium transition-colors ${
                     disableClicks
                       ? "cursor-default opacity-60"
-                      : "cursor-pointer hover:opacity-80"
+                      : "cursor-pointer text-black hover:text-black/80"
                   }`}
                 >
                   {link.text}
@@ -149,16 +141,12 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
           <div className="hidden items-center gap-3 lg:flex">
             {buttons.map(button =>
               isEditable && onEditButton && onDeleteButton ? (
-                <EditableItem
-                  key={button.id}
-                  onEdit={() => onEditButton(button)}
-                  onDelete={() => onDeleteButton(button.id)}
-                >
+                <EditableItem key={button.id}>
                   <Button
                     onClick={e => e.preventDefault()}
-                    variant={getButtonVariant(button.variant)}
+                    variant="default"
                     size="default"
-                    className="cursor-pointer px-6 py-2 text-base"
+                    className="cursor-pointer bg-black px-6 py-2 text-base text-white hover:bg-black/90"
                   >
                     {button.text}
                   </Button>
@@ -166,10 +154,10 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
               ) : (
                 <Button
                   key={button.id}
-                  variant={getButtonVariant(button.variant)}
+                  variant="default"
                   size="default"
                   onClick={disableClicks ? e => e.preventDefault() : undefined}
-                  className={`px-6 py-2 text-base ${
+                  className={`bg-black px-6 py-2 text-base text-white hover:bg-black/90 ${
                     disableClicks
                       ? "pointer-events-auto cursor-default opacity-60"
                       : ""
@@ -201,7 +189,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                 <Button
                   variant="default"
                   size="default"
-                  className={`px-6 py-2 text-base ${
+                  className={`bg-black px-6 py-2 text-base text-white hover:bg-black/90 ${
                     disableClicks
                       ? "pointer-events-auto cursor-default opacity-60"
                       : ""
@@ -249,14 +237,10 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
             <div className="mb-6 space-y-2">
               {links.map(link =>
                 isEditable && onEditLink && onDeleteLink ? (
-                  <EditableItem
-                    key={link.id}
-                    onEdit={() => onEditLink(link)}
-                    onDelete={() => onDeleteLink(link.id)}
-                  >
+                  <EditableItem key={link.id}>
                     <Button
                       variant="ghost"
-                      className="hover:bg-accent h-12 w-full justify-start px-4 text-lg font-normal"
+                      className="h-12 w-full justify-start px-4 text-lg font-normal text-black hover:bg-gray-100"
                       onClick={e => e.preventDefault()}
                     >
                       {link.text}
@@ -266,7 +250,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                   <SheetClose asChild key={link.id}>
                     <Button
                       variant="ghost"
-                      className="hover:bg-accent h-12 w-full justify-start px-4 text-lg font-normal"
+                      className="h-12 w-full justify-start px-4 text-lg font-normal text-black hover:bg-gray-100"
                       asChild={!disableClicks}
                     >
                       <Link
@@ -294,16 +278,12 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
             <div className="mb-6 space-y-3">
               {buttons.map(button =>
                 isEditable && onEditButton && onDeleteButton ? (
-                  <EditableItem
-                    key={button.id}
-                    onEdit={() => onEditButton(button)}
-                    onDelete={() => onDeleteButton(button.id)}
-                  >
+                  <EditableItem key={button.id}>
                     <Button
                       onClick={e => e.preventDefault()}
-                      variant={getButtonVariant(button.variant)}
+                      variant="default"
                       size="default"
-                      className="w-full cursor-pointer justify-center py-3 text-base font-medium"
+                      className="w-full cursor-pointer justify-center bg-black py-3 text-base font-medium text-white hover:bg-black/90"
                     >
                       {button.text}
                     </Button>
@@ -311,12 +291,12 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                 ) : (
                   <SheetClose asChild key={button.id}>
                     <Button
-                      variant={getButtonVariant(button.variant)}
+                      variant="default"
                       size="default"
                       onClick={
                         disableClicks ? e => e.preventDefault() : undefined
                       }
-                      className={`w-full justify-center py-3 text-base font-medium ${
+                      className={`w-full justify-center bg-black py-3 text-base font-medium text-white hover:bg-black/90 ${
                         disableClicks
                           ? "pointer-events-auto cursor-default opacity-60"
                           : ""
@@ -350,7 +330,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                   <Button
                     variant="default"
                     size="default"
-                    className={`w-full justify-center py-3 text-base font-medium ${
+                    className={`w-full justify-center bg-black py-3 text-base font-medium text-white hover:bg-black/90 ${
                       disableClicks
                         ? "pointer-events-auto cursor-default opacity-60"
                         : ""

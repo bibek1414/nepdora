@@ -97,20 +97,49 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const daysOfWeek = [
+    { key: "monday", label: "Monday" },
+    { key: "tuesday", label: "Tuesday" },
+    { key: "wednesday", label: "Wednesday" },
+    { key: "thursday", label: "Thursday" },
+    { key: "friday", label: "Friday" },
+    { key: "saturday", label: "Saturday" },
+    { key: "sunday", label: "Sunday" },
+  ];
+
   return (
     <div className="mx-auto max-w-4xl">
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 via-white to-purple-50 p-1 shadow-2xl">
+      <div
+        className="relative overflow-hidden rounded-2xl p-1 shadow-2xl"
+        style={{
+          background: `linear-gradient(to bottom right, ${theme.colors.primary}20, white, ${theme.colors.primary}10)`,
+        }}
+      >
         <div className="relative rounded-2xl bg-white p-8 md:p-12">
           {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 h-40 w-40 translate-x-16 -translate-y-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 opacity-20 blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 h-40 w-40 -translate-x-16 translate-y-16 rounded-full bg-gradient-to-tr from-purple-400 to-pink-500 opacity-20 blur-3xl"></div>
+          <div
+            className="absolute top-0 right-0 h-40 w-40 translate-x-16 -translate-y-16 rounded-full opacity-20 blur-3xl"
+            style={{ backgroundColor: theme.colors.primary }}
+          ></div>
+          <div
+            className="absolute bottom-0 left-0 h-40 w-40 -translate-x-16 translate-y-16 rounded-full opacity-20 blur-3xl"
+            style={{ backgroundColor: theme.colors.primary }}
+          ></div>
 
           {/* Header */}
           <div className="relative mb-8 text-center">
-            <div className="mb-4 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-3">
+            <div
+              className="mb-4 inline-flex items-center justify-center rounded-full p-3"
+              style={{ backgroundColor: theme.colors.primary }}
+            >
               <Sparkles className="h-6 w-6 text-white" />
             </div>
-            <h3 className="mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-3xl font-bold text-transparent">
+            <h3
+              className="mb-2 bg-clip-text text-3xl font-bold text-transparent"
+              style={{
+                backgroundImage: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.primary}99)`,
+              }}
+            >
               Schedule Your Visit
             </h3>
             <p className="text-gray-600">
@@ -125,7 +154,10 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
                 htmlFor="full_name"
                 className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
               >
-                <User className="h-4 w-4 text-blue-500" />
+                <User
+                  className="h-4 w-4"
+                  style={{ color: theme.colors.primary }}
+                />
                 Full Name{" "}
                 {data.required_fields.full_name && (
                   <span className="text-red-500">*</span>
@@ -150,7 +182,10 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
                   htmlFor="email"
                   className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
                 >
-                  <Mail className="h-4 w-4 text-blue-500" />
+                  <Mail
+                    className="h-4 w-4"
+                    style={{ color: theme.colors.primary }}
+                  />
                   Email{" "}
                   {data.required_fields.email && (
                     <span className="text-red-500">*</span>
@@ -173,7 +208,10 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
                   htmlFor="phone"
                   className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
                 >
-                  <Phone className="h-4 w-4 text-blue-500" />
+                  <Phone
+                    className="h-4 w-4"
+                    style={{ color: theme.colors.primary }}
+                  />
                   Phone{" "}
                   {data.required_fields.phone && (
                     <span className="text-red-500">*</span>
@@ -199,7 +237,10 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
                   htmlFor="date"
                   className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
                 >
-                  <Calendar className="h-4 w-4 text-purple-500" />
+                  <Calendar
+                    className="h-4 w-4"
+                    style={{ color: theme.colors.primary }}
+                  />
                   Preferred Date{" "}
                   {data.required_fields.date && (
                     <span className="text-red-500">*</span>
@@ -221,7 +262,10 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
                   htmlFor="time"
                   className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
                 >
-                  <Clock className="h-4 w-4 text-purple-500" />
+                  <Clock
+                    className="h-4 w-4"
+                    style={{ color: theme.colors.primary }}
+                  />
                   Preferred Time{" "}
                   {data.required_fields.time && (
                     <span className="text-red-500">*</span>
@@ -246,7 +290,10 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
                   htmlFor="reason"
                   className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
                 >
-                  <MessageSquare className="h-4 w-4 text-blue-500" />
+                  <MessageSquare
+                    className="h-4 w-4"
+                    style={{ color: theme.colors.primary }}
+                  />
                   Reason for Visit{" "}
                   {data.required_fields.reason && (
                     <span className="text-red-500">*</span>
@@ -279,7 +326,10 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
                 htmlFor="message"
                 className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700"
               >
-                <MessageSquare className="h-4 w-4 text-blue-500" />
+                <MessageSquare
+                  className="h-4 w-4"
+                  style={{ color: theme.colors.primary }}
+                />
                 Additional Notes{" "}
                 {data.required_fields.message && (
                   <span className="text-red-500">*</span>
@@ -300,7 +350,11 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
             <Button
               type="submit"
               disabled={submitAppointment.isPending || isPreview}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 py-6 text-lg font-semibold shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-xl"
+              className="w-full py-6 text-lg font-semibold shadow-lg transition-all hover:shadow-xl"
+              style={{
+                backgroundImage: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.primary}CC)`,
+                color: theme.colors.primaryForeground,
+              }}
             >
               {submitAppointment.isPending ? (
                 <>

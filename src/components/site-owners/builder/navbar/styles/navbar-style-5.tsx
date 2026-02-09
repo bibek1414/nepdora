@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import {
   NavbarData,
   NavbarLink,
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
-import { Plus, Edit, Trash2, Menu, Search, ShoppingCart } from "lucide-react";
+import { Edit, Trash2, Menu, Search, ShoppingCart } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
@@ -22,12 +22,8 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 
 const EditableItem: React.FC<{
-  onEdit: () => void;
-  onDelete?: () => void;
   children: React.ReactNode;
-}> = ({ onEdit, onDelete, children }) => (
-  <div className="group relative">{children}</div>
-);
+}> = ({ children }) => <div className="group relative">{children}</div>;
 
 interface NavbarStyleProps {
   navbarData: NavbarData;
@@ -111,10 +107,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
   return (
     <>
       <div className="bg-white">
-        <div
-          className="flex h-10 items-center justify-center px-4 text-sm font-medium text-white sm:px-6 lg:px-8"
-          style={{ backgroundColor: theme.colors.primary }}
-        >
+        <div className="flex h-10 items-center justify-center bg-black px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
           {isEditable ? (
             <EditableText
               value={bannerText}
@@ -125,7 +118,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
             />
           ) : (
             <div
-              className="prose prose-sm max-w-none leading-relaxed"
+              className="prose prose-sm max-w-none leading-relaxed text-white"
               dangerouslySetInnerHTML={{ __html: bannerText }}
             />
           )}
@@ -164,7 +157,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                   className={`ml-4 flex lg:ml-0 ${disableClicks ? "pointer-events-auto" : ""}`}
                 >
                   {isEditable && onEditLogo ? (
-                    <EditableItem onEdit={onEditLogo}>
+                    <EditableItem>
                       <NavbarLogo
                         data={navbarData}
                         isEditable={isEditable}
@@ -188,14 +181,11 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                     {links.map(link => (
                       <div key={link.id} className="flex">
                         {isEditable && onEditLink && onDeleteLink ? (
-                          <EditableItem
-                            onEdit={() => onEditLink(link)}
-                            onDelete={() => onDeleteLink(link.id)}
-                          >
+                          <EditableItem key={link.id}>
                             <Link
                               href={link.href}
                               onClick={e => e.preventDefault()}
-                              className="mt-6 flex items-center text-sm font-medium hover:text-gray-800"
+                              className="mt-6 flex items-center text-sm font-medium text-black transition-colors hover:text-black/80"
                             >
                               {link.text}
                             </Link>
@@ -228,15 +218,11 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                     {buttons.slice(0, 2).map(button =>
                       isEditable && onEditButton && onDeleteButton ? (
-                        <EditableItem
-                          key={button.id}
-                          onEdit={() => onEditButton(button)}
-                          onDelete={() => onDeleteButton(button.id)}
-                        >
+                        <EditableItem key={button.id}>
                           <Link
                             href={button.href}
                             onClick={e => e.preventDefault()}
-                            className="cursor-pointer text-sm font-medium hover:text-gray-800"
+                            className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
                           >
                             {button.text}
                           </Link>
@@ -293,7 +279,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                       className={`ml-4 flow-root lg:ml-6 ${disableClicks ? "pointer-events-auto" : ""}`}
                     >
                       {isEditable && onEditCart ? (
-                        <EditableItem onEdit={onEditCart}>
+                        <EditableItem>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -330,16 +316,12 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
             <div className="space-y-6 px-4 py-6">
               {links.map(link =>
                 isEditable && onEditLink && onDeleteLink ? (
-                  <EditableItem
-                    key={link.id}
-                    onEdit={() => onEditLink(link)}
-                    onDelete={() => onDeleteLink(link.id)}
-                  >
+                  <EditableItem key={link.id}>
                     <div className="flow-root">
                       <Link
                         href={link.href}
                         onClick={e => e.preventDefault()}
-                        className="-m-2 block cursor-pointer p-2 font-medium text-gray-900"
+                        className="-m-2 block cursor-pointer p-2 font-medium text-black transition-colors hover:text-black/80"
                       >
                         {link.text}
                       </Link>
@@ -370,16 +352,12 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
               <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                 {buttons.map(button =>
                   isEditable && onEditButton && onDeleteButton ? (
-                    <EditableItem
-                      key={button.id}
-                      onEdit={() => onEditButton(button)}
-                      onDelete={() => onDeleteButton(button.id)}
-                    >
+                    <EditableItem key={button.id}>
                       <div className="flow-root">
                         <Link
                           href={button.href}
                           onClick={e => e.preventDefault()}
-                          className="-m-2 block cursor-pointer p-2 font-medium text-gray-900"
+                          className="-m-2 block cursor-pointer p-2 font-medium text-black transition-colors hover:text-black/80"
                         >
                           {button.text}
                         </Link>
