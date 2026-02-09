@@ -45,10 +45,6 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
       </SessionProvider>
 
       <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
-        <div className="mb-5">
-          <h1 className="text-xl font-bold text-black">Dashboard</h1>
-        </div>
-
         {isServiceSite ? (
           <div className="space-y-12">
             <StatsCards

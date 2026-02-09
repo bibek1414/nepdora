@@ -19,14 +19,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <SubscriptionProvider>
-        <DynamicFavicon />
-        <DynamicFontProvider>
-          <body>{children}</body>
-        </DynamicFontProvider>
-        <SubscriptionBlocker />
-      </SubscriptionProvider>
-    </html>
+    <SubscriptionProvider>
+      <DynamicFavicon />
+      <DynamicFontProvider>{children}</DynamicFontProvider>
+      <SubscriptionBlocker />
+    </SubscriptionProvider>
   );
 }

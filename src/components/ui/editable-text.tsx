@@ -264,10 +264,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
 
   return (
     <>
-      <div
-        className="relative inline-block w-full"
-        style={{ fontFamily: selectedFont }}
-      >
+      <div className="relative inline-block w-full">
         {React.createElement(Tag, commonProps)}
       </div>
     </>

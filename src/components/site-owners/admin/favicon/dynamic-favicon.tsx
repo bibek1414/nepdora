@@ -13,18 +13,27 @@ export const DynamicFavicon = () => {
       return;
     }
 
-    // Find the existing favicon link tag in the document's head.
-    let link: HTMLLinkElement | null =
-      document.querySelector("link[rel*='icon']");
+    const faviconUrl = siteConfig.favicon;
 
-    // If the link tag doesn't exist, create it and append it to the head.
-    if (!link) {
-      link = document.createElement("link");
-      link.rel = "icon";
-      document.head.appendChild(link);
-    }
+    // Helper to update or create a link tag
+    const updateIcon = (selector: string, rel: string) => {
+      let link = document.querySelector(selector) as HTMLLinkElement;
+      if (link) {
+        link.href = faviconUrl;
+      } else {
+        link = document.createElement("link");
+        link.rel = rel;
+        link.href = faviconUrl;
+        document.head.appendChild(link);
+      }
+    };
 
-    link.href = siteConfig.favicon;
+    // Update standard favicon
+    updateIcon("link[rel~='icon']", "icon");
+    // Update shortcut icon
+    updateIcon("link[rel='shortcut icon']", "shortcut icon");
+    // Update apple touch icon
+    updateIcon("link[rel='apple-touch-icon']", "apple-touch-icon");
   }, [siteConfig, isLoading, error, pathname]);
 
   return null;
