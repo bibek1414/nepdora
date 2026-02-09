@@ -94,7 +94,6 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
         className={`bg-background flex items-center justify-between p-4 ${
           !isEditable ? "sticky top-16 z-40 mx-auto max-w-7xl" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
-        style={{ fontFamily: theme.fonts.heading }}
       >
         <div className="flex items-center gap-8">
           <div className={disableClicks ? "pointer-events-auto" : ""}>

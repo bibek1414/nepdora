@@ -9,6 +9,7 @@ import {
   Music2,
   Edit,
   Trash2,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -147,6 +148,7 @@ interface FooterProps {
   onUpdate?: (componentId: string, data: any) => void;
   componentId?: string;
   footerId?: string;
+  onReplace?: (category: string) => void;
 }
 
 export function Footer({
@@ -157,6 +159,7 @@ export function Footer({
   componentId = "footer",
   footerId,
   siteUser,
+  onReplace,
 }: FooterProps) {
   const { data: currentFooterData, setData: setCurrentFooterData } =
     useBuilderLogic(footerData, updatedData => {
@@ -372,6 +375,17 @@ export function Footer({
           >
             <Edit className="mr-2 h-4 w-4" />
             Edit Footer
+          </Button>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onReplace?.("footer-sections")}
+            disabled={isLoading}
+            className="w-full justify-start bg-white"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Replace
           </Button>
 
           <Button

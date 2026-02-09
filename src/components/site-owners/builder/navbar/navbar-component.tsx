@@ -23,7 +23,7 @@ import { NavbarStyle9 } from "./styles/navbar-style-9";
 import { NavbarStyle10 } from "./styles/navbar-style-10";
 import { NavbarStyle11 } from "./styles/navbar-style-11";
 import { Button } from "@/components/ui/button";
-import { Edit, Edit2, Settings, Trash2 } from "lucide-react";
+import { Edit, Edit2, RefreshCw, Settings, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,6 +41,7 @@ interface NavbarComponentProps {
   isEditable?: boolean;
   siteUser: string;
   disableClicks?: boolean;
+  onReplace?: (category: string) => void;
 }
 
 const styleMap = {
@@ -62,6 +63,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
   isEditable = true,
   siteUser,
   disableClicks = false,
+  onReplace,
 }) => {
   const { mutate: updateNavbar, isPending: isUpdating } =
     useUpdateNavbarMutation();
@@ -175,8 +177,17 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
             onClick={() => setIsEditorOpen(true)}
             className="w-full justify-start"
           >
-            <Edit className="mr-2 h-4 w-4" />
             Edit Navbar
+          </Button>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onReplace?.("navbar-sections")}
+            className="w-full justify-start bg-white"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Replace
           </Button>
 
           <AlertDialog>

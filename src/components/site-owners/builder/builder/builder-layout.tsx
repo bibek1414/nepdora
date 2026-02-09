@@ -10,6 +10,7 @@ import { AddSectionDialog } from "@/components/site-owners/builder/builder/add-s
 import {
   useNavbarQuery,
   useCreateNavbarMutation,
+  useReplaceNavbarMutation,
 } from "@/hooks/owner-site/components/use-navbar";
 import { CTAData } from "@/types/owner-site/components/cta";
 import { NavbarData } from "@/types/owner-site/components/navbar";
@@ -20,6 +21,7 @@ import { Page } from "@/types/owner-site/components/page";
 import {
   useFooterQuery,
   useCreateFooterMutation,
+  useReplaceFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
 import { ComponentOutlineSidebar } from "@/components/site-owners/builder/builder/component-outline-sidebar";
 import { defaultGalleryData } from "@/types/owner-site/components/gallery";
@@ -102,6 +104,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [pendingInsertIndex, setPendingInsertIndex] = useState<
     number | undefined
   >(undefined);
+  const [pendingCategoryFilter, setPendingCategoryFilter] = useState<
+    string | undefined
+  >(undefined);
   const [pendingReplaceId, setPendingReplaceId] = useState<string | null>(null);
 
   // Dialog states
@@ -112,7 +117,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   // Queries and Mutations
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const createNavbarMutation = useCreateNavbarMutation();
+  const replaceNavbarMutation = useReplaceNavbarMutation();
   const createFooterMutation = useCreateFooterMutation();
+  const replaceFooterMutation = useReplaceFooterMutation();
   const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
 
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
@@ -385,6 +392,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   // Updated handler for Add Section that stores the insertIndex
   const handleAddSection = (position?: "above" | "below", index?: number) => {
+    setPendingReplaceId(null);
+    setPendingCategoryFilter(undefined);
     let insertIndex: number;
 
     if (index !== undefined && pageComponents[index]) {
@@ -402,9 +411,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     setIsAddSectionDialogOpen(true);
   };
 
-  const handleReplaceSection = (componentId: string) => {
+  const handleReplaceSection = (componentId: string, category?: string) => {
     setPendingReplaceId(componentId);
     setPendingInsertIndex(undefined);
+    setPendingCategoryFilter(category);
     setIsAddSectionDialogOpen(true);
   };
 
@@ -418,12 +428,26 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
     const toastId = "navbar-create";
 
-    createNavbarMutation.mutate(payload, {
-      onSuccess: () => {},
-      onError: error => {
-        toast.error("Failed to create navbar", { id: toastId });
-      },
-    });
+    if (pendingCategoryFilter === "navbar-sections") {
+      replaceNavbarMutation.mutate(payload, {
+        onSuccess: () => {
+          setPendingCategoryFilter(undefined);
+          setPendingReplaceId(null);
+        },
+        onError: error => {
+          toast.error("Failed to replace navbar", { id: toastId });
+        },
+      });
+    } else {
+      createNavbarMutation.mutate(payload, {
+        onSuccess: () => {
+          toast.success("Navbar added successfully!", { id: toastId });
+        },
+        onError: error => {
+          toast.error("Failed to create navbar", { id: toastId });
+        },
+      });
+    }
   };
 
   const handleNavbarTemplateSelect = (templateData: NavbarData) => {
@@ -509,18 +533,28 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       component_id: `footer-${Date.now()}`,
     };
 
-    const toastId = "footer-create";
+    const toastId = "footer-replace";
 
-    createFooterMutation.mutate(payload, {
-      onSuccess: () => {
-        console.log("Footer created successfully from dialog");
-        toast.success("Footer added successfully!", { id: toastId });
-      },
-      onError: error => {
-        console.error("Failed to create footer from dialog:", error);
-        toast.error("Failed to create footer", { id: toastId });
-      },
-    });
+    if (pendingCategoryFilter === "footer-sections") {
+      replaceFooterMutation.mutate(payload, {
+        onSuccess: () => {
+          setPendingCategoryFilter(undefined);
+          setPendingReplaceId(null);
+        },
+        onError: error => {
+          toast.error("Failed to replace footer", { id: toastId });
+        },
+      });
+    } else {
+      createFooterMutation.mutate(payload, {
+        onSuccess: () => {
+          toast.success("Footer added successfully!", { id: toastId });
+        },
+        onError: error => {
+          toast.error("Failed to create footer", { id: toastId });
+        },
+      });
+    }
   };
   // Add handler for opening CTA dialog
   const handleAddCTA = (insertIndex?: number) => {
@@ -579,7 +613,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "category-3"
       | "category-4"
       | "category-5"
-      | "category-6"
   ) => {
     const categoryData = {
       page_size: 8,
@@ -1029,11 +1062,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         {/* All Dialog Components */}
         <AddSectionDialog
           open={isAddSectionDialogOpen}
-          onOpenChange={setIsAddSectionDialogOpen}
+          onOpenChange={isOpen => {
+            setIsAddSectionDialogOpen(isOpen);
+            if (!isOpen) {
+              setPendingReplaceId(null);
+              setPendingCategoryFilter(undefined);
+            }
+          }}
           onComponentClick={handleComponentClick}
           onNavbarSelect={handleNavbarSelectFromDialog}
           onFooterSelect={handleFooterSelectFromDialog}
           websiteType={user?.website_type || "ecommerce"}
+          categoryFilter={pendingCategoryFilter}
         />
 
         <NavbarTemplateDialog

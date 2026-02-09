@@ -90,7 +90,6 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
         className={`bg-background flex items-center justify-between p-4 ${
           !isEditable ? "sticky top-16 z-40 border-b" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
-        style={{ fontFamily: theme.fonts.heading }}
       >
         <div className="hidden flex-1 items-center justify-end gap-4 md:flex">
           {leftLinks.map(link =>

@@ -107,3 +107,19 @@ export const useDeleteNavbarMutation = () => {
     },
   });
 };
+
+export const useReplaceNavbarMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateNavbarRequest) => useNavbarApi.replaceNavbar(data),
+    onSuccess: data => {
+      queryClient.invalidateQueries({ queryKey: NAVBAR_QUERY_KEY });
+      toast.success(data.message || "Navbar replaced successfully");
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to replace navbar");
+    },
+  });
+};

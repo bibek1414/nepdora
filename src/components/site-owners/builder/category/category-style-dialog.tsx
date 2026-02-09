@@ -11,7 +11,12 @@ interface CategoryStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onStyleSelect: (
-    style: "grid-1" | "grid-2" | "grid-3" | "link-1" | "card-1"
+    style:
+      | "category-1"
+      | "category-2"
+      | "category-3"
+      | "category-4"
+      | "category-5"
   ) => void;
 }
 
@@ -21,34 +26,44 @@ export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "grid-1" | "grid-2" | "grid-3" | "link-1" | "card-1" | null
+    | "category-1"
+    | "category-2"
+    | "category-3"
+    | "category-4"
+    | "category-5"
+    | null
   >(null);
 
   const templates = [
     {
-      id: "grid-1" as const,
-      name: "Grid Style 1",
+      id: "category-1" as const,
+      name: "Category Style 1",
     },
     {
-      id: "grid-2" as const,
-      name: "Grid Style 2",
+      id: "category-2" as const,
+      name: "Category Style 2",
     },
     {
-      id: "grid-3" as const,
-      name: "Grid Style 3",
+      id: "category-3" as const,
+      name: "Category Style 3",
     },
     {
-      id: "link-1" as const,
-      name: "Link Style 1",
+      id: "category-4" as const,
+      name: "Category Style 4",
     },
     {
-      id: "card-1" as const,
-      name: "Card Style 1",
+      id: "category-5" as const,
+      name: "Category Style 5",
     },
   ];
 
   const handleSelect = (template: {
-    id: "grid-1" | "grid-2" | "grid-3" | "link-1" | "card-1";
+    id:
+      | "category-1"
+      | "category-2"
+      | "category-3"
+      | "category-4"
+      | "category-5";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
@@ -60,7 +75,7 @@ export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="fixed right-0 !left-auto h-full w-full max-w-2xl transform overflow-y-auto rounded-none border-l bg-white p-6 shadow-xl transition-all duration-300 data-[state=closed]:translate-x-full data-[state=open]:translate-x-0">
+      <DialogContent className="fixed right-0 left-auto! h-full w-full max-w-2xl transform overflow-y-auto rounded-none border-l bg-white p-6 shadow-xl transition-all duration-300 data-[state=closed]:translate-x-full data-[state=open]:translate-x-0">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Choose Category Section Style

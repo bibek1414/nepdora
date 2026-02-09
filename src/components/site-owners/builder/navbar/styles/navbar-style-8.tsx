@@ -97,7 +97,6 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
             className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${
               disableClicks ? "pointer-events-none" : ""
             }`}
-            style={{ fontFamily: theme.fonts.heading }}
           >
             <div className="flex h-20 items-center justify-between">
               {/* Left: Logo */}

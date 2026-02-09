@@ -130,7 +130,6 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
             className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${
               disableClicks ? "pointer-events-none" : ""
             }`}
-            style={{ fontFamily: theme.fonts.heading }}
           >
             <div className="border-b border-gray-200">
               <div className="flex h-16 items-center">

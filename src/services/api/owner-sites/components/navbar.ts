@@ -105,4 +105,28 @@ export const useNavbarApi = {
       message: "Navbar deleted successfully",
     };
   },
+
+  // Replace navbar
+  replaceNavbar: async (
+    data: CreateNavbarRequest
+  ): Promise<CreateNavbarResponse> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/navbar/replace/`, {
+      method: "POST",
+      headers: createHeaders(),
+      body: JSON.stringify({
+        component_id: data.component_id,
+        content: data.content,
+        data: data.navbarData,
+      }),
+    });
+
+    await handleApiError(response);
+    const responseData = await response.json();
+
+    return {
+      data: responseData,
+      message: "Navbar replaced successfully",
+    };
+  },
 };

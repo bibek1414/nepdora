@@ -30,9 +30,7 @@ export interface CategoryData {
     | "category-2"
     | "category-3"
     | "category-4"
-    | "category-5"
-    | "category-6"
-    | "category-7";
+    | "category-5";
 
   title: string;
   subtitle?: string;

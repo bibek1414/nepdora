@@ -95,7 +95,6 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
         className={`bg-background mx-auto flex max-w-7xl items-center justify-between p-4 ${
           !isEditable ? "sticky top-0 z-40 border-b" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
-        style={{ fontFamily: theme.fonts.heading }}
       >
         <div className="flex min-w-0 flex-1 items-center gap-6">
           <div

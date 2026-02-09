@@ -127,3 +127,19 @@ export const useDeleteFooterMutation = () => {
     },
   });
 };
+
+export const useReplaceFooterMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateFooterRequest) => useFooterApi.replaceFooter(data),
+    onSuccess: data => {
+      queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
+      toast.success(data.message || "Footer replaced successfully");
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to replace footer");
+    },
+  });
+};

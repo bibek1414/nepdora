@@ -76,7 +76,7 @@ interface CanvasAreaProps {
   error: Error | null;
 
   onAddSection: (position?: "above" | "below", index?: number) => void;
-  onReplaceSection: (componentId: string) => void;
+  onReplaceSection: (componentId: string, category?: string) => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -603,7 +603,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       {/* Navbar Section */}
       {navbar ? (
         <div className="group relative mb-4 border-b">
-          <NavbarComponent navbar={navbar} siteUser="" />
+          <NavbarComponent
+            navbar={navbar}
+            siteUser=""
+            onReplace={category => onReplaceSection("navbar", category)}
+          />
         </div>
       ) : null}
 
@@ -685,6 +689,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             footerData={footer.data}
             style={footer.data.style}
             isEditable={true}
+            onReplace={() => onReplaceSection(footer.id, "footer-sections")}
           />
         </div>
       ) : null}

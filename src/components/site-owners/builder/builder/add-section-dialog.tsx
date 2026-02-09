@@ -52,6 +52,7 @@ interface AddSectionDialogProps {
       | "style-9"
   ) => void;
   websiteType?: string;
+  categoryFilter?: string;
 }
 
 type ComponentItem = {
@@ -83,9 +84,20 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
   onNavbarSelect,
   onFooterSelect,
   websiteType = "ecommerce", // Default to ecommerce for backward compatibility
+  categoryFilter,
 }) => {
   const [query, setQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    categoryFilter || null
+  );
+
+  // Reset selected category and query when the dialog is opened
+  React.useEffect(() => {
+    if (open) {
+      setSelectedCategory(categoryFilter || null);
+      setQuery("");
+    }
+  }, [open, categoryFilter]);
 
   const templates = {
     hero: [
@@ -375,17 +387,17 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     category: [
       {
         id: "category-1",
-        name: "Category Grid 1",
+        name: "Category Style 1",
         image: "/images/site-owners/categories/category1.png",
       },
       {
         id: "category-2",
-        name: "Category Grid 2",
+        name: "Category Style 2",
         image: "/images/site-owners/categories/category2.png",
       },
       {
         id: "category-3",
-        name: "Category List",
+        name: "Category Style 3",
         image: "/images/site-owners/categories/category3.png",
       },
       {
@@ -1501,26 +1513,28 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
             {/* Components List */}
             <ScrollArea className="flex-1 overflow-auto">
               <div className="p-2">
-                {filtered.map(component => (
-                  <button
-                    key={component.id}
-                    onClick={() => handleCategorySelect(component.id)}
-                    className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left transition-colors ${
-                      selectedCategory === component.id
-                        ? "bg-blue-50 text-blue-700"
-                        : "hover:bg-gray-100"
-                    }`}
-                  >
-                    <component.icon className="h-4 w-4 shrink-0" />
-                    <span className="truncate text-sm font-medium">
-                      {component.label}
-                    </span>
+                {filtered
+                  .filter(c => !categoryFilter || c.id === categoryFilter)
+                  .map(component => (
+                    <button
+                      key={component.id}
+                      onClick={() => handleCategorySelect(component.id)}
+                      className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left transition-colors ${
+                        selectedCategory === component.id
+                          ? "bg-blue-50 text-blue-700"
+                          : "hover:bg-gray-100"
+                      }`}
+                    >
+                      <component.icon className="h-4 w-4 shrink-0" />
+                      <span className="truncate text-sm font-medium">
+                        {component.label}
+                      </span>
 
-                    {component.hasTemplates && (
-                      <ChevronRight className="ml-auto h-3 w-3 shrink-0" />
-                    )}
-                  </button>
-                ))}
+                      {component.hasTemplates && (
+                        <ChevronRight className="ml-auto h-3 w-3 shrink-0" />
+                      )}
+                    </button>
+                  ))}
               </div>
             </ScrollArea>
           </div>

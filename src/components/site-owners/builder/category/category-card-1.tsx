@@ -58,9 +58,9 @@ export const CategoryCard1: React.FC<CategoryCard1Props> = ({
           <Image
             src={categoryImage}
             alt={category.name}
-            fill
+            height={400}
+            width={400}
             className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
         <h3 className="text-text-light dark:text-text-dark text-center text-lg font-semibold">

@@ -115,4 +115,28 @@ export const useFooterApi = {
       message: "Footer deleted successfully",
     };
   },
+
+  // Replace footer
+  replaceFooter: async (
+    data: CreateFooterRequest
+  ): Promise<CreateFooterResponse> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/footer/replace/`, {
+      method: "POST",
+      headers: createHeaders(),
+      body: JSON.stringify({
+        component_id: data.component_id,
+        content: data.content,
+        data: data.footerData,
+      }),
+    });
+
+    await handleApiError(response);
+    const responseData = await response.json();
+
+    return {
+      data: responseData,
+      message: "Footer replaced successfully",
+    };
+  },
 };
