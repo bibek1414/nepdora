@@ -52,7 +52,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 export const ProfileForm = () => {
   const { data: profile, isLoading, isError } = useUserProfile();
   const updateProfile = useUpdateUserProfile();
-  const { clearAuthData } = useAuth();
+  const { logout } = useAuth();
   const router = useRouter();
 
   const form = useForm<ProfileFormValues>({
@@ -94,8 +94,8 @@ export const ProfileForm = () => {
 
           // Small delay to let the toast show
           setTimeout(() => {
-            clearAuthData();
-            router.push("/admin/login");
+            // Logout and redirect to main admin login
+            logout("/admin/login");
           }, 1500);
         }
       },

@@ -34,7 +34,7 @@ interface AuthContextType {
   tokens: AuthTokens | null;
   login: (data: LoginData) => Promise<void>;
   signup: (data: SignupData) => Promise<void>;
-  logout: () => void;
+  logout: (redirectPath?: string) => void;
   updateTokens: (tokens: AuthTokens) => void;
   updateUser: (userData: Partial<User>) => void;
   isLoading: boolean;
@@ -544,7 +544,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = () => {
+  const logout = (redirectPath?: string) => {
     clearAuthData();
 
     toast.success("Logged Out", {
@@ -553,15 +553,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (typeof window !== "undefined") {
       const hostname = window.location.hostname;
+      const redirectQuery = redirectPath
+        ? `?next=${encodeURIComponent(redirectPath)}`
+        : "";
 
       if (hostname.includes("localhost")) {
-        window.location.href = "http://localhost:3000/logout";
+        window.location.href = `http://localhost:3000/logout${redirectQuery}`;
         return;
       }
 
       const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
       const protocol = process.env.NEXT_PUBLIC_PROTOCOL || "https";
-      const logoutUrl = `${protocol}://${baseDomain}/logout`;
+      const logoutUrl = `${protocol}://${baseDomain}/logout${redirectQuery}`;
       window.location.href = logoutUrl;
     }
   };
