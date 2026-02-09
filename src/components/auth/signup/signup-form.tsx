@@ -239,7 +239,7 @@ export function SignupForm({
 
         <div className="relative z-10 flex w-full flex-col items-center gap-8 md:flex-row">
           {/* Left Side - Illustration */}
-          <div className="flex w-full flex-col items-center justify-center p-8 md:w-1/2">
+          <div className="hidden w-full flex-col items-center justify-center p-8 md:flex md:w-1/2">
             <div className="mt-8 text-center">
               <h2 className="mb-2 text-3xl font-bold text-gray-800">
                 Build and manage websites
