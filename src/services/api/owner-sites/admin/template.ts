@@ -5,9 +5,8 @@ import {
   ImportTemplateRequest,
   ImportTemplateResponse,
 } from "@/types/owner-site/admin/template";
-import { getApiBaseUrl, siteConfig } from "@/config/site";
-import { getAuthToken } from "@/utils/auth";
-const API_BASE_URL = siteConfig.apiBaseUrl;
+import { getApiBaseUrl } from "@/config/site";
+
 export const templateAPI = {
   getTemplates: async (
     filters: TemplateFilters = {}
@@ -41,43 +40,22 @@ export const templateAPI = {
   importTemplate: async (
     templateId: number
   ): Promise<ImportTemplateResponse> => {
-    const token = getAuthToken();
+    const BASE_API_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/templates/use/`, {
+    const response = await fetch(`${BASE_API_URL}/api/import-template/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
       },
       body: JSON.stringify({
         template_id: templateId,
-        token: token,
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
-        errorData.message || `Failed to use template: ${response.status}`
-      );
-    }
-
-    return await response.json();
-  },
-
-  skipOnboarding: async (token: string): Promise<ImportTemplateResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/templates/use/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message || `Failed to skip onboarding: ${response.status}`
+        errorData.message || `Failed to import template: ${response.status}`
       );
     }
 

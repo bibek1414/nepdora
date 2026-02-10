@@ -6,12 +6,15 @@ import { ArrowLeft, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useTemplateCategories } from "@/hooks/super-admin/components/use-template-category";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
+import { User } from "@/hooks/use-jwt-server";
 
 interface OnboardingStepTwoProps {
   onContinue: (categoryId?: number) => void;
   onBack: () => void;
   currentStep: number;
   totalSteps: number;
+  user: User;
 }
 
 export const OnboardingStepTwo = ({
@@ -19,9 +22,11 @@ export const OnboardingStepTwo = ({
   onBack,
   currentStep,
   totalSteps,
+  user,
 }: OnboardingStepTwoProps) => {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
   const { data: categories = [], isLoading } = useTemplateCategories();
 
@@ -31,6 +36,10 @@ export const OnboardingStepTwo = ({
     setTimeout(() => {
       onContinue(categoryId);
     }, 300); // Small delay for better UX
+  };
+
+  const handleSkip = () => {
+    router.push(`/builder/${user.storeName}`);
   };
 
   const clearSearch = () => {
@@ -57,7 +66,7 @@ export const OnboardingStepTwo = ({
         <img src="/nepdora-logooo.svg" alt="Logo" className="h-8" />
         <button
           className="text-gray-600 hover:text-gray-900"
-          onClick={() => onContinue()}
+          onClick={handleSkip}
         >
           Skip
         </button>

@@ -40,9 +40,9 @@ import {
 import {
   useImportTemplate,
   usePreviewTemplate,
-  useSkipOnboarding,
 } from "@/hooks/owner-site/admin/use-template";
 import { useAuth } from "@/hooks/use-auth";
+import { User } from "@/hooks/use-jwt-server";
 
 interface OnboardingStepFourProps {
   websiteType: string;
@@ -51,6 +51,7 @@ interface OnboardingStepFourProps {
   onBack: () => void;
   currentStep: number;
   totalSteps: number;
+  user: User;
 }
 
 export const OnboardingStepFour = ({
@@ -60,10 +61,10 @@ export const OnboardingStepFour = ({
   onBack,
   currentStep,
   totalSteps,
+  user,
 }: OnboardingStepFourProps) => {
   const router = useRouter();
   const { tokens } = useAuth();
-  const { mutate: skipOnboarding } = useSkipOnboarding();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
@@ -145,7 +146,7 @@ export const OnboardingStepFour = ({
           setShowLoadingScreen(true);
 
           setTimeout(() => {
-            router.push("/admin");
+            router.push(`/builder/${user.storeName}`);
           }, 5000);
         },
         onError: error => {
@@ -174,12 +175,8 @@ export const OnboardingStepFour = ({
     setShowScratchConfirm(false);
     setShowLoadingScreen(true);
 
-    if (tokens?.access_token) {
-      skipOnboarding(tokens.access_token);
-    }
-
     setTimeout(() => {
-      router.push("/admin");
+      router.push(`/builder/${user.storeName}`);
     }, 5000);
   };
 

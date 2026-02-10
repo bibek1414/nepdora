@@ -5,6 +5,7 @@ import { OnboardingStepOne } from "./on-boarding-step-one";
 import { OnboardingStepTwo } from "./on-boarding-step-two";
 import { OnboardingStepThree } from "./on-boarding-step-three";
 import { OnboardingStepFour } from "./on-boarding-step-four";
+import { User } from "@/hooks/use-jwt-server";
 
 type OnboardingStep = 1 | 2 | 3 | 4;
 
@@ -15,7 +16,11 @@ interface WebsiteData {
   selectedOption?: "template" | "ai" | "scratch";
 }
 
-export default function OnboardingPage() {
+interface OnboardingPageProps {
+  user: User;
+}
+
+export default function OnboardingPage({ user }: OnboardingPageProps) {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>(1);
   const [websiteData, setWebsiteData] = useState<WebsiteData>({
     type: "",
@@ -67,6 +72,7 @@ export default function OnboardingPage() {
           onSelectOption={handleStepOneSelect}
           currentStep={currentStep}
           totalSteps={4}
+          user={user}
         />
       )}
       {currentStep === 2 && (
@@ -75,6 +81,7 @@ export default function OnboardingPage() {
           onBack={handleStepTwoBack}
           currentStep={currentStep}
           totalSteps={4}
+          user={user}
         />
       )}
       {currentStep === 3 && (
@@ -84,6 +91,7 @@ export default function OnboardingPage() {
           onBack={handleStepThreeBack}
           currentStep={currentStep}
           totalSteps={4}
+          user={user}
         />
       )}
       {currentStep === 4 && (
@@ -94,6 +102,7 @@ export default function OnboardingPage() {
           onBack={handleStepFourBack}
           currentStep={currentStep}
           totalSteps={4}
+          user={user}
         />
       )}
     </>

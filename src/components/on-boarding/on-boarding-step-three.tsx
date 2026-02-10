@@ -9,6 +9,8 @@ import {
   useTemplateSubcategories,
 } from "@/hooks/super-admin/components/use-template-category";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
+import { User } from "@/hooks/use-jwt-server";
 
 interface OnboardingStepThreeProps {
   categoryId?: number;
@@ -16,6 +18,7 @@ interface OnboardingStepThreeProps {
   onBack: () => void;
   currentStep: number;
   totalSteps: number;
+  user: User;
 }
 
 export const OnboardingStepThree = ({
@@ -24,11 +27,13 @@ export const OnboardingStepThree = ({
   onBack,
   currentStep,
   totalSteps,
+  user,
 }: OnboardingStepThreeProps) => {
   const [selectedSubcategory, setSelectedSubcategory] = useState<number | null>(
     null
   );
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
   const { data: categories = [] } = useTemplateCategories();
   const { data: subcategories = [], isLoading } =
@@ -48,6 +53,10 @@ export const OnboardingStepThree = ({
     setTimeout(() => {
       onContinue(subcategoryId, type);
     }, 300); // Small delay for better UX
+  };
+
+  const handleSkip = () => {
+    router.push(`/builder/${user.storeName}`);
   };
 
   const clearSearch = () => {
@@ -74,7 +83,7 @@ export const OnboardingStepThree = ({
         <img src="/nepdora-logooo.svg" alt="Logo" className="h-8" />
         <button
           className="text-gray-600 hover:text-gray-900"
-          onClick={() => onContinue(undefined, selectedCategory?.name)}
+          onClick={handleSkip}
         >
           Skip
         </button>
