@@ -1,16 +1,10 @@
+"use client";
 import React, { useState } from "react";
-import {
-  NewsletterComponentData,
-  NewsletterData,
-} from "@/types/owner-site/components/newsletter";
+import { NewsletterComponentData } from "@/types/owner-site/components/newsletter";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { NewsletterForm1 } from "./newsletter-form-1";
-import { NewsletterForm2 } from "./newsletter-form-2";
-import { NewsletterForm3 } from "./newsletter-form-3";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,11 +14,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { EditableText } from "@/components/ui/editable-text";
-import { Trash2, Mail, RefreshCw } from "lucide-react";
+import { Trash2, RefreshCw } from "lucide-react";
+import { NewsletterStyle1 } from "./newsletter-style-1";
+import { NewsletterStyle2 } from "./newsletter-style-2";
+import { NewsletterStyle3 } from "./newsletter-style-3";
 
 interface NewsletterComponentProps {
   component: NewsletterComponentData;
@@ -43,30 +38,8 @@ export const NewsletterComponent: React.FC<NewsletterComponentProps> = ({
   onUpdate,
   onReplace,
 }) => {
-  const { data: builderData, handleTextUpdate } = useBuilderLogic(
-    component.data,
-    updatedData => {
-      if (onUpdate) {
-        onUpdate(component.component_id, {
-          ...component,
-          data: {
-            ...component.data,
-            ...updatedData,
-          },
-        });
-      }
-    }
-  );
-
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const {
-    title = "Stay Updated",
-    subtitle,
-    style = "style-1",
-  } = builderData || {};
-
-  // Use unified mutation hooks
   const deleteNewsletterComponent = useDeleteComponentMutation(
     pageSlug || "",
     "newsletter"
@@ -76,139 +49,90 @@ export const NewsletterComponent: React.FC<NewsletterComponentProps> = ({
     "newsletter"
   );
 
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-    setIsDeleteDialogOpen(true);
-  };
+  const handleUpdate = (
+    updatedData: Partial<NewsletterComponentData["data"]>
+  ) => {
+    if (!pageSlug) return;
+    const componentId = component.component_id;
 
-  const handleConfirmDelete = () => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
+    const newData = {
+      ...component.data,
+      ...updatedData,
+    };
 
-    deleteNewsletterComponent.mutate(component.component_id);
-    setIsDeleteDialogOpen(false);
-  };
-
-  const handleTitleChange = (newTitle: string) => {
-    handleTextUpdate("title")(newTitle);
-
-    if (pageSlug) {
-      updateNewsletterComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
-      });
-    }
-  };
-
-  const handleSubtitleChange = (newSubtitle: string) => {
-    handleTextUpdate("subtitle")(newSubtitle);
-
-    if (pageSlug) {
-      updateNewsletterComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
-      });
-    }
-  };
-
-  const handleDataChange = (newData: NewsletterData) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
-
-    // Update component data via unified API
     updateNewsletterComponent.mutate({
-      componentId: component.component_id,
+      componentId,
       data: newData,
     });
 
-    // Also update local state if onUpdate is provided
     if (onUpdate) {
-      onUpdate(component.component_id, {
+      onUpdate(componentId, {
         ...component,
         data: newData,
       });
     }
   };
 
-  const renderNewsletterForm = () => {
-    const formProps = {
-      data: builderData,
-      siteUser: isEditable ? undefined : siteUser,
-      isPreview: isEditable,
-      isEditable: isEditable,
-      onDataChange: isEditable ? handleDataChange : undefined,
+  const handleConfirmDelete = () => {
+    if (!pageSlug) return;
+    deleteNewsletterComponent.mutate(component.component_id);
+    setIsDeleteDialogOpen(false);
+  };
+
+  const renderNewsletterStyle = () => {
+    const style = component.data?.style || "newsletter-1";
+    const commonProps = {
+      data: component.data,
+      isEditable,
+      siteUser,
+      onUpdate: handleUpdate,
     };
 
     switch (style) {
       case "newsletter-2":
-        return <NewsletterForm2 {...formProps} />;
+        return <NewsletterStyle2 {...commonProps} />;
       case "newsletter-3":
-        return <NewsletterForm3 {...formProps} />;
+        return <NewsletterStyle3 {...commonProps} />;
       case "newsletter-1":
       default:
-        return <NewsletterForm1 {...formProps} />;
+        return <NewsletterStyle1 {...commonProps} />;
     }
   };
 
-  // Builder mode preview
-  if (isEditable) {
-    return (
-      <div className="group relative">
-        {/* Delete Control with AlertDialog */}
-        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
+  return (
+    <div className="group relative">
+      {isEditable && (
+        <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onReplace?.(component.component_id)}
+            className="h-8 w-fit justify-start bg-white px-3"
+          >
+            <RefreshCw className="mr-1 h-4 w-4" />
+            Replace
+          </Button>
+
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex flex-col gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => onReplace?.(component.component_id)}
-                className="h-8 w-fit justify-start bg-white px-3"
-              >
-                <RefreshCw className="mr-1 h-4 w-4" />
-                Replace
-              </Button>
-              <AlertDialogTrigger asChild>
-                <Button
-                  onClick={handleDeleteClick}
-                  variant="destructive"
-                  size="sm"
-                  className="h-8 w-fit justify-start px-3"
-                  disabled={deleteNewsletterComponent.isPending}
-                >
-                  <Trash2 className="mr-1 h-4 w-4" />
-                  {deleteNewsletterComponent.isPending
-                    ? "Deleting..."
-                    : "Delete"}
-                </Button>
-              </AlertDialogTrigger>
-            </div>
+            <Button
+              onClick={() => setIsDeleteDialogOpen(true)}
+              variant="destructive"
+              size="sm"
+              className="h-8 w-fit justify-start px-3"
+              disabled={deleteNewsletterComponent.isPending}
+            >
+              <Trash2 className="mr-1 h-4 w-4" />
+              {deleteNewsletterComponent.isPending ? "Deleting..." : "Delete"}
+            </Button>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete Newsletter Component
-                </AlertDialogTitle>
+                <AlertDialogTitle>Delete Newsletter Component</AlertDialogTitle>
                 <AlertDialogDescription>
                   Are you sure you want to delete this newsletter component?
-                  This action cannot be undone and will permanently remove the
-                  component from your page.
+                  This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -220,54 +144,15 @@ export const NewsletterComponent: React.FC<NewsletterComponentProps> = ({
                 >
                   {deleteNewsletterComponent.isPending
                     ? "Deleting..."
-                    : "Delete Component"}
+                    : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
+      )}
 
-        {/* Newsletter Preview */}
-        {/* Show title/subtitle editing for form-1 and form-3 styles */}
-        <div className="py-8">
-          <div className="container mx-auto px-4">
-            {/* {style === "style-1" && (
-              <div className="mb-8 text-center">
-                <EditableText
-                  value={title}
-                  onChange={handleTitleChange}
-                  as="h2"
-                  className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                  isEditable={true}
-                  placeholder="Enter title..."
-                />
-                {subtitle !== undefined && (
-                  <EditableText
-                    value={subtitle || ""}
-                    onChange={handleSubtitleChange}
-                    as="p"
-                    className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                    isEditable={true}
-                    placeholder="Enter subtitle..."
-                    multiline={true}
-                  />
-                )}
-              </div>
-            )} */}
-
-            <div className="relative">{renderNewsletterForm()}</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Live site rendering
-  return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
-        {renderNewsletterForm()}
-      </div>
-    </section>
+      {renderNewsletterStyle()}
+    </div>
   );
 };

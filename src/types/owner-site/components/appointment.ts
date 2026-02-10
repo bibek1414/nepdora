@@ -80,3 +80,15 @@ export const DEFAULT_APPOINTMENT_MAP: Record<
   "appointment-3": { ...defaultAppointmentData, style: "appointment-3" },
   "appointment-4": { ...defaultAppointmentData, style: "appointment-4" },
 };
+// Type guards
+export const isAppointmentTemplate1 = (data: AppointmentData): boolean =>
+  data.style === "appointment-1";
+
+export const isAppointmentTemplate2 = (data: AppointmentData): boolean =>
+  data.style === "appointment-2";
+
+export const isAppointmentTemplate3 = (data: AppointmentData): boolean =>
+  data.style === "appointment-3";
+
+export const isAppointmentTemplate4 = (data: AppointmentData): boolean =>
+  data.style === "appointment-4";

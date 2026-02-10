@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
-import { ProductCard4 } from "@/components/site-owners/builder/products/product-card4";
+import { ProductCard4 } from "@/components/site-owners/builder/products/products-card/product-card4";
 import ProductFilterSidebar from "@/components/site-owners/builder/products/products-filter/product-filter-sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

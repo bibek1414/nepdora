@@ -1,17 +1,10 @@
+"use client";
 import React, { useState } from "react";
 import { PricingComponentData } from "@/types/owner-site/components/pricing";
-import { usePricings } from "@/hooks/owner-site/admin/use-pricing";
-import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { PricingCard1 } from "./pricing-card-1";
-import { PricingCard2 } from "./pricing-card-2";
-import { PricingCard3 } from "./pricing-card-3";
-import { PricingCard4 } from "./pricing-card-4";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,13 +14,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, DollarSign, RefreshCw } from "lucide-react";
-import { Pricing } from "@/types/owner-site/admin/pricing";
+import { Trash2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EditableText } from "@/components/ui/editable-text";
 import Link from "next/link";
+import { PricingStyle1 } from "./pricing-style/pricing-style-1";
+import { PricingStyle2 } from "./pricing-style/pricing-style-2";
+import { PricingStyle3 } from "./pricing-style/pricing-style-3";
+import { PricingStyle4 } from "./pricing-style/pricing-style-4";
 
 interface PricingComponentProps {
   component: PricingComponentData;
@@ -46,28 +40,7 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
   onPricingClick,
   onReplace,
 }) => {
-  const { data: builderData, handleTextUpdate } = useBuilderLogic(
-    component.data,
-    updatedData => {
-      if (onUpdate) {
-        onUpdate(component.component_id, {
-          ...component,
-          data: {
-            ...component.data,
-            ...updatedData,
-          },
-        });
-      }
-    }
-  );
-
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  const {
-    title = "Our Pricing Plans",
-    subtitle,
-    style = "pricing-1",
-  } = builderData || {};
 
   const deletePricingComponent = useDeleteComponentMutation(
     pageSlug || "",
@@ -78,139 +51,104 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
     "pricing"
   );
 
-  const { data, isLoading, error } = usePricings();
+  const handleUpdate = (updatedData: Partial<PricingComponentData["data"]>) => {
+    if (!pageSlug) return;
+    const componentId = component.component_id;
 
-  const pricings = data?.results || [];
+    const newData = {
+      ...component.data,
+      ...updatedData,
+    };
 
-  const handlePricingClick = (pricing: Pricing) => {
-    if (onPricingClick && component.order !== undefined) {
-      onPricingClick(pricing.id, component.order);
+    updatePricingComponent.mutate({
+      componentId,
+      data: newData,
+    });
+
+    if (onUpdate) {
+      onUpdate(componentId, {
+        ...component,
+        data: newData,
+      });
     }
-  };
-
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-    setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-
+    if (!pageSlug) return;
     deletePricingComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
-  const handleTitleChange = (newTitle: string) => {
-    handleTextUpdate("title")(newTitle);
-
-    if (pageSlug) {
-      updatePricingComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
-      });
-    }
-  };
-
-  const handleSubtitleChange = (newSubtitle: string) => {
-    handleTextUpdate("subtitle")(newSubtitle);
-
-    if (pageSlug) {
-      updatePricingComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
-      });
-    }
-  };
-
-  const renderPricingCard = (pricing: Pricing) => {
-    const cardProps = {
-      pricing,
-      onClick: () => handlePricingClick(pricing),
+  const renderPricingStyle = () => {
+    const style = component.data?.style || "pricing-1";
+    const commonProps = {
+      data: component.data,
+      isEditable,
+      onUpdate: handleUpdate,
+      onPricingClick: (pricingId: number) => {
+        if (onPricingClick && component.order !== undefined) {
+          onPricingClick(pricingId, component.order);
+        }
+      },
     };
 
     switch (style) {
       case "pricing-2":
-        return <PricingCard2 key={pricing.id} {...cardProps} />;
+        return <PricingStyle2 {...commonProps} />;
       case "pricing-3":
-        return <PricingCard3 key={pricing.id} {...cardProps} />;
+        return <PricingStyle3 {...commonProps} />;
       case "pricing-4":
-        return <PricingCard4 key={pricing.id} {...cardProps} />;
+        return <PricingStyle4 {...commonProps} />;
       case "pricing-1":
       default:
-        return <PricingCard1 key={pricing.id} {...cardProps} />;
+        return <PricingStyle1 {...commonProps} />;
     }
   };
 
-  const getGridClass = () => {
-    return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
-  };
+  return (
+    <div className="group relative">
+      {isEditable && (
+        <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <Link href="/admin/pricing/" target="_blank" rel="noopener">
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full justify-start"
+            >
+              Manage Pricing
+            </Button>
+          </Link>
 
-  // Builder mode preview
-  if (isEditable) {
-    return (
-      <div className="group relative">
-        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onReplace?.(component.component_id)}
+            className="h-8 w-fit justify-start bg-white px-3"
+          >
+            <RefreshCw className="mr-1 h-4 w-4" />
+            Replace
+          </Button>
+
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex flex-col gap-2">
-              <Link href="/admin/pricing/" target="_blank" rel="noopener">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="w-full justify-start"
-                >
-                  Manage Pricing
-                </Button>
-              </Link>
-
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => onReplace?.(component.component_id)}
-                className="h-8 w-fit justify-start bg-white px-3"
-              >
-                <RefreshCw className="mr-1 h-4 w-4" />
-                Replace
-              </Button>
-
-              <AlertDialogTrigger asChild>
-                <Button
-                  onClick={handleDeleteClick}
-                  variant="destructive"
-                  size="sm"
-                  className="h-8 w-fit justify-start px-3"
-                  disabled={deletePricingComponent.isPending}
-                >
-                  <Trash2 className="mr-1 h-4 w-4" />
-                  {deletePricingComponent.isPending ? "Deleting..." : "Delete"}
-                </Button>
-              </AlertDialogTrigger>
-            </div>
+            <Button
+              onClick={() => setIsDeleteDialogOpen(true)}
+              variant="destructive"
+              size="sm"
+              className="h-8 w-fit justify-start px-3"
+              disabled={deletePricingComponent.isPending}
+            >
+              <Trash2 className="mr-1 h-4 w-4" />
+              {deletePricingComponent.isPending ? "Deleting..." : "Delete"}
+            </Button>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete Pricing Component
-                </AlertDialogTitle>
+                <AlertDialogTitle>Delete Pricing Component</AlertDialogTitle>
                 <AlertDialogDescription>
                   Are you sure you want to delete this pricing component? This
-                  action cannot be undone and will permanently remove the
-                  component from your page.
+                  action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -220,162 +158,15 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   disabled={deletePricingComponent.isPending}
                 >
-                  {deletePricingComponent.isPending
-                    ? "Deleting..."
-                    : "Delete Component"}
+                  {deletePricingComponent.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
+      )}
 
-        <div className="py-8">
-          <div className="container mx-auto px-4">
-            {/* Conditionally render the text center div only if title or subtitle exist and style is not pricing-4 */}
-            {(title || subtitle) && style !== "pricing-4" && (
-              <div className="mb-8 text-center">
-                {title && (
-                  <EditableText
-                    value={title}
-                    onChange={handleTitleChange}
-                    as="h2"
-                    className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                    isEditable={true}
-                    placeholder="Enter title..."
-                  />
-                )}
-                {subtitle && (
-                  <EditableText
-                    value={subtitle}
-                    onChange={handleSubtitleChange}
-                    as="p"
-                    className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                    isEditable={true}
-                    placeholder="Enter subtitle..."
-                    multiline={true}
-                  />
-                )}
-              </div>
-            )}
-
-            {isLoading && (
-              <div className={`grid ${getGridClass()} gap-6`}>
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <div key={index} className="flex flex-col space-y-3">
-                    <Skeleton className="h-[400px] w-full rounded-xl" />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error Loading Pricing</AlertTitle>
-                <AlertDescription>
-                  {error instanceof Error
-                    ? error.message
-                    : "Failed to load pricing plans. Please check your API connection."}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {!isLoading && !error && pricings.length > 0 && (
-              <div className={`grid ${getGridClass()} gap-6`}>
-                {pricings.map(pricing => (
-                  <div
-                    key={pricing.id}
-                    className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
-                  >
-                    <div className="absolute inset-0 z-10 bg-transparent" />
-                    {renderPricingCard(pricing)}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {!isLoading && !error && pricings.length === 0 && (
-              <div className="bg-muted/50 rounded-lg py-12 text-center">
-                <DollarSign className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-                <h3 className="text-foreground mb-2 text-lg font-semibold">
-                  No Pricing Plans Found
-                </h3>
-                <p className="text-muted-foreground">
-                  Add some pricing plans to display them here.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Live site rendering
-  return (
-    <section className="bg-background mx-auto max-w-5xl py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
-        {/* Conditionally render header only if title or subtitle exist */}
-        {(title || subtitle) && style !== "pricing-4" && (
-          <div className="mb-12 text-center">
-            {title && (
-              <h2
-                className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-                dangerouslySetInnerHTML={{ __html: title }}
-              ></h2>
-            )}
-            {subtitle && (
-              <p
-                className="text-muted-foreground mx-auto max-w-3xl text-xl"
-                dangerouslySetInnerHTML={{ __html: subtitle }}
-              ></p>
-            )}
-          </div>
-        )}
-
-        {isLoading && (
-          <div className={`grid ${getGridClass()} gap-8`}>
-            {Array.from({ length: 3 }).map((_, index) => (
-              <div key={index} className="flex flex-col space-y-4">
-                <Skeleton className="h-[450px] w-full rounded-lg" />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {error && (
-          <Alert variant="destructive" className="mx-auto max-w-2xl">
-            <AlertCircle className="h-5 w-5" />
-            <AlertTitle>Unable to Load Pricing</AlertTitle>
-            <AlertDescription className="text-base">
-              {error instanceof Error
-                ? error.message
-                : "We're having trouble loading our pricing plans. Please try refreshing the page."}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {!isLoading && !error && pricings.length > 0 && (
-          <div className={`grid ${getGridClass()} gap-8`}>
-            {pricings.map(pricing => (
-              <div key={pricing.id}>{renderPricingCard(pricing)}</div>
-            ))}
-          </div>
-        )}
-
-        {!isLoading && !error && pricings.length === 0 && (
-          <div className="py-16 text-center">
-            <DollarSign className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Pricing Plans Available
-            </h3>
-            <p className="text-muted-foreground mx-auto max-w-md text-lg">
-              We&apos;re currently updating our pricing structure. Please check
-              back soon for new plans.
-            </p>
-          </div>
-        )}
-      </div>
-    </section>
+      {renderPricingStyle()}
+    </div>
   );
 };

@@ -8,7 +8,8 @@ export interface TeamData {
     | "team-4"
     | "team-5"
     | "team-6"
-    | "team-7";
+    | "team-7"
+    | "team-8";
 
   title: string;
   subtitle?: string;
@@ -41,4 +42,5 @@ export const DEFAULT_TEAM_MAP: Record<TeamData["style"], TeamData> = {
   "team-5": { ...defaultTeamData, style: "team-5" },
   "team-6": { ...defaultTeamData, style: "team-6" },
   "team-7": { ...defaultTeamData, style: "team-7" },
+  "team-8": { ...defaultTeamData, style: "team-8" },
 };

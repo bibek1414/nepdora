@@ -1,22 +1,10 @@
+"use client";
 import React, { useState } from "react";
-import {
-  ServicesComponentData,
-  ServicesData,
-} from "@/types/owner-site/components/services";
-import { useServices } from "@/hooks/owner-site/admin/use-services";
-import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { ServicesComponentData } from "@/types/owner-site/components/services";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { ServicesCard1 } from "./services-card1";
-import { ServicesCard2 } from "./services-card2";
-import { ServicesCard3 } from "./services-card3";
-import { ServicesCard4 } from "./services-card4";
-import { ServicesCard5 } from "./services-card5";
-import { ServicesCard6 } from "./services-card6";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,13 +14,16 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, Briefcase, RefreshCw } from "lucide-react";
-import { ServicesPost } from "@/types/owner-site/admin/services";
+import { Trash2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { EditableText } from "@/components/ui/editable-text";
+import { ServicesStyle1 } from "./services-style/services-style-1";
+import { ServicesStyle2 } from "./services-style/services-style-2";
+import { ServicesStyle3 } from "./services-style/services-style-3";
+import { ServicesStyle4 } from "./services-style/services-style-4";
+import { ServicesStyle5 } from "./services-style/services-style-5";
+import { ServicesStyle6 } from "./services-style/services-style-6";
 
 interface ServicesComponentProps {
   component: ServicesComponentData;
@@ -53,36 +44,8 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
   onServiceClick,
   onReplace,
 }) => {
-  const { data: builderData, handleTextUpdate } = useBuilderLogic(
-    component.data,
-    updatedData => {
-      const componentId = component.component_id || component.id?.toString();
-      if (onUpdate && componentId) {
-        onUpdate(componentId, {
-          ...component,
-          data: {
-            ...component.data,
-            ...updatedData,
-          },
-        });
-      }
-    }
-  );
-
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const componentData: ServicesData = builderData || {
-    component_type: "services",
-    style: "services-1",
-    title: "Latest Services",
-  };
-  const { title = "Latest Services", subtitle } = componentData;
-
-  const style = componentData.style;
-
-  const page_size = 6;
-
-  // Delete and update mutation hooks - changed from 'blog' to 'services'
   const deleteServicesComponent = useDeleteComponentMutation(
     pageSlug || "",
     "services"
@@ -92,77 +55,33 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
     "services"
   );
 
-  // Calculate page size and get first page for the page_size
-  const pageSize = Math.min(page_size, 50);
+  const handleUpdate = (
+    updatedData: Partial<ServicesComponentData["data"]>
+  ) => {
+    if (!pageSlug) return;
+    const componentId = component.component_id || component.id?.toString();
+    if (!componentId) return;
 
-  const { data, isLoading, error } = useServices({
-    page: 1,
-    page_size: pageSize,
-  });
+    const newData = {
+      ...component.data,
+      ...updatedData,
+    };
 
-  // Extract services from the API response structure
-  const services = data?.results || [];
-  const totalServices = data?.count || 0;
+    updateServicesComponent.mutate({
+      componentId,
+      data: newData,
+    });
 
-  const hasNext = data?.next !== null;
-  const hasPrevious = data?.previous !== null;
-  const totalPages = Math.ceil(totalServices / pageSize);
-
-  const handleTitleChange = (newTitle: string) => {
-    handleTextUpdate("title")(newTitle);
-
-    if (pageSlug) {
-      const componentId = component.component_id || component.id?.toString();
-      if (componentId) {
-        updateServicesComponent.mutate({
-          componentId,
-          data: {
-            ...component.data,
-            title: newTitle,
-          },
-        });
-      }
+    if (onUpdate) {
+      onUpdate(componentId, {
+        ...component,
+        data: newData,
+      });
     }
-  };
-
-  const handleSubtitleChange = (newSubtitle: string) => {
-    handleTextUpdate("subtitle")(newSubtitle);
-
-    if (pageSlug) {
-      const componentId = component.component_id || component.id?.toString();
-      if (componentId) {
-        updateServicesComponent.mutate({
-          componentId,
-          data: {
-            ...component.data,
-            subtitle: newSubtitle,
-          },
-        });
-      }
-    }
-  };
-
-  const handleServiceClick = (service: ServicesPost) => {
-    if (onServiceClick && component.order !== undefined) {
-      onServiceClick(service.slug, component.order);
-    }
-  };
-
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-    setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-
+    if (!pageSlug) return;
     const componentId = component.component_id || component.id?.toString();
     if (componentId) {
       deleteServicesComponent.mutate(componentId);
@@ -170,215 +89,116 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
     setIsDeleteDialogOpen(false);
   };
 
-  const renderServiceCard = (service: ServicesPost, index: number) => {
+  const renderServicesStyle = () => {
+    const style = component.data?.style || "services-1";
     const commonProps = {
-      services: service,
-      siteUser: isEditable ? undefined : siteUser,
-      onClick: () => handleServiceClick(service),
+      isEditable,
+      siteUser,
+      onServiceClick: (serviceSlug: string) => {
+        if (onServiceClick && component.order !== undefined) {
+          onServiceClick(serviceSlug, component.order);
+        }
+      },
     };
 
     switch (style) {
       case "services-2":
-        return <ServicesCard2 {...commonProps} />;
+        return (
+          <ServicesStyle2
+            data={component.data}
+            {...commonProps}
+            onUpdate={handleUpdate}
+          />
+        );
       case "services-3":
-        return <ServicesCard3 {...commonProps} index={index} />;
+        return (
+          <ServicesStyle3
+            data={component.data}
+            {...commonProps}
+            onUpdate={handleUpdate}
+          />
+        );
       case "services-4":
-        return <ServicesCard4 {...commonProps} index={index} />;
+        return (
+          <ServicesStyle4
+            data={component.data}
+            {...commonProps}
+            onUpdate={handleUpdate}
+          />
+        );
       case "services-5":
-        return <ServicesCard5 {...commonProps} index={index} />;
-      case "services-1":
-      default:
-        return <ServicesCard1 {...commonProps} />;
-    }
-  };
-
-  const getGridClass = () => {
-    switch (style) {
-      case "services-2":
-        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
-      case "services-3":
-        return "grid-cols-1 gap-6";
-      case "services-4":
-        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
-      case "services-5":
-        return "grid-cols-1 gap-8 md:grid-cols-3";
+        return (
+          <ServicesStyle5
+            data={component.data}
+            {...commonProps}
+            onUpdate={handleUpdate}
+          />
+        );
       case "services-6":
-        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
-      case "services-1":
-      default:
-        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
-    }
-  };
-
-  // Special handling for services-6 (full section with header)
-  if (style === "services-6") {
-    return (
-      <div className="group relative">
-        {/* Delete Control with AlertDialog */}
-        <div className="absolute inset-y-4 top-4 -right-5 z-20 translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
-          <AlertDialog
-            open={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-          >
-            <div className="flex flex-col gap-2">
-              <Link href="/admin/services/" target="_blank" rel="noopener">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="w-full justify-start"
-                >
-                  Manage Services
-                </Button>
-              </Link>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => onReplace?.(component.component_id)}
-                className="h-8 w-fit justify-start bg-white px-3"
-              >
-                <RefreshCw className="mr-1 h-4 w-4" />
-                Replace
-              </Button>
-              <AlertDialogTrigger asChild>
-                <Button
-                  onClick={handleDeleteClick}
-                  variant="destructive"
-                  size="sm"
-                  className="h-8 w-fit justify-start px-3"
-                  disabled={deleteServicesComponent.isPending}
-                >
-                  <Trash2 className="mr-1 h-4 w-4" />
-                  {deleteServicesComponent.isPending ? "Deleting..." : "Delete"}
-                </Button>
-              </AlertDialogTrigger>
-            </div>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete Services Component
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to delete this services component? This
-                  action cannot be undone and will permanently remove the
-                  component from your page.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleConfirmDelete}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  disabled={deleteServicesComponent.isPending}
-                >
-                  {deleteServicesComponent.isPending
-                    ? "Deleting..."
-                    : "Delete Component"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-
-        {/* Services-6 Full Section */}
-        {!isLoading && !error && (
-          <ServicesCard6
+        return (
+          <ServicesStyle6
             component={component}
-            services={services.slice(0, Math.min(page_size, services.length))}
-            isEditable={isEditable}
-            siteUser={siteUser}
             pageSlug={pageSlug}
             onUpdate={onUpdate}
-            onServiceClick={onServiceClick}
+            {...commonProps}
           />
-        )}
+        );
+      case "services-1":
+      default:
+        return (
+          <ServicesStyle1
+            data={component.data}
+            {...commonProps}
+            onUpdate={handleUpdate}
+          />
+        );
+    }
+  };
 
-        {isLoading && (
-          <div className="py-20">
-            <div className="container mx-auto px-4 md:px-8">
-              <div className="mb-12 flex flex-col items-end justify-between md:flex-row">
-                <div className="mb-4 md:mb-0">
-                  <Skeleton className="mb-2 h-4 w-32" />
-                  <Skeleton className="h-12 w-64" />
-                </div>
-                <Skeleton className="h-10 w-32" />
-              </div>
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <Skeleton key={index} className="h-64 rounded-3xl" />
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+  return (
+    <div className="group relative">
+      {isEditable && (
+        <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <Link href="/admin/services/" target="_blank" rel="noopener">
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full justify-start"
+            >
+              Manage Services
+            </Button>
+          </Link>
 
-        {error && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error Loading Services</AlertTitle>
-            <AlertDescription>
-              {error instanceof Error
-                ? error.message
-                : "Failed to load services. Please check your API connection."}
-            </AlertDescription>
-          </Alert>
-        )}
-      </div>
-    );
-  }
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onReplace?.(component.component_id)}
+            className="h-8 w-fit justify-start bg-white px-3"
+          >
+            <RefreshCw className="mr-1 h-4 w-4" />
+            Replace
+          </Button>
 
-  // Builder mode preview
-  if (isEditable) {
-    return (
-      <div className="group relative">
-        {/* Delete Control with AlertDialog */}
-        <div className="absolute inset-y-4 top-4 -right-5 z-20 translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex flex-col gap-2">
-              <Link href="/admin/services/" target="_blank" rel="noopener">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="w-full justify-start"
-                >
-                  Manage Services
-                </Button>
-              </Link>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => onReplace?.(component.component_id)}
-                className="h-8 w-fit justify-start bg-white px-3"
-              >
-                <RefreshCw className="mr-1 h-4 w-4" />
-                Replace
-              </Button>
-              <AlertDialogTrigger asChild>
-                <Button
-                  onClick={handleDeleteClick}
-                  variant="destructive"
-                  size="sm"
-                  className="h-8 w-fit justify-start px-3"
-                  disabled={deleteServicesComponent.isPending}
-                >
-                  <Trash2 className="mr-1 h-4 w-4" />
-                  {deleteServicesComponent.isPending ? "Deleting..." : "Delete"}
-                </Button>
-              </AlertDialogTrigger>
-            </div>
+            <Button
+              onClick={() => setIsDeleteDialogOpen(true)}
+              variant="destructive"
+              size="sm"
+              className="h-8 w-fit justify-start px-3"
+              disabled={deleteServicesComponent.isPending}
+            >
+              <Trash2 className="mr-1 h-4 w-4" />
+              {deleteServicesComponent.isPending ? "Deleting..." : "Delete"}
+            </Button>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete Services Component
-                </AlertDialogTitle>
+                <AlertDialogTitle>Delete Services Component</AlertDialogTitle>
                 <AlertDialogDescription>
                   Are you sure you want to delete this services component? This
-                  action cannot be undone and will permanently remove the
-                  component from your page.
+                  action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -388,200 +208,15 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   disabled={deleteServicesComponent.isPending}
                 >
-                  {deleteServicesComponent.isPending
-                    ? "Deleting..."
-                    : "Delete Component"}
+                  {deleteServicesComponent.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
+      )}
 
-        {/* Services Preview */}
-        <div className="py-8">
-          <div className="container mx-auto px-4">
-            <div className="mb-8 text-center">
-              <EditableText
-                value={title}
-                onChange={handleTitleChange}
-                as="h2"
-                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-              <EditableText
-                value={subtitle || ""}
-                onChange={handleSubtitleChange}
-                as="p"
-                className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                isEditable={true}
-                placeholder="Enter subtitle..."
-                multiline={true}
-              />
-            </div>
-
-            {isLoading && (
-              <div className={`grid ${getGridClass()} gap-6`}>
-                {Array.from({ length: Math.min(page_size, 3) }).map(
-                  (_, index) => (
-                    <div key={index} className="flex flex-col space-y-3">
-                      <Skeleton className="h-[200px] w-full rounded-xl" />
-                      <div className="space-y-2">
-                        <Skeleton className="h-5 w-3/4" />
-                        <Skeleton className="h-4 w-1/2" />
-                      </div>
-                    </div>
-                  )
-                )}
-              </div>
-            )}
-
-            {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error Loading Services</AlertTitle>
-                <AlertDescription>
-                  {error instanceof Error
-                    ? error.message
-                    : "Failed to load services. Please check your API connection."}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {!isLoading && !error && services.length > 0 && (
-              <div className={`grid ${getGridClass()} gap-6`}>
-                {services
-                  .slice(0, Math.min(page_size, 6))
-                  .map((service, index) => (
-                    <div
-                      key={service.id}
-                      className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
-                    >
-                      {/* Overlay to prevent clicks in builder mode */}
-                      <div className="absolute inset-0 z-10 bg-transparent" />
-                      {renderServiceCard(service, index)}
-                    </div>
-                  ))}
-              </div>
-            )}
-
-            {!isLoading && !error && services.length === 0 && (
-              <div className="bg-muted/50 rounded-lg py-12 text-center">
-                <Briefcase className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-                <h3 className="text-foreground mb-2 text-lg font-semibold">
-                  No Services Found
-                </h3>
-                <p className="text-muted-foreground">
-                  Add some services to your site to display them here.
-                </p>
-              </div>
-            )}
-
-            {!isLoading && !error && services.length > 6 && (
-              <div className="bg-muted/50 mt-6 rounded-md p-3 text-center">
-                <p className="text-muted-foreground text-sm">
-                  Showing 6 of {services.length} services in builder preview
-                  {totalServices > 0 && ` (${totalServices} total available)`}
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Special handling for services-6 in live site
-  if (componentData.style === "services-6") {
-    return (
-      <ServicesCard6
-        component={component}
-        services={services.slice(0, page_size)}
-        isEditable={false}
-        siteUser={siteUser}
-        pageSlug={pageSlug}
-        onServiceClick={onServiceClick}
-      />
-    );
-  }
-
-  // Live site rendering
-  return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          <h2
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></h2>
-          {subtitle && (
-            <p
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            ></p>
-          )}
-        </div>
-
-        {isLoading && (
-          <div className={`grid ${getGridClass()} gap-8`}>
-            {Array.from({ length: page_size }).map((_, index) => (
-              <div key={index} className="flex flex-col space-y-4">
-                <Skeleton className="h-[280px] w-full rounded-lg" />
-                <div className="space-y-3">
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {error && (
-          <Alert variant="destructive" className="mx-auto max-w-2xl">
-            <AlertCircle className="h-5 w-5" />
-            <AlertTitle>Unable to Load Services</AlertTitle>
-            <AlertDescription className="text-base">
-              {error instanceof Error
-                ? error.message
-                : "We're having trouble loading our services. Please try refreshing the page."}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {!isLoading && !error && services.length > 0 && (
-          <div className={`grid ${getGridClass()} gap-8`}>
-            {services.slice(0, page_size).map((service, index) => (
-              <div key={service.id} className="flex-shrink-0">
-                {renderServiceCard(service, index)}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {!isLoading && !error && services.length === 0 && (
-          <div className="py-16 text-center">
-            <Briefcase className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Services Available
-            </h3>
-            <p className="text-muted-foreground mx-auto max-w-md text-lg">
-              We&apos;re currently working on new services. Please check back
-              soon for updates.
-            </p>
-          </div>
-        )}
-
-        {/* Pagination info */}
-        {!isLoading && !error && totalServices > page_size && (
-          <div className="bg-muted/30 mt-12 rounded-lg p-4 text-center">
-            <p className="text-muted-foreground">
-              Showing {Math.min(page_size, services.length)} of {totalServices}{" "}
-              services
-              {totalPages > 1 && ` (Page 1 of ${totalPages})`}
-            </p>
-          </div>
-        )}
-      </div>
-    </section>
+      {renderServicesStyle()}
+    </div>
   );
 };

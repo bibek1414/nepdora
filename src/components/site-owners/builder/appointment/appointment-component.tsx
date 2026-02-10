@@ -1,15 +1,10 @@
+"use client";
 import React, { useState } from "react";
-import {
-  AppointmentComponentData,
-  AppointmentData,
-} from "@/types/owner-site/components/appointment";
+import { AppointmentComponentData } from "@/types/owner-site/components/appointment";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { AppointmentForm1 } from "./appointment-form-1";
-import { AppointmentForm2 } from "./appointment-form-2";
-import { AppointmentForm3 } from "./appointment-form-3";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,12 +14,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Trash2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { EditableText } from "@/components/ui/editable-text";
-import { Trash2, RefreshCw } from "lucide-react";
+import { AppointmentStyle1 } from "./appointment-style/appointment-style-1";
+import { AppointmentStyle2 } from "./appointment-style/appointment-style-2";
+import { AppointmentStyle3 } from "./appointment-style/appointment-style-3";
 
 interface AppointmentComponentProps {
   component: AppointmentComponentData;
@@ -45,13 +41,6 @@ export const AppointmentComponent: React.FC<AppointmentComponentProps> = ({
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const {
-    title = "Book an Appointment",
-    subtitle,
-    style = "appointment-1",
-  } = component.data || {};
-
-  // Use unified mutation hooks
   const deleteAppointmentComponent = useDeleteComponentMutation(
     pageSlug || "",
     "appointment"
@@ -61,170 +50,102 @@ export const AppointmentComponent: React.FC<AppointmentComponentProps> = ({
     "appointment"
   );
 
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-    setIsDeleteDialogOpen(true);
-  };
+  const handleUpdate = (
+    updatedData: Partial<AppointmentComponentData["data"]>
+  ) => {
+    if (!pageSlug) return;
+    const componentId = component.component_id;
 
-  const handleConfirmDelete = () => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-
-    deleteAppointmentComponent.mutate(component.component_id);
-    setIsDeleteDialogOpen(false);
-  };
-
-  const handleTitleChange = (newTitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
+    const newData = {
+      ...component.data,
+      ...updatedData,
+    };
 
     updateAppointmentComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        title: newTitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
-      });
-    }
-  };
-
-  const handleSubtitleChange = (newSubtitle: string) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
-
-    updateAppointmentComponent.mutate({
-      componentId: component.component_id,
-      data: {
-        ...component.data,
-        subtitle: newSubtitle,
-      },
-    });
-
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
-      });
-    }
-  };
-
-  const handleDataChange = (newData: AppointmentData) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
-
-    updateAppointmentComponent.mutate({
-      componentId: component.component_id,
+      componentId,
       data: newData,
     });
 
     if (onUpdate) {
-      onUpdate(component.component_id, {
+      onUpdate(componentId, {
         ...component,
         data: newData,
       });
     }
   };
 
-  const renderAppointmentForm = () => {
-    const formProps = {
+  const handleConfirmDelete = () => {
+    if (!pageSlug) return;
+    deleteAppointmentComponent.mutate(component.component_id);
+    setIsDeleteDialogOpen(false);
+  };
+
+  const renderAppointmentStyle = () => {
+    const style = component.data?.style || "appointment-1";
+    const commonProps = {
       data: component.data,
-      siteUser: isEditable ? undefined : siteUser,
-      isPreview: isEditable,
-      isEditable: isEditable,
-      onDataChange: isEditable ? handleDataChange : undefined,
+      isEditable,
+      siteUser,
+      onUpdate: handleUpdate,
     };
 
     switch (style) {
       case "appointment-2":
-        return <AppointmentForm2 {...formProps} />;
+        return <AppointmentStyle2 {...commonProps} />;
       case "appointment-3":
-        return <AppointmentForm3 {...formProps} />;
+        return <AppointmentStyle3 {...commonProps} />;
       case "appointment-1":
       default:
-        return <AppointmentForm1 {...formProps} />;
+        return <AppointmentStyle1 {...commonProps} />;
     }
   };
 
-  // Builder mode preview
-  if (isEditable) {
-    return (
-      <div className="group relative">
-        {/* Delete Control with AlertDialog */}
-        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
+  return (
+    <div className="group relative">
+      {isEditable && (
+        <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <Link href="/admin/appointments/" target="_blank" rel="noopener">
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full justify-start"
+            >
+              Manage Appointments
+            </Button>
+          </Link>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onReplace?.(component.component_id)}
+            className="h-8 w-fit justify-start bg-white px-3"
+          >
+            <RefreshCw className="mr-1 h-4 w-4" />
+            Replace
+          </Button>
+
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex flex-col gap-2">
-              <Link href="/admin/appointments/" target="_blank" rel="noopener">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="w-full justify-start"
-                >
-                  Manage Appointments
-                </Button>
-              </Link>
-
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => onReplace?.(component.component_id)}
-                className="h-8 w-fit justify-start bg-white px-3"
-              >
-                <RefreshCw className="mr-1 h-4 w-4" />
-                Replace
-              </Button>
-
-              <AlertDialogTrigger asChild>
-                <Button
-                  onClick={handleDeleteClick}
-                  variant="destructive"
-                  size="sm"
-                  className="h-8 w-fit justify-start px-3"
-                  disabled={deleteAppointmentComponent.isPending}
-                >
-                  <Trash2 className="mr-1 h-4 w-4" />
-                  {deleteAppointmentComponent.isPending
-                    ? "Deleting..."
-                    : "Delete"}
-                </Button>
-              </AlertDialogTrigger>
-            </div>
+            <Button
+              onClick={() => setIsDeleteDialogOpen(true)}
+              variant="destructive"
+              size="sm"
+              className="h-8 w-fit justify-start px-3"
+              disabled={deleteAppointmentComponent.isPending}
+            >
+              <Trash2 className="mr-1 h-4 w-4" />
+              {deleteAppointmentComponent.isPending ? "Deleting..." : "Delete"}
+            </Button>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
+                <AlertDialogTitle>
                   Delete Appointment Component
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                   Are you sure you want to delete this appointment component?
-                  This action cannot be undone and will permanently remove the
-                  component from your page.
+                  This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -236,64 +157,15 @@ export const AppointmentComponent: React.FC<AppointmentComponentProps> = ({
                 >
                   {deleteAppointmentComponent.isPending
                     ? "Deleting..."
-                    : "Delete Component"}
+                    : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
+      )}
 
-        {/* Appointment Preview */}
-        <div className="py-8">
-          <div className="container mx-auto px-4">
-            <div className="mb-8 text-center">
-              <EditableText
-                value={title}
-                onChange={handleTitleChange}
-                as="h2"
-                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-              {subtitle !== undefined && (
-                <EditableText
-                  value={subtitle || ""}
-                  onChange={handleSubtitleChange}
-                  as="p"
-                  className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                  isEditable={true}
-                  placeholder="Enter subtitle..."
-                  multiline={true}
-                />
-              )}
-            </div>
-
-            <div className="relative">{renderAppointmentForm()}</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Live site rendering
-  return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          <h2
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></h2>
-          {subtitle && (
-            <p
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            ></p>
-          )}
-        </div>
-
-        {renderAppointmentForm()}
-      </div>
-    </section>
+      {renderAppointmentStyle()}
+    </div>
   );
 };

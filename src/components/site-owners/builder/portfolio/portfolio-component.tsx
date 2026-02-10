@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { useBuilderLogic } from "@/hooks/use-builder-logic";
+"use client";
+import React, { useState } from "react";
+import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import {
-  Trash2,
-  Briefcase,
-  ChevronLeft,
-  ChevronRight,
-  RefreshCw,
-} from "lucide-react";
+  useDeleteComponentMutation,
+  useUpdateComponentMutation,
+} from "@/hooks/owner-site/components/use-unified";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,27 +14,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Skeleton } from "@/components/ui/skeleton";
-import { AlertCircle } from "lucide-react";
+import { Trash2, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import {
-  PortfolioData,
-  PortfolioComponentData,
-} from "@/types/owner-site/components/portfolio";
-import { Portfolio } from "@/types/owner-site/admin/portfolio";
-import { PortfolioCard1 } from "./portfolio-card-1";
-import { PortfolioCard2 } from "./portfolio-card-2";
-import { PortfolioCard3 } from "./portfolio-card-3";
-import { PortfolioCard4 } from "./portfolio-card-4";
-import {
-  useDeleteComponentMutation,
-  useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/use-unified";
-import { usePortfolios } from "@/hooks/owner-site/admin/use-portfolio";
-import { EditableText } from "@/components/ui/editable-text";
+import { PortfolioStyle1 } from "./portfolio-style/portfolio-style-1";
+import { PortfolioStyle2 } from "./portfolio-style/portfolio-style-2";
+import { PortfolioStyle3 } from "./portfolio-style/portfolio-style-3";
+import { PortfolioStyle4 } from "./portfolio-style/portfolio-style-4";
 
 interface PortfolioComponentProps {
   component: PortfolioComponentData;
@@ -54,20 +38,11 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
   isEditable = false,
   pageSlug,
   siteUser,
+  onUpdate,
   onPortfolioClick,
   onReplace,
 }) => {
-  const { data: builderData, handleTextUpdate } = useBuilderLogic(
-    component.data,
-    updatedData => {
-      const componentId = component.component_id || component.id.toString();
-      // No direct onUpdate here, but we could add it if needed
-    }
-  );
-
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   const deletePortfolioMutation = useDeleteComponentMutation(
     pageSlug,
@@ -78,420 +53,127 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
     "portfolio"
   );
 
-  const {
-    title = "Our Portfolio",
-    subtitle,
-    style = "portfolio-1",
-  } = builderData || {};
-
-  // Fetch portfolios from API
-  const { data, isLoading, error } = usePortfolios({
-    page: 1,
-    page_size: 6,
-  });
-
-  // Extract portfolios from the API response structure
-  const portfolios = data?.results || [];
-  const totalPortfolios = data?.count || 0;
-
-  const handleUpdate = (updatedData: Partial<PortfolioData>) => {
+  const handleUpdate = (
+    updatedData: Partial<PortfolioComponentData["data"]>
+  ) => {
+    if (!pageSlug) return;
     const componentId = component.component_id || component.id.toString();
+
+    const newData = {
+      ...component.data,
+      ...updatedData,
+    };
 
     updatePortfolioMutation.mutate({
       componentId,
-      data: updatedData,
+      data: newData,
     });
-  };
 
-  const handleTitleChange = (newTitle: string) => {
-    handleTextUpdate("title")(newTitle);
-    handleUpdate({
-      ...component.data,
-      title: newTitle,
-    });
-  };
-
-  const handleSubtitleChange = (newSubtitle: string) => {
-    handleTextUpdate("subtitle")(newSubtitle);
-    handleUpdate({
-      ...component.data,
-      subtitle: newSubtitle,
-    });
-  };
-
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsDeleteDialogOpen(true);
-  };
-
-  const handleDelete = () => {
-    const componentId = component.component_id || component.id.toString();
-
-    deletePortfolioMutation.mutate(componentId, {
-      onSuccess: () => {
-        setIsDeleteDialogOpen(false);
-      },
-    });
-  };
-
-  const handlePortfolioClick = (portfolio: Portfolio) => {
-    if (onPortfolioClick && component.order !== undefined) {
-      onPortfolioClick(portfolio.slug, component.order);
+    if (onUpdate) {
+      onUpdate(componentId, {
+        ...component,
+        data: newData,
+      });
     }
   };
 
-  // Carousel navigation functions
-  const goToNextProject = () => {
-    if (isAnimating || portfolios.length === 0) return;
-
-    setIsAnimating(true);
-    setCurrentProjectIndex(prevIndex =>
-      prevIndex === portfolios.length - 1 ? 0 : prevIndex + 1
-    );
-
-    setTimeout(() => setIsAnimating(false), 300);
+  const handleConfirmDelete = () => {
+    const componentId = component.component_id || component.id.toString();
+    deletePortfolioMutation.mutate(componentId);
+    setIsDeleteDialogOpen(false);
   };
 
-  const goToPrevProject = () => {
-    if (isAnimating || portfolios.length === 0) return;
-
-    setIsAnimating(true);
-    setCurrentProjectIndex(prevIndex =>
-      prevIndex === 0 ? portfolios.length - 1 : prevIndex - 1
-    );
-
-    setTimeout(() => setIsAnimating(false), 300);
-  };
-
-  // Reset index when portfolios change
-  useEffect(() => {
-    setCurrentProjectIndex(0);
-  }, [portfolios]);
-
-  const renderPortfolioCard = (portfolio: Portfolio, index: number) => {
-    const cardProps = {
-      portfolio,
-      isEditable: false,
-      siteUser: isEditable ? undefined : siteUser,
+  const renderPortfolioStyle = () => {
+    const style = component.data?.style || "portfolio-1";
+    const commonProps = {
+      data: component.data,
+      isEditable,
+      siteUser,
       onUpdate: handleUpdate,
-      onClick: () => handlePortfolioClick(portfolio),
-      index,
+      onPortfolioClick: (slug: string) => {
+        if (onPortfolioClick && component.order !== undefined) {
+          onPortfolioClick(slug, component.order);
+        }
+      },
     };
 
     switch (style) {
-      case "portfolio-1":
-        return <PortfolioCard1 {...cardProps} />;
       case "portfolio-2":
-        return <PortfolioCard2 {...cardProps} />;
+        return <PortfolioStyle2 {...commonProps} />;
       case "portfolio-3":
-        return <PortfolioCard3 {...cardProps} />;
+        return <PortfolioStyle3 {...commonProps} />;
       case "portfolio-4":
-        return <PortfolioCard4 {...cardProps} />;
+        return <PortfolioStyle4 {...commonProps} />;
+      case "portfolio-1":
       default:
-        return <PortfolioCard1 {...cardProps} />;
+        return <PortfolioStyle1 {...commonProps} />;
     }
   };
 
-  // Builder mode preview with carousel
-  if (isEditable) {
-    return (
-      <div className="group relative">
-        {/* Delete Control with AlertDialog */}
-        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
+  return (
+    <div className="group relative">
+      {isEditable && (
+        <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <Link href="/admin/portfolio/" target="_blank" rel="noopener">
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full justify-start"
+            >
+              Manage Portfolio
+            </Button>
+          </Link>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() =>
+              onReplace?.(component.component_id || component.id.toString())
+            }
+            className="h-8 w-fit justify-start bg-white px-3"
+          >
+            <RefreshCw className="mr-1 h-4 w-4" />
+            Replace
+          </Button>
+
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex flex-col gap-2">
-              <Link href="/admin/portfolio/" target="_blank" rel="noopener">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="w-full justify-start"
-                >
-                  Manage Portfolio
-                </Button>
-              </Link>
-
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() =>
-                  onReplace?.(component.component_id || component.id.toString())
-                }
-                className="h-8 w-fit justify-start bg-white px-3"
-              >
-                <RefreshCw className="mr-1 h-4 w-4" />
-                Replace
-              </Button>
-
-              <AlertDialogTrigger asChild>
-                <Button
-                  onClick={handleDeleteClick}
-                  variant="destructive"
-                  size="sm"
-                  className="h-8 w-fit justify-start px-3"
-                  disabled={deletePortfolioMutation.isPending}
-                >
-                  <Trash2 className="mr-1 h-4 w-4" />
-                  {deletePortfolioMutation.isPending ? "Deleting..." : "Delete"}
-                </Button>
-              </AlertDialogTrigger>
-            </div>
+            <Button
+              onClick={() => setIsDeleteDialogOpen(true)}
+              variant="destructive"
+              size="sm"
+              className="h-8 w-fit justify-start px-3"
+              disabled={deletePortfolioMutation.isPending}
+            >
+              <Trash2 className="mr-1 h-4 w-4" />
+              {deletePortfolioMutation.isPending ? "Deleting..." : "Delete"}
+            </Button>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete Portfolio Component
-                </AlertDialogTitle>
+                <AlertDialogTitle>Delete Portfolio Component</AlertDialogTitle>
                 <AlertDialogDescription>
                   Are you sure you want to delete this portfolio component? This
-                  action cannot be undone and will permanently remove the
-                  component from your page.
+                  action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={handleDelete}
+                  onClick={handleConfirmDelete}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   disabled={deletePortfolioMutation.isPending}
                 >
-                  {deletePortfolioMutation.isPending
-                    ? "Deleting..."
-                    : "Delete Component"}
+                  {deletePortfolioMutation.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
+      )}
 
-        {/* Portfolio Preview with Carousel */}
-        <div className="py-8">
-          <div className="container mx-auto px-4">
-            <div className="mb-8 text-center">
-              <EditableText
-                value={title}
-                onChange={handleTitleChange}
-                as="h2"
-                className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-              <EditableText
-                value={subtitle || ""}
-                onChange={handleSubtitleChange}
-                as="p"
-                className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                isEditable={true}
-                placeholder="Enter subtitle..."
-                multiline={true}
-              />
-            </div>
-
-            {isLoading && (
-              <div className="flex flex-col items-center">
-                <div className="w-full max-w-6xl">
-                  <div className="flex flex-col space-y-4">
-                    <Skeleton className="h-[400px] w-full rounded-lg" />
-                    <div className="space-y-3">
-                      <Skeleton className="mx-auto h-8 w-3/4" />
-                      <Skeleton className="mx-auto h-6 w-1/2" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error Loading Portfolio Items</AlertTitle>
-                <AlertDescription>
-                  {error instanceof Error
-                    ? error.message
-                    : "Failed to load portfolio items. Please check your API connection."}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {!isLoading && !error && portfolios.length > 0 && (
-              <div className="flex flex-col items-center">
-                {/* Single Portfolio Item Display */}
-                <div className="w-full max-w-6xl">
-                  <div
-                    className={`transition-opacity duration-300 ${
-                      isAnimating ? "opacity-0" : "opacity-100"
-                    }`}
-                  >
-                    <div className="relative">
-                      {/* Overlay to prevent clicks in builder mode */}
-                      <div className="absolute inset-0 z-10 bg-transparent" />
-                      {renderPortfolioCard(
-                        portfolios[currentProjectIndex],
-                        currentProjectIndex
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Navigation Controls */}
-                {portfolios.length > 1 && (
-                  <div className="mt-8 flex items-center justify-center gap-4">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={goToPrevProject}
-                      disabled={isAnimating}
-                      className="h-12 w-12 rounded-full border-2"
-                    >
-                      <ChevronLeft className="h-6 w-6" />
-                    </Button>
-
-                    <div className="text-muted-foreground mx-4 text-sm">
-                      <span className="font-medium">
-                        {currentProjectIndex + 1}
-                      </span>
-                      <span className="mx-2">of</span>
-                      <span>{portfolios.length}</span>
-                    </div>
-
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={goToNextProject}
-                      disabled={isAnimating}
-                      className="h-12 w-12 rounded-full border-2"
-                    >
-                      <ChevronRight className="h-6 w-6" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {!isLoading && !error && portfolios.length === 0 && (
-              <div className="bg-muted/50 rounded-lg py-12 text-center">
-                <Briefcase className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-                <h3 className="text-foreground mb-2 text-lg font-semibold">
-                  No Portfolio Items Found
-                </h3>
-                <p className="text-muted-foreground">
-                  Add some portfolio items to your site to display them here.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Live site rendering with carousel
-  return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          <h2
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></h2>
-          {subtitle && (
-            <p
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            ></p>
-          )}
-        </div>
-
-        {isLoading && (
-          <div className="flex flex-col items-center">
-            <div className="w-full max-w-4xl">
-              <div className="flex flex-col space-y-4">
-                <Skeleton className="h-[400px] w-full rounded-lg" />
-                <div className="space-y-3">
-                  <Skeleton className="mx-auto h-8 w-3/4" />
-                  <Skeleton className="mx-auto h-6 w-1/2" />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {error && (
-          <Alert variant="destructive" className="mx-auto max-w-2xl">
-            <AlertCircle className="h-5 w-5" />
-            <AlertTitle>Unable to Load Portfolio Items</AlertTitle>
-            <AlertDescription className="text-base">
-              {error instanceof Error
-                ? error.message
-                : "We're having trouble loading our portfolio items. Please try refreshing the page."}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {!isLoading && !error && portfolios.length > 0 && (
-          <div className="flex flex-col items-center">
-            {/* Single Portfolio Item Display */}
-            <div className="w-full max-w-6xl">
-              <div
-                className={`transition-opacity duration-300 ${
-                  isAnimating ? "opacity-0" : "opacity-100"
-                }`}
-              >
-                {renderPortfolioCard(
-                  portfolios[currentProjectIndex],
-                  currentProjectIndex
-                )}
-              </div>
-            </div>
-
-            {/* Navigation Controls */}
-            {portfolios.length > 1 && (
-              <div className="mt-8 flex items-center justify-center gap-4">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={goToPrevProject}
-                  disabled={isAnimating}
-                  className="h-12 w-12 rounded-full border-2"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </Button>
-
-                <div className="text-muted-foreground mx-4 text-sm">
-                  <span className="font-medium">{currentProjectIndex + 1}</span>
-                  <span className="mx-2">of</span>
-                  <span>{portfolios.length}</span>
-                </div>
-
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={goToNextProject}
-                  disabled={isAnimating}
-                  className="h-12 w-12 rounded-full border-2"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </Button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {!isLoading && !error && portfolios.length === 0 && (
-          <div className="py-16 text-center">
-            <Briefcase className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Portfolio Items Available
-            </h3>
-            <p className="text-muted-foreground mx-auto max-w-md text-lg">
-              We&apos;re currently working on new projects. Please check back
-              soon for new portfolio items.
-            </p>
-          </div>
-        )}
-      </div>
-    </section>
+      {renderPortfolioStyle()}
+    </div>
   );
 };

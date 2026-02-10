@@ -1,22 +1,10 @@
+"use client";
 import React, { useState } from "react";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
-import { useFAQs } from "@/hooks/owner-site/admin/use-faq";
-import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { FAQCard1 } from "./faq-card-1";
-import { FAQCard2 } from "./faq-card-2";
-import { FAQCard3 } from "./faq-card-3";
-import { FAQCard4 } from "./faq-card-4";
-import { FAQCard5 } from "./faq-card-5";
-import { FaqCard6 } from "./faq-card-6";
-import { FaqCard7 } from "./faq-card-7";
-import { FaqCard8 } from "./faq-card-8";
-import { FaqCard9 } from "./faq-card-9";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,13 +14,19 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { AlertCircle, Trash2, HelpCircle, Plus, RefreshCw } from "lucide-react";
+import { Trash2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { EditableText } from "@/components/ui/editable-text";
-import { FAQForm } from "../../admin/faq/faq-form";
+import { FAQStyle1 } from "./faq-style/faq-style-1";
+import { FAQStyle2 } from "./faq-style/faq-style-2";
+import { FAQStyle3 } from "./faq-style/faq-style-3";
+import { FAQStyle4 } from "./faq-style/faq-style-4";
+import { FAQStyle5 } from "./faq-style/faq-style-5";
+import { FAQStyle6 } from "./faq-style/faq-style-6";
+import { FAQStyle7 } from "./faq-style/faq-style-7";
+import { FAQStyle8 } from "./faq-style/faq-style-8";
+import { FAQStyle9 } from "./faq-style/faq-style-9";
 
 interface FAQComponentProps {
   component: FAQComponentData;
@@ -51,296 +45,73 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
   onUpdate,
   onReplace,
 }) => {
-  const { data: builderData, handleTextUpdate } = useBuilderLogic(
-    component.data,
-    updatedData => {
-      if (onUpdate) {
-        onUpdate(component.component_id, {
-          ...component,
-          data: {
-            ...component.data,
-            ...updatedData,
-          },
-        });
-      }
-    }
-  );
-
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  const {
-    title = "Frequently Asked Questions",
-    subtitle,
-    style = "accordion",
-  } = builderData || {};
-
-  // Use unified mutation hooks
   const deleteFAQComponent = useDeleteComponentMutation(pageSlug || "", "faq");
   const updateFAQComponent = useUpdateComponentMutation(pageSlug || "", "faq");
 
-  // Get FAQ data
-  const { data: faqs = [], isLoading, error } = useFAQs();
+  const handleUpdate = (updatedData: Partial<FAQComponentData["data"]>) => {
+    if (!pageSlug) return;
+    const componentId = component.component_id;
 
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
+    const newData = {
+      ...component.data,
+      ...updatedData,
+    };
+
+    updateFAQComponent.mutate({
+      componentId,
+      data: newData,
+    });
+
+    if (onUpdate) {
+      onUpdate(componentId, {
+        ...component,
+        data: newData,
+      });
     }
-    setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-
+    if (!pageSlug) return;
     deleteFAQComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
-  const handleTitleChange = (newTitle: string) => {
-    handleTextUpdate("title")(newTitle);
-
-    if (pageSlug) {
-      updateFAQComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
-      });
-    }
-  };
-
-  const handleAddClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsAddDialogOpen(true);
-  };
-
-  const handleSubtitleChange = (newSubtitle: string) => {
-    handleTextUpdate("subtitle")(newSubtitle);
-
-    if (pageSlug) {
-      updateFAQComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
-      });
-    }
-  };
-
-  const handleContactTitleChange = (newContactTitle: string) => {
-    handleTextUpdate("contactTitle" as any)(newContactTitle);
-
-    if (pageSlug) {
-      updateFAQComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          contactTitle: newContactTitle,
-        },
-      });
-    }
-  };
-
-  const handleContactDescriptionChange = (newContactDescription: string) => {
-    handleTextUpdate("contactDescription" as any)(newContactDescription);
-
-    if (pageSlug) {
-      updateFAQComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          contactDescription: newContactDescription,
-        },
-      });
-    }
-  };
-
-  const handleButtonTextChange = (newButtonText: string) => {
-    handleTextUpdate("buttonText" as any)(newButtonText);
-
-    if (pageSlug) {
-      updateFAQComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          buttonText: newButtonText,
-        },
-      });
-    }
-  };
-
-  const renderFAQCard = () => {
-    const {
-      title = "Frequently Asked Questions",
-      subtitle,
-      leftImage,
-      leftImage1,
-      leftImage2,
-      leftImage3,
-      contactTitle,
-      contactDescription,
-      buttonText,
-    } = component.data || {};
-
-    const baseCardProps = { faqs };
+  const renderFAQStyle = () => {
+    const style = component.data?.style || "faq-1";
+    const commonProps = {
+      data: component.data,
+      isEditable,
+      onUpdate: handleUpdate,
+    };
 
     switch (style) {
-      case "faq-4":
-        return <FAQCard4 {...baseCardProps} />;
-      case "faq-5":
-        return <FAQCard5 {...baseCardProps} />;
-      case "faq-6":
-        return (
-          <FaqCard6
-            {...baseCardProps}
-            title={title}
-            subtitle={subtitle}
-            leftImage={leftImage}
-            isEditable={isEditable}
-            onTitleChange={handleTitleChange}
-            onSubtitleChange={handleSubtitleChange}
-            onLeftImageChange={url => {
-              if (!pageSlug) return;
-              updateFAQComponent.mutate({
-                componentId: component.component_id,
-                data: {
-                  ...component.data,
-                  leftImage: url,
-                },
-              });
-              if (onUpdate) {
-                onUpdate(component.component_id, {
-                  ...component,
-                  data: {
-                    ...component.data,
-                    leftImage: url,
-                  },
-                });
-              }
-            }}
-          />
-        );
-      case "faq-7":
-        return (
-          <FaqCard7
-            {...baseCardProps}
-            title={title}
-            contactTitle={contactTitle}
-            contactDescription={contactDescription}
-            buttonText={buttonText}
-            isEditable={isEditable}
-            onTitleChange={handleTitleChange}
-            onContactTitleChange={handleContactTitleChange}
-            onContactDescriptionChange={handleContactDescriptionChange}
-            onButtonTextChange={handleButtonTextChange}
-          />
-        );
-      case "faq-8":
-        return (
-          <FaqCard8
-            {...baseCardProps}
-            title={title}
-            subtitle={subtitle}
-            isEditable={isEditable}
-            onTitleChange={handleTitleChange}
-            onSubtitleChange={handleSubtitleChange}
-          />
-        );
-      case "faq-9":
-        return (
-          <FaqCard9
-            {...baseCardProps}
-            title={title}
-            subtitle={subtitle}
-            leftImage1={leftImage1}
-            leftImage2={leftImage2}
-            leftImage3={leftImage3}
-            contactTitle={contactTitle}
-            contactDescription={contactDescription}
-            isEditable={isEditable}
-            onTitleChange={handleTitleChange}
-            onSubtitleChange={handleSubtitleChange}
-            onLeftImage1Change={url => {
-              if (!pageSlug) return;
-              updateFAQComponent.mutate({
-                componentId: component.component_id,
-                data: {
-                  ...component.data,
-                  leftImage1: url,
-                },
-              });
-              if (onUpdate) {
-                onUpdate(component.component_id, {
-                  ...component,
-                  data: {
-                    ...component.data,
-                    leftImage1: url,
-                  },
-                });
-              }
-            }}
-            onLeftImage2Change={url => {
-              if (!pageSlug) return;
-              updateFAQComponent.mutate({
-                componentId: component.component_id,
-                data: {
-                  ...component.data,
-                  leftImage2: url,
-                },
-              });
-              if (onUpdate) {
-                onUpdate(component.component_id, {
-                  ...component,
-                  data: {
-                    ...component.data,
-                    leftImage2: url,
-                  },
-                });
-              }
-            }}
-            onLeftImage3Change={url => {
-              if (!pageSlug) return;
-              updateFAQComponent.mutate({
-                componentId: component.component_id,
-                data: {
-                  ...component.data,
-                  leftImage3: url,
-                },
-              });
-              if (onUpdate) {
-                onUpdate(component.component_id, {
-                  ...component,
-                  data: {
-                    ...component.data,
-                    leftImage3: url,
-                  },
-                });
-              }
-            }}
-          />
-        );
       case "faq-2":
-        return <FAQCard2 {...baseCardProps} />;
+        return <FAQStyle2 {...commonProps} />;
       case "faq-3":
-        return <FAQCard3 {...baseCardProps} />;
+        return <FAQStyle3 {...commonProps} />;
+      case "faq-4":
+        return <FAQStyle4 {...commonProps} />;
+      case "faq-5":
+        return <FAQStyle5 {...commonProps} />;
+      case "faq-6":
+        return <FAQStyle6 {...commonProps} />;
+      case "faq-7":
+        return <FAQStyle7 {...commonProps} />;
+      case "faq-8":
+        return <FAQStyle8 {...commonProps} />;
+      case "faq-9":
+        return <FAQStyle9 {...commonProps} />;
       case "faq-1":
       default:
-        return <FAQCard1 {...baseCardProps} />;
+        return <FAQStyle1 {...commonProps} />;
     }
   };
 
-  // Builder mode preview
-  if (isEditable) {
-    return (
-      <div className="group relative">
-        {/* Controls */}
+  return (
+    <div className="group relative">
+      {isEditable && (
         <div className="absolute -right-5 z-20 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
           <Link href="/admin/faq/" target="_blank" rel="noopener">
             <Button
@@ -362,32 +133,26 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
             Replace
           </Button>
 
-          {/* Delete Button */}
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="destructive"
-                size="sm"
-                className="h-8 w-fit justify-start px-3"
-                disabled={deleteFAQComponent.isPending}
-              >
-                <Trash2 className="mr-1 h-4 w-4" />
-                {deleteFAQComponent.isPending ? "Deleting..." : "Delete"}
-              </Button>
-            </AlertDialogTrigger>
+            <Button
+              variant="destructive"
+              size="sm"
+              className="h-8 w-fit justify-start px-3"
+              disabled={deleteFAQComponent.isPending}
+              onClick={() => setIsDeleteDialogOpen(true)}
+            >
+              <Trash2 className="mr-1 h-4 w-4" />
+              {deleteFAQComponent.isPending ? "Deleting..." : "Delete"}
+            </Button>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete FAQ Component
-                </AlertDialogTitle>
+                <AlertDialogTitle>Delete FAQ Component</AlertDialogTitle>
                 <AlertDialogDescription>
                   Are you sure you want to delete this FAQ component? This
-                  action cannot be undone and will permanently remove the
-                  component from your page.
+                  action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -397,170 +162,15 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   disabled={deleteFAQComponent.isPending}
                 >
-                  {deleteFAQComponent.isPending
-                    ? "Deleting..."
-                    : "Delete Component"}
+                  {deleteFAQComponent.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
+      )}
 
-        {/* FAQ Form Dialog */}
-        <FAQForm
-          open={isAddDialogOpen}
-          onOpenChange={setIsAddDialogOpen}
-          mode="create"
-        />
-
-        {/* FAQ Preview */}
-        <div className="py-8">
-          <div className="container mx-auto">
-            {/* Only show separate title/subtitle for styles that don't have built-in titles */}
-            {style !== "faq-6" &&
-              style !== "faq-7" &&
-              style !== "faq-8" &&
-              style !== "faq-9" && (
-                <div className="mb-8 text-center">
-                  <EditableText
-                    value={title}
-                    onChange={handleTitleChange}
-                    as="h2"
-                    className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                    isEditable={true}
-                    placeholder="Enter title..."
-                  />
-                  <EditableText
-                    value={subtitle || ""}
-                    onChange={handleSubtitleChange}
-                    as="p"
-                    className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                    isEditable={true}
-                    placeholder="Enter subtitle..."
-                    multiline={true}
-                  />
-                </div>
-              )}
-
-            <div
-              className={
-                style === "faq-6" || style === "faq-7" || style === "faq-9"
-                  ? "w-full"
-                  : "mx-auto max-w-4xl"
-              }
-            >
-              {isLoading && (
-                <div className="space-y-4">
-                  {Array.from({ length: 6 }).map((_, index) => (
-                    <div key={index} className="space-y-2">
-                      <Skeleton className="h-12 w-full rounded-lg" />
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {error && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error Loading FAQs</AlertTitle>
-                  <AlertDescription>
-                    {error instanceof Error
-                      ? error.message
-                      : "Failed to load FAQs. Please check your API connection."}
-                  </AlertDescription>
-                </Alert>
-              )}
-
-              {!isLoading && !error && faqs.length > 0 && (
-                <div className="relative">{renderFAQCard()}</div>
-              )}
-
-              {!isLoading && !error && faqs.length === 0 && (
-                <div className="bg-muted/50 rounded-lg py-12 text-center">
-                  <HelpCircle className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-                  <h3 className="text-foreground mb-2 text-lg font-semibold">
-                    No FAQs Found
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Add FAQ items to display them here.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Live site rendering
-  return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-6xl">
-        {/* Only show separate title/subtitle for styles that don't have built-in titles */}
-        {style !== "faq-6" &&
-          style !== "faq-7" &&
-          style !== "faq-8" &&
-          style !== "faq-9" && (
-            <div className="mb-12 text-center">
-              <h2
-                className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-                dangerouslySetInnerHTML={{ __html: title }}
-              ></h2>
-              {subtitle && (
-                <p
-                  className="text-muted-foreground mx-auto max-w-3xl text-xl"
-                  dangerouslySetInnerHTML={{ __html: subtitle }}
-                ></p>
-              )}
-            </div>
-          )}
-
-        <div
-          className={
-            style === "faq-6" || style === "faq-7" || style === "faq-9"
-              ? "w-full"
-              : "mx-auto max-w-4xl"
-          }
-        >
-          {isLoading && (
-            <div className="space-y-6">
-              {Array.from({ length: 8 }).map((_, index) => (
-                <div key={index} className="space-y-3">
-                  <Skeleton className="h-14 w-full rounded-lg" />
-                </div>
-              ))}
-            </div>
-          )}
-
-          {error && (
-            <Alert variant="destructive" className="mx-auto max-w-2xl">
-              <AlertCircle className="h-5 w-5" />
-              <AlertTitle>Unable to Load FAQs</AlertTitle>
-              <AlertDescription className="text-base">
-                {error instanceof Error
-                  ? error.message
-                  : "We're having trouble loading our FAQs. Please try refreshing the page."}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {!isLoading && !error && faqs.length > 0 && renderFAQCard()}
-
-          {!isLoading && !error && faqs.length === 0 && (
-            <div className="py-16 text-center">
-              <HelpCircle className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-              <h3 className="text-foreground mb-4 text-2xl font-semibold">
-                No FAQs Available
-              </h3>
-              <p className="text-muted-foreground mx-auto max-w-md text-lg">
-                Our FAQ section is currently being updated. Please check back
-                soon.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </section>
+      {renderFAQStyle()}
+    </div>
   );
 };

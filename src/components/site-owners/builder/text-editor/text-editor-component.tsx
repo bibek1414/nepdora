@@ -1,9 +1,7 @@
 "use client";
-
-import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/site-owners/button";
-import { Button as CButton } from "@/components/ui/button";
-import { Trash2, Calendar, Save } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Trash2, Save } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,18 +12,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
-import {
-  TextEditorData,
-  TextEditorComponentData,
-} from "@/types/owner-site/components/text-editor";
+import { TextEditorComponentData } from "@/types/owner-site/components/text-editor";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import Tiptap from "@/components/ui/tip-tap";
 import { uploadToCloudinary } from "@/utils/cloudinary";
-import { sanitizeContent } from "@/utils/html-sanitizer";
+import { TextEditorStyle1 } from "./text-editor-style/text-editor-style-1";
 
 interface TextEditorComponentProps {
   component: TextEditorComponentData;
@@ -57,33 +50,24 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
     "text_editor"
   );
 
-  // Ref to store the timeout ID for debouncing
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track content changes only (not title)
   useEffect(() => {
     const hasModifications = data.content !== originalContent;
     setHasContentChanges(hasModifications);
   }, [data.content, originalContent]);
 
-  // Auto-save effect with 2-second debounce
   useEffect(() => {
-    // Only auto-save if in edit mode and there are changes
-    if (!isEditable || !hasContentChanges) {
-      return;
-    }
+    if (!isEditable || !hasContentChanges) return;
 
-    // Clear existing timeout
     if (autoSaveTimeoutRef.current) {
       clearTimeout(autoSaveTimeoutRef.current);
     }
 
-    // Set new timeout for 2 seconds
     autoSaveTimeoutRef.current = setTimeout(() => {
       handleAutoSave();
     }, 2000);
 
-    // Cleanup function
     return () => {
       if (autoSaveTimeoutRef.current) {
         clearTimeout(autoSaveTimeoutRef.current);
@@ -91,18 +75,8 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
     };
   }, [data.content, hasContentChanges, isEditable]);
 
-  // Sanitize content for preview mode
-  const sanitizedContent = useMemo(() => {
-    if (isEditable || !data.content) {
-      return data.content;
-    }
-    return sanitizeContent(data.content);
-  }, [data.content, isEditable]);
-
-  // Auto-save function
   const handleAutoSave = () => {
     const componentId = component.component_id || component.id.toString();
-
     setIsSaving(true);
 
     const updatedData = {
@@ -128,63 +102,27 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
     );
   };
 
-  // Handle title change with auto-save
-  const handleTitleChange = (value: string) => {
-    const componentId = component.component_id || component.id.toString();
-
-    // Update local state immediately
-    setData(prev => ({ ...prev, title: value }));
-
-    // Auto-save title
-    const updatedData = {
-      ...data,
-      title: value,
-      lastUpdated: new Date().toISOString().split("T")[0],
-    };
-
-    updateTextEditorMutation.mutate(
-      {
-        componentId,
-        data: updatedData,
-      },
-      {
-        onError: () => {
-          // Revert on error
-          setData(prev => ({ ...prev, title: data.title }));
-        },
-      }
-    );
-  };
-
-  // Handle content change (local state only)
   const handleContentChange = (value: string) => {
     setData(prev => ({ ...prev, content: value }));
   };
 
-  // Manual save content changes
   const handleSaveChanges = () => {
-    // Clear any pending auto-save
     if (autoSaveTimeoutRef.current) {
       clearTimeout(autoSaveTimeoutRef.current);
     }
-
     handleAutoSave();
   };
 
-  // Discard content changes only
   const handleDiscardChanges = () => {
-    // Clear any pending auto-save
     if (autoSaveTimeoutRef.current) {
       clearTimeout(autoSaveTimeoutRef.current);
     }
-
     setData(prev => ({ ...prev, content: originalContent }));
     setHasContentChanges(false);
   };
 
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
-
     deleteTextEditorMutation.mutate(componentId, {
       onSuccess: () => {
         setIsDeleteDialogOpen(false);
@@ -207,10 +145,8 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
 
   return (
     <div className="group relative">
-      {/* Action Buttons */}
       {isEditable && (
         <>
-          {/* Auto-save indicator */}
           {(isSaving || hasContentChanges) && (
             <div className="bg-background/95 fixed top-18 left-1/2 z-50 flex -translate-x-1/2 transform items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 backdrop-blur-sm">
               {isSaving ? (
@@ -227,7 +163,6 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
                       size="sm"
                       variant="outline"
                       onClick={handleDiscardChanges}
-                      disabled={updateTextEditorMutation.isPending}
                     >
                       Discard
                     </Button>
@@ -235,7 +170,6 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
                       size="sm"
                       variant="default"
                       onClick={handleSaveChanges}
-                      disabled={updateTextEditorMutation.isPending}
                       className="gap-2"
                     >
                       <Save className="h-4 w-4" />
@@ -247,9 +181,8 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
             </div>
           )}
 
-          {/* Delete Button */}
-          <div className="absolute -right-5 z-30 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
-            <CButton
+          <div className="absolute -right-5 z-30 flex translate-x-full gap-2 rounded-lg p-1 opacity-0 transition-opacity group-hover:opacity-100">
+            <Button
               size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
@@ -257,10 +190,9 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
             >
               <Trash2 className="h-4 w-4" />
               Delete
-            </CButton>
+            </Button>
           </div>
 
-          {/* Delete Confirmation Dialog */}
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
@@ -290,36 +222,12 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
         </>
       )}
 
-      {/* TextEditor Content */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-lg bg-white">
-          {/* Content */}
-          <div className="px-8 py-8">
-            {isEditable ? (
-              <div className="space-y-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Text Editor Content (Auto-saves 2 seconds after you stop
-                  typing)
-                </label>
-                <Tiptap
-                  value={data.content}
-                  onChange={handleContentChange}
-                  placeholder="Enter content..."
-                  height="500px"
-                  toolbar="advanced"
-                  onImageUpload={handleImageUpload}
-                  maxImageSize={5}
-                />
-              </div>
-            ) : (
-              <div
-                className="prose prose-lg prose-headings:font-semibold prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-2xl prose-h3:mb-3 prose-h3:mt-6 prose-h3:text-xl prose-p:mb-4 prose-p:leading-relaxed prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6 prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6 prose-li:mb-2 prose-strong:font-semibold prose-table:my-6 prose-table:w-full prose-table:border-collapse prose-thead:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-th:px-4 prose-th:py-2 prose-th:text-left prose-td:border prose-td:border-gray-300 prose-td:px-4 prose-td:py-2 max-w-none"
-                dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-              />
-            )}
-          </div>
-        </div>
-      </div>
+      <TextEditorStyle1
+        data={data}
+        isEditable={isEditable}
+        onContentChange={handleContentChange}
+        onImageUpload={handleImageUpload}
+      />
     </div>
   );
 };

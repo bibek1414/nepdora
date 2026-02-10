@@ -42,7 +42,7 @@ import { TestimonialsComponent } from "@/components/site-owners/builder/testimon
 import { PortfolioComponent } from "@/components/site-owners/builder/portfolio/portfolio-component";
 import { BannerComponent } from "@/components/site-owners/builder/banner/banner-component";
 import { NewsletterComponent } from "@/components/site-owners/builder/newsletter/newsletter-component";
-import { VidoesComponent as VideosComponent } from "@/components/site-owners/builder/videos/videos-component";
+import { VideosComponent } from "@/components/site-owners/builder/videos/videos-component";
 import { GalleryComponent } from "@/components/site-owners/builder/gallery/gallery-component";
 import { PolicyComponent } from "@/components/site-owners/builder/policies/policies-component";
 import { TextEditorComponent } from "@/components/site-owners/builder/text-editor/text-editor-component";

@@ -133,13 +133,7 @@ const ProcessCard: React.FC<ProcessCardProps> = ({
       </div>
 
       {/* Title */}
-      <h3
-        className="mb-4 text-[22px] leading-[30px] font-bold"
-        style={{
-          color: theme.colors.text,
-          fontFamily: theme.fonts.heading,
-        }}
-      >
+      <h3 className="mb-4 text-[22px] leading-[30px] font-bold">
         <EditableText
           value={card.title}
           onChange={value => onUpdate(index, "title", value)}
@@ -150,13 +144,7 @@ const ProcessCard: React.FC<ProcessCardProps> = ({
       </h3>
 
       {/* Description */}
-      <p
-        className="text-[16px] leading-[30px] font-normal"
-        style={{
-          color: theme.colors.text,
-          fontFamily: theme.fonts.body,
-        }}
-      >
+      <p className="text-[16px] leading-[30px] font-normal">
         <EditableText
           value={card.description}
           onChange={value => onUpdate(index, "description", value)}
@@ -226,13 +214,7 @@ const ProcessHeader: React.FC<ProcessHeaderProps> = ({
       </div>
 
       {/* Main Title */}
-      <h2
-        className="max-w-[630px] text-[40px] leading-[1.2] font-bold md:text-[50px]"
-        style={{
-          color: theme.colors.text,
-          fontFamily: theme.fonts.heading,
-        }}
-      >
+      <h2 className="max-w-[630px] text-[40px] leading-[1.2] font-bold md:text-[50px]">
         <EditableText
           value={title}
           onChange={onTitleUpdate}

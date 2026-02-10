@@ -1,22 +1,10 @@
+"use client";
 import React, { useState } from "react";
-import {
-  ContactComponentData,
-  ContactData,
-} from "@/types/owner-site/components/contact";
-import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { ContactComponentData } from "@/types/owner-site/components/contact";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { ContactForm1 } from "./contact-form-1";
-import { ContactForm2 } from "./contact-form-2";
-import { ContactForm3 } from "./contact-form-3";
-import { ContactForm4 } from "./contact-form-4";
-import { ContactForm5 } from "./contact-form-5";
-import { ContactForm6 } from "./contact-form-6";
-import { ContactForm7 } from "./contact-form-7";
-import { ContactForm8 } from "./contact-form-8";
-import { ContactForm9 } from "./contact-form-9";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,11 +14,18 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Trash2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EditableText } from "@/components/ui/editable-text";
-import { Trash2, Mail, RefreshCw } from "lucide-react";
+import { ContactStyle1 } from "./contact-style/contact-style-1";
+import { ContactStyle2 } from "./contact-style/contact-style-2";
+import { ContactStyle3 } from "./contact-style/contact-style-3";
+import { ContactStyle4 } from "./contact-style/contact-style-4";
+import { ContactStyle5 } from "./contact-style/contact-style-5";
+import { ContactStyle6 } from "./contact-style/contact-style-6";
+import { ContactStyle7 } from "./contact-style/contact-style-7";
+import { ContactStyle8 } from "./contact-style/contact-style-8";
+import { ContactStyle9 } from "./contact-style/contact-style-9";
 
 interface ContactComponentProps {
   component: ContactComponentData;
@@ -49,30 +44,8 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
   onUpdate,
   onReplace,
 }) => {
-  const { data: builderData, handleTextUpdate } = useBuilderLogic(
-    component.data,
-    updatedData => {
-      if (onUpdate) {
-        onUpdate(component.component_id, {
-          ...component,
-          data: {
-            ...component.data,
-            ...updatedData,
-          },
-        });
-      }
-    }
-  );
-
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const {
-    title = "Get in Touch",
-    subtitle,
-    style = "form-1",
-  } = builderData || {};
-
-  // Use unified mutation hooks
   const deleteContactComponent = useDeleteComponentMutation(
     pageSlug || "",
     "contact"
@@ -82,21 +55,30 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
     "contact"
   );
 
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
+  const handleUpdate = (updatedData: Partial<ContactComponentData["data"]>) => {
+    if (!pageSlug) return;
+    const componentId = component.component_id;
+
+    const newData = {
+      ...component.data,
+      ...updatedData,
+    };
+
+    updateContactComponent.mutate({
+      componentId,
+      data: newData,
+    });
+
+    if (onUpdate) {
+      onUpdate(componentId, {
+        ...component,
+        data: newData,
+      });
     }
-    setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-
+    if (!pageSlug) return;
     deleteContactComponent.mutate(component.component_id, {
       onSuccess: () => {
         setIsDeleteDialogOpen(false);
@@ -104,130 +86,72 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
     });
   };
 
-  const handleTitleChange = (newTitle: string) => {
-    handleTextUpdate("title")(newTitle);
-
-    if (pageSlug) {
-      updateContactComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
-      });
-    }
-  };
-
-  const handleSubtitleChange = (newSubtitle: string) => {
-    handleTextUpdate("subtitle")(newSubtitle);
-
-    if (pageSlug) {
-      updateContactComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
-      });
-    }
-  };
-
-  const handleDataChange = (newData: ContactData) => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for updating component");
-      return;
-    }
-
-    // Update component data via unified API
-    updateContactComponent.mutate({
-      componentId: component.component_id,
-      data: newData,
-    });
-
-    // Also update local state if onUpdate is provided
-    if (onUpdate) {
-      onUpdate(component.component_id, {
-        ...component,
-        data: newData,
-      });
-    }
-  };
-
-  const renderContactForm = () => {
-    const formProps = {
+  const renderContactStyle = () => {
+    const style = component.data?.style || "form-1";
+    const commonProps = {
       data: component.data,
-      siteUser: isEditable ? undefined : siteUser,
-      isPreview: isEditable,
-      isEditable: isEditable,
-      onDataChange: isEditable ? handleDataChange : undefined,
+      isEditable,
+      siteUser,
+      onUpdate: handleUpdate,
     };
 
     switch (style) {
       case "contact-2":
-        return <ContactForm2 {...formProps} />;
+        return <ContactStyle2 {...commonProps} />;
       case "contact-3":
-        return <ContactForm3 {...formProps} />;
+        return <ContactStyle3 {...commonProps} />;
       case "contact-4":
-        return <ContactForm4 {...formProps} />;
+        return <ContactStyle4 {...commonProps} />;
       case "contact-5":
-        return <ContactForm5 {...formProps} />;
-      case "contact-7":
-        return <ContactForm7 {...formProps} />;
-      case "contact-8":
-        return <ContactForm8 {...formProps} />;
-      case "contact-9":
-        return <ContactForm9 {...formProps} />;
-
+        return <ContactStyle5 {...commonProps} />;
       case "contact-6":
-        return <ContactForm6 {...formProps} />;
+        return <ContactStyle6 {...commonProps} />;
+      case "contact-7":
+        return <ContactStyle7 {...commonProps} />;
+      case "contact-8":
+        return <ContactStyle8 {...commonProps} />;
+      case "contact-9":
+        return <ContactStyle9 {...commonProps} />;
+      case "contact-1":
       default:
-        return <ContactForm1 {...formProps} />;
+        return <ContactStyle1 {...commonProps} />;
     }
   };
 
-  // Builder mode preview
-  if (isEditable) {
-    return (
-      <div className="group relative">
-        {/* Delete Control with AlertDialog */}
-        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
+  return (
+    <div className="group relative">
+      {isEditable && (
+        <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <Button
+            onClick={() => onReplace?.(component.component_id)}
+            variant="outline"
+            size="sm"
+            className="h-8 w-fit justify-start bg-white px-3"
+          >
+            <RefreshCw className="mr-1 h-4 w-4" />
+            Replace
+          </Button>
+
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex flex-col gap-2">
-              <Button
-                onClick={() => onReplace?.(component.component_id)}
-                variant="outline"
-                size="sm"
-                className="h-8 w-fit justify-start bg-white px-3"
-              >
-                <RefreshCw className="mr-1 h-4 w-4" />
-                Replace
-              </Button>
-              <AlertDialogTrigger asChild>
-                <Button
-                  onClick={handleDeleteClick}
-                  variant="destructive"
-                  size="sm"
-                  className="h-8 w-fit justify-start px-3"
-                  disabled={deleteContactComponent.isPending}
-                >
-                  <Trash2 className="mr-1 h-4 w-4" />
-                  {deleteContactComponent.isPending ? "Deleting..." : "Delete"}
-                </Button>
-              </AlertDialogTrigger>
-            </div>
+            <Button
+              onClick={() => setIsDeleteDialogOpen(true)}
+              variant="destructive"
+              size="sm"
+              className="h-8 w-fit justify-start px-3"
+              disabled={deleteContactComponent.isPending}
+            >
+              <Trash2 className="mr-1 h-4 w-4" />
+              {deleteContactComponent.isPending ? "Deleting..." : "Delete"}
+            </Button>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
-                  Delete Contact Component
-                </AlertDialogTitle>
+                <AlertDialogTitle>Delete Contact Component</AlertDialogTitle>
                 <AlertDialogDescription>
                   Are you sure you want to delete this contact component? This
-                  action cannot be undone and will permanently remove the
-                  component from your page.
+                  action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -237,80 +161,15 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   disabled={deleteContactComponent.isPending}
                 >
-                  {deleteContactComponent.isPending
-                    ? "Deleting..."
-                    : "Delete Component"}
+                  {deleteContactComponent.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
+      )}
 
-        {/* Contact Preview */}
-        <div className="py-8">
-          <div className="container mx-auto px-4">
-            {/* Only show title/subtitle editing for non-form-4 and non-form-5 styles */}
-            {style !== "contact-4" &&
-              style !== "contact-5" &&
-              style !== "contact-7" &&
-              style !== "contact-8" &&
-              style !== "contact-9" && (
-                <div className="mb-8 text-center">
-                  <EditableText
-                    value={title}
-                    onChange={handleTitleChange}
-                    as="h2"
-                    className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                    isEditable={true}
-                    placeholder="Enter title..."
-                  />
-                  {subtitle !== undefined && (
-                    <EditableText
-                      value={subtitle || ""}
-                      onChange={handleSubtitleChange}
-                      as="p"
-                      className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                      isEditable={true}
-                      placeholder="Enter subtitle..."
-                      multiline={true}
-                    />
-                  )}
-                </div>
-              )}
-
-            <div className="relative">{renderContactForm()}</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Live site rendering
-  return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
-        {/* Only show title/subtitle for non-form-4 and non-form-5 styles */}
-        {style !== "contact-4" &&
-          style !== "contact-5" &&
-          style !== "contact-7" &&
-          style !== "contact-8" &&
-          style !== "contact-9" && (
-            <div className="mb-12 text-center">
-              <h2
-                className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-                dangerouslySetInnerHTML={{ __html: title }}
-              ></h2>
-              {subtitle && (
-                <p
-                  className="text-muted-foreground mx-auto max-w-3xl text-xl"
-                  dangerouslySetInnerHTML={{ __html: subtitle }}
-                ></p>
-              )}
-            </div>
-          )}
-
-        {renderContactForm()}
-      </div>
-    </section>
+      {renderContactStyle()}
+    </div>
   );
 };

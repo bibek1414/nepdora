@@ -1,16 +1,10 @@
+"use client";
 import React, { useState } from "react";
-import {
-  OurClientsComponentData,
-  OurClientsData,
-} from "@/types/owner-site/components/our-client";
+import { OurClientsComponentData } from "@/types/owner-site/components/our-client";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { OurClients1 } from "./our-clients-1";
-import { OurClients2 } from "./our-clients-2";
-import { OurClients3 } from "./our-clients-3";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,12 +14,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { EditableText } from "@/components/ui/editable-text";
 import { Trash2, RefreshCw } from "lucide-react";
+import Link from "next/link";
+import { OurClientsStyle1 } from "./our-clients-style-1";
+import { OurClientsStyle2 } from "./our-clients-style-2";
+import { OurClientsStyle3 } from "./our-clients-style-3";
 
 interface OurClientsComponentProps {
   component: OurClientsComponentData;
@@ -44,30 +39,8 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
   onUpdate,
   onReplace,
 }) => {
-  const { data: builderData, handleTextUpdate } = useBuilderLogic(
-    component.data,
-    updatedData => {
-      if (onUpdate) {
-        onUpdate(component.component_id, {
-          ...component,
-          data: {
-            ...component.data,
-            ...updatedData,
-          },
-        });
-      }
-    }
-  );
-
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const {
-    title = "Our Clients",
-    subtitle,
-    style = "our-clients-1",
-  } = builderData || {};
-
-  // Use unified mutation hooks
   const deleteOurClientsComponent = useDeleteComponentMutation(
     pageSlug || "",
     "our_clients"
@@ -77,125 +50,101 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
     "our_clients"
   );
 
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
+  const handleUpdate = (
+    updatedData: Partial<OurClientsComponentData["data"]>
+  ) => {
+    if (!pageSlug) return;
+    const componentId = component.component_id;
+
+    const newData = {
+      ...component.data,
+      ...updatedData,
+    };
+
+    updateOurClientsComponent.mutate({
+      componentId,
+      data: newData,
+    });
+
+    if (onUpdate) {
+      onUpdate(componentId, {
+        ...component,
+        data: newData,
+      });
     }
-    setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (!pageSlug) {
-      console.error("pageSlug is required for deletion");
-      return;
-    }
-
+    if (!pageSlug) return;
     deleteOurClientsComponent.mutate(component.component_id);
     setIsDeleteDialogOpen(false);
   };
 
-  const handleTitleChange = (newTitle: string) => {
-    handleTextUpdate("title")(newTitle);
-
-    if (pageSlug) {
-      updateOurClientsComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          title: newTitle,
-        },
-      });
-    }
-  };
-
-  const handleSubtitleChange = (newSubtitle: string) => {
-    handleTextUpdate("subtitle")(newSubtitle);
-
-    if (pageSlug) {
-      updateOurClientsComponent.mutate({
-        componentId: component.component_id,
-        data: {
-          ...component.data,
-          subtitle: newSubtitle,
-        },
-      });
-    }
-  };
-
-  const renderOurClients = () => {
-    const props = {
-      data: builderData,
+  const renderOurClientsStyle = () => {
+    const style = component.data?.style || "our-clients-1";
+    const commonProps = {
+      data: component.data,
+      isEditable,
+      onUpdate: handleUpdate,
     };
 
     switch (style) {
       case "our-clients-2":
-        return <OurClients2 {...props} />;
+        return <OurClientsStyle2 {...commonProps} />;
       case "our-clients-3":
-        return <OurClients3 {...props} />;
+        return <OurClientsStyle3 {...commonProps} />;
       case "our-clients-1":
       default:
-        return <OurClients1 {...props} />;
+        return <OurClientsStyle1 {...commonProps} />;
     }
   };
 
-  // Builder mode preview
-  if (isEditable) {
-    return (
-      <div className="group relative">
-        {/* Delete Control with AlertDialog */}
-        <div className="absolute -right-5 z-30 flex translate-x-full opacity-0 transition-opacity group-hover:opacity-100">
+  return (
+    <div className="group relative">
+      {isEditable && (
+        <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <Link href="/admin/our-clients/" target="_blank" rel="noopener">
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full justify-start"
+            >
+              Manage Our Clients
+            </Button>
+          </Link>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onReplace?.(component.component_id)}
+            className="h-8 w-fit justify-start bg-white px-3"
+          >
+            <RefreshCw className="mr-1 h-4 w-4" />
+            Replace
+          </Button>
+
           <AlertDialog
             open={isDeleteDialogOpen}
             onOpenChange={setIsDeleteDialogOpen}
           >
-            <div className="flex flex-col gap-2">
-              <Link href="/admin/our-clients/" target="_blank" rel="noopener">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="w-full justify-start"
-                >
-                  Manage Our Clients
-                </Button>
-              </Link>
-
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => onReplace?.(component.component_id)}
-                className="h-8 w-fit justify-start bg-white px-3"
-              >
-                <RefreshCw className="mr-1 h-4 w-4" />
-                Replace
-              </Button>
-
-              <AlertDialogTrigger asChild>
-                <Button
-                  onClick={handleDeleteClick}
-                  variant="destructive"
-                  size="sm"
-                  className="h-8 w-fit justify-start px-3"
-                  disabled={deleteOurClientsComponent.isPending}
-                >
-                  <Trash2 className="mr-1 h-4 w-4" />
-                  {deleteOurClientsComponent.isPending
-                    ? "Deleting..."
-                    : "Delete"}
-                </Button>
-              </AlertDialogTrigger>
-            </div>
+            <Button
+              onClick={() => setIsDeleteDialogOpen(true)}
+              variant="destructive"
+              size="sm"
+              className="h-8 w-fit justify-start px-3"
+              disabled={deleteOurClientsComponent.isPending}
+            >
+              <Trash2 className="mr-1 h-4 w-4" />
+              {deleteOurClientsComponent.isPending ? "Deleting..." : "Delete"}
+            </Button>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <Trash2 className="text-destructive h-5 w-5" />
+                <AlertDialogTitle>
                   Delete Our Clients Component
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                   Are you sure you want to delete this component? This action
-                  cannot be undone and will permanently remove the component
-                  from your page.
+                  cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -213,68 +162,9 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
             </AlertDialogContent>
           </AlertDialog>
         </div>
+      )}
 
-        {/* Preview */}
-        <div className="py-8">
-          <div className="container mx-auto px-4">
-            <div className="mb-8 text-center">
-              {style !== "our-clients-1" && (
-                <>
-                  <EditableText
-                    value={title}
-                    onChange={handleTitleChange}
-                    as="h2"
-                    className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-                    isEditable={true}
-                    placeholder="Enter title..."
-                  />
-                  {subtitle !== undefined && (
-                    <EditableText
-                      value={subtitle || ""}
-                      onChange={handleSubtitleChange}
-                      as="p"
-                      className="text-muted-foreground mx-auto max-w-2xl text-lg"
-                      isEditable={true}
-                      placeholder="Enter subtitle..."
-                      multiline={true}
-                    />
-                  )}
-                </>
-              )}
-            </div>
-
-            <div className="relative">{renderOurClients()}</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Live site rendering
-  return (
-    <section className="bg-background md:py-1">
-      <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          {style !== "our-clients-1" && (
-            <>
-              <h2
-                className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-                dangerouslySetInnerHTML={{ __html: title }}
-              ></h2>
-              {subtitle && (
-                <div className="mb-10 flex items-center justify-center gap-3 opacity-80">
-                  <p
-                    className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase"
-                    dangerouslySetInnerHTML={{ __html: subtitle }}
-                  ></p>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-
-        {renderOurClients()}
-      </div>
-    </section>
+      {renderOurClientsStyle()}
+    </div>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ProductCard1 } from "@/components/site-owners/builder/products/product-card1";
+import { ProductCard1 } from "@/components/site-owners/builder/products/products-card/product-card1";
 import {
   useWishlist,
   useAddToWishlist,
