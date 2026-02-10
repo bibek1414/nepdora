@@ -1,0 +1,106 @@
+"use client";
+import React from "react";
+import { useProducts } from "@/hooks/owner-site/admin/use-product";
+import ProductCard8 from "../products-card/product-card8";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle, ShoppingBag } from "lucide-react";
+import { ProductsComponentData } from "@/types/owner-site/components/products";
+
+interface ProductsStyleProps {
+  data: ProductsComponentData["data"];
+  isEditable?: boolean;
+  siteUser?: string;
+  onUpdate?: (updatedData: Partial<ProductsComponentData["data"]>) => void;
+  onProductClick?: (productId: number) => void;
+}
+
+export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
+  data,
+  isEditable = false,
+  siteUser,
+  onUpdate,
+  onProductClick,
+}) => {
+  const {
+    title = "Our Products",
+    subtitle,
+    categoryId,
+    subCategoryId,
+  } = data || {};
+  const {
+    data: productsData,
+    isLoading,
+    error,
+  } = useProducts({
+    category_id: categoryId,
+    sub_category_id: subCategoryId,
+  });
+  const products = productsData?.results || [];
+
+  return (
+    <div className="relative">
+      {isLoading && (
+        <div className="py-12 text-center">
+          <Skeleton className="mx-auto h-[400px] w-full max-w-7xl rounded-xl" />
+        </div>
+      )}
+
+      {error && (
+        <div className="container mx-auto px-4 py-8">
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error Loading Products</AlertTitle>
+            <AlertDescription>
+              {error instanceof Error
+                ? error.message
+                : "Failed to load products."}
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
+
+      {!isLoading && !error && products.length > 0 && (
+        <div className="container mx-auto max-w-7xl px-4 py-12">
+          <div className="mb-8 text-center">
+            <h2 className="text-2xl font-bold">{title}</h2>
+            {subtitle && <p className="text-muted-foreground">{subtitle}</p>}
+          </div>
+
+          <div className="flex gap-6 overflow-x-auto px-4">
+            {products.map(product => (
+              <div key={product.id} className="shrink-0">
+                <div
+                  className="relative transform cursor-pointer transition-transform duration-200"
+                  onClick={() => !isEditable && onProductClick?.(product.id)}
+                >
+                  {isEditable && (
+                    <div className="absolute inset-0 z-10 bg-transparent" />
+                  )}
+                  <ProductCard8
+                    product={product}
+                    siteUser={isEditable ? undefined : siteUser}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!isLoading && !error && products.length === 0 && (
+        <div className="bg-muted/50 rounded-lg py-12 text-center">
+          <ShoppingBag className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+          <h3 className="text-foreground mb-2 text-lg font-semibold">
+            No Products Found
+          </h3>
+          <p className="text-muted-foreground">
+            Add some products to your inventory to display them here.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ProductsStyle8;

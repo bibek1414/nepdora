@@ -124,7 +124,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             </Button>
           </Link>
 
-          {(user.is_template_account ||
+          {/* {(user.is_template_account ||
             user.sub_domain === "bibek" ||
             user.sub_domain === "urs-collection") && (
             <a
@@ -136,7 +136,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                 Builder
               </Button>
             </a>
-          )}
+          )} */}
 
           <a
             href="https://docs.nepdora.com"

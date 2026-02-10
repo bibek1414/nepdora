@@ -229,18 +229,6 @@ export interface HeroTemplate13Data {
   backgroundImageUrl?: string;
 }
 
-export interface HeroTemplate14Data {
-  template: "hero-14";
-  sectionSubtitle?: string;
-  sectionTitle?: string;
-  viewMoreText?: string;
-  viewMoreHref?: string;
-  countries: HeroCountry[];
-  buttons: HeroButton[];
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
-  backgroundImageUrl?: string;
-}
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data
@@ -255,8 +243,7 @@ export type HeroData =
   | HeroTemplate10Data
   | HeroTemplate11Data
   | HeroTemplate12Data
-  | HeroTemplate13Data
-  | HeroTemplate14Data;
+  | HeroTemplate13Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -648,42 +635,6 @@ export const defaultHeroTemplate13Data: HeroTemplate13Data = {
   imageAlt: "Office meeting background",
 };
 
-export const defaultHeroTemplate14Data: HeroTemplate14Data = {
-  template: "hero-14",
-  sectionSubtitle: "AVAILABLE COUNTRIES",
-  sectionTitle: "Urban Escapes City\nHopping Adventures",
-  viewMoreText: "View More →",
-  viewMoreHref: "#",
-  countries: [
-    {
-      id: "1",
-      name: "Canada",
-      flagColor: "#EF4444",
-      features: ["Mistakes To Avoid", "Your Startup", "Knew About Fonts"],
-    },
-    {
-      id: "2",
-      name: "Bangladesh",
-      flagColor: "#16A34A",
-      features: ["Mistakes To Avoid", "Your Startup", "Knew About Fonts"],
-    },
-    {
-      id: "3",
-      name: "Australia",
-      flagColor: "#2563EB",
-      features: ["Mistakes To Avoid", "Your Startup", "Knew About Fonts"],
-    },
-    {
-      id: "4",
-      name: "United Kingdom",
-      flagColor: "#1E40AF",
-      features: ["Mistakes To Avoid", "Your Startup", "Knew About Fonts"],
-    },
-  ],
-  buttons: [],
-  backgroundType: "color",
-  backgroundColor: "#FFFFFF",
-};
 // Default data map for all hero templates
 export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-1": defaultHeroTemplate1Data,
@@ -699,7 +650,6 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-11": defaultHeroTemplate11Data,
   "hero-12": defaultHeroTemplate12Data,
   "hero-13": defaultHeroTemplate13Data,
-  "hero-14": defaultHeroTemplate14Data,
 };
 
 // Type guards for each template
@@ -740,6 +690,3 @@ export const isHeroTemplate12 = (data: HeroData): data is HeroTemplate12Data =>
 
 export const isHeroTemplate13 = (data: HeroData): data is HeroTemplate13Data =>
   data.template === "hero-13";
-
-export const isHeroTemplate14 = (data: HeroData): data is HeroTemplate14Data =>
-  data.template === "hero-14";
