@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User } from "@/hooks/use-jwt-server";
+import { User } from "@/types/auth/auth";
 import { LoadingScreen } from "@/components/on-boarding/loading-screen/loading-screen";
 
 interface OnboardingStepOneProps {
@@ -48,7 +48,7 @@ export const OnboardingStepOne = ({
     setShowLoadingScreen(true);
 
     setTimeout(() => {
-      router.push(`/builder/${user.storeName}`);
+      router.push(`/builder/${user.sub_domain}`);
     }, 5000);
   };
 
@@ -56,7 +56,7 @@ export const OnboardingStepOne = ({
     setShowLoadingScreen(true);
 
     setTimeout(() => {
-      router.push(`/builder/${user.storeName}`);
+      router.push(`/builder/${user.sub_domain}`);
     }, 5000);
   };
 

@@ -23,7 +23,7 @@ async function DomainsPage() {
     }
   };
 
-  const fullDomain = generateDomain(user.subDomain);
+  const fullDomain = generateDomain(user.sub_domain || "");
 
   return (
     <div>

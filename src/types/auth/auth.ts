@@ -15,6 +15,9 @@ export interface User {
   is_onboarding_complete?: boolean;
   website_type?: string;
   is_template_account?: boolean;
+  avatar?: string;
+  // Convenience alias for store_name
+  name?: string;
 }
 export interface AuthTokens {
   access_token: string;

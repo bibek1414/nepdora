@@ -15,5 +15,5 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PluginManagementPage() {
   const user = await getServerUser();
 
-  return <PluginManager websiteType={user?.websiteType} />;
+  return <PluginManager websiteType={user?.website_type} />;
 }

@@ -6,7 +6,7 @@ import RecentOrders from "../orders/recent-orders";
 import { GoogleAuthRedirectHandler } from "@/components/auth/GoogleAuthRedirectHandler";
 
 import { SessionProvider } from "next-auth/react";
-import { User as UserType } from "@/hooks/use-jwt-server";
+import { User } from "@/types/auth/auth";
 import RecentInquiries from "../contact/recent-inquiries";
 import RecentAppointments from "../appointments/recent-appointments";
 import { StatsCards } from "./stats-cards";
@@ -14,7 +14,7 @@ import { useGetContacts } from "@/hooks/owner-site/admin/use-contact";
 import { useGetAppointments } from "@/hooks/owner-site/admin/use-appointment";
 
 interface AdminDashboardProps {
-  user?: UserType;
+  user?: User;
 }
 
 export default function AdminDashboard({ user }: AdminDashboardProps) {
@@ -33,10 +33,10 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
   } = useGetAppointments({ page: 1, page_size: 1, status: "pending" });
 
   const isServiceSite =
-    user?.websiteType === "service" ||
-    user?.websiteType === "SERVICE_WEBSITE" ||
-    user?.websiteType === "AGENCY_WEBSITE" ||
-    user?.websiteType === "CONSULTANCY_WEBSITE";
+    user?.website_type === "service" ||
+    user?.website_type === "SERVICE_WEBSITE" ||
+    user?.website_type === "AGENCY_WEBSITE" ||
+    user?.website_type === "CONSULTANCY_WEBSITE";
 
   return (
     <div>

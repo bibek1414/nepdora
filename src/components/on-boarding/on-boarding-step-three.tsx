@@ -10,7 +10,7 @@ import {
 } from "@/hooks/super-admin/components/use-template-category";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
-import { User } from "@/hooks/use-jwt-server";
+import { User } from "@/types/auth/auth";
 
 interface OnboardingStepThreeProps {
   categoryId?: number;
@@ -56,7 +56,7 @@ export const OnboardingStepThree = ({
   };
 
   const handleSkip = () => {
-    router.push(`/builder/${user.storeName}`);
+    router.push(`/builder/${user.sub_domain}`);
   };
 
   const clearSearch = () => {

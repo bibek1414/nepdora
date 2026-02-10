@@ -49,7 +49,7 @@ export default async function SettingsLayout({
         </h1>
       </div>
 
-      <SettingsTabs items={settingsItems} websiteType={user?.websiteType} />
+      <SettingsTabs items={settingsItems} websiteType={user?.website_type} />
 
       <div className="mt-2">{children}</div>
     </div>
