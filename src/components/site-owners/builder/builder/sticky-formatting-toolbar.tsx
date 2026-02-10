@@ -767,34 +767,37 @@ export const StickyFormattingToolbar: React.FC = () => {
           </button>
 
           {showAlignPicker && (
-            <div className="absolute top-full left-0 z-50 mt-1 rounded-lg border border-gray-200 bg-white shadow-lg">
+            <div className="absolute top-full left-0 z-50 mt-1 w-32 rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
               <button
                 onClick={() => applyAlignment("left")}
-                className="hover:text-primary flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50"
+                className="hover:text-primary flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-blue-50"
               >
-                <AlignLeft className="h-4 w-4" />
-                Align Left
+                <AlignLeft className="h-4 w-4 shrink-0" />
+                <span>Align Left</span>
               </button>
+
               <button
                 onClick={() => applyAlignment("center")}
-                className="hover:text-primary flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50"
+                className="hover:text-primary flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-blue-50"
               >
-                <AlignCenter className="h-4 w-4" />
-                Align Center
+                <AlignCenter className="h-4 w-4 shrink-0" />
+                <span>Align Center</span>
               </button>
+
               <button
                 onClick={() => applyAlignment("right")}
-                className="hover:text-primary flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50"
+                className="hover:text-primary flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-blue-50"
               >
-                <AlignRight className="h-4 w-4" />
-                Align Right
+                <AlignRight className="h-4 w-4 shrink-0" />
+                <span>Align Right</span>
               </button>
+
               <button
                 onClick={() => applyAlignment("justify")}
-                className="hover:text-primary flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50"
+                className="hover:text-primary flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-blue-50"
               >
-                <AlignJustify className="h-4 w-4" />
-                Justify
+                <AlignJustify className="h-4 w-4 shrink-0" />
+                <span>Justify</span>
               </button>
             </div>
           )}
