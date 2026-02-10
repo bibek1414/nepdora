@@ -43,6 +43,7 @@ export const StickyFormattingToolbar: React.FC = () => {
   const [selectionHighlight, setSelectionHighlight] = useState("#FFFF00");
   const [selectionFontSize, setSelectionFontSize] = useState("16px");
   const [selectedFont, setSelectedFont] = useState("Inter");
+  const [fontSizeInput, setFontSizeInput] = useState("16");
 
   const toolbarRef = useRef<HTMLDivElement>(null);
 
@@ -95,6 +96,8 @@ export const StickyFormattingToolbar: React.FC = () => {
     "36px",
     "48px",
     "60px",
+    "72px",
+    "96px",
   ];
 
   // Font options
@@ -395,7 +398,9 @@ export const StickyFormattingToolbar: React.FC = () => {
       setShowAlignPicker(false);
     } else {
       if (selection.fontSize) {
+        const size = parseInt(selection.fontSize);
         setSelectionFontSize(selection.fontSize);
+        setFontSizeInput(size.toString());
       }
       if (selection.color) {
         // Convert RGB to HEX for the color picker if needed
@@ -480,7 +485,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 <button
                   key={font}
                   onClick={() => applyFontFamily(font)}
-                  className="block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
+                  className="hover:text-primary block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50"
                   style={{ fontFamily: font }}
                 >
                   {font}
@@ -492,7 +497,6 @@ export const StickyFormattingToolbar: React.FC = () => {
 
         <div className="h-6 w-px bg-gray-300" />
 
-        {/* Font Size Controls */}
         <div className="flex items-center gap-0.5">
           <button
             onClick={() => {
@@ -501,6 +505,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 const newSize = `${current - 2}px`;
                 setSelectionFontSize(newSize);
                 handleFontSizeApply(newSize);
+                setFontSizeInput((current - 2).toString());
               }
             }}
             className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100"
@@ -509,25 +514,56 @@ export const StickyFormattingToolbar: React.FC = () => {
             <Minus className="h-4 w-4 text-gray-700" />
           </button>
 
-          <button
-            onClick={e => {
-              e.stopPropagation();
-              closeAllDropdowns();
-              setShowFontSizePicker(!showFontSizePicker);
-            }}
-            className="min-w-[45px] rounded border border-gray-300 px-2 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100"
-            title="Font Size"
-          >
-            {parseInt(selectionFontSize) || 16}
-          </button>
+          <div className="relative flex items-center">
+            <input
+              type="text"
+              value={fontSizeInput}
+              onChange={e => {
+                const value = e.target.value.replace(/[^0-9]/g, "");
+                setFontSizeInput(value);
+              }}
+              onBlur={() => {
+                if (fontSizeInput) {
+                  const size = Math.min(
+                    Math.max(parseInt(fontSizeInput), 1),
+                    100
+                  );
+                  const newSize = `${size}px`;
+                  setSelectionFontSize(newSize);
+                  handleFontSizeApply(newSize);
+                  setFontSizeInput(size.toString());
+                } else {
+                  setFontSizeInput(parseInt(selectionFontSize).toString());
+                }
+              }}
+              onKeyDown={e => {
+                if (e.key === "Enter") {
+                  (e.target as HTMLInputElement).blur();
+                }
+              }}
+              className="w-12 rounded border border-gray-300 px-1 py-1.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:border-blue-400 focus:outline-none"
+              title="Font Size"
+            />
+            <button
+              onClick={e => {
+                e.stopPropagation();
+                closeAllDropdowns();
+                setShowFontSizePicker(!showFontSizePicker);
+              }}
+              className="absolute right-0 flex h-full items-center px-1 text-gray-400 hover:text-gray-600"
+            >
+              <ChevronDown className="h-3 w-3" />
+            </button>
+          </div>
 
           <button
             onClick={() => {
               const current = parseInt(selectionFontSize) || 16;
-              if (current < 96) {
+              if (current < 100) {
                 const newSize = `${current + 2}px`;
                 setSelectionFontSize(newSize);
                 handleFontSizeApply(newSize);
+                setFontSizeInput((current + 2).toString());
               }
             }}
             className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100"
@@ -545,9 +581,9 @@ export const StickyFormattingToolbar: React.FC = () => {
                 key={size}
                 onClick={() => {
                   handleFontSizeApply(size);
+                  setFontSizeInput(parseInt(size).toString());
                 }}
-                className="block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
-                style={{ fontSize: size }}
+                className="hover:text-primary block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50"
               >
                 {parseInt(size)}px
               </button>
@@ -615,7 +651,7 @@ export const StickyFormattingToolbar: React.FC = () => {
           </button>
 
           {showColorPicker && (
-            <div className="absolute top-full left-0 z-50 mt-1 w-64 rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
+            <div className="absolute top-full left-0 z-50 mt-1 w-auto rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
               <div className="mb-2 flex gap-2">
                 <input
                   type="color"
@@ -675,7 +711,7 @@ export const StickyFormattingToolbar: React.FC = () => {
           </button>
 
           {showHighlightPicker && (
-            <div className="absolute top-full left-0 z-50 mt-1 w-64 rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
+            <div className="absolute top-full left-0 z-50 mt-1 w-auto rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
               <div className="mb-2 flex gap-2">
                 <input
                   type="color"
@@ -734,28 +770,28 @@ export const StickyFormattingToolbar: React.FC = () => {
             <div className="absolute top-full left-0 z-50 mt-1 rounded-lg border border-gray-200 bg-white shadow-lg">
               <button
                 onClick={() => applyAlignment("left")}
-                className="flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
+                className="hover:text-primary flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50"
               >
                 <AlignLeft className="h-4 w-4" />
                 Align Left
               </button>
               <button
                 onClick={() => applyAlignment("center")}
-                className="flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
+                className="hover:text-primary flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50"
               >
                 <AlignCenter className="h-4 w-4" />
                 Align Center
               </button>
               <button
                 onClick={() => applyAlignment("right")}
-                className="flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
+                className="hover:text-primary flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50"
               >
                 <AlignRight className="h-4 w-4" />
                 Align Right
               </button>
               <button
                 onClick={() => applyAlignment("justify")}
-                className="flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50 hover:text-blue-700"
+                className="hover:text-primary flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-blue-50"
               >
                 <AlignJustify className="h-4 w-4" />
                 Justify
