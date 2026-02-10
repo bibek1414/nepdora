@@ -42,7 +42,7 @@ import {
   usePreviewTemplate,
 } from "@/hooks/owner-site/admin/use-template";
 import { useAuth } from "@/hooks/use-auth";
-import { User } from "@/hooks/use-jwt-server";
+import { User } from "@/types/auth/auth";
 
 interface OnboardingStepFourProps {
   websiteType: string;
@@ -146,7 +146,7 @@ export const OnboardingStepFour = ({
           setShowLoadingScreen(true);
 
           setTimeout(() => {
-            router.push(`/builder/${user.storeName}`);
+            router.push(`/builder/${user.sub_domain}`);
           }, 5000);
         },
         onError: error => {
@@ -176,7 +176,7 @@ export const OnboardingStepFour = ({
     setShowLoadingScreen(true);
 
     setTimeout(() => {
-      router.push(`/builder/${user.storeName}`);
+      router.push(`/builder/${user.sub_domain}`);
     }, 5000);
   };
 

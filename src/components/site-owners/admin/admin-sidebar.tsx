@@ -10,7 +10,7 @@ import {
   FileText,
   Bug,
   MessageSquare,
-  User,
+  User as UserIcon,
   Mail,
   PanelRight,
   PanelLeft,
@@ -26,10 +26,10 @@ import {
   Database,
   BookOpen,
 } from "lucide-react";
-import { User as UserType } from "@/hooks/use-jwt-server";
+import { User } from "@/types/auth/auth";
 
 interface AdminSidebarProps {
-  user: UserType;
+  user: User;
 }
 
 const navigationGroups = [
@@ -149,11 +149,11 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
   // Filter navigation groups based on website type and subdomain
   const filteredNavigationGroups = navigationGroups.filter(group => {
     // If user's website type is 'service' and this group should be hidden for service, filter it out
-    if (user.websiteType === "service" && group.hideForService) {
+    if (user.website_type === "service" && group.hideForService) {
       return false;
     }
     // If group should only show for batoma subdomain
-    if (group.showForBatoma && user.subDomain !== "batoma") {
+    if (group.showForBatoma && user.sub_domain !== "batoma") {
       return false;
     }
     return true;
@@ -271,14 +271,14 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
         >
           <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-full">
             <span className="text-primary-foreground text-xs font-medium">
-              {user.name?.charAt(0)?.toUpperCase() ||
+              {(user.name || user.store_name)?.charAt(0)?.toUpperCase() ||
                 user.email.charAt(0).toUpperCase()}
             </span>
           </div>
           {!collapsed && (
             <div className="flex flex-1 flex-col overflow-hidden">
               <p className="truncate text-sm font-medium capitalize">
-                {user.name || "Admin"}
+                {user.name || user.store_name || "Admin"}
               </p>
               <p className="text-muted-foreground truncate text-xs">
                 {user.email}

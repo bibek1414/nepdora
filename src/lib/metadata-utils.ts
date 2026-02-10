@@ -17,9 +17,9 @@ export async function generateAdminPageMetadata({
 }: AdminPageMetadataOptions): Promise<Metadata> {
   const user = await getServerUser();
 
-  const rawStoreName = user?.storeName || "Nepdora";
+  const rawStoreName = user?.store_name || "Nepdora";
   const storeName = capitalizeWords(rawStoreName);
-  const subDomain = user?.subDomain || "";
+  const subDomain = user?.sub_domain || "";
 
   const title = `${storeName} | ${pageName} | Admin Dashboard`;
   const description = pageDescription.replace(/\{storeName\}/g, storeName);
@@ -53,9 +53,9 @@ export async function generatePreviewPageMetadata({
 }: AdminPageMetadataOptions): Promise<Metadata> {
   const user = await getServerUser();
 
-  const rawStoreName = user?.storeName || "Nepdora";
+  const rawStoreName = user?.store_name || "Nepdora";
   const storeName = capitalizeWords(rawStoreName);
-  const subDomain = user?.subDomain || "";
+  const subDomain = user?.sub_domain || "";
 
   const title = `${storeName} | ${pageName} | Preview`;
   const description = pageDescription.replace(/\{storeName\}/g, storeName);

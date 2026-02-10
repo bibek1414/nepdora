@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Menu,
   LogOut,
-  User,
+  User as UserIcon,
   Settings,
   ExternalLink,
   Pencil,
@@ -26,13 +26,14 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
-import { User as UserType } from "@/hooks/use-jwt-server";
+import { User } from "@/types/auth/auth";
+import { getUserInitials } from "@/lib/user-utils";
 import { useState } from "react";
 import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
 import { toast } from "sonner";
 
 interface AdminHeaderProps {
-  user: UserType;
+  user: User;
 }
 
 export default function AdminHeader({ user }: AdminHeaderProps) {
@@ -64,14 +65,6 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
     router.push("/support");
   };
 
-  const getUserInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map(word => word.charAt(0).toUpperCase())
-      .join("")
-      .substring(0, 2);
-  };
-
   return (
     <header className="sticky top-0 z-40 w-full border-b border-gray-100 bg-white">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -86,10 +79,10 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             className="rounded-full border-none bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
           >
             <FileCheck className="mr-2 h-4 w-4" />
-            {user.isOnboardingComplete ? "Edit Site Info" : "Complete Setup"}
+            {user.is_onboarding_complete ? "Edit Site Info" : "Complete Setup"}
           </Button>
           <Link
-            href={`/publish/${user.subDomain}`}
+            href={`/publish/${user.sub_domain}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -103,7 +96,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             </Button>
           </Link>
           <Link
-            href={`/preview/${user.subDomain}`}
+            href={`/preview/${user.sub_domain}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -117,7 +110,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             </Button>
           </Link>
           <Link
-            href={`/builder/${user.subDomain}`}
+            href={`/builder/${user.sub_domain}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -131,11 +124,11 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             </Button>
           </Link>
 
-          {(user.isTemplateAccount ||
-            user.subDomain === "bibek" ||
-            user.subDomain === "urs-collection") && (
+          {(user.is_template_account ||
+            user.sub_domain === "bibek" ||
+            user.sub_domain === "urs-collection") && (
             <a
-              href={`https://builder.nepdora.com/builder/${user.subDomain}`}
+              href={`https://builder.nepdora.com/builder/${user.sub_domain}`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -176,7 +169,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="bg-primary text-xs font-medium text-white">
-                    {getUserInitials(user.name)}
+                    {getUserInitials(user.name || user.store_name)}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -184,12 +177,14 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium capitalize">{user.name}</p>
+                  <p className="text-sm font-medium capitalize">
+                    {user.name || user.store_name}
+                  </p>
                   <DropdownMenuSeparator />
                   {/* <p className="text-muted-foreground text-xs">{user.email}</p> */}
                   {/* <div className="flex items-center space-x-2">
                     <Badge variant="outline" className="text-xs">
-                      {user.subDomain}
+                      {user.sub_domain}
                     </Badge>
                   </div> */}
                 </div>
@@ -197,7 +192,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
               <DropdownMenuItem
                 onClick={() => handleNavigation("/admin/profile")}
               >
-                <User className="mr-2 h-4 w-4" />
+                <UserIcon className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
 
@@ -219,9 +214,9 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
       {showOnboarding && (
         <OnboardingModal
           userData={{
-            storeName: user.storeName || "",
+            storeName: user.store_name || "",
             email: user.email,
-            phoneNumber: user.phoneNumber || "",
+            phoneNumber: user.phone_number || "",
           }}
           isOverlay={true}
           onClose={handleCloseOnboarding}

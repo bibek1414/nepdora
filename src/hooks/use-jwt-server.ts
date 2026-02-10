@@ -1,23 +1,7 @@
 import { cookies } from "next/headers";
 import { decodeJWT, isTokenExpired, JWTPayload } from "@/lib/jwt-utils";
-
-export interface User {
-  id: number;
-  email: string;
-  name: string;
-  storeName: string;
-  role: string;
-  phoneNumber: string;
-  domain: string;
-  subDomain: string;
-  hasProfile: boolean;
-  hasProfileCompleted: boolean;
-  isFirstLogin?: boolean;
-  isOnboardingComplete?: boolean;
-  websiteType?: string;
-  isTemplateAccount?: boolean;
-  avatar: string;
-}
+import { User } from "@/types/auth/auth";
+import { generateUserAvatar } from "@/lib/user-utils";
 
 interface GoogleAuthUser {
   user_id?: number;
@@ -77,32 +61,33 @@ export async function getServerUser(): Promise<User | null> {
 
       const user: User = {
         id: userData.user_id || tokenPayload?.user_id || 0,
+        user_id: userData.user_id || tokenPayload?.user_id || 0,
         email: userData.email || tokenPayload?.email || "",
+        store_name: userData.store_name || tokenPayload?.store_name || "",
         name: userData.store_name || tokenPayload?.store_name || "",
-        storeName: userData.store_name || tokenPayload?.store_name || "",
         role: userData.role || tokenPayload?.role || "owner",
-        phoneNumber: userData.phone_number || tokenPayload?.phone_number || "",
+        phone_number: userData.phone_number || tokenPayload?.phone_number || "",
         domain: userData.domain || tokenPayload?.domain || "",
-        subDomain: userData.sub_domain || tokenPayload?.sub_domain || "",
-        hasProfile: userData.has_profile ?? tokenPayload?.has_profile ?? true,
-        hasProfileCompleted:
+        sub_domain: userData.sub_domain || tokenPayload?.sub_domain || "",
+        has_profile: userData.has_profile ?? tokenPayload?.has_profile ?? true,
+        has_profile_completed:
           userData.has_profile_completed ??
           tokenPayload?.has_profile_completed ??
           false,
-        isFirstLogin: userData.first_login ?? tokenPayload?.first_login ?? true,
-        isOnboardingComplete:
+        first_login: userData.first_login ?? tokenPayload?.first_login ?? true,
+        is_onboarding_complete:
           userData.is_onboarding_complete ??
           tokenPayload?.is_onboarding_complete ??
           false,
-        websiteType:
+        website_type:
           userData.website_type || tokenPayload?.website_type || "ecommerce",
-        isTemplateAccount:
+        is_template_account:
           userData.is_template_account ??
           tokenPayload?.is_template_account ??
           false,
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        avatar: generateUserAvatar(
           userData.store_name || tokenPayload?.store_name || "User"
-        )}&background=3b82f6&color=ffffff&size=32&rounded=true&bold=true`,
+        ),
       };
 
       console.log("[getServerUser] Google auth user created:", user);
@@ -126,22 +111,21 @@ export async function getServerUser(): Promise<User | null> {
 
       const user: User = {
         id: payload.user_id,
+        user_id: payload.user_id,
         email: payload.email,
+        store_name: payload.store_name,
         name: payload.store_name,
-        storeName: payload.store_name,
         role: payload.role,
-        phoneNumber: payload.phone_number,
+        phone_number: payload.phone_number,
         domain: payload.domain,
-        subDomain: payload.sub_domain,
-        hasProfile: payload.has_profile,
-        hasProfileCompleted: payload.has_profile_completed,
-        isFirstLogin: payload.first_login,
-        isOnboardingComplete: payload.is_onboarding_complete,
-        websiteType: payload.website_type || "ecommerce", // Add website_type with default
-        isTemplateAccount: payload.is_template_account ?? false,
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
-          payload.store_name
-        )}&background=3b82f6&color=ffffff&size=32&rounded=true&bold=true`,
+        sub_domain: payload.sub_domain,
+        has_profile: payload.has_profile,
+        has_profile_completed: payload.has_profile_completed,
+        first_login: payload.first_login,
+        is_onboarding_complete: payload.is_onboarding_complete,
+        website_type: payload.website_type || "ecommerce",
+        is_template_account: payload.is_template_account ?? false,
+        avatar: generateUserAvatar(payload.store_name),
       };
 
       console.log("[getServerUser] Normal auth user created:", user);

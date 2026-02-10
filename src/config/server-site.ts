@@ -34,8 +34,8 @@ export const getServerApiBaseUrl = async (): Promise<string> => {
     }
 
     // If user has a subdomain, build the URL
-    if (user?.subDomain) {
-      return buildServerPreviewApi(user.subDomain);
+    if (user?.sub_domain) {
+      return buildServerPreviewApi(user.sub_domain);
     }
 
     // Fallback to base URL
@@ -52,7 +52,7 @@ export const getServerApiBaseUrl = async (): Promise<string> => {
 export const getServerSubdomain = async (): Promise<string | null> => {
   try {
     const user = await getServerUser();
-    return user?.subDomain || null;
+    return user?.sub_domain || null;
   } catch (error) {
     console.error("Error getting server subdomain:", error);
     return null;
@@ -76,8 +76,8 @@ export const createServerHeaders = async (): Promise<HeadersInit> => {
   }
 
   // Add tenant subdomain for multi-tenant backend
-  if (user?.subDomain) {
-    headers["X-Tenant"] = user.subDomain;
+  if (user?.sub_domain) {
+    headers["X-Tenant"] = user.sub_domain;
   }
 
   return headers;

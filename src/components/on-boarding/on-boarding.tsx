@@ -5,7 +5,7 @@ import { OnboardingStepOne } from "./on-boarding-step-one";
 import { OnboardingStepTwo } from "./on-boarding-step-two";
 import { OnboardingStepThree } from "./on-boarding-step-three";
 import { OnboardingStepFour } from "./on-boarding-step-four";
-import { User } from "@/hooks/use-jwt-server";
+import { User } from "@/types/auth/auth";
 
 type OnboardingStep = 1 | 2 | 3 | 4;
 

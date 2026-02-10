@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useTemplateCategories } from "@/hooks/super-admin/components/use-template-category";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
-import { User } from "@/hooks/use-jwt-server";
+import { User } from "@/types/auth/auth";
 
 interface OnboardingStepTwoProps {
   onContinue: (categoryId?: number) => void;
@@ -39,7 +39,7 @@ export const OnboardingStepTwo = ({
   };
 
   const handleSkip = () => {
-    router.push(`/builder/${user.storeName}`);
+    router.push(`/builder/${user.sub_domain}`);
   };
 
   const clearSearch = () => {

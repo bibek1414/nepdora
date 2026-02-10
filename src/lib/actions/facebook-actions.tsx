@@ -34,8 +34,8 @@ async function createServerHeaders(): Promise<HeadersInit> {
   }
 
   // CRITICAL: Add tenant subdomain for multi-tenant backend
-  if (user?.subDomain) {
-    headers["X-Tenant"] = user.subDomain;
+  if (user?.sub_domain) {
+    headers["X-Tenant"] = user.sub_domain;
   }
 
   return headers;

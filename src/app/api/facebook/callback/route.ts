@@ -151,8 +151,8 @@ export async function GET(request: Request) {
     });
 
     const user = await getServerUser();
-    const baseUrl = user?.subDomain
-      ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.subDomain}.localhost:3000`)}`
+    const baseUrl = user?.sub_domain
+      ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.sub_domain}.localhost:3000`)}`
       : process.env.NEXT_PUBLIC_BASE_URL;
 
     return NextResponse.redirect(
@@ -237,8 +237,8 @@ export async function GET(request: Request) {
       }
 
       // Build success redirect URL
-      const redirectBaseUrl = user.subDomain
-        ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.subDomain}.localhost:3000`)}`
+      const redirectBaseUrl = user.sub_domain
+        ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.sub_domain}.localhost:3000`)}`
         : process.env.NEXT_PUBLIC_BASE_URL;
 
       const successUrl = `${redirectBaseUrl}/admin/facebook?success=facebook_connected`;
@@ -250,8 +250,8 @@ export async function GET(request: Request) {
       console.error("[Facebook OAuth] Error during callback:", error);
 
       const user = await getServerUser();
-      const redirectBaseUrl = user?.subDomain
-        ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.subDomain}.localhost:3000`)}`
+      const redirectBaseUrl = user?.sub_domain
+        ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.sub_domain}.localhost:3000`)}`
         : process.env.NEXT_PUBLIC_BASE_URL;
 
       const errorMessage =
@@ -271,8 +271,8 @@ export async function GET(request: Request) {
   );
 
   const user = await getServerUser();
-  const redirectBaseUrl = user?.subDomain
-    ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.subDomain}.localhost:3000`)}`
+  const redirectBaseUrl = user?.sub_domain
+    ? `${process.env.NEXT_PUBLIC_BASE_URL?.replace("localhost:3000", `${user.sub_domain}.localhost:3000`)}`
     : process.env.NEXT_PUBLIC_BASE_URL;
 
   return NextResponse.redirect(
@@ -399,10 +399,10 @@ async function saveBusinessIntegration({
   authToken: string;
 }) {
   const API_BASE_URL = getApiBaseUrl();
-  const backendUrl = user.subDomain
+  const backendUrl = user.sub_domain
     ? API_BASE_URL.replace(
         "nepdora.baliyoventures.com",
-        `${user.subDomain}.nepdora.baliyoventures.com`
+        `${user.sub_domain}.nepdora.baliyoventures.com`
       )
     : API_BASE_URL;
 
@@ -501,10 +501,10 @@ async function saveUserIntegration({
   authToken: string;
 }) {
   const API_BASE_URL = getApiBaseUrl();
-  const backendUrl = user.subDomain
+  const backendUrl = user.sub_domain
     ? API_BASE_URL.replace(
         "nepdora.baliyoventures.com",
-        `${user.subDomain}.nepdora.baliyoventures.com`
+        `${user.sub_domain}.nepdora.baliyoventures.com`
       )
     : API_BASE_URL;
 
