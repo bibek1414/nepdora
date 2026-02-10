@@ -273,60 +273,111 @@ export const StickyFormattingToolbar: React.FC = () => {
       if (!sel) return;
 
       try {
+        // Restore and use the stored selection range
+        sel.removeAllRanges();
+        sel.addRange(selection.range.cloneRange());
+
         const range = sel.getRangeAt(0);
-        if (!range.collapsed) {
-          // Create a span with the desired font size
-          const span = document.createElement("span");
-          span.style.fontSize = size;
+        if (range.collapsed) return;
 
-          try {
-            const content = range.extractContents();
-
-            // Clean up any existing font-size spans within the extracted content
-            // to prevent nesting.
-            const tempDiv = document.createElement("div");
-            tempDiv.appendChild(content);
-            const redundantSpans = tempDiv.querySelectorAll(
-              'span[style*="font-size"]'
-            );
-            redundantSpans.forEach(s => {
-              const element = s as HTMLElement;
-              element.style.fontSize = "";
-              // If the span has no other styles, we can unwrap it later or now
-              if (
-                !element.getAttribute("style") ||
-                element.style.length === 0
-              ) {
-                while (element.firstChild) {
-                  element.parentNode?.insertBefore(element.firstChild, element);
+        // Helper: unwrap any spans that have inline font-size from a root element
+        const cleanFontSizeSpans = (root: HTMLElement) => {
+          const spans = Array.from(
+            root.querySelectorAll("span")
+          ) as HTMLElement[];
+          // Process from inner-most to outer to avoid skipping nested spans
+          spans.reverse().forEach(el => {
+            try {
+              if (el.style && el.style.fontSize) {
+                // Move children out, then remove this span
+                while (el.firstChild) {
+                  el.parentNode?.insertBefore(el.firstChild, el);
                 }
-                element.parentNode?.removeChild(element);
+                el.parentNode?.removeChild(el);
               }
-            });
+            } catch (e) {
+              // ignore DOM exceptions for complex nodes
+            }
+          });
+        };
 
-            span.appendChild(tempDiv.firstChild || tempDiv);
-            range.insertNode(span);
-
-            // Re-select the newly created span to persist selection
-            const newRange = document.createRange();
-            newRange.selectNodeContents(span);
-            sel.removeAllRanges();
-            sel.addRange(newRange);
-
-            // Update context so toolbar re-syncs
-            setSelection({
-              ...selection,
-              range: newRange,
-              fontSize: size,
-            });
-          } catch (e) {
-            console.warn("Manual span wrapping failed, falling back:", e);
-            document.execCommand("styleWithCSS", false, "true");
-            document.execCommand("fontSize", false, "4"); // Mid size fallback
+        // If selection is inside an ancestor element that already has a font-size,
+        // update that ancestor instead of wrapping. This avoids creating nested spans.
+        const common = range.commonAncestorContainer;
+        let ancestor =
+          common.nodeType === 1
+            ? (common as HTMLElement)
+            : common.parentElement;
+        let fontAncestor: HTMLElement | null = null;
+        while (ancestor) {
+          if (
+            ancestor instanceof HTMLElement &&
+            ancestor.style &&
+            ancestor.style.fontSize
+          ) {
+            fontAncestor = ancestor;
+            break;
           }
+          ancestor = ancestor.parentElement;
         }
 
-        setSelectionFontSize(size);
+        if (fontAncestor) {
+          // Clean nested font-size spans inside this ancestor and then set the size
+          cleanFontSizeSpans(fontAncestor);
+          fontAncestor.style.fontSize = size;
+          fontAncestor.style.lineHeight = "1.15";
+
+          const newRange = document.createRange();
+          newRange.selectNodeContents(fontAncestor);
+          sel.removeAllRanges();
+          sel.addRange(newRange);
+
+          setSelection({
+            ...selection,
+            range: newRange,
+            fontSize: size,
+          });
+          setSelectionFontSize(size);
+          return;
+        }
+
+        // Otherwise, extract the selected contents, clean nested font-size spans,
+        // and wrap once with a new span.
+        try {
+          const content = range.extractContents();
+          const tempDiv = document.createElement("div");
+          tempDiv.appendChild(content);
+
+          // Clean any nested font-size spans inside the extracted content
+          cleanFontSizeSpans(tempDiv);
+
+          const wrapper = document.createElement("span");
+          wrapper.style.fontSize = size;
+          wrapper.style.lineHeight = "1.15";
+
+          // Move cleaned children into the wrapper
+          while (tempDiv.firstChild) {
+            wrapper.appendChild(tempDiv.firstChild);
+          }
+
+          range.insertNode(wrapper);
+
+          const newRange = document.createRange();
+          newRange.selectNodeContents(wrapper);
+          sel.removeAllRanges();
+          sel.addRange(newRange);
+
+          setSelection({
+            ...selection,
+            range: newRange,
+            fontSize: size,
+          });
+          setSelectionFontSize(size);
+        } catch (e) {
+          console.warn("Manual span wrapping failed, falling back:", e);
+          document.execCommand("styleWithCSS", false, "true");
+          document.execCommand("fontSize", false, "4"); // Mid size fallback
+        }
       } catch (error) {
         console.warn("Font size application failed:", error);
       }
@@ -415,7 +466,7 @@ export const StickyFormattingToolbar: React.FC = () => {
             title="Font Family"
           >
             <span
-              className="max-w-[80px] truncate"
+              className="max-w-20 truncate"
               style={{ fontFamily: selectedFont }}
             >
               {selectedFont}

@@ -2,6 +2,7 @@
 import React from "react";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
 import { ProductCard7 } from "../products-card/product-card7";
+import { EditableText } from "@/components/ui/editable-text";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, ShoppingBag } from "lucide-react";
@@ -69,19 +70,41 @@ export const ProductsStyle7: React.FC<ProductsStyleProps> = ({
       )}
 
       {!isLoading && !error && products.length > 0 && (
-        <div className="relative">
-          {isEditable && (
-            <div className="absolute inset-0 z-10 bg-transparent" />
-          )}
-          <ProductCard7
-            products={products}
-            siteUser={isEditable ? undefined : siteUser}
-            title={title}
-            subtitle={subtitle}
-            onTitleChange={handleTitleChange}
-            onSubtitleChange={handleSubtitleChange}
-            isEditable={isEditable}
-          />
+        <div className="container mx-auto max-w-7xl px-4 py-12">
+          <div className="mb-8 text-center">
+            <EditableText
+              value={title}
+              onChange={handleTitleChange}
+              as="h2"
+              className="text-2xl font-bold"
+              isEditable={isEditable}
+              placeholder="Enter title..."
+            />
+            <EditableText
+              value={subtitle || ""}
+              onChange={handleSubtitleChange}
+              as="p"
+              className="text-muted-foreground"
+              isEditable={isEditable}
+              placeholder="Enter subtitle..."
+              multiline={true}
+            />
+          </div>
+
+          <div className="relative">
+            {isEditable && (
+              <div className="absolute inset-0 z-10 bg-transparent" />
+            )}
+            <ProductCard7
+              products={products}
+              siteUser={isEditable ? undefined : siteUser}
+              title={title}
+              subtitle={subtitle}
+              onTitleChange={handleTitleChange}
+              onSubtitleChange={handleSubtitleChange}
+              isEditable={isEditable}
+            />
+          </div>
         </div>
       )}
 

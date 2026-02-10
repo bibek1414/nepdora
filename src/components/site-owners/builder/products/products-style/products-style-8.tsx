@@ -2,6 +2,7 @@
 import React from "react";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
 import ProductCard8 from "../products-card/product-card8";
+import { EditableText } from "@/components/ui/editable-text";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, ShoppingBag } from "lucide-react";
@@ -38,6 +39,14 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
   });
   const products = productsData?.results || [];
 
+  const handleTitleChange = (newTitle: string) => {
+    onUpdate?.({ title: newTitle });
+  };
+
+  const handleSubtitleChange = (newSubtitle: string) => {
+    onUpdate?.({ subtitle: newSubtitle });
+  };
+
   return (
     <div className="relative">
       {isLoading && (
@@ -63,8 +72,23 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
       {!isLoading && !error && products.length > 0 && (
         <div className="container mx-auto max-w-7xl px-4 py-12">
           <div className="mb-8 text-center">
-            <h2 className="text-2xl font-bold">{title}</h2>
-            {subtitle && <p className="text-muted-foreground">{subtitle}</p>}
+            <EditableText
+              value={title}
+              onChange={handleTitleChange}
+              as="h2"
+              className="text-2xl font-bold"
+              isEditable={isEditable}
+              placeholder="Enter title..."
+            />
+            <EditableText
+              value={subtitle || ""}
+              onChange={handleSubtitleChange}
+              as="p"
+              className="text-muted-foreground"
+              isEditable={isEditable}
+              placeholder="Enter subtitle..."
+              multiline={true}
+            />
           </div>
 
           <div className="flex gap-6 overflow-x-auto px-4">
