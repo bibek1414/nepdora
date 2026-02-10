@@ -410,6 +410,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Category Style 5",
         image: "/images/site-owners/categories/category5.png",
       },
+      {
+        id: "category-6",
+        name: "Category Style 6",
+        image: "/images/site-owners/categories/category6.png",
+      },
     ],
     subcategory: [
       {

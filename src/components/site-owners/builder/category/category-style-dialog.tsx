@@ -17,6 +17,7 @@ interface CategoryStylesDialogProps {
       | "category-3"
       | "category-4"
       | "category-5"
+      | "category-6"
   ) => void;
 }
 
@@ -31,6 +32,7 @@ export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
     | "category-3"
     | "category-4"
     | "category-5"
+    | "category-6"
     | null
   >(null);
 
@@ -55,6 +57,10 @@ export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
       id: "category-5" as const,
       name: "Category Style 5",
     },
+    {
+      id: "category-6" as const,
+      name: "Category Style 6",
+    },
   ];
 
   const handleSelect = (template: {
@@ -63,7 +69,8 @@ export const CategoryStylesDialog: React.FC<CategoryStylesDialogProps> = ({
       | "category-2"
       | "category-3"
       | "category-4"
-      | "category-5";
+      | "category-5"
+      | "category-6";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {

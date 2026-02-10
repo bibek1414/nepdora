@@ -23,6 +23,7 @@ import { CategoryStyle2 } from "./category-style/category-style-2";
 import { CategoryStyle3 } from "./category-style/category-style-3";
 import { CategoryStyle4 } from "./category-style/category-style-4";
 import { CategoryStyle5 } from "./category-style/category-style-5";
+import { CategoryStyle6 } from "./category-style/category-style-6";
 
 interface CategoryComponentProps {
   component: CategoryComponentData;
@@ -107,6 +108,8 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
         return <CategoryStyle4 {...commonProps} />;
       case "category-5":
         return <CategoryStyle5 {...commonProps} />;
+      case "category-6":
+        return <CategoryStyle6 {...commonProps} />;
       case "category-1":
       default:
         return <CategoryStyle1 {...commonProps} />;

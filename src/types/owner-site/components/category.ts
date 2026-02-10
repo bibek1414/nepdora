@@ -20,6 +20,7 @@ export const DEFAULT_CATEGORY_MAP: Record<CategoryData["style"], CategoryData> =
     "category-3": { ...defaultCategoryData, style: "category-3" },
     "category-4": { ...defaultCategoryData, style: "category-4" },
     "category-5": { ...defaultCategoryData, style: "category-5" },
+    "category-6": { ...defaultCategoryData, style: "category-6" },
   };
 
 export interface FeaturedContent {
@@ -39,7 +40,8 @@ export interface CategoryData {
     | "category-2"
     | "category-3"
     | "category-4"
-    | "category-5";
+    | "category-5"
+    | "category-6";
 
   title: string;
   subtitle?: string;
