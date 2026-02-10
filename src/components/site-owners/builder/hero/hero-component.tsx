@@ -27,6 +27,7 @@ import {
   isHeroTemplate11,
   isHeroTemplate12,
   isHeroTemplate13,
+  isHeroTemplate15,
 } from "@/types/owner-site/components/hero";
 import { HeroTemplate1 } from "./hero-style-1";
 import { HeroTemplate2 } from "./hero-style-2";
@@ -46,6 +47,7 @@ import { HeroTemplate10 } from "./hero-style-10";
 import { HeroTemplate11 } from "./hero-style-11";
 import { HeroTemplate12 } from "./hero-style-12";
 import { HeroTemplate13 } from "./hero-style-13";
+import { HeroTemplate15 } from "./hero-style-15";
 
 interface HeroComponentData {
   id: string | number;
@@ -157,13 +159,17 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
     if (isHeroTemplate13(component.data)) {
       return <HeroTemplate13 heroData={component.data} {...commonProps} />;
     }
+    if (isHeroTemplate15(component.data)) {
+      return <HeroTemplate15 heroData={component.data} {...commonProps} />;
+    }
 
-    // Fallback for unknown templates
+    // Fallback for unknown templates (e.g. hero-14)
+    const fallbackData = component.data as HeroData;
     return (
       <div className="flex min-h-[60vh] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-20">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-yellow-700">
-            Unknown Hero Template: {component.data.template}
+            Unknown Hero Template: {fallbackData.template}
           </h2>
           <p className="mt-2 text-yellow-600">
             Please select a valid template in settings.

@@ -229,6 +229,15 @@ export interface HeroTemplate13Data {
   backgroundImageUrl?: string;
 }
 
+export interface HeroTemplate15Data {
+  template: "hero-15";
+  subtitle?: string;
+  title: string;
+  buttons: HeroButton[];
+  backgroundImageUrl?: string;
+  imageAlt?: string;
+}
+
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data
@@ -243,7 +252,8 @@ export type HeroData =
   | HeroTemplate10Data
   | HeroTemplate11Data
   | HeroTemplate12Data
-  | HeroTemplate13Data;
+  | HeroTemplate13Data
+  | HeroTemplate15Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -635,6 +645,16 @@ export const defaultHeroTemplate13Data: HeroTemplate13Data = {
   imageAlt: "Office meeting background",
 };
 
+export const defaultHeroTemplate15Data: HeroTemplate15Data = {
+  template: "hero-15",
+  subtitle: "Exclusive Drop",
+  title: "MIDNIGHT SERIES",
+  buttons: [{ id: "1", text: "Shop The Look", variant: "primary", href: "#" }],
+  backgroundImageUrl:
+    "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2576&auto=format&fit=crop",
+  imageAlt: "Featured Collection",
+};
+
 // Default data map for all hero templates
 export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-1": defaultHeroTemplate1Data,
@@ -650,6 +670,7 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-11": defaultHeroTemplate11Data,
   "hero-12": defaultHeroTemplate12Data,
   "hero-13": defaultHeroTemplate13Data,
+  "hero-15": defaultHeroTemplate15Data,
 };
 
 // Type guards for each template
@@ -690,3 +711,6 @@ export const isHeroTemplate12 = (data: HeroData): data is HeroTemplate12Data =>
 
 export const isHeroTemplate13 = (data: HeroData): data is HeroTemplate13Data =>
   data.template === "hero-13";
+
+export const isHeroTemplate15 = (data: HeroData): data is HeroTemplate15Data =>
+  data.template === "hero-15";

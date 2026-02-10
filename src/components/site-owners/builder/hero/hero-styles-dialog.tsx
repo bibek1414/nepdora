@@ -25,6 +25,8 @@ interface HeroStylesDialogProps {
       | "hero-10"
       | "hero-11"
       | "hero-12"
+      | "hero-13"
+      | "hero-15"
   ) => void;
 }
 
@@ -46,6 +48,8 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
     | "hero-10"
     | "hero-11"
     | "hero-12"
+    | "hero-13"
+    | "hero-15"
     | null
   >(null);
 
@@ -94,6 +98,18 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
       id: "hero-11" as const,
       name: "Hero Template 11",
     },
+    {
+      id: "hero-12" as const,
+      name: "Hero Template 12",
+    },
+    {
+      id: "hero-13" as const,
+      name: "Hero Template 13",
+    },
+    {
+      id: "hero-15" as const,
+      name: "Hero Template 15 (Featured Banner)",
+    },
   ];
 
   const handleSelect = (template: {
@@ -104,11 +120,14 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
       | "hero-4"
       | "hero-5"
       | "hero-6"
+      | "hero-7"
       | "hero-8"
       | "hero-9"
-      | "hero-7"
       | "hero-10"
-      | "hero-11";
+      | "hero-11"
+      | "hero-12"
+      | "hero-13"
+      | "hero-15";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
@@ -150,9 +169,11 @@ export const HeroStylesDialog: React.FC<HeroStylesDialogProps> = ({
                 <div className="p-3">
                   <div className="relative w-full">
                     <Image
-                      src={`/images/site-owners/hero/hero${
-                        template.id.split("-")[1]
-                      }.png`}
+                      src={
+                        template.id === "hero-15"
+                          ? "/images/site-owners/hero/hero13.png"
+                          : `/images/site-owners/hero/hero${template.id.split("-")[1]}.png`
+                      }
                       alt={template.name}
                       width={600}
                       height={300}
