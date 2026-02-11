@@ -104,7 +104,7 @@ export default function PriceRangeSlider({
           ]}
           handleStyle={[commonHandleStyle, commonHandleStyle]}
           railStyle={{
-            backgroundColor: theme.colors.secondaryForeground,
+            backgroundcolor: theme.colors.text,
             height: 4,
             borderRadius: 2,
           }}

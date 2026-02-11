@@ -163,7 +163,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
 
   return (
     <section
-      className="relative overflow-hidden bg-white"
+      className="relative mx-auto max-w-7xl overflow-hidden bg-white"
       data-component-id={componentId}
     >
       {/* Desktop Layout */}

@@ -52,7 +52,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
   } = useBuilderLogic(heroData, onUpdate);
 
   return (
-    <section className="relative w-full overflow-hidden">
+    <section className="relative flex min-h-screen w-full items-center overflow-hidden">
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
           {/* Left Content */}
@@ -64,7 +64,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                 className="w-fit"
                 style={{
                   backgroundColor: theme.colors.secondary,
-                  color: theme.colors.secondaryForeground,
+                  color: theme.colors.text,
                   fontFamily: theme.fonts.body,
                 }}
               >
@@ -107,30 +107,35 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
             {data.buttons.length > 0 && (
               <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                 {data.buttons.map((button, index) => (
-                  <Button
+                  <EditableLink
                     key={button.id}
-                    size={index === 0 ? "lg" : "default"}
-                    variant={index === 0 ? "default" : "outline"}
+                    style={{
+                      backgroundColor:
+                        button.variant === "primary"
+                          ? theme.colors.primary
+                          : theme.colors.secondary,
+                      color:
+                        button.variant === "primary"
+                          ? theme.colors.primaryForeground
+                          : theme.colors.secondaryForeground,
+                      fontFamily: theme.fonts.body,
+                    }}
                     className="px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base"
-                    asChild
+                    text={button.text}
+                    href={button.href || "#"}
+                    onChange={(text, href) =>
+                      handleButtonUpdate("buttons")(button.id, text, href)
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter button URL..."
                   >
-                    <EditableLink
-                      text={button.text}
-                      href={button.href || "#"}
-                      onChange={(text, href) =>
-                        handleButtonUpdate("buttons")(button.id, text, href)
-                      }
-                      isEditable={isEditable}
-                      siteUser={siteUser}
-                      textPlaceholder="Button text..."
-                      hrefPlaceholder="Enter button URL..."
-                    >
-                      {index === 1 && (
-                        <Play size={16} className="sm:h-[18px] sm:w-[18px]" />
-                      )}
-                      <span>{button.text}</span>
-                    </EditableLink>
-                  </Button>
+                    {index === 1 && (
+                      <Play size={16} className="sm:h-[18px] sm:w-[18px]" />
+                    )}
+                    <span>{button.text}</span>
+                  </EditableLink>
                 ))}
               </div>
             )}

@@ -95,7 +95,7 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
                 className="mb-2 text-xs sm:mb-3 sm:text-sm"
                 style={{
                   background: theme.colors.secondary,
-                  color: theme.colors.secondaryForeground,
+                  color: theme.colors.text,
                   fontFamily: theme.fonts.heading,
                 }}
               >

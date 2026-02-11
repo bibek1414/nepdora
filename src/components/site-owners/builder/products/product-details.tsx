@@ -528,7 +528,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   className="text-xs"
                   style={{
                     backgroundColor: theme.colors.secondary,
-                    color: theme.colors.secondaryForeground,
+                    color: theme.colors.text,
                   }}
                 >
                   Featured

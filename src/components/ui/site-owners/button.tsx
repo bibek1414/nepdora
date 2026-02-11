@@ -82,7 +82,7 @@ function Button({
         return {
           ...baseStyles,
           backgroundColor: theme.colors.secondary,
-          color: theme.colors.secondaryForeground,
+          color: theme.colors.text,
         };
 
       case "outline":

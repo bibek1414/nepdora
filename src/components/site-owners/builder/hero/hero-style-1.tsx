@@ -90,7 +90,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                 className="text-xs sm:text-sm"
                 style={{
                   backgroundColor: theme.colors.secondary,
-                  color: theme.colors.secondaryForeground,
+                  color: theme.colors.text,
                   fontFamily: theme.fonts.body,
                 }}
               >
@@ -150,7 +150,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                   }}
                   isEditable={isEditable}
                   siteUser={siteUser}
-                  className="h-10 items-center justify-center !px-4 !py-8 text-center !text-white"
+                  className="!text-white"
                   textPlaceholder="Button text..."
                   hrefPlaceholder="Enter URL..."
                 />
@@ -169,7 +169,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                   }
                   isEditable={isEditable}
                   siteUser={siteUser}
-                  className="h-10 items-center justify-center border !px-4 !py-8 text-center"
+                  className="border text-center"
                   textPlaceholder="Button text..."
                   hrefPlaceholder="Enter URL..."
                 />

@@ -214,7 +214,6 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           value={data.subtitle || "Introducing the UA-01"}
           onChange={handleTextUpdate("subtitle")}
           as="h1"
-          className="mb-4 tracking-[0.2em] uppercase"
           style={{
             color: "#D1D5DB", // text-gray-300 equivalent
           }}
@@ -228,7 +227,6 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           value={data.title}
           onChange={handleTextUpdate("title")}
           as="h2"
-          className="text-4xl leading-tight font-bold sm:text-6xl md:text-7xl"
           isEditable={isEditable}
           placeholder="Enter main title..."
           multiline={true}
@@ -262,7 +260,6 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
               }
               isEditable={isEditable}
               siteUser={siteUser}
-              className="h-16 rounded-full px-8 py-3 font-semibold transition hover:bg-gray-200"
               style={{
                 backgroundColor: theme.colors.primary,
                 color: theme.colors.primaryForeground,
@@ -287,7 +284,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
               }
               isEditable={isEditable}
               siteUser={siteUser}
-              className="rounded-full border transition"
+              className="border"
               textPlaceholder="Secondary button text..."
               hrefPlaceholder="Enter URL..."
             />

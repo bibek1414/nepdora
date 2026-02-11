@@ -167,7 +167,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
 
   return (
     <section
-      className="relative flex min-h-[70vh] w-full items-center p-4 sm:min-h-[80vh] sm:p-6 md:p-8 lg:p-16"
+      className="relative flex min-h-screen w-full items-center p-4 sm:p-6 md:p-8 lg:p-16"
       style={{
         ...getBackgroundStyles(),
         color: textColor,
@@ -266,8 +266,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="!sm:text-4xl !md:text-5xl !lg:text-6xl w-full !text-3xl leading-tight font-bold"
-            style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter your hero title..."
           />
@@ -276,8 +274,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             value={data.subtitle}
             onChange={handleTextUpdate("subtitle")}
             as="p"
-            className="w-full !text-base sm:text-lg md:text-xl"
-            style={{ fontFamily: theme.fonts.body }}
             isEditable={isEditable}
             placeholder="Enter subtitle..."
           />
@@ -287,8 +283,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="w-full !text-sm opacity-90 sm:text-base"
-              style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}
@@ -296,21 +290,10 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
           )}
 
           {/* Buttons */}
-          <div
-            className={`mt-2 flex flex-wrap gap-2 sm:mt-4 sm:gap-3 ${
-              data.layout === "text-left"
-                ? "justify-start"
-                : data.layout === "text-right"
-                  ? "justify-end"
-                  : "justify-center"
-            }`}
-          >
+          <div className="mt-2 flex flex-wrap justify-start gap-2 sm:mt-4 sm:gap-3">
             {data.buttons.map(btn => (
-              <Button
+              <EditableLink
                 key={`btn-${componentId}-${btn.id}`}
-                variant={btn.variant === "primary" ? "default" : btn.variant}
-                size="default"
-                className="!h-16 px-4 py-2 text-sm !text-white sm:px-6 sm:py-3 sm:text-base"
                 style={{
                   backgroundColor:
                     btn.variant === "primary"
@@ -322,20 +305,16 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                       : theme.colors.secondaryForeground,
                   fontFamily: theme.fonts.body,
                 }}
-                asChild
-              >
-                <EditableLink
-                  text={btn.text}
-                  href={btn.href || "#"}
-                  onChange={(text, href) =>
-                    handleButtonUpdate("buttons")(btn.id, text, href)
-                  }
-                  isEditable={isEditable}
-                  siteUser={siteUser}
-                  textPlaceholder="Button text..."
-                  hrefPlaceholder="Enter button URL..."
-                />
-              </Button>
+                text={btn.text}
+                href={btn.href || "#"}
+                onChange={(text, href) =>
+                  handleButtonUpdate("buttons")(btn.id, text, href)
+                }
+                isEditable={isEditable}
+                siteUser={siteUser}
+                textPlaceholder="Button text..."
+                hrefPlaceholder="Enter button URL..."
+              />
             ))}
           </div>
         </div>

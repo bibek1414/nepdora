@@ -296,7 +296,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                   }
                   isEditable={isEditable}
                   siteUser={siteUser}
-                  className="inline-block rounded-sm bg-white px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-gray-200"
+                  className="rounded-sm bg-white px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-gray-200"
                   style={{
                     backgroundColor: theme.colors.primary,
                     color: theme.colors.primaryForeground,

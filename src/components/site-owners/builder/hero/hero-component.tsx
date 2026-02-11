@@ -47,7 +47,7 @@ import { HeroTemplate10 } from "./hero-style-10";
 import { HeroTemplate11 } from "./hero-style-11";
 import { HeroTemplate12 } from "./hero-style-12";
 import { HeroTemplate13 } from "./hero-style-13";
-import { HeroTemplate15 } from "./hero-style-15";
+import { HeroTemplate15 } from "./hero-style-14";
 
 interface HeroComponentData {
   id: string | number;

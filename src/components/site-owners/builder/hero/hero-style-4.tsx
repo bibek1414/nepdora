@@ -59,7 +59,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
 
   return (
     <section
-      className="relative w-full overflow-hidden"
+      className="relative flex min-h-screen w-full items-center overflow-hidden"
       style={{
         background: `linear-gradient(135deg, ${theme.colors.background} 0%, #f8fafc 100%)`,
         fontFamily: theme.fonts.body,
@@ -121,7 +121,6 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                       }
                       isEditable={isEditable}
                       siteUser={siteUser}
-                      className="group inline-flex items-center gap-2 rounded-none px-5 py-2.5 text-sm font-semibold transition-all hover:shadow-lg sm:px-6 sm:py-3 sm:text-base"
                       style={{
                         backgroundColor: theme.colors.primary,
                         color: theme.colors.primaryForeground,

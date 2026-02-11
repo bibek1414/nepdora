@@ -7,6 +7,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate10Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { ChevronRight } from "lucide-react";
 
 interface HeroTemplate10Props {
   heroData: HeroTemplate10Data;
@@ -494,10 +495,18 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                 }}
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700"
+                style={{
+                  background: theme.colors.primary ? theme.colors.primary : "",
+                  color: theme.colors.primaryForeground,
+                }}
                 textPlaceholder="Button text..."
                 hrefPlaceholder="Enter URL..."
-              />
+              >
+                <span>{button.text}</span>
+                <span className="ml-2">
+                  <ChevronRight />
+                </span>
+              </EditableLink>
             </div>
           </div>
         </div>

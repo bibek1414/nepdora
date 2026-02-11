@@ -104,7 +104,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
                 className="absolute right-8 bottom-8 flex flex-col items-center justify-center rounded-2xl px-6 py-4 shadow-lg"
                 style={{
                   backgroundColor: theme.colors.secondary,
-                  color: theme.colors.secondaryForeground,
+                  color: theme.colors.text,
                 }}
               >
                 <EditableText
@@ -221,7 +221,7 @@ export const OthersTemplate1: React.FC<OthersTemplate1Props> = ({
                   className="inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-semibold transition-transform hover:scale-105"
                   style={{
                     backgroundColor: theme.colors.secondary,
-                    color: theme.colors.secondaryForeground,
+                    color: theme.colors.text,
                   }}
                 />
               )}

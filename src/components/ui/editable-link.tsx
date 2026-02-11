@@ -378,10 +378,16 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
         target={isExternal ? "_blank" : target}
         style={style}
         className={cn(
-          "inline-flex items-center gap-1",
+          "inline-flex items-center gap-1 transition-all duration-200",
+          // Default styles that apply to both modes unless overridden
+          !className?.includes("h-") && "h-16",
+          !className?.includes("cursor-") && "cursor-pointer",
+          !className?.includes("px-") && "px-4",
+          !className?.includes("py-") && "py-2",
+          !className?.includes("rounded") && "rounded",
           className,
           isEditable && [
-            "hover:bg-primary/10 h-16 cursor-pointer rounded px-2 py-3 transition-colors",
+            "hover:bg-primary/10",
             isEmpty && "text-muted-foreground italic",
           ]
         )}

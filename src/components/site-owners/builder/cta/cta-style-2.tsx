@@ -102,7 +102,7 @@ export const CTATemplate2: React.FC<CTATemplate2Props> = ({
               className="px-4 py-1 text-sm"
               style={{
                 backgroundColor: theme.colors.secondary,
-                color: theme.colors.secondaryForeground,
+                color: theme.colors.text,
                 fontFamily: theme.fonts.body,
               }}
             >
