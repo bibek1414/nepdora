@@ -369,7 +369,9 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
   // Regular link display
   const displayText = text || textPlaceholder;
   const isEmpty = !text || !href;
-  const isExternal = href.startsWith("http") || href.startsWith("mailto:");
+  const isExternal =
+    typeof href === "string" &&
+    (href.startsWith("http") || href.startsWith("mailto:"));
 
   return (
     <div className="group relative inline-block" ref={containerRef}>

@@ -8,7 +8,7 @@ import {
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { Check, ArrowUpRight } from "lucide-react";
+import { Check, ChevronRight } from "lucide-react";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
@@ -137,7 +137,7 @@ export function AboutUsTemplate14({
             <>
               <span>{data.buttonText || "Button Text"}</span>
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:rotate-45">
-                <ArrowUpRight
+                <ChevronRight
                   className="h-5 w-5"
                   style={{ color: theme.colors.primary }}
                 />

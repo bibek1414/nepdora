@@ -37,6 +37,7 @@ import {
 } from "@/hooks/owner-site/components/use-unified";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
+import BuilderSkeleton from "./builder-skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { Facebook, Twitter } from "lucide-react";
 import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
@@ -522,20 +523,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     isPagesLoading ||
     isPageComponentsLoading ||
     isCreatingHomePage;
-
   if (isLoading) {
-    return (
-      <div className="bg-background flex min-h-screen items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="border-primary h-32 w-32 animate-spin rounded-full border-b-2"></div>
-          {isCreatingHomePage && (
-            <p className="text-muted-foreground text-sm">
-              Setting up your first page...
-            </p>
-          )}
-        </div>
-      </div>
-    );
+    return <BuilderSkeleton isCreatingHomePage={isCreatingHomePage} />;
   }
 
   return (

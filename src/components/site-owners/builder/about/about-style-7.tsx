@@ -10,7 +10,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 
 interface AboutUsTemplate7Props {
   aboutUsData: AboutUs7Data;
@@ -136,11 +136,10 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
           <EditableText
             value={data.subtitle}
             onChange={handleTextUpdate("subtitle")}
-            as="p"
+            as="h1"
             style={{
               color: theme.colors.primary,
             }}
-            className="text-2xl font-bold"
             isEditable={isEditable}
             placeholder="What we do"
           />
@@ -152,7 +151,6 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
               color: theme.colors.secondary,
               fontFamily: theme.fonts.heading,
             }}
-            className="mt-2 text-3xl leading-tight font-bold tracking-tight md:text-5xl md:leading-snug"
             isEditable={isEditable}
             placeholder="Where athletes push their limits and train with purpose."
             multiline={true}
@@ -227,21 +225,10 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
                   value={training.title}
                   onChange={handleTrainingUpdate(idx, "title")}
                   as="h3"
-                  className="text-xl font-bold text-white"
+                  className="text-white"
                   isEditable={isEditable}
                   placeholder="Training Title"
                 />
-                {training.description && (
-                  <EditableText
-                    value={training.description}
-                    onChange={handleTrainingUpdate(idx, "description")}
-                    as="p"
-                    className="mt-2 text-sm text-gray-200"
-                    isEditable={isEditable}
-                    placeholder="Training description"
-                    multiline={true}
-                  />
-                )}
               </div>
             </div>
           ))}
@@ -265,6 +252,7 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
               siteUser={siteUser}
             >
               {data.buttonText}
+              <ChevronRight className="ml-2 h-5 w-5" />
             </EditableLink>
           </div>
         )}

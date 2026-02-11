@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronRight, ImagePlus } from "lucide-react";
+import { uploadToCloudinary } from "@/utils/cloudinary";
+import { toast } from "sonner";
 
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
@@ -53,6 +55,59 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
     handleAltUpdate,
     handleArrayItemUpdate,
   } = useBuilderLogic(aboutUsData, onUpdate);
+
+  // Local file input for component-specific top-right change button
+  const overlayFileInputRef = useRef<HTMLInputElement | null>(null);
+  const [overlayUploading, setOverlayUploading] = useState(false);
+
+  const handleOverlayFileSelect = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // basic validation: reuse sensible defaults
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    const maxSize = 5 * 1024 * 1024;
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(
+        `Please select a valid image file (${allowedTypes.join(", ")})`
+      );
+      return;
+    }
+    if (file.size > maxSize) {
+      toast.error(`Image size must be less than ${maxSize / (1024 * 1024)}MB`);
+      return;
+    }
+
+    setOverlayUploading(true);
+    try {
+      const imageUrl = await uploadToCloudinary(file, {
+        folder: "about-us-images",
+        resourceType: "image",
+      });
+
+      const newAlt = file.name.split(".")[0];
+
+      // Call the same handlers used elsewhere in this component
+      if (activeTabData) {
+        handleArrayItemUpdate(
+          "tabs",
+          activeTabData.id
+        )({ imageUrl, imageAlt: newAlt });
+      } else {
+        onUpdate?.({ imageUrl, imageAlt: newAlt } as Partial<AboutUs13Data>);
+      }
+
+      toast.success("Image uploaded successfully");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to upload image. Please try again.");
+    } finally {
+      setOverlayUploading(false);
+      if (overlayFileInputRef.current) overlayFileInputRef.current.value = "";
+    }
+  };
 
   const [activeTab, setActiveTab] = useState(data.tabs?.[0]?.id ?? "tab-1");
 
@@ -115,6 +170,25 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
             variants={fadeInUp}
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
+            {/* Component-specific top-right change button (doesn't modify shared EditableImage) */}
+            <input
+              ref={overlayFileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleOverlayFileSelect}
+              className="hidden"
+            />
+
+            <div className="pointer-events-auto absolute top-4 right-4 z-40">
+              <button
+                type="button"
+                onClick={() => overlayFileInputRef.current?.click()}
+                className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white/90 px-3 py-1 text-sm font-medium shadow-lg transition-colors hover:opacity-95"
+                disabled={overlayUploading}
+              >
+                <span>{overlayUploading ? "Uploading..." : "Change"}</span>
+              </button>
+            </div>
             <EditableImage
               src={activeImageUrl}
               alt={activeImageAlt}
@@ -128,7 +202,6 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
                   ? handleTabAltUpdate(activeTabData.id)
                   : handleAltUpdate("imageAlt")
               }
-              isEditable={isEditable}
               className="h-full w-full object-cover"
               width={800}
               height={800}
@@ -144,15 +217,11 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               }}
             />
 
-            <div className="pointer-events-none absolute bottom-8 left-8 max-w-xs text-white">
+            <div className="absolute bottom-8 left-8 z-10 max-w-xs text-white">
               <EditableText
                 value={data.cardTitle}
                 onChange={handleTextUpdate("cardTitle")}
                 as="h3"
-                style={{
-                  color: "#FFFFFF",
-                  fontFamily: theme.fonts.heading,
-                }}
                 className="text-2xl font-bold"
                 isEditable={isEditable}
                 placeholder="Card title"
@@ -162,10 +231,6 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
                 value={data.cardDescription}
                 onChange={handleTextUpdate("cardDescription")}
                 as="p"
-                style={{
-                  color: "#FFFFFF",
-                  fontFamily: theme.fonts.body,
-                }}
                 className="mt-2 text-sm opacity-90"
                 isEditable={isEditable}
                 placeholder="Card description"
@@ -177,8 +242,8 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
                   href={data.ctaLink}
                   onChange={handleOverlayLinkUpdate}
                   style={{
-                    backgroundColor: theme.colors.primaryForeground + "E6",
-                    color: theme.colors.text,
+                    backgroundColor: theme.colors.primary + "E6",
+                    color: theme.colors.primaryForeground,
                     fontFamily: theme.fonts.body,
                   }}
                   className="mt-4 inline-flex items-center rounded-full px-6 py-2 text-sm font-medium shadow-lg transition-colors hover:opacity-100"
@@ -189,7 +254,7 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
                 >
                   <>
                     {data.ctaText || "Get In Touch"}
-                    <ArrowUpRight className="ml-2 h-4 w-4" />
+                    <ChevronRight className="ml-2 h-4 w-4" />
                   </>
                 </EditableLink>
               </div>
@@ -204,11 +269,7 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               value={data.heading}
               onChange={handleTextUpdate("heading")}
               as="h2"
-              style={{
-                color: theme.colors.text,
-                fontFamily: theme.fonts.heading,
-              }}
-              className="mb-6 text-4xl leading-tight font-semibold md:text-5xl"
+              className="mb-6 leading-tight text-white"
               isEditable={isEditable}
               placeholder="Heading"
               multiline
@@ -217,11 +278,7 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              style={{
-                color: theme.colors.text,
-                fontFamily: theme.fonts.body,
-              }}
-              className="mb-10 opacity-80"
+              className="mb-10 text-white opacity-80"
               isEditable={isEditable}
               placeholder="Description"
               multiline
@@ -276,11 +333,7 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
                 value={activeTabData?.description || ""}
                 onChange={handleTabDescriptionUpdate(activeTabData?.id || "")}
                 as="div"
-                style={{
-                  color: theme.colors.text,
-                  fontFamily: theme.fonts.body,
-                }}
-                className="text-sm leading-loose opacity-80"
+                className="text-sm leading-loose text-white opacity-80"
                 isEditable={isEditable}
                 placeholder="Tab description"
                 multiline

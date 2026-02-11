@@ -162,6 +162,7 @@ export interface AboutUs10Data {
     items: string[];
   }>;
   buttonText: string;
+  buttonLink: string;
   supportText: string;
   supportNumber: string;
   imageUrl: string;
@@ -709,6 +710,7 @@ export const defaultAboutUs10Data: AboutUs10Data = {
     },
   ],
   buttonText: "Read More",
+  buttonLink: "#",
   supportText: "Need help?",
   supportNumber: "(808) 555-0111",
   imageUrl:

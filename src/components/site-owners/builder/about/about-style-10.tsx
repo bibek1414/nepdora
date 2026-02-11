@@ -3,6 +3,7 @@ import React from "react";
 import { AboutUs10Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
+import { EditableLink } from "@/components/ui/editable-link";
 import { Check, ChevronRight, Phone, MoveUpRight, Map } from "lucide-react";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
@@ -149,10 +150,7 @@ export function AboutUsTemplate10({
 
           {/* Right Side Content */}
           <div className="space-y-4 sm:space-y-6 md:space-y-8">
-            <div
-              className="flex items-center gap-1.5 text-[10px] font-semibold tracking-widest uppercase sm:gap-2 sm:text-xs"
-              style={{ color: hexToRgba(theme.colors.primary, 0.6) }}
-            >
+            <div className="flex items-center gap-1.5 text-[10px] font-semibold tracking-widest uppercase sm:gap-2 sm:text-xs">
               <Map size={12} className="sm:size-4" />
               <EditableText
                 value={data.sectionTag}
@@ -166,7 +164,6 @@ export function AboutUsTemplate10({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h2"
-              className="text-2xl leading-tight font-bold sm:text-3xl md:text-4xl lg:text-5xl"
               isEditable={isEditable}
               placeholder="Main Title"
             />
@@ -190,57 +187,11 @@ export function AboutUsTemplate10({
                   }}
                 >
                   <div className="mb-4 flex items-center gap-3">
-                    <div
-                      className="flex h-10 w-10 items-center justify-center rounded-full"
-                      style={{
-                        backgroundColor: theme.colors.primary,
-                        color: theme.colors.primaryForeground,
-                      }}
-                    >
-                      {index === 0 ? (
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <rect
-                            x="3"
-                            y="4"
-                            width="18"
-                            height="18"
-                            rx="2"
-                            ry="2"
-                          ></rect>
-                          <line x1="16" y1="2" x2="16" y2="6"></line>
-                          <line x1="8" y1="2" x2="8" y2="6"></line>
-                          <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                      ) : (
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                          <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-                        </svg>
-                      )}
-                    </div>
                     <EditableText
                       value={feature.title}
                       onChange={handleFeatureUpdate(feature.id, "title")}
                       as="h4"
                       className="font-bold"
-                      style={{
-                        color: theme.colors.secondary,
-                        fontFamily: theme.fonts.heading,
-                      }}
                       isEditable={isEditable}
                       placeholder="Feature Title"
                     />
@@ -250,7 +201,6 @@ export function AboutUsTemplate10({
                       <li
                         key={itemIndex}
                         className="flex items-center gap-2 text-xs"
-                        style={{ color: hexToRgba(theme.colors.primary, 0.8) }}
                       >
                         <Check
                           size={14}
@@ -275,32 +225,27 @@ export function AboutUsTemplate10({
             </div>
 
             <div className="flex flex-wrap items-center gap-6 pt-4">
-              <button
-                className="flex items-center gap-2 rounded-full border border-gray-300 px-8 py-3 font-bold transition-colors hover:opacity-90"
+              <EditableLink
+                text={data.buttonText}
+                href={data.buttonLink}
+                onChange={(text, href) => {
+                  // Update button text and link without using boolean chaining on void
+                  handleTextUpdate("buttonText")(text);
+                  onUpdate?.({ buttonLink: href });
+                }}
+                className="flex items-center gap-2 rounded-full border px-8 py-3 font-bold transition-colors hover:opacity-90"
                 style={{
-                  color: theme.colors.secondary,
-                  borderColor: theme.colors.secondary,
+                  color: theme.colors.primary,
+                  borderColor: theme.colors.primary,
                 }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.backgroundColor =
-                    theme.colors.secondary;
-                  e.currentTarget.style.color =
-                    theme.colors.secondaryForeground;
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = theme.colors.secondary;
-                }}
+                // Hover styles handled via CSS classes / theme-aware styles
+                isEditable={isEditable}
+                textPlaceholder="Read More"
+                hrefPlaceholder="#"
               >
-                <EditableText
-                  value={data.buttonText}
-                  onChange={handleTextUpdate("buttonText")}
-                  as="span"
-                  isEditable={isEditable}
-                  placeholder="Read More"
-                />{" "}
+                {data.buttonText}
                 <ChevronRight size={16} />
-              </button>
+              </EditableLink>
               <div className="flex items-center gap-3 border-l border-gray-200 pl-4">
                 <div
                   className="flex h-10 w-10 animate-pulse items-center justify-center rounded-full shadow-lg"
@@ -320,8 +265,6 @@ export function AboutUsTemplate10({
                     value={data.supportText}
                     onChange={handleTextUpdate("supportText")}
                     as="div"
-                    className="text-[10px] font-bold uppercase"
-                    style={{ color: hexToRgba(theme.colors.primary, 0.6) }}
                     isEditable={isEditable}
                     placeholder="Need help?"
                   />
@@ -329,8 +272,6 @@ export function AboutUsTemplate10({
                     value={data.supportNumber}
                     onChange={handleTextUpdate("supportNumber")}
                     as="div"
-                    className="text-sm font-bold"
-                    style={{ color: theme.colors.secondary }}
                     isEditable={isEditable}
                     placeholder="(808) 555-0111"
                   />
