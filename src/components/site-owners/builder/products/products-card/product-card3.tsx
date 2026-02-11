@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface ProductCard3Props {
   product: Product;
@@ -37,6 +38,15 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   const { data: wishlistItems } = useWishlist();
   const addToWishlistMutation = useAddToWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlist();
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+      secondary: "#facc15",
+      text: "#000000",
+    },
+  };
 
   // Use actual product data
   const productImage =
@@ -204,7 +214,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       {product.category && (
-                        <span className="text-xs font-bold tracking-wider uppercase">
+                        <span className="text-xs font-bold tracking-wider">
                           {product.category.name}
                         </span>
                       )}
@@ -295,7 +305,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                   <div className="space-y-1">
                     <div className="flex items-center gap-3">
                       <span className="text-3xl font-bold">
-                        Rs.{Number(discountedPrice).toLocaleString("en-IN")}
+                        Rs.{Number(price).toLocaleString("en-IN")}
                       </span>
 
                       {marketPrice && discountPercentage > 0 && (
@@ -317,7 +327,11 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                 <div className="flex gap-3">
                   <SOButton
                     variant="default"
-                    className="hover:bg-primary flex-1 py-3 font-semibold text-white"
+                    className="flex-1 py-3 font-semibold transition-all hover:opacity-90"
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                    }}
                     disabled={product.stock === 0}
                     onClick={handleAddToCart}
                     data-cart-action="true"

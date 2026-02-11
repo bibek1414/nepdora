@@ -7,6 +7,8 @@ import { Product } from "@/types/owner-site/admin/product";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductCard7Props {
   products?: Product[];
@@ -32,6 +34,17 @@ export const ProductCard7: React.FC<ProductCard7Props> = ({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const isScrollingRef = useRef(false);
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#3B82F6",
+      text: "#0F172A",
+    },
+    fonts: {
+      heading: "Inter",
+      body: "Inter",
+    },
+  };
 
   // Create infinite loop by repeating products multiple times for seamless scrolling
   const infiniteProducts = [
@@ -193,11 +206,27 @@ export const ProductCard7: React.FC<ProductCard7Props> = ({
                       />
                     </div>
 
-                    {/* Product Name */}
+                    {/* Product Name & Price */}
                     <div className="flex flex-col items-center p-2">
-                      <h3 className="text-center font-medium text-gray-900">
+                      <h3
+                        className="mb-1 text-center font-medium text-gray-900"
+                        style={{ fontFamily: theme.fonts.heading }}
+                      >
                         {product.name}
                       </h3>
+                      <div className="flex flex-col items-center gap-1">
+                        <span
+                          className="text-lg font-bold"
+                          style={{ color: theme.colors.primary }}
+                        >
+                          Rs.{Number(price).toLocaleString("en-IN")}
+                        </span>
+                        {marketPrice && marketPrice > price && (
+                          <span className="text-sm text-gray-400 line-through">
+                            Rs.{Number(marketPrice).toLocaleString("en-IN")}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </Link>

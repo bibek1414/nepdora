@@ -7,13 +7,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, ShoppingBag } from "lucide-react";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface ProductsStyleProps {
   data: ProductsComponentData["data"];
   isEditable?: boolean;
   siteUser?: string;
   onUpdate?: (updatedData: Partial<ProductsComponentData["data"]>) => void;
-  onProductClick?: (productId: number) => void;
+  onProductClick?: (productslug: string) => void;
 }
 
 export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
@@ -29,6 +30,13 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
     categoryId,
     subCategoryId,
   } = data || {};
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    fonts: {
+      heading: "Inter",
+      body: "Inter",
+    },
+  };
   const {
     data: productsData,
     isLoading,
@@ -76,7 +84,8 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
               value={title}
               onChange={handleTitleChange}
               as="h2"
-              className="text-2xl font-bold"
+              className="mb-4 text-center text-2xl font-bold"
+              style={{ fontFamily: theme.fonts.heading }}
               isEditable={isEditable}
               placeholder="Enter title..."
             />
@@ -84,7 +93,8 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
               value={subtitle || ""}
               onChange={handleSubtitleChange}
               as="p"
-              className="text-muted-foreground"
+              className="text-muted-foreground mx-auto max-w-3xl text-center"
+              style={{ fontFamily: theme.fonts.body }}
               isEditable={isEditable}
               placeholder="Enter subtitle..."
               multiline={true}
@@ -96,7 +106,9 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
               <div key={product.id} className="shrink-0">
                 <div
                   className="relative transform cursor-pointer transition-transform duration-200"
-                  onClick={() => !isEditable && onProductClick?.(product.id)}
+                  onClick={() =>
+                    !isEditable && onProductClick?.(product.slug || "")
+                  }
                 >
                   {isEditable && (
                     <div className="absolute inset-0 z-10 bg-transparent" />

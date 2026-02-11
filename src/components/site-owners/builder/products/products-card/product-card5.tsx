@@ -227,7 +227,7 @@ export const ProductCard5: React.FC<ProductCard5Props> = ({
         <div className="p-6 text-center">
           {/* Brand/Category */}
           {product.category && (
-            <h2 className="text-text-light dark:text-text-dark text-xl font-bold tracking-wider uppercase">
+            <h2 className="text-text-light dark:text-text-dark text-xl font-bold tracking-wider">
               {product.category.name}
             </h2>
           )}
@@ -245,7 +245,7 @@ export const ProductCard5: React.FC<ProductCard5Props> = ({
               fontFamily: theme.fonts.heading,
             }}
           >
-            Rs.{Number(discountedPrice).toLocaleString("en-IN")}
+            Rs.{Number(price).toLocaleString("en-IN")}
             {marketPrice && discountPercentage > 0 && (
               <span className="text-xl text-gray-400 line-through">
                 Rs.{Number(marketPrice).toLocaleString("en-IN")}
@@ -289,7 +289,11 @@ export const ProductCard5: React.FC<ProductCard5Props> = ({
         {/* Add to Cart button */}
         <div className="p-4">
           <SOButton
-            className="bg-primary h-auto w-full rounded-lg py-3 text-base font-semibold tracking-wider text-white transition-colors"
+            className="h-auto w-full rounded-lg py-3 text-base font-semibold tracking-wider transition-all hover:opacity-90"
+            style={{
+              backgroundColor: theme.colors.primary,
+              color: theme.colors.primaryForeground,
+            }}
             variant="default"
             disabled={product.stock === 0}
             onClick={handleAddToCart}

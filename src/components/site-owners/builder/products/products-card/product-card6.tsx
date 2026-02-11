@@ -238,7 +238,7 @@ export const ProductCard6: React.FC<ProductCard6Props> = ({
                 fontFamily: theme.fonts.heading,
               }}
             >
-              Rs. {Number(discountedPrice).toLocaleString("en-IN")}
+              Rs. {Number(price).toLocaleString("en-IN")}
             </span>
             {marketPrice && discountPercentage > 0 && (
               <>

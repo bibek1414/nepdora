@@ -18,6 +18,7 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface ProductCard2Props {
   product: Product;
@@ -38,6 +39,15 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
   const { data: wishlistItems } = useWishlist();
   const addToWishlistMutation = useAddToWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlist();
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+      secondary: "#facc15",
+      text: "#000000",
+    },
+  };
 
   // Use actual product data
   const productImage =
@@ -151,7 +161,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
 
   return (
     <CardWrapper>
-      <Card className="overflow-hidden border-0 bg-white/80 backdrop-blur-sm">
+      <Card className="overflow-hidden border-0 bg-white/80 shadow-none backdrop-blur-sm">
         <CardContent className="p-0">
           <div className="relative overflow-hidden bg-linear-to-br from-gray-50 to-gray-100">
             <div className="relative aspect-4/3">
@@ -212,7 +222,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
           <div className="space-y-4 p-6">
             {/* Brand/Category */}
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
+              <span className="text-muted-foreground text-xs font-semibold tracking-widest">
                 {product.category?.name || "Premium Collection"}
               </span>
               {product.stock > 0 && (
@@ -272,7 +282,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
               <div className="space-y-1">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl font-bold">
-                    Rs.{Number(discountedPrice).toLocaleString("en-IN")}
+                    Rs.{Number(price).toLocaleString("en-IN")}
                   </span>
 
                   {marketPrice && discountPercentage > 0 && (
@@ -289,7 +299,11 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
 
             {/* Action Button */}
             <SOButton
-              className="w-full rounded-none border-0 py-6 font-normal tracking-wide text-white hover:bg-gray-800"
+              className="w-full rounded-none border-0 py-6 font-normal tracking-wide transition-all hover:opacity-90"
+              style={{
+                backgroundColor: theme.colors.primary,
+                color: theme.colors.primaryForeground,
+              }}
               disabled={product.stock === 0}
               onClick={handleAddToCart}
               data-cart-action="true"

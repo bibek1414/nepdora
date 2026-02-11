@@ -159,7 +159,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
 
   return (
     <CardWrapper>
-      <Card className="overflow-hidden border-0">
+      <Card className="overflow-hidden border-0 shadow-none">
         <CardContent className="p-0">
           {/* Header with gradient */}
           <div className="relative overflow-hidden">
@@ -216,7 +216,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
           <div className="space-y-4 p-5">
             {/* Category */}
             {product.category && (
-              <div className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+              <div className="text-muted-foreground text-xs font-semibold tracking-wide">
                 {product.category.name}
               </div>
             )}
@@ -282,7 +282,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
                     fontFamily: theme.fonts.heading,
                   }}
                 >
-                  Rs.{Number(discountedPrice).toLocaleString("en-IN")}
+                  Rs.{Number(price).toLocaleString("en-IN")}
                 </span>
 
                 {marketPrice && discountPercentage > 0 && (
@@ -295,17 +295,16 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
 
             {/* Action Button */}
             <Button
-              className="text-primary border-primary/20 hover:bg-primary flex h-10 w-10 items-center justify-center rounded-full border bg-white hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              style={{
+                backgroundColor: theme.colors.primary,
+                color: theme.colors.primaryForeground,
+              }}
               disabled={product.stock === 0}
               onClick={handleAddToCart}
               data-cart-action="true"
             >
-              <ShoppingCart
-                className="h-4 w-4"
-                style={{
-                  color: theme.colors.primary,
-                }}
-              />
+              <ShoppingCart className="h-4 w-4" />
             </Button>
           </div>
         </CardContent>

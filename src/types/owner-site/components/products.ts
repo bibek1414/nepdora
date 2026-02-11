@@ -8,7 +8,9 @@ export interface ProductsData {
     | "product-5"
     | "product-6"
     | "product-7"
-    | "product-8";
+    | "product-8"
+    | "product-9"
+    | "product-10";
 
   title: string;
   subtitle?: string;
@@ -43,4 +45,14 @@ export const DEFAULT_PRODUCTS_MAP: Record<ProductsData["style"], ProductsData> =
     "product-6": { ...defaultProductsData, style: "product-6" },
     "product-7": { ...defaultProductsData, style: "product-7" },
     "product-8": { ...defaultProductsData, style: "product-8" },
+    "product-9": {
+      ...defaultProductsData,
+      style: "product-9",
+      title: "Featured Collection",
+    },
+    "product-10": {
+      ...defaultProductsData,
+      style: "product-10",
+      title: "Best Selling",
+    },
   };

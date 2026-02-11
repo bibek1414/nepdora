@@ -10,6 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, ShoppingBag, Filter } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import Pagination from "@/components/ui/site-owners/pagination";
 import ProductFilterSidebar from "../products-filter/product-filter-sidebar";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,7 @@ interface ProductsStyleProps {
   isEditable?: boolean;
   siteUser?: string;
   onUpdate?: (updatedData: Partial<ProductsComponentData["data"]>) => void;
-  onProductClick?: (productId: number) => void;
+  onProductClick?: (productslug: string) => void;
 }
 
 export const ProductsStyle4: React.FC<ProductsStyleProps> = ({
@@ -35,6 +36,13 @@ export const ProductsStyle4: React.FC<ProductsStyleProps> = ({
     categoryId,
     subCategoryId,
   } = data || {};
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    fonts: {
+      heading: "Inter",
+      body: "Inter",
+    },
+  };
   const [currentPage, setCurrentPage] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const productFilters = useProductFilters();
@@ -70,7 +78,8 @@ export const ProductsStyle4: React.FC<ProductsStyleProps> = ({
             value={title}
             onChange={handleTitleChange}
             as="h2"
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+            className="text-foreground mb-4 text-center text-4xl font-bold tracking-tight"
+            style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter title..."
           />
@@ -78,7 +87,8 @@ export const ProductsStyle4: React.FC<ProductsStyleProps> = ({
             value={subtitle || ""}
             onChange={handleSubtitleChange}
             as="p"
-            className="text-muted-foreground mx-auto max-w-3xl text-xl"
+            className="text-muted-foreground mx-auto max-w-3xl text-center text-xl"
+            style={{ fontFamily: theme.fonts.body }}
             isEditable={isEditable}
             placeholder="Enter subtitle..."
             multiline={true}
@@ -87,7 +97,7 @@ export const ProductsStyle4: React.FC<ProductsStyleProps> = ({
 
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Sidebar */}
-          <div className="hidden flex-shrink-0 lg:block lg:w-64">
+          <div className="hidden shrink-0 lg:block lg:w-64">
             <ProductFilterSidebar siteUser={siteUser} isEditable={isEditable} />
           </div>
 
@@ -150,7 +160,7 @@ export const ProductsStyle4: React.FC<ProductsStyleProps> = ({
                       key={product.id}
                       className="relative transform cursor-pointer transition-transform duration-200 hover:scale-105"
                       onClick={() =>
-                        !isEditable && onProductClick?.(product.id)
+                        !isEditable && onProductClick?.(product.slug || "")
                       }
                     >
                       {isEditable && (

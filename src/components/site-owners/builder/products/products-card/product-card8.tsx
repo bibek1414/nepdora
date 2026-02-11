@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { generateLinkHref } from "@/lib/link-utils";
 import { usePathname } from "next/navigation";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -32,17 +33,6 @@ interface ProductCard8Props {
   onClick?: () => void;
 }
 
-const formatPrice = (price: number | string) => {
-  const p = typeof price === "string" ? parseFloat(price || "0") : price;
-  return new Intl.NumberFormat("en-PK", {
-    style: "currency",
-    currency: "PKR",
-    minimumFractionDigits: 2,
-  })
-    .format(p || 0)
-    .replace("PKR", "Rs");
-};
-
 export const ProductCard8: React.FC<ProductCard8Props> = ({
   product,
   siteUser,
@@ -55,6 +45,16 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
   const addToWishlistMutation = useAddToWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlist();
   const { isAuthenticated } = useAuth();
+
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+      secondary: "#facc15",
+      text: "#000000",
+    },
+  };
 
   const getImageUrl = (img: any) => {
     if (!img) return null;
@@ -203,19 +203,21 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
             <div className="flex items-center space-x-2">
               {marketPrice && marketPrice > price && (
                 <span className="text-sm text-gray-400 line-through">
-                  {formatPrice(marketPrice)}
+                  Rs.{Number(marketPrice).toLocaleString("en-IN")}
                 </span>
               )}
               <span className="font-semibold text-gray-900">
-                {formatPrice(price)}
+                Rs.{Number(price).toLocaleString("en-IN")}
               </span>
             </div>
 
             {/* Add to Cart Button */}
             <Button
-              variant="outline"
-              size="sm"
-              className="border-primary/30 hover:bg-primary mt-2 w-full hover:text-white"
+              className="mt-2 w-full transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              style={{
+                backgroundColor: theme.colors.primary,
+                color: theme.colors.primaryForeground,
+              }}
               disabled={product.stock === 0}
               onClick={e => {
                 e.preventDefault();

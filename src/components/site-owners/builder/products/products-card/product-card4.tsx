@@ -208,7 +208,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
             <div className="flex items-center justify-between">
               {product.category && (
                 <span
-                  className="text-[10px] font-medium tracking-wider uppercase opacity-70"
+                  className="text-[10px] font-medium tracking-wider opacity-70"
                   style={{
                     color: theme.colors.primary,
                     fontFamily: theme.fonts.heading,
@@ -275,7 +275,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
             <div className="space-y-1">
               <div className="flex items-center gap-1.5">
                 <span className="text-base font-bold text-gray-900">
-                  Rs.{Number(discountedPrice).toLocaleString("en-IN")}
+                  Rs.{Number(price).toLocaleString("en-IN")}
                 </span>
 
                 {marketPrice && discountPercentage > 0 && (
@@ -297,7 +297,11 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
 
             {/* Add to Cart Button */}
             <SOButton
-              className="w-full py-2 text-[11px] font-medium text-white transition-all duration-200"
+              className="w-full py-2 text-[11px] font-medium transition-all duration-200 hover:opacity-90"
+              style={{
+                backgroundColor: theme.colors.primary,
+                color: theme.colors.primaryForeground,
+              }}
               disabled={product.stock === 0}
               variant="default"
               onClick={handleAddToCart}

@@ -26,6 +26,8 @@ import { ProductsStyle5 } from "./products-style/products-style-5";
 import { ProductsStyle6 } from "./products-style/products-style-6";
 import { ProductsStyle7 } from "./products-style/products-style-7";
 import { ProductsStyle8 } from "./products-style/products-style-8";
+import { ProductsStyle9 } from "./products-style/products-style-9";
+import { ProductsStyle10 } from "./products-style/products-style-10";
 
 interface ProductsComponentProps {
   component: ProductsComponentData;
@@ -33,7 +35,7 @@ interface ProductsComponentProps {
   siteUser?: string;
   pageSlug?: string;
   onUpdate?: (componentId: string, newData: ProductsComponentData) => void;
-  onProductClick?: (productId: number, order: number) => void;
+  onProductClick?: (productSlug: string, order: number) => void;
   onReplace?: (componentId: string) => void;
 }
 
@@ -94,9 +96,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
       isEditable,
       siteUser,
       onUpdate: handleUpdate,
-      onProductClick: (productId: number) => {
+      onProductClick: (productSlug: string) => {
         if (onProductClick && component.order !== undefined) {
-          onProductClick(productId, component.order);
+          onProductClick(productSlug, component.order);
         }
       },
     };
@@ -116,6 +118,10 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
         return <ProductsStyle7 {...commonProps} />;
       case "product-8":
         return <ProductsStyle8 {...commonProps} />;
+      case "product-9":
+        return <ProductsStyle9 {...commonProps} />;
+      case "product-10":
+        return <ProductsStyle10 {...commonProps} />;
       case "product-1":
       default:
         return <ProductsStyle1 {...commonProps} />;
