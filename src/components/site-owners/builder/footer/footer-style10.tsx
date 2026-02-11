@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
-import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
+import { FooterData } from "@/types/owner-site/components/footer";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
-import { CheckCircle, AlertCircle, Facebook } from "lucide-react";
+import { CheckCircle, AlertCircle } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { SocialIcon } from "./shared/social-icon";
 
 interface FooterStyle10Props {
   footerData: FooterData;
@@ -17,26 +18,6 @@ interface FooterStyle10Props {
   onUpdate?: (updatedData: Partial<FooterData>) => void; // reserved for future inline editing
   siteUser?: string;
 }
-
-// Icon mapping to resolve serialized icons
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Facebook,
-};
-
-// Helper to render social icons
-const renderSocialIcon = (social: SocialLink) => {
-  const IconFromMap = iconMap[social.platform];
-  if (IconFromMap) {
-    return <IconFromMap className="h-4 w-4" />;
-  }
-
-  if (typeof social.icon === "function") {
-    const IconComponent = social.icon;
-    return <IconComponent className="h-4 w-4" />;
-  }
-
-  return <Facebook className="h-4 w-4" />;
-};
 
 export const FooterStyle10: React.FC<FooterStyle10Props> = ({
   footerData,
@@ -254,7 +235,7 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
                     : undefined
                 }
               >
-                {renderSocialIcon(social)}
+                <SocialIcon platform={social.platform} className="h-4 w-4" />
               </Link>
             ))}
           </div>

@@ -1,22 +1,8 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Heart,
-  Edit,
-  Trash2,
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Youtube,
-  Globe,
-  Music2,
-} from "lucide-react";
-import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
+import { Mail, Phone, MapPin, Heart } from "lucide-react";
+import { FooterData } from "@/types/owner-site/components/footer";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
@@ -24,6 +10,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { SocialIcon } from "./shared/social-icon";
 
 interface FooterStyle5Props {
   footerData: FooterData;
@@ -31,38 +18,6 @@ interface FooterStyle5Props {
   onEditClick?: () => void;
   siteUser?: string;
 }
-
-// Complete icon mapping to resolve serialized icons
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  LinkedIn: Linkedin,
-  Youtube,
-  YouTube: Youtube,
-  Music2,
-  Tiktok: Music2,
-  Globe,
-};
-
-// Helper function to render social icons with proper fallback
-const renderSocialIcon = (social: SocialLink) => {
-  // First, try to get the icon from the mapping based on platform name
-  const IconFromMap = iconMap[social.platform];
-  if (IconFromMap) {
-    return <IconFromMap className="h-5 w-5" />;
-  }
-
-  // If the icon is a proper React component (function), use it directly
-  if (typeof social.icon === "function") {
-    const IconComponent = social.icon;
-    return <IconComponent className="h-5 w-5" />;
-  }
-
-  // Fallback to a default icon if nothing else works
-  return <Globe className="h-5 w-5" />;
-};
 
 // Logo component
 const FooterLogo = ({
@@ -265,7 +220,10 @@ export function FooterStyle5({
                             : undefined
                         }
                       >
-                        {renderSocialIcon(social)}
+                        <SocialIcon
+                          platform={social.platform}
+                          className="h-5 w-5"
+                        />
                       </Link>
                     ))}
                   </div>

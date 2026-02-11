@@ -1,23 +1,12 @@
 import React from "react";
-import {
-  MapPin,
-  Mail,
-  ChevronRight,
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Youtube,
-  Music2,
-  Globe,
-  Phone,
-} from "lucide-react";
-import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
+import { MapPin, Mail, ChevronRight } from "lucide-react";
+import { FooterData } from "@/types/owner-site/components/footer";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { SocialIcon } from "./shared/social-icon";
 
 interface FooterStyle8Props {
   footerData: FooterData;
@@ -25,32 +14,6 @@ interface FooterStyle8Props {
   onEditClick?: () => void;
   siteUser?: string;
 }
-
-// Icon mapping to resolve serialized icons
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  LinkedIn: Linkedin,
-  Youtube,
-  YouTube: Youtube,
-  Music2,
-  Tiktok: Music2,
-  Globe,
-};
-
-const renderSocialIcon = (social: SocialLink) => {
-  const IconFromMap = iconMap[social.platform];
-  if (IconFromMap) {
-    return <IconFromMap className="h-4 w-4" />;
-  }
-  if (typeof social.icon === "function") {
-    const IconComponent = social.icon;
-    return <IconComponent className="h-4 w-4" />;
-  }
-  return <Facebook className="h-4 w-4" />;
-};
 
 const FooterLogo = ({
   footerData,
@@ -262,10 +225,15 @@ export function FooterStyle8({
                 key={social.id}
                 href={social.href || "#"}
                 className="group flex items-center gap-1 transition-colors hover:text-gray-300"
-                target="_blank"
-                rel="noopener noreferrer"
+                target={social.href?.startsWith("http") ? "_blank" : undefined}
+                rel={
+                  social.href?.startsWith("http")
+                    ? "noopener noreferrer"
+                    : undefined
+                }
               >
-                {social.platform}
+                <SocialIcon platform={social.platform} className="h-4 w-4" />
+                <span>{social.platform}</span>
                 <ChevronRight className="h-4 w-4 text-white group-hover:text-gray-300" />
               </a>
             ))}

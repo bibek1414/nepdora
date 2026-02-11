@@ -1,17 +1,12 @@
 import React from "react";
-import {
-  ChevronRight,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Twitter,
-} from "lucide-react";
-import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
+import { ChevronRight } from "lucide-react";
+import { FooterData } from "@/types/owner-site/components/footer";
 import Link from "next/link";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { SocialIcon } from "./shared/social-icon";
 
 interface FooterStyle9Props {
   footerData: FooterData;
@@ -63,19 +58,6 @@ const LinkItem: React.FC<{
     </li>
   );
 };
-
-// Helper for Social Buttons
-const SocialButton: React.FC<{
-  icon: React.ComponentType<{ className?: string }>;
-  href: string;
-}> = ({ icon: Icon, href }) => (
-  <a
-    href={href}
-    className="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition-all duration-300 hover:border-white hover:bg-white hover:text-[#0b1221]"
-  >
-    <Icon className="h-[18px] w-[18px]" />
-  </a>
-);
 
 const FooterLogo = ({
   footerData,
@@ -242,11 +224,18 @@ export function FooterStyle9({
             {/* Social Icons */}
             <div className="flex gap-3">
               {data.socialLinks.map(social => (
-                <SocialButton
+                <a
                   key={social.id}
-                  icon={social.icon}
                   href={social.href || "#"}
-                />
+                  className="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition-all duration-300 hover:border-white hover:bg-white hover:text-[#0b1221]"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <SocialIcon
+                    platform={social.platform}
+                    className="h-[18px] w-[18px]"
+                  />
+                </a>
               ))}
             </div>
 

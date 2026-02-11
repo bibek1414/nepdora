@@ -8,19 +8,10 @@ import {
   Phone,
   Heart,
   ExternalLink,
-  Edit,
-  Trash2,
-  Facebook,
-  Youtube,
-  Music2,
-  Globe,
-  Twitter,
-  Instagram,
-  Linkedin,
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
-import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
+import { FooterData } from "@/types/owner-site/components/footer";
 import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
@@ -28,6 +19,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { SocialIcon } from "./shared/social-icon";
 
 interface FooterStyle2Props {
   footerData: FooterData;
@@ -35,35 +27,6 @@ interface FooterStyle2Props {
   onEditClick?: () => void;
   siteUser?: string;
 }
-
-// Icon mapping to resolve serialized icons
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  LinkedIn: Linkedin, // Alternative spelling
-  Youtube,
-  YouTube: Youtube, // Alternative spelling
-  Music2,
-  Tiktok: Music2, // Map Tiktok to Music2 icon
-  Globe,
-};
-
-// Helper function to render social icons with proper fallback
-const renderSocialIcon = (social: SocialLink) => {
-  const IconFromMap = iconMap[social.platform];
-  if (IconFromMap) {
-    return <IconFromMap className="h-4 w-4" />;
-  }
-
-  if (typeof social.icon === "function") {
-    const IconComponent = social.icon;
-    return <IconComponent className="h-4 w-4" />;
-  }
-
-  return <Facebook className="h-4 w-4" />;
-};
 
 // Logo component
 const FooterLogo = ({
@@ -238,7 +201,10 @@ export function FooterStyle2({
                             : undefined
                         }
                       >
-                        {renderSocialIcon(social)}
+                        <SocialIcon
+                          platform={social.platform}
+                          className="h-4 w-4"
+                        />
                       </Link>
                     ))}
                   </div>

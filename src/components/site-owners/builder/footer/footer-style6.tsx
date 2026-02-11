@@ -1,20 +1,11 @@
 import React from "react";
-import {
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Youtube,
-  Music2,
-  Globe,
-  Github,
-} from "lucide-react";
-import { FooterData, SocialLink } from "@/types/owner-site/components/footer";
+import { FooterData } from "@/types/owner-site/components/footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { SocialIcon } from "./shared/social-icon";
 
 interface FooterStyle6Props {
   footerData: FooterData;
@@ -22,37 +13,6 @@ interface FooterStyle6Props {
   onEditClick?: () => void;
   siteUser?: string;
 }
-
-// Icon mapping to resolve serialized icons
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  LinkedIn: Linkedin, // Alternative spelling
-  Youtube,
-  YouTube: Youtube, // Alternative spelling
-  Music2,
-  Tiktok: Music2, // Map Tiktok to Music2 icon
-  Globe,
-  Github,
-  GitHub: Github, // Alternative spelling
-};
-
-// Helper function to render social icons with proper fallback
-const renderSocialIcon = (social: SocialLink) => {
-  const IconFromMap = iconMap[social.platform];
-  if (IconFromMap) {
-    return <IconFromMap className="h-6 w-6" />;
-  }
-
-  if (typeof social.icon === "function") {
-    const IconComponent = social.icon;
-    return <IconComponent className="h-6 w-6" />;
-  }
-
-  return <Globe className="h-6 w-6" />;
-};
 
 // Logo component
 const FooterLogo = ({
@@ -197,7 +157,7 @@ export function FooterStyle6({
                   : undefined
               }
             >
-              {renderSocialIcon(social)}
+              <SocialIcon platform={social.platform} className="h-6 w-6" />
             </Link>
           ))}
         </div>

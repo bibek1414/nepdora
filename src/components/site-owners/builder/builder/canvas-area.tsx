@@ -152,7 +152,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     // Common props for builder mode
     const commonProps = {
-      key: `${component.component_type}-${component.id}`,
       component: component,
       isEditable: true,
       siteUser: "", // siteUser not needed in builder cards for most components
@@ -203,6 +202,12 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             onMouseEnter={() => setHoveredComponentIndex(index)}
             onMouseLeave={() => setHoveredComponentIndex(null)}
           >
+            <div
+              {...provided.dragHandleProps}
+              className="pointer-events-none absolute inset-0"
+              aria-hidden
+            />
+
             {/* Hover Add Section Controls */}
             {isHovered && (
               <>
