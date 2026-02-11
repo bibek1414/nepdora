@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/site-owners/button";
 import { use } from "react";
 import { usePageData } from "@/hooks/owner-site/use-page-data";
 import { PageComponentRenderer } from "@/components/site-owners/shared/page-component-renderer";
-import { LoadingSpinner } from "@/components/site-owners/shared/loading-spinner";
+import { PageSkeleton } from "@/components/site-owners/shared/page-skeleton";
 interface DynamicPageProps {
   params: Promise<{
     siteUser: string;
@@ -35,7 +35,7 @@ export default function DynamicPage({ params }: DynamicPageProps) {
   };
 
   if (isComponentsLoading) {
-    return <LoadingSpinner message={`Loading ${currentPageSlug} page...`} />;
+    return <PageSkeleton />;
   }
 
   const hasContent = pageComponents.length > 0;

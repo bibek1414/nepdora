@@ -6,7 +6,7 @@ import { use } from "react";
 import { usePages } from "@/hooks/owner-site/use-page";
 import { usePageData } from "@/hooks/owner-site/use-page-data";
 import { PageComponentRenderer } from "@/components/site-owners/shared/page-component-renderer";
-import { LoadingSpinner } from "@/components/site-owners/shared/loading-spinner";
+import { PageSkeleton } from "@/components/site-owners/shared/page-skeleton";
 import { useDomains } from "@/hooks/super-admin/use-domain";
 
 interface PreviewPageProps {
@@ -38,7 +38,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
   const handleComponentUpdate = () => {};
 
   if (isPagesLoading || isComponentsLoading) {
-    return <LoadingSpinner message="Loading ..." />;
+    return <PageSkeleton />;
   }
 
   const hasContent = pageComponents.length > 0;
@@ -47,7 +47,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
   );
 
   if (isDomainsLoading || isPagesLoading || isComponentsLoading) {
-    return <LoadingSpinner message="Loading..." />;
+    return <PageSkeleton />;
   }
 
   // Show error if domain doesn't exist

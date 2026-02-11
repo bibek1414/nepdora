@@ -17,7 +17,7 @@ export const usePageComponentsQuery = <
     queryKey: ["pageComponents", pageSlug],
     queryFn: () => componentsApi.getPageComponents<T>(pageSlug),
     enabled: !!pageSlug,
-    staleTime: 5000,
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -31,7 +31,7 @@ export const usePageComponentsQueryPublished = <
     queryKey: ["pageComponents", pageSlug],
     queryFn: () => componentsApi.getPageComponentsPublished<T>(pageSlug),
     enabled: !!pageSlug,
-    staleTime: 5000,
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
   });

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/site-owners/button";
 import { usePageData } from "@/hooks/owner-site/use-page-data";
 import { useDomains } from "@/hooks/super-admin/use-domain";
+import { PageSkeleton } from "@/components/site-owners/shared/page-skeleton";
 import { PageComponentRenderer } from "@/components/site-owners/shared/page-component-renderer";
 
 interface DynamicPageClientProps {
@@ -72,9 +73,7 @@ export default function DynamicPageClient({
       {/* Show minimal skeleton during loading to prevent white flash */}
       {(isComponentsLoading || isDomainsLoading) &&
       pageComponents.length === 0 ? (
-        <div className="bg-background min-h-screen">
-          {/* Empty div to prevent white flash - NProgress handles visual feedback */}
-        </div>
+        <PageSkeleton />
       ) : (
         <PageComponentRenderer
           components={pageComponents}
