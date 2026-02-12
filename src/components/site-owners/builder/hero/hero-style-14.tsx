@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, useId } from "react";
 import { ArrowRight, ChevronRight, Loader2 } from "lucide-react";
 import {
-  HeroTemplate15Data,
+  HeroTemplate14Data,
   HeroButton,
 } from "@/types/owner-site/components/hero";
 import { EditableText } from "@/components/ui/editable-text";
@@ -13,11 +13,11 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-interface HeroTemplate15Props {
-  heroData: HeroTemplate15Data;
+interface HeroTemplate14Props {
+  heroData: HeroTemplate14Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<HeroTemplate15Data>) => void;
+  onUpdate?: (updatedData: Partial<HeroTemplate14Data>) => void;
 }
 
 const DEFAULT_BUTTON: HeroButton = {
@@ -27,7 +27,7 @@ const DEFAULT_BUTTON: HeroButton = {
   href: "#",
 };
 
-export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
+export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
   heroData,
   isEditable = false,
   siteUser,

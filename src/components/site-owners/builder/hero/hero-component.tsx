@@ -27,7 +27,7 @@ import {
   isHeroTemplate11,
   isHeroTemplate12,
   isHeroTemplate13,
-  isHeroTemplate15,
+  isHeroTemplate14,
 } from "@/types/owner-site/components/hero";
 import { HeroTemplate1 } from "./hero-style-1";
 import { HeroTemplate2 } from "./hero-style-2";
@@ -47,7 +47,7 @@ import { HeroTemplate10 } from "./hero-style-10";
 import { HeroTemplate11 } from "./hero-style-11";
 import { HeroTemplate12 } from "./hero-style-12";
 import { HeroTemplate13 } from "./hero-style-13";
-import { HeroTemplate15 } from "./hero-style-14";
+import { HeroTemplate14 } from "./hero-style-14";
 
 interface HeroComponentData {
   id: string | number;
@@ -159,8 +159,8 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
     if (isHeroTemplate13(component.data)) {
       return <HeroTemplate13 heroData={component.data} {...commonProps} />;
     }
-    if (isHeroTemplate15(component.data)) {
-      return <HeroTemplate15 heroData={component.data} {...commonProps} />;
+    if (isHeroTemplate14(component.data)) {
+      return <HeroTemplate14 heroData={component.data} {...commonProps} />;
     }
 
     // Fallback for unknown templates (e.g. hero-14)
