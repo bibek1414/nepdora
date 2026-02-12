@@ -8,6 +8,7 @@ import {
   ContactFormSubmission,
 } from "@/types/owner-site/components/contact";
 import { useSubmitContactForm } from "@/hooks/owner-site/admin/use-contact";
+import { toast } from "sonner";
 
 interface ContactForm9Props {
   data: ContactData;
@@ -25,7 +26,7 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
   onDataChange,
 }) => {
   const [formData, setFormData] = useState<ContactFormSubmission>({
-    name: "Anonymous",
+    name: "",
     email: "",
     phone_number: "",
     message: "",
@@ -53,16 +54,38 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isPreview && siteUser) {
+    if (isPreview) {
+      toast.success("Message sent successfully!");
+      setFormData({
+        name: "",
+        email: "",
+        phone_number: "",
+        message: "",
+      });
+      return;
+    }
+
+    if (siteUser) {
       submitContactForm.mutate(formData, {
         onSuccess: () => {
           setFormData({
-            name: "Anonymous",
+            name: "",
             email: "",
             phone_number: "",
             message: "",
           });
         },
+        onError: (error: any) => {
+          console.error("Form submission failed:", error);
+        },
+      });
+    } else {
+      toast.success("Message sent successfully!");
+      setFormData({
+        name: "",
+        email: "",
+        phone_number: "",
+        message: "",
       });
     }
   };
@@ -153,7 +176,6 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
                 onChange={updateTitle}
                 as="h2"
                 className="text-4xl leading-tight font-bold md:text-5xl"
-                style={{ color: primaryColor }}
                 isEditable={isEditable}
                 multiline={true}
               />
@@ -179,7 +201,6 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
                     onChange={value => updateChecklist(index, value)}
                     as="span"
                     className="text-lg font-medium"
-                    style={{ color: primaryColor }}
                     isEditable={isEditable}
                   />
                 </li>
@@ -189,14 +210,30 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
 
           {/* Right Content: Form */}
           <div className="flex flex-col justify-center">
-            <div className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Full Name */}
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-medium">
+                  Full Name {data.required_fields.name && "*"}
+                </span>
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Full Name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required={data.required_fields.name}
+                    className="w-full rounded-full border border-gray-200 bg-white py-3 pr-10 pl-5 text-sm transition-all placeholder:text-gray-400 focus:border-gray-300 focus:ring-1 focus:ring-gray-200 focus:outline-none"
+                    style={{ borderColor: "#E5E7EB" }}
+                  />
+                </div>
+              </label>
+
               <div className="grid gap-6 md:grid-cols-2">
                 {/* Email */}
                 <label className="flex flex-col gap-2">
-                  <span
-                    className="text-sm font-medium"
-                    style={{ color: primaryColor }}
-                  >
+                  <span className="text-sm font-medium">
                     Your Email {data.required_fields.email && "*"}
                   </span>
                   <div className="relative">
@@ -207,7 +244,7 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
                       value={formData.email}
                       onChange={handleInputChange}
                       required={data.required_fields.email}
-                      className="w-full rounded-full border border-gray-200 bg-white py-3 pr-10 pl-5 text-sm placeholder:text-gray-400 focus:ring-1 focus:outline-none"
+                      className="w-full rounded-full border border-gray-200 bg-white py-3 pr-10 pl-5 text-sm transition-all placeholder:text-gray-400 focus:border-gray-300 focus:ring-1 focus:ring-gray-200 focus:outline-none"
                       style={{ borderColor: "#E5E7EB" }}
                     />
                     <Send
@@ -219,10 +256,7 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
 
                 {/* Phone */}
                 <label className="flex flex-col gap-2">
-                  <span
-                    className="text-sm font-medium"
-                    style={{ color: primaryColor }}
-                  >
+                  <span className="text-sm font-medium">
                     Your Phone {data.required_fields.phone && "*"}
                   </span>
                   <div className="relative">
@@ -233,7 +267,7 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
                       value={formData.phone_number}
                       onChange={handleInputChange}
                       required={data.required_fields.phone}
-                      className="w-full rounded-full border border-gray-200 bg-white py-3 pr-10 pl-5 text-sm placeholder:text-gray-400 focus:ring-1 focus:outline-none"
+                      className="w-full rounded-full border border-gray-200 bg-white py-3 pr-10 pl-5 text-sm transition-all placeholder:text-gray-400 focus:border-gray-300 focus:ring-1 focus:ring-gray-200 focus:outline-none"
                       style={{ borderColor: "#E5E7EB" }}
                     />
                     <Phone
@@ -244,33 +278,9 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
                 </label>
               </div>
 
-              {/* Address */}
-              <label className="flex flex-col gap-2">
-                <span
-                  className="text-sm font-medium"
-                  style={{ color: primaryColor }}
-                >
-                  Your Address
-                </span>
-                <div className="relative">
-                  <input
-                    placeholder="Your Address"
-                    className="w-full rounded-full border border-gray-200 bg-white py-3 pr-10 pl-5 text-sm placeholder:text-gray-400 focus:ring-1 focus:outline-none"
-                    style={{ borderColor: "#E5E7EB" }}
-                  />
-                  <MapPin
-                    className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400"
-                    size={16}
-                  />
-                </div>
-              </label>
-
               {/* Message */}
               <label className="flex flex-col gap-2">
-                <span
-                  className="text-sm font-medium"
-                  style={{ color: primaryColor }}
-                >
+                <span className="text-sm font-medium">
                   Message {data.required_fields.message && "*"}
                 </span>
                 <div className="relative">
@@ -292,11 +302,9 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
 
               <Button
                 type="submit"
-                disabled={submitContactForm.isPending || isPreview}
-                className="w-full rounded-full py-6 text-base font-semibold text-white transition hover:opacity-90"
-                style={{
-                  backgroundColor: secondaryColor,
-                }}
+                disabled={submitContactForm.isPending}
+                className="w-full rounded-full py-6 text-base font-semibold"
+                variant="default"
               >
                 {submitContactForm.isPending ? (
                   <>
@@ -307,7 +315,7 @@ export const ContactForm9: React.FC<ContactForm9Props> = ({
                   "Send Message"
                 )}
               </Button>
-            </div>
+            </form>
           </div>
         </div>
       </div>

@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Search,
-  User,
-  Calendar,
-  MessageCircle,
-  ChevronRight,
-} from "lucide-react";
+import { Search, User, Calendar, ChevronRight } from "lucide-react";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -63,31 +57,6 @@ const BlogSidebar6: React.FC<{
           <Search className="h-4 w-4 text-white" />
         </button>
       </div>
-
-      {/* Popular Tags Widget */}
-      {/* <div className="rounded-[15px] bg-white p-6 shadow-[0px_0px_40px_rgba(0,0,0,0.05)]">
-        <h3
-          className="mb-4 text-[18px] leading-[24px] font-bold text-[#034833]"
-          style={{ fontFamily: fonts.body, color: colors.text }}
-        >
-          Popular Tags
-        </h3>
-        <div className="flex flex-wrap gap-2.5">
-          {tags.map(tag => (
-            <button
-              key={tag}
-              className="rounded-full border bg-transparent px-4 py-2 text-[13px] font-normal text-[#727272] transition-colors"
-              style={{
-                borderColor: colors.border,
-                fontFamily: fonts.body,
-                color: colors.mutedForeground,
-              }}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-      </div> */}
     </div>
   );
 };
@@ -171,38 +140,26 @@ const BlogPostCard6: React.FC<{
         <div className="mb-3 flex flex-wrap items-center gap-4 text-[#111214] md:gap-6">
           <div className="flex items-center gap-1.5">
             <User className="h-3.5 w-3.5" style={{ color: colors.text }} />
-            <span
-              className="text-[13px] leading-[20px] font-normal"
-              style={{ fontFamily: fonts.body, color: colors.text }}
-            >
+            <span className="text-[13px] leading-[20px] font-normal">
               By {authorName}
             </span>
           </div>
 
           <div className="flex items-center gap-1.5">
             <Calendar className="h-3.5 w-3.5" style={{ color: colors.text }} />
-            <span
-              className="text-[13px] leading-[20px] font-normal"
-              style={{ fontFamily: fonts.body, color: colors.text }}
-            >
+            <span className="text-[13px] leading-[20px] font-normal">
               {formatDate(blog.created_at)}
             </span>
           </div>
         </div>
 
         {/* Title */}
-        <h2
-          className="mb-3 text-[22px] leading-[1.3] font-bold text-black md:text-[30px]"
-          style={{ fontFamily: fonts.heading, color: colors.text }}
-        >
+        <h2 className="mb-3 text-[22px] leading-[1.3] font-bold text-black md:text-[30px]">
           {blog.title}
         </h2>
 
         {/* Description */}
-        <p
-          className="mb-5 text-[15px] leading-[26px] font-normal text-[#727272]"
-          style={{ fontFamily: fonts.body, color: colors.mutedForeground }}
-        >
+        <p className="mb-5 text-[15px] leading-[26px] font-normal text-[#727272]">
           {getExcerpt(blog.meta_description || blog.content || "", 320)}
         </p>
 
@@ -211,11 +168,6 @@ const BlogPostCard6: React.FC<{
           type="button"
           onClick={handleNavigate}
           className="flex h-[44px] items-center gap-2 rounded-full px-6 transition-colors"
-          style={{
-            backgroundColor: colors.primary,
-            color: colors.primaryForeground,
-            fontFamily: fonts.body,
-          }}
         >
           <span className="text-[13px] font-semibold">Learn More</span>
           <ChevronRight className="h-3 w-3 stroke-3" />

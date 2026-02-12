@@ -262,7 +262,7 @@ export const defaultContactData9: ContactData = {
     "Knew About Fonts",
   ],
   required_fields: {
-    name: false,
+    name: true,
     email: true,
     phone: true,
     message: true,
@@ -281,7 +281,7 @@ export const defaultContactData8: ContactData = {
   subtitle: "CONTACT INFORMATION",
   description: "",
   required_fields: {
-    name: false, // Name field is removed in contact-8 design
+    name: true,
     email: true,
     phone: true,
     message: true,

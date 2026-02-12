@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { ChevronRight, Mail, MapPin, Phone, Send, Loader2 } from "lucide-react";
+import {
+  ChevronRight,
+  Mail,
+  MapPin,
+  Phone,
+  Send,
+  Loader2,
+  Check,
+} from "lucide-react";
 import { Button } from "@/components/ui/site-owners/button";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
@@ -9,6 +17,7 @@ import {
   ContactFormSubmission,
 } from "@/types/owner-site/components/contact";
 import { useSubmitContactForm } from "@/hooks/owner-site/admin/use-contact";
+import { toast } from "sonner";
 
 interface ContactForm8Props {
   data: ContactData;
@@ -26,7 +35,7 @@ export const ContactForm8: React.FC<ContactForm8Props> = ({
   onDataChange,
 }) => {
   const [formData, setFormData] = useState<ContactFormSubmission>({
-    name: "Anonymous", // Default name since field is removed
+    name: "",
     email: "",
     phone_number: "",
     message: "",
@@ -54,16 +63,35 @@ export const ContactForm8: React.FC<ContactForm8Props> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isPreview && siteUser) {
+    if (isPreview) {
+      toast.success("Message sent successfully!");
+      setFormData({
+        name: "",
+        email: "",
+        phone_number: "",
+        message: "",
+      });
+      return;
+    }
+
+    if (siteUser) {
       submitContactForm.mutate(formData, {
         onSuccess: () => {
           setFormData({
-            name: "Anonymous",
+            name: "",
             email: "",
             phone_number: "",
             message: "",
           });
         },
+      });
+    } else {
+      toast.success("Message sent successfully!");
+      setFormData({
+        name: "",
+        email: "",
+        phone_number: "",
+        message: "",
       });
     }
   };
@@ -152,11 +180,7 @@ export const ContactForm8: React.FC<ContactForm8Props> = ({
                   isEditable={isEditable}
                   placeholder="CONTACT INFORMATION"
                 />
-                <Send
-                  size={12}
-                  className="rotate-45 text-[#83CD20]"
-                  fill="#83CD20"
-                />
+                <Send size={12} fill="#83CD20" />
               </div>
 
               {/* Main Title */}
@@ -164,129 +188,91 @@ export const ContactForm8: React.FC<ContactForm8Props> = ({
                 value={title}
                 onChange={updateTitle}
                 as="h2"
-                className="text-4xl leading-tight font-bold text-[#034833] md:text-5xl"
+                className="text-4xl leading-tight font-bold md:text-5xl"
                 isEditable={isEditable}
                 placeholder="Let Your Wanderlust Guide You"
                 multiline={true}
                 useHeadingFont={true}
-                style={{ color: primaryColor }}
               />
             </div>
 
-            <div className="rounded-[30px] bg-[#F1F5EB] p-8 md:p-10">
+            <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm md:p-10">
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Row 1: Email & Phone */}
+                {/* Full Name */}
+                <label className="flex flex-col gap-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    Full Name {data.required_fields.name && "*"}
+                  </span>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter your full name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required={data.required_fields.name}
+                    className="w-full rounded-lg border border-gray-200 bg-gray-50/30 px-4 py-3 text-sm transition-all focus:border-[#83CD20] focus:ring-1 focus:ring-[#83CD20] focus:outline-none"
+                  />
+                </label>
+
+                {/* Email & Phone */}
                 <div className="grid gap-6 md:grid-cols-2">
                   <label className="flex flex-col gap-2">
-                    <span
-                      className="text-sm font-medium text-[#034833]"
-                      style={{ color: primaryColor }}
-                    >
-                      Your Email {data.required_fields.email && "*"}
+                    <span className="text-sm font-medium text-gray-700">
+                      Email Address {data.required_fields.email && "*"}
                     </span>
-                    <div className="relative">
-                      <input
-                        type="email"
-                        name="email"
-                        placeholder="Your Email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required={data.required_fields.email}
-                        className="w-full rounded-full border-none bg-white py-3 pr-10 pl-5 text-sm placeholder:text-gray-400 focus:ring-1 focus:ring-[#83CD20]"
-                      />
-                      <Send
-                        className="absolute top-1/2 right-4 -translate-y-1/2 rotate-45 text-[#034833]"
-                        size={16}
-                        style={{ color: primaryColor }}
-                      />
-                    </div>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required={data.required_fields.email}
+                      className="w-full rounded-lg border border-gray-200 bg-gray-50/30 px-4 py-3 text-sm transition-all focus:border-[#83CD20] focus:ring-1 focus:ring-[#83CD20] focus:outline-none"
+                    />
                   </label>
 
                   <label className="flex flex-col gap-2">
-                    <span
-                      className="text-sm font-medium text-[#034833]"
-                      style={{ color: primaryColor }}
-                    >
-                      Your Phone {data.required_fields.phone && "*"}
+                    <span className="text-sm font-medium text-gray-700">
+                      Phone Number {data.required_fields.phone && "*"}
                     </span>
-                    <div className="relative">
-                      <input
-                        type="tel"
-                        name="phone_number"
-                        placeholder="Your Phone"
-                        value={formData.phone_number}
-                        onChange={handleInputChange}
-                        required={data.required_fields.phone}
-                        className="w-full rounded-full border-none bg-white py-3 pr-10 pl-5 text-sm placeholder:text-gray-400 focus:ring-1 focus:ring-[#83CD20]"
-                      />
-                      <Phone
-                        className="absolute top-1/2 right-4 -translate-y-1/2 text-[#034833]"
-                        size={16}
-                        style={{ color: primaryColor }}
-                      />
-                    </div>
+                    <input
+                      type="tel"
+                      name="phone_number"
+                      placeholder="Enter your phone"
+                      value={formData.phone_number}
+                      onChange={handleInputChange}
+                      required={data.required_fields.phone}
+                      className="w-full rounded-lg border border-gray-200 bg-gray-50/30 px-4 py-3 text-sm transition-all focus:border-[#83CD20] focus:ring-1 focus:ring-[#83CD20] focus:outline-none"
+                    />
                   </label>
                 </div>
 
-                {/* Row 2: Address */}
-                <label className="flex flex-col gap-2">
-                  <span
-                    className="text-sm font-medium text-[#034833]"
-                    style={{ color: primaryColor }}
-                  >
-                    Your Address
-                  </span>
-                  <div className="relative">
-                    <input
-                      placeholder="Your Address"
-                      className="w-full rounded-full border-none bg-white py-3 pr-10 pl-5 text-sm placeholder:text-gray-400 focus:ring-1 focus:ring-[#83CD20]"
-                    />
-                    <MapPin
-                      className="absolute top-1/2 right-4 -translate-y-1/2 text-[#034833]"
-                      size={16}
-                      style={{ color: primaryColor }}
-                    />
-                  </div>
-                </label>
-
                 {/* Message */}
                 <label className="flex flex-col gap-2">
-                  <span
-                    className="text-sm font-medium text-[#034833]"
-                    style={{ color: primaryColor }}
-                  >
+                  <span className="text-sm font-medium text-gray-700">
                     Message {data.required_fields.message && "*"}
                   </span>
-                  <div className="relative">
-                    <textarea
-                      name="message"
-                      placeholder="Write Message.."
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      required={data.required_fields.message}
-                      className="h-32 w-full resize-none rounded-3xl border-none bg-white p-5 text-sm placeholder:text-gray-400 focus:ring-1 focus:ring-[#83CD20]"
-                    />
-                    <Mail
-                      className="absolute top-6 right-4 text-[#034833]"
-                      size={16}
-                      style={{ color: primaryColor }}
-                    />
-                  </div>
+                  <textarea
+                    name="message"
+                    placeholder="How can we help you?"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    required={data.required_fields.message}
+                    className="h-32 w-full resize-none rounded-lg border border-gray-200 bg-gray-50/30 p-4 text-sm transition-all focus:border-[#83CD20] focus:ring-1 focus:ring-[#83CD20] focus:outline-none"
+                  />
                 </label>
 
                 <Button
                   type="submit"
-                  disabled={submitContactForm.isPending || isPreview}
-                  className="w-full rounded-full py-6 text-base font-semibold text-white transition hover:opacity-90"
-                  style={{
-                    backgroundColor: secondaryColor, // Green button
-                  }}
+                  disabled={submitContactForm.isPending}
+                  className="w-full rounded-full py-6 text-base font-semibold"
+                  variant="default"
                 >
                   {submitContactForm.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Sending...
-                    </>
+                    <div className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <span>Sending Message...</span>
+                    </div>
                   ) : (
                     "Send Message"
                   )}
