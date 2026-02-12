@@ -5,7 +5,7 @@ export const generateLinkHref = (
   isEditable: boolean = false,
   disableClicks: boolean = false
 ) => {
-  if (isEditable || disableClicks) return "#";
+  if (isEditable || disableClicks || !originalHref) return "#";
 
   if (originalHref.startsWith("http") || originalHref.startsWith("mailto:")) {
     return originalHref;

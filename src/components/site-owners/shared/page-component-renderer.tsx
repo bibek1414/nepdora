@@ -48,7 +48,6 @@ export function PageComponentRenderer({
 
     // Common props passed to all components
     const commonProps = {
-      key: component.id,
       component: component,
       isEditable: false,
       siteUser: siteUser,
@@ -66,7 +65,7 @@ export function PageComponentRenderer({
       onSubCategoryClick,
     };
 
-    return <Component {...commonProps} {...specificProps} />;
+    return <Component key={component.id} {...commonProps} {...specificProps} />;
   };
 
   if (components.length === 0) {

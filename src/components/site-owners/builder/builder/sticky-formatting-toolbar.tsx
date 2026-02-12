@@ -160,6 +160,13 @@ export const StickyFormattingToolbar: React.FC = () => {
             range: currentSel.getRangeAt(0),
           });
         }
+
+        // Trigger input event on the element to ensure EditableText catches the change
+        if (selection.element) {
+          selection.element.dispatchEvent(
+            new Event("input", { bubbles: true })
+          );
+        }
       }
     }
     setShowHighlightPicker(false);
@@ -190,6 +197,13 @@ export const StickyFormattingToolbar: React.FC = () => {
             range: sel.getRangeAt(0),
           });
         }
+
+        // Trigger input event
+        if (selection.element) {
+          selection.element.dispatchEvent(
+            new Event("input", { bubbles: true })
+          );
+        }
       }
     }
     setShowFontPicker(false);
@@ -209,13 +223,29 @@ export const StickyFormattingToolbar: React.FC = () => {
 
       try {
         document.execCommand(alignCommands[alignment], false);
+        selection.element.dispatchEvent(new Event("input", { bubbles: true }));
       } catch (error) {
         console.warn(`Alignment ${alignment} failed:`, error);
       }
     }
     setShowAlignPicker(false);
   };
+  // Add this new function that uses the context's applyFontSize
+  const handleFontSizeChange = (size: string) => {
+    if (selection?.range) {
+      // Call the context's applyFontSize which should handle the API update
+      applyFontSize(size);
 
+      // Update local state
+      setSelectionFontSize(size);
+      setFontSizeInput(parseInt(size).toString());
+
+      // Close dropdown if open
+      setShowFontSizePicker(false);
+    }
+  };
+
+  // Then update all your font size buttons to use this function
   // Enhanced formatting application
   const handleFormatting = (format: string) => {
     if (selection?.range) {
@@ -232,6 +262,12 @@ export const StickyFormattingToolbar: React.FC = () => {
               ...selection,
               range: sel.getRangeAt(0),
             });
+          }
+
+          if (selection.element) {
+            selection.element.dispatchEvent(
+              new Event("input", { bubbles: true })
+            );
           }
         } catch (error) {
           console.warn(`Formatting ${format} failed:`, error);
@@ -260,9 +296,20 @@ export const StickyFormattingToolbar: React.FC = () => {
               color: color,
             });
           }
+
+          if (selection.element) {
+            selection.element.dispatchEvent(
+              new Event("input", { bubbles: true })
+            );
+          }
         } catch (error) {
           console.warn("Color application failed:", error);
           document.execCommand("foreColor", false, color);
+          if (selection.element) {
+            selection.element.dispatchEvent(
+              new Event("input", { bubbles: true })
+            );
+          }
         }
       }
     }
@@ -380,6 +427,13 @@ export const StickyFormattingToolbar: React.FC = () => {
           console.warn("Manual span wrapping failed, falling back:", e);
           document.execCommand("styleWithCSS", false, "true");
           document.execCommand("fontSize", false, "4"); // Mid size fallback
+        }
+
+        // Trigger input event on the element to ensure EditableText catches the change
+        if (selection.element) {
+          selection.element.dispatchEvent(
+            new Event("input", { bubbles: true })
+          );
         }
       } catch (error) {
         console.warn("Font size application failed:", error);
@@ -505,6 +559,8 @@ export const StickyFormattingToolbar: React.FC = () => {
                 const newSize = `${current - 2}px`;
                 setSelectionFontSize(newSize);
                 handleFontSizeApply(newSize);
+                handleFontSizeChange(newSize); // Use the new function
+
                 setFontSizeInput((current - 2).toString());
               }
             }}
@@ -531,6 +587,8 @@ export const StickyFormattingToolbar: React.FC = () => {
                   const newSize = `${size}px`;
                   setSelectionFontSize(newSize);
                   handleFontSizeApply(newSize);
+                  handleFontSizeChange(newSize); // Use the new function
+
                   setFontSizeInput(size.toString());
                 } else {
                   setFontSizeInput(parseInt(selectionFontSize).toString());
@@ -563,6 +621,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 const newSize = `${current + 2}px`;
                 setSelectionFontSize(newSize);
                 handleFontSizeApply(newSize);
+                handleFontSizeChange(newSize);
                 setFontSizeInput((current + 2).toString());
               }
             }}
@@ -582,6 +641,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 onClick={() => {
                   handleFontSizeApply(size);
                   setFontSizeInput(parseInt(size).toString());
+                  handleFontSizeChange(size); // Use the new function
                 }}
                 className="hover:text-primary block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50"
               >
