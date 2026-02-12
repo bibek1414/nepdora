@@ -44,6 +44,25 @@ interface TextSelection {
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cn = (...classes: any[]) => classes.filter(Boolean).join(" ");
 
+/* Helper to unwrap nested font size spans */
+const cleanFontSizeSpans = (root: HTMLElement) => {
+  const spans = Array.from(root.querySelectorAll("span")) as HTMLElement[];
+  // Process from inner-most to outer to avoid skipping nested spans
+  spans.reverse().forEach(el => {
+    try {
+      if (el.style && el.style.fontSize) {
+        // Move children out, then remove this span
+        while (el.firstChild) {
+          el.parentNode?.insertBefore(el.firstChild, el);
+        }
+        el.parentNode?.removeChild(el);
+      }
+    } catch (e) {
+      // ignore DOM exceptions
+    }
+  });
+};
+
 export const EditableText: React.FC<EditableTextProps> = ({
   value,
   onChange,
@@ -138,26 +157,125 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const applyFontSizeToSelection = (fontSize: string) => {
     if (!textSelection) return;
 
-    // Use execCommand with styleWithCSS to apply font size
-    document.execCommand("styleWithCSS", false, "true");
-    applyFormatting("fontSize", "7"); // This sets a base size, we'll override with inline style
-
-    // Apply inline style for precise control
     const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      const span = document.createElement("span");
-      span.style.fontSize = fontSize;
-      range.surroundContents(span);
+    if (selection) {
+      try {
+        // Restore selection from state
+        selection.removeAllRanges();
+        selection.addRange(textSelection.range);
 
-      // Update the value with HTML content
-      if (textRef.current) {
-        const newValue = textRef.current.innerHTML;
-        onChange(newValue);
+        const range = selection.getRangeAt(0);
+
+        if (!range.collapsed) {
+          // Check for existing ancestor span to update
+          const common = range.commonAncestorContainer;
+          let ancestor =
+            common.nodeType === 1
+              ? (common as HTMLElement)
+              : common.parentElement;
+          let fontAncestor: HTMLElement | null = null;
+
+          // Find the closest span ancestor with a font-size
+          while (ancestor) {
+            if (
+              ancestor.tagName === "SPAN" &&
+              ancestor.style &&
+              ancestor.style.fontSize
+            ) {
+              fontAncestor = ancestor;
+              break;
+            }
+            if (ancestor === textRef.current) break;
+            ancestor = ancestor.parentElement;
+          }
+
+          // If we found an ancestor, check if our selection covers it entirely
+          if (fontAncestor) {
+            const rangeText = range.toString().trim();
+            const ancestorText = fontAncestor.textContent?.trim() || "";
+
+            if (rangeText === ancestorText && rangeText.length > 0) {
+              // Update the existing span
+              fontAncestor.style.fontSize = fontSize;
+              fontAncestor.style.lineHeight = "1.15";
+
+              // Reselect
+              const newRange = document.createRange();
+              newRange.selectNodeContents(fontAncestor);
+              selection.removeAllRanges();
+              selection.addRange(newRange);
+
+              setTextSelection({ ...textSelection, range: newRange });
+
+              // Trigger change
+              if (textRef.current) onChange(textRef.current.innerHTML);
+              setShowFontSizeInput(false);
+              return;
+            }
+          }
+
+          try {
+            const content = range.extractContents();
+            const tempDiv = document.createElement("div");
+            tempDiv.appendChild(content);
+
+            // Clean any nested font-size spans inside the extracted content
+            cleanFontSizeSpans(tempDiv);
+
+            const wrapper = document.createElement("span");
+            wrapper.style.fontSize = fontSize;
+            wrapper.style.lineHeight = "1.15";
+
+            // Move cleaned children into the wrapper
+            while (tempDiv.firstChild) {
+              wrapper.appendChild(tempDiv.firstChild);
+            }
+
+            range.insertNode(wrapper);
+
+            // Update selection to the new wrapper
+            const newRange = document.createRange();
+            newRange.selectNodeContents(wrapper);
+            selection.removeAllRanges();
+            selection.addRange(newRange);
+
+            // Update state
+            setTextSelection({
+              ...textSelection,
+              range: newRange,
+            });
+
+            // Update the value with HTML content
+            if (textRef.current) {
+              const newValue = textRef.current.innerHTML;
+              onChange(newValue);
+            }
+          } catch (e) {
+            console.warn("Manual span wrapping failed, falling back:", e);
+            // Fallback
+            document.execCommand("styleWithCSS", false, "true");
+            applyFormatting("fontSize", "7");
+
+            // Try simple wrap as fallback
+            try {
+              const range = selection.getRangeAt(0);
+              const span = document.createElement("span");
+              span.style.fontSize = fontSize;
+              range.surroundContents(span);
+            } catch (e) {}
+
+            if (textRef.current) {
+              onChange(textRef.current.innerHTML);
+            }
+          }
+        }
+      } catch (error) {
+        console.warn("Font size application failed:", error);
       }
     }
 
-    // Clear selection after applying font size
+    // Clear selection picker UI but keep selection?
+    // User logic implies we might want to keep it, but here we close the input
     setShowFontSizeInput(false);
   };
 

@@ -160,13 +160,6 @@ export const StickyFormattingToolbar: React.FC = () => {
             range: currentSel.getRangeAt(0),
           });
         }
-
-        // Trigger input event on the element to ensure EditableText catches the change
-        if (selection.element) {
-          selection.element.dispatchEvent(
-            new Event("input", { bubbles: true })
-          );
-        }
       }
     }
     setShowHighlightPicker(false);
@@ -197,13 +190,6 @@ export const StickyFormattingToolbar: React.FC = () => {
             range: sel.getRangeAt(0),
           });
         }
-
-        // Trigger input event
-        if (selection.element) {
-          selection.element.dispatchEvent(
-            new Event("input", { bubbles: true })
-          );
-        }
       }
     }
     setShowFontPicker(false);
@@ -223,29 +209,13 @@ export const StickyFormattingToolbar: React.FC = () => {
 
       try {
         document.execCommand(alignCommands[alignment], false);
-        selection.element.dispatchEvent(new Event("input", { bubbles: true }));
       } catch (error) {
         console.warn(`Alignment ${alignment} failed:`, error);
       }
     }
     setShowAlignPicker(false);
   };
-  // Add this new function that uses the context's applyFontSize
-  const handleFontSizeChange = (size: string) => {
-    if (selection?.range) {
-      // Call the context's applyFontSize which should handle the API update
-      applyFontSize(size);
 
-      // Update local state
-      setSelectionFontSize(size);
-      setFontSizeInput(parseInt(size).toString());
-
-      // Close dropdown if open
-      setShowFontSizePicker(false);
-    }
-  };
-
-  // Then update all your font size buttons to use this function
   // Enhanced formatting application
   const handleFormatting = (format: string) => {
     if (selection?.range) {
@@ -262,12 +232,6 @@ export const StickyFormattingToolbar: React.FC = () => {
               ...selection,
               range: sel.getRangeAt(0),
             });
-          }
-
-          if (selection.element) {
-            selection.element.dispatchEvent(
-              new Event("input", { bubbles: true })
-            );
           }
         } catch (error) {
           console.warn(`Formatting ${format} failed:`, error);
@@ -296,150 +260,13 @@ export const StickyFormattingToolbar: React.FC = () => {
               color: color,
             });
           }
-
-          if (selection.element) {
-            selection.element.dispatchEvent(
-              new Event("input", { bubbles: true })
-            );
-          }
         } catch (error) {
           console.warn("Color application failed:", error);
           document.execCommand("foreColor", false, color);
-          if (selection.element) {
-            selection.element.dispatchEvent(
-              new Event("input", { bubbles: true })
-            );
-          }
         }
       }
     }
     setShowColorPicker(false);
-  };
-
-  // Enhanced font size application
-  const handleFontSizeApply = (size: string) => {
-    if (selection?.range) {
-      const sel = window.getSelection();
-      if (!sel) return;
-
-      try {
-        // Restore and use the stored selection range
-        sel.removeAllRanges();
-        sel.addRange(selection.range.cloneRange());
-
-        const range = sel.getRangeAt(0);
-        if (range.collapsed) return;
-
-        // Helper: unwrap any spans that have inline font-size from a root element
-        const cleanFontSizeSpans = (root: HTMLElement) => {
-          const spans = Array.from(
-            root.querySelectorAll("span")
-          ) as HTMLElement[];
-          // Process from inner-most to outer to avoid skipping nested spans
-          spans.reverse().forEach(el => {
-            try {
-              if (el.style && el.style.fontSize) {
-                // Move children out, then remove this span
-                while (el.firstChild) {
-                  el.parentNode?.insertBefore(el.firstChild, el);
-                }
-                el.parentNode?.removeChild(el);
-              }
-            } catch (e) {
-              // ignore DOM exceptions for complex nodes
-            }
-          });
-        };
-
-        // If selection is inside an ancestor element that already has a font-size,
-        // update that ancestor instead of wrapping. This avoids creating nested spans.
-        const common = range.commonAncestorContainer;
-        let ancestor =
-          common.nodeType === 1
-            ? (common as HTMLElement)
-            : common.parentElement;
-        let fontAncestor: HTMLElement | null = null;
-        while (ancestor) {
-          if (
-            ancestor instanceof HTMLElement &&
-            ancestor.style &&
-            ancestor.style.fontSize
-          ) {
-            fontAncestor = ancestor;
-            break;
-          }
-          ancestor = ancestor.parentElement;
-        }
-
-        if (fontAncestor) {
-          // Clean nested font-size spans inside this ancestor and then set the size
-          cleanFontSizeSpans(fontAncestor);
-          fontAncestor.style.fontSize = size;
-          fontAncestor.style.lineHeight = "1.15";
-
-          const newRange = document.createRange();
-          newRange.selectNodeContents(fontAncestor);
-          sel.removeAllRanges();
-          sel.addRange(newRange);
-
-          setSelection({
-            ...selection,
-            range: newRange,
-            fontSize: size,
-          });
-          setSelectionFontSize(size);
-          return;
-        }
-
-        // Otherwise, extract the selected contents, clean nested font-size spans,
-        // and wrap once with a new span.
-        try {
-          const content = range.extractContents();
-          const tempDiv = document.createElement("div");
-          tempDiv.appendChild(content);
-
-          // Clean any nested font-size spans inside the extracted content
-          cleanFontSizeSpans(tempDiv);
-
-          const wrapper = document.createElement("span");
-          wrapper.style.fontSize = size;
-          wrapper.style.lineHeight = "1.15";
-
-          // Move cleaned children into the wrapper
-          while (tempDiv.firstChild) {
-            wrapper.appendChild(tempDiv.firstChild);
-          }
-
-          range.insertNode(wrapper);
-
-          const newRange = document.createRange();
-          newRange.selectNodeContents(wrapper);
-          sel.removeAllRanges();
-          sel.addRange(newRange);
-
-          setSelection({
-            ...selection,
-            range: newRange,
-            fontSize: size,
-          });
-          setSelectionFontSize(size);
-        } catch (e) {
-          console.warn("Manual span wrapping failed, falling back:", e);
-          document.execCommand("styleWithCSS", false, "true");
-          document.execCommand("fontSize", false, "4"); // Mid size fallback
-        }
-
-        // Trigger input event on the element to ensure EditableText catches the change
-        if (selection.element) {
-          selection.element.dispatchEvent(
-            new Event("input", { bubbles: true })
-          );
-        }
-      } catch (error) {
-        console.warn("Font size application failed:", error);
-      }
-    }
-    setShowFontSizePicker(false);
   };
 
   // Reset states when selection changes
@@ -558,9 +385,9 @@ export const StickyFormattingToolbar: React.FC = () => {
               if (current > 8) {
                 const newSize = `${current - 2}px`;
                 setSelectionFontSize(newSize);
-                handleFontSizeApply(newSize);
-                handleFontSizeChange(newSize); // Use the new function
-
+                applyFontSize(newSize);
+                console.log("newSize", newSize);
+                clearSelection();
                 setFontSizeInput((current - 2).toString());
               }
             }}
@@ -586,9 +413,8 @@ export const StickyFormattingToolbar: React.FC = () => {
                   );
                   const newSize = `${size}px`;
                   setSelectionFontSize(newSize);
-                  handleFontSizeApply(newSize);
-                  handleFontSizeChange(newSize); // Use the new function
-
+                  applyFontSize(newSize);
+                  clearSelection();
                   setFontSizeInput(size.toString());
                 } else {
                   setFontSizeInput(parseInt(selectionFontSize).toString());
@@ -620,8 +446,8 @@ export const StickyFormattingToolbar: React.FC = () => {
               if (current < 100) {
                 const newSize = `${current + 2}px`;
                 setSelectionFontSize(newSize);
-                handleFontSizeApply(newSize);
-                handleFontSizeChange(newSize);
+                applyFontSize(newSize);
+                clearSelection();
                 setFontSizeInput((current + 2).toString());
               }
             }}
@@ -639,9 +465,9 @@ export const StickyFormattingToolbar: React.FC = () => {
               <button
                 key={size}
                 onClick={() => {
-                  handleFontSizeApply(size);
+                  applyFontSize(size);
+                  clearSelection();
                   setFontSizeInput(parseInt(size).toString());
-                  handleFontSizeChange(size); // Use the new function
                 }}
                 className="hover:text-primary block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50"
               >
