@@ -38,7 +38,7 @@ export const generateLinkHref = (
   }
 
   if (isPublishMode && siteUser) {
-    return isHomePage ? `` : `${cleanHref}`;
+    return isHomePage ? `/` : `/${cleanHref}`;
   }
 
   // Published mode on custom domain or fallback

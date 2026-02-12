@@ -243,11 +243,8 @@ export default function OnboardingModal({
   };
 
   const updateOnboardingStatus = () => {
-    console.log("🔄 Updating onboarding status to complete...");
-
     if (updateUser) {
       updateUser({ is_onboarding_complete: true });
-      console.log("✅ Updated via AuthContext updateUser");
     }
 
     try {
@@ -259,7 +256,6 @@ export default function OnboardingModal({
           is_onboarding_complete: true,
         };
         localStorage.setItem("authUser", JSON.stringify(updatedUser));
-        console.log("✅ Updated localStorage with onboarding complete: true");
       }
     } catch (error) {
       console.error("❌ Error updating localStorage:", error);

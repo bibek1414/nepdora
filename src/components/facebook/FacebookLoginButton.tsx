@@ -25,21 +25,7 @@ export function FacebookLoginButton({
     integration,
   } = useFacebook();
 
-  console.log("🎨 [FacebookLoginButton] Render state:", {
-    isConnected,
-    isLoading,
-    hasIntegration: !!integration,
-    integrationId: integration?.id,
-    integrationPageName: integration?.page_name,
-    integrationEnabled: integration?.is_enabled,
-  });
-
   const handleClick = async () => {
-    console.log("🖱️ [FacebookLoginButton] Button clicked:", {
-      currentState: isConnected ? "connected" : "disconnected",
-      action: isConnected ? "disconnect" : "connect",
-    });
-
     try {
       if (isConnected) {
         await disconnectFacebook();

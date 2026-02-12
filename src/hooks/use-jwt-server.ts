@@ -27,17 +27,9 @@ export async function getServerUser(): Promise<User | null> {
   const googleAuthToken = cookieStore.get("google_auth_token")?.value;
   const googleAuthUser = cookieStore.get("google_auth_user")?.value;
 
-  console.log("[getServerUser] Auth check:", {
-    hasAuthToken: !!authToken,
-    hasGoogleAuthToken: !!googleAuthToken,
-    hasGoogleAuthUser: !!googleAuthUser,
-  });
-
   // Priority 1: Check Google auth first
   if (googleAuthToken && googleAuthUser) {
     try {
-      console.log("[getServerUser] Processing Google auth...");
-
       // Parse Google auth user data
       let userData: GoogleAuthUser;
       try {
@@ -48,13 +40,10 @@ export async function getServerUser(): Promise<User | null> {
         userData = JSON.parse(decoded);
       }
 
-      console.log("[getServerUser] Google user data:", userData);
-
       // Also decode the token to get additional fields
       let tokenPayload: JWTPayload | null = null;
       try {
         tokenPayload = decodeJWT(googleAuthToken) as JWTPayload;
-        console.log("[getServerUser] Google token payload:", tokenPayload);
       } catch (error) {
         console.error("[getServerUser] Error decoding Google token:", error);
       }
@@ -90,7 +79,6 @@ export async function getServerUser(): Promise<User | null> {
         ),
       };
 
-      console.log("[getServerUser] Google auth user created:", user);
       return user;
     } catch (error) {
       console.error("[getServerUser] Error processing Google auth:", error);
@@ -101,11 +89,9 @@ export async function getServerUser(): Promise<User | null> {
   // Priority 2: Check normal auth token
   if (authToken) {
     try {
-      console.log("[getServerUser] Processing normal auth token...");
       const payload = decodeJWT(authToken) as JWTPayload;
 
       if (!payload || isTokenExpired(payload.exp)) {
-        console.log("[getServerUser] Token expired or invalid");
         return null;
       }
 
@@ -128,7 +114,6 @@ export async function getServerUser(): Promise<User | null> {
         avatar: generateUserAvatar(payload.store_name),
       };
 
-      console.log("[getServerUser] Normal auth user created:", user);
       return user;
     } catch (error) {
       console.error("[getServerUser] Error decoding normal JWT:", error);
@@ -136,7 +121,6 @@ export async function getServerUser(): Promise<User | null> {
     }
   }
 
-  console.log("[getServerUser] No valid auth found");
   return null;
 }
 
@@ -154,6 +138,4 @@ export async function clearGoogleAuthCookies() {
   cookiesToClear.forEach(cookieName => {
     cookieStore.delete(cookieName);
   });
-
-  console.log("[clearGoogleAuthCookies] Google auth cookies cleared");
 }

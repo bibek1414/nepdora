@@ -92,10 +92,6 @@ export async function proxy(request: NextRequest) {
   const refreshToken = url.searchParams.get("refresh_token");
 
   if (authToken) {
-    console.log(
-      "[Proxy] Found auth_token in URL, setting cookies and redirecting..."
-    );
-
     // Determine where to redirect (same URL without tokens)
     const nextUrl = new URL(request.url);
     nextUrl.searchParams.delete("auth_token");

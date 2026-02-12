@@ -27,6 +27,7 @@ export function usePageData(siteUser: string, pageSlug: string) {
   const router = useRouter();
 
   const isPreview = pathname?.startsWith("/preview") || false;
+  const isPublish = pathname?.startsWith("/publish") || false;
 
   const { data: pageComponentsResponse, isLoading: isComponentsLoading } =
     isPreview
@@ -72,14 +73,19 @@ export function usePageData(siteUser: string, pageSlug: string) {
     );
   }, [pageComponentsResponse]);
 
-  const routePrefix = isPreview ? `/preview/${siteUser}` : `/`;
+  // routePrefix should NOT end with a slash to avoid double slashes when concatenated with /products/...
+  const routePrefix = isPreview
+    ? `/preview/${siteUser}`
+    : isPublish
+      ? `/publish/${siteUser}`
+      : "";
 
   const navigation = {
     handleBacktoHome: () => {
-      router.push(isPreview ? `/preview/${siteUser}` : `/`);
+      router.push(routePrefix || "/");
     },
-    handleProductClick: (productId: number) => {
-      router.push(`${routePrefix}/products/${productId}`);
+    handleProductClick: (productSlug: string) => {
+      router.push(`${routePrefix}/products/${productSlug}`);
     },
     handleBlogClick: (blogSlug: string) => {
       router.push(`${routePrefix}/blog/${blogSlug}`);

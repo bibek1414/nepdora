@@ -178,9 +178,6 @@ const nextAuthOptions: NextAuthOptions = {
             // Fetch the pending signup metadata: store_name and phone
             const { storeName, phoneNumber, websiteType } =
               await getPendingGoogleSignupMetadata();
-            console.log("[Google Auth] Store name:", storeName);
-            console.log("[Google Auth] Phone number:", phoneNumber);
-            console.log("[Google Auth] Website type:", websiteType);
 
             // ⭐ FIXED: backend expects "phone", not "phone_number"
             const requestBody = {
@@ -237,12 +234,9 @@ const nextAuthOptions: NextAuthOptions = {
             }
 
             const data = await response.json();
-            console.log("[Google Auth] Data:", data);
             const decodedToken = jwtDecode<DecodedToken>(
               data.data.user.access_token
             );
-
-            console.log("[Google Auth] Decoded token:", decodedToken);
 
             if (!decodedToken.sub_domain) {
               await persistGoogleAuthError(

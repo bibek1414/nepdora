@@ -42,7 +42,6 @@ const buildProductFormData = (
           imageCount++;
         }
       });
-      console.log(`Appended ${imageCount} new image files to FormData`);
     } else if (key === "thumbnail_image" && value instanceof File) {
       formData.append("thumbnail_image", value);
     } else if (key === "variants" && Array.isArray(value)) {
