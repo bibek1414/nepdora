@@ -84,19 +84,19 @@ export function usePageData(siteUser: string, pageSlug: string) {
     handleBacktoHome: () => {
       router.push(routePrefix || "/");
     },
-    handleProductClick: (productSlug: string) => {
+    handleProductClick: (productSlug: string, _order: number) => {
       router.push(`${routePrefix}/products/${productSlug}`);
     },
-    handleBlogClick: (blogSlug: string) => {
+    handleBlogClick: (blogSlug: string, _order: number) => {
       router.push(`${routePrefix}/blog/${blogSlug}`);
     },
-    handleServiceClick: (serviceSlug: string) => {
+    handleServiceClick: (serviceSlug: string, _order: number) => {
       router.push(`${routePrefix}/services/${serviceSlug}`);
     },
-    handleCategoryClick: (categoryId: number) => {
+    handleCategoryClick: (categoryId: number, _order: number) => {
       router.push(`${routePrefix}/categories/${categoryId}`);
     },
-    handleSubCategoryClick: (subcategoryId: number) => {
+    handleSubCategoryClick: (subcategoryId: number, _order: number) => {
       router.push(`${routePrefix}/subcategories/${subcategoryId}`);
     },
   };

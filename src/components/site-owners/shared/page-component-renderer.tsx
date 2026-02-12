@@ -16,7 +16,7 @@ interface PageComponentRendererProps {
   components: PageComponent[];
   siteUser: string;
   pageSlug: string;
-  onProductClick: (productId: number, order: number) => void;
+  onProductClick: (productSlug: string, order: number) => void;
   onBlogClick: (blogSlug: string, order: number) => void;
   onServiceClick: (serviceSlug: string, order: number) => void;
   onCategoryClick: (categoryId: number, order: number) => void;
