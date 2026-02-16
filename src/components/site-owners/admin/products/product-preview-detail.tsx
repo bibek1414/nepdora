@@ -377,12 +377,12 @@ export const ProductPreviewDetail: React.FC<ProductPreviewDetailProps> = ({
                 className="text-4xl font-extrabold"
                 style={{ color: theme.colors.primary }}
               >
-                ${discountedPrice}
+                Rs.{discountedPrice}
               </span>
               {marketPrice && discountPercentage > 0 && (
                 <>
                   <span className="text-muted-foreground ml-3 text-xl line-through">
-                    ${marketPrice.toFixed(2)}
+                    Rs.{marketPrice.toFixed(2)}
                   </span>
                   <Badge variant="destructive" className="ml-3">
                     {discountPercentage}% OFF
