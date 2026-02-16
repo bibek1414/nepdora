@@ -10,6 +10,7 @@ import {
   uploadToCloudinary,
   optimizeCloudinaryUrl,
   convertUnsplashUrl,
+  DEFAULT_MAX_IMAGE_SIZE,
   type CloudinaryUploadResponse,
 } from "@/utils/cloudinary";
 import { toast } from "sonner";
@@ -67,7 +68,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   },
   imageOptimization,
   uploadValidation = {
-    maxSize: 5 * 1024 * 1024, // 5MB
+    maxSize: DEFAULT_MAX_IMAGE_SIZE,
     allowedTypes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
   },
   disableImageChange,
@@ -110,8 +111,11 @@ export const EditableImage: React.FC<EditableImageProps> = ({
 
     // Validate file size
     if (uploadValidation.maxSize && file.size > uploadValidation.maxSize) {
-      const maxSizeMB = uploadValidation.maxSize / (1024 * 1024);
-      toast.error(`Image size must be less than ${maxSizeMB}MB`);
+      const maxSizeFormatted =
+        uploadValidation.maxSize >= 1024 * 1024
+          ? `${(uploadValidation.maxSize / (1024 * 1024)).toFixed(1)}MB`
+          : `${Math.round(uploadValidation.maxSize / 1024)}KB`;
+      toast.error(`Image size must be less than ${maxSizeFormatted}`);
       return;
     }
 
@@ -119,7 +123,10 @@ export const EditableImage: React.FC<EditableImageProps> = ({
 
     try {
       // Upload to Cloudinary using your existing utility
-      const imageUrl = await uploadToCloudinary(file, cloudinaryOptions);
+      const imageUrl = await uploadToCloudinary(file, {
+        ...cloudinaryOptions,
+        maxSize: uploadValidation.maxSize,
+      });
 
       // Update with new image
       const newAlt = localAlt || file.name.split(".")[0];

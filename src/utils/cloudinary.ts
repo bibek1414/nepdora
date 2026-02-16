@@ -32,15 +32,28 @@ const getCloudinaryConfig = (): CloudinaryConfig => {
   };
 };
 
+export const DEFAULT_MAX_IMAGE_SIZE = 500 * 1024; // 500KB
+
 export const uploadToCloudinary = async (
   file: File,
   options?: {
     folder?: string;
     transformation?: string;
     resourceType?: "image" | "video" | "raw" | "auto";
+    maxSize?: number; // in bytes
   }
 ): Promise<string> => {
   try {
+    const effectiveMaxSize = options?.maxSize ?? DEFAULT_MAX_IMAGE_SIZE;
+
+    if (file.size > effectiveMaxSize) {
+      const maxSizeFormatted =
+        effectiveMaxSize >= 1024 * 1024
+          ? `${(effectiveMaxSize / (1024 * 1024)).toFixed(1)}MB`
+          : `${Math.round(effectiveMaxSize / 1024)}KB`;
+      throw new Error(`File size exceeds the limit of ${maxSizeFormatted}`);
+    }
+
     const config = getCloudinaryConfig();
     const formData = new FormData();
 
