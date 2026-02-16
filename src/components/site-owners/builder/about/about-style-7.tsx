@@ -90,13 +90,6 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
       return;
     }
 
-    // Validate file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast.error("Image size must be less than 5MB");
-      return;
-    }
-
     setIsUploading(index);
 
     try {
@@ -112,7 +105,9 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
       toast.success("Image uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
-      toast.error("Failed to upload image. Please try again.");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to upload image."
+      );
     } finally {
       setIsUploading(null);
       event.target.value = "";

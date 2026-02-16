@@ -68,15 +68,10 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
 
     // basic validation: reuse sensible defaults
     const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    const maxSize = 5 * 1024 * 1024;
     if (!allowedTypes.includes(file.type)) {
       toast.error(
         `Please select a valid image file (${allowedTypes.join(", ")})`
       );
-      return;
-    }
-    if (file.size > maxSize) {
-      toast.error(`Image size must be less than ${maxSize / (1024 * 1024)}MB`);
       return;
     }
 
@@ -102,7 +97,9 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
       toast.success("Image uploaded successfully");
     } catch (err) {
       console.error(err);
-      toast.error("Failed to upload image. Please try again.");
+      toast.error(
+        err instanceof Error ? err.message : "Failed to upload image."
+      );
     } finally {
       setOverlayUploading(false);
       if (overlayFileInputRef.current) overlayFileInputRef.current.value = "";

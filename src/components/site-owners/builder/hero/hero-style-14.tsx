@@ -123,8 +123,10 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
       });
       handleBackgroundUpdate(url, file.name);
       toast.success("Image uploaded successfully!");
-    } catch {
-      toast.error("Failed to upload image. Please try again.");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to upload image."
+      );
     } finally {
       setIsUploadingBackground(false);
       event.target.value = "";

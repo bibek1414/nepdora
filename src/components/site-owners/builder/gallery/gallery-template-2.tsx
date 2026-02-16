@@ -77,7 +77,9 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
       toast.success("Image uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
-      toast.error("Failed to upload image. Please try again.");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to upload image."
+      );
     } finally {
       setIsUploading(false);
       event.target.value = "";

@@ -139,12 +139,6 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
       return;
     }
 
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast.error("Image size must be less than 5MB");
-      return;
-    }
-
     setIsUploading(collectionId);
 
     try {
@@ -161,7 +155,9 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
       toast.success("Collection image uploaded successfully!");
     } catch (error) {
       console.error("Image upload failed:", error);
-      toast.error("Failed to upload image. Please try again.");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to upload image."
+      );
     } finally {
       setIsUploading(null);
       event.target.value = "";
