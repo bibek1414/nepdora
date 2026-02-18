@@ -1,5 +1,6 @@
 import React, { use } from "react";
 import { BuilderLayout } from "@/components/site-owners/builder/builder/builder-layout";
+import { WebsiteSocketProvider } from "@/providers/website-socket-provider";
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 
@@ -22,5 +23,9 @@ export async function generateMetadata({
 export default function BuilderPage({ params }: BuilderPageProps) {
   const { siteUser, pageSlug } = use(params);
 
-  return <BuilderLayout params={{ siteUser, pageSlug }} />;
+  return (
+    <WebsiteSocketProvider schema_name={siteUser}>
+      <BuilderLayout params={{ siteUser, pageSlug }} />
+    </WebsiteSocketProvider>
+  );
 }

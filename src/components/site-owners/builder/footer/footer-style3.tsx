@@ -107,10 +107,6 @@ export function FooterStyle3({
 
   const pathname = usePathname();
 
-  const handleDelete = () => {
-    deleteFooterMutation.mutate();
-  };
-
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

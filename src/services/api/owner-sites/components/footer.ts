@@ -56,7 +56,7 @@ export const useFooterApi = {
       body: JSON.stringify({
         component_id: data.component_id,
         content: data.content,
-        data: data.footerData,
+        data: data.data,
       }),
     });
 
@@ -79,7 +79,7 @@ export const useFooterApi = {
       `${API_BASE_URL}/api/footer/${data.id}/`
     );
     console.log("Update payload:", {
-      data: data.footerData,
+      data: data.data,
       ...(data.content && { content: data.content }),
     });
 
@@ -87,7 +87,7 @@ export const useFooterApi = {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify({
-        data: data.footerData,
+        data: data.data,
         ...(data.content && { content: data.content }),
       }),
     });
@@ -127,7 +127,7 @@ export const useFooterApi = {
       body: JSON.stringify({
         component_id: data.component_id,
         content: data.content,
-        data: data.footerData,
+        data: data.data,
       }),
     });
 

@@ -133,7 +133,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       // Call your refresh API
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

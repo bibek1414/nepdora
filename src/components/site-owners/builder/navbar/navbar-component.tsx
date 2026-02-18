@@ -58,6 +58,19 @@ const styleMap = {
   "style-11": NavbarStyle11,
 };
 
+const defaultNavbarData: NavbarData = {
+  logoText: "Brand",
+  logoType: "text",
+  links: [
+    { id: "1", text: "Home", href: "#" },
+    { id: "2", text: "About", href: "#" },
+    { id: "3", text: "Contact", href: "#" },
+  ],
+  buttons: [],
+  style: "style-1",
+  showCart: true,
+};
+
 export const NavbarComponent: React.FC<NavbarComponentProps> = ({
   navbar,
   isEditable = true,
@@ -71,12 +84,14 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
     useDeleteNavbarMutation();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
-  const handleSaveNavbar = (navbarData: NavbarData) => {
+  const navbarData = navbar.data || defaultNavbarData;
+
+  const handleSaveNavbar = (data: NavbarData) => {
     if (!isEditable) return;
 
     updateNavbar({
       id: navbar.id,
-      navbarData: { ...navbar.data, ...navbarData },
+      data: { ...navbarData, ...data },
     });
   };
 
@@ -91,8 +106,8 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
 
     updateNavbar({
       id: navbar.id,
-      navbarData: {
-        ...navbar.data,
+      data: {
+        ...navbarData,
         bannerText: bannerText,
       },
     });
@@ -103,8 +118,8 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
 
     updateNavbar({
       id: navbar.id,
-      navbarData: {
-        ...navbar.data,
+      data: {
+        ...navbarData,
         topBarItems: topBarItems,
       },
     });
@@ -113,14 +128,14 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
   const handleEditLink = (link: NavbarLink) => {
     if (!isEditable) return;
 
-    const updatedLinks = navbar.data.links.map(l =>
+    const updatedLinks = navbarData.links.map(l =>
       l.id === link.id ? link : l
     );
 
     updateNavbar({
       id: navbar.id,
-      navbarData: {
-        ...navbar.data,
+      data: {
+        ...navbarData,
         links: updatedLinks,
       },
     });
@@ -129,12 +144,12 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
   const handleDeleteLink = (linkId: string) => {
     if (!isEditable) return;
 
-    const updatedLinks = navbar.data.links.filter(l => l.id !== linkId);
+    const updatedLinks = navbarData.links.filter(l => l.id !== linkId);
 
     updateNavbar({
       id: navbar.id,
-      navbarData: {
-        ...navbar.data,
+      data: {
+        ...navbarData,
         links: updatedLinks,
       },
     });
@@ -151,15 +166,15 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
 
     updateNavbar({
       id: navbar.id,
-      navbarData: {
-        ...navbar.data,
-        links: [...navbar.data.links, newLink],
+      data: {
+        ...navbarData,
+        links: [...navbarData.links, newLink],
       },
     });
   };
 
   const StyleComponent =
-    styleMap[navbar.data.style as keyof typeof styleMap] || NavbarStyle1;
+    styleMap[navbarData.style as keyof typeof styleMap] || NavbarStyle1;
 
   return (
     <div
@@ -229,12 +244,12 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
           isOpen={isEditorOpen}
           onClose={() => setIsEditorOpen(false)}
           onSave={handleSaveNavbar}
-          initialData={navbar.data}
+          initialData={navbarData}
         />
       )}
 
       <StyleComponent
-        navbarData={navbar.data}
+        navbarData={navbarData}
         isEditable={isEditable}
         siteUser={siteUser}
         disableClicks={disableClicks}

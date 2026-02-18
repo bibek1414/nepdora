@@ -5,68 +5,100 @@ import {
   UpdateNavbarRequest,
 } from "@/types/owner-site/components/navbar";
 import { toast } from "sonner";
+import { useWebsiteSocketContext } from "@/providers/website-socket-provider";
 
 const NAVBAR_QUERY_KEY = ["navbar"];
 
 export const useNavbarQuery = () => {
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
   return useQuery({
     queryKey: NAVBAR_QUERY_KEY,
-    queryFn: useNavbarApi.getNavbar,
+    queryFn: () => {
+      return new Promise<any>((resolve, reject) => {
+        const unsubscribe = subscribe("navbar", message => {
+          unsubscribe();
+          resolve({
+            data: message.data || null,
+            message: message.data ? "Navbar retrieved" : "No navbar found",
+          });
+        });
+
+        setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for navbar"));
+        }, 10000);
+
+        sendMessage({
+          action: "get_navbar",
+          status: "preview",
+        });
+      });
+    },
     staleTime: 5 * 60 * 1000,
     retry: 2,
   });
 };
 
 export const useNavbarQueryPublished = () => {
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
   return useQuery({
-    queryKey: NAVBAR_QUERY_KEY,
-    queryFn: useNavbarApi.getNavbarPublished,
+    queryKey: [...NAVBAR_QUERY_KEY, "published"],
+    queryFn: () => {
+      return new Promise<any>((resolve, reject) => {
+        const unsubscribe = subscribe("navbar", message => {
+          unsubscribe();
+          resolve({
+            data: message.data || null,
+            message: message.data ? "Navbar retrieved" : "No navbar found",
+          });
+        });
+
+        setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for published navbar"));
+        }, 10000);
+
+        sendMessage({
+          action: "get_navbar",
+          status: "published",
+        });
+      });
+    },
     staleTime: 5 * 60 * 1000,
     retry: 2,
   });
 };
 
+// use-navbar.ts updates
 export const useCreateNavbarMutation = () => {
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateNavbarRequest) => {
-      // First, fetch existing navbar to get its ID
-      let existingNavbar;
-      try {
-        existingNavbar = await useNavbarApi.getNavbar();
-      } catch (error) {
-        // No existing navbar, proceed with creation
-        existingNavbar = null;
-      }
+      return new Promise<any>((resolve, reject) => {
+        const unsubscribe = subscribe("navbar_created", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
 
-      // If navbar exists, delete it first
-      if (existingNavbar?.data?.id) {
-        try {
-          await useNavbarApi.deleteNavbar(existingNavbar.data.id);
-          // Wait briefly to ensure deletion completes
-          await new Promise(resolve => setTimeout(resolve, 300));
-          toast.info("Previous navbar replaced with new design");
-        } catch (deleteError) {
-          console.error("Failed to delete existing navbar:", deleteError);
-          throw new Error("Failed to replace existing navbar");
-        }
-      }
+        setTimeout(() => unsubscribe(), 10000);
 
-      // Now create the new navbar
-      return await useNavbarApi.createNavbar(data);
+        sendMessage({
+          action: "create_navbar",
+          ...data,
+        });
+      });
     },
     onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: NAVBAR_QUERY_KEY });
-      toast.success(data.message || "Navbar created successfully");
+      // Global listener invalidates, but we can toast
+      toast.success("Navbar created/updated successfully");
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       const errorMessage =
         error?.data?.detail ||
         error?.detail ||
         error?.message ||
-        error?.response?.data?.detail ||
         "Failed to create navbar";
       toast.error(errorMessage);
     },
@@ -74,15 +106,27 @@ export const useCreateNavbarMutation = () => {
 };
 
 export const useUpdateNavbarMutation = () => {
-  const queryClient = useQueryClient();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
 
   return useMutation({
-    mutationFn: (data: UpdateNavbarRequest) => useNavbarApi.updateNavbar(data),
-    onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: NAVBAR_QUERY_KEY });
-      toast.success(data.message || "Navbar updated successfully");
+    mutationFn: async (data: UpdateNavbarRequest) => {
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("navbar_updated", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
+
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "update_navbar",
+          ...data,
+        });
+      });
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onSuccess: data => {
+      toast.success("Navbar updated successfully");
+    },
     onError: (error: any) => {
       toast.error(error.message || "Failed to update navbar");
     },
@@ -90,18 +134,32 @@ export const useUpdateNavbarMutation = () => {
 };
 
 export const useDeleteNavbarMutation = () => {
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
-      return useNavbarApi.deleteNavbar(id);
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("navbar_deleted", message => {
+          const deletedId = message.id || message.data?.id;
+          if (deletedId === id) {
+            unsubscribe();
+            resolve(message.data);
+          }
+        });
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "delete_navbar",
+          id: id,
+        });
+      });
     },
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: NAVBAR_QUERY_KEY });
       queryClient.setQueryData(NAVBAR_QUERY_KEY, null);
-      toast.success(data.message || "Navbar deleted successfully");
+      toast.success("Navbar deleted successfully");
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error.message || "Failed to delete navbar");
     },
@@ -109,15 +167,26 @@ export const useDeleteNavbarMutation = () => {
 };
 
 export const useReplaceNavbarMutation = () => {
-  const queryClient = useQueryClient();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
 
   return useMutation({
-    mutationFn: (data: CreateNavbarRequest) => useNavbarApi.replaceNavbar(data),
-    onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: NAVBAR_QUERY_KEY });
-      toast.success(data.message || "Navbar replaced successfully");
+    mutationFn: async (data: CreateNavbarRequest) => {
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("navbar_replaced", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "replace_navbar",
+          ...data,
+        });
+      });
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onSuccess: data => {
+      toast.success("Navbar replaced successfully");
+    },
     onError: (error: any) => {
       toast.error(error.message || "Failed to replace navbar");
     },

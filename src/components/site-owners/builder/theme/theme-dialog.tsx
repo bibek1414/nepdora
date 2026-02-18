@@ -26,7 +26,6 @@ import {
   defaultThemeData,
 } from "@/types/owner-site/components/theme";
 import { Palette, Save, Type } from "lucide-react";
-import { toast } from "sonner";
 
 interface ThemeDialogProps {
   open: boolean;
@@ -357,12 +356,10 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
     saveOperation
       .then(() => {
         setHasChanges(false);
-        toast.success("Theme saved successfully");
         onOpenChange(false);
         onSaveComplete?.();
       })
       .catch(error => {
-        toast.error("Failed to save theme");
         console.error("Error saving theme:", error);
       });
   };

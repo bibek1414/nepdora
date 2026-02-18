@@ -31,7 +31,7 @@ export function usePageData(siteUser: string, pageSlug: string) {
 
   const { data: pageComponentsResponse, isLoading: isComponentsLoading } =
     isPreview
-      ? usePageComponentsQuery(pageSlug)
+      ? usePageComponentsQuery(pageSlug, "preview")
       : usePageComponentsQueryPublished(pageSlug);
 
   const { data: navbarResponse, isLoading: isNavbarLoading } = isPreview
@@ -55,7 +55,9 @@ export function usePageData(siteUser: string, pageSlug: string) {
     let components: ComponentResponse<keyof ComponentTypeMap>[] = [];
 
     if (Array.isArray(pageComponentsResponse)) {
-      components = pageComponentsResponse;
+      components = pageComponentsResponse as unknown as ComponentResponse<
+        keyof ComponentTypeMap
+      >[];
     } else if (typeof pageComponentsResponse === "object") {
       const response = pageComponentsResponse as ApiListResponse<
         ComponentResponse<keyof ComponentTypeMap>

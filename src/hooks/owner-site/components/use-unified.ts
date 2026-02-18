@@ -1,25 +1,67 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { componentsApi } from "@/services/api/owner-sites/components/unified";
 import {
-  componentsApi,
-  componentOrdersApi,
-  BulkOrderUpdateRequest,
-} from "@/services/api/owner-sites/components/unified";
-import { ComponentTypeMap } from "@/types/owner-site/components/components";
+  ComponentTypeMap,
+  ComponentResponse,
+} from "@/types/owner-site/components/components";
+import { useWebsiteSocketContext } from "@/providers/website-socket-provider";
+
+// Helper to generate UUID
+const generateUUID = () => {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
 
 // Generic hook for fetching page components
 export const usePageComponentsQuery = <
   T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
 >(
-  pageSlug: string
+  pageSlug: string,
+  status: "preview" | "published" = "published"
 ) => {
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
+
   return useQuery({
-    queryKey: ["pageComponents", pageSlug],
-    queryFn: () => componentsApi.getPageComponents<T>(pageSlug),
+    queryKey: ["pageComponents", pageSlug, status],
+    queryFn: () => {
+      return new Promise<ComponentResponse<T>[]>((resolve, reject) => {
+        const unsubscribe = subscribe("components_list", (message: any) => {
+          unsubscribe();
+          if (message.data) {
+            resolve(message.data as ComponentResponse<T>[]);
+          } else {
+            resolve([]);
+          }
+        });
+
+        // Timeout
+        setTimeout(() => {
+          unsubscribe();
+          // If timeout, maybe return empty or throw?
+          // Let's throw to trigger retry or error state
+          reject(new Error("Timeout waiting for components list"));
+        }, 10000);
+
+        sendMessage({
+          action: "list_components",
+          slug: pageSlug,
+          status,
+        });
+      });
+    },
     enabled: !!pageSlug,
+    // Since we are using sockets, maybe we don't need to refetch on window focus as much
+    // if we have real-time updates.
+    refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false,
   });
 };
 export const usePageComponentsQueryPublished = <
@@ -27,14 +69,7 @@ export const usePageComponentsQueryPublished = <
 >(
   pageSlug: string
 ) => {
-  return useQuery({
-    queryKey: ["pageComponents", pageSlug],
-    queryFn: () => componentsApi.getPageComponentsPublished<T>(pageSlug),
-    enabled: !!pageSlug,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
+  return usePageComponentsQuery<T>(pageSlug, "published");
 };
 
 // Generic hook for fetching components by type
@@ -50,31 +85,41 @@ export const useComponentsByTypeQuery = <T extends keyof ComponentTypeMap>(
   });
 };
 
-let invalidationTimeout: NodeJS.Timeout | null = null;
-
 // Generic hook that can handle multiple component types in one instance
 export const useCreateComponentMutation = (pageSlug: string) => {
-  const queryClient = useQueryClient();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
 
   return useMutation({
     mutationFn: async ({
       componentType,
       data,
       insertIndex,
+      silent,
     }: {
       componentType: keyof ComponentTypeMap;
       data: ComponentTypeMap[keyof ComponentTypeMap];
       insertIndex?: number;
       silent?: boolean;
     }) => {
-      const existingComponents =
-        await componentsApi.getPageComponents(pageSlug);
-      return componentsApi.createComponent(
-        pageSlug,
-        { component_type: componentType, data },
-        existingComponents,
-        insertIndex
-      );
+      return new Promise<any>((resolve, reject) => {
+        const unsubscribe = subscribe("component_created", (message: any) => {
+          unsubscribe();
+          resolve(message.data);
+        });
+
+        setTimeout(() => {
+          unsubscribe();
+        }, 10000);
+
+        sendMessage({
+          action: "create_component",
+          slug: pageSlug,
+          component_type: componentType,
+          component_id: generateUUID(),
+          data,
+          insert_index: insertIndex,
+        });
+      });
     },
     onMutate: variables => {
       if (!variables.silent) {
@@ -88,23 +133,16 @@ export const useCreateComponentMutation = (pageSlug: string) => {
         };
       }
     },
-    onSuccess: (_, variables, context) => {
-      if (invalidationTimeout) clearTimeout(invalidationTimeout);
-
-      invalidationTimeout = setTimeout(() => {
-        queryClient.invalidateQueries({
-          queryKey: ["pageComponents", pageSlug],
-        });
-        if (!variables.silent) {
-          toast.success(
-            `${
-              variables.componentType.charAt(0).toUpperCase() +
-              variables.componentType.slice(1)
-            } component added successfully!`,
-            { id: context?.toastId }
-          );
-        }
-      }, 300);
+    onSuccess: (data, variables, context) => {
+      if (!variables.silent) {
+        toast.success(
+          `${
+            variables.componentType.charAt(0).toUpperCase() +
+            variables.componentType.slice(1)
+          } component added successfully!`,
+          { id: context?.toastId }
+        );
+      }
     },
     onError: (error: unknown, variables, context) => {
       const errorMessage =
@@ -123,7 +161,7 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
   pageSlug: string,
   componentType: T
 ) => {
-  const queryClient = useQueryClient();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
 
   return useMutation({
     mutationFn: ({
@@ -132,23 +170,27 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
     }: {
       componentId: string;
       data: Partial<ComponentTypeMap[T]>;
-    }) =>
-      componentsApi.updateComponent(
-        pageSlug,
-        componentId,
-        { data },
-        componentType
-      ),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
-      queryClient.invalidateQueries({
-        queryKey: ["pageComponents", pageSlug, componentType],
+    }) => {
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("component_updated", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
+
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "update_component",
+          slug: pageSlug,
+          component_id: componentId,
+          data: data,
+          component_type: componentType,
+        });
       });
-      toast.success(
-        `${
-          componentType.charAt(0).toUpperCase() + componentType.slice(1)
-        } component updated successfully!`
-      );
+    },
+    onSuccess: () => {
+      // Toast and invalidation handled by global listener mostly
+      toast.success("Component updated successfully");
     },
     onError: (error: unknown) => {
       const errorMessage =
@@ -165,11 +207,31 @@ export const useDeleteComponentMutation = (
   pageSlug: string,
   componentType: keyof ComponentTypeMap
 ) => {
-  const queryClient = useQueryClient();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
 
   return useMutation({
-    mutationFn: (componentId: string) =>
-      componentsApi.deleteComponent(pageSlug, componentId, componentType),
+    mutationFn: (componentId: string) => {
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("component_deleted", message => {
+          if (
+            message.component_id === componentId ||
+            (message.data && message.data.component_id === componentId)
+          ) {
+            unsubscribe();
+            resolve(message.data);
+          }
+        });
+
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "delete_component",
+          page_slug: pageSlug,
+          component_id: componentId,
+          component_type: componentType,
+        });
+      });
+    },
     onMutate: () => {
       return {
         toastId: toast.loading(
@@ -180,10 +242,6 @@ export const useDeleteComponentMutation = (
       };
     },
     onSuccess: (_, __, context) => {
-      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
-      queryClient.invalidateQueries({
-        queryKey: ["pageComponents", pageSlug, componentType],
-      });
       toast.success(
         `${
           componentType.charAt(0).toUpperCase() + componentType.slice(1)
@@ -206,7 +264,7 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
   pageSlug: string,
   componentType: T
 ) => {
-  const queryClient = useQueryClient();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
 
   return useMutation({
     mutationFn: ({
@@ -215,21 +273,30 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
     }: {
       componentId: string;
       data: ComponentTypeMap[T];
-    }) =>
-      componentsApi.replaceComponent(pageSlug, componentId, {
-        component_type: componentType,
-        data,
-      }),
+    }) => {
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("component_replaced", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
+
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "replace_component",
+          page_slug: pageSlug,
+          component_id: componentId,
+          component_type: componentType,
+          data,
+        });
+      });
+    },
     onMutate: () => {
       return {
         toastId: toast.loading(`${componentType} component replacing...`),
       };
     },
     onSuccess: (_, __, context) => {
-      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
-      queryClient.invalidateQueries({
-        queryKey: ["pageComponents", pageSlug, componentType],
-      });
       toast.success(`${componentType} component replaced successfully!`, {
         id: context?.toastId,
       });
@@ -246,7 +313,7 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
 
 // Generic replace mutation hook
 export const useGenericReplaceComponentMutation = (pageSlug: string) => {
-  const queryClient = useQueryClient();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
 
   return useMutation({
     mutationFn: ({
@@ -259,12 +326,25 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
       componentType: keyof ComponentTypeMap;
       data: ComponentTypeMap[keyof ComponentTypeMap];
       order?: number;
-    }) =>
-      componentsApi.replaceComponent(pageSlug, componentId, {
-        component_type: componentType,
-        data,
-        order,
-      }),
+    }) => {
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("component_replaced", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
+
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "replace_component",
+          page_slug: pageSlug,
+          component_id: componentId,
+          component_type: componentType,
+          data,
+          order,
+        });
+      });
+    },
     onMutate: variables => {
       return {
         toastId: toast.loading(
@@ -273,10 +353,6 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
       };
     },
     onSuccess: (_, variables, context) => {
-      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
-      queryClient.invalidateQueries({
-        queryKey: ["pageComponents", pageSlug, variables.componentType],
-      });
       toast.success(
         `${variables.componentType} component replaced successfully!`,
         { id: context?.toastId }
@@ -292,8 +368,9 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
   });
 };
 
+// Deprecated or specific portfolio delete - map to generic delete
 export const useDeletePortfolioComponentMutation = () => {
-  const queryClient = useQueryClient();
+  const { sendMessage } = useWebsiteSocketContext();
 
   return useMutation({
     mutationFn: ({
@@ -302,17 +379,23 @@ export const useDeletePortfolioComponentMutation = () => {
     }: {
       pageSlug: string;
       componentId: string;
-    }) => componentsApi.deleteComponent(pageSlug, componentId, "portfolio"),
+    }) => {
+      sendMessage({
+        action: "delete_component",
+        data: {
+          page_slug: pageSlug,
+          component_id: componentId,
+          component_type: "portfolio",
+        },
+      });
+      return Promise.resolve();
+    },
     onMutate: () => {
       return {
         toastId: toast.loading("Removing portfolio section..."),
       };
     },
     onSuccess: (_, variables, context) => {
-      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
-      queryClient.invalidateQueries({
-        queryKey: ["pageComponents", variables.pageSlug],
-      });
       toast.success("Portfolio section removed successfully!", {
         id: context?.toastId,
       });
@@ -328,15 +411,20 @@ export const useDeletePortfolioComponentMutation = () => {
 };
 
 export const useUpdateComponentOrderMutation = (pageSlug: string) => {
-  const queryClient = useQueryClient();
+  const { sendMessage } = useWebsiteSocketContext();
 
   return useMutation({
-    mutationFn: ({ orderUpdates }: BulkOrderUpdateRequest) =>
-      componentOrdersApi.updateComponentOrders(pageSlug, orderUpdates),
+    mutationFn: ({ orderUpdates }: { orderUpdates: any[] }) => {
+      sendMessage({
+        action: "update_component_order",
+        page_slug: pageSlug,
+        order_updates: orderUpdates,
+      });
+      return Promise.resolve();
+    },
     onSuccess: () => {
-      // Silently invalidate and refetch - no toast for background order updates
-      queryClient.invalidateQueries({ queryKey: ["pageComponents", pageSlug] });
-      queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+      // Silently handled by global listener "components_reordered" or similar if it exists,
+      // or we just trust the optimistic update.
     },
     onError: (error: unknown) => {
       const errorMessage =
@@ -344,7 +432,6 @@ export const useUpdateComponentOrderMutation = (pageSlug: string) => {
           ? error.message
           : "Failed to update component order";
       console.error("Order update error:", error);
-      // Only show toast on actual errors
       toast.error(errorMessage);
     },
   });
