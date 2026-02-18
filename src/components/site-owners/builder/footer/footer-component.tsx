@@ -1,13 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import {
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Youtube,
-  Music2,
-} from "lucide-react";
+import React, { useState } from "react";
 import { FooterStyle1 } from "./footer-style1";
 import { FooterStyle2 } from "./footer-style2";
 import { FooterStyle3 } from "./footer-style3";
@@ -19,14 +11,14 @@ import { FooterStyle8 } from "./footer-style8";
 import { FooterStyle9 } from "./footer-style9";
 import { FooterStyle10 } from "./footer-style10";
 import { FooterEditorDialog } from "./footer-editor-dialog";
-import { FooterData } from "@/types/owner-site/components/footer";
+import {
+  Footer as FooterType,
+  FooterData,
+} from "@/types/owner-site/components/footer";
 import {
   useUpdateFooterMutation,
-  useCreateFooterMutation,
-  useFooterQuery,
   useDeleteFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
-import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { Button } from "@/components/ui/button";
 import { Edit, RefreshCw, Trash2 } from "lucide-react";
 import {
@@ -39,16 +31,21 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Youtube,
+  Music2,
+} from "lucide-react";
 
-// Social platform mapping with icons
-const socialPlatforms = [
-  { name: "Facebook", icon: Facebook, field: "facebook_url" as const },
-  { name: "Twitter", icon: Twitter, field: "twitter_url" as const },
-  { name: "Instagram", icon: Instagram, field: "instagram_url" as const },
-  { name: "LinkedIn", icon: Linkedin, field: "linkedin_url" as const },
-  { name: "YouTube", icon: Youtube, field: "youtube_url" as const },
-  { name: "Tiktok", icon: Music2, field: "tiktok_url" as const },
-];
+interface FooterProps {
+  footer: FooterType;
+  isEditable?: boolean;
+  siteUser?: string;
+  onReplace?: (category: string) => void;
+}
 
 const defaultFooterData: FooterData = {
   companyName: "Your Company",
@@ -88,10 +85,10 @@ const defaultFooterData: FooterData = {
     },
   ],
   socialLinks: [
-    { id: "1", platform: "Facebook", href: "#", icon: Facebook },
-    { id: "2", platform: "Twitter", href: "#", icon: Twitter },
-    { id: "3", platform: "Instagram", href: "#", icon: Instagram },
-    { id: "4", platform: "LinkedIn", href: "#", icon: Linkedin },
+    { id: "1", platform: "Facebook", href: "#" },
+    { id: "2", platform: "Twitter", href: "#" },
+    { id: "3", platform: "Instagram", href: "#" },
+    { id: "4", platform: "LinkedIn", href: "#" },
   ],
   contactInfo: {
     email: "hello@company.com",
@@ -109,127 +106,40 @@ const defaultFooterData: FooterData = {
   copyright: "© 2025 Your Company. All rights reserved.",
 };
 
-interface FooterProps {
-  footerData?: FooterData;
-  style?: string;
-  isEditable?: boolean;
-  siteUser?: string;
-  onUpdate?: (componentId: string, data: any) => void;
-  componentId?: string;
-  footerId?: string;
-  onReplace?: (category: string) => void;
-}
-
 export function Footer({
-  footerData = defaultFooterData,
-  style = "style-1",
+  footer,
   isEditable = false,
-  onUpdate,
-  componentId = "footer",
-  footerId,
   siteUser,
   onReplace,
 }: FooterProps) {
-  const [currentFooterData, setCurrentFooterData] =
-    useState<FooterData>(footerData);
   const [showEditor, setShowEditor] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [existingFooterId, setExistingFooterId] = useState<string | null>(
-    footerId || null
-  );
 
-  const { data: siteConfig, isLoading: isSiteConfigLoading } = useSiteConfig();
-  const updateFooterMutation = useUpdateFooterMutation();
-  const createFooterMutation = useCreateFooterMutation();
-  const deleteFooterMutation = useDeleteFooterMutation();
-  const { data: existingFooter } = useFooterQuery();
+  const { mutate: updateFooter, isPending: isUpdating } =
+    useUpdateFooterMutation();
+  const { mutate: deleteFooter, isPending: isDeleting } =
+    useDeleteFooterMutation();
 
-  useEffect(() => {
-    if (footerData) {
-      setCurrentFooterData(footerData);
-    }
-  }, [footerData]);
+  const footerData = footer.data || defaultFooterData;
 
-  useEffect(() => {
-    if (siteConfig) {
-      const updatedFooterData = { ...currentFooterData };
-      let changed = false;
+  const handleSaveFooter = (newData: FooterData) => {
+    if (!isEditable) return;
 
-      if (siteConfig.logo && siteConfig.logo !== updatedFooterData.logoImage) {
-        updatedFooterData.logoImage = siteConfig.logo;
-        changed = true;
-      }
-
-      const updatedSocialLinks = [];
-      for (const platform of socialPlatforms) {
-        const url = siteConfig[platform.field];
-        if (url) {
-          updatedSocialLinks.push({
-            id: platform.field,
-            platform: platform.name,
-            href: url,
-            icon: platform.icon,
-          });
-        }
-      }
-
-      if (
-        updatedSocialLinks.length > 0 &&
-        JSON.stringify(updatedSocialLinks) !==
-          JSON.stringify(updatedFooterData.socialLinks)
-      ) {
-        updatedFooterData.socialLinks = updatedSocialLinks;
-        changed = true;
-      }
-
-      if (changed) {
-        setCurrentFooterData(updatedFooterData);
-      }
-    }
-  }, [siteConfig]);
-
-  useEffect(() => {
-    if (existingFooter?.data?.id && !existingFooterId) {
-      setExistingFooterId(existingFooter.data.id);
-    }
-  }, [existingFooter, existingFooterId]);
-
-  const handleSaveFooter = async (newData: FooterData) => {
-    try {
-      const footerIdToUse =
-        existingFooterId || footerId || existingFooter?.data?.id;
-      if (footerIdToUse) {
-        const result = await updateFooterMutation.mutateAsync({
-          id: footerIdToUse,
-          data: newData,
-        });
-        if (result?.data?.data) setCurrentFooterData(result.data.data);
-      } else {
-        const result = await createFooterMutation.mutateAsync({
-          component_id: componentId,
-          content: "",
-          data: newData,
-        });
-        if (result?.data) {
-          setCurrentFooterData(result.data.data);
-          setExistingFooterId(result.data.id);
-        }
-      }
-      onUpdate?.(componentId, { footerData: newData });
-      setShowEditor(false);
-    } catch (error) {
-      console.error("Failed to save footer:", error);
-    }
+    updateFooter({
+      id: footer.id,
+      data: newData,
+    });
+    setShowEditor(false);
   };
 
   const handleConfirmDelete = () => {
-    const footerIdToUse =
-      existingFooterId || footerId || existingFooter?.data?.id;
-    deleteFooterMutation.mutate(footerIdToUse || "");
+    if (!isEditable) return;
+    deleteFooter(footer.id);
     setIsDeleteDialogOpen(false);
   };
 
   const FooterComponent = (() => {
+    const style = footerData.style || "style-1";
     switch (style) {
       case "style-2":
         return FooterStyle2;
@@ -254,11 +164,7 @@ export function Footer({
     }
   })();
 
-  const isLoading =
-    updateFooterMutation.isPending ||
-    createFooterMutation.isPending ||
-    deleteFooterMutation.isPending ||
-    isSiteConfigLoading;
+  const isLoading = isUpdating || isDeleting;
 
   return (
     <div className="group relative">
@@ -290,19 +196,23 @@ export function Footer({
             className="h-8 w-fit justify-start px-3"
           >
             <Trash2 className="mr-2 h-4 w-4" />{" "}
-            {deleteFooterMutation.isPending ? "Deleting..." : "Delete"}
+            {isDeleting ? "Deleting..." : "Delete"}
           </Button>
         </div>
       )}
 
       <FooterComponent
-        footerData={currentFooterData}
+        footerData={footerData}
         isEditable={isEditable}
         onEditClick={() => setShowEditor(true)}
         siteUser={siteUser}
-        onUpdate={newData =>
-          setCurrentFooterData({ ...currentFooterData, ...newData })
-        }
+        onUpdate={newData => {
+          if (!isEditable) return;
+          updateFooter({
+            id: footer.id,
+            data: { ...footerData, ...newData },
+          });
+        }}
       />
 
       {isEditable && (
@@ -310,10 +220,12 @@ export function Footer({
           <FooterEditorDialog
             open={showEditor}
             onOpenChange={setShowEditor}
-            footerData={currentFooterData}
+            footerData={footerData}
             onSave={handleSaveFooter}
             isLoading={isLoading}
-            footerStyle={style === "style-5" ? "FooterStyle5" : undefined}
+            footerStyle={
+              footerData.style === "style-5" ? "FooterStyle5" : undefined
+            }
             siteUser={siteUser}
           />
           <AlertDialog
@@ -332,17 +244,15 @@ export function Footer({
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel disabled={deleteFooterMutation.isPending}>
+                <AlertDialogCancel disabled={isDeleting}>
                   Cancel
                 </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleConfirmDelete}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  disabled={deleteFooterMutation.isPending}
+                  disabled={isDeleting}
                 >
-                  {deleteFooterMutation.isPending
-                    ? "Deleting..."
-                    : "Delete Footer"}
+                  {isDeleting ? "Deleting..." : "Delete Footer"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

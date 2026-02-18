@@ -363,10 +363,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       {footer ? (
         <div className="group relative border-t">
           <FooterComponent
-            componentId={footer.id}
-            footerData={footer.data || undefined}
-            style={footer.data?.style || "style-1"}
+            footer={footer}
             isEditable={true}
+            siteUser=""
             onReplace={() => onReplaceSection(footer.id, "footer-sections")}
           />
         </div>

@@ -19,7 +19,7 @@ export interface SocialLink {
   id: string;
   platform: string;
   href?: string;
-  icon: React.ComponentType<{ className?: string }> | LucideIcon;
+  icon?: React.ComponentType<{ className?: string }> | LucideIcon;
 }
 
 // The complete data structure for the footer component's content

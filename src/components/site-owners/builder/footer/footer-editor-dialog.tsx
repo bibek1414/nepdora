@@ -84,32 +84,26 @@ interface FooterEditorDialogProps {
 const socialPlatforms = [
   {
     name: "Facebook",
-    icon: Facebook,
     field: "facebook_url" as const,
   },
   {
     name: "Twitter",
-    icon: Twitter,
     field: "twitter_url" as const,
   },
   {
     name: "Instagram",
-    icon: Instagram,
     field: "instagram_url" as const,
   },
   {
     name: "LinkedIn",
-    icon: Linkedin,
     field: "linkedin_url" as const,
   },
   {
     name: "YouTube",
-    icon: Youtube,
     field: "youtube_url" as const,
   },
   {
     name: "Tiktok",
-    icon: Music2,
     field: "tiktok_url" as const,
   },
 ];
@@ -256,7 +250,6 @@ export function FooterEditorDialog({
             id: platform.field,
             platform: platform.name,
             href: url,
-            icon: platform.icon,
           });
         }
       });
@@ -558,7 +551,6 @@ export function FooterEditorDialog({
       id: Date.now().toString(),
       platform: availablePlatform.name,
       href: "",
-      icon: availablePlatform.icon,
     };
 
     setEditingData(prev => ({
@@ -577,9 +569,7 @@ export function FooterEditorDialog({
         const updatedLink = { ...link, [field]: value };
         if (field === "platform") {
           const platform = socialPlatforms.find(p => p.name === value);
-          if (platform) {
-            updatedLink.icon = platform.icon;
-          }
+          // Platform name is enough as SocialIcon resolves the icon
         }
         return updatedLink;
       }

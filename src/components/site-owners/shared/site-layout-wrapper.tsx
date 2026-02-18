@@ -120,9 +120,7 @@ export function SiteLayoutWrapper({
             {/* Render Footer */}
             {footerResponse?.data && (
               <FooterComponent
-                componentId={footerResponse.data.id}
-                footerData={footerResponse.data.data}
-                style={footerResponse.data.data.style}
+                footer={footerResponse.data}
                 isEditable={false}
                 siteUser={siteUser}
               />

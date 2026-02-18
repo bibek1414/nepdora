@@ -370,8 +370,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           },
         ],
         socialLinks: [
-          { id: "soc1", platform: "Facebook", href: "#", icon: Facebook },
-          { id: "soc2", platform: "Twitter", href: "#", icon: Twitter },
+          { id: "soc1", platform: "Facebook", href: "#" },
+          { id: "soc2", platform: "Twitter", href: "#" },
         ],
         contactInfo: {
           email: "support@yourbrand.com",

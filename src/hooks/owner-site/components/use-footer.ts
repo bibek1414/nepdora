@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useFooterApi } from "@/services/api/owner-sites/components/footer";
 import {
   CreateFooterRequest,
   UpdateFooterRequest,
@@ -71,7 +70,6 @@ export const useFooterQueryPublished = () => {
 
 export const useCreateFooterMutation = () => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateFooterRequest) => {
@@ -108,10 +106,6 @@ export const useUpdateFooterMutation = () => {
 
   return useMutation({
     mutationFn: async (data: UpdateFooterRequest) => {
-      if (!data.id) {
-        throw new Error("Footer ID is required for update");
-      }
-
       return new Promise<any>(resolve => {
         const unsubscribe = subscribe("footer_updated", message => {
           unsubscribe();
@@ -130,7 +124,6 @@ export const useUpdateFooterMutation = () => {
       toast.success("Footer updated successfully");
     },
     onError: (error: any) => {
-      console.error("❌ UPDATE ERROR:", error);
       toast.error(error.message || "Failed to update footer");
     },
   });
@@ -142,17 +135,10 @@ export const useDeleteFooterMutation = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const existingFooter = await useFooterApi.getFooter();
-      const footerId = existingFooter?.data?.id;
-
-      if (!footerId) {
-        throw new Error("No footer found to delete");
-      }
-
       return new Promise<any>(resolve => {
         const unsubscribe = subscribe("footer_deleted", message => {
           const deletedId = message.id || message.data?.id;
-          if (deletedId === footerId) {
+          if (deletedId === id) {
             unsubscribe();
             resolve(message.data);
           }
@@ -161,14 +147,14 @@ export const useDeleteFooterMutation = () => {
 
         sendMessage({
           action: "delete_footer",
-          id: footerId,
+          id: id,
         });
       });
     },
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
       queryClient.setQueryData(FOOTER_QUERY_KEY, null);
-      toast.success(data.message || "Footer deleted successfully");
+      toast.success("Footer deleted successfully");
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to delete footer");
