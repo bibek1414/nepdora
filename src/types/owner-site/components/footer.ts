@@ -62,7 +62,7 @@ export interface GetFooterResponse {
 
 export interface CreateFooterRequest {
   content: string;
-  footerData: FooterData;
+  data: FooterData;
   component_id: string;
 }
 
@@ -74,7 +74,7 @@ export interface CreateFooterResponse {
 export interface UpdateFooterRequest {
   id: string;
   content?: string;
-  footerData?: Partial<FooterData>;
+  data?: Partial<FooterData>;
 }
 
 export interface UpdateFooterResponse {

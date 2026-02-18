@@ -196,6 +196,7 @@ export async function proxy(request: NextRequest) {
       pathname.startsWith("/preview") ||
       pathname.startsWith("/location") ||
       pathname.startsWith("/on-boarding") ||
+      pathname.startsWith("/websocket-worker.js") ||
       pathname.startsWith("/subscription")
     ) {
       return NextResponse.next();

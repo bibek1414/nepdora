@@ -56,7 +56,7 @@ export const useNavbarApi = {
       body: JSON.stringify({
         component_id: data.component_id,
         content: data.content,
-        data: data.navbarData,
+        data: data.data,
       }),
     });
 
@@ -78,7 +78,7 @@ export const useNavbarApi = {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify({
-        data: data.navbarData,
+        data: data.data,
       }),
     });
 
@@ -117,7 +117,7 @@ export const useNavbarApi = {
       body: JSON.stringify({
         component_id: data.component_id,
         content: data.content,
-        data: data.navbarData,
+        data: data.data,
       }),
     });
 

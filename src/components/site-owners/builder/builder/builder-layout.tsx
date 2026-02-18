@@ -84,7 +84,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     data: pageComponentsResponse,
     isLoading: isPageComponentsLoading,
     error: pageComponentsError,
-  } = usePageComponentsQuery(pageSlug);
+  } = usePageComponentsQuery(pageSlug, "preview");
 
   const [droppedComponents, setDroppedComponents] = useState<
     ComponentResponse[]
@@ -100,21 +100,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const pageComponents = React.useMemo(() => {
     if (!pageComponentsResponse) return [];
 
-    let components: ComponentResponse[] = [];
-
-    if (Array.isArray(pageComponentsResponse)) {
-      components = pageComponentsResponse as ComponentResponse[];
-    } else {
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const apiResponse = pageComponentsResponse as any;
-      if (Array.isArray(apiResponse.data)) {
-        components = apiResponse.data;
-      } else if (Array.isArray(apiResponse.components)) {
-        components = apiResponse.components;
-      } else {
-        return [];
-      }
-    }
+    const components = Array.isArray(pageComponentsResponse)
+      ? (pageComponentsResponse as unknown as ComponentResponse[])
+      : [];
 
     const filteredComponents = components.filter(
       (component: ComponentResponse) => {
@@ -123,6 +111,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           Object.keys(COMPONENT_REGISTRY).includes(component.component_type);
         const hasValidData = component && component.data;
         const hasValidId = component && typeof component.id !== "undefined";
+
         return hasValidType && hasValidData && hasValidId;
       }
     );
@@ -295,7 +284,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleNavbarSelectFromDialog = (navbarData: NavbarData) => {
     const payload = {
       content: "navbar content",
-      navbarData: navbarData,
+      data: navbarData,
       component_id: `nav-${Date.now()}`,
     };
 
@@ -324,7 +313,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const handleNavbarTemplateSelect = (templateData: NavbarData) => {
     const payload = {
       content: "navbar content",
-      navbarData: templateData,
+      data: templateData,
       component_id: `nav-${Date.now()}`,
     };
 
@@ -354,7 +343,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   ) => {
     const payload = {
       content: "footer content",
-      footerData: {
+      data: {
         style: footerStyle,
         logoText: "Your Brand",
         logoType: "text" as "text" | "image" | "both",

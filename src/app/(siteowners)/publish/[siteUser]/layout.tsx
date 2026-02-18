@@ -6,6 +6,8 @@ import { DynamicFavicon } from "@/components/site-owners/admin/favicon/dynamic-f
 import { GoogleAnalytics } from "@/components/site-owners/admin/google-analytics/google-analytics";
 import { generatePublishPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
+import { WebsiteSocketProvider } from "@/providers/website-socket-provider";
+
 interface PublishLayoutProps {
   children: React.ReactNode;
   params: Promise<{ siteUser: string }>;
@@ -33,11 +35,13 @@ export default async function PublishLayout({
     <>
       <DynamicFavicon />
       <GoogleAnalytics />
-      <DynamicFontProvider>
-        <SiteLayoutWrapper siteUser={siteUser}>{children}</SiteLayoutWrapper>
-        <WhatsApp />
-        <PopupManager />
-      </DynamicFontProvider>
+      <WebsiteSocketProvider schema_name={siteUser}>
+        <DynamicFontProvider>
+          <SiteLayoutWrapper siteUser={siteUser}>{children}</SiteLayoutWrapper>
+          <WhatsApp />
+          <PopupManager />
+        </DynamicFontProvider>
+      </WebsiteSocketProvider>
     </>
   );
 }

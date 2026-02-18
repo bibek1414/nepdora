@@ -5,6 +5,7 @@ import {
   UpdateThemeRequest,
 } from "@/types/owner-site/components/theme";
 import { toast } from "sonner";
+import { useWebsiteSocketContext } from "@/providers/website-socket-provider";
 
 const THEME_QUERY_KEY = ["themes"];
 
@@ -27,15 +28,27 @@ export const useThemeQueryPublished = () => {
 };
 
 export const useCreateThemeMutation = () => {
-  const queryClient = useQueryClient();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
 
   return useMutation({
-    mutationFn: (data: CreateThemeRequest) => useThemeApi.createTheme(data),
-    onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: THEME_QUERY_KEY });
-      toast.success(data.message);
+    mutationFn: async (data: CreateThemeRequest) => {
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("theme_updated", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
+
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "update_theme",
+          ...data,
+        });
+      });
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onSuccess: data => {
+      toast.success("Theme created successfully");
+    },
     onError: (error: any) => {
       toast.error(error.message || "Failed to create theme");
     },
@@ -43,15 +56,27 @@ export const useCreateThemeMutation = () => {
 };
 
 export const useUpdateThemeMutation = () => {
-  const queryClient = useQueryClient();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
 
   return useMutation({
-    mutationFn: (data: UpdateThemeRequest) => useThemeApi.updateTheme(data),
-    onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: THEME_QUERY_KEY });
-      toast.success(data.message);
+    mutationFn: async (data: UpdateThemeRequest) => {
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("theme_updated", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
+
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "update_theme",
+          ...data,
+        });
+      });
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onSuccess: data => {
+      toast.success("Theme updated successfully");
+    },
     onError: (error: any) => {
       toast.error(error.message || "Failed to update theme");
     },

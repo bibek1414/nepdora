@@ -107,7 +107,8 @@ export function FooterStyle4({
   const pathname = usePathname();
 
   const handleDelete = () => {
-    deleteFooterMutation.mutate();
+    const footerId = (data as any)?.id || (data as any)?.data?.id;
+    deleteFooterMutation.mutate(footerId || "");
   };
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {

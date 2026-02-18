@@ -5,68 +5,98 @@ import {
   UpdateFooterRequest,
 } from "@/types/owner-site/components/footer";
 import { toast } from "sonner";
+import { useWebsiteSocketContext } from "@/providers/website-socket-provider";
 
 const FOOTER_QUERY_KEY = ["footer"];
 
 export const useFooterQuery = () => {
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
   return useQuery({
     queryKey: FOOTER_QUERY_KEY,
-    queryFn: useFooterApi.getFooter,
+    queryFn: () => {
+      return new Promise<any>((resolve, reject) => {
+        const unsubscribe = subscribe("footer", message => {
+          unsubscribe();
+          resolve({
+            data: message.data || null,
+            message: message.data ? "Footer retrieved" : "No footer found",
+          });
+        });
+
+        setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for footer"));
+        }, 10000);
+
+        sendMessage({
+          action: "get_footer",
+          status: "preview",
+        });
+      });
+    },
     staleTime: 5 * 60 * 1000,
     retry: 2,
   });
 };
 
 export const useFooterQueryPublished = () => {
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
   return useQuery({
-    queryKey: FOOTER_QUERY_KEY,
-    queryFn: useFooterApi.getFooterPublished,
+    queryKey: [...FOOTER_QUERY_KEY, "published"],
+    queryFn: () => {
+      return new Promise<any>((resolve, reject) => {
+        const unsubscribe = subscribe("footer", message => {
+          unsubscribe();
+          resolve({
+            data: message.data || null,
+            message: message.data ? "Footer retrieved" : "No footer found",
+          });
+        });
+
+        setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for published footer"));
+        }, 10000);
+
+        sendMessage({
+          action: "get_footer",
+          status: "published",
+        });
+      });
+    },
     staleTime: 5 * 60 * 1000,
     retry: 2,
   });
 };
 
 export const useCreateFooterMutation = () => {
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateFooterRequest) => {
-      // First, fetch existing footer to get its ID
-      let existingFooter;
-      try {
-        existingFooter = await useFooterApi.getFooter();
-      } catch (error) {
-        // No existing footer, proceed with creation
-        existingFooter = null;
-      }
+      return new Promise<any>((resolve, reject) => {
+        const unsubscribe = subscribe("footer_created", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
 
-      // If footer exists, delete it first
-      if (existingFooter?.data?.id) {
-        try {
-          await useFooterApi.deleteFooter(existingFooter.data.id);
-          // Wait briefly to ensure deletion completes
-          await new Promise(resolve => setTimeout(resolve, 300));
-          toast.info("Previous footer replaced with new design");
-        } catch (deleteError) {
-          console.error("Failed to delete existing footer:", deleteError);
-          throw new Error("Failed to replace existing footer");
-        }
-      }
+        setTimeout(() => unsubscribe(), 10000);
 
-      // Now create the new footer
-      return await useFooterApi.createFooter(data);
+        sendMessage({
+          action: "create_footer",
+          ...data,
+        });
+      });
     },
     onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
-      toast.success(data.message || "Footer created successfully");
+      toast.success("Footer created successfully");
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       const errorMessage =
         error?.data?.detail ||
         error?.detail ||
         error?.message ||
-        error?.response?.data?.detail ||
         "Failed to create footer";
       toast.error(errorMessage);
     },
@@ -74,26 +104,31 @@ export const useCreateFooterMutation = () => {
 };
 
 export const useUpdateFooterMutation = () => {
-  const queryClient = useQueryClient();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
 
   return useMutation({
     mutationFn: async (data: UpdateFooterRequest) => {
-      console.log("🔧 UPDATE FOOTER MUTATION CALLED:", data);
-
       if (!data.id) {
         throw new Error("Footer ID is required for update");
       }
 
-      const result = await useFooterApi.updateFooter(data);
-      console.log("✅ UPDATE RESPONSE:", result);
-      return result;
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("footer_updated", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
+
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "update_footer",
+          ...data,
+        });
+      });
     },
     onSuccess: data => {
-      console.log("🎉 UPDATE SUCCESS:", data);
-      queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
-      toast.success(data.message || "Footer updated successfully");
+      toast.success("Footer updated successfully");
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       console.error("❌ UPDATE ERROR:", error);
       toast.error(error.message || "Failed to update footer");
@@ -102,11 +137,11 @@ export const useUpdateFooterMutation = () => {
 };
 
 export const useDeleteFooterMutation = () => {
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
-      // Get footer from API (not cache) to ensure we have the latest
+    mutationFn: async (id: string) => {
       const existingFooter = await useFooterApi.getFooter();
       const footerId = existingFooter?.data?.id;
 
@@ -114,14 +149,27 @@ export const useDeleteFooterMutation = () => {
         throw new Error("No footer found to delete");
       }
 
-      return useFooterApi.deleteFooter(footerId);
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("footer_deleted", message => {
+          const deletedId = message.id || message.data?.id;
+          if (deletedId === footerId) {
+            unsubscribe();
+            resolve(message.data);
+          }
+        });
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "delete_footer",
+          id: footerId,
+        });
+      });
     },
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
       queryClient.setQueryData(FOOTER_QUERY_KEY, null);
       toast.success(data.message || "Footer deleted successfully");
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error.message || "Failed to delete footer");
     },
@@ -129,15 +177,26 @@ export const useDeleteFooterMutation = () => {
 };
 
 export const useReplaceFooterMutation = () => {
-  const queryClient = useQueryClient();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
 
   return useMutation({
-    mutationFn: (data: CreateFooterRequest) => useFooterApi.replaceFooter(data),
-    onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: FOOTER_QUERY_KEY });
-      toast.success(data.message || "Footer replaced successfully");
+    mutationFn: async (data: CreateFooterRequest) => {
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("footer_replaced", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "replace_footer",
+          ...data,
+        });
+      });
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onSuccess: data => {
+      toast.success("Footer replaced successfully");
+    },
     onError: (error: any) => {
       toast.error(error.message || "Failed to replace footer");
     },

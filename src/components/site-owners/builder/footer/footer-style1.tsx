@@ -115,10 +115,6 @@ export function FooterStyle1({
 
   // Function to generate the correct href for links
 
-  const handleDelete = () => {
-    deleteFooterMutation.mutate();
-  };
-
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

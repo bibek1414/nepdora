@@ -43,7 +43,7 @@ export interface GetNavbarResponse {
 
 export interface CreateNavbarRequest {
   content: string;
-  navbarData: NavbarData;
+  data: NavbarData;
   component_id: string;
 }
 
@@ -55,7 +55,7 @@ export interface CreateNavbarResponse {
 export interface UpdateNavbarRequest {
   id: string;
   content?: string;
-  navbarData?: Partial<NavbarData>;
+  data?: Partial<NavbarData>;
 }
 
 export interface UpdateNavbarResponse {

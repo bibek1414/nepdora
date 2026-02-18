@@ -115,10 +115,6 @@ export function FooterStyle2({
   const createNewsletterMutation = useCreateNewsletter();
   const pathname = usePathname();
 
-  const handleDelete = () => {
-    deleteFooterMutation.mutate();
-  };
-
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

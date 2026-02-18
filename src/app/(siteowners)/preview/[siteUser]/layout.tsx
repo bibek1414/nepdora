@@ -7,6 +7,8 @@ import { GoogleAnalytics } from "@/components/site-owners/admin/google-analytics
 import { generatePreviewPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 
+import { WebsiteSocketProvider } from "@/providers/website-socket-provider";
+
 interface PreviewLayoutProps {
   children: React.ReactNode;
   params: Promise<{ siteUser: string }>;
@@ -35,11 +37,13 @@ export default async function PreviewLayout({
     <>
       <DynamicFavicon />
       <GoogleAnalytics />
-      <DynamicFontProvider>
-        <SiteLayoutWrapper siteUser={siteUser}>{children}</SiteLayoutWrapper>
-        <WhatsApp />
-        <PopupManager />
-      </DynamicFontProvider>
+      <WebsiteSocketProvider schema_name={siteUser}>
+        <DynamicFontProvider>
+          <SiteLayoutWrapper siteUser={siteUser}>{children}</SiteLayoutWrapper>
+          <WhatsApp />
+          <PopupManager />
+        </DynamicFontProvider>
+      </WebsiteSocketProvider>
     </>
   );
 }

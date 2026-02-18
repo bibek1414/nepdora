@@ -201,14 +201,14 @@ export function Footer({
       if (footerIdToUse) {
         const result = await updateFooterMutation.mutateAsync({
           id: footerIdToUse,
-          footerData: newData,
+          data: newData,
         });
         if (result?.data?.data) setCurrentFooterData(result.data.data);
       } else {
         const result = await createFooterMutation.mutateAsync({
           component_id: componentId,
           content: "",
-          footerData: newData,
+          data: newData,
         });
         if (result?.data) {
           setCurrentFooterData(result.data.data);
@@ -223,7 +223,9 @@ export function Footer({
   };
 
   const handleConfirmDelete = () => {
-    deleteFooterMutation.mutate();
+    const footerIdToUse =
+      existingFooterId || footerId || existingFooter?.data?.id;
+    deleteFooterMutation.mutate(footerIdToUse || "");
     setIsDeleteDialogOpen(false);
   };
 

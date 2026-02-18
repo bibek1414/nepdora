@@ -144,7 +144,8 @@ export function FooterStyle7({
   // Function to generate the correct href for links
 
   const handleDelete = () => {
-    deleteFooterMutation.mutate();
+    const footerId = (data as any)?.id || (data as any)?.data?.id;
+    deleteFooterMutation.mutate(footerId || "");
   };
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
