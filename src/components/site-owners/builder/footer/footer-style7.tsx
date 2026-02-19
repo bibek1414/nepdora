@@ -10,7 +10,6 @@ import {
   Send,
 } from "lucide-react";
 import { FooterData } from "@/types/owner-site/components/footer";
-import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import { EditableText } from "@/components/ui/editable-text";
@@ -63,7 +62,6 @@ export function FooterStyle7({
   >("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const deleteFooterMutation = useDeleteFooterMutation();
   const createNewsletterMutation = useCreateNewsletter();
 
   // Get colors from theme with fallbacks
@@ -71,7 +69,6 @@ export function FooterStyle7({
   const secondaryColor = theme.colors?.secondary || "#F59E0B";
   const primaryForeground = theme.colors?.primaryForeground || "#FFFFFF";
   const secondaryForeground = theme.colors?.secondaryForeground || "#1F2937";
-  const backgroundColor = theme.colors?.background || "#FFFFFF";
 
   // Extended FooterData with CTA fields
   type ExtendedFooterData = FooterData & {
@@ -88,11 +85,6 @@ export function FooterStyle7({
   const pathname = usePathname();
 
   // Function to generate the correct href for links
-
-  const handleDelete = () => {
-    const footerId = (data as any)?.id || (data as any)?.data?.id;
-    deleteFooterMutation.mutate(footerId || "");
-  };
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

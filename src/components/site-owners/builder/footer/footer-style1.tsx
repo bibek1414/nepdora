@@ -10,7 +10,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { FooterData } from "@/types/owner-site/components/footer";
-import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import Link from "next/link";
@@ -57,7 +56,6 @@ export function FooterStyle1({
   >("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const deleteFooterMutation = useDeleteFooterMutation();
   const createNewsletterMutation = useCreateNewsletter();
   const pathname = usePathname();
 

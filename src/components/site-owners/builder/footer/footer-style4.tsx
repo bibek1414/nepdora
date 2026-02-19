@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Phone, MapPin, CheckCircle, AlertCircle } from "lucide-react";
 import { FooterData } from "@/types/owner-site/components/footer";
-import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import Link from "next/link";
@@ -50,14 +49,8 @@ export function FooterStyle4({
   >("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const deleteFooterMutation = useDeleteFooterMutation();
   const createNewsletterMutation = useCreateNewsletter();
   const pathname = usePathname();
-
-  const handleDelete = () => {
-    const footerId = (data as any)?.id || (data as any)?.data?.id;
-    deleteFooterMutation.mutate(footerId || "");
-  };
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
