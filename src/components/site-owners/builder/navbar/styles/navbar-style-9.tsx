@@ -12,7 +12,6 @@ import {
   NavbarLink,
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
-import { getButtonVariant } from "@/lib/utils";
 import { Edit, Trash2, Menu, X, Search, ShoppingCart } from "lucide-react";
 import { NavbarLogo } from "../navbar-logo";
 import Link from "next/link";

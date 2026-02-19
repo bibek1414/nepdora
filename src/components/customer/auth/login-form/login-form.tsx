@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/site-owners/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/customer/use-auth";
@@ -20,6 +20,7 @@ export function LoginForm({
   const [loginError, setLoginError] = useState<string | null>(null);
   const [attemptCount, setAttemptCount] = useState(0);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: themeResponse } = useThemeQuery();
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -145,10 +146,30 @@ export function LoginForm({
 
     // Extract siteUser from the current pathname
     const pathSegments = window.location.pathname.split("/");
-    // For path like "/preview/41/login", siteUser is at index 2
-    const siteUser = pathSegments[2] || "guest";
+    const isPreview = window.location.pathname.startsWith("/preview");
+    const isPublish = window.location.pathname.startsWith("/publish");
 
-    router.push(`/preview/${siteUser}/signup`);
+    let siteUser = null;
+    if (isPreview) {
+      siteUser = pathSegments[2];
+    } else if (isPublish) {
+      siteUser = pathSegments[2];
+    }
+
+    const redirect = searchParams.get("redirect");
+    let signupPath = "/signup";
+
+    if (isPreview && siteUser) {
+      signupPath = `/preview/${siteUser}/signup`;
+    } else if (isPublish && siteUser) {
+      signupPath = `/signup`;
+    }
+
+    if (redirect) {
+      signupPath += `?redirect=${encodeURIComponent(redirect)}`;
+    }
+
+    router.push(signupPath);
   };
 
   // Show additional security message after multiple failed attempts

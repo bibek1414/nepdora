@@ -19,6 +19,7 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
+import { FooterLogo } from "./shared/footer-logo";
 
 interface FooterStyle7Props {
   footerData: FooterData;
@@ -27,61 +28,6 @@ interface FooterStyle7Props {
   onUpdate?: (updatedData: Partial<FooterData>) => void;
   siteUser?: string;
 }
-
-// Logo component
-const FooterLogo = ({
-  footerData,
-  getImageUrl,
-}: {
-  footerData: FooterData;
-  getImageUrl: any;
-}) => {
-  const { logoType, logoImage, logoText, companyName } = footerData;
-
-  if (logoType === "text") {
-    return (
-      <div className="flex items-center">
-        <span className="text-base font-bold text-white sm:text-lg md:text-xl">
-          {logoText || companyName}
-        </span>
-      </div>
-    );
-  }
-
-  if (logoType === "image") {
-    return logoImage ? (
-      <div className="flex items-center">
-        <img
-          src={getImageUrl(logoImage)}
-          alt={companyName}
-          className="h-6 w-auto object-contain sm:h-7 md:h-8"
-        />
-      </div>
-    ) : (
-      <div className="flex items-center">
-        <span className="text-base font-bold text-white sm:text-lg md:text-xl">
-          {companyName}
-        </span>
-      </div>
-    );
-  }
-
-  // logoType === "both"
-  return (
-    <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
-      {logoImage && (
-        <img
-          src={getImageUrl(logoImage)}
-          alt={companyName}
-          className="h-6 w-auto object-contain sm:h-7 md:h-8"
-        />
-      )}
-      <span className="text-base font-bold text-white sm:text-lg md:text-xl">
-        {logoText || companyName}
-      </span>
-    </div>
-  );
-};
 
 export function FooterStyle7({
   footerData,
@@ -300,7 +246,11 @@ export function FooterStyle7({
                   className="-rotate-45 fill-current sm:h-5 sm:w-5 md:h-5 md:w-5"
                 />
               </div>
-              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
+              <FooterLogo
+                footerData={data}
+                getImageUrl={getImageUrl}
+                textClassName="text-white"
+              />
             </div>
             <p className="text-xs leading-relaxed text-white sm:text-sm">
               {data.description}
@@ -379,12 +329,6 @@ export function FooterStyle7({
                 <li
                   key={link.id}
                   className="flex cursor-pointer items-center gap-2 text-white/90 transition-colors hover:text-white"
-                  // style={
-                  //   {
-                  //     color: `${primaryForeground}80`,
-                  //     "--hover-color": primaryForeground,
-                  //   } as React.CSSProperties
-                  // }
                 >
                   <span style={{ color: secondaryColor }}>&gt;</span>
                   <Link
@@ -492,32 +436,6 @@ export function FooterStyle7({
             ))}
           </div>
         </div>
-
-        {/* Edit/Delete buttons for editable mode */}
-        {isEditable && (
-          <div className="absolute top-4 right-4 flex gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={onEditClick}
-              className="border-0 text-white hover:bg-white/20"
-              style={{ backgroundColor: `${primaryForeground}20` }}
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              Edit
-            </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleDelete}
-              disabled={deleteFooterMutation.isPending}
-              className="border-0 bg-red-500/80 hover:bg-red-600"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              {deleteFooterMutation.isPending ? "Deleting..." : "Delete"}
-            </Button>
-          </div>
-        )}
       </footer>
     </div>
   );

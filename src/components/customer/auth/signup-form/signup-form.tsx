@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/customer/use-auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signupSchema, SignupFormValues } from "@/schemas/customer/signup.form";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
@@ -17,6 +17,7 @@ export function SignupForm({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const { signup, isLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: themeResponse } = useThemeQuery();
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -60,9 +61,30 @@ export function SignupForm({
 
     // Extract siteUser from the current pathname
     const pathSegments = window.location.pathname.split("/");
-    const siteUser = pathSegments[2] || "guest";
+    const isPreview = window.location.pathname.startsWith("/preview");
+    const isPublish = window.location.pathname.startsWith("/publish");
 
-    router.push(`/preview/${siteUser}/login`);
+    let siteUser = null;
+    if (isPreview) {
+      siteUser = pathSegments[2];
+    } else if (isPublish) {
+      siteUser = pathSegments[2];
+    }
+
+    const redirect = searchParams.get("redirect");
+    let loginPath = "/login";
+
+    if (isPreview && siteUser) {
+      loginPath = `/preview/${siteUser}/login`;
+    } else if (isPublish && siteUser) {
+      loginPath = `/login`;
+    }
+
+    if (redirect) {
+      loginPath += `?redirect=${encodeURIComponent(redirect)}`;
+    }
+
+    router.push(loginPath);
   };
 
   return (

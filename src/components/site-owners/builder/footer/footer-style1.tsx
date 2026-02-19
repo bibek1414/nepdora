@@ -18,6 +18,7 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
+import { FooterLogo } from "./shared/footer-logo";
 
 interface FooterStyle1Props {
   footerData: FooterData;
@@ -25,59 +26,6 @@ interface FooterStyle1Props {
   onEditClick?: () => void;
   siteUser?: string;
 }
-
-// Logo component
-const FooterLogo = ({
-  footerData,
-  getImageUrl,
-}: {
-  footerData: FooterData;
-  getImageUrl: any;
-}) => {
-  const { logoType, logoImage, logoText, companyName } = footerData;
-
-  if (logoType === "text") {
-    return (
-      <div className="flex items-center">
-        <span className="text-foreground text-xl font-bold">
-          {logoText || companyName}
-        </span>
-      </div>
-    );
-  }
-
-  if (logoType === "image") {
-    return logoImage ? (
-      <div className="flex items-center">
-        <img
-          src={getImageUrl(logoImage)}
-          alt={companyName}
-          className="h-8 w-auto object-contain"
-        />
-      </div>
-    ) : (
-      <div className="flex items-center">
-        <span className="text-foreground text-xl font-bold">{companyName}</span>
-      </div>
-    );
-  }
-
-  // logoType === "both"
-  return (
-    <div className="flex items-center gap-3">
-      {logoImage && (
-        <img
-          src={getImageUrl(logoImage)}
-          alt={companyName}
-          className="h-8 w-auto object-contain"
-        />
-      )}
-      <span className="text-foreground text-xl font-bold">
-        {logoText || companyName}
-      </span>
-    </div>
-  );
-};
 
 export function FooterStyle1({
   footerData,
@@ -163,7 +111,13 @@ export function FooterStyle1({
             <div className="lg:col-span-2">
               {/* Logo */}
               <div className="mb-4">
-                <FooterLogo footerData={data} getImageUrl={getImageUrl} />
+                <FooterLogo
+                  footerData={data}
+                  getImageUrl={getImageUrl}
+                  textClassName="text-foreground text-xl"
+                  imageClassName="h-8"
+                  containerClassName="gap-3"
+                />
               </div>
 
               <p className="text-muted-foreground mb-6 max-w-md">

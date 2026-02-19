@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useEffect, ReactNode } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import {
   User,
@@ -33,6 +33,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const storedTokens = localStorage.getItem("customer-authTokens");
@@ -179,8 +180,26 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
         routePrefix = ``;
       }
 
-      if (siteUser) router.push(`${routePrefix}/home`);
-      else router.push("/");
+      const redirect = searchParams.get("redirect");
+
+      if (redirect) {
+        // Handle redirect from query parameter
+        let redirectPath = redirect.startsWith("/") ? redirect : `/${redirect}`;
+
+        if (isPreview && siteUser) {
+          if (!redirectPath.startsWith(`/preview/${siteUser}`)) {
+            redirectPath = `/preview/${siteUser}${redirectPath}`;
+          }
+        } else if (isPublish && siteUser) {
+          // In publish mode, siteUser is usually the domain, so we just use the relative path
+        }
+
+        router.push(redirectPath);
+      } else if (siteUser) {
+        router.push(`${routePrefix}/home`);
+      } else {
+        router.push("/");
+      }
     } catch (error: any) {
       toast.error(getErrorMessage(error));
       throw error;
@@ -214,12 +233,18 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
           siteUser = pathSegments[publishIndex + 1];
       }
 
+      const redirect = searchParams.get("redirect");
       let loginPath = "/login";
       if (isPreview && siteUser) {
         loginPath = `/preview/${siteUser}/login`;
       } else if (isPublish && siteUser) {
         loginPath = `/login`;
       }
+
+      if (redirect) {
+        loginPath += `?redirect=${encodeURIComponent(redirect)}`;
+      }
+
       router.push(loginPath);
     } catch (error: any) {
       toast.error(getErrorMessage(error));

@@ -94,7 +94,6 @@ function Button({
         return {
           ...baseStyles,
           backgroundColor: "transparent",
-          color: theme.colors.text,
         };
       case "navigation":
         return {
@@ -145,9 +144,9 @@ function Button({
         } as React.CSSProperties;
       case "ghost":
         return {
-          "--hover-bg": `${theme.colors.primary}1a`,
-          "--hover-color": theme.colors.text,
+          "--hover-bg": "#f9fafb",
         } as React.CSSProperties;
+
       case "navigation":
         return {} as React.CSSProperties;
       default:

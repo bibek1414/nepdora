@@ -31,18 +31,38 @@ export const generateLinkHref = (
     }
   }
 
+  let finalHref = "";
   if (isPreviewMode && siteUser) {
-    return isHomePage
+    finalHref = isHomePage
       ? `/preview/${siteUser}`
       : `/preview/${siteUser}/${cleanHref}`;
+  } else if (isPublishMode && siteUser) {
+    finalHref = isHomePage ? `/` : `/${cleanHref}`;
+  } else {
+    finalHref = isHomePage ? "/" : `/${cleanHref}`;
   }
 
-  if (isPublishMode && siteUser) {
-    return isHomePage ? `/` : `/${cleanHref}`;
+  // Add redirect parameter for login links
+  if (cleanHref === "login" && pathname) {
+    const pathSegments = pathname.split("/").filter(Boolean);
+    let slug = "";
+
+    if (isPreviewMode) {
+      // Expected pathname: /preview/{siteUser}/{slug}
+      // pathSegments: ['preview', siteUser, ...slugParts]
+      slug = pathSegments.slice(2).join("/") || "home";
+    } else if (isPublishMode) {
+      // Expected pathname: /{slug}
+      slug = pathSegments.join("/") || "home";
+    }
+
+    if (slug && slug !== "login" && slug !== "signup") {
+      const separator = finalHref.includes("?") ? "&" : "?";
+      finalHref = `${finalHref}${separator}redirect=${encodeURIComponent(slug)}`;
+    }
   }
 
-  // Published mode on custom domain or fallback
-  return isHomePage ? "/" : `/${cleanHref}`;
+  return finalHref;
 };
 
 export const getLinkPrefix = (

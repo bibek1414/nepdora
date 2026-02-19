@@ -20,7 +20,6 @@ import {
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableText } from "@/components/ui/navbar/editable-text";
 import { SearchBar } from "@/components/site-owners/builder/search-bar/search-bar";
 import { EditableLink } from "@/components/ui/navbar/editable-link";
@@ -67,10 +66,6 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
   onEditLogo,
   onAddLink,
   onEditLink,
-  onDeleteLink,
-  onAddButton,
-  onEditButton,
-  onDeleteButton,
   onEditCart,
   disableClicks = false,
   onUpdateTopBar,
@@ -103,22 +98,6 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
       setTopBarItems(initialTopBarItems);
     }
   }, [initialTopBarItems]);
-
-  const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const toggleCart = () => {
     if (disableClicks) return;

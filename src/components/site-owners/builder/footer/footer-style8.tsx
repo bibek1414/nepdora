@@ -7,6 +7,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { SocialIcon } from "./shared/social-icon";
+import { FooterLogo } from "./shared/footer-logo";
 
 interface FooterStyle8Props {
   footerData: FooterData;
@@ -14,53 +15,6 @@ interface FooterStyle8Props {
   onEditClick?: () => void;
   siteUser?: string;
 }
-
-const FooterLogo = ({
-  footerData,
-  getImageUrl,
-}: {
-  footerData: FooterData;
-  getImageUrl: any;
-}) => {
-  const { logoType, logoImage, logoText, companyName } = footerData;
-
-  if (logoType === "text") {
-    return (
-      <span className="text-vistara-accent text-2xl font-semibold tracking-tight">
-        {logoText || companyName}
-      </span>
-    );
-  }
-
-  if (logoType === "image") {
-    return logoImage ? (
-      <img
-        src={getImageUrl(logoImage)}
-        alt={companyName}
-        className="h-8 w-auto object-contain"
-      />
-    ) : (
-      <span className="text-vistara-accent text-2xl font-semibold tracking-tight">
-        {companyName}
-      </span>
-    );
-  }
-
-  return (
-    <div className="flex items-center gap-3">
-      {logoImage && (
-        <img
-          src={getImageUrl(logoImage)}
-          alt={companyName}
-          className="h-8 w-auto object-contain"
-        />
-      )}
-      <span className="text-vistara-accent text-2xl font-semibold tracking-tight">
-        {logoText || companyName}
-      </span>
-    </div>
-  );
-};
 
 export function FooterStyle8({
   footerData,
@@ -98,7 +52,13 @@ export function FooterStyle8({
           {/* Column 1: Brand Info */}
           <div className="w-full border-b border-gray-800 p-8 lg:w-[40%] lg:border-r lg:border-b-0 lg:p-16">
             <div className="mb-6 flex items-center gap-3">
-              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
+              <FooterLogo
+                footerData={data}
+                getImageUrl={getImageUrl}
+                textClassName="text-vistara-accent text-2xl font-semibold tracking-tight"
+                imageClassName="h-8"
+                containerClassName="gap-3"
+              />
             </div>
             <p className="max-w-md text-lg leading-relaxed text-gray-400">
               {data.description}

@@ -35,7 +35,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SearchBar } from "@/components/site-owners/builder/search-bar/search-bar";
 import { useRouter } from "next/navigation";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
@@ -80,22 +79,6 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
 
   const { data: wishlistData } = useWishlist();
   const wishlistCount = wishlistData?.length || 0;
-
-  const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const { data: categoriesData } = useCategories();
   const { data: subCategoriesData } = useSubCategories();

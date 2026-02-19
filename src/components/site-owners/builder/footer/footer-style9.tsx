@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { SocialIcon } from "./shared/social-icon";
+import { FooterLogo } from "./shared/footer-logo";
 
 interface FooterStyle9Props {
   footerData: FooterData;
@@ -56,53 +57,6 @@ const LinkItem: React.FC<{
         </Link>
       )}
     </li>
-  );
-};
-
-const FooterLogo = ({
-  footerData,
-  getImageUrl,
-}: {
-  footerData: FooterData;
-  getImageUrl: any;
-}) => {
-  const { logoType, logoImage, logoText, companyName } = footerData;
-
-  if (logoType === "text") {
-    return (
-      <span className="text-2xl font-bold tracking-tight text-white">
-        {logoText || companyName}
-      </span>
-    );
-  }
-
-  if (logoType === "image") {
-    return logoImage ? (
-      <img
-        src={getImageUrl(logoImage)}
-        alt={companyName}
-        className="h-10 w-auto object-contain"
-      />
-    ) : (
-      <span className="text-2xl font-bold tracking-tight text-white">
-        {companyName}
-      </span>
-    );
-  }
-
-  return (
-    <div className="flex items-center gap-3">
-      {logoImage && (
-        <img
-          src={getImageUrl(logoImage)}
-          alt={companyName}
-          className="h-10 w-auto object-contain"
-        />
-      )}
-      <span className="text-2xl font-bold tracking-tight text-white">
-        {logoText || companyName}
-      </span>
-    </div>
   );
 };
 
@@ -241,7 +195,13 @@ export function FooterStyle9({
 
             {/* Logo */}
             <div className="mt-4 cursor-pointer opacity-90 transition-opacity hover:opacity-100">
-              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
+              <FooterLogo
+                footerData={data}
+                getImageUrl={getImageUrl}
+                textClassName="text-white text-2xl tracking-tight font-bold"
+                imageClassName="h-10"
+                containerClassName="gap-3"
+              />
             </div>
 
             {/* Decorative bottom graphic hint */}

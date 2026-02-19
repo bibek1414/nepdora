@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
+import { FooterLogo } from "./shared/footer-logo";
 
 interface FooterStyle3Props {
   footerData: FooterData;
@@ -18,59 +19,6 @@ interface FooterStyle3Props {
   onEditClick?: () => void;
   siteUser?: string;
 }
-
-// Logo component
-const FooterLogo = ({
-  footerData,
-  getImageUrl,
-}: {
-  footerData: FooterData;
-  getImageUrl: any;
-}) => {
-  const { logoType, logoImage, logoText, companyName } = footerData;
-
-  if (logoType === "text") {
-    return (
-      <div className="flex items-center">
-        <span className="text-xl font-bold text-white">
-          {logoText || companyName}
-        </span>
-      </div>
-    );
-  }
-
-  if (logoType === "image") {
-    return logoImage ? (
-      <div className="flex items-center">
-        <img
-          src={getImageUrl(logoImage)}
-          alt={companyName}
-          className="h-8 w-auto object-contain"
-        />
-      </div>
-    ) : (
-      <div className="flex items-center">
-        <span className="text-xl font-bold text-white">{companyName}</span>
-      </div>
-    );
-  }
-
-  // logoType === "both"
-  return (
-    <div className="flex items-center gap-3">
-      {logoImage && (
-        <img
-          src={getImageUrl(logoImage)}
-          alt={companyName}
-          className="h-8 w-auto object-contain"
-        />
-      )}
-      <span className="text-xl font-bold text-white">
-        {logoText || companyName}
-      </span>
-    </div>
-  );
-};
 
 export function FooterStyle3({
   footerData,
@@ -261,7 +209,13 @@ export function FooterStyle3({
           <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 text-sm text-gray-200 md:flex-row">
             {/* Logo and Company Name */}
             <div className="mb-4 flex items-center md:mb-0">
-              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
+              <FooterLogo
+                footerData={data}
+                getImageUrl={getImageUrl}
+                textClassName="text-white text-xl"
+                imageClassName="h-8"
+                containerClassName="gap-3"
+              />
             </div>
 
             {/* Copyright */}

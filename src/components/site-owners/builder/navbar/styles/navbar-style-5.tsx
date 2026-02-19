@@ -9,7 +9,6 @@ import { Edit, Trash2, Menu, Search, ShoppingCart } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableText } from "@/components/ui/navbar/editable-text";
 import {
   Sheet,
@@ -46,10 +45,8 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
   isEditable,
   siteUser,
   onEditLogo,
-  onAddLink,
   onEditLink,
   onDeleteLink,
-  onAddButton,
   onEditButton,
   onDeleteButton,
   onEditCart,
@@ -59,26 +56,9 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
   const { links, buttons, showCart } = navbarData;
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [openPopovers, setOpenPopovers] = useState<Record<string, boolean>>({});
   const [bannerText, setBannerText] = useState(
     navbarData.bannerText || "Get free delivery on orders over $100"
   );
-
-  const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const toggleCart = () => {
     if (disableClicks) return;

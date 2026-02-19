@@ -9,7 +9,6 @@ import { getButtonVariant } from "@/lib/utils";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -40,32 +39,13 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
   isEditable,
   siteUser,
   onEditLogo,
-  onAddLink,
   onEditLink,
   onDeleteLink,
-  onAddButton,
   onEditButton,
   onDeleteButton,
   onEditCart,
-  onToggleCart,
   disableClicks = false,
 }) => {
-  const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
-
   const { data } = useBuilderLogic(navbarData, undefined);
   const { links, buttons, showCart } = data;
   const [isCartOpen, setIsCartOpen] = useState(false);

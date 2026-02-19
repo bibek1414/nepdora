@@ -19,6 +19,7 @@ import {
   useUpdateFooterMutation,
   useDeleteFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { Button } from "@/components/ui/button";
 import { Edit, RefreshCw, Trash2 } from "lucide-react";
 import {
@@ -120,7 +121,24 @@ export function Footer({
   const { mutate: deleteFooter, isPending: isDeleting } =
     useDeleteFooterMutation();
 
-  const footerData = footer.data || defaultFooterData;
+  const { data: siteConfig } = useSiteConfig();
+
+  const footerData = React.useMemo(() => {
+    const rawData = footer.data || defaultFooterData;
+
+    // Fallback to site config for logo and company name if they are missing in the footer data
+    return {
+      ...rawData,
+      companyName:
+        rawData.companyName || siteConfig?.business_name || "Your Company",
+      logoImage: rawData.logoImage || siteConfig?.logo || "",
+      logoText:
+        rawData.logoText ||
+        rawData.companyName ||
+        siteConfig?.business_name ||
+        "",
+    };
+  }, [footer.data, siteConfig]);
 
   const handleSaveFooter = (newData: FooterData) => {
     if (!isEditable) return;

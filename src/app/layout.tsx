@@ -63,27 +63,27 @@ export default function RootLayout({
         <GoogleAnalyticsStatic measurementId="G-1GZLGXVXWT" />
       </head>
       <body className={inter.className}>
-        <AuthProvider>
-          <CustomerAuthProvider>
-            <QueryProvider>
-              <TextSelectionProvider>
-                <CartProvider>
-                  <Suspense fallback={null}>
+        <Suspense fallback={null}>
+          <AuthProvider>
+            <CustomerAuthProvider>
+              <QueryProvider>
+                <TextSelectionProvider>
+                  <CartProvider>
                     <TopLoader />
-                  </Suspense>
-                  {children}
-                  <Analytics />
-                  <Toaster
-                    position="bottom-right"
-                    richColors
-                    closeButton
-                    duration={3000}
-                  />
-                </CartProvider>
-              </TextSelectionProvider>
-            </QueryProvider>
-          </CustomerAuthProvider>
-        </AuthProvider>
+                    {children}
+                    <Analytics />
+                    <Toaster
+                      position="bottom-right"
+                      richColors
+                      closeButton
+                      duration={3000}
+                    />
+                  </CartProvider>
+                </TextSelectionProvider>
+              </QueryProvider>
+            </CustomerAuthProvider>
+          </AuthProvider>
+        </Suspense>
       </body>
     </html>
   );

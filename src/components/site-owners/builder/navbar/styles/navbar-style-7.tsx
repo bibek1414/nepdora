@@ -22,7 +22,6 @@ import {
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableLink } from "@/components/ui/navbar/editable-link";
 import { useAuth } from "@/hooks/customer/use-auth";
 import { useWishlist } from "@/hooks/customer/use-wishlist";
@@ -81,22 +80,6 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
 
   // Fetch site config for social media links
   const { data: siteConfig } = useSiteConfig();
-
-  const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const toggleCart = () => {
     if (disableClicks) return;

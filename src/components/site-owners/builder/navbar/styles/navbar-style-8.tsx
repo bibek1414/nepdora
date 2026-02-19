@@ -7,7 +7,6 @@ import {
 } from "@/types/owner-site/components/navbar";
 import { Facebook, Instagram, Twitter, Linkedin, Youtube } from "lucide-react";
 import { NavbarLogo } from "../navbar-logo";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableLink } from "@/components/ui/navbar/editable-link";
 import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import Link from "next/link";
@@ -49,21 +48,6 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
   // Fetch site config for social media links
   const { data: siteConfig } = useSiteConfig();
 
-  const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
   const pathname = usePathname();
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
