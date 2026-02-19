@@ -27,7 +27,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
   const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
     useBuilderLogic(galleryData, onUpdate);
 
-  const [isUploading, setIsUploading] = useState(false);
+  const [isAddingImage, setIsAddingImage] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
 
   const componentId = React.useId();
@@ -48,8 +48,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleImageFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index?: number
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -60,7 +59,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
       return;
     }
 
-    setIsUploading(true);
+    setIsAddingImage(true);
 
     try {
       const imageUrl = await uploadToCloudinary(file, {
@@ -68,12 +67,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
         resourceType: "image",
       });
 
-      if (index !== undefined) {
-        handleImageUpdateLocal(index, imageUrl, `Gallery image: ${file.name}`);
-      } else {
-        handleAddImage(imageUrl);
-      }
-
+      handleAddImage(imageUrl);
       toast.success("Image uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
@@ -81,7 +75,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
         error instanceof Error ? error.message : "Failed to upload image."
       );
     } finally {
-      setIsUploading(false);
+      setIsAddingImage(false);
       event.target.value = "";
     }
   };
@@ -141,7 +135,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
           {activeImages.map((image, index) => (
             <div
               key={image.id}
-              className="group relative mb-4 break-inside-avoid overflow-hidden rounded-lg bg-gray-100 transition-all hover:shadow-xl"
+              className="relative mb-4 break-inside-avoid overflow-hidden rounded-lg bg-gray-100 transition-all"
             >
               <div className="relative">
                 <EditableImage
@@ -151,32 +145,15 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                     handleImageUpdateLocal(index, imageUrl, altText)
                   }
                   isEditable={isEditable}
-                  className="w-full transition-transform duration-300 group-hover:scale-105"
                   cloudinaryOptions={{
                     folder: "gallery-images",
                     resourceType: "image",
                   }}
                   disableImageChange={true}
                   showAltEditor={isEditable}
+                  inputId={`gallery-upload-${componentId}-${index}`}
                 />
 
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <div className="flex h-full items-center justify-center">
-                    {!isEditable && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-white hover:bg-white/20"
-                        onClick={() => setSelectedImage(image)}
-                      >
-                        <ZoomIn className="h-6 w-6" />
-                      </Button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Edit Controls */}
                 {isEditable && (
                   <div className="absolute top-2 right-2 z-10 flex gap-2">
                     <label
@@ -185,17 +162,13 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                     >
                       Change
                     </label>
-                    <input
-                      id={`gallery-upload-${componentId}-${index}`}
-                      type="file"
-                      accept="image/*"
-                      onChange={e => handleImageFileChange(e, index)}
-                      className="hidden"
-                    />
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => handleRemoveImage(index)}
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleRemoveImage(index);
+                      }}
                       className="h-6 px-2"
                     >
                       <X className="h-3 w-3" />
@@ -226,15 +199,24 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
               htmlFor={`gallery-add-${componentId}`}
               className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-2 hover:bg-gray-100"
             >
-              <Plus className="h-5 w-5 text-gray-400" />
-              <span className="text-sm text-gray-600">Add Image</span>
-              <input
-                id={`gallery-add-${componentId}`}
-                type="file"
-                accept="image/*"
-                onChange={e => handleImageFileChange(e)}
-                className="hidden"
-              />
+              {isAddingImage ? (
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <span className="text-sm font-medium">Uploading...</span>
+                </div>
+              ) : (
+                <>
+                  <Plus className="h-5 w-5 text-gray-400" />
+                  <span className="text-sm text-gray-600">Add Image</span>
+                  <input
+                    id={`gallery-add-${componentId}`}
+                    type="file"
+                    accept="image/*"
+                    onChange={e => handleImageFileChange(e)}
+                    className="hidden"
+                  />
+                </>
+              )}
             </label>
           </div>
         )}
@@ -265,15 +247,6 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
             <DialogClose className="absolute top-2 right-2" />
           </DialogContent>
         </Dialog>
-      )}
-
-      {isUploading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="flex flex-col items-center gap-2 text-white">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <p className="text-sm font-medium">Uploading image...</p>
-          </div>
-        </div>
       )}
     </div>
   );

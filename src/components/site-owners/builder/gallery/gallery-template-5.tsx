@@ -26,7 +26,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
   const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
     useBuilderLogic(galleryData, onUpdate);
 
-  const [isUploading, setIsUploading] = useState(false);
+  const [isAddingImage, setIsAddingImage] = useState(false);
 
   const componentId = React.useId();
 
@@ -46,8 +46,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleImageFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index?: number
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -58,7 +57,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
       return;
     }
 
-    setIsUploading(true);
+    setIsAddingImage(true);
 
     try {
       const imageUrl = await uploadToCloudinary(file, {
@@ -66,12 +65,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
         resourceType: "image",
       });
 
-      if (index !== undefined) {
-        handleImageUpdateLocal(index, imageUrl, `Gallery image: ${file.name}`);
-      } else {
-        handleAddImage(imageUrl);
-      }
-
+      handleAddImage(imageUrl);
       toast.success("Image uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
@@ -79,7 +73,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
         error instanceof Error ? error.message : "Failed to upload image."
       );
     } finally {
-      setIsUploading(false);
+      setIsAddingImage(false);
       event.target.value = "";
     }
   };
@@ -133,22 +127,13 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
         />
       </p>
 
-      {isUploading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="flex flex-col items-center gap-2 text-white">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <p className="text-sm font-medium">Uploading image...</p>
-          </div>
-        </div>
-      )}
-
       <div className="mx-auto mt-10 flex h-[400px] w-full max-w-4xl items-center gap-2">
         {filteredImages.map((image, index) => {
           const actualIndex = data.images.findIndex(img => img.id === image.id);
           return (
             <div
               key={image.id}
-              className="group relative h-[400px] w-56 flex-grow overflow-hidden rounded-lg transition-all duration-500 hover:w-full"
+              className="group relative h-[400px] w-56 grow overflow-hidden rounded-lg transition-all duration-500 hover:w-full"
             >
               {!isEditable ? (
                 <img
@@ -157,7 +142,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
                   alt={image.image_alt_description}
                 />
               ) : (
-                <div className="h-full w-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-center [&>div]:!relative [&>div]:h-full [&>div]:w-full">
+                <div className="h-full w-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-center [&>div]:relative! [&>div]:h-full [&>div]:w-full">
                   <EditableImage
                     src={getImageUrl(image.image)}
                     alt={image.image_alt_description}
@@ -181,6 +166,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
                     }}
                     disableImageChange={true}
                     showAltEditor={false}
+                    inputId={`gallery5-upload-${componentId}-${actualIndex}`}
                   />
                 </div>
               )}
@@ -192,17 +178,13 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
                   >
                     Change
                   </label>
-                  <input
-                    id={`gallery5-upload-${componentId}-${actualIndex}`}
-                    type="file"
-                    accept="image/*"
-                    onChange={e => handleImageFileChange(e, actualIndex)}
-                    className="hidden"
-                  />
                   <Button
                     size="sm"
                     variant="destructive"
-                    onClick={() => handleRemoveImage(actualIndex)}
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleRemoveImage(actualIndex);
+                    }}
                     className="h-6 px-2"
                   >
                     <X className="h-3 w-3" />
@@ -214,20 +196,29 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
         })}
 
         {isEditable && (
-          <div className="relative flex h-[400px] w-56 flex-grow items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
+          <div className="relative flex h-[400px] w-56 grow items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
             <label
               htmlFor={`gallery5-add-${componentId}`}
               className="flex cursor-pointer flex-col items-center gap-2"
             >
-              <Plus className="h-8 w-8 text-gray-400" />
-              <span className="text-sm text-gray-500">Add Image</span>
-              <input
-                id={`gallery5-add-${componentId}`}
-                type="file"
-                accept="image/*"
-                onChange={e => handleImageFileChange(e)}
-                className="hidden"
-              />
+              {isAddingImage ? (
+                <div className="flex flex-col items-center gap-2 text-gray-500">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                  <span className="text-sm font-medium">Uploading...</span>
+                </div>
+              ) : (
+                <>
+                  <Plus className="h-8 w-8 text-gray-400" />
+                  <span className="text-sm text-gray-500">Add Image</span>
+                  <input
+                    id={`gallery5-add-${componentId}`}
+                    type="file"
+                    accept="image/*"
+                    onChange={e => handleImageFileChange(e)}
+                    className="hidden"
+                  />
+                </>
+              )}
             </label>
           </div>
         )}

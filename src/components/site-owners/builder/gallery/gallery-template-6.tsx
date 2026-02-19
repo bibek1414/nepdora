@@ -8,7 +8,7 @@ import {
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronRight, Loader2, Plus, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Plus, X } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { toast } from "sonner";
 import { uploadToCloudinary } from "@/utils/cloudinary";
@@ -92,7 +92,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
   const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
     useBuilderLogic(buildInitialData(galleryData), onUpdate);
 
-  const [isUploading, setIsUploading] = useState(false);
+  const [isAddingImage, setIsAddingImage] = useState(false);
   const componentId = React.useId();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showRightFade, setShowRightFade] = useState(false);
@@ -123,8 +123,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleImageFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index?: number
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -135,7 +134,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
       return;
     }
 
-    setIsUploading(true);
+    setIsAddingImage(true);
 
     try {
       const imageUrl = await uploadToCloudinary(file, {
@@ -143,12 +142,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
         resourceType: "image",
       });
 
-      if (index !== undefined) {
-        handleImageUpdateLocal(index, imageUrl, `Gallery image: ${file.name}`);
-      } else {
-        handleAddImage(imageUrl);
-      }
-
+      handleAddImage(imageUrl);
       toast.success("Image uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
@@ -156,7 +150,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
         error instanceof Error ? error.message : "Failed to upload image."
       );
     } finally {
-      setIsUploading(false);
+      setIsAddingImage(false);
       event.target.value = "";
     }
   };
@@ -280,7 +274,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
               type="button"
               aria-label="Scroll left"
             >
-              <ArrowLeft size={18} />
+              <ChevronLeft size={18} />
             </button>
             <button
               onClick={scrollRight}
@@ -292,15 +286,6 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
             </button>
           </div>
         </motion.div>
-
-        {isUploading && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div className="flex flex-col items-center gap-2 text-white">
-              <Loader2 className="h-8 w-8 animate-spin" />
-              <p className="text-sm font-medium">Uploading image...</p>
-            </div>
-          </div>
-        )}
 
         <motion.div
           className="relative"
@@ -353,7 +338,8 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                         resourceType: "image",
                       }}
                       disableImageChange={true}
-                      showAltEditor={false}
+                      showAltEditor={isEditable}
+                      inputId={`gallery6-upload-${componentId}-${actualIndex}`}
                     />
                   </div>
 
@@ -363,23 +349,17 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                     <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover/card:opacity-100">
                       <label
                         htmlFor={`gallery6-upload-${componentId}-${actualIndex}`}
-                        className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-gray-900 shadow hover:bg-white"
+                        className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg hover:bg-white"
                       >
                         Change
                       </label>
-                      <input
-                        id={`gallery6-upload-${componentId}-${actualIndex}`}
-                        type="file"
-                        accept="image/*"
-                        onChange={event =>
-                          handleImageFileChange(event, actualIndex)
-                        }
-                        className="hidden"
-                      />
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => handleRemoveImage(actualIndex)}
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleRemoveImage(actualIndex);
+                        }}
                         className="h-6 px-2"
                       >
                         <X className="h-3 w-3" />
@@ -428,15 +408,26 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                   htmlFor={`gallery6-add-${componentId}`}
                   className="flex cursor-pointer flex-col items-center gap-2 text-gray-500"
                 >
-                  <Plus className="h-8 w-8" />
-                  <span className="text-sm font-medium">Add Case Study</span>
-                  <input
-                    id={`gallery6-add-${componentId}`}
-                    type="file"
-                    accept="image/*"
-                    onChange={event => handleImageFileChange(event)}
-                    className="hidden"
-                  />
+                  {isAddingImage ? (
+                    <div className="flex flex-col items-center gap-2 text-gray-500">
+                      <Loader2 className="h-8 w-8 animate-spin" />
+                      <span className="text-sm font-medium">Uploading...</span>
+                    </div>
+                  ) : (
+                    <>
+                      <Plus className="h-8 w-8" />
+                      <span className="text-sm font-medium">
+                        Add Case Study
+                      </span>
+                      <input
+                        id={`gallery6-add-${componentId}`}
+                        type="file"
+                        accept="image/*"
+                        onChange={event => handleImageFileChange(event)}
+                        className="hidden"
+                      />
+                    </>
+                  )}
                 </label>
               </div>
             )}

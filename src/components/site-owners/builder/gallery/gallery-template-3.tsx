@@ -35,7 +35,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isAddingImage, setIsAddingImage] = useState(false);
   const componentId = React.useId();
 
   useEffect(() => {
@@ -63,8 +63,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleImageFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index?: number
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -75,7 +74,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
       return;
     }
 
-    setIsUploading(true);
+    setIsAddingImage(true);
 
     try {
       const imageUrl = await uploadToCloudinary(file, {
@@ -83,18 +82,13 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
         resourceType: "image",
       });
 
-      if (index !== undefined) {
-        handleImageUpdateLocal(index, imageUrl, `Gallery image: ${file.name}`);
-      } else {
-        handleAddImage(imageUrl);
-      }
-
+      handleAddImage(imageUrl);
       toast.success("Image uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
       toast.error("Failed to upload image. Please try again.");
     } finally {
-      setIsUploading(false);
+      setIsAddingImage(false);
       event.target.value = "";
     }
   };
@@ -250,6 +244,14 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
                           image={image}
                           isEditable={isEditable}
                           onOpenLightbox={() => setSelectedImage(image)}
+                          onImageChange={(imageUrl, altText) =>
+                            handleImageUpdateLocal(
+                              actualIndex,
+                              imageUrl,
+                              altText
+                            )
+                          }
+                          inputId={`gallery-upload-${componentId}-${actualIndex}`}
                         />
                         {isEditable && (
                           <div className="absolute top-2 right-2 z-10 flex gap-2">
@@ -259,19 +261,13 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
                             >
                               Change
                             </label>
-                            <input
-                              id={`gallery-upload-${componentId}-${actualIndex}`}
-                              type="file"
-                              accept="image/*"
-                              onChange={e =>
-                                handleImageFileChange(e, actualIndex)
-                              }
-                              className="hidden"
-                            />
                             <Button
                               size="sm"
                               variant="destructive"
-                              onClick={() => handleRemoveImage(actualIndex)}
+                              onClick={e => {
+                                e.stopPropagation();
+                                handleRemoveImage(actualIndex);
+                              }}
                               className="h-6 px-2"
                             >
                               <X className="h-3 w-3" />
@@ -291,11 +287,15 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
                 img => img.id === image.id
               );
               return (
-                <div key={image.id} className="relative flex-shrink-0">
+                <div key={image.id} className="relative shrink-0">
                   <PhotoCard
                     image={image}
                     isEditable={isEditable}
                     onOpenLightbox={() => setSelectedImage(image)}
+                    onImageChange={(imageUrl, altText) =>
+                      handleImageUpdateLocal(actualIndex, imageUrl, altText)
+                    }
+                    inputId={`gallery-upload-${componentId}-${actualIndex}`}
                     size={180}
                     enableHover={!isEditable}
                     enableRandomRotation={false}
@@ -308,17 +308,13 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
                       >
                         Change
                       </label>
-                      <input
-                        id={`gallery-upload-${componentId}-${actualIndex}`}
-                        type="file"
-                        accept="image/*"
-                        onChange={e => handleImageFileChange(e, actualIndex)}
-                        className="hidden"
-                      />
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => handleRemoveImage(actualIndex)}
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleRemoveImage(actualIndex);
+                        }}
                         className="h-6 px-2"
                       >
                         <X className="h-3 w-3" />
@@ -338,15 +334,24 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
             htmlFor={`gallery-add-${componentId}`}
             className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-2 hover:bg-gray-100"
           >
-            <Plus className="h-5 w-5 text-gray-400" />
-            <span className="text-sm text-gray-600">Add Image</span>
-            <input
-              id={`gallery-add-${componentId}`}
-              type="file"
-              accept="image/*"
-              onChange={e => handleImageFileChange(e)}
-              className="hidden"
-            />
+            {isAddingImage ? (
+              <div className="flex items-center gap-2 text-gray-500">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                <span className="text-sm font-medium">Uploading...</span>
+              </div>
+            ) : (
+              <>
+                <Plus className="h-5 w-5 text-gray-400" />
+                <span className="text-sm text-gray-600">Add Image</span>
+                <input
+                  id={`gallery-add-${componentId}`}
+                  type="file"
+                  accept="image/*"
+                  onChange={e => handleImageFileChange(e)}
+                  className="hidden"
+                />
+              </>
+            )}
           </label>
         </div>
       )}
@@ -380,15 +385,6 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
           </DialogContent>
         </Dialog>
       )}
-
-      {isUploading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="flex flex-col items-center gap-2 text-white">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <p className="text-sm font-medium">Uploading image...</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -415,6 +411,8 @@ const PhotoCard = ({
   image,
   isEditable,
   onOpenLightbox,
+  onImageChange,
+  inputId,
   size = 220,
   enableHover = true,
   enableRandomRotation = true,
@@ -422,6 +420,8 @@ const PhotoCard = ({
   image: GalleryImage;
   isEditable: boolean;
   onOpenLightbox: () => void;
+  onImageChange?: (imageUrl: string, altText?: string) => void;
+  inputId?: string;
   size?: number;
   enableHover?: boolean;
   enableRandomRotation?: boolean;
@@ -460,11 +460,17 @@ const PhotoCard = ({
           <EditableImage
             src={getImageUrl(image.image)}
             alt={image.image_alt_description}
-            className="h-full w-full rounded-3xl object-cover"
             width={size}
+            isEditable={isEditable}
+            onImageChange={onImageChange}
             height={size}
             disableImageChange={true}
             showAltEditor={true}
+            inputId={inputId}
+            cloudinaryOptions={{
+              folder: "gallery-images",
+              resourceType: "image",
+            }}
           />
         ) : (
           <MotionImage

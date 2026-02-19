@@ -27,7 +27,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
   const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
     useBuilderLogic(galleryData, onUpdate);
 
-  const [isUploading, setIsUploading] = useState(false);
+  const [isAddingImage, setIsAddingImage] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
 
   const componentId = React.useId();
@@ -48,8 +48,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleImageFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index?: number
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -60,7 +59,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
       return;
     }
 
-    setIsUploading(true);
+    setIsAddingImage(true);
 
     try {
       const imageUrl = await uploadToCloudinary(file, {
@@ -68,12 +67,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
         resourceType: "image",
       });
 
-      if (index !== undefined) {
-        handleImageUpdateLocal(index, imageUrl, `Gallery image: ${file.name}`);
-      } else {
-        handleAddImage(imageUrl);
-      }
-
+      handleAddImage(imageUrl);
       toast.success("Image uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
@@ -81,7 +75,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
         error instanceof Error ? error.message : "Failed to upload image."
       );
     } finally {
-      setIsUploading(false);
+      setIsAddingImage(false);
       event.target.value = "";
     }
   };
@@ -141,15 +135,6 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
           />
         </div>
 
-        {isUploading && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="flex flex-col items-center gap-2 text-white">
-              <Loader2 className="h-8 w-8 animate-spin" />
-              <p className="text-sm font-medium">Uploading image...</p>
-            </div>
-          </div>
-        )}
-
         <div className="mx-auto mt-12 flex max-w-5xl flex-wrap items-center justify-center gap-4">
           {filteredImages.map((image, index) => {
             const actualIndex = data.images.findIndex(
@@ -175,6 +160,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                     }}
                     disableImageChange={true}
                     showAltEditor={isEditable}
+                    inputId={`gallery4-upload-${componentId}-${actualIndex}`}
                   />
 
                   {isEditable && (
@@ -185,17 +171,13 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                       >
                         Change
                       </label>
-                      <input
-                        id={`gallery4-upload-${componentId}-${actualIndex}`}
-                        type="file"
-                        accept="image/*"
-                        onChange={e => handleImageFileChange(e, actualIndex)}
-                        className="hidden"
-                      />
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => handleRemoveImage(actualIndex)}
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleRemoveImage(actualIndex);
+                        }}
                         className="h-6 px-2"
                       >
                         <X className="h-3 w-3" />
@@ -226,15 +208,24 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                 htmlFor={`gallery4-add-${componentId}`}
                 className="flex cursor-pointer flex-col items-center gap-2"
               >
-                <Plus className="h-8 w-8 text-gray-400" />
-                <span className="text-sm text-gray-500">Add Image</span>
-                <input
-                  id={`gallery4-add-${componentId}`}
-                  type="file"
-                  accept="image/*"
-                  onChange={e => handleImageFileChange(e)}
-                  className="hidden"
-                />
+                {isAddingImage ? (
+                  <div className="flex flex-col items-center gap-2 text-gray-500">
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                    <span className="text-sm font-medium">Uploading...</span>
+                  </div>
+                ) : (
+                  <>
+                    <Plus className="h-8 w-8 text-gray-400" />
+                    <span className="text-sm text-gray-500">Add Image</span>
+                    <input
+                      id={`gallery4-add-${componentId}`}
+                      type="file"
+                      accept="image/*"
+                      onChange={e => handleImageFileChange(e)}
+                      className="hidden"
+                    />
+                  </>
+                )}
               </label>
             </div>
           )}

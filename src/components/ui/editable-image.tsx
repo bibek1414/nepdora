@@ -50,6 +50,7 @@ interface EditableImageProps {
   };
   showDimensionGuide?: boolean; // New prop to enable/disable dimension display
   dimensionGuideText?: string; // Custom text for dimension guide
+  inputId?: string;
 }
 
 export const EditableImage: React.FC<EditableImageProps> = ({
@@ -76,6 +77,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   placeholder,
   showDimensionGuide = true,
   dimensionGuideText,
+  inputId,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -188,6 +190,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
       {/* Hidden file input */}
       <input
         ref={fileInputRef}
+        id={inputId}
         type="file"
         accept="image/*"
         onChange={handleFileSelect}
