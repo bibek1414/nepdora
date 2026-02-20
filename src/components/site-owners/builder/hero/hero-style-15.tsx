@@ -324,7 +324,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
             <svg
               viewBox="0 0 100 100"
               className="h-full w-full"
-              style={{ fill: "#4A9B6F" }}
+              style={{ fill: secondaryColor }}
             >
               <path d="M50,10 Q30,20 25,40 Q20,60 30,75 Q40,85 50,90 Q60,85 70,75 Q80,60 75,40 Q70,20 50,10 M45,30 L55,30 L50,60 Z" />
             </svg>
