@@ -60,7 +60,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
 
   return (
     <section
-      className="relative flex min-h-screen max-w-7xl mx-auto items-center overflow-hidden px-4 py-12 md:px-12"
+      className="relative mx-auto flex min-h-screen max-w-7xl items-center overflow-hidden px-4 py-12 md:px-12"
       data-component-id={componentId}
     >
       {/* Background decorative shape */}
