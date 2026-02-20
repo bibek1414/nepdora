@@ -238,6 +238,22 @@ export interface HeroTemplate14Data {
   imageAlt?: string;
 }
 
+export interface HeroTemplate15Data {
+  template: "hero-15";
+  title: string;
+  subtitle?: string;
+  description?: string;
+  buttons: HeroButton[];
+  imageUrl?: string;
+  imageAlt?: string;
+  priceLabel?: string;
+  priceValue?: string;
+  stat1Value?: string;
+  stat1Label?: string;
+  stat2Value?: string;
+  stat2Label?: string;
+}
+
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data
@@ -253,7 +269,8 @@ export type HeroData =
   | HeroTemplate11Data
   | HeroTemplate12Data
   | HeroTemplate13Data
-  | HeroTemplate14Data;
+  | HeroTemplate14Data
+  | HeroTemplate15Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -655,6 +672,23 @@ export const defaultHeroTemplate14Data: HeroTemplate14Data = {
   imageAlt: "Featured Collection",
 };
 
+export const defaultHeroTemplate15Data: HeroTemplate15Data = {
+  template: "hero-15",
+  title: "Delicious Deals\nIn One\nClick",
+  subtitle: "Savor Every Bite",
+  description:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed sodales auctor orci, sit amet vulputate velit molestie.",
+  buttons: [{ id: "1", text: "Order Now", variant: "primary", href: "#" }],
+  imageUrl: "/hero.webp",
+  imageAlt: "Delicious food plate",
+  priceLabel: "Price",
+  priceValue: "$ 10.03",
+  stat1Value: "23",
+  stat1Label: "Daily Orders",
+  stat2Value: "56+",
+  stat2Label: "Items Available",
+};
+
 // Default data map for all hero templates
 export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-1": defaultHeroTemplate1Data,
@@ -671,6 +705,7 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-12": defaultHeroTemplate12Data,
   "hero-13": defaultHeroTemplate13Data,
   "hero-14": defaultHeroTemplate14Data,
+  "hero-15": defaultHeroTemplate15Data,
 };
 
 // Type guards for each template
@@ -714,3 +749,6 @@ export const isHeroTemplate13 = (data: HeroData): data is HeroTemplate13Data =>
 
 export const isHeroTemplate14 = (data: HeroData): data is HeroTemplate14Data =>
   data.template === "hero-14";
+
+export const isHeroTemplate15 = (data: HeroData): data is HeroTemplate15Data =>
+  data.template === "hero-15";
