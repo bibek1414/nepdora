@@ -8,6 +8,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate15Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { ChevronRight } from "lucide-react";
 
 interface HeroTemplate15Props {
   heroData: HeroTemplate15Data;
@@ -40,10 +41,8 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
     },
   };
 
-  const { data, handleTextUpdate, getImageUrl, setData } = useBuilderLogic(
-    heroData,
-    onUpdate
-  );
+  const { data, handleTextUpdate, getImageUrl, setData, handleButtonUpdate } =
+    useBuilderLogic(heroData, onUpdate);
 
   const { scrollY } = useScroll();
   const rotate = useTransform(scrollY, [0, 1000], [0, 360]);
@@ -194,6 +193,38 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
                 placeholder="Stat label..."
               />
             </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="mt-10">
+            <EditableLink
+              text={button.text || "Order Now"}
+              href={button.href || "#"}
+              onChange={(text, href) => {
+                if (!data.buttons || data.buttons.length === 0) {
+                  const newButton = {
+                    id: "1",
+                    text,
+                    href: href || "#",
+                    variant: "primary" as const,
+                  };
+                  const updatedData = { ...data, buttons: [newButton] };
+                  setData(updatedData);
+                  onUpdate?.({ buttons: [newButton] });
+                } else {
+                  handleButtonUpdate("buttons")(button.id, text, href);
+                }
+              }}
+              isEditable={isEditable}
+              siteUser={siteUser}
+              className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-bold shadow-lg transition-transform hover:scale-105"
+              style={{ background: secondaryColor, color: "#fff" }}
+              textPlaceholder="Button text..."
+              hrefPlaceholder="Enter URL..."
+            >
+              <span>{button.text || "Order Now"}</span>
+              <ChevronRight className="h-5 w-5" />
+            </EditableLink>
           </div>
         </motion.div>
 
