@@ -1158,7 +1158,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     },
     {
       id: "others-sections",
-      label: "others",
+      label: "Others",
       icon: FileText,
       keywords: ["articles", "posts", "news", "updates"],
       hasTemplates: true,

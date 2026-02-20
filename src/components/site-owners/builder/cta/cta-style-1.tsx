@@ -44,7 +44,7 @@ export const CTATemplate1: React.FC<CTATemplate1Props> = ({
 
   const getButtonClassesLocal = (variant: string) => {
     const baseClasses =
-      "inline-block px-6 py-3 font-bold transition-colors min-w-[120px] text-center rounded-lg";
+      " px-6 py-3 font-bold transition-colors min-w-[120px] text-center rounded-lg";
 
     const buttonStyles = {
       backgroundColor:

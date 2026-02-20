@@ -42,7 +42,7 @@ export interface CTATemplate3Data {
   title: string;
   description?: string;
   buttons: CTAButton[];
-  backgroundType: "color" | "gradient" | "image";
+  backgroundType: "image";
   backgroundColor?: string;
   backgroundImageUrl?: string;
   showFeatureIcons?: boolean;

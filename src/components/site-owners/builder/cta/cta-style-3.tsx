@@ -1,11 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { CTATemplate3Data } from "@/types/owner-site/components/cta";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { uploadToCloudinary } from "@/utils/cloudinary";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 interface CTATemplate3Props {
   ctaData: CTATemplate3Data;
@@ -20,6 +23,10 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
+  // Generate unique component ID to prevent conflicts
+  const componentId = React.useId();
+
+  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -37,14 +44,67 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
     },
   };
 
-  const { data, handleTextUpdate, handleButtonUpdate } = useBuilderLogic(
-    ctaData,
-    onUpdate
-  );
+  const { data, setData, handleTextUpdate, handleButtonUpdate } =
+    useBuilderLogic(ctaData, onUpdate);
+
+  const handleBackgroundImageUpdate = (imageUrl: string) => {
+    const update = {
+      backgroundType: "image" as const,
+      backgroundImageUrl: imageUrl,
+    };
+    const updatedData = { ...data, ...update };
+    setData(updatedData);
+    onUpdate?.(update);
+  };
+
+  const handleBackgroundFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(
+        `Please select a valid image file (${allowedTypes.join(", ")})`
+      );
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    setIsUploadingBackground(true);
+
+    try {
+      // Upload to Cloudinary with unique public_id
+      const imageUrl = await uploadToCloudinary(file, {
+        folder: "cta-backgrounds",
+        resourceType: "image",
+      });
+
+      // Update background
+      handleBackgroundImageUpdate(imageUrl);
+
+      toast.success("Background image uploaded successfully!");
+    } catch (error) {
+      console.error("Background upload failed:", error);
+      toast.error("Failed to upload background image. Please try again.");
+    } finally {
+      setIsUploadingBackground(false);
+      // Reset file input
+      event.target.value = "";
+    }
+  };
 
   const getButtonClassesLocal = (variant: string) => {
     const baseClasses =
-      "inline-block px-6 py-3 font-bold transition-colors min-w-[120px] text-center rounded-lg";
+      " px-6 py-3 font-bold transition-colors min-w-[120px] text-center rounded-lg";
 
     const buttonStyles = {
       backgroundColor:
@@ -68,28 +128,61 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
     return { className: baseClasses, style: buttonStyles };
   };
 
-  const getBackgroundStyle = () => {
-    switch (data.backgroundType) {
-      case "gradient":
-        return { background: data.backgroundColor };
-      case "image":
-        return {
-          backgroundImage: `url(${data.backgroundImageUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        };
-      default:
-        return {
-          backgroundColor: data.backgroundColor || theme.colors.background,
-        };
-    }
-  };
-
   return (
     <section
       className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-8"
-      style={getBackgroundStyle()}
+      style={{
+        ...(data.backgroundType === "image" && data.backgroundImageUrl
+          ? {
+              backgroundImage: `url(${data.backgroundImageUrl})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }
+          : {
+              backgroundColor: data.backgroundColor || theme.colors.background,
+            }),
+      }}
+      data-component-id={componentId}
     >
+      {/* Background Change Button - Only visible when editable */}
+      {isEditable && (
+        <div className="absolute top-6 right-4 z-10">
+          <label
+            htmlFor={`background-upload-${componentId}`}
+            className={`mr-12 cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
+              isUploadingBackground ? "pointer-events-none opacity-50" : ""
+            }`}
+          >
+            {isUploadingBackground ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Uploading...
+              </span>
+            ) : (
+              "Change Background"
+            )}
+          </label>
+          <input
+            id={`background-upload-${componentId}`}
+            type="file"
+            accept="image/*"
+            onChange={handleBackgroundFileChange}
+            className="hidden"
+            disabled={isUploadingBackground}
+          />
+        </div>
+      )}
+
+      {/* Background Upload Loading Overlay */}
+      {isUploadingBackground && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50">
+          <div className="flex flex-col items-center gap-2 text-white">
+            <Loader2 className="h-8 w-8 animate-spin" />
+            <p className="text-sm font-medium">Uploading background image...</p>
+          </div>
+        </div>
+      )}
+
       <div className="relative z-10 container mx-auto max-w-5xl">
         <div className="rounded-2xl bg-white p-8 shadow-xl sm:p-12 md:p-16">
           <div className="text-center">
