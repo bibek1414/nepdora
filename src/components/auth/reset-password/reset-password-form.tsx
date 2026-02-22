@@ -5,7 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { AlertCircle, CheckCircle, Lock, Loader2 } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle,
+  Lock,
+  Loader2,
+  ChevronLeft,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -245,7 +251,10 @@ export function ResetPasswordForm({
               href="/admin/login"
               className="text-sm text-gray-600 transition-colors hover:text-gray-900"
             >
-              ← Back to Login
+              <div className="flex items-center justify-center">
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Back to Login
+              </div>
             </Link>
           </div>
         </div>

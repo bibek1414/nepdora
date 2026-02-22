@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { AlertCircle, Mail, CheckCircle } from "lucide-react";
+import { AlertCircle, Mail, CheckCircle, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
 import { requestPasswordReset } from "@/services/auth/api";
@@ -226,7 +226,9 @@ export function ForgotPasswordForm({
               href="/admin/login"
               className="text-sm text-gray-600 transition-colors hover:text-gray-900"
             >
-              ← Back to Login
+              <div className="flex items-center justify-center">
+                <ChevronLeft className="mr-2 h-4 w-4" /> Back to Login
+              </div>
             </Link>
           </div>
         </div>

@@ -193,6 +193,7 @@ export async function proxy(request: NextRequest) {
       pathname.startsWith("/builder") ||
       pathname.startsWith("/support") ||
       pathname.startsWith("/payment") ||
+      pathname.startsWith("/logout") ||
       pathname.startsWith("/preview") ||
       pathname.startsWith("/location") ||
       pathname.startsWith("/on-boarding") ||
