@@ -2,15 +2,14 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Plus,
-  Hourglass,
-  AlertCircle,
-  Clock,
-  CheckCircle2,
-} from "lucide-react";
+import { Plus } from "lucide-react";
 import { IssueCard } from "./issues-card";
 import { Issue, STATUS_OPTIONS } from "@/types/owner-site/admin/issues";
+import { useDroppable } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 // Extract status key type from the centralized STATUS_OPTIONS
 type StatusKey = (typeof STATUS_OPTIONS)[number]["value"];
@@ -57,7 +56,6 @@ interface StatusColumnProps {
   onEditIssue: (issue: Issue) => void;
   onDeleteIssue: (issue: Issue) => void;
   onStatusChange: (issueId: number, newStatus: StatusKey) => void;
-  onDrop: (issueId: number, newStatus: StatusKey) => void;
 }
 
 export function StatusColumn({
@@ -67,35 +65,24 @@ export function StatusColumn({
   onEditIssue,
   onDeleteIssue,
   onStatusChange,
-  onDrop,
 }: StatusColumnProps) {
   const config = STATUS_CONFIG[status];
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const issueId = e.dataTransfer.getData("text/plain");
-    if (issueId) {
-      onDrop(parseInt(issueId), status);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
+  const { setNodeRef } = useDroppable({
+    id: status,
+  });
 
   return (
     <div
-      className={`flex flex-col rounded-lg border-2 border-dashed bg-gray-50 ${config.color} min-h-[600px] w-80`}
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
+      ref={setNodeRef}
+      className={`flex flex-col rounded-xl border bg-gray-50/50 ${config.color} min-h-[600px] w-80 transition-colors duration-200`}
     >
       {/* Column Header */}
-      <div className="border-b border-gray-200 p-4">
+      <div className="border-b border-gray-200/60 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <h3 className="font-semibold text-gray-900">{config.label}</h3>
             <div
-              className={`rounded-full px-2 py-1 text-xs font-medium ${config.badgeColor}`}
+              className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${config.badgeColor} border border-black/5`}
             >
               {issues.length}
             </div>
@@ -103,7 +90,7 @@ export function StatusColumn({
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 w-8 p-0 hover:bg-white/80"
+            className="h-8 w-8 rounded-full p-0 hover:bg-white/80"
             onClick={() => onAddIssue(status)}
           >
             <Plus className="h-4 w-4" />
@@ -113,26 +100,24 @@ export function StatusColumn({
 
       {/* Issues List */}
       <div className="flex-1 space-y-3 p-4">
-        {issues.map(issue => (
-          <div
-            key={issue.id}
-            draggable
-            onDragStart={e => {
-              e.dataTransfer.setData("text/plain", issue.id.toString());
-            }}
-          >
+        <SortableContext
+          items={issues.map(i => i.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {issues.map(issue => (
             <IssueCard
+              key={issue.id}
               issue={issue}
               onEdit={onEditIssue}
               onDelete={onDeleteIssue}
               onStatusChange={onStatusChange}
             />
-          </div>
-        ))}
+          ))}
+        </SortableContext>
         {issues.length === 0 && (
-          <div className="py-8 text-center">
-            <p className="text-sm text-gray-500">
-              No {config.label.toLowerCase()} issues
+          <div className="rounded-xl border-2 border-dashed border-gray-200/50 py-12 text-center">
+            <p className="text-sm font-medium text-gray-400 italic">
+              No tasks here
             </p>
           </div>
         )}

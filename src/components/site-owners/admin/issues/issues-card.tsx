@@ -3,12 +3,14 @@
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { User, Edit, Trash2, ChevronDown } from "lucide-react";
+import { User, Edit, Trash2, Calendar, MessageSquare } from "lucide-react";
 import {
   Issue,
   STATUS_OPTIONS,
   PRIORITY_OPTIONS,
 } from "@/types/owner-site/admin/issues";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type StatusKey = (typeof STATUS_OPTIONS)[number]["value"];
 type PriorityKey = (typeof PRIORITY_OPTIONS)[number]["value"];
@@ -16,71 +18,17 @@ type PriorityKey = (typeof PRIORITY_OPTIONS)[number]["value"];
 const PRIORITY_CONFIG: Record<
   PriorityKey,
   {
-    variant: "destructive" | "default" | "secondary";
+    label: string;
     color: string;
   }
 > = {
-  high: { variant: "destructive", color: "bg-red-100 text-red-800" },
-  medium: { variant: "default", color: "bg-yellow-100 text-yellow-800" },
-  low: { variant: "secondary", color: "bg-gray-100 text-gray-800" },
+  high: { label: "High", color: "bg-red-50 text-red-700 border-red-100" },
+  medium: {
+    label: "Medium",
+    color: "bg-yellow-50 text-yellow-700 border-yellow-100",
+  },
+  low: { label: "Low", color: "bg-slate-50 text-slate-700 border-slate-100" },
 };
-
-// Custom Select Component
-interface SelectOption {
-  value: string;
-  label: string;
-}
-
-interface CustomSelectProps {
-  value: string;
-  onChange: (value: string) => void;
-  options: SelectOption[];
-  placeholder: string;
-}
-
-function CustomSelect({
-  value,
-  onChange,
-  options,
-  placeholder,
-}: CustomSelectProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const selectedOption = options.find(option => option.value === value);
-
-  return (
-    <div className="relative">
-      <button
-        type="button"
-        className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus:ring-ring flex h-8 w-full items-center justify-between rounded-md border px-2 py-1 text-xs focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className="flex items-center space-x-1">
-          <span>{selectedOption?.label || placeholder}</span>
-        </span>
-        <ChevronDown className="h-3 w-3 opacity-50" />
-      </button>
-
-      {isOpen && (
-        <div className="bg-popover text-popover-foreground absolute top-full z-50 mt-1 w-full min-w-[8rem] overflow-hidden rounded-md border p-1">
-          {options.map(option => (
-            <button
-              key={option.value}
-              type="button"
-              className="hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground relative flex w-full cursor-default items-center rounded-sm px-2 py-1.5 text-xs outline-none select-none"
-              onClick={() => {
-                onChange(option.value);
-                setIsOpen(false);
-              }}
-            >
-              <span>{option.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
 
 interface IssueCardProps {
   issue: Issue;
@@ -95,12 +43,28 @@ export function IssueCard({
   onEdit,
   onDelete,
   onStatusChange,
-  isDragging = false,
+  isDragging: isOverlay = false,
 }: IssueCardProps) {
   const [showActions, setShowActions] = useState(false);
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: issue.id,
+    data: {
+      type: "card",
+      status: issue.status,
+    },
+  });
 
-  const getPriorityColor = (priority: PriorityKey) => {
-    return PRIORITY_CONFIG[priority]?.color || "bg-gray-100 text-gray-800";
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : 1,
   };
 
   const formatDate = (dateString: string) => {
@@ -108,82 +72,84 @@ export function IssueCard({
     return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   };
 
-  const handleStatusChange = (newStatus: string) => {
-    if (
-      newStatus !== issue.status &&
-      STATUS_OPTIONS.some(opt => opt.value === newStatus)
-    ) {
-      onStatusChange(issue.id, newStatus as StatusKey);
-    }
-  };
+  const priority =
+    PRIORITY_CONFIG[issue.priority as PriorityKey] || PRIORITY_CONFIG.low;
 
   return (
     <div
-      className={`group relative mb-3 cursor-grab rounded-lg border bg-white p-3 transition-all duration-200 ${
-        isDragging ? "rotate-2 opacity-50" : ""
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className={`group relative flex flex-col gap-3 rounded-2xl border bg-white p-4 transition-all duration-300 select-none ${
+        isOverlay
+          ? "z-50 scale-105 cursor-grabbing border-blue-200 shadow-2xl"
+          : "cursor-grab border-gray-100 active:cursor-grabbing"
       }`}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
       onClick={() => onEdit(issue)}
     >
-      <div className="mb-2 flex items-start justify-between">
-        <h4 className="mr-2 line-clamp-2 flex-1 text-sm font-medium text-gray-900">
-          {issue.title}
-        </h4>
-        <div
-          className={`rounded px-2 py-1 text-xs font-medium ${getPriorityColor(issue.priority)}`}
+      <div className="flex items-start justify-between gap-3">
+        <span
+          className={`rounded-md border px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase ${priority.color}`}
         >
-          {PRIORITY_OPTIONS.find(p => p.value === issue.priority)?.label ||
-            issue.priority}
+          {priority.label}
+        </span>
+        <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-400">
+          <Calendar className="h-3 w-3" />
+          {formatDate(issue.created_at)}
         </div>
       </div>
 
-      {issue.description && (
-        <p className="mb-2 line-clamp-2 text-xs text-gray-600">
-          {issue.description}
-        </p>
-      )}
+      <div className="space-y-1.5">
+        <h4 className="line-clamp-2 text-sm leading-tight font-bold text-gray-900 transition-colors group-hover:text-blue-600">
+          {issue.title}
+        </h4>
+        {issue.description && (
+          <p className="line-clamp-2 text-xs leading-relaxed font-medium text-gray-500">
+            {issue.description}
+          </p>
+        )}
+      </div>
 
-      <div className="mb-2 flex items-center justify-between text-xs text-gray-500">
+      <div className="mt-auto flex items-center justify-between border-t border-gray-50 pt-3">
+        <div className="flex items-center gap-2">
+          {issue.reported_by && (
+            <div className="flex items-center gap-2">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 text-[10px] font-bold text-blue-600 shadow-sm">
+                {issue.reported_by.email.charAt(0).toUpperCase()}
+              </div>
+              <span className="max-w-[100px] truncate text-[10px] font-bold text-gray-500">
+                {issue.reported_by.email.split("@")[0]}
+              </span>
+            </div>
+          )}
+        </div>
+
         {issue.issue_category && (
-          <Badge variant="outline" className="text-xs">
+          <Badge
+            variant="secondary"
+            className="h-5 border-none bg-slate-50 px-2 py-0 text-[9px] font-bold text-slate-600"
+          >
             {issue.issue_category.name}
           </Badge>
         )}
-        <span>{formatDate(issue.created_at)}</span>
       </div>
 
-      {issue.reported_by && (
-        <div className="flex items-center text-xs text-gray-500">
-          <User className="mr-1 h-3 w-3" />
-          <span className="truncate">{issue.reported_by.email}</span>
-        </div>
-      )}
-
       {/* Action buttons - visible on hover */}
-      {showActions && (
-        <div className="absolute top-2 right-2 flex items-center space-x-1 rounded border bg-white p-1 opacity-0 transition-opacity group-hover:opacity-100">
+      {showActions && !isOverlay && (
+        <div className="absolute top-3 right-3 z-[9999] flex items-center space-x-1 opacity-0 transition-all duration-300 group-hover:opacity-100">
           <Button
             variant="ghost"
-            size="sm"
-            className="h-6 w-6 p-0 hover:bg-gray-100"
-            onClick={e => {
-              e.stopPropagation();
-              onEdit(issue);
-            }}
-          >
-            <Edit className="h-3 w-3" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 w-6 p-0 hover:bg-red-50 hover:text-red-600"
+            size="icon"
+            className="h-7 w-7 rounded-full bg-gray-50/80 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 z-[9999]"
             onClick={e => {
               e.stopPropagation();
               onDelete(issue);
             }}
           >
-            <Trash2 className="h-3 w-3" />
+            <Trash2 className="h-3.5 w-3.5" />
           </Button>
         </div>
       )}

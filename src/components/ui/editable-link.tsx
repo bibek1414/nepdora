@@ -2,13 +2,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {
-  Edit,
   Check,
   X,
   ExternalLink,
   Plus,
-  Search,
-  ChevronDown,
 } from "lucide-react";
 import { usePages, useCreatePage } from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";

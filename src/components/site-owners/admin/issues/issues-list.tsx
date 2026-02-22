@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   useIssues,
   useIssueCategories,
@@ -15,29 +16,53 @@ import { DeleteDialog } from "./delete-dialog";
 import { LoadingState } from "./loading-state";
 import { ErrorState } from "./error-state";
 import { Issue, STATUS_OPTIONS } from "@/types/owner-site/admin/issues";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverEvent,
+  DragOverlay,
+  DragStartEvent,
+  closestCorners,
+} from "@dnd-kit/core";
+import { IssueCard } from "./issues-card";
 
 type StatusKey = (typeof STATUS_OPTIONS)[number]["value"];
 
 export default function IssuesList() {
-  const { data: issues = [], isLoading, error } = useIssues();
+  const { data: initialIssues = [], isLoading, error } = useIssues();
   const { data: categories = [] } = useIssueCategories();
   const createIssueMutation = useCreateIssue();
   const updateIssueMutation = useUpdateIssue();
   const deleteIssueMutation = useDeleteIssue();
 
+  const [issues, setIssues] = useState<Issue[]>([]);
+  const [activeIssue, setActiveIssue] = useState<Issue | null>(null);
   const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteIssue, setDeleteIssue] = useState<Issue | null>(null);
   const [newIssueStatus, setNewIssueStatus] = useState<StatusKey | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (initialIssues) {
+      setIssues(initialIssues);
+    }
+  }, [initialIssues]);
 
   // Group issues by status using the centralized STATUS_OPTIONS
-  const issuesByStatus: Record<StatusKey, Issue[]> = STATUS_OPTIONS.reduce(
-    (acc, { value: status }) => {
-      acc[status] = issues.filter(issue => issue.status === status);
-      return acc;
-    },
-    {} as Record<StatusKey, Issue[]>
-  );
+  const issuesByStatus = useMemo(() => {
+    return STATUS_OPTIONS.reduce(
+      (acc, { value: status }) => {
+        acc[status] = issues.filter(issue => issue.status === status);
+        return acc;
+      },
+      {} as Record<StatusKey, Issue[]>
+    );
+  }, [issues]);
 
   const handleAddIssue = (status?: StatusKey) => {
     setSelectedIssue(null);
@@ -75,8 +100,85 @@ export default function IssuesList() {
     }
   };
 
-  const handleDrop = (issueId: number, newStatus: StatusKey) => {
-    handleStatusChange(issueId, newStatus);
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    const issueId = active.id as number;
+    const issue = issues.find(i => i.id === issueId);
+    if (issue) setActiveIssue(issue);
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = active.id as number;
+    const overId = over.id;
+
+    const activeIssue = issues.find(i => i.id === activeId);
+    if (!activeIssue) return;
+
+    // overId can be a number (issue ID) or a string (column status)
+    const isOverIssue = typeof overId === "number";
+    const isOverColumn = typeof overId === "string";
+
+    if (isOverIssue) {
+      const overIssue = issues.find(i => i.id === overId);
+      if (overIssue && activeIssue.status !== overIssue.status) {
+        setIssues(prev => {
+          const updated = prev.map(i =>
+            i.id === activeId ? { ...i, status: overIssue.status } : i
+          );
+          return updated;
+        });
+      }
+    } else if (isOverColumn) {
+      const newStatus = overId as StatusKey;
+      if (activeIssue.status !== newStatus) {
+        setIssues(prev => {
+          const updated = prev.map(i =>
+            i.id === activeId ? { ...i, status: newStatus } : i
+          );
+          return updated;
+        });
+      }
+    }
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    setActiveIssue(null);
+
+    if (!over) {
+      setIssues(initialIssues);
+      return;
+    }
+
+    const activeId = active.id as number;
+    const overId = over.id;
+
+    const activeIssue = issues.find(i => i.id === activeId);
+    if (!activeIssue) return;
+
+    let newStatus: StatusKey = activeIssue.status;
+
+    if (typeof overId === "number") {
+      const overIssue = issues.find(i => i.id === overId);
+      if (overIssue) newStatus = overIssue.status;
+    } else {
+      newStatus = overId as StatusKey;
+    }
+
+    if (activeIssue.status !== newStatus || typeof overId === "number") {
+      // If status changed or moved within column, persist
+      try {
+        await updateIssueMutation.mutateAsync({
+          id: activeId,
+          data: { status: newStatus },
+        });
+      } catch (error) {
+        setIssues(initialIssues); // Rollback on error
+      }
+    }
   };
 
   const handleFormClose = () => {
@@ -106,22 +208,40 @@ export default function IssuesList() {
           inProgressIssues={inProgressIssues}
         />
 
-        {/* Loading State */}
         {isLoading && <LoadingState />}
 
-        {/* Kanban Board */}
         {!isLoading && (
-          <IssuesComponent
-            issuesByStatus={issuesByStatus}
-            onAddIssue={handleAddIssue}
-            onEditIssue={handleEditIssue}
-            onDeleteIssue={handleDeleteIssue}
-            onStatusChange={handleStatusChange}
-            onDrop={handleDrop}
-          />
+          <DndContext
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+          >
+            <IssuesComponent
+              issuesByStatus={issuesByStatus}
+              onAddIssue={handleAddIssue}
+              onEditIssue={handleEditIssue}
+              onDeleteIssue={handleDeleteIssue}
+              onStatusChange={handleStatusChange}
+            />
+            {mounted &&
+              createPortal(
+                <DragOverlay>
+                  {activeIssue ? (
+                    <IssueCard
+                      issue={activeIssue}
+                      onEdit={() => {}}
+                      onDelete={() => {}}
+                      onStatusChange={() => {}}
+                      isDragging
+                    />
+                  ) : null}
+                </DragOverlay>,
+                document.body
+              )}
+          </DndContext>
         )}
 
-        {/* Forms and Dialogs */}
         <IssuesForm
           issue={selectedIssue}
           open={isFormOpen}

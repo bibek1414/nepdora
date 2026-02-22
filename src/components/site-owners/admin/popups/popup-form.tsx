@@ -125,8 +125,6 @@ const PopupForm: React.FC<PopupFormProps> = ({
 
     if (formData.image instanceof File) {
       submitData.append("image", formData.image);
-    } else if (initialData && imageFiles.length === 0) {
-      submitData.append("image", "");
     }
 
     if (initialData?.id) {
