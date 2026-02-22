@@ -23,8 +23,13 @@ import {
   DragOverlay,
   DragStartEvent,
   closestCorners,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  KeyboardSensor,
 } from "@dnd-kit/core";
 import { IssueCard } from "./issues-card";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 type StatusKey = (typeof STATUS_OPTIONS)[number]["value"];
 
@@ -46,6 +51,17 @@ export default function IssuesList() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px of movement required before dragging starts
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     if (initialIssues) {
@@ -212,6 +228,7 @@ export default function IssuesList() {
 
         {!isLoading && (
           <DndContext
+            sensors={sensors}
             collisionDetection={closestCorners}
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}

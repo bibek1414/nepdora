@@ -139,11 +139,15 @@ export function IssueCard({
 
       {/* Action buttons - visible on hover */}
       {showActions && !isOverlay && (
-        <div className="absolute top-3 right-3 z-[9999] flex items-center space-x-1 opacity-0 transition-all duration-300 group-hover:opacity-100">
+        <div
+          className="pointer-events-auto absolute top-3 right-3 z-50 flex items-center space-x-1 opacity-0 transition-all duration-300 group-hover:opacity-100"
+          onClick={e => e.stopPropagation()} // Prevent clicking actions from opening edit form
+        >
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 rounded-full bg-gray-50/80 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 z-[9999]"
+            className="h-7 w-7 rounded-full bg-gray-50/80 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+            title="Delete Issue"
             onClick={e => {
               e.stopPropagation();
               onDelete(issue);
