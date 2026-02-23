@@ -148,12 +148,12 @@ export function FooterStyle7({
       <footer className="relative mx-auto mt-12 max-w-7xl pt-12 text-white sm:mt-16 sm:pt-16 md:mt-20 md:pt-20">
         {/* Floating CTA Bar */}
         <div
-          className="absolute top-0 left-1/2 flex w-[95%] min-w-[288px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-between rounded-2xl border border-white/10 p-4 shadow-2xl sm:w-[90%] sm:rounded-3xl sm:p-6 md:w-[80%] md:flex-row md:rounded-full md:p-12"
+          className="absolute top-0 left-1/2 flex w-[95%] min-w-[288px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-between rounded-2xl border border-white/10 p-6 shadow-2xl sm:w-[90%] sm:rounded-3xl md:w-[80%] md:flex-row md:rounded-full md:px-12 md:py-8"
           style={{ backgroundColor: primaryColor }}
         >
-          <div className="mb-3 flex items-center gap-2 sm:mb-4 sm:gap-3 md:mb-0 md:gap-4">
+          <div className="mb-4 flex items-center gap-4 md:mb-0 w-full md:w-auto">
             <div
-              className="flex h-10 w-10 items-center justify-center rounded-full text-white sm:h-11 sm:w-11 md:h-12 md:w-12"
+              className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white"
               style={{
                 backgroundColor: secondaryColor,
                 color: secondaryForeground,
@@ -166,12 +166,12 @@ export function FooterStyle7({
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                className="sm:h-6 sm:w-6"
+                className="h-6 w-6"
               >
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
               </svg>
             </div>
-            <h3 className="md:text-md text-base leading-tight font-bold whitespace-pre-line sm:text-lg lg:text-xl">
+            <h3 className="text-lg leading-tight font-bold whitespace-pre-line lg:text-xl">
               <EditableText
                 value={ctaText1}
                 onChange={handleTextUpdate("ctaText1" as any)}
@@ -183,11 +183,11 @@ export function FooterStyle7({
             </h3>
           </div>
 
-          <div className="mx-4 hidden h-8 w-px bg-white/20 sm:mx-6 sm:h-10 md:mx-8 md:block md:h-12"></div>
+          <div className="mx-8 hidden h-12 w-px bg-white/20 md:block"></div>
 
-          <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+          <div className="flex items-center gap-4 w-full md:w-auto">
             <div
-              className="flex h-10 w-10 items-center justify-center rounded-full text-white sm:h-11 sm:w-11 md:h-12 md:w-12"
+              className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white"
               style={{
                 backgroundColor: secondaryColor,
                 color: secondaryForeground,
@@ -200,13 +200,13 @@ export function FooterStyle7({
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                className="sm:h-6 sm:w-6"
+                className="h-6 w-6"
               >
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
             </div>
-            <h3 className="text-base leading-tight font-bold whitespace-pre-line sm:text-lg md:text-xl lg:text-2xl">
+            <h3 className="text-lg leading-tight font-bold whitespace-pre-line lg:text-xl">
               <EditableText
                 value={ctaText2}
                 onChange={handleTextUpdate("ctaText2" as any)}
@@ -220,39 +220,39 @@ export function FooterStyle7({
         </div>
 
         <div
-          className="grid grid-cols-1 gap-8 border-b border-white/10 px-3 pt-16 pb-8 sm:gap-10 sm:px-4 sm:pt-20 sm:pb-10 md:grid-cols-2 md:gap-12 md:px-6 md:pt-24 md:pb-12 lg:grid-cols-4 lg:px-12"
+          className="grid grid-cols-1 gap-12 border-b border-white/10 px-4 pt-32 pb-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8"
           style={{ borderColor: `${primaryForeground}10` }}
         >
           {/* Brand Column */}
-          <div className="space-y-4 sm:space-y-5 md:space-y-6">
-            <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
               <div
-                className="flex h-8 w-8 items-center justify-center rounded-full text-white sm:h-9 sm:w-9 md:h-10 md:w-10"
+                className="flex h-10 w-10 items-center justify-center rounded-full text-white"
                 style={{
                   backgroundColor: primaryForeground,
                   color: primaryColor,
                 }}
               >
                 <Plane
-                  size={16}
-                  className="-rotate-45 fill-current sm:h-5 sm:w-5 md:h-5 md:w-5"
+                  size={20}
+                  className="-rotate-45 fill-current"
                 />
               </div>
               <FooterLogo
                 footerData={data}
                 getImageUrl={getImageUrl}
-                textClassName="text-white"
+                textClassName="text-white text-2xl font-bold"
               />
             </div>
-            <p className="text-xs leading-relaxed text-white sm:text-sm">
+            <p className="text-sm leading-relaxed text-white/90">
               {data.description}
             </p>
-            <div className="flex gap-2.5 sm:gap-3 md:gap-4">
+            <div className="flex gap-4">
               {data.socialLinks.map(social => (
                 <Link
                   key={social.id}
                   href={social.href || "#"}
-                  className="flex h-7 w-7 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900 sm:h-8 sm:w-8"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white hover:text-gray-900"
                   target={
                     social.href?.startsWith("http") ? "_blank" : undefined
                   }
@@ -264,7 +264,7 @@ export function FooterStyle7({
                 >
                   <SocialIcon
                     platform={social.platform}
-                    className="h-3.5 w-3.5 sm:h-4 sm:w-4"
+                    className="h-4 w-4"
                   />
                 </Link>
               ))}
@@ -273,22 +273,16 @@ export function FooterStyle7({
 
           {/* Services Links */}
           <div>
-            <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
+            <h4 className="mb-6 text-lg font-bold">
               {servicesSection?.title || "Services"}
             </h4>
-            <ul className="space-y-2 text-xs sm:space-y-2.5 sm:text-sm md:space-y-3">
+            <ul className="space-y-3 text-sm">
               {(servicesSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex cursor-pointer items-center gap-2 text-white/90 transition-colors hover:text-white"
-                  // style={
-                  //   {
-                  //     color: `${primaryForeground}80`,
-                  //     "--hover-color": primaryForeground,
-                  //   } as React.CSSProperties
-                  // }
+                  className="flex cursor-pointer items-center gap-3 text-white/90 transition-colors hover:text-white group"
                 >
-                  <span style={{ color: secondaryColor }}>✓</span>
+                  <span style={{ color: secondaryColor }} className="group-hover:translate-x-1 transition-transform">✓</span>
                   <Link
                     href={generateLinkHref(
                       link.href || "",
@@ -313,16 +307,16 @@ export function FooterStyle7({
 
           {/* Resources */}
           <div>
-            <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
+            <h4 className="mb-6 text-lg font-bold">
               {usefulLinksSection?.title || "Resources"}
             </h4>
-            <ul className="space-y-2 text-xs sm:space-y-2.5 sm:text-sm md:space-y-3">
+            <ul className="space-y-3 text-sm">
               {(usefulLinksSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex cursor-pointer items-center gap-2 text-white/90 transition-colors hover:text-white"
+                  className="flex cursor-pointer items-center gap-3 text-white/90 transition-colors hover:text-white group"
                 >
-                  <span style={{ color: secondaryColor }}>&gt;</span>
+                  <span style={{ color: secondaryColor }} className="group-hover:translate-x-1 transition-transform">&gt;</span>
                   <Link
                     href={generateLinkHref(
                       link.href || "",
@@ -347,16 +341,16 @@ export function FooterStyle7({
 
           {/* Newsletter */}
           <div>
-            <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
+            <h4 className="mb-6 text-lg font-bold">
               {data.newsletter.title}
             </h4>
-            <p className="mb-3 text-xs leading-relaxed text-white/90 sm:mb-4 sm:text-sm">
+            <p className="mb-4 text-sm leading-relaxed text-white/90">
               {data.newsletter.description}
             </p>
 
             {data.newsletter.enabled ? (
               subscriptionStatus === "success" ? (
-                <div className="flex items-center justify-center gap-2 text-green-400">
+                <div className="flex items-center justify-start gap-2 text-green-400">
                   <CheckCircle className="h-5 w-5" />
                   <span className="text-sm">Successfully subscribed!</span>
                 </div>
@@ -368,14 +362,14 @@ export function FooterStyle7({
                       placeholder="Enter Email"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
-                      className="w-full rounded-full border px-3 py-2 pr-12 text-xs text-white focus:outline-none sm:px-4 sm:py-2.5 sm:pr-14 sm:text-sm"
+                      className="w-full rounded-full border-none bg-white/10 px-5 py-3 pr-14 text-sm text-white placeholder-white/50 focus:bg-white/20 focus:ring-0 focus:outline-none"
                       disabled={
                         isEditable || createNewsletterMutation.isPending
                       }
                     />
                     <Button
                       type="submit"
-                      className="absolute top-1/2 right-1 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full p-0 transition-colors sm:right-1.5 sm:h-9 sm:w-9"
+                      className="absolute top-1/2 right-1.5 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full p-0 transition-colors"
                       style={{
                         backgroundColor: secondaryColor,
                         color: secondaryForeground,
@@ -384,12 +378,12 @@ export function FooterStyle7({
                         isEditable || createNewsletterMutation.isPending
                       }
                     >
-                      <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                      <Send className="h-4 w-4" />
                     </Button>
                   </div>
 
                   {subscriptionStatus === "error" && errorMessage && (
-                    <div className="mt-2 flex items-center justify-center gap-2 text-red-400">
+                    <div className="mt-2 flex items-center justify-start gap-2 text-red-400">
                       <AlertCircle className="h-4 w-4" />
                       <span className="text-sm">{errorMessage}</span>
                     </div>
@@ -405,11 +399,10 @@ export function FooterStyle7({
         </div>
 
         <div
-          className="flex flex-col items-center justify-between gap-3 px-3 py-6 text-[10px] leading-relaxed sm:gap-4 sm:px-4 sm:py-7 sm:text-xs md:flex-row md:gap-0 md:px-6 md:py-8 lg:px-12"
-          style={{ color: `${primaryForeground}80` }}
+          className="flex flex-col items-center justify-between gap-6 px-4 py-8 text-xs leading-relaxed text-white/60 md:flex-row md:px-8"
         >
-          <p>{data.copyright}</p>
-          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:justify-start md:gap-8">
+          <p className="text-left">{data.copyright}</p>
+          <div className="flex flex-wrap justify-center gap-6 md:justify-end">
             {(legalSection?.links || []).map(link => (
               <Link
                 key={link.id}

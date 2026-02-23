@@ -58,28 +58,31 @@ export const ServicesCard3: React.FC<ServicesPost3Props> = ({
   return (
     <CardWrapper>
       <div
-        className={`grid items-center gap-8 md:grid-cols-2 ${index % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
+        className={`grid items-center gap-8 md:grid-cols-2 rounded-2xl bg-card p-6 shadow-sm transition-all hover:shadow-md ${index % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
       >
-        <div>
-          <Image
-            src={serviceImage}
-            alt={services.thumbnail_image_alt_description || services.title}
-            className="aspect-video h-auto w-full rounded-xl object-cover"
-            width={800}
-            height={450}
-          />
+        <div className={index % 2 !== 0 ? "md:order-2" : ""}>
+          <div className="relative aspect-video w-full overflow-hidden rounded-xl">
+            <Image
+              src={serviceImage}
+              alt={services.thumbnail_image_alt_description || services.title}
+              fill
+              className="object-cover transition-transform duration-500 hover:scale-105"
+            />
+          </div>
         </div>
-        <div>
-          <h2 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
+        <div className={index % 2 !== 0 ? "md:order-1" : ""}>
+          <h2 className="mb-4 text-2xl font-bold text-foreground">
             {services.title}
           </h2>
+          <p className="mb-6 text-muted-foreground line-clamp-3">
+             {services.description?.replace(/<[^>]*>/g, "") || "Read more about this service."}
+          </p>
 
-          <a
-            className="mt-4 inline-block border-b-2 border-gray-900 pb-1 text-sm font-semibold tracking-wider text-gray-900 dark:border-white dark:text-white"
-            href={getDetailsUrl()}
+          <span
+            className="inline-block border-b-2 border-primary pb-1 text-sm font-semibold tracking-wider text-primary"
           >
             READ MORE
-          </a>
+          </span>
         </div>
       </div>
     </CardWrapper>

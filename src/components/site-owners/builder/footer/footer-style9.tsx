@@ -20,7 +20,7 @@ interface FooterStyle9Props {
 const ColumnHeader: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <h3 className="mb-6 text-2xl font-bold tracking-wide text-white uppercase">
+  <h3 className="mb-6 text-2xl font-bold tracking-wide text-white uppercase text-left">
     {children}
   </h3>
 );
@@ -35,7 +35,7 @@ const LinkItem: React.FC<{
   const pathname = usePathname();
 
   return (
-    <li className="mb-3">
+    <li className="mb-3 text-left">
       {isEditable ? (
         <span className="group flex cursor-default items-center text-[15px] font-medium text-gray-300 transition-colors duration-200 hover:text-white">
           <ChevronRight
@@ -96,7 +96,7 @@ export function FooterStyle9({
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-[#0b1221] pt-16 pb-8 font-sans text-white">
+    <footer className="relative overflow-hidden bg-[#0b1221] pt-20 pb-12 font-sans text-white">
       {/* Subtle Background Elements to mimic the bridge/cityscape watermark */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.03]">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -112,7 +112,7 @@ export function FooterStyle9({
 
       <div className="relative z-10 container mx-auto px-6 lg:px-12">
         {/* Main Grid Content */}
-        <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+        <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Column 1: Student Services (Span 4) */}
           <div className="lg:col-span-4">
             {studentServices && (
@@ -213,7 +213,7 @@ export function FooterStyle9({
         <div className="mb-8 h-px w-full bg-gray-800" />
 
         {/* Bottom Bar */}
-        <div className="flex flex-col items-center justify-between gap-4 text-sm text-gray-400 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-6 text-sm text-gray-400 md:flex-row">
           {/* Left: Copyright */}
           <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
             <p>{data.copyright}</p>

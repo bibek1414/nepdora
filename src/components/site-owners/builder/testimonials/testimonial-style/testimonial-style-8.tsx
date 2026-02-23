@@ -43,12 +43,12 @@ export const TestimonialStyle8: React.FC<TestimonialStyleProps> = ({
   };
 
   return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="mx-auto max-w-6xl px-4">
+    <section className="bg-background py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {isLoading && (
-          <div className="space-y-4">
-            <Skeleton className="mx-auto h-6 w-40" />
-            <Skeleton className="h-[420px] w-full rounded-3xl" />
+          <div className="space-y-6">
+            <Skeleton className="h-8 w-48 rounded-md" />
+            <Skeleton className="h-[500px] w-full rounded-3xl" />
           </div>
         )}
 
@@ -65,24 +65,27 @@ export const TestimonialStyle8: React.FC<TestimonialStyleProps> = ({
         )}
 
         {!isLoading && !error && testimonials.length > 0 && (
-          <TestimonialCard8
-            testimonials={testimonials.slice(0, pageSize)}
-            title={title}
-            subtitle={subtitle}
-            backgroundImage={backgroundImage}
-            isEditable={isEditable}
-            onTitleChange={handleTitleChange}
-            onSubtitleChange={handleSubtitleChange}
-            onBackgroundChange={handleBackgroundImageChange}
-            onTestimonialClick={testimonial =>
-              onTestimonialClick?.(testimonial.id)
-            }
-          />
+          <div className="relative">
+             {isEditable && <div className="absolute inset-0 z-10 pointer-events-none" />}
+            <TestimonialCard8
+                testimonials={testimonials.slice(0, pageSize)}
+                title={title}
+                subtitle={subtitle}
+                backgroundImage={backgroundImage}
+                isEditable={isEditable}
+                onTitleChange={handleTitleChange}
+                onSubtitleChange={handleSubtitleChange}
+                onBackgroundChange={handleBackgroundImageChange}
+                onTestimonialClick={testimonial =>
+                onTestimonialClick?.(testimonial.id)
+                }
+            />
+          </div>
         )}
 
         {!isLoading && !error && testimonials.length === 0 && (
-          <div className="mt-10 w-full py-16 text-center">
-            <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
+          <div className="mt-10 w-full py-20 text-center bg-muted/30 rounded-2xl border border-dashed">
+            <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-16 w-16 opacity-50" />
             <h3 className="text-foreground mb-4 text-2xl font-semibold">
               No Testimonials Available
             </h3>

@@ -31,8 +31,8 @@ export const TestimonialStyle10: React.FC<TestimonialStyleProps> = ({
   };
 
   return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="mx-auto max-w-7xl px-4">
+    <section className="bg-background py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {isLoading && (
           <div className="mx-auto max-w-7xl">
             <Skeleton className="h-[540px] w-full rounded-[40px]" />
@@ -65,8 +65,8 @@ export const TestimonialStyle10: React.FC<TestimonialStyleProps> = ({
         )}
 
         {!isLoading && !error && testimonials.length === 0 && (
-          <div className="py-16 text-center">
-            <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
+          <div className="py-20 text-center rounded-2xl bg-muted/30 border border-dashed">
+            <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-16 w-16 opacity-50" />
             <h3 className="text-foreground mb-4 text-2xl font-semibold">
               No Testimonials Available
             </h3>

@@ -111,7 +111,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
 
   return (
     <div
-      className="relative flex min-h-screen items-center justify-center text-center text-white"
+      className="relative flex min-h-screen items-center"
       data-component-id={componentId}
       style={{
         ...(data.backgroundType === "image" && data.backgroundImageUrl
@@ -207,88 +207,95 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
       )}
 
       {/* Content - Make sure it's above the overlay */}
-      <div className="relative z-10 max-w-3xl px-6">
-        {/* Badge/Subtitle */}
-        <EditableText
-          key={`subtitle-${componentId}`}
-          value={data.subtitle || "Introducing the UA-01"}
-          onChange={handleTextUpdate("subtitle")}
-          as="h1"
-          style={{
-            color: "#D1D5DB", // text-gray-300 equivalent
-          }}
-          isEditable={isEditable}
-          placeholder="Enter subtitle/badge text..."
-        />
-
-        {/* Main Title */}
-        <EditableText
-          key={`title-${componentId}`}
-          value={data.title}
-          onChange={handleTextUpdate("title")}
-          as="h2"
-          isEditable={isEditable}
-          placeholder="Enter main title..."
-          multiline={true}
-        />
-
-        {/* Description */}
-        <EditableText
-          key={`description-${componentId}`}
-          value={data.description}
-          onChange={handleTextUpdate("description")}
-          as="p"
-          className="mt-6"
-          isEditable={isEditable}
-          placeholder="Enter description..."
-          multiline={true}
-        />
-
-        {/* Buttons */}
-        <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-          {data.buttons.length > 0 && (
-            <EditableLink
-              key={`button-1-${componentId}`}
-              text={data.buttons[0]?.text || "Discover More"}
-              href={data.buttons[0]?.href || "#"}
-              onChange={(text, href) =>
-                handleButtonUpdate("buttons")(
-                  data.buttons[0]?.id || "1",
-                  text,
-                  href
-                )
-              }
-              isEditable={isEditable}
-              siteUser={siteUser}
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="max-w-3xl flex flex-col items-start text-left space-y-8">
+          {/* Badge/Subtitle */}
+          <div className="inline-block">
+            <EditableText
+              key={`subtitle-${componentId}`}
+              value={data.subtitle || "Introducing the UA-01"}
+              onChange={handleTextUpdate("subtitle")}
+              as="h1"
               style={{
-                backgroundColor: theme.colors.primary,
-                color: theme.colors.primaryForeground,
-                fontFamily: theme.fonts.body,
+                color: "#D1D5DB", // text-gray-300 equivalent
               }}
-              textPlaceholder="Primary button text..."
-              hrefPlaceholder="Enter URL..."
-            />
-          )}
-
-          {data.buttons.length > 1 && (
-            <EditableLink
-              key={`button-2-${componentId}`}
-              text={data.buttons[1]?.text || "Explore Collection"}
-              href={data.buttons[1]?.href || "#"}
-              onChange={(text, href) =>
-                handleButtonUpdate("buttons")(
-                  data.buttons[1]?.id || "2",
-                  text,
-                  href
-                )
-              }
+              className="text-sm font-semibold tracking-wider uppercase border-l-2 pl-4 border-white/50"
               isEditable={isEditable}
-              siteUser={siteUser}
-              className="border"
-              textPlaceholder="Secondary button text..."
-              hrefPlaceholder="Enter URL..."
+              placeholder="Enter subtitle/badge text..."
             />
-          )}
+          </div>
+
+          {/* Main Title */}
+          <EditableText
+            key={`title-${componentId}`}
+            value={data.title}
+            onChange={handleTextUpdate("title")}
+            as="h2"
+            className="text-5xl font-bold leading-tight tracking-tight sm:text-6xl lg:text-7xl text-white"
+            isEditable={isEditable}
+            placeholder="Enter main title..."
+            multiline={true}
+          />
+
+          {/* Description */}
+          <EditableText
+            key={`description-${componentId}`}
+            value={data.description}
+            onChange={handleTextUpdate("description")}
+            as="p"
+            className="text-xl text-gray-300 leading-relaxed max-w-2xl"
+            isEditable={isEditable}
+            placeholder="Enter description..."
+            multiline={true}
+          />
+
+          {/* Buttons */}
+          <div className="flex flex-wrap items-center gap-4 pt-4">
+            {data.buttons.length > 0 && (
+              <EditableLink
+                key={`button-1-${componentId}`}
+                text={data.buttons[0]?.text || "Discover More"}
+                href={data.buttons[0]?.href || "#"}
+                onChange={(text, href) =>
+                  handleButtonUpdate("buttons")(
+                    data.buttons[0]?.id || "1",
+                    text,
+                    href
+                  )
+                }
+                isEditable={isEditable}
+                siteUser={siteUser}
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  color: theme.colors.primaryForeground,
+                  fontFamily: theme.fonts.body,
+                }}
+                className="px-8 py-4 rounded-lg font-medium transition-transform hover:scale-105"
+                textPlaceholder="Primary button text..."
+                hrefPlaceholder="Enter URL..."
+              />
+            )}
+
+            {data.buttons.length > 1 && (
+              <EditableLink
+                key={`button-2-${componentId}`}
+                text={data.buttons[1]?.text || "Explore Collection"}
+                href={data.buttons[1]?.href || "#"}
+                onChange={(text, href) =>
+                  handleButtonUpdate("buttons")(
+                    data.buttons[1]?.id || "2",
+                    text,
+                    href
+                  )
+                }
+                isEditable={isEditable}
+                siteUser={siteUser}
+                className="px-8 py-4 rounded-lg font-medium border border-white/30 hover:bg-white/10 transition-colors text-white"
+                textPlaceholder="Secondary button text..."
+                hrefPlaceholder="Enter URL..."
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

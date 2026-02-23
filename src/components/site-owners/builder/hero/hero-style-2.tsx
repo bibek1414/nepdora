@@ -167,7 +167,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
 
   return (
     <section
-      className="relative flex min-h-screen w-full items-center p-4 sm:p-6 md:p-8 lg:p-16"
+      className="relative flex min-h-screen w-full items-center py-20 lg:py-32"
       style={{
         ...getBackgroundStyles(),
         color: textColor,
@@ -259,192 +259,193 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
       )}
 
       {/* Main Content Container */}
-      <div className="relative z-10 container mx-auto flex w-full max-w-7xl flex-col gap-6 sm:gap-8 lg:flex-row lg:items-center">
-        {/* Text Content */}
-        <div className={`flex w-full flex-col gap-3 sm:gap-4 lg:flex-1`}>
-          <EditableText
-            value={data.title}
-            onChange={handleTextUpdate("title")}
-            as="h1"
-            isEditable={isEditable}
-            placeholder="Enter your hero title..."
-          />
-
-          <EditableText
-            value={data.subtitle}
-            onChange={handleTextUpdate("subtitle")}
-            as="p"
-            isEditable={isEditable}
-            placeholder="Enter subtitle..."
-          />
-
-          {data.description && (
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 items-center">
+          {/* Text Content */}
+          <div className="flex flex-col items-start text-left gap-6 order-2 lg:order-1">
             <EditableText
-              value={data.description}
-              onChange={handleTextUpdate("description")}
-              as="p"
+              value={data.title}
+              onChange={handleTextUpdate("title")}
+              as="h1"
+              className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
               isEditable={isEditable}
-              placeholder="Enter description..."
-              multiline={true}
+              placeholder="Enter your hero title..."
             />
-          )}
 
-          {/* Buttons */}
-          <div className="mt-2 flex flex-wrap justify-start gap-2 sm:mt-4 sm:gap-3">
-            {data.buttons.map(btn => (
-              <EditableLink
-                key={`btn-${componentId}-${btn.id}`}
-                style={{
-                  backgroundColor:
-                    btn.variant === "primary"
-                      ? theme.colors.primary
-                      : theme.colors.secondary,
-                  color:
-                    btn.variant === "primary"
-                      ? theme.colors.primaryForeground
-                      : theme.colors.secondaryForeground,
-                  fontFamily: theme.fonts.body,
-                }}
-                text={btn.text}
-                href={btn.href || "#"}
-                onChange={(text, href) =>
-                  handleButtonUpdate("buttons")(btn.id, text, href)
-                }
+            <EditableText
+              value={data.subtitle}
+              onChange={handleTextUpdate("subtitle")}
+              as="p"
+              className="text-lg font-medium opacity-90"
+              isEditable={isEditable}
+              placeholder="Enter subtitle..."
+            />
+
+            {data.description && (
+              <EditableText
+                value={data.description}
+                onChange={handleTextUpdate("description")}
+                as="p"
+                className="text-lg opacity-80 leading-relaxed max-w-lg"
                 isEditable={isEditable}
-                siteUser={siteUser}
-                textPlaceholder="Button text..."
-                hrefPlaceholder="Enter button URL..."
+                placeholder="Enter description..."
+                multiline={true}
               />
-            ))}
+            )}
+
+            {/* Buttons */}
+            <div className="flex flex-wrap items-center gap-4 mt-2">
+              {data.buttons.map(btn => (
+                <EditableLink
+                  key={`btn-${componentId}-${btn.id}`}
+                  style={{
+                    backgroundColor:
+                      btn.variant === "primary"
+                        ? theme.colors.primary
+                        : theme.colors.secondary,
+                    color:
+                      btn.variant === "primary"
+                        ? theme.colors.primaryForeground
+                        : theme.colors.secondaryForeground,
+                    fontFamily: theme.fonts.body,
+                  }}
+                  className="px-8 py-3 rounded-lg font-medium transition-transform hover:scale-105"
+                  text={btn.text}
+                  href={btn.href || "#"}
+                  onChange={(text, href) =>
+                    handleButtonUpdate("buttons")(btn.id, text, href)
+                  }
+                  isEditable={isEditable}
+                  siteUser={siteUser}
+                  textPlaceholder="Button text..."
+                  hrefPlaceholder="Enter button URL..."
+                />
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Image Slider */}
-        {data.showSlider &&
-          data.sliderImages &&
-          data.sliderImages.length > 0 && (
-            <div className="group relative mt-6 w-full lg:mt-0 lg:w-1/2 lg:flex-shrink-0">
-              <div className="relative overflow-hidden rounded-lg shadow-lg">
-                <div
-                  className="flex transition-transform duration-500 ease-in-out"
-                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                >
-                  {data.sliderImages.map((img, index) => (
-                    <div
-                      className="w-full flex-shrink-0"
-                      key={`slide-${componentId}-${img.id || index}`}
-                    >
-                      <EditableImage
-                        key={`slide-img-${componentId}-${index}-${img.url}`}
-                        src={getImageUrl(img.url, {
-                          width: 600,
-                          height: 400,
-                          crop: "fill",
-                        })}
-                        alt={img.alt || `Slide ${index + 1}`}
-                        onImageChange={(imageUrl, altText) =>
-                          handleSliderImageUpdate(index, imageUrl, altText)
-                        }
-                        onAltChange={altText => {
-                          const imgId =
-                            data.sliderImages?.[index]?.id || `slide-${index}`;
-                          handleArrayItemUpdate(
-                            "sliderImages",
-                            imgId
-                          )({ alt: altText });
-                        }}
-                        isEditable={isEditable}
-                        className="h-56 w-full object-cover sm:h-72 md:h-80 lg:h-96"
-                        width={600}
-                        height={400}
-                        cloudinaryOptions={{
-                          folder: "hero-slider-images",
-                          resourceType: "image",
-                        }}
-                        showAltEditor={isEditable}
-                        placeholder={{
-                          width: 600,
-                          height: 400,
-                          text: `Upload slide ${index + 1}`,
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Slider Navigation */}
-              {data.sliderImages.length > 1 && (
-                <>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="bg-background/80 pointer-events-none invisible absolute top-1/2 left-1 z-10 h-8 w-8 -translate-y-1/2 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 sm:left-2 sm:h-10 sm:w-10"
-                    onClick={prevSlide}
+          {/* Image Slider */}
+          {data.showSlider &&
+            data.sliderImages &&
+            data.sliderImages.length > 0 && (
+              <div className="group relative w-full order-1 lg:order-2">
+                <div className="relative overflow-hidden rounded-2xl shadow-2xl aspect-[4/3]">
+                  <div
+                    className="flex h-full transition-transform duration-500 ease-in-out"
+                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                   >
-                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="bg-background/80 pointer-events-none invisible absolute top-1/2 right-1 z-10 h-8 w-8 -translate-y-1/2 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 sm:right-2 sm:h-10 sm:w-10"
-                    onClick={nextSlide}
-                  >
-                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                  </Button>
-
-                  {/* Slide indicators */}
-                  <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 transform space-x-1.5 sm:bottom-4 sm:space-x-2">
-                    {data.sliderImages.map((_, index) => (
-                      <button
-                        key={index}
-                        className={`h-1.5 w-1.5 rounded-full transition-colors sm:h-2 sm:w-2 ${
-                          index === currentSlide ? "bg-white" : "bg-white/50"
-                        }`}
-                        onClick={() => setCurrentSlide(index)}
-                        aria-label={`Go to slide ${index + 1}`}
-                      />
+                    {data.sliderImages.map((img, index) => (
+                      <div
+                        className="w-full flex-shrink-0 h-full relative"
+                        key={`slide-${componentId}-${img.id || index}`}
+                      >
+                        <EditableImage
+                          key={`slide-img-${componentId}-${index}-${img.url}`}
+                          src={getImageUrl(img.url, {
+                            width: 800,
+                            height: 600,
+                            crop: "fill",
+                          })}
+                          alt={img.alt || `Slide ${index + 1}`}
+                          onImageChange={(imageUrl, altText) =>
+                            handleSliderImageUpdate(index, imageUrl, altText)
+                          }
+                          onAltChange={altText => {
+                            const imgId =
+                              data.sliderImages?.[index]?.id || `slide-${index}`;
+                            handleArrayItemUpdate(
+                              "sliderImages",
+                              imgId
+                            )({ alt: altText });
+                          }}
+                          isEditable={isEditable}
+                          className="h-full w-full object-cover"
+                          width={800}
+                          height={600}
+                          cloudinaryOptions={{
+                            folder: "hero-slider-images",
+                            resourceType: "image",
+                          }}
+                          showAltEditor={isEditable}
+                          placeholder={{
+                            width: 800,
+                            height: 600,
+                            text: `Upload slide ${index + 1}`,
+                          }}
+                        />
+                      </div>
                     ))}
                   </div>
-                </>
-              )}
 
-              {/* Add New Slide Button */}
-              {isEditable && (
-                <div className="mt-4 text-center sm:mt-6">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-xs sm:text-sm"
-                    onClick={() => {
-                      const newSlide = {
-                        id: `slide-${Date.now()}`,
-                        url: "https://via.placeholder.com/600x400?text=New+Slide",
-                        alt: `Slide ${(data.sliderImages?.length || 0) + 1}`,
-                      };
-                      const updatedSliderImages = [
-                        ...(data.sliderImages || []),
-                        newSlide,
-                      ];
-                      const updatedData = {
-                        ...data,
-                        sliderImages: updatedSliderImages,
-                      };
-                      setData(updatedData);
-                      onUpdate?.({ sliderImages: updatedSliderImages });
-                    }}
-                    style={{
-                      borderColor: theme.colors.primary,
-                      color: theme.colors.primary,
-                    }}
-                  >
-                    Add New Slide
-                  </Button>
+                  {/* Slider Navigation */}
+                  {data.sliderImages.length > 1 && (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm rounded-full"
+                        onClick={prevSlide}
+                      >
+                        <ChevronLeft className="h-6 w-6" />
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm rounded-full"
+                        onClick={nextSlide}
+                      >
+                        <ChevronRight className="h-6 w-6" />
+                      </Button>
+
+                      {/* Slide indicators */}
+                      <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 transform space-x-2">
+                        {data.sliderImages.map((_, index) => (
+                          <button
+                            key={index}
+                            className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                              index === currentSlide ? "bg-white w-6" : "bg-white/50"
+                            }`}
+                            onClick={() => setCurrentSlide(index)}
+                            aria-label={`Go to slide ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
-              )}
-            </div>
-          )}
+
+                {/* Add New Slide Button */}
+                {isEditable && (
+                  <div className="mt-4 text-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newSlide = {
+                          id: `slide-${Date.now()}`,
+                          url: "https://via.placeholder.com/600x400?text=New+Slide",
+                          alt: `Slide ${(data.sliderImages?.length || 0) + 1}`,
+                        };
+                        const updatedSliderImages = [
+                          ...(data.sliderImages || []),
+                          newSlide,
+                        ];
+                        const updatedData = {
+                          ...data,
+                          sliderImages: updatedSliderImages,
+                        };
+                        setData(updatedData);
+                        onUpdate?.({ sliderImages: updatedSliderImages });
+                      }}
+                    >
+                      Add New Slide
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+        </div>
       </div>
     </section>
   );

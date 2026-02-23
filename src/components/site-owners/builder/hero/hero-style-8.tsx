@@ -159,7 +159,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
 
   return (
     <section
-      className="relative mx-auto max-w-7xl overflow-hidden bg-white"
+      className="relative mx-auto w-full overflow-hidden bg-white"
       data-component-id={componentId}
     >
       {/* Desktop Layout */}
@@ -170,7 +170,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
             {/* Left Image Column */}
             <div className="relative h-full min-h-[600px] lg:min-h-[700px]">
               <div
-                className="relative h-full w-full cursor-pointer overflow-hidden"
+                className="relative h-full w-full cursor-pointer overflow-hidden group"
                 onMouseEnter={() => setHoveredImage("leftImage")}
                 onMouseLeave={() => setHoveredImage(null)}
               >
@@ -178,7 +178,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                   src={leftImageUrl}
                   alt={data.leftImageAlt || "Left image"}
                   fill
-                  className="object-cover"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                   priority
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
@@ -230,13 +230,13 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
             </div>
 
             {/* Center Content Column */}
-            <div className="relative flex h-full min-h-[600px] flex-col items-center justify-center px-6 py-12 lg:min-h-[700px] lg:px-8">
+            <div className="relative flex h-full min-h-[600px] flex-col items-start justify-center px-8 py-12 lg:min-h-[700px] lg:px-12 text-left bg-background">
               {/* Main Heading */}
               <EditableText
                 value={data.title || "Premium Nepali Hand Knotted Rugs"}
                 onChange={handleTextUpdate("title")}
                 as="h1"
-                className="mb-4 w-full text-center text-3xl leading-tight font-bold md:text-4xl lg:mb-6 lg:text-5xl"
+                className="mb-6 w-full text-4xl leading-tight font-bold md:text-5xl lg:mb-8 lg:text-6xl tracking-tight text-foreground"
                 isEditable={isEditable}
                 placeholder="Enter main title..."
                 multiline={true}
@@ -250,14 +250,38 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 }
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="mb-8 w-full text-center text-sm leading-relaxed md:mb-10 md:text-base lg:mb-12 lg:text-lg"
+                className="mb-8 w-full text-lg leading-relaxed text-muted-foreground md:mb-10 lg:mb-12"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
               />
 
               {/* Action Buttons */}
-              <div className="flex w-full flex-col gap-4 sm:flex-row sm:justify-center sm:gap-6">
+              <div className="flex w-full flex-wrap items-center gap-4 sm:gap-6">
+                 {data.buttons.length > 0 && (
+                  <EditableLink
+                    text={data.buttons[0]?.text || "Order Now"}
+                    href={data.buttons[0]?.href || "#"}
+                    onChange={(text, href) =>
+                      handleButtonUpdate("buttons")(
+                        data.buttons[0]?.id || "1",
+                        text,
+                        href
+                      )
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    className="h-12 rounded-lg px-8 py-3 text-base font-medium shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                      fontFamily: theme.fonts.body,
+                    }}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter URL..."
+                  />
+                )}
+
                 {data.buttons.length > 1 && (
                   <EditableLink
                     text={data.buttons[1]?.text || "View Menu"}
@@ -271,36 +295,11 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="h-10 w-full rounded-lg border-2 bg-transparent px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-gray-50 sm:w-auto sm:min-w-[140px] lg:h-12 lg:px-6 lg:text-base"
+                    className="h-12 rounded-lg border-2 bg-transparent px-8 py-3 text-base font-medium transition-all duration-200 hover:bg-muted"
                     style={{
                       borderColor: theme.colors.primary,
                       color: theme.colors.primary,
                       fontFamily: theme.fonts.body,
-                    }}
-                    textPlaceholder="Button text..."
-                    hrefPlaceholder="Enter URL..."
-                  />
-                )}
-
-                {data.buttons.length > 0 && (
-                  <EditableLink
-                    text={data.buttons[0]?.text || "Order Now"}
-                    href={data.buttons[0]?.href || "#"}
-                    onChange={(text, href) =>
-                      handleButtonUpdate("buttons")(
-                        data.buttons[0]?.id || "1",
-                        text,
-                        href
-                      )
-                    }
-                    isEditable={isEditable}
-                    siteUser={siteUser}
-                    className="h-10 w-full rounded-lg px-5 py-2.5 text-sm font-medium shadow-lg transition-all duration-200 hover:shadow-xl sm:w-auto sm:min-w-[140px] lg:h-12 lg:px-6 lg:text-base"
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.primaryForeground,
-                      fontFamily: theme.fonts.body,
-                      boxShadow: `0 10px 25px ${theme.colors.primary}20`,
                     }}
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter URL..."
@@ -312,7 +311,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
             {/* Right Image Column */}
             <div className="relative h-full min-h-[600px] lg:min-h-[700px]">
               <div
-                className="relative h-full w-full cursor-pointer overflow-hidden"
+                className="relative h-full w-full cursor-pointer overflow-hidden group"
                 onMouseEnter={() => setHoveredImage("rightImage")}
                 onMouseLeave={() => setHoveredImage(null)}
               >
@@ -320,7 +319,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                   src={rightImageUrl}
                   alt={data.rightImageAlt || "Right image"}
                   fill
-                  className="object-cover"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                   priority
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
@@ -373,7 +372,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
           </div>
 
           {/* Mobile Layout */}
-          <div className="relative min-h-[500px] md:hidden">
+          <div className="relative min-h-[600px] md:hidden">
             {/* Mobile Background Image */}
             {data.mobileImageUrl && (
               <div
@@ -389,6 +388,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                   priority
                   sizes="100vw"
                 />
+                 <div className="absolute inset-0 bg-black/60" />
 
                 {isEditable && (
                   <>
@@ -439,19 +439,18 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
             )}
 
             {/* Mobile Content Overlay */}
-            <div className="relative z-10 flex min-h-[500px] flex-col items-center justify-center px-6 py-12">
+            <div className="relative z-10 flex min-h-[600px] flex-col items-start justify-center px-6 py-12 text-left">
               {/* Main Heading */}
               <EditableText
                 value={data.title || "Premium Nepali Hand Knotted Rugs"}
                 onChange={handleTextUpdate("title")}
                 as="h1"
-                className="mb-4 w-full text-center text-3xl leading-tight font-bold"
+                className="mb-4 w-full text-4xl leading-tight font-bold text-white"
                 isEditable={isEditable}
                 placeholder="Enter main title..."
                 multiline={true}
                 style={{
                   fontFamily: theme.fonts.heading,
-                  color: data.mobileImageUrl ? "#FFFFFF" : theme.colors.primary,
                 }}
               />
 
@@ -463,18 +462,42 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 }
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="mb-8 w-full text-center text-sm leading-relaxed md:text-base"
+                className="mb-8 w-full text-lg leading-relaxed text-white/90"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
                 style={{
                   fontFamily: theme.fonts.body,
-                  color: data.mobileImageUrl ? "#FFFFFF" : theme.colors.text,
                 }}
               />
 
               {/* Action Buttons */}
               <div className="flex w-full flex-col gap-4">
+                 {data.buttons.length > 0 && (
+                  <EditableLink
+                    text={data.buttons[0]?.text || "Order Now"}
+                    href={data.buttons[0]?.href || "#"}
+                    onChange={(text, href) =>
+                      handleButtonUpdate("buttons")(
+                        data.buttons[0]?.id || "1",
+                        text,
+                        href
+                      )
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    className="h-12 w-full rounded-lg px-8 py-3 text-base font-medium shadow-lg transition-all duration-200"
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                      fontFamily: theme.fonts.body,
+                      boxShadow: `0 10px 25px ${theme.colors.primary}20`,
+                    }}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter URL..."
+                  />
+                )}
+
                 {data.buttons.length > 1 && (
                   <EditableLink
                     text={data.buttons[1]?.text || "View Menu"}
@@ -488,40 +511,9 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="h-10 w-full rounded-lg border-2 bg-transparent px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-white/10"
+                    className="h-12 w-full rounded-lg border-2 border-white bg-transparent px-8 py-3 text-base font-medium text-white transition-all duration-200 hover:bg-white/10"
                     style={{
-                      borderColor: data.mobileImageUrl
-                        ? "#FFFFFF"
-                        : theme.colors.primary,
-                      color: data.mobileImageUrl
-                        ? "#FFFFFF"
-                        : theme.colors.primary,
                       fontFamily: theme.fonts.body,
-                    }}
-                    textPlaceholder="Button text..."
-                    hrefPlaceholder="Enter URL..."
-                  />
-                )}
-
-                {data.buttons.length > 0 && (
-                  <EditableLink
-                    text={data.buttons[0]?.text || "Order Now"}
-                    href={data.buttons[0]?.href || "#"}
-                    onChange={(text, href) =>
-                      handleButtonUpdate("buttons")(
-                        data.buttons[0]?.id || "1",
-                        text,
-                        href
-                      )
-                    }
-                    isEditable={isEditable}
-                    siteUser={siteUser}
-                    className="h-10 w-full rounded-lg px-5 py-2.5 text-sm font-medium shadow-lg transition-all duration-200 hover:shadow-xl"
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.primaryForeground,
-                      fontFamily: theme.fonts.body,
-                      boxShadow: `0 10px 25px ${theme.colors.primary}20`,
                     }}
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter URL..."

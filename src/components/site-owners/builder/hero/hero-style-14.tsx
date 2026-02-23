@@ -139,7 +139,7 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
   return (
     <section
       ref={bannerRef}
-      className="relative h-screen w-full overflow-hidden bg-gray-900"
+      className="relative h-screen min-h-[700px] w-full overflow-hidden bg-gray-900"
     >
       {isEditable && (
         <div className="absolute top-6 right-4 z-30">
@@ -184,63 +184,66 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
         />
         {/* Dark Overlay for text contrast */}
         <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
       </div>
 
-      {/* Content Container - Reset to Centered */}
-      <div className="relative flex h-full w-full flex-col items-center justify-center px-4 text-center text-white sm:px-6">
-        {/* Title & Subtitle with Fade Up Animation */}
-        <div
-          className={`transition-all delay-100 duration-1000 ease-out ${
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
-          }`}
-        >
-          <p className="mb-3 text-xs font-bold tracking-[0.2em] text-gray-300 uppercase sm:mb-4 sm:text-sm sm:tracking-[0.3em]">
-            <EditableText
-              value={data.subtitle || "Exclusive Drop"}
-              onChange={handleTextUpdate("subtitle")}
-              as="span"
-              isEditable={isEditable}
-              placeholder="Exclusive Drop"
-            />
-          </p>
-          <h2 className="mb-6 text-4xl font-light tracking-tight sm:mb-8 sm:text-6xl md:text-7xl lg:text-8xl">
-            <EditableText
-              value={data.title || "MIDNIGHT SERIES"}
-              onChange={handleTextUpdate("title")}
-              as="span"
-              isEditable={isEditable}
-              placeholder="MIDNIGHT SERIES"
-            />
-          </h2>
-        </div>
-
-        {/* Sliding Button Animation: Slides from Left (-translate-x) to Center (0) */}
-        <div
-          className={`transform transition-all delay-300 duration-1000 ease-out ${
-            isVisible
-              ? "translate-x-0 opacity-100"
-              : "-translate-x-20 opacity-0 sm:-translate-x-32"
-          }`}
-        >
-          <EditableLink
-            text={buttonText}
-            href={buttonHref}
-            onChange={handlePrimaryButtonUpdate}
-            isEditable={isEditable}
-            siteUser={siteUser}
-            textPlaceholder="Shop The Look"
-            hrefPlaceholder="Enter URL..."
-            style={{
-              color: theme.colors.primaryForeground,
-              backgroundColor: theme.colors.primary,
-            }}
+      {/* Content Container - Left Aligned */}
+      <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-start text-left max-w-4xl">
+          {/* Title & Subtitle with Fade Up Animation */}
+          <div
+            className={`transition-all delay-100 duration-1000 ease-out ${
+              isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
+            }`}
           >
-            <>
-              <span className="mr-2">{buttonText}</span>
-              <ChevronRight className="h-4 w-4" />
-            </>
-          </EditableLink>
+            <p className="mb-4 text-sm font-bold tracking-[0.2em] text-gray-200 uppercase sm:text-base">
+              <EditableText
+                value={data.subtitle || "Exclusive Drop"}
+                onChange={handleTextUpdate("subtitle")}
+                as="span"
+                isEditable={isEditable}
+                placeholder="Exclusive Drop"
+              />
+            </p>
+            <h2 className="mb-8 text-5xl font-light tracking-tight text-white sm:text-7xl md:text-8xl lg:text-9xl">
+              <EditableText
+                value={data.title || "MIDNIGHT SERIES"}
+                onChange={handleTextUpdate("title")}
+                as="span"
+                isEditable={isEditable}
+                placeholder="MIDNIGHT SERIES"
+              />
+            </h2>
+          </div>
+
+          {/* Sliding Button Animation */}
+          <div
+            className={`transform transition-all delay-300 duration-1000 ease-out ${
+              isVisible
+                ? "translate-x-0 opacity-100"
+                : "-translate-x-20 opacity-0"
+            }`}
+          >
+            <EditableLink
+              text={buttonText}
+              href={buttonHref}
+              onChange={handlePrimaryButtonUpdate}
+              isEditable={isEditable}
+              siteUser={siteUser}
+              textPlaceholder="Shop The Look"
+              hrefPlaceholder="Enter URL..."
+              style={{
+                color: theme.colors.primaryForeground,
+                backgroundColor: theme.colors.primary,
+              }}
+              className="inline-flex items-center px-8 py-4 text-base font-medium rounded-full shadow-lg hover:scale-105 transition-transform"
+            >
+              <>
+                <span className="mr-2">{buttonText}</span>
+                <ChevronRight className="h-5 w-5" />
+              </>
+            </EditableLink>
+          </div>
         </div>
       </div>
     </section>

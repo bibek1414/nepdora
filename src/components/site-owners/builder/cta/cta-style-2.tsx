@@ -45,7 +45,7 @@ export const CTATemplate2: React.FC<CTATemplate2Props> = ({
 
   const getButtonClassesLocal = (variant: string) => {
     const baseClasses =
-      " px-8 py-4 font-bold transition-colors min-w-[140px] text-center rounded-full text-lg";
+      " px-8 py-4 font-bold transition-all duration-300 min-w-[140px] text-center rounded-full text-lg hover:shadow-lg hover:-translate-y-0.5";
 
     const buttonStyles = {
       backgroundColor:
@@ -90,95 +90,97 @@ export const CTATemplate2: React.FC<CTATemplate2Props> = ({
 
   return (
     <section
-      className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8"
+      className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8 lg:py-24"
       style={getBackgroundStyle()}
     >
-      <div className="relative z-10 container mx-auto max-w-3xl text-center">
-        {/* Badge */}
-        {data.showBadge && data.badgeText && (
-          <div className="mb-6">
-            <Badge
-              variant="secondary"
-              className="px-4 py-1 text-sm"
-              style={{
-                backgroundColor: theme.colors.secondary,
-                color: theme.colors.text,
-                fontFamily: theme.fonts.body,
-              }}
-            >
-              <EditableText
-                value={data.badgeText}
-                onChange={handleTextUpdate("badgeText")}
-                as="span"
-                isEditable={isEditable}
-                placeholder="Badge text..."
-              />
-            </Badge>
-          </div>
-        )}
-
-        {/* Subtitle */}
-        {data.subtitle && (
-          <EditableText
-            value={data.subtitle}
-            onChange={handleTextUpdate("subtitle")}
-            as="h3"
-            className="mb-2 text-lg font-semibold tracking-wide uppercase"
-            style={{ color: theme.colors.primaryForeground }}
-            isEditable={isEditable}
-            placeholder="Enter subtitle..."
-          />
-        )}
-
-        {/* Title */}
-        <EditableText
-          value={data.title}
-          onChange={handleTextUpdate("title")}
-          as="h2"
-          className="mb-4 text-4xl font-bold sm:text-5xl md:text-6xl"
-          style={{ color: theme.colors.primaryForeground }}
-          isEditable={isEditable}
-          placeholder="Enter CTA title..."
-        />
-
-        {/* Description */}
-        {data.description && (
-          <EditableText
-            value={data.description}
-            onChange={handleTextUpdate("description")}
-            as="p"
-            className="mx-auto mb-8 max-w-2xl text-xl"
-            style={{ color: theme.colors.primaryForeground }}
-            isEditable={isEditable}
-            placeholder="Enter description..."
-            multiline={true}
-          />
-        )}
-
-        {/* Buttons */}
-        {data.buttons.length > 0 && (
-          <div className="flex justify-center gap-4">
-            {data.buttons.map(button => {
-              const buttonClass = getButtonClassesLocal(button.variant);
-              return (
-                <EditableLink
-                  key={button.id}
-                  text={button.text || "Button text"}
-                  href={button.href || "#"}
-                  onChange={(text, href) =>
-                    handleButtonUpdate("buttons")(button.id, text, href)
-                  }
+      <div className="relative z-10 container mx-auto max-w-7xl">
+        <div className="flex flex-col items-start text-left max-w-4xl">
+          {/* Badge */}
+          {data.showBadge && data.badgeText && (
+            <div className="mb-6">
+              <Badge
+                variant="secondary"
+                className="px-4 py-1.5 text-sm font-medium rounded-full"
+                style={{
+                  backgroundColor: theme.colors.secondary,
+                  color: theme.colors.text,
+                  fontFamily: theme.fonts.body,
+                }}
+              >
+                <EditableText
+                  value={data.badgeText}
+                  onChange={handleTextUpdate("badgeText")}
+                  as="span"
                   isEditable={isEditable}
-                  siteUser={siteUser}
-                  className={buttonClass.className}
-                  style={buttonClass.style}
-                  textPlaceholder="Button text..."
-                  hrefPlaceholder="Enter URL..."
+                  placeholder="Badge text..."
                 />
-              );
-            })}
-          </div>
-        )}
+              </Badge>
+            </div>
+          )}
+
+          {/* Subtitle */}
+          {data.subtitle && (
+            <EditableText
+              value={data.subtitle}
+              onChange={handleTextUpdate("subtitle")}
+              as="h3"
+              className="mb-4 text-lg font-bold tracking-wide uppercase opacity-90"
+              style={{ color: theme.colors.primaryForeground }}
+              isEditable={isEditable}
+              placeholder="Enter subtitle..."
+            />
+          )}
+
+          {/* Title */}
+          <EditableText
+            value={data.title}
+            onChange={handleTextUpdate("title")}
+            as="h2"
+            className="mb-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl"
+            style={{ color: theme.colors.primaryForeground }}
+            isEditable={isEditable}
+            placeholder="Enter CTA title..."
+          />
+
+          {/* Description */}
+          {data.description && (
+            <EditableText
+              value={data.description}
+              onChange={handleTextUpdate("description")}
+              as="p"
+              className="mb-10 text-xl leading-relaxed opacity-90 max-w-2xl"
+              style={{ color: theme.colors.primaryForeground }}
+              isEditable={isEditable}
+              placeholder="Enter description..."
+              multiline={true}
+            />
+          )}
+
+          {/* Buttons */}
+          {data.buttons.length > 0 && (
+            <div className="flex flex-wrap gap-4">
+              {data.buttons.map(button => {
+                const buttonClass = getButtonClassesLocal(button.variant);
+                return (
+                  <EditableLink
+                    key={button.id}
+                    text={button.text || "Button text"}
+                    href={button.href || "#"}
+                    onChange={(text, href) =>
+                      handleButtonUpdate("buttons")(button.id, text, href)
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    className={buttonClass.className}
+                    style={buttonClass.style}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter URL..."
+                  />
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

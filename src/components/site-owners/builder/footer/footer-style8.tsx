@@ -60,7 +60,7 @@ export function FooterStyle8({
                 containerClassName="gap-3"
               />
             </div>
-            <p className="max-w-md text-lg leading-relaxed text-gray-400">
+            <p className="max-w-md text-lg leading-relaxed text-gray-400 text-left">
               {data.description}
             </p>
           </div>
@@ -71,7 +71,7 @@ export function FooterStyle8({
             <div className="flex flex-1 gap-12 border-b border-gray-800 p-8 sm:gap-20 md:border-r md:border-b-0 lg:p-16">
               {/* Quick Links (Section 1) */}
               {section1 && (
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-6 text-left">
                   <h3 className="text-lg font-medium text-white">
                     {section1.title}
                   </h3>
@@ -103,7 +103,7 @@ export function FooterStyle8({
 
               {/* Pages (Section 2) */}
               {section2 && (
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-6 text-left">
                   <h3 className="text-lg font-medium text-white">
                     {section2.title}
                   </h3>
@@ -135,7 +135,7 @@ export function FooterStyle8({
             </div>
 
             {/* Contact Column */}
-            <div className="flex flex-1 flex-col justify-start gap-8 p-8 lg:p-16">
+            <div className="flex flex-1 flex-col justify-start gap-8 p-8 lg:p-16 text-left">
               {data.contactInfo.address && (
                 <div className="flex items-start gap-4">
                   <div className="mt-1">
@@ -200,7 +200,7 @@ export function FooterStyle8({
           </div>
 
           {/* Copyright */}
-          <div className="text-right text-sm leading-relaxed text-gray-300 md:text-base">
+          <div className="text-left text-sm leading-relaxed text-gray-300 md:text-base">
             <p>{data.copyright}</p>
             <p>
               Powered By <span className="font-medium text-white">Nepdora</span>
