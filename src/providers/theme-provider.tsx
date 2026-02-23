@@ -1,44 +1,50 @@
-// "use client";
+"use client";
 
-// import React, { createContext, useContext } from "react";
-// import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import React, { createContext, useContext, useEffect } from "react";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import {
+  defaultThemeData,
+  ThemeData,
+} from "@/types/owner-site/components/theme";
 
-// interface ThemeContextType {
-//   colors: {
-//     text: string;
-//     primary: string;
-//     secondary: string;
-//     background: string;
-//   };
-//   fonts: {
-//     body: string;
-//     heading: string;
-//   };
-// }
+const ThemeContext = createContext<ThemeData>(defaultThemeData);
 
-// const defaultTheme: ThemeContextType = {
-//   colors: {
-//     text: "#111827",
-//     primary: "#1E40AF",
-//     secondary: "#FACC15",
-//     background: "#FFFFFF",
-//   },
-//   fonts: {
-//     body: "Inter",
-//     heading: "Inter",
-//   },
-// };
+export const useTheme = () => useContext(ThemeContext);
 
-// const ThemeContext = createContext<ThemeContextType>(defaultTheme);
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || defaultThemeData;
 
-// export const useTheme = () => useContext(ThemeContext);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
-// export function ThemeProvider({ children }: { children: React.ReactNode }) {
-//   const { data: themeResponse } = useThemeQuery();
+    const root = document.documentElement;
 
-//   const theme = themeResponse?.data?.[0]?.data?.theme || defaultTheme;
+    // Apply colors to CSS variables
+    if (theme.colors) {
+      root.style.setProperty("--primary", theme.colors.primary);
+      root.style.setProperty(
+        "--primary-foreground",
+        theme.colors.primaryForeground || "#FFFFFF"
+      );
+      root.style.setProperty("--secondary", theme.colors.secondary);
+      root.style.setProperty(
+        "--secondary-foreground",
+        theme.colors.secondaryForeground || "#000000"
+      );
+      root.style.setProperty("--background", theme.colors.background);
+      root.style.setProperty("--foreground", theme.colors.text);
 
-//   return (
-//     <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
-//   );
-// }
+      // Also set these for components that might use them
+      // In shadcn, 'card' and 'popover' usually follow background
+      root.style.setProperty("--card", theme.colors.background);
+      root.style.setProperty("--card-foreground", theme.colors.text);
+      root.style.setProperty("--popover", theme.colors.background);
+      root.style.setProperty("--popover-foreground", theme.colors.text);
+    }
+  }, [theme.colors]);
+
+  return (
+    <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+  );
+}

@@ -6,7 +6,6 @@ import { HeroTemplate1Data } from "@/types/owner-site/components/hero";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface HeroTemplate1Props {
@@ -22,23 +21,6 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const { data: themeResponse } = useThemeQuery();
-
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
-
   const {
     data,
     handleTextUpdate,
@@ -62,12 +44,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
             {data.subtitle && (
               <Badge
                 variant="secondary"
-                className="w-fit rounded-full px-3 py-1 text-xs font-medium sm:text-sm"
-                style={{
-                  backgroundColor: theme.colors.secondary,
-                  color: theme.colors.text,
-                  fontFamily: theme.fonts.body,
-                }}
+                className="w-fit rounded-full bg-secondary text-secondary-foreground font-body px-3 py-1 text-xs font-medium sm:text-sm"
               >
                 <EditableText
                   value={data.subtitle}
@@ -84,7 +61,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-foreground text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
+              className="text-foreground font-heading text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
               isEditable={isEditable}
               placeholder="Enter your hero title..."
             />
@@ -95,7 +72,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="text-muted-foreground max-w-lg text-lg leading-relaxed sm:text-xl"
+                className="text-muted-foreground font-body max-w-lg text-lg leading-relaxed sm:text-xl"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -117,14 +94,9 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                         href
                       )
                     }
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.primaryForeground,
-                      fontFamily: theme.fonts.body,
-                    }}
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="!text-white hover:scale-105 rounded-lg px-8 py-3 font-medium transition-transform"
+                    className="bg-primary text-primary-foreground font-body hover:scale-105 rounded-lg px-8 py-3 font-medium transition-transform"
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter URL..."
                   />
@@ -143,7 +115,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-lg border px-8 py-3 font-medium transition-colors"
+                    className="border-input bg-background font-body hover:bg-accent hover:text-accent-foreground rounded-lg border px-8 py-3 font-medium transition-colors"
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter URL..."
                   />

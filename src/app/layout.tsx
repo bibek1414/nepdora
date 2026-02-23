@@ -4,6 +4,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { CustomerAuthProvider } from "@/contexts/customer/AuthContext";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { QueryProvider } from "@/providers/query-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import TopLoader from "@/components/top-loader";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
@@ -67,19 +68,21 @@ export default function RootLayout({
           <AuthProvider>
             <CustomerAuthProvider>
               <QueryProvider>
-                <TextSelectionProvider>
-                  <CartProvider>
-                    <TopLoader />
-                    {children}
-                    <Analytics />
-                    <Toaster
-                      position="bottom-right"
-                      richColors
-                      closeButton
-                      duration={3000}
-                    />
-                  </CartProvider>
-                </TextSelectionProvider>
+                <ThemeProvider>
+                  <TextSelectionProvider>
+                    <CartProvider>
+                      <TopLoader />
+                      {children}
+                      <Analytics />
+                      <Toaster
+                        position="bottom-right"
+                        richColors
+                        closeButton
+                        duration={3000}
+                      />
+                    </CartProvider>
+                  </TextSelectionProvider>
+                </ThemeProvider>
               </QueryProvider>
             </CustomerAuthProvider>
           </AuthProvider>

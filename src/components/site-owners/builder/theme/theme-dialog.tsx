@@ -14,6 +14,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import {
   useThemeQuery,
   useCreateThemeMutation,
@@ -25,7 +33,8 @@ import {
   ThemeFonts,
   defaultThemeData,
 } from "@/types/owner-site/components/theme";
-import { Palette, Save, Type } from "lucide-react";
+import { Palette, Save, Type, Check, RefreshCw } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ThemeDialogProps {
   open: boolean;
@@ -48,150 +57,61 @@ const fontOptions = [
   { value: "Lato", label: "Lato" },
 ];
 
-const predefinedColors = [
-  "#3B82F6",
-  "#EF4444",
-  "#10B981",
-  "#F59E0B",
-  "#8B5CF6",
-  "#EC4899",
-  "#06B6D4",
-  "#84CC16",
-  "#FFFFFF",
-  "#6366F1",
-  "#14B8A6",
-  "#F43F5E",
-  "#22C55E",
-  "#A855F7",
-  "#0EA5E9",
-  "#EAB308",
-  "#DC2626",
-  "#000000",
+const shadcnPalette = [
+  { name: "Slate", value: "#64748b" },
+  { name: "Gray", value: "#6b7280" },
+  { name: "Zinc", value: "#71717a" },
+  { name: "Neutral", value: "#737373" },
+  { name: "Stone", value: "#78716c" },
+  { name: "Red", value: "#ef4444" },
+  { name: "Orange", value: "#f97316" },
+  { name: "Amber", value: "#f59e0b" },
+  { name: "Yellow", value: "#eab308" },
+  { name: "Lime", value: "#84cc16" },
+  { name: "Green", value: "#22c55e" },
+  { name: "Emerald", value: "#10b981" },
+  { name: "Teal", value: "#14b8a6" },
+  { name: "Cyan", value: "#06b6d4" },
+  { name: "Sky", value: "#0ea5e9" },
+  { name: "Blue", value: "#3b82f6" },
+  { name: "Indigo", value: "#6366f1" },
+  { name: "Violet", value: "#8b5cf6" },
+  { name: "Purple", value: "#a855f7" },
+  { name: "Fuchsia", value: "#d946ef" },
+  { name: "Pink", value: "#ec4899" },
+  { name: "Rose", value: "#f43f5e" },
 ];
 
-// Memoized ColorPicker component to prevent unnecessary re-renders
+// Memoized ColorPicker component
 const ColorPicker = memo(
   ({
     label,
-    colorKey,
     value,
-    description,
     onChange,
-    previewColors,
   }: {
     label: string;
-    colorKey: string;
     value: string;
-    description?: string;
     onChange: (value: string) => void;
-    previewColors: ThemeColors;
   }) => {
-    const [textValue, setTextValue] = useState(value);
-
-    // Sync textValue when value prop changes from outside (like preset clicks)
-    useEffect(() => {
-      setTextValue(value);
-    }, [value]);
-
-    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
-      setTextValue(newValue);
-
-      // Only update parent if it's a valid color format
-      if (
-        newValue.startsWith("#") &&
-        (newValue.length === 4 || newValue.length === 7)
-      ) {
-        onChange(newValue);
-      } else if (newValue.startsWith("#")) {
-        // Still update parent even for incomplete hex codes
-        onChange(newValue);
-      }
-    };
-
-    const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
-      setTextValue(newValue);
-      onChange(newValue);
-    };
-
-    const handlePresetClick = (color: string) => {
-      setTextValue(color);
-      onChange(color);
-    };
-
-    const getPreviewColor = () => {
-      if (colorKey.includes("Foreground")) return value;
-      if (colorKey === "background") return previewColors.text;
-      if (colorKey === "text") return previewColors.background;
-      return "#fff";
-    };
-
     return (
-      <div className="space-y-3">
-        <div className="space-y-1">
-          <Label className="text-sm font-medium">{label}</Label>
-          {description && (
-            <p className="text-xs text-gray-500">{description}</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <div
-              className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-gray-200 text-xs font-medium shadow-sm"
-              style={{
-                backgroundColor: value,
-                color: getPreviewColor(),
-              }}
-            >
-              Aa
-            </div>
-          </div>
-
-          <div className="grid grid-cols-6 gap-1">
-            {predefinedColors.map(color => (
-              <button
-                key={color}
-                type="button"
-                className="relative h-8 w-8 rounded-md border-2 border-gray-200 transition-colors hover:scale-105 hover:border-gray-400"
-                style={{ backgroundColor: color }}
-                onClick={() => handlePresetClick(color)}
-              >
-                {value === color && (
-                  <svg
-                    className="absolute inset-0 m-auto h-4 w-4 text-white drop-shadow-sm"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                )}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex gap-2">
+      <div className="flex flex-col gap-2">
+        <Label className="text-xs text-muted-foreground">{label}</Label>
+        <div className="flex items-center gap-2">
+          <div className="relative h-9 w-9 overflow-hidden rounded-md border shadow-sm">
             <input
               type="color"
               value={value}
-              onChange={handleColorChange}
-              className="h-10 w-16 cursor-pointer rounded border p-1"
-            />
-            <Input
-              type="text"
-              value={textValue}
-              onChange={handleTextChange}
-              className="flex-1 font-mono text-sm"
-              placeholder="#000000"
+              onChange={e => onChange(e.target.value)}
+              className="absolute -top-1/2 -left-1/2 h-[200%] w-[200%] cursor-pointer p-0"
             />
           </div>
+          <Input
+            value={value}
+            onChange={e => onChange(e.target.value)}
+            className="h-9 flex-1 font-mono text-xs uppercase"
+            placeholder="#000000"
+            maxLength={7}
+          />
         </div>
       </div>
     );
@@ -211,81 +131,35 @@ const FontSelector = memo(
     value: string;
     onChange: (value: string) => void;
   }) => (
-    <div className="space-y-3">
-      <Label className="text-sm font-medium">{label}</Label>
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-        {fontOptions.slice(0, 4).map(font => (
-          <button
-            key={font.value}
-            type="button"
-            className={`relative rounded-lg border-2 p-3 text-left transition-all hover:shadow-md ${
-              value === font.value
-                ? "border-blue-500 bg-blue-50 shadow-sm"
-                : "border-gray-200 hover:border-gray-300"
-            }`}
-            onClick={() => onChange(font.value)}
-          >
-            <div className="space-y-1">
-              <div
-                className="text-lg font-medium"
-                style={{ fontFamily: font.value }}
-              >
-                Aa
-              </div>
-              <div className="text-xs text-gray-600">{font.label}</div>
-            </div>
-            {value === font.value && (
-              <svg
-                className="absolute top-2 right-2 h-4 w-4 text-blue-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            )}
-          </button>
-        ))}
-      </div>
-
-      <div className="max-h-32 overflow-y-auto rounded-md border">
-        {fontOptions.slice(4).map(font => (
-          <button
-            key={font.value}
-            type="button"
-            className={`w-full border-b px-3 py-2 text-left transition-colors last:border-b-0 hover:bg-gray-50 ${
-              value === font.value ? "border-blue-200 bg-blue-50" : ""
-            }`}
-            onClick={() => onChange(font.value)}
-            style={{ fontFamily: font.value }}
-          >
-            <div className="flex items-center justify-between">
-              <span>{font.label}</span>
-              {value === font.value && (
-                <svg
-                  className="h-4 w-4 text-blue-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+    <Card className="border-border bg-card/50 shadow-sm">
+      <CardHeader className="p-4 pb-2">
+        <CardTitle className="text-sm font-medium">{label}</CardTitle>
+      </CardHeader>
+      <CardContent className="p-4 pt-2">
+        <div className="grid grid-cols-2 gap-2">
+          {fontOptions.slice(0, 6).map(font => (
+            <button
+              key={font.value}
+              type="button"
+              className={cn(
+                "flex items-center justify-between rounded-md border px-3 py-2 text-sm transition-all hover:border-primary/50",
+                value === font.value
+                  ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                  : "bg-background"
               )}
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
+              onClick={() => onChange(font.value)}
+            >
+              <span className="truncate" style={{ fontFamily: font.value }}>
+                {font.label}
+              </span>
+              {value === font.value && (
+                <Check className="h-3 w-3 text-primary" />
+              )}
+            </button>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   )
 );
 
@@ -312,7 +186,6 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
     }
   }, [themesResponse]);
 
-  // Memoized color change handler
   const handleColorChange = useCallback(
     (colorKey: keyof ThemeColors, value: string) => {
       setCurrentTheme(prev => ({
@@ -327,7 +200,6 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
     []
   );
 
-  // Memoized font change handler
   const handleFontChange = useCallback(
     (fontKey: keyof ThemeFonts, value: string) => {
       setCurrentTheme(prev => ({
@@ -364,185 +236,288 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
       });
   };
 
+  const applyPalette = (color: string) => {
+    setCurrentTheme(prev => ({
+      ...prev,
+      colors: {
+        ...prev.colors,
+        primary: color,
+        // Calculate a foreground color or use white/black based on brightness?
+        // For simplicity, assuming white for dark colors, but let's stick to theme defaults or current
+        primaryForeground: "#FFFFFF",
+        // Maybe update secondary to a lighter shade or complementary?
+        // Keeping it simple: just update primary for "branding"
+      },
+    }));
+    setHasChanges(true);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
 
-      <DialogContent className="max-h-[90vh] max-w-4xl overflow-hidden">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Palette className="h-5 w-5" />
-            Theme Settings
-          </DialogTitle>
-          <DialogDescription>
-            Customize your website&apos;s appearance with colors, fonts, and
-            sizes.
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="max-h-[90vh] max-w-4xl overflow-hidden p-0">
+        <div className="flex h-full flex-col">
+          <DialogHeader className="px-6 py-4 border-b">
+            <DialogTitle className="flex items-center gap-2">
+              <Palette className="h-5 w-5" />
+              Theme Settings
+            </DialogTitle>
+            <DialogDescription>
+              Customize your design system. Changes apply globally.
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="max-h-[60vh] space-y-6 overflow-auto">
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">Colors</h3>
-            <div className="grid gap-6">
-              <div className="space-y-4">
-                <h4 className="text-md font-medium text-gray-700">
-                  Primary Colors
-                </h4>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <ColorPicker
-                    label="Primary Background"
-                    colorKey="primary"
-                    value={currentTheme.colors.primary}
-                    description="Main brand color for buttons and highlights"
-                    onChange={value => handleColorChange("primary", value)}
-                    previewColors={currentTheme.colors}
-                  />
-                  <ColorPicker
-                    label="Primary Text"
-                    colorKey="primaryForeground"
-                    value={currentTheme.colors.primaryForeground}
-                    description="Text color on primary background"
-                    onChange={value =>
-                      handleColorChange("primaryForeground", value)
-                    }
-                    previewColors={currentTheme.colors}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="text-md font-medium text-gray-700">
-                  Secondary Colors
-                </h4>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <ColorPicker
-                    label="Secondary Background"
-                    colorKey="secondary"
-                    value={currentTheme.colors.secondary}
-                    description="Accent color for secondary elements"
-                    onChange={value => handleColorChange("secondary", value)}
-                    previewColors={currentTheme.colors}
-                  />
-                  <ColorPicker
-                    label="Secondary Text"
-                    colorKey="secondaryForeground"
-                    value={currentTheme.colors.secondaryForeground}
-                    description="Text color on secondary background"
-                    onChange={value =>
-                      handleColorChange("secondaryForeground", value)
-                    }
-                    previewColors={currentTheme.colors}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="text-md font-medium text-gray-700">
-                  General Colors
-                </h4>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <ColorPicker
-                    label="Text Color"
-                    colorKey="text"
-                    value={currentTheme.colors.text}
-                    description="Main text color"
-                    onChange={value => handleColorChange("text", value)}
-                    previewColors={currentTheme.colors}
-                  />
-                  <ColorPicker
-                    label="Background Color"
-                    colorKey="background"
-                    value={currentTheme.colors.background}
-                    description="Main background color"
-                    onChange={value => handleColorChange("background", value)}
-                    previewColors={currentTheme.colors}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <Separator />
-
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Type className="h-5 w-5" />
-              <h3 className="text-lg font-medium">Typography</h3>
+          <Tabs defaultValue="colors" className="flex-1 overflow-hidden">
+            <div className="border-b px-6 bg-muted/30">
+              <TabsList className="h-12 w-full justify-start gap-4 bg-transparent p-0">
+                <TabsTrigger
+                  value="colors"
+                  className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-3 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                >
+                  Colors
+                </TabsTrigger>
+                <TabsTrigger
+                  value="typography"
+                  className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-3 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                >
+                  Typography
+                </TabsTrigger>
+              </TabsList>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <FontSelector
-                label="Body Font"
-                value={currentTheme.fonts.body}
-                onChange={value => handleFontChange("body", value)}
-              />
-              <FontSelector
-                label="Heading Font"
-                value={currentTheme.fonts.heading}
-                onChange={value => handleFontChange("heading", value)}
-              />
-            </div>
-          </div>
+            <div className="h-[calc(60vh)] overflow-y-auto p-6">
+              <TabsContent value="colors" className="m-0 space-y-8">
+                {/* Palette Selection */}
+                <div className="space-y-4">
+                  <Label className="text-base font-semibold">
+                    Brand Palette
+                  </Label>
+                  <div className="grid grid-cols-6 gap-3 sm:grid-cols-8 md:grid-cols-11">
+                    {shadcnPalette.map(color => (
+                      <button
+                        key={color.name}
+                        onClick={() => applyPalette(color.value)}
+                        className={cn(
+                          "group relative aspect-square w-full overflow-hidden rounded-full ring-offset-2 transition-all hover:scale-110 focus:ring-2 focus:outline-none",
+                          currentTheme.colors.primary === color.value &&
+                            "ring-2 ring-primary"
+                        )}
+                        title={color.name}
+                      >
+                        <span
+                          className="absolute inset-0 h-full w-full"
+                          style={{ backgroundColor: color.value }}
+                        />
+                        {currentTheme.colors.primary === color.value && (
+                          <span className="absolute inset-0 flex items-center justify-center text-white">
+                            <Check className="h-4 w-4 drop-shadow-md" />
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">Preview</h3>
-            <div
-              className="rounded-lg border-2 p-6"
-              style={{
-                backgroundColor: currentTheme.colors.background,
-                color: currentTheme.colors.text,
-              }}
+                <Separator />
+
+                {/* Detailed Color Config */}
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {/* Primary */}
+                  <Card className="border-border bg-card/50 shadow-sm">
+                    <CardHeader className="p-4 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        Primary
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        Brand buttons & links
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-2">
+                      <div className="grid grid-cols-2 gap-4">
+                        <ColorPicker
+                          label="Background"
+                          value={currentTheme.colors.primary}
+                          onChange={v => handleColorChange("primary", v)}
+                        />
+                        <ColorPicker
+                          label="Text"
+                          value={currentTheme.colors.primaryForeground}
+                          onChange={v =>
+                            handleColorChange("primaryForeground", v)
+                          }
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Secondary */}
+                  <Card className="border-border bg-card/50 shadow-sm">
+                    <CardHeader className="p-4 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        Secondary
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        Accent elements
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-2">
+                      <div className="grid grid-cols-2 gap-4">
+                        <ColorPicker
+                          label="Background"
+                          value={currentTheme.colors.secondary}
+                          onChange={v => handleColorChange("secondary", v)}
+                        />
+                        <ColorPicker
+                          label="Text"
+                          value={currentTheme.colors.secondaryForeground}
+                          onChange={v =>
+                            handleColorChange("secondaryForeground", v)
+                          }
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Global */}
+                  <Card className="border-border bg-card/50 shadow-sm">
+                    <CardHeader className="p-4 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        Global
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        Body background & text
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-2">
+                      <div className="grid grid-cols-2 gap-4">
+                        <ColorPicker
+                          label="Background"
+                          value={currentTheme.colors.background}
+                          onChange={v => handleColorChange("background", v)}
+                        />
+                        <ColorPicker
+                          label="Text"
+                          value={currentTheme.colors.text}
+                          onChange={v => handleColorChange("text", v)}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Preview */}
+                <Card className="overflow-hidden border-border bg-card/50 shadow-sm">
+                  <CardHeader className="p-4 pb-2 border-b">
+                    <CardTitle className="text-sm font-medium">
+                      Live Preview
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div
+                      className="rounded-lg border p-6 shadow-sm transition-all"
+                      style={{
+                        backgroundColor: currentTheme.colors.background,
+                        color: currentTheme.colors.text,
+                        borderColor: currentTheme.colors.secondary,
+                      }}
+                    >
+                      <h3
+                        className="mb-2 text-2xl font-bold"
+                        style={{ fontFamily: currentTheme.fonts.heading }}
+                      >
+                        Design System
+                      </h3>
+                      <p
+                        className="mb-4 max-w-md opacity-80"
+                        style={{ fontFamily: currentTheme.fonts.body }}
+                      >
+                        This is how your content will appear. The spacing,
+                        colors, and typography are applied consistently.
+                      </p>
+                      <div className="flex gap-3">
+                        <button
+                          className="rounded-md px-4 py-2 font-medium shadow-sm transition-transform active:scale-95"
+                          style={{
+                            backgroundColor: currentTheme.colors.primary,
+                            color: currentTheme.colors.primaryForeground,
+                            fontFamily: currentTheme.fonts.body,
+                          }}
+                        >
+                          Primary Action
+                        </button>
+                        <button
+                          className="rounded-md px-4 py-2 font-medium shadow-sm transition-transform active:scale-95"
+                          style={{
+                            backgroundColor: currentTheme.colors.secondary,
+                            color: currentTheme.colors.secondaryForeground,
+                            fontFamily: currentTheme.fonts.body,
+                          }}
+                        >
+                          Secondary
+                        </button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="typography" className="m-0 space-y-6">
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-4">
+                    <FontSelector
+                      label="Heading Font"
+                      value={currentTheme.fonts.heading}
+                      onChange={v => handleFontChange("heading", v)}
+                    />
+                    <div className="rounded-lg border bg-muted/20 p-6">
+                      <h1
+                        className="text-4xl font-bold"
+                        style={{ fontFamily: currentTheme.fonts.heading }}
+                      >
+                        Heading Display
+                      </h1>
+                      <h2
+                        className="mt-2 text-2xl font-semibold"
+                        style={{ fontFamily: currentTheme.fonts.heading }}
+                      >
+                        Subheading Style
+                      </h2>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <FontSelector
+                      label="Body Font"
+                      value={currentTheme.fonts.body}
+                      onChange={v => handleFontChange("body", v)}
+                    />
+                    <div className="rounded-lg border bg-muted/20 p-6">
+                      <p
+                        className="leading-relaxed"
+                        style={{ fontFamily: currentTheme.fonts.body }}
+                      >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Sed do eiusmod tempor incididunt ut labore et dolore
+                        magna aliqua. Ut enim ad minim veniam, quis nostrud
+                        exercitation ullamco laboris nisi ut aliquip ex ea
+                        commodo consequat.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+            </div>
+          </Tabs>
+
+          <DialogFooter className="border-t bg-muted/10 px-6 py-4">
+            <Button
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              className="mr-2"
             >
-              <h4
-                className="mb-2 font-bold"
-                style={{ fontFamily: currentTheme.fonts.heading }}
-              >
-                Sample Heading
-              </h4>
-              <p
-                className="mb-4"
-                style={{ fontFamily: currentTheme.fonts.body }}
-              >
-                This is how your content will look with the selected theme. The
-                font sizes and line height will be applied consistently across
-                your website.
-              </p>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  className="rounded px-4 py-2 font-medium"
-                  style={{
-                    backgroundColor: currentTheme.colors.primary,
-                    color: currentTheme.colors.primaryForeground,
-                    fontFamily: currentTheme.fonts.body,
-                  }}
-                >
-                  Primary Button
-                </button>
-                <button
-                  type="button"
-                  className="rounded px-4 py-2 font-medium"
-                  style={{
-                    backgroundColor: currentTheme.colors.secondary,
-                    color: currentTheme.colors.secondaryForeground,
-                    fontFamily: currentTheme.fonts.body,
-                  }}
-                >
-                  Secondary Button
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <Separator />
-
-        <DialogFooter className="flex items-center justify-between">
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-
             <Button
               onClick={handleSave}
               disabled={
@@ -551,13 +526,18 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
                 updateThemeMutation.isPending ||
                 createThemeMutation.isPending
               }
-              className="gap-2"
+              className="min-w-[100px]"
             >
-              <Save className="h-4 w-4" />
+              {updateThemeMutation.isPending ||
+              createThemeMutation.isPending ? (
+                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="mr-2 h-4 w-4" />
+              )}
               {hasChanges ? "Save Changes" : "Saved"}
             </Button>
-          </div>
-        </DialogFooter>
+          </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
