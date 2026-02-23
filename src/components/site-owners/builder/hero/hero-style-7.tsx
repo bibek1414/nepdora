@@ -9,7 +9,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 
 interface HeroTemplate7Props {
   heroData: HeroTemplate7Data;
@@ -166,17 +166,17 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
 
   return (
     <div
-      className="bg-background-light dark:bg-background-dark flex min-h-screen items-center justify-center p-4"
+      className="bg-background min-h-screen py-12 px-4 sm:px-6 lg:px-8"
       data-component-id={componentId}
     >
-      <div className="grid w-full max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
+      <div className="mx-auto max-w-7xl grid w-full grid-cols-1 gap-8 md:grid-cols-2">
         {collections.map((collection, index) => (
           <div
             key={collection.id}
-            className="group relative h-auto w-full overflow-hidden"
+            className="group relative h-[600px] w-full overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl"
           >
             {/* Collection Image */}
-            <div className="relative h-full min-h-[600px] w-full">
+            <div className="relative h-full w-full transform transition-transform duration-700 group-hover:scale-105">
               {/* Background Image */}
               <div
                 className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
@@ -255,9 +255,9 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
             )}
 
             {/* Content Overlay */}
-            <div className="bg-opacity-10 absolute inset-0 flex flex-col justify-center bg-black/40 p-8 text-white">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-8 md:p-12 flex flex-col justify-end items-start text-white">
               {/* Content */}
-              <div className="relative z-10">
+              <div className="relative z-10 w-full transform transition-all duration-500 translate-y-4 group-hover:translate-y-0">
                 {/* Subtitle */}
                 <EditableText
                   value={collection.subtitle}
@@ -265,7 +265,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                     handleCollectionUpdate(collection.id, "subtitle", value)
                   }
                   as="p"
-                  className="mb-2 tracking-wider"
+                  className="mb-3 text-sm font-semibold tracking-wider uppercase text-white/90"
                   isEditable={isEditable}
                   placeholder="Enter subtitle..."
                 />
@@ -277,29 +277,30 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                     handleCollectionUpdate(collection.id, "title", value)
                   }
                   as="h2"
-                  className="mb-4 font-bold"
+                  className="mb-6 text-3xl font-bold leading-tight md:text-4xl"
                   isEditable={isEditable}
                   placeholder="Enter collection title..."
                   multiline={true}
                 />
 
                 {/* CTA Button */}
-                <EditableLink
-                  text={collection.buttonText}
-                  href={collection.buttonHref}
-                  onChange={(text, href) =>
-                    handleCollectionButtonUpdate(collection.id, text, href)
-                  }
-                  isEditable={isEditable}
-                  siteUser={siteUser}
-                  className="rounded-sm bg-white px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-gray-200"
-                  style={{
-                    backgroundColor: theme.colors.primary,
-                    color: theme.colors.primaryForeground,
-                  }}
-                  textPlaceholder="Button text..."
-                  hrefPlaceholder="Enter URL..."
-                />
+                <div className="opacity-0 transform translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
+                    <EditableLink
+                    text={collection.buttonText}
+                    href={collection.buttonHref}
+                    onChange={(text, href) =>
+                        handleCollectionButtonUpdate(collection.id, text, href)
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-white border-b border-white/0 hover:border-white transition-all pb-1"
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter URL..."
+                    >
+                        {collection.buttonText}
+                        <ArrowRight className="h-4 w-4" />
+                    </EditableLink>
+                </div>
               </div>
             </div>
           </div>

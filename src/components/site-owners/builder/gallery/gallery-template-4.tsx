@@ -116,15 +116,14 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
 
   return (
     <>
-      <div className="mx-auto max-w-7xl px-4 py-16">
-        <h1 className="mx-auto text-center text-3xl font-semibold">
+      <div className="mx-auto max-w-7xl px-4 py-16 md:py-24">
+        <div className="mb-12 text-left">
           <EditableText
             value={data.title || "Our Latest Creations"}
             onChange={handleTextUpdate("title")}
             isEditable={isEditable}
+            className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4"
           />
-        </h1>
-        <div className="mx-auto mt-2 max-w-lg text-center text-sm text-slate-500">
           <EditableText
             value={
               data.subtitle ||
@@ -132,10 +131,11 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
             }
             onChange={handleTextUpdate("subtitle")}
             isEditable={isEditable}
+            className="text-lg text-muted-foreground leading-relaxed max-w-3xl"
           />
         </div>
 
-        <div className="mx-auto mt-12 flex max-w-5xl flex-wrap items-center justify-center gap-4">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-start justify-start gap-6">
           {filteredImages.map((image, index) => {
             const actualIndex = data.images.findIndex(
               img => img.id === image.id
@@ -143,9 +143,12 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
             return (
               <div
                 key={image.id}
-                className="relative overflow-hidden rounded-lg"
+                className="relative overflow-hidden rounded-xl h-[300px] flex-grow min-w-[250px] md:min-w-[300px] lg:min-w-[350px] shadow-sm hover:shadow-lg transition-shadow group"
               >
-                <div className="relative">
+                <div
+                    className="relative w-full h-full"
+                    onClick={() => !isEditable && setSelectedImage(image)}
+                >
                   <EditableImage
                     src={getImageUrl(image.image)}
                     alt={image.image_alt_description}
@@ -153,7 +156,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                       handleImageUpdateLocal(actualIndex, imageUrl, altText)
                     }
                     isEditable={isEditable}
-                    className="size-56 object-cover object-top"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     cloudinaryOptions={{
                       folder: "gallery-images",
                       resourceType: "image",
@@ -186,7 +189,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                   )}
                 </div>
 
-                <div className="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 text-white opacity-0 transition-all duration-300 hover:opacity-100">
+                <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 via-transparent to-transparent p-6 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none">
                   {image.title && (
                     <EditableText
                       value={image.title}
@@ -194,7 +197,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                         handleImageTitleUpdate(actualIndex, newTitle)
                       }
                       isEditable={isEditable}
-                      className="text-xl font-medium"
+                      className="text-xl font-bold"
                     />
                   )}
                 </div>
@@ -203,7 +206,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
           })}
 
           {isEditable && (
-            <div className="flex h-56 w-56 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
+            <div className="flex h-[300px] min-w-[250px] flex-grow items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/50 hover:bg-gray-50 transition-colors">
               <label
                 htmlFor={`gallery4-add-${componentId}`}
                 className="flex cursor-pointer flex-col items-center gap-2"
@@ -216,7 +219,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                 ) : (
                   <>
                     <Plus className="h-8 w-8 text-gray-400" />
-                    <span className="text-sm text-gray-500">Add Image</span>
+                    <span className="text-sm text-gray-500 font-medium">Add Image</span>
                     <input
                       id={`gallery4-add-${componentId}`}
                       type="file"
@@ -237,27 +240,32 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
           open={!!selectedImage}
           onOpenChange={() => setSelectedImage(null)}
         >
-          <DialogContent className="max-w-4xl">
-            <img
-              src={getImageUrl(selectedImage.image)}
-              alt={selectedImage.image_alt_description}
-              className="h-auto w-full rounded-lg"
-            />
+          <DialogContent className="max-w-5xl p-0 bg-transparent border-none shadow-none overflow-hidden sm:max-w-fit">
+            <div className="relative group">
+                <img
+                src={getImageUrl(selectedImage.image)}
+                alt={selectedImage.image_alt_description}
+                className="max-h-[85vh] w-auto max-w-full rounded-lg shadow-2xl object-contain mx-auto"
+                />
+                <DialogClose className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors">
+                    <X className="h-5 w-5" />
+                </DialogClose>
+            </div>
+
             {(selectedImage.title || selectedImage.description) && (
-              <div className="mt-4">
+              <div className="bg-background/90 backdrop-blur-md p-6 rounded-xl max-w-2xl mx-auto mt-4 border shadow-lg">
                 {selectedImage.title && (
-                  <h3 className="text-xl font-semibold">
+                  <h3 className="text-xl font-bold text-foreground mb-2">
                     {selectedImage.title}
                   </h3>
                 )}
                 {selectedImage.description && (
-                  <p className="mt-2 text-gray-600">
+                  <p className="text-muted-foreground leading-relaxed">
                     {selectedImage.description}
                   </p>
                 )}
               </div>
             )}
-            <DialogClose className="absolute top-2 right-2" />
           </DialogContent>
         </Dialog>
       )}

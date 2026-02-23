@@ -105,51 +105,57 @@ export function FooterStyle5({
 
   return (
     <div className="group relative">
-      <footer className="bg-background-light dark:bg-background-dark font-display border-t px-4 py-12 sm:px-6 lg:px-8">
+      <footer className="bg-background-light dark:bg-background-dark font-display border-t px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
             {/* Company Info - Takes 2 columns on large screens */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 space-y-8">
               {/* Logo */}
-              <div className="mb-4">
+              <div>
                 <FooterLogo
                   footerData={data}
                   getImageUrl={getImageUrl}
-                  textClassName="text-heading-light dark:text-heading-dark text-xl"
-                  imageClassName="h-8"
+                  textClassName="text-heading-light dark:text-heading-dark text-xl font-bold"
+                  imageClassName="h-8 w-auto"
                   containerClassName="gap-3"
                 />
               </div>
 
-              <p className="text-text-light dark:text-text-dark mb-6 max-w-md">
+              <p className="text-text-light dark:text-text-dark max-w-md leading-relaxed">
                 {data.description}
               </p>
 
               {/* Contact Info */}
-              <div className="mb-6 space-y-2">
+              <div className="space-y-3">
                 {data.contactInfo.email && (
-                  <div className="text-text-light dark:text-text-dark flex items-center">
-                    <Mail className="mr-2 h-4 w-4" />
-                    <span className="text-sm">{data.contactInfo.email}</span>
+                  <div className="text-text-light dark:text-text-dark flex items-center group">
+                    <div className="p-2 rounded-full bg-primary/10 mr-3 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                        <Mail className="h-4 w-4" />
+                    </div>
+                    <span className="text-sm font-medium">{data.contactInfo.email}</span>
                   </div>
                 )}
                 {data.contactInfo.phone && (
-                  <div className="text-text-light dark:text-text-dark flex items-center">
-                    <Phone className="mr-2 h-4 w-4" />
-                    <span className="text-sm">{data.contactInfo.phone}</span>
+                  <div className="text-text-light dark:text-text-dark flex items-center group">
+                    <div className="p-2 rounded-full bg-primary/10 mr-3 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                        <Phone className="h-4 w-4" />
+                    </div>
+                    <span className="text-sm font-medium">{data.contactInfo.phone}</span>
                   </div>
                 )}
                 {data.contactInfo.address && (
-                  <div className="text-text-light dark:text-text-dark flex items-center">
-                    <MapPin className="mr-2 h-4 w-4" />
-                    <span className="text-sm">{data.contactInfo.address}</span>
+                  <div className="text-text-light dark:text-text-dark flex items-start group">
+                    <div className="p-2 rounded-full bg-primary/10 mr-3 text-primary group-hover:bg-primary group-hover:text-white transition-all mt-0.5">
+                        <MapPin className="h-4 w-4" />
+                    </div>
+                    <span className="text-sm font-medium leading-relaxed">{data.contactInfo.address}</span>
                   </div>
                 )}
               </div>
 
               {/* Social Links - Horizontal Layout */}
               <div>
-                <h4 className="text-heading-light dark:text-heading-dark mb-3 font-semibold">
+                <h4 className="text-heading-light dark:text-heading-dark mb-4 font-semibold text-sm uppercase tracking-wider">
                   Follow Us
                 </h4>
                 {data.socialLinks.length > 0 ? (
@@ -158,7 +164,7 @@ export function FooterStyle5({
                       <Link
                         key={social.id}
                         href={social.href || "#"}
-                        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-muted transition-all hover:bg-primary hover:text-white hover:-translate-y-1 shadow-sm"
                         target={
                           social.href?.startsWith("http") ? "_blank" : undefined
                         }
@@ -188,7 +194,7 @@ export function FooterStyle5({
               .filter(section => section.links.length > 0)
               .map(section => (
                 <div key={section.id} className="col-span-1">
-                  <h3 className="text-heading-light dark:text-heading-dark mb-4 font-bold">
+                  <h3 className="text-heading-light dark:text-heading-dark mb-6 font-bold text-lg">
                     {section.title}
                   </h3>
 
@@ -197,7 +203,7 @@ export function FooterStyle5({
                       <li key={link.id}>
                         {isEditable ? (
                           <button
-                            className="text-text-light dark:text-text-dark hover:text-primary text-left transition-colors dark:hover:text-white"
+                            className="text-text-light dark:text-text-dark hover:text-primary text-left transition-colors dark:hover:text-white text-sm font-medium"
                             onClick={
                               isEditable ? e => e.preventDefault() : undefined
                             }
@@ -212,7 +218,7 @@ export function FooterStyle5({
                               pathname,
                               isEditable
                             )}
-                            className="text-text-light dark:text-text-dark hover:text-primary block text-left transition-colors dark:hover:text-white"
+                            className="text-text-light dark:text-text-dark hover:text-primary block text-left transition-colors dark:hover:text-white text-sm font-medium"
                           >
                             {link.text}
                           </Link>
@@ -225,11 +231,11 @@ export function FooterStyle5({
           </div>
 
           {/* Copyright */}
-          <div className="mx-auto mt-12 border-t border-gray-300 pt-8 text-center dark:border-gray-700">
-            <p className="text-text-light dark:text-text-dark flex items-center justify-center gap-1 text-sm">
+          <div className="mx-auto mt-16 border-t border-border pt-8 text-left dark:border-gray-700">
+            <p className="text-muted-foreground flex items-center justify-start gap-1 text-sm font-medium">
               {data.copyright ||
                 `© ${new Date().getFullYear()} ${data.companyName}. All rights reserved.`}
-              <Heart className="inline h-3 w-3 text-red-500" />
+              <Heart className="inline h-3 w-3 text-red-500 fill-current" />
             </p>
           </div>
         </div>

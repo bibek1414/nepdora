@@ -56,35 +56,34 @@ export const ServicesCard4: React.FC<ServicesPost4Props> = ({
         </div>
       );
   const truncatedDescription =
-    services.description.length > 150
-      ? services.description.slice(0, 150) + "..."
-      : services.description;
+    services.description?.replace(/<[^>]*>/g, "").slice(0, 120) + "...";
+
   return (
     <CardWrapper>
-      <div className="group relative rounded-xl bg-white transition-all duration-300 dark:bg-gray-800">
+      <div className="group relative h-full overflow-hidden rounded-2xl bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
         {/* Image Container */}
-        <div className="relative aspect-4/3 w-full">
+        <div className="relative aspect-[4/3] w-full overflow-hidden">
           <Image
             src={serviceImage}
             alt={services.thumbnail_image_alt_description || services.title}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            width={600}
-            height={450}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             priority={index < 3}
           />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100" />
 
           {/* Content Overlay */}
-          <div className="mt-2 text-black">
-            <h2 className="mb-3 line-clamp-2 text-xl font-semibold text-gray-900 dark:text-white">
+          <div className="absolute bottom-0 left-0 w-full p-6 text-white text-left">
+            <h2 className="mb-2 line-clamp-2 text-xl font-bold leading-tight">
               {services.title}
             </h2>
-            <div
-              className="prose prose-lg dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: truncatedDescription }}
-            />
-            <Button variant="default" size="sm" className="mt-2">
-              <a href={getDetailsUrl()}>Learn More</a>
-            </Button>
+            <p className="mb-4 line-clamp-2 text-sm text-white/80">
+                {truncatedDescription}
+            </p>
+            <span className="inline-block rounded-md bg-white/20 px-4 py-2 text-xs font-semibold backdrop-blur-sm transition-colors hover:bg-white/30">
+              Learn More
+            </span>
           </div>
         </div>
       </div>

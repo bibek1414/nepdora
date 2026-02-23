@@ -127,7 +127,7 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
     <div className="bg-background-light dark:bg-background-dark font-display min-h-screen text-gray-800 dark:text-gray-200">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-24 lg:px-8">
         {/* Header */}
-        <div className="text-center">
+        <div className="text-left mb-16">
           <EditableText
             value={data.subtitle}
             onChange={handleTextUpdate("subtitle")}
@@ -135,13 +135,15 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
             style={{
               color: theme.colors.primary,
             }}
+            className="text-lg font-bold uppercase tracking-wider mb-2"
             isEditable={isEditable}
             placeholder="What we do"
           />
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
-            as="h1"
+            as="h2"
+            className="text-4xl md:text-5xl font-bold leading-tight"
             style={{
               color: theme.colors.secondary,
               fontFamily: theme.fonts.heading,
@@ -157,7 +159,7 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
           {data.trainings.map((training, idx) => (
             <div
               key={training.id}
-              className="group relative h-96 overflow-hidden rounded-lg bg-cover bg-center"
+              className="group relative h-96 overflow-hidden rounded-xl bg-cover bg-center shadow-lg transition-transform hover:-translate-y-1 hover:shadow-xl"
             >
               {/* Change Image Button - Only visible when editable */}
               {isEditable && (
@@ -209,18 +211,18 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
                   alt={training.imageAlt}
                   width={400}
                   height={500}
-                  className="h-96 w-full object-cover"
+                  className="h-96 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   priority={idx === 0}
                 />
               </div>
 
               {/* Text Overlay */}
-              <div className="absolute inset-0 flex flex-col justify-end bg-black/40 p-6 transition-all duration-300 group-hover:bg-black/20">
+              <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 transition-all duration-300">
                 <EditableText
                   value={training.title}
                   onChange={handleTrainingUpdate(idx, "title")}
                   as="h3"
-                  className="text-white"
+                  className="text-white text-xl font-bold"
                   isEditable={isEditable}
                   placeholder="Training Title"
                 />
@@ -231,12 +233,12 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
 
         {/* Learn More Button */}
         {data.buttonText && data.buttonLink && (
-          <div className="mt-20 text-center">
+          <div className="mt-20 text-left">
             <EditableLink
               text={data.buttonText}
               href={data.buttonLink}
               onChange={handleButtonLinkUpdate}
-              className="rounded-lg px-8 py-3 font-bold transition-transform duration-200 hover:scale-105"
+              className="inline-flex items-center rounded-lg px-8 py-4 font-bold text-white shadow-md transition-all hover:scale-105 hover:shadow-lg"
               style={{
                 backgroundColor: theme.colors.primary,
                 color: theme.colors.primaryForeground,

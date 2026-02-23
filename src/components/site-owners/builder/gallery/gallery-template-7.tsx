@@ -5,7 +5,7 @@ import {
 } from "@/types/owner-site/components/gallery";
 import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
-import { Plus, X, Loader2 } from "lucide-react";
+import { Plus, X, Loader2, ZoomIn } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
@@ -114,8 +114,8 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
 
   return (
     <>
-      <div className="mx-auto max-w-7xl px-4 py-16">
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+      <div className="mx-auto max-w-7xl px-4 py-16 md:py-24">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
           {filteredImages.map((image, index) => {
             const actualIndex = data.images.findIndex(
               img => img.id === image.id
@@ -123,9 +123,12 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
             return (
               <div
                 key={image.id}
-                className="relative overflow-hidden rounded-lg"
+                className="relative overflow-hidden rounded-xl shadow-sm hover:shadow-lg transition-all group"
               >
-                <div className="relative aspect-square w-full">
+                <div
+                    className="relative aspect-square w-full cursor-pointer"
+                    onClick={() => !isEditable && setSelectedImage(image)}
+                >
                   <EditableImage
                     src={getImageUrl(image.image)}
                     alt={image.image_alt_description}
@@ -133,7 +136,7 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
                       handleImageUpdateLocal(actualIndex, imageUrl, altText)
                     }
                     isEditable={isEditable}
-                    className="h-120 w-full object-cover"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     cloudinaryOptions={{
                       folder: "gallery-images",
                       resourceType: "image",
@@ -142,6 +145,12 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
                     showAltEditor={isEditable}
                     inputId={`gallery7-upload-${componentId}-${actualIndex}`}
                   />
+
+                  {!isEditable && (
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                        <ZoomIn className="text-white w-8 h-8 drop-shadow-lg" />
+                    </div>
+                  )}
 
                   {isEditable && (
                     <div className="absolute top-2 right-2 z-10 flex gap-2">
@@ -170,7 +179,7 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
           })}
 
           {isEditable && (
-            <div className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
+            <div className="flex aspect-square w-full items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors">
               <label
                 htmlFor={`gallery7-add-${componentId}`}
                 className="flex cursor-pointer flex-col items-center gap-2"
@@ -183,7 +192,7 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
                 ) : (
                   <>
                     <Plus className="h-8 w-8 text-gray-400" />
-                    <span className="text-sm text-gray-500">Add Image</span>
+                    <span className="text-sm text-gray-500 font-medium">Add Image</span>
                     <input
                       id={`gallery7-add-${componentId}`}
                       type="file"
@@ -204,13 +213,17 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
           open={!!selectedImage}
           onOpenChange={() => setSelectedImage(null)}
         >
-          <DialogContent className="max-w-4xl">
-            <img
-              src={getImageUrl(selectedImage.image)}
-              alt={selectedImage.image_alt_description}
-              className="h-auto w-full rounded-lg"
-            />
-            <DialogClose className="absolute top-2 right-2" />
+          <DialogContent className="max-w-5xl p-0 bg-transparent border-none shadow-none overflow-hidden sm:max-w-fit">
+            <div className="relative group">
+                <img
+                src={getImageUrl(selectedImage.image)}
+                alt={selectedImage.image_alt_description}
+                className="max-h-[85vh] w-auto max-w-full rounded-lg shadow-2xl object-contain mx-auto"
+                />
+                <DialogClose className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors">
+                    <X className="h-5 w-5" />
+                </DialogClose>
+            </div>
           </DialogContent>
         </Dialog>
       )}

@@ -59,7 +59,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
 
   return (
     <section
-      className="relative mx-auto flex min-h-screen max-w-7xl items-center overflow-hidden px-4 py-12 md:px-12"
+      className="relative mx-auto flex min-h-screen items-center overflow-hidden px-4 py-16 md:px-12 lg:py-24"
       data-component-id={componentId}
     >
       {/* Background decorative shape */}
@@ -106,18 +106,19 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
         </svg>
       </motion.div>
 
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
         {/* Left Content */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="flex flex-col items-start text-left"
         >
           <EditableText
             value={data.subtitle || "Savor Every Bite"}
             onChange={handleTextUpdate("subtitle")}
             as="span"
-            className="text-secondary mb-6 block text-sm font-bold tracking-widest"
+            className="mb-6 block text-sm font-bold tracking-widest uppercase"
             style={{ color: secondaryColor }}
             isEditable={isEditable}
             placeholder="Badge text..."
@@ -137,7 +138,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
               handleTextUpdate("title")(currentParts.join("<br />"));
             }}
             as="h1"
-            className="mb-8 text-5xl leading-[0.95] font-black md:text-6xl lg:text-6xl"
+            className="mb-8 text-5xl leading-[0.95] font-black text-foreground md:text-6xl lg:text-7xl"
             isEditable={isEditable}
             placeholder="First line..."
           />
@@ -150,7 +151,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
             }
             onChange={handleTextUpdate("description")}
             as="p"
-            className="mb-12 max-w-md text-lg leading-relaxed text-[#0D3B2E]/70"
+            className="mb-12 max-w-lg text-lg leading-relaxed text-muted-foreground"
             isEditable={isEditable}
             placeholder="Description..."
             multiline
@@ -162,7 +163,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
                 value={data.stat1Value || "23"}
                 onChange={handleTextUpdate("stat1Value")}
                 as="div"
-                className="mb-2 text-5xl font-black"
+                className="mb-2 text-5xl font-black text-foreground"
                 isEditable={isEditable}
                 placeholder="Stat value..."
               />
@@ -170,7 +171,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
                 value={data.stat1Label || "Daily Orders"}
                 onChange={handleTextUpdate("stat1Label")}
                 as="div"
-                className="text-sm font-bold tracking-wider"
+                className="text-sm font-bold tracking-wider text-muted-foreground uppercase"
                 isEditable={isEditable}
                 placeholder="Stat label..."
               />
@@ -180,7 +181,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
                 value={data.stat2Value || "56+"}
                 onChange={handleTextUpdate("stat2Value")}
                 as="div"
-                className="mb-2 text-5xl font-black"
+                className="mb-2 text-5xl font-black text-foreground"
                 isEditable={isEditable}
                 placeholder="Stat value..."
               />
@@ -188,7 +189,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
                 value={data.stat2Label || "Items Available"}
                 onChange={handleTextUpdate("stat2Label")}
                 as="div"
-                className="text-sm font-bold tracking-wider"
+                className="text-sm font-bold tracking-wider text-muted-foreground uppercase"
                 isEditable={isEditable}
                 placeholder="Stat label..."
               />
@@ -217,7 +218,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
               }}
               isEditable={isEditable}
               siteUser={siteUser}
-              className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-bold shadow-lg transition-transform hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-bold shadow-lg transition-transform hover:scale-105 hover:shadow-xl"
               style={{ background: secondaryColor, color: "#fff" }}
               textPlaceholder="Button text..."
               hrefPlaceholder="Enter URL..."
@@ -297,7 +298,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
               value={data.priceLabel || "Price"}
               onChange={handleTextUpdate("priceLabel")}
               as="div"
-              className="text-xs font-bold tracking-wider text-white"
+              className="text-xs font-bold tracking-wider text-white uppercase"
               isEditable={isEditable}
               placeholder="Label..."
             />

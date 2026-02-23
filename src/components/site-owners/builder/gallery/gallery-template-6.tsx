@@ -234,20 +234,20 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
 
   return (
     <motion.section
-      className="overflow-hidden bg-white py-20"
+      className="overflow-hidden bg-white py-16 md:py-24"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       transition={{ staggerChildren: 0.12 }}
     >
-      <div className="container mx-auto max-w-7xl px-[23px]">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
           variants={fadeInUp}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <div className="max-w-2xl space-y-3">
-            <h2 className="text-2xl font-semibold text-gray-900 md:text-3xl">
+          <div className="max-w-2xl space-y-4">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               <EditableText
                 value={data.title || "How We Helped Clients Grow Smarter"}
                 onChange={handleTextUpdate("title")}
@@ -255,7 +255,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                 className="leading-tight"
               />
             </h2>
-            <p className="text-sm text-gray-600 md:text-base">
+            <p className="text-lg text-muted-foreground">
               <EditableText
                 value={
                   data.subtitle ||
@@ -267,22 +267,22 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
             </p>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button
               onClick={scrollLeft}
-              className="rounded-full bg-gray-100 p-3 text-gray-700 transition-colors hover:bg-gray-200"
+              className="rounded-full border border-gray-200 bg-white p-3 text-gray-700 transition-colors hover:bg-gray-50 hover:text-black shadow-sm"
               type="button"
               aria-label="Scroll left"
             >
-              <ChevronLeft size={18} />
+              <ChevronLeft size={20} />
             </button>
             <button
               onClick={scrollRight}
-              className="rounded-full bg-gray-100 p-3 text-gray-700 transition-colors hover:bg-gray-200"
+              className="rounded-full border border-gray-200 bg-white p-3 text-gray-700 transition-colors hover:bg-gray-50 hover:text-black shadow-sm"
               type="button"
               aria-label="Scroll right"
             >
-              <ChevronRight size={18} />
+              <ChevronRight size={20} />
             </button>
           </div>
         </motion.div>
@@ -293,13 +293,13 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <div
-            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-white via-white/60 to-transparent transition-opacity duration-300"
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white to-transparent transition-opacity duration-300"
             style={{ opacity: showRightFade ? 1 : 0 }}
           />
           <div
             ref={scrollContainerRef}
             onScroll={updateFadeVisibility}
-            className="scrollbar-hide -mx-4 flex gap-6 overflow-x-auto px-4 pb-8 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden"
+            className="scrollbar-hide -mx-4 flex gap-6 overflow-x-auto px-4 pb-8 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden snap-x snap-mandatory"
           >
             {filteredImages.map(image => {
               const actualIndex = data.images.findIndex(
@@ -308,7 +308,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
               return (
                 <motion.div
                   key={image.id}
-                  className="group/card relative h-[450px] min-w-[300px] cursor-pointer overflow-hidden rounded-2xl md:min-w-[350px]"
+                  className="group/card relative h-[450px] min-w-[300px] cursor-pointer overflow-hidden rounded-2xl md:min-w-[350px] snap-center shadow-md transition-shadow hover:shadow-xl"
                   variants={fadeInUp}
                   initial={false}
                   whileInView="visible"
@@ -343,7 +343,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                     />
                   </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-60" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-transparent to-transparent opacity-80" />
 
                   {isEditable && (
                     <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover/card:opacity-100">
@@ -368,7 +368,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                   )}
 
                   <div className="absolute inset-x-6 bottom-6 z-10">
-                    <div className="translate-y-2 rounded-xl bg-white p-4 shadow-lg transition-all duration-300 group-hover/card:translate-y-0 group-hover/card:scale-105 group-hover/card:shadow-xl">
+                    <div className="translate-y-4 transition-transform duration-300 group-hover/card:translate-y-0">
                       <div className="flex flex-col gap-2">
                         <EditableText
                           value={image.title || "Case Study"}
@@ -376,7 +376,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                             handleImageTitleUpdate(actualIndex, newValue)
                           }
                           isEditable={isEditable}
-                          className="font-semibold text-gray-900"
+                          className="text-xl font-bold text-white"
                         />
                         <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-300 group-hover/card:max-h-40 group-hover/card:opacity-100">
                           {(image.description || isEditable) && (
@@ -389,7 +389,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                                 )
                               }
                               isEditable={isEditable}
-                              className="text-[11px] leading-relaxed text-gray-600"
+                              className="text-sm leading-relaxed text-gray-200 mt-2"
                               placeholder="Add description"
                               multiline
                             />
@@ -403,21 +403,23 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
             })}
 
             {isEditable && (
-              <div className="flex h-[450px] min-w-[300px] items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 md:min-w-[350px]">
+              <div className="flex h-[450px] min-w-[300px] items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 md:min-w-[350px] shrink-0 snap-center">
                 <label
                   htmlFor={`gallery6-add-${componentId}`}
-                  className="flex cursor-pointer flex-col items-center gap-2 text-gray-500"
+                  className="flex cursor-pointer flex-col items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors"
                 >
                   {isAddingImage ? (
-                    <div className="flex flex-col items-center gap-2 text-gray-500">
+                    <div className="flex flex-col items-center gap-2">
                       <Loader2 className="h-8 w-8 animate-spin" />
                       <span className="text-sm font-medium">Uploading...</span>
                     </div>
                   ) : (
                     <>
-                      <Plus className="h-8 w-8" />
+                      <div className="p-4 bg-white rounded-full shadow-sm">
+                        <Plus className="h-8 w-8" />
+                      </div>
                       <span className="text-sm font-medium">
-                        Add Case Study
+                        Add New Case Study
                       </span>
                       <input
                         id={`gallery6-add-${componentId}`}
