@@ -25,8 +25,12 @@ import {
   Upload,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { siteConfigAPI } from "@/services/api/owner-sites/admin/site-config";
-import { onboardingAPI } from "@/services/auth/onboarding";
+import {
+  useSiteConfig,
+  useCreateSiteConfig,
+  usePatchSiteConfig,
+} from "@/hooks/owner-site/admin/use-site-config";
+import { useCompleteOnboarding } from "@/hooks/use-onboarding";
 import { SiteConfig } from "@/types/owner-site/admin/site-config";
 import { decodeJwt } from "@/lib/utils";
 import Tiptap from "@/components/ui/tip-tap";
@@ -107,11 +111,18 @@ export default function OnboardingModal({
   onComplete,
 }: OnboardingModalProps) {
   const router = useRouter();
-  const { tokens, user, updateUser } = useAuth();
+  const { tokens, updateUser } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [existingConfig, setExistingConfig] = useState<SiteConfig | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: existingConfig, isLoading } = useSiteConfig();
+  const createSiteConfig = useCreateSiteConfig();
+  const patchSiteConfig = usePatchSiteConfig();
+  const completeOnboarding = useCompleteOnboarding();
+
+  const isPending =
+    createSiteConfig.isPending ||
+    patchSiteConfig.isPending ||
+    completeOnboarding.isPending;
+
   const [isOpen, setIsOpen] = useState(true);
 
   const [formData, setFormData] = useState<OnboardingFormData>({
@@ -129,43 +140,25 @@ export default function OnboardingModal({
 
   // Load existing site config on component mount
   useEffect(() => {
-    const loadExistingConfig = async () => {
-      if (!tokens?.access_token) {
-        setIsLoading(false);
-        return;
-      }
+    if (existingConfig) {
+      setFormData(prev => ({
+        ...prev,
+        businessName: existingConfig.business_name || userData.storeName || "",
+        address: existingConfig.address || "",
+        phone: existingConfig.phone || userData.phoneNumber || "",
+        email: existingConfig.email || userData.email || "",
+        workingHours: existingConfig.working_hours || "",
+        businessDescription: existingConfig.business_details || "",
+        socialLinks: socialPlatforms.map(
+          platform =>
+            (existingConfig[platform.field as keyof SiteConfig] as string) || ""
+        ),
+      }));
 
-      try {
-        const config = await siteConfigAPI.getSiteConfig();
-        setExistingConfig(config);
-
-        if (config) {
-          setFormData(prev => ({
-            ...prev,
-            businessName: config.business_name || userData.storeName || "",
-            address: config.address || "",
-            phone: config.phone || userData.phoneNumber || "",
-            email: config.email || userData.email || "",
-            workingHours: config.working_hours || "",
-            businessDescription: config.business_details || "",
-            socialLinks: socialPlatforms.map(
-              platform =>
-                (config[platform.field as keyof SiteConfig] as string) || ""
-            ),
-          }));
-
-          if (config.logo) setLogoPreview(config.logo);
-          if (config.favicon) setFaviconPreview(config.favicon);
-        }
-      } catch (error) {
-        console.error("Error loading existing config:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadExistingConfig();
-  }, [tokens, userData]);
+      if (existingConfig.logo) setLogoPreview(existingConfig.logo);
+      if (existingConfig.favicon) setFaviconPreview(existingConfig.favicon);
+    }
+  }, [existingConfig, userData]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -246,38 +239,6 @@ export default function OnboardingModal({
     if (updateUser) {
       updateUser({ is_onboarding_complete: true });
     }
-
-    try {
-      const currentUser = localStorage.getItem("authUser");
-      if (currentUser) {
-        const parsedUser = JSON.parse(currentUser);
-        const updatedUser = {
-          ...parsedUser,
-          is_onboarding_complete: true,
-        };
-        localStorage.setItem("authUser", JSON.stringify(updatedUser));
-      }
-    } catch (error) {
-      console.error("❌ Error updating localStorage:", error);
-    }
-
-    try {
-      const storedTokens = localStorage.getItem("authTokens");
-      if (storedTokens) {
-        const tokens = JSON.parse(storedTokens);
-        if (tokens.access_token) {
-          const payload = decodeJwt(tokens.access_token);
-          if (payload) {
-            const updatedPayload = {
-              ...payload,
-              is_onboarding_complete: true,
-            };
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error updating token data:", error);
-    }
   };
 
   const handleSubmit = async () => {
@@ -290,8 +251,6 @@ export default function OnboardingModal({
       toast.error("Authentication token not found");
       return;
     }
-
-    setIsSubmitting(true);
 
     try {
       const siteConfigFormData = new FormData();
@@ -327,23 +286,22 @@ export default function OnboardingModal({
         }
       });
 
-      let siteConfigResponse;
       if (existingConfig && existingConfig.id) {
-        siteConfigResponse = await siteConfigAPI.patchSiteConfig(
-          existingConfig.id,
-          siteConfigFormData,
-          tokens.access_token
-        );
+        await patchSiteConfig.mutateAsync({
+          id: existingConfig.id,
+          data: siteConfigFormData,
+          accessToken: tokens.access_token,
+        });
         toast.success("Site configuration updated successfully!");
       } else {
-        siteConfigResponse = await siteConfigAPI.createSiteConfig(
-          siteConfigFormData,
-          tokens.access_token
-        );
+        await createSiteConfig.mutateAsync({
+          configData: siteConfigFormData,
+          accessToken: tokens.access_token,
+        });
         toast.success("Site configuration created successfully!");
       }
 
-      await onboardingAPI.completeOnboarding(tokens.access_token);
+      await completeOnboarding.mutateAsync(tokens.access_token);
       toast.success("Onboarding completed successfully!");
 
       updateOnboardingStatus();
@@ -366,8 +324,6 @@ export default function OnboardingModal({
       } else {
         toast.error("Failed to complete onboarding. Please try again.");
       }
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -833,8 +789,8 @@ export default function OnboardingModal({
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 ) : (
-                  <Button onClick={handleSubmit} disabled={isSubmitting}>
-                    {isSubmitting
+                  <Button onClick={handleSubmit} disabled={isPending}>
+                    {isPending
                       ? "Submitting..."
                       : existingConfig
                         ? "Update Configuration"

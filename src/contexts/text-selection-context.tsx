@@ -191,8 +191,6 @@ export const TextSelectionProvider: React.FC<{ children: React.ReactNode }> = ({
       } catch (error) {
         console.warn("Font size application failed:", error);
       }
-
-      // clearSelection(); // KEEP SELECTION ACTIVE so users can change size again if they want
     },
     [selection] // Removed clearSelection from dependencies as we might not want to clear immediately
   );

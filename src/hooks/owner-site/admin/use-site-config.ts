@@ -20,8 +20,13 @@ export const useSiteConfig = () => {
 export const useCreateSiteConfig = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (configData: FormData) =>
-      siteConfigAPI.createSiteConfig(configData),
+    mutationFn: ({
+      configData,
+      accessToken,
+    }: {
+      configData: FormData;
+      accessToken?: string;
+    }) => siteConfigAPI.createSiteConfig(configData, accessToken),
     onSuccess: data => {
       // Optimistically update cache
       queryClient.setQueryData(["site-config"], data);
@@ -33,8 +38,15 @@ export const useCreateSiteConfig = () => {
 export const usePatchSiteConfig = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: FormData }) =>
-      siteConfigAPI.patchSiteConfig(id, data),
+    mutationFn: ({
+      id,
+      data,
+      accessToken,
+    }: {
+      id: number;
+      data: FormData;
+      accessToken?: string;
+    }) => siteConfigAPI.patchSiteConfig(id, data, accessToken),
     onSuccess: data => {
       // Optimistically update cache
       queryClient.setQueryData(["site-config"], data);

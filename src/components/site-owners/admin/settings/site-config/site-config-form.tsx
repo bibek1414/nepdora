@@ -19,6 +19,7 @@ import {
   X,
 } from "lucide-react";
 import { ImageUploader } from "@/components/ui/image-uploader";
+import { useAuth } from "@/hooks/use-auth";
 
 interface FieldErrors {
   [fieldName: string]: string[];
@@ -26,6 +27,7 @@ interface FieldErrors {
 
 export const SiteConfigForm: React.FC = () => {
   const { data: siteConfig, isLoading } = useSiteConfig();
+  const { tokens } = useAuth();
   const createMutation = useCreateSiteConfig();
   const patchMutation = usePatchSiteConfig();
 
@@ -205,7 +207,10 @@ export const SiteConfigForm: React.FC = () => {
 
     try {
       if (isCreateMode) {
-        await createMutation.mutateAsync(submitData);
+        await createMutation.mutateAsync({
+          configData: submitData,
+          accessToken: tokens?.access_token,
+        });
         toast.success("Site configuration created successfully!");
         setHasJustCreated(true);
       } else {
@@ -217,6 +222,7 @@ export const SiteConfigForm: React.FC = () => {
         await patchMutation.mutateAsync({
           id: siteConfig.id,
           data: submitData,
+          accessToken: tokens?.access_token,
         });
         toast.success("Site configuration updated successfully!");
       }

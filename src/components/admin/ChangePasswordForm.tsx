@@ -18,8 +18,19 @@ import {
   ChangePasswordFormValues,
 } from "@/schemas/change-password";
 import { useChangePassword } from "@/hooks/use-user";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, Loader2, Lock, CheckCircle } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  FloatingInput,
+  FloatingLabel,
+} from "@/components/ui/floating-label-input";
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +42,7 @@ export function ChangePasswordForm() {
 
   const form = useForm<ChangePasswordFormValues>({
     resolver: zodResolver(changePasswordSchema),
+    mode: "onChange",
     defaultValues: {
       old_password: "",
       new_password: "",
@@ -64,34 +76,46 @@ export function ChangePasswordForm() {
     <Card className="mx-auto w-full max-w-md border-none shadow-none">
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="old_password"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Old Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        type={showOldPassword ? "text" : "password"}
-                        placeholder="Enter old password"
-                        {...field}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowOldPassword(!showOldPassword)}
-                        className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2"
-                      >
-                        {showOldPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
+                <FormItem className="space-y-0">
+                  <div className="relative">
+                    <FloatingInput
+                      id="old_password"
+                      type={showOldPassword ? "text" : "password"}
+                      disabled={isPending}
+                      className={cn(
+                        "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
+                        form.formState.errors.old_password &&
+                          "border-red-300 focus:border-red-500 focus:ring-red-500"
+                      )}
+                      {...field}
+                    />
+                    <FloatingLabel htmlFor="old_password">
+                      <Lock className="mr-2 h-4 w-4" />
+                      Old Password
+                    </FloatingLabel>
+                    <button
+                      type="button"
+                      onClick={() => setShowOldPassword(!showOldPassword)}
+                      className="text-muted-foreground absolute top-1/2 right-3 z-10 -translate-y-1/2"
+                    >
+                      {showOldPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  {form.formState.errors.old_password && (
+                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
+                      <AlertCircle className="mr-1 h-4 w-4" />
+                      {form.formState.errors.old_password.message}
+                    </p>
+                  )}
                 </FormItem>
               )}
             />
@@ -100,28 +124,35 @@ export function ChangePasswordForm() {
               control={form.control}
               name="new_password"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>New Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        type={showNewPassword ? "text" : "password"}
-                        placeholder="Enter new password"
-                        {...field}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowNewPassword(!showNewPassword)}
-                        className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2"
-                      >
-                        {showNewPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
+                <FormItem className="space-y-0">
+                  <div className="relative">
+                    <FloatingInput
+                      id="new_password"
+                      type={showNewPassword ? "text" : "password"}
+                      disabled={isPending}
+                      className={cn(
+                        "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
+                        form.formState.errors.new_password &&
+                          "border-red-300 focus:border-red-500 focus:ring-red-500"
+                      )}
+                      {...field}
+                    />
+                    <FloatingLabel htmlFor="new_password">
+                      <Lock className="mr-2 h-4 w-4" />
+                      New Password
+                    </FloatingLabel>
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="text-muted-foreground absolute top-1/2 right-3 z-10 -translate-y-1/2"
+                    >
+                      {showNewPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
                   {newPassword && newPassword.length > 0 && (
                     <div className="mt-2 space-y-1 text-xs">
                       <div
@@ -198,7 +229,12 @@ export function ChangePasswordForm() {
                       </div>
                     </div>
                   )}
-                  <FormMessage />
+                  {form.formState.errors.new_password && (
+                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
+                      <AlertCircle className="mr-1 h-4 w-4" />
+                      {form.formState.errors.new_password.message}
+                    </p>
+                  )}
                 </FormItem>
               )}
             />
@@ -207,38 +243,63 @@ export function ChangePasswordForm() {
               control={form.control}
               name="confirmPassword"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm New Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Confirm new password"
-                        {...field}
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setShowConfirmPassword(!showConfirmPassword)
-                        }
-                        className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2"
-                      >
-                        {showConfirmPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
+                <FormItem className="space-y-0">
+                  <div className="relative">
+                    <FloatingInput
+                      id="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      disabled={isPending}
+                      className={cn(
+                        "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
+                        form.formState.errors.confirmPassword &&
+                          "border-red-300 focus:border-red-500 focus:ring-red-500"
+                      )}
+                      {...field}
+                    />
+                    <FloatingLabel htmlFor="confirmPassword">
+                      <Lock className="mr-2 h-4 w-4" />
+                      Confirm New Password
+                    </FloatingLabel>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      className="text-muted-foreground absolute top-1/2 right-3 z-10 -translate-y-1/2"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  {form.formState.errors.confirmPassword && (
+                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
+                      <AlertCircle className="mr-1 h-4 w-4" />
+                      {form.formState.errors.confirmPassword.message}
+                    </p>
+                  )}
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Update Password
+            <Button
+              type="submit"
+              disabled={isPending}
+              className={cn(
+                "flex w-full justify-center rounded-lg bg-gray-900 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-gray-800 focus:outline-none",
+                isPending ? "cursor-not-allowed opacity-70" : ""
+              )}
+            >
+              {isPending ? (
+                <span className="flex items-center">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Updating...
+                </span>
+              ) : (
+                "Update Password"
+              )}
             </Button>
           </form>
         </Form>
