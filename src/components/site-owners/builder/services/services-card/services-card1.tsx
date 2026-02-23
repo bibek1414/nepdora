@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { formatDate } from "@/utils/date";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 
 interface ServicesCard1Props {
@@ -46,29 +45,32 @@ export const ServicesCard1: React.FC<ServicesCard1Props> = ({
 
   const CardWrapper = siteUser
     ? ({ children }: { children: React.ReactNode }) => (
-        <Link href={getDetailsUrl()}>{children}</Link>
+        <Link href={getDetailsUrl()} className="group block h-full">
+          {children}
+        </Link>
       )
     : ({ children }: { children: React.ReactNode }) => (
-        <div onClick={handleClick} className="cursor-pointer">
+        <div onClick={handleClick} className="group block h-full cursor-pointer">
           {children}
         </div>
       );
 
   return (
     <CardWrapper>
-      <div className="bg-background-light h-full overflow-hidden rounded-lg shadow-md dark:bg-zinc-800">
-        <div className="relative h-56 w-full">
+      <div className="h-full overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-zinc-900/50">
+        <div className="relative aspect-video w-full overflow-hidden">
           <Image
             src={servicesImage}
             alt={services.thumbnail_image_alt_description || services.title}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
         <div className="p-6">
-          <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-white">
+          <h2 className="line-clamp-2 text-xl font-bold leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
             {services.title}
           </h2>
+          {/* Optional: Add a short excerpt here if description is plain text */}
         </div>
       </div>
     </CardWrapper>
