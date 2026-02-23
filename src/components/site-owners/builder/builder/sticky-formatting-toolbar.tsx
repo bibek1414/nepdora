@@ -387,7 +387,6 @@ export const StickyFormattingToolbar: React.FC = () => {
                 setSelectionFontSize(newSize);
                 applyFontSize(newSize);
                 console.log("newSize", newSize);
-                clearSelection();
                 setFontSizeInput((current - 2).toString());
               }
             }}
@@ -403,10 +402,9 @@ export const StickyFormattingToolbar: React.FC = () => {
               value={fontSizeInput}
               onClick={e => {
                 e.stopPropagation();
-                if (!showFontSizePicker) {
-                  closeAllDropdowns();
-                  setShowFontSizePicker(true);
-                }
+                const willShow = !showFontSizePicker;
+                closeAllDropdowns();
+                setShowFontSizePicker(willShow);
               }}
               onChange={e => {
                 const value = e.target.value.replace(/[^0-9]/g, "");
@@ -421,7 +419,6 @@ export const StickyFormattingToolbar: React.FC = () => {
                   const newSize = `${size}px`;
                   setSelectionFontSize(newSize);
                   applyFontSize(newSize);
-                  clearSelection();
                   setFontSizeInput(size.toString());
                 } else {
                   setFontSizeInput(parseInt(selectionFontSize).toString());
@@ -454,7 +451,6 @@ export const StickyFormattingToolbar: React.FC = () => {
                     key={size}
                     onClick={() => {
                       applyFontSize(size);
-                      clearSelection();
                       setFontSizeInput(parseInt(size).toString());
                       setShowFontSizePicker(false);
                     }}
@@ -474,7 +470,6 @@ export const StickyFormattingToolbar: React.FC = () => {
                 const newSize = `${current + 2}px`;
                 setSelectionFontSize(newSize);
                 applyFontSize(newSize);
-                clearSelection();
                 setFontSizeInput((current + 2).toString());
               }
             }}
