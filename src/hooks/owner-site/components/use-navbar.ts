@@ -90,11 +90,29 @@ export const useCreateNavbarMutation = () => {
         });
       });
     },
-    onSuccess: data => {
-      // Global listener invalidates, but we can toast
-      toast.success("Navbar created/updated successfully");
+    onMutate: async variables => {
+      await queryClient.cancelQueries({ queryKey: NAVBAR_QUERY_KEY });
+      const previousNavbar = queryClient.getQueryData(NAVBAR_QUERY_KEY);
+
+      queryClient.setQueryData(NAVBAR_QUERY_KEY, {
+        data: {
+          ...variables,
+          status: "draft",
+          component_type: "navbar",
+          isOptimistic: true,
+        },
+        message: "Navbar created/updated (optimistic)",
+      });
+
+      return { previousNavbar };
     },
-    onError: (error: any) => {
+    onSuccess: () => {
+      toast.success("Navbar created successfully");
+    },
+    onError: (error: any, __, context) => {
+      if (context?.previousNavbar) {
+        queryClient.setQueryData(NAVBAR_QUERY_KEY, context.previousNavbar);
+      }
       const errorMessage =
         error?.data?.detail ||
         error?.detail ||
@@ -107,6 +125,7 @@ export const useCreateNavbarMutation = () => {
 
 export const useUpdateNavbarMutation = () => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: UpdateNavbarRequest) => {
@@ -124,10 +143,27 @@ export const useUpdateNavbarMutation = () => {
         });
       });
     },
+    onMutate: async (data: UpdateNavbarRequest) => {
+      await queryClient.cancelQueries({ queryKey: NAVBAR_QUERY_KEY });
+      const previousNavbar = queryClient.getQueryData(NAVBAR_QUERY_KEY);
+
+      queryClient.setQueryData(NAVBAR_QUERY_KEY, (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          data: { ...old.data, ...data },
+        };
+      });
+
+      return { previousNavbar };
+    },
     onSuccess: data => {
       toast.success("Navbar updated successfully");
     },
-    onError: (error: any) => {
+    onError: (error: any, __, context) => {
+      if (context?.previousNavbar) {
+        queryClient.setQueryData(NAVBAR_QUERY_KEY, context.previousNavbar);
+      }
       toast.error(error.message || "Failed to update navbar");
     },
   });
@@ -168,6 +204,7 @@ export const useDeleteNavbarMutation = () => {
 
 export const useReplaceNavbarMutation = () => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateNavbarRequest) => {
@@ -184,10 +221,29 @@ export const useReplaceNavbarMutation = () => {
         });
       });
     },
+    onMutate: async (data: CreateNavbarRequest) => {
+      await queryClient.cancelQueries({ queryKey: NAVBAR_QUERY_KEY });
+      const previousNavbar = queryClient.getQueryData(NAVBAR_QUERY_KEY);
+
+      queryClient.setQueryData(NAVBAR_QUERY_KEY, {
+        data: {
+          ...data,
+          status: "draft",
+          component_type: "navbar",
+          isOptimistic: true,
+        },
+        message: "Navbar replaced (optimistic)",
+      });
+
+      return { previousNavbar };
+    },
     onSuccess: data => {
       toast.success("Navbar replaced successfully");
     },
-    onError: (error: any) => {
+    onError: (error: any, __, context) => {
+      if (context?.previousNavbar) {
+        queryClient.setQueryData(NAVBAR_QUERY_KEY, context.previousNavbar);
+      }
       toast.error(error.message || "Failed to replace navbar");
     },
   });

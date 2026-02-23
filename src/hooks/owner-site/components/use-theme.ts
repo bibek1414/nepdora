@@ -29,11 +29,12 @@ export const useThemeQueryPublished = () => {
 
 export const useCreateThemeMutation = () => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateThemeRequest) => {
       return new Promise<any>(resolve => {
-        const unsubscribe = subscribe("theme_updated", message => {
+        const unsubscribe = subscribe("theme_created", message => {
           unsubscribe();
           resolve(message.data);
         });
@@ -41,15 +42,36 @@ export const useCreateThemeMutation = () => {
         setTimeout(() => unsubscribe(), 10000);
 
         sendMessage({
-          action: "update_theme",
+          action: "create_theme",
           ...data,
         });
       });
     },
+    onMutate: async variables => {
+      await queryClient.cancelQueries({ queryKey: THEME_QUERY_KEY });
+      const previousThemes = queryClient.getQueryData(THEME_QUERY_KEY);
+
+      const optimisticTheme = {
+        ...variables,
+        id: `temp-${Date.now()}`,
+        status: "draft",
+        isOptimistic: true,
+      };
+
+      queryClient.setQueryData(THEME_QUERY_KEY, (old: any[] | undefined) => {
+        if (!old) return [optimisticTheme];
+        return [...old, optimisticTheme];
+      });
+
+      return { previousThemes };
+    },
     onSuccess: data => {
       toast.success("Theme created successfully");
     },
-    onError: (error: any) => {
+    onError: (error: any, __, context) => {
+      if (context?.previousThemes) {
+        queryClient.setQueryData(THEME_QUERY_KEY, context.previousThemes);
+      }
       toast.error(error.message || "Failed to create theme");
     },
   });
@@ -57,6 +79,7 @@ export const useCreateThemeMutation = () => {
 
 export const useUpdateThemeMutation = () => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: UpdateThemeRequest) => {
@@ -74,10 +97,24 @@ export const useUpdateThemeMutation = () => {
         });
       });
     },
+    onMutate: async (data: UpdateThemeRequest) => {
+      await queryClient.cancelQueries({ queryKey: THEME_QUERY_KEY });
+      const previousThemes = queryClient.getQueryData(THEME_QUERY_KEY);
+
+      queryClient.setQueryData(THEME_QUERY_KEY, (old: any[] | undefined) => {
+        if (!old) return old;
+        return old.map(t => (t.id === data.id ? { ...t, ...data } : t));
+      });
+
+      return { previousThemes };
+    },
     onSuccess: data => {
       toast.success("Theme updated successfully");
     },
-    onError: (error: any) => {
+    onError: (error: any, __, context) => {
+      if (context?.previousThemes) {
+        queryClient.setQueryData(THEME_QUERY_KEY, context.previousThemes);
+      }
       toast.error(error.message || "Failed to update theme");
     },
   });

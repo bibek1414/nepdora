@@ -100,14 +100,85 @@ export const useWebsiteSocket = ({
           queryClient.invalidateQueries({ queryKey: ["pages"] });
           break;
         case "component_created":
+          if (data) {
+            const statusKey = data.status === "draft" ? "preview" : "published";
+            queryClient.setQueryData(
+              ["pageComponents", data.page_slug, statusKey],
+              (old: any[] | undefined) => {
+                if (!old) return [data];
+                // Avoid duplicates
+                if (old.some(c => c.component_id === data.component_id))
+                  return old;
+
+                const newComponents = [...old, data];
+                return newComponents.sort(
+                  (a, b) => (a.order ?? 0) - (b.order ?? 0)
+                );
+              }
+            );
+          }
+          break;
         case "component_updated":
-        case "component_replaced":
+          if (data) {
+            const statusKey = data.status === "draft" ? "preview" : "published";
+            queryClient.setQueryData(
+              ["pageComponents", data.page_slug, statusKey],
+              (old: any[] | undefined) => {
+                if (!old) return old;
+                return old.map(c =>
+                  c.component_id === data.component_id ? { ...c, ...data } : c
+                );
+              }
+            );
+          }
+          break;
         case "component_deleted":
-          queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
+          const componentId = message.component_id || data?.component_id;
+          const pageSlug = message.page_slug || data?.page_slug;
+
+          if (componentId) {
+            // We might not know the status, so we might need to update both or invalidate if unsure.
+            // But usually builders work on "preview" (draft).
+            ["preview", "published"].forEach(status => {
+              queryClient.setQueryData(
+                ["pageComponents", pageSlug, status],
+                (old: any[] | undefined) => {
+                  if (!old) return old;
+                  return old.filter(c => c.component_id !== componentId);
+                }
+              );
+            });
+          }
+
           if (data?.component_type) {
             queryClient.invalidateQueries({
               queryKey: ["pageComponents", "types", data.component_type],
             });
+          }
+          break;
+        case "component_replaced":
+          if (data && Array.isArray(data)) {
+            // Backend returns a list of components for replace
+            const firstComp = data[0];
+            if (firstComp) {
+              const statusKey =
+                firstComp.status === "draft" ? "preview" : "published";
+              queryClient.setQueryData(
+                ["pageComponents", firstComp.page_slug, statusKey],
+                (old: any[] | undefined) => {
+                  if (!old) return data;
+                  // Remove the old one(s) with the same IDs or handle replacement logic
+                  // Replaced message usually means one ID was replaced by one or more.
+                  // For now, let's assume we replace the specific ID if we had it.
+                  // Since replace_component in backend deletes then creates, we might need more info.
+                  // But list_components is the safest fallback if complex.
+                  return data.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+                }
+              );
+            }
+          } else {
+            // If data is just one component
+            queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
           }
           break;
         case "component_published":
@@ -123,19 +194,25 @@ export const useWebsiteSocket = ({
         case "navbar_updated":
         case "navbar_replaced":
         case "navbar_published":
-          queryClient.invalidateQueries({ queryKey: ["navbar"] });
-          if (data)
-            queryClient.setQueryData(["navbar"], {
+          if (data) {
+            const statusKey = data.status === "draft" ? "preview" : "published";
+            const queryKey =
+              statusKey === "preview" ? ["navbar"] : ["navbar", "published"];
+            queryClient.setQueryData(queryKey, {
               data,
-              message: "Navbar updated",
+              message: `Navbar ${action.split("_")[1] || "retrieved"}`,
             });
+          }
           break;
         case "navbar_deleted":
           queryClient.setQueryData(["navbar"], null);
-          queryClient.invalidateQueries({ queryKey: ["navbar"] });
+          queryClient.setQueryData(["navbar", "published"], null);
           break;
         case "footer":
-          queryClient.setQueryData(["footer"], {
+          const fStatusKey = data?.status === "draft" ? "preview" : "published";
+          const fQueryKey =
+            fStatusKey === "preview" ? ["footer"] : ["footer", "published"];
+          queryClient.setQueryData(fQueryKey, {
             data,
             message: "Footer retrieved",
           });
@@ -144,23 +221,47 @@ export const useWebsiteSocket = ({
         case "footer_updated":
         case "footer_replaced":
         case "footer_published":
-          queryClient.invalidateQueries({ queryKey: ["footer"] });
-          if (data)
-            queryClient.setQueryData(["footer"], {
+          if (data) {
+            const statusKey = data.status === "draft" ? "preview" : "published";
+            const queryKey =
+              statusKey === "preview" ? ["footer"] : ["footer", "published"];
+            queryClient.setQueryData(queryKey, {
               data,
-              message: "Footer updated",
+              message: `Footer ${action.split("_")[1] || "retrieved"}`,
             });
+          }
           break;
         case "footer_deleted":
           queryClient.setQueryData(["footer"], null);
-          queryClient.invalidateQueries({ queryKey: ["footer"] });
+          queryClient.setQueryData(["footer", "published"], null);
           break;
         case "themes_list":
           queryClient.setQueryData(["themes"], data);
           break;
+        case "theme_created":
         case "theme_updated":
+          if (data) {
+            queryClient.setQueryData(["themes"], (old: any[] | undefined) => {
+              if (!old) return [data];
+              const exists = old.find(t => t.id === data.id);
+              if (exists) {
+                return old.map(t => (t.id === data.id ? { ...t, ...data } : t));
+              }
+              return [...old, data];
+            });
+          }
+          break;
         case "theme_published":
           queryClient.invalidateQueries({ queryKey: ["themes"] });
+          break;
+        case "theme_deleted":
+          const themeId = message.id || data?.id;
+          if (themeId) {
+            queryClient.setQueryData(["themes"], (old: any[] | undefined) => {
+              if (!old) return old;
+              return old.filter(t => t.id !== themeId);
+            });
+          }
           break;
         case "site_config":
         case "site_config_updated":

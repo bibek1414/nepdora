@@ -88,6 +88,7 @@ export const useComponentsByTypeQuery = <T extends keyof ComponentTypeMap>(
 // Generic hook that can handle multiple component types in one instance
 export const useCreateComponentMutation = (pageSlug: string) => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
@@ -121,19 +122,64 @@ export const useCreateComponentMutation = (pageSlug: string) => {
         });
       });
     },
-    onMutate: variables => {
-      if (!variables.silent) {
+    onMutate: async variables => {
+      const { componentType, data, insertIndex, silent } = variables;
+
+      // Cancel refetching
+      await queryClient.cancelQueries({
+        queryKey: ["pageComponents", pageSlug, "preview"],
+      });
+
+      // Snapshot previous
+      const previousComponents = queryClient.getQueryData([
+        "pageComponents",
+        pageSlug,
+        "preview",
+      ]);
+
+      // Optimistically update
+      const optimisticId = generateUUID();
+      const optimisticComponent = {
+        component_id: optimisticId,
+        component_type: componentType,
+        data: data,
+        page_slug: pageSlug,
+        status: "draft",
+        order:
+          insertIndex ??
+          (Array.isArray(previousComponents) ? previousComponents.length : 0),
+        isOptimistic: true, // For UI feedback if needed
+      };
+
+      queryClient.setQueryData(
+        ["pageComponents", pageSlug, "preview"],
+        (old: any[] | undefined) => {
+          if (!old) return [optimisticComponent];
+          const newList = [...old];
+          if (typeof insertIndex === "number") {
+            newList.splice(insertIndex, 0, optimisticComponent);
+          } else {
+            newList.push(optimisticComponent);
+          }
+          return newList.map((c, i) => ({ ...c, order: i }));
+        }
+      );
+
+      if (!silent) {
         return {
+          previousComponents,
           toastId: toast.loading(
             `Adding ${
-              variables.componentType.charAt(0).toUpperCase() +
-              variables.componentType.slice(1)
+              componentType.charAt(0).toUpperCase() + componentType.slice(1)
             } component...`
           ),
         };
       }
+      return { previousComponents };
     },
     onSuccess: (data, variables, context) => {
+      // The WebSocket will provide the real data, but we can update the optimistic one here too if we want.
+      // Or just let the WebSocket handle it.
       if (!variables.silent) {
         toast.success(
           `${
@@ -145,6 +191,14 @@ export const useCreateComponentMutation = (pageSlug: string) => {
       }
     },
     onError: (error: unknown, variables, context) => {
+      // Rollback
+      if (context?.previousComponents) {
+        queryClient.setQueryData(
+          ["pageComponents", pageSlug, "preview"],
+          context.previousComponents
+        );
+      }
+
       const errorMessage =
         error instanceof Error
           ? error.message
@@ -162,6 +216,7 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
   componentType: T
 ) => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({
@@ -188,11 +243,40 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
         });
       });
     },
+    onMutate: async ({ componentId, data }) => {
+      await queryClient.cancelQueries({
+        queryKey: ["pageComponents", pageSlug, "preview"],
+      });
+      const previousComponents = queryClient.getQueryData([
+        "pageComponents",
+        pageSlug,
+        "preview",
+      ]);
+
+      queryClient.setQueryData(
+        ["pageComponents", pageSlug, "preview"],
+        (old: any[] | undefined) => {
+          if (!old) return old;
+          return old.map(c =>
+            c.component_id === componentId
+              ? { ...c, data: { ...c.data, ...data } }
+              : c
+          );
+        }
+      );
+
+      return { previousComponents };
+    },
     onSuccess: () => {
-      // Toast and invalidation handled by global listener mostly
       toast.success("Component updated successfully");
     },
-    onError: (error: unknown) => {
+    onError: (error: unknown, __, context) => {
+      if (context?.previousComponents) {
+        queryClient.setQueryData(
+          ["pageComponents", pageSlug, "preview"],
+          context.previousComponents
+        );
+      }
       const errorMessage =
         error instanceof Error
           ? error.message
@@ -208,6 +292,7 @@ export const useDeleteComponentMutation = (
   componentType: keyof ComponentTypeMap
 ) => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (componentId: string) => {
@@ -232,8 +317,26 @@ export const useDeleteComponentMutation = (
         });
       });
     },
-    onMutate: () => {
+    onMutate: async componentId => {
+      await queryClient.cancelQueries({
+        queryKey: ["pageComponents", pageSlug, "preview"],
+      });
+      const previousComponents = queryClient.getQueryData([
+        "pageComponents",
+        pageSlug,
+        "preview",
+      ]);
+
+      queryClient.setQueryData(
+        ["pageComponents", pageSlug, "preview"],
+        (old: any[] | undefined) => {
+          if (!old) return old;
+          return old.filter(c => c.component_id !== componentId);
+        }
+      );
+
       return {
+        previousComponents,
         toastId: toast.loading(
           `Deleting ${
             componentType.charAt(0).toUpperCase() + componentType.slice(1)
@@ -250,6 +353,12 @@ export const useDeleteComponentMutation = (
       );
     },
     onError: (error: unknown, __, context) => {
+      if (context?.previousComponents) {
+        queryClient.setQueryData(
+          ["pageComponents", pageSlug, "preview"],
+          context.previousComponents
+        );
+      }
       const errorMessage =
         error instanceof Error
           ? error.message
@@ -265,6 +374,7 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
   componentType: T
 ) => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({
@@ -291,8 +401,28 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
         });
       });
     },
-    onMutate: () => {
+    onMutate: async ({ componentId, data }) => {
+      await queryClient.cancelQueries({
+        queryKey: ["pageComponents", pageSlug, "preview"],
+      });
+      const previousComponents = queryClient.getQueryData([
+        "pageComponents",
+        pageSlug,
+        "preview",
+      ]);
+
+      queryClient.setQueryData(
+        ["pageComponents", pageSlug, "preview"],
+        (old: any[] | undefined) => {
+          if (!old) return old;
+          return old.map(c =>
+            c.component_id === componentId ? { ...c, data } : c
+          );
+        }
+      );
+
       return {
+        previousComponents,
         toastId: toast.loading(`${componentType} component replacing...`),
       };
     },
@@ -302,6 +432,12 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
       });
     },
     onError: (error: unknown, __, context) => {
+      if (context?.previousComponents) {
+        queryClient.setQueryData(
+          ["pageComponents", pageSlug, "preview"],
+          context.previousComponents
+        );
+      }
       const errorMessage =
         error instanceof Error
           ? error.message
@@ -314,6 +450,7 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
 // Generic replace mutation hook
 export const useGenericReplaceComponentMutation = (pageSlug: string) => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({
@@ -345,8 +482,36 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
         });
       });
     },
-    onMutate: variables => {
+    onMutate: async variables => {
+      await queryClient.cancelQueries({
+        queryKey: ["pageComponents", pageSlug, "preview"],
+      });
+      const previousComponents = queryClient.getQueryData([
+        "pageComponents",
+        pageSlug,
+        "preview",
+      ]);
+
+      queryClient.setQueryData(
+        ["pageComponents", pageSlug, "preview"],
+        (old: any[] | undefined) => {
+          if (!old) return old;
+          return old
+            .map(c =>
+              c.component_id === variables.componentId
+                ? {
+                    ...c,
+                    data: variables.data,
+                    order: variables.order ?? c.order,
+                  }
+                : c
+            )
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+        }
+      );
+
       return {
+        previousComponents,
         toastId: toast.loading(
           `Replacing ${variables.componentType} component...`
         ),
@@ -359,6 +524,12 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
       );
     },
     onError: (error: unknown, variables, context) => {
+      if (context?.previousComponents) {
+        queryClient.setQueryData(
+          ["pageComponents", pageSlug, "preview"],
+          context.previousComponents
+        );
+      }
       const errorMessage =
         error instanceof Error
           ? error.message
@@ -412,6 +583,7 @@ export const useDeletePortfolioComponentMutation = () => {
 
 export const useUpdateComponentOrderMutation = (pageSlug: string) => {
   const { sendMessage } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ orderUpdates }: { orderUpdates: any[] }) => {
@@ -422,11 +594,45 @@ export const useUpdateComponentOrderMutation = (pageSlug: string) => {
       });
       return Promise.resolve();
     },
+    onMutate: async ({ orderUpdates }) => {
+      await queryClient.cancelQueries({
+        queryKey: ["pageComponents", pageSlug, "preview"],
+      });
+      const previousComponents = queryClient.getQueryData([
+        "pageComponents",
+        pageSlug,
+        "preview",
+      ]);
+
+      queryClient.setQueryData(
+        ["pageComponents", pageSlug, "preview"],
+        (old: any[] | undefined) => {
+          if (!old) return old;
+          const newComponents = old.map(c => {
+            const update = orderUpdates.find(
+              u => u.component_id === c.component_id
+            );
+            return update ? { ...c, order: update.order } : c;
+          });
+          return [...newComponents].sort(
+            (a, b) => (a.order ?? 0) - (b.order ?? 0)
+          );
+        }
+      );
+
+      return { previousComponents };
+    },
     onSuccess: () => {
       // Silently handled by global listener "components_reordered" or similar if it exists,
       // or we just trust the optimistic update.
     },
-    onError: (error: unknown) => {
+    onError: (error: unknown, __, context) => {
+      if (context?.previousComponents) {
+        queryClient.setQueryData(
+          ["pageComponents", pageSlug, "preview"],
+          context.previousComponents
+        );
+      }
       const errorMessage =
         error instanceof Error
           ? error.message

@@ -70,6 +70,7 @@ export const useFooterQueryPublished = () => {
 
 export const useCreateFooterMutation = () => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateFooterRequest) => {
@@ -87,10 +88,29 @@ export const useCreateFooterMutation = () => {
         });
       });
     },
+    onMutate: async variables => {
+      await queryClient.cancelQueries({ queryKey: FOOTER_QUERY_KEY });
+      const previousFooter = queryClient.getQueryData(FOOTER_QUERY_KEY);
+
+      queryClient.setQueryData(FOOTER_QUERY_KEY, {
+        data: {
+          ...variables,
+          status: "draft",
+          component_type: "footer",
+          isOptimistic: true,
+        },
+        message: "Footer created/updated (optimistic)",
+      });
+
+      return { previousFooter };
+    },
     onSuccess: data => {
       toast.success("Footer created successfully");
     },
-    onError: (error: any) => {
+    onError: (error: any, __, context) => {
+      if (context?.previousFooter) {
+        queryClient.setQueryData(FOOTER_QUERY_KEY, context.previousFooter);
+      }
       const errorMessage =
         error?.data?.detail ||
         error?.detail ||
@@ -103,6 +123,7 @@ export const useCreateFooterMutation = () => {
 
 export const useUpdateFooterMutation = () => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: UpdateFooterRequest) => {
@@ -120,10 +141,27 @@ export const useUpdateFooterMutation = () => {
         });
       });
     },
+    onMutate: async (data: UpdateFooterRequest) => {
+      await queryClient.cancelQueries({ queryKey: FOOTER_QUERY_KEY });
+      const previousFooter = queryClient.getQueryData(FOOTER_QUERY_KEY);
+
+      queryClient.setQueryData(FOOTER_QUERY_KEY, (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          data: { ...old.data, ...data },
+        };
+      });
+
+      return { previousFooter };
+    },
     onSuccess: data => {
       toast.success("Footer updated successfully");
     },
-    onError: (error: any) => {
+    onError: (error: any, __, context) => {
+      if (context?.previousFooter) {
+        queryClient.setQueryData(FOOTER_QUERY_KEY, context.previousFooter);
+      }
       toast.error(error.message || "Failed to update footer");
     },
   });
@@ -164,6 +202,7 @@ export const useDeleteFooterMutation = () => {
 
 export const useReplaceFooterMutation = () => {
   const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateFooterRequest) => {
@@ -180,10 +219,29 @@ export const useReplaceFooterMutation = () => {
         });
       });
     },
+    onMutate: async (data: CreateFooterRequest) => {
+      await queryClient.cancelQueries({ queryKey: FOOTER_QUERY_KEY });
+      const previousFooter = queryClient.getQueryData(FOOTER_QUERY_KEY);
+
+      queryClient.setQueryData(FOOTER_QUERY_KEY, {
+        data: {
+          ...data,
+          status: "draft",
+          component_type: "footer",
+          isOptimistic: true,
+        },
+        message: "Footer replaced (optimistic)",
+      });
+
+      return { previousFooter };
+    },
     onSuccess: data => {
       toast.success("Footer replaced successfully");
     },
-    onError: (error: any) => {
+    onError: (error: any, __, context) => {
+      if (context?.previousFooter) {
+        queryClient.setQueryData(FOOTER_QUERY_KEY, context.previousFooter);
+      }
       toast.error(error.message || "Failed to replace footer");
     },
   });

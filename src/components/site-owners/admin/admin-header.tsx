@@ -41,7 +41,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
   const { logout, user: authUser, updateUser } = useAuth();
   const currentUser = authUser || user;
   const [showOnboarding, setShowOnboarding] = useState(
-    !user?.is_onboarding_complete
+    user?.is_onboarding_complete
   );
 
   const handleOpenOnboarding = () => setShowOnboarding(true);
