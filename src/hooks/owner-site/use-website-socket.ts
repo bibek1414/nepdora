@@ -236,18 +236,29 @@ export const useWebsiteSocket = ({
           queryClient.setQueryData(["footer", "published"], null);
           break;
         case "themes_list":
-          queryClient.setQueryData(["themes"], data);
+          queryClient.setQueryData(["themes"], {
+            data: data || [],
+            message: "Themes retrieved successfully",
+          });
           break;
         case "theme_created":
         case "theme_updated":
           if (data) {
-            queryClient.setQueryData(["themes"], (old: any[] | undefined) => {
-              if (!old) return [data];
-              const exists = old.find(t => t.id === data.id);
+            queryClient.setQueryData(["themes"], (old: any | undefined) => {
+              if (!old || !old.data) return { data: [data], message: "Sync" };
+              const exists = old.data.find((t: any) => t.id === data.id);
               if (exists) {
-                return old.map(t => (t.id === data.id ? { ...t, ...data } : t));
+                return {
+                  ...old,
+                  data: old.data.map((t: any) =>
+                    t.id === data.id ? { ...t, ...data } : t
+                  ),
+                };
               }
-              return [...old, data];
+              return {
+                ...old,
+                data: [...old.data, data],
+              };
             });
           }
           break;

@@ -58,9 +58,12 @@ export const useCreateThemeMutation = () => {
         isOptimistic: true,
       };
 
-      queryClient.setQueryData(THEME_QUERY_KEY, (old: any[] | undefined) => {
-        if (!old) return [optimisticTheme];
-        return [...old, optimisticTheme];
+      queryClient.setQueryData(THEME_QUERY_KEY, (old: any | undefined) => {
+        if (!old) return { data: [optimisticTheme], message: "Optimistic" };
+        return {
+          ...old,
+          data: [...(old.data || []), optimisticTheme],
+        };
       });
 
       return { previousThemes };
@@ -101,9 +104,14 @@ export const useUpdateThemeMutation = () => {
       await queryClient.cancelQueries({ queryKey: THEME_QUERY_KEY });
       const previousThemes = queryClient.getQueryData(THEME_QUERY_KEY);
 
-      queryClient.setQueryData(THEME_QUERY_KEY, (old: any[] | undefined) => {
-        if (!old) return old;
-        return old.map(t => (t.id === data.id ? { ...t, ...data } : t));
+      queryClient.setQueryData(THEME_QUERY_KEY, (old: any | undefined) => {
+        if (!old || !old.data) return old;
+        return {
+          ...old,
+          data: old.data.map((t: any) =>
+            t.id === data.id ? { ...t, ...data } : t
+          ),
+        };
       });
 
       return { previousThemes };
