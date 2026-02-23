@@ -8,6 +8,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { cn } from "@/lib/utils";
 
 interface FooterStyle9Props {
   footerData: FooterData;
@@ -20,7 +21,7 @@ interface FooterStyle9Props {
 const ColumnHeader: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <h3 className="mb-6 text-2xl font-bold tracking-wide text-white uppercase text-left">
+  <h3 className="mb-6 text-2xl font-bold tracking-wide uppercase text-left font-heading text-background">
     {children}
   </h3>
 );
@@ -37,21 +38,21 @@ const LinkItem: React.FC<{
   return (
     <li className="mb-3 text-left">
       {isEditable ? (
-        <span className="group flex cursor-default items-center text-[15px] font-medium text-gray-300 transition-colors duration-200 hover:text-white">
+        <span className="group flex cursor-default items-center text-[15px] font-medium text-background/80 transition-colors duration-200 hover:text-background">
           <ChevronRight
             size={16}
-            className="mr-2 text-gray-400 transition-all duration-200 group-hover:translate-x-1 group-hover:text-white"
+            className="mr-2 text-background/60 transition-all duration-200 group-hover:translate-x-1 group-hover:text-background"
           />
           {label}
         </span>
       ) : (
         <Link
           href={generateLinkHref(href, siteUser, pathname, isEditable)}
-          className="group flex items-center text-[15px] font-medium text-gray-300 transition-colors duration-200 hover:text-white"
+          className="group flex items-center text-[15px] font-medium text-background/80 transition-colors duration-200 hover:text-background"
         >
           <ChevronRight
             size={16}
-            className="mr-2 text-gray-400 transition-all duration-200 group-hover:translate-x-1 group-hover:text-white"
+            className="mr-2 text-background/60 transition-all duration-200 group-hover:translate-x-1 group-hover:text-background"
           />
           {label}
         </Link>
@@ -66,20 +67,6 @@ export function FooterStyle9({
   siteUser,
 }: FooterStyle9Props) {
   const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
@@ -96,7 +83,7 @@ export function FooterStyle9({
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-[#0b1221] pt-20 pb-12 font-sans text-white">
+    <footer className="relative overflow-hidden bg-foreground pt-20 pb-12 font-body text-background">
       {/* Subtle Background Elements to mimic the bridge/cityscape watermark */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.03]">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -105,8 +92,8 @@ export function FooterStyle9({
               <feGaussianBlur in="SourceGraphic" stdDeviation="50" />
             </filter>
           </defs>
-          <path d="M0 600 L100 500 L200 550 L300 450 L500 600 Z" fill="white" />
-          <circle cx="80%" cy="40%" r="300" fill="white" filter="url(#blur)" />
+          <path d="M0 600 L100 500 L200 550 L300 450 L500 600 Z" fill="currentColor" />
+          <circle cx="80%" cy="40%" r="300" fill="currentColor" filter="url(#blur)" />
         </svg>
       </div>
 
@@ -181,7 +168,7 @@ export function FooterStyle9({
                 <a
                   key={social.id}
                   href={social.href || "#"}
-                  className="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition-all duration-300 hover:border-white hover:bg-white hover:text-[#0b1221]"
+                  className="flex h-10 w-10 items-center justify-center rounded border border-background/20 text-background/80 transition-all duration-300 hover:border-background hover:bg-background hover:text-foreground"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -198,22 +185,22 @@ export function FooterStyle9({
               <FooterLogo
                 footerData={data}
                 getImageUrl={getImageUrl}
-                textClassName="text-white text-2xl tracking-tight font-bold"
+                textClassName="text-background text-2xl tracking-tight font-bold font-heading"
                 imageClassName="h-10"
                 containerClassName="gap-3"
               />
             </div>
 
             {/* Decorative bottom graphic hint */}
-            <div className="mt-auto hidden h-32 w-full translate-y-12 rounded-t-full bg-linear-to-t from-white/5 to-transparent opacity-20 blur-xl lg:block"></div>
+            <div className="mt-auto hidden h-32 w-full translate-y-12 rounded-t-full bg-linear-to-t from-background/5 to-transparent opacity-20 blur-xl lg:block"></div>
           </div>
         </div>
 
         {/* Separator */}
-        <div className="mb-8 h-px w-full bg-gray-800" />
+        <div className="mb-8 h-px w-full bg-background/10" />
 
         {/* Bottom Bar */}
-        <div className="flex flex-col items-center justify-between gap-6 text-sm text-gray-400 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-6 text-sm text-background/60 md:flex-row">
           {/* Left: Copyright */}
           <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
             <p>{data.copyright}</p>
@@ -226,7 +213,7 @@ export function FooterStyle9({
               <a
                 key={link.id}
                 href={link.href || "#"}
-                className="transition-colors hover:text-white"
+                className="transition-colors hover:text-background"
               >
                 {link.text}
               </a>

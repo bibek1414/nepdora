@@ -20,6 +20,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { cn } from "@/lib/utils";
 
 interface FooterStyle2Props {
   footerData: FooterData;
@@ -35,20 +36,6 @@ export function FooterStyle2({
   siteUser,
 }: FooterStyle2Props) {
   const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
@@ -102,10 +89,10 @@ export function FooterStyle2({
 
   return (
     <div className="group relative">
-      <footer className="bg-muted/50 border-t">
+      <footer className="bg-muted/30 border-t border-border font-body">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           {/* Main Content Card */}
-          <Card className="mb-8 border-none shadow-sm bg-white/50 backdrop-blur-sm">
+          <Card className="mb-8 border-none shadow-sm bg-background/50 backdrop-blur-sm">
             <CardContent className="p-8 md:p-12">
               <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
                 {/* Company Section */}
@@ -115,7 +102,7 @@ export function FooterStyle2({
                     <FooterLogo
                       footerData={data}
                       getImageUrl={getImageUrl}
-                      textClassName="text-foreground text-xl font-bold"
+                      textClassName="text-foreground text-xl font-bold font-heading"
                       imageClassName="h-8 w-auto"
                       containerClassName="gap-3"
                     />
@@ -123,10 +110,7 @@ export function FooterStyle2({
 
                   <div className="flex flex-col gap-4">
                     <Badge
-                        className="w-fit text-white"
-                        style={{
-                        backgroundColor: theme.colors.primary,
-                        }}
+                        className="w-fit bg-primary text-primary-foreground font-body"
                     >
                         {data.companyName}
                     </Badge>
@@ -141,7 +125,7 @@ export function FooterStyle2({
                       <Link
                         key={social.id}
                         href={social.href || "#"}
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm transition-all hover:bg-primary hover:text-white hover:-translate-y-1"
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-background shadow-sm transition-all hover:bg-primary hover:text-primary-foreground hover:-translate-y-1"
                         target={
                           social.href?.startsWith("http") ? "_blank" : undefined
                         }
@@ -164,7 +148,7 @@ export function FooterStyle2({
                 <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 lg:col-span-2">
                   {data.sections.map(section => (
                     <div key={section.id}>
-                      <h4 className="text-foreground mb-6 flex items-center font-semibold tracking-tight">
+                      <h4 className="text-foreground mb-6 flex items-center font-semibold tracking-tight font-heading">
                         {section.title}
                       </h4>
                       <ul className="space-y-3">
@@ -218,7 +202,7 @@ export function FooterStyle2({
               <CardContent className="p-8">
                 <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
                   <div>
-                    <h4 className="text-foreground mb-2 text-lg font-semibold">
+                    <h4 className="text-foreground mb-2 text-lg font-semibold font-heading">
                       {data.newsletter.title}
                     </h4>
                     <p className="text-muted-foreground">
@@ -240,17 +224,14 @@ export function FooterStyle2({
                             placeholder="Enter your email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
-                            className="flex-1 border-gray-200 bg-white"
+                            className="flex-1 border-border bg-background"
                             disabled={
                               isEditable || createNewsletterMutation.isPending
                             }
                           />
                           <Button
                             type="submit"
-                            style={{
-                              backgroundColor: theme.colors.primary,
-                            }}
-                            className="px-6"
+                            className="px-6 bg-primary text-primary-foreground hover:bg-primary/90"
                             disabled={
                               isEditable || createNewsletterMutation.isPending
                             }
@@ -262,7 +243,7 @@ export function FooterStyle2({
                         </div>
 
                         {subscriptionStatus === "error" && errorMessage && (
-                          <div className="flex items-center gap-2 text-red-600 text-sm">
+                          <div className="flex items-center gap-2 text-destructive text-sm">
                             <AlertCircle className="h-4 w-4" />
                             <span>{errorMessage}</span>
                           </div>
@@ -276,7 +257,7 @@ export function FooterStyle2({
           )}
 
           {/* Contact Info Card */}
-          <Card className="border-none shadow-sm">
+          <Card className="border-none shadow-sm bg-background">
             <CardContent className="p-6">
               <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-3">
                 {data.contactInfo.email && (
@@ -301,7 +282,7 @@ export function FooterStyle2({
                 )}
                 <div className="flex items-center justify-start md:justify-end gap-2 text-sm text-muted-foreground">
                     <span>{data.copyright}</span>
-                    <Heart className="h-3 w-3 text-red-500 fill-current" />
+                    <Heart className="h-3 w-3 text-destructive fill-current" />
                 </div>
               </div>
             </CardContent>

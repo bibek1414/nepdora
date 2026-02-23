@@ -11,6 +11,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { cn } from "@/lib/utils";
 
 interface FooterStyle4Props {
   footerData: FooterData;
@@ -26,20 +27,6 @@ export function FooterStyle4({
   siteUser,
 }: FooterStyle4Props) {
   const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
@@ -94,10 +81,7 @@ export function FooterStyle4({
   return (
     <div className="group relative">
       <footer
-        style={{
-          background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
-        }}
-        className="text-white"
+        className="bg-primary text-primary-foreground font-body"
       >
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           {/* Main content */}
@@ -109,13 +93,13 @@ export function FooterStyle4({
                 <FooterLogo
                   footerData={data}
                   getImageUrl={getImageUrl}
-                  textClassName="text-foreground text-2xl font-bold"
+                  textClassName="text-primary-foreground text-2xl font-bold font-heading"
                   imageClassName="h-10 w-auto"
                   containerClassName="gap-4"
                 />
               </div>
 
-              <p className="text-lg leading-relaxed text-white/90 max-w-md">
+              <p className="text-lg leading-relaxed text-primary-foreground/90 max-w-md">
                 {data.description}
               </p>
 
@@ -123,30 +107,30 @@ export function FooterStyle4({
               <div className="space-y-4">
                 {data.contactInfo.email && (
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white/10 rounded-full">
-                        <Mail className="h-4 w-4 text-white" />
+                    <div className="p-2 bg-primary-foreground/10 rounded-full">
+                        <Mail className="h-4 w-4 text-primary-foreground" />
                     </div>
-                    <span className="text-white/90 text-sm font-medium">
+                    <span className="text-primary-foreground/90 text-sm font-medium">
                       {data.contactInfo.email}
                     </span>
                   </div>
                 )}
                 {data.contactInfo.phone && (
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white/10 rounded-full">
-                        <Phone className="h-4 w-4 text-white" />
+                    <div className="p-2 bg-primary-foreground/10 rounded-full">
+                        <Phone className="h-4 w-4 text-primary-foreground" />
                     </div>
-                    <span className="text-white/90 text-sm font-medium">
+                    <span className="text-primary-foreground/90 text-sm font-medium">
                       {data.contactInfo.phone}
                     </span>
                   </div>
                 )}
                 {data.contactInfo.address && (
                   <div className="flex items-start gap-3">
-                    <div className="p-2 bg-white/10 rounded-full mt-1">
-                        <MapPin className="h-4 w-4 text-white" />
+                    <div className="p-2 bg-primary-foreground/10 rounded-full mt-1">
+                        <MapPin className="h-4 w-4 text-primary-foreground" />
                     </div>
-                    <span className="text-white/90 text-sm font-medium leading-relaxed">
+                    <span className="text-primary-foreground/90 text-sm font-medium leading-relaxed">
                       {data.contactInfo.address}
                     </span>
                   </div>
@@ -158,13 +142,13 @@ export function FooterStyle4({
             <div className="lg:col-span-2 grid grid-cols-2 gap-8">
                 {data.sections.map(section => (
                 <div key={section.id}>
-                    <h4 className="mb-6 text-lg font-bold tracking-wide">{section.title}</h4>
+                    <h4 className="mb-6 text-lg font-bold tracking-wide font-heading">{section.title}</h4>
                     <ul className="space-y-3">
                     {section.links.map(link => (
                         <li key={link.id}>
                         {isEditable ? (
                             <button
-                            className="text-left text-sm text-white/80 transition-all hover:translate-x-1 hover:text-white"
+                            className="text-left text-sm text-primary-foreground/80 transition-all hover:translate-x-1 hover:text-primary-foreground"
                             onClick={
                                 isEditable ? e => e.preventDefault() : undefined
                             }
@@ -179,7 +163,7 @@ export function FooterStyle4({
                                 pathname,
                                 isEditable
                             )}
-                            className="block text-left text-sm text-white/80 transition-all hover:translate-x-1 hover:text-white"
+                            className="block text-left text-sm text-primary-foreground/80 transition-all hover:translate-x-1 hover:text-primary-foreground"
                             >
                             {link.text}
                             </Link>
@@ -194,13 +178,13 @@ export function FooterStyle4({
 
           {/* Newsletter Section */}
           {data.newsletter.enabled && (
-            <div className="mt-20 rounded-3xl bg-white/10 p-8 md:p-12 backdrop-blur-md border border-white/10">
+            <div className="mt-20 rounded-3xl bg-primary-foreground/10 p-8 md:p-12 backdrop-blur-md border border-primary-foreground/10">
               <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
                 <div className="space-y-3">
-                  <h4 className="text-2xl font-bold">
+                  <h4 className="text-2xl font-bold font-heading">
                     {data.newsletter.title}
                   </h4>
-                  <p className="text-base text-white/80 max-w-md">
+                  <p className="text-base text-primary-foreground/80 max-w-md">
                     {data.newsletter.description}
                   </p>
                 </div>
@@ -220,17 +204,14 @@ export function FooterStyle4({
                             placeholder="Enter your email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
-                            className="flex-1 rounded-full border-none bg-white/20 px-6 py-6 text-white placeholder-white/60 backdrop-blur-sm focus:bg-white/30 focus:text-white focus:ring-2 focus:ring-white/50"
+                            className="flex-1 rounded-full border-none bg-primary-foreground/20 px-6 py-6 text-primary-foreground placeholder:text-primary-foreground/60 backdrop-blur-sm focus:bg-primary-foreground/30 focus:text-primary-foreground focus:ring-2 focus:ring-primary-foreground/50"
                             disabled={
                                 isEditable || createNewsletterMutation.isPending
                             }
                             />
                             <Button
                             type="submit"
-                            style={{
-                                backgroundColor: theme.colors.secondary,
-                            }}
-                            className="rounded-full px-8 py-6 font-bold text-white transition-all hover:scale-105 hover:shadow-lg shadow-md"
+                            className="rounded-full px-8 py-6 font-bold transition-all hover:scale-105 hover:shadow-lg shadow-md bg-secondary text-secondary-foreground"
                             disabled={
                                 isEditable || createNewsletterMutation.isPending
                             }
@@ -242,7 +223,7 @@ export function FooterStyle4({
                         </div>
 
                         {subscriptionStatus === "error" && errorMessage && (
-                            <div className="flex items-center gap-2 text-red-200 text-sm px-4">
+                            <div className="flex items-center gap-2 text-destructive-foreground text-sm px-4 bg-destructive p-1 rounded">
                             <AlertCircle className="h-4 w-4" />
                             <span>{errorMessage}</span>
                             </div>
@@ -256,9 +237,9 @@ export function FooterStyle4({
           )}
 
           {/* Bottom Section */}
-          <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 gap-6 md:flex-row">
+          <div className="mt-16 flex flex-col items-center justify-between border-t border-primary-foreground/20 pt-8 gap-6 md:flex-row">
             {/* Copyright */}
-            <div className="text-sm text-white/60 text-center md:text-left">
+            <div className="text-sm text-primary-foreground/60 text-center md:text-left">
               <p>{data.copyright}</p>
             </div>
 
@@ -268,7 +249,7 @@ export function FooterStyle4({
                 <Link
                   key={social.id}
                   href={social.href || "#"}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all hover:bg-white hover:text-primary hover:-translate-y-1"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-foreground/10 transition-all hover:bg-primary-foreground hover:text-primary hover:-translate-y-1"
                   target={
                     social.href?.startsWith("http") ? "_blank" : undefined
                   }

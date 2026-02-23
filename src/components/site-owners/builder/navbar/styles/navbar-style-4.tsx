@@ -38,6 +38,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { cn } from "@/lib/utils";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -194,9 +195,11 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   return (
     <>
       <nav
-        className={`bg-background flex items-center justify-between border-b p-4 ${
-          !isEditable ? "sticky top-16 z-40 mx-auto max-w-7xl" : ""
-        } ${disableClicks ? "pointer-events-none" : ""}`}
+        className={cn(
+          "bg-background text-foreground flex items-center justify-between border-b p-4 font-body",
+          !isEditable && "sticky top-16 z-40 mx-auto max-w-7xl",
+          disableClicks && "pointer-events-none"
+        )}
       >
         <div className="flex items-center gap-8">
           <div className={disableClicks ? "pointer-events-auto" : ""}>
@@ -234,7 +237,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                   <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
-                    className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
+                    className="cursor-pointer text-sm font-medium text-foreground transition-colors hover:text-foreground/80"
                   >
                     {link.text}
                   </Link>
@@ -250,11 +253,12 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                     disableClicks
                   )}
                   onClick={e => handleLinkClick(e, link.href)}
-                  className={`text-sm font-medium transition-colors ${
+                  className={cn(
+                    "text-sm font-medium transition-colors text-foreground",
                     disableClicks
                       ? "cursor-default opacity-60"
                       : "cursor-pointer hover:opacity-80"
-                  }`}
+                  )}
                 >
                   {link.text}
                 </Link>
@@ -265,11 +269,12 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className={`flex items-center gap-1 text-sm font-medium transition-colors ${
+                  className={cn(
+                    "flex items-center gap-1 text-sm font-medium transition-colors text-foreground",
                     disableClicks
                       ? "pointer-events-auto cursor-default opacity-60"
                       : "cursor-pointer hover:opacity-80"
-                  }`}
+                  )}
                   onClick={disableClicks ? e => e.preventDefault() : undefined}
                 >
                   Categories
@@ -352,7 +357,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                   onClick={e => e.preventDefault()}
                   variant={getButtonVariant(button.variant)}
                   size="sm"
-                  className="cursor-pointer bg-black text-white hover:bg-black/90"
+                  className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   {button.text}
                 </Button>
@@ -363,7 +368,10 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                 variant={getButtonVariant(button.variant)}
                 size="sm"
                 onClick={disableClicks ? e => e.preventDefault() : undefined}
-                className={`bg-black text-white hover:bg-black/90 ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
+                className={cn(
+                  "bg-primary text-primary-foreground hover:bg-primary/90",
+                  disableClicks && "pointer-events-auto cursor-default opacity-60"
+                )}
                 asChild={!disableClicks}
               >
                 {disableClicks ? (
@@ -390,13 +398,14 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
               variant="default"
               size="sm"
               onClick={isEditable ? undefined : handleLoginClick}
-              className={`bg-black text-white hover:bg-black/90 ${
+              className={cn(
+                "bg-primary text-primary-foreground hover:bg-primary/90",
                 isEditable
                   ? "pointer-events-none opacity-60"
                   : disableClicks
                     ? "pointer-events-auto cursor-default opacity-60"
                     : "pointer-events-auto"
-              }`}
+              )}
             >
               {isEditable ? "Login (Preview Only)" : "Login"}
             </Button>
@@ -406,11 +415,12 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                 <Button
                   variant="default"
                   size="sm"
-                  className={`flex items-center gap-1 bg-black text-white hover:bg-black/90 ${
+                  className={cn(
+                    "flex items-center gap-1 bg-primary text-primary-foreground hover:bg-primary/90",
                     isEditable || disableClicks
                       ? "pointer-events-auto cursor-default opacity-60"
                       : ""
-                  }`}
+                  )}
                   onClick={disableClicks ? e => e.preventDefault() : undefined}
                 >
                   <User className="h-4 w-4" />

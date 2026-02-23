@@ -6,8 +6,8 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate4Data } from "@/types/owner-site/components/hero";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { cn } from "@/lib/utils";
 
 interface HeroTemplate4Props {
   heroData: HeroTemplate4Data;
@@ -22,24 +22,6 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const { data: themeResponse } = useThemeQuery();
-
-  // Get theme colors with updated structure, fallback to defaults if not available
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
-
   const {
     data,
     handleTextUpdate,
@@ -59,11 +41,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
 
   return (
     <section
-      className="relative flex min-h-screen w-full items-center overflow-hidden py-16 lg:py-24"
-      style={{
-        background: `linear-gradient(135deg, ${theme.colors.background} 0%, #f8fafc 100%)`,
-        fontFamily: theme.fonts.body,
-      }}
+      className="relative flex min-h-screen w-full items-center overflow-hidden py-16 lg:py-24 font-body bg-linear-to-br from-background via-background to-secondary/10"
     >
       {/* Hero Section */}
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -77,7 +55,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   value={data.title}
                   onChange={handleTextUpdate("title")}
                   as="h1"
-                  className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl text-foreground"
+                  className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl text-foreground font-heading"
                   isEditable={isEditable}
                   placeholder="Enter main title..."
                   multiline={true}
@@ -87,7 +65,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   value={data.subtitle}
                   onChange={handleTextUpdate("subtitle")}
                   as="h2"
-                  className="text-3xl font-bold leading-tight text-primary sm:text-4xl lg:text-5xl"
+                  className="text-3xl font-bold leading-tight text-primary sm:text-4xl lg:text-5xl font-heading"
                   isEditable={isEditable}
                   placeholder="Highlighted text..."
                   multiline={true}
@@ -99,7 +77,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="max-w-lg text-lg leading-relaxed text-muted-foreground sm:text-xl"
+                className="max-w-lg text-lg leading-relaxed text-muted-foreground sm:text-xl font-body"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -121,19 +99,13 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                       }
                       isEditable={isEditable}
                       siteUser={siteUser}
-                      style={{
-                        backgroundColor: theme.colors.primary,
-                        color: theme.colors.primaryForeground,
-                        fontFamily: theme.fonts.body,
-                      }}
-                      className="px-8 py-4 rounded-lg font-medium shadow-lg transition-all hover:shadow-xl hover:-translate-y-1 flex items-center gap-2"
+                      className="px-8 py-4 rounded-lg font-medium shadow-lg transition-all hover:shadow-xl hover:-translate-y-1 flex items-center gap-2 bg-primary text-primary-foreground font-body"
                       textPlaceholder="Button text..."
                       hrefPlaceholder="Enter URL..."
                     >
                       {data.buttons[0]?.text || "Shop Now"}
                       <ChevronRight
                         className="h-5 w-5 transition-transform group-hover:translate-x-1"
-                        style={{ color: theme.colors.primaryForeground }}
                       />
                     </EditableLink>
                   </div>
@@ -152,7 +124,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                     handleTextUpdate("statsNumber")(newValue);
                   }}
                   as="h3"
-                  className="text-3xl font-bold text-foreground sm:text-4xl"
+                  className="text-3xl font-bold text-foreground sm:text-4xl font-heading"
                   isEditable={isEditable}
                   placeholder="788+"
                 />
@@ -164,7 +136,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                     handleTextUpdate("statsLabel")(newValue);
                   }}
                   as="div"
-                  className="mt-1 text-sm font-medium text-muted-foreground uppercase tracking-wide"
+                  className="mt-1 text-sm font-medium text-muted-foreground uppercase tracking-wide font-body"
                   isEditable={isEditable}
                   placeholder="Stats description..."
                   multiline={true}
@@ -179,7 +151,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                     handleTextUpdate("statsNumber")(newValue);
                   }}
                   as="h3"
-                  className="text-3xl font-bold text-foreground sm:text-4xl"
+                  className="text-3xl font-bold text-foreground sm:text-4xl font-heading"
                   isEditable={isEditable}
                   placeholder="8k+"
                 />
@@ -191,7 +163,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                     handleTextUpdate("statsLabel")(newValue);
                   }}
                   as="div"
-                  className="mt-1 text-sm font-medium text-muted-foreground uppercase tracking-wide"
+                  className="mt-1 text-sm font-medium text-muted-foreground uppercase tracking-wide font-body"
                   isEditable={isEditable}
                   placeholder="Second stats description..."
                   multiline={true}

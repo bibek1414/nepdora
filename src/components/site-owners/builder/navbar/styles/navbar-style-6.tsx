@@ -36,6 +36,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { cn } from "@/lib/utils";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -184,8 +185,8 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
 
   return (
     <>
-      <div className="bg-white">
-        <div className="bg-black">
+      <div className="bg-background font-body">
+        <div className="bg-foreground">
           <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-4 text-xs sm:px-6 lg:px-8">
             <div className="flex items-center gap-4">
               {links.slice(0, 3).map((link, index) => (
@@ -202,7 +203,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                         }}
                         isEditable={isEditable}
                         siteUser={siteUser}
-                        className="flex cursor-pointer items-center gap-1.5 text-white hover:text-white/80"
+                        className="flex cursor-pointer items-center gap-1.5 text-background hover:text-background/80"
                         textPlaceholder="Link text..."
                         hrefPlaceholder="Enter URL..."
                       />
@@ -217,18 +218,19 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                         disableClicks
                       )}
                       onClick={e => handleLinkClick(e, link.href)}
-                      className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
+                      className={cn(
+                        "flex items-center gap-1.5 text-background hover:text-background/80",
                         disableClicks
                           ? "cursor-default opacity-60"
                           : "cursor-pointer"
-                      }`}
+                      )}
                     >
                       {link.text}
                     </Link>
                   )}
 
                   {index < Math.min(3, links.length) - 1 && (
-                    <span className="h-4 w-px bg-white/30"></span>
+                    <span className="h-4 w-px bg-background/30"></span>
                   )}
                 </React.Fragment>
               ))}
@@ -238,7 +240,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   onClick={onAddLink}
                   variant="ghost"
                   size="sm"
-                  className="pointer-events-auto h-7 px-2 text-white hover:bg-white/20 hover:text-white"
+                  className="pointer-events-auto h-7 px-2 text-background hover:bg-background/20 hover:text-background"
                 >
                   Link
                 </Button>
@@ -256,14 +258,14 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                           handleTopBarItemTextChange(item.id, newText)
                         }
                         isEditable={isEditable}
-                        className="text-center text-white hover:text-white/90"
+                        className="text-center text-background hover:text-background/90"
                         placeholder="Enter text..."
                       />
                       <Button
                         onClick={() => handleDeleteTopBarItem(item.id)}
                         variant="ghost"
                         size="sm"
-                        className="pointer-events-auto ml-1 flex h-6 w-6 items-center justify-center p-0 text-white transition-opacity group-hover:opacity-100 hover:bg-white/20 hover:text-white"
+                        className="pointer-events-auto ml-1 flex h-6 w-6 items-center justify-center p-0 text-background transition-opacity group-hover:opacity-100 hover:bg-background/20 hover:text-background"
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
@@ -287,11 +289,12 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                       onClick={e =>
                         disableClicks ? e.preventDefault() : undefined
                       }
-                      className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
+                      className={cn(
+                        "flex items-center gap-1.5 text-background hover:text-background/80",
                         disableClicks
                           ? "cursor-default opacity-60"
                           : "cursor-pointer"
-                      }`}
+                      )}
                     >
                       <span
                         className="mx-auto max-w-3xl text-sm"
@@ -301,7 +304,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   )}
 
                   {index < topBarItems.length - 1 && (
-                    <span className="h-4 w-px bg-white/30"></span>
+                    <span className="h-4 w-px bg-background/30"></span>
                   )}
                 </React.Fragment>
               ))}
@@ -311,7 +314,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   onClick={handleAddTopBarItem}
                   variant="ghost"
                   size="sm"
-                  className="pointer-events-auto h-7 px-2 text-white hover:bg-white/20 hover:text-white"
+                  className="pointer-events-auto h-7 px-2 text-background hover:bg-background/20 hover:text-background"
                 >
                   Add Item
                 </Button>
@@ -320,12 +323,13 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
           </div>
         </div>
 
-        <header className="relative bg-white shadow-sm">
+        <header className="relative bg-background shadow-sm">
           <nav
             aria-label="Top"
-            className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${
-              disableClicks ? "pointer-events-none" : ""
-            }`}
+            className={cn(
+              "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8",
+              disableClicks && "pointer-events-none"
+            )}
           >
             <div className="flex h-20 items-center justify-between">
               <div
@@ -371,15 +375,16 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                         generateLinkHref("/wishlist", siteUser, pathname)
                       )
                     }
-                    className={`relative flex items-center gap-1 ${
+                    className={cn(
+                      "relative flex items-center gap-1",
                       disableClicks
                         ? "pointer-events-auto cursor-default opacity-60"
                         : ""
-                    }`}
+                    )}
                   >
                     <Heart className="h-5 w-5" />
                     {wishlistCount > 0 && (
-                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs text-white">
                         {wishlistCount}
                       </span>
                     )}
@@ -399,7 +404,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                           onClick={e => e.preventDefault()}
                         >
                           <ShoppingCart className="h-5 w-5" />
-                          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs text-white">
                             0
                           </span>
                         </Button>
@@ -414,11 +419,12 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="outline"
-                      className={`flex items-center gap-2 ${
+                      className={cn(
+                        "flex items-center gap-2",
                         disableClicks
                           ? "pointer-events-auto cursor-default opacity-60"
                           : ""
-                      }`}
+                      )}
                       onClick={
                         disableClicks ? e => e.preventDefault() : undefined
                       }
@@ -453,7 +459,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                             <div className="flex w-full items-center justify-between">
                               <span>Wishlist</span>
                               {wishlistCount > 0 && (
-                                <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                                <span className="ml-2 rounded-full bg-destructive px-2 py-0.5 text-xs text-white">
                                   {wishlistCount}
                                 </span>
                               )}
@@ -468,7 +474,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
-                            className="cursor-pointer text-red-600 focus:text-red-600"
+                            className="cursor-pointer text-destructive focus:text-destructive"
                             onClick={() => handleProfileAction("logout")}
                           >
                             <LogOut className="mr-2 h-4 w-4" />

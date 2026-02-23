@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { EditableText } from "@/components/ui/editable-text";
-import { EditableImage } from "@/components/ui/editable-image";
-import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate5Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { EditableText } from "@/components/ui/editable-text";
+import { EditableImage } from "@/components/ui/editable-image";
+import { EditableLink } from "@/components/ui/editable-link";
+import { cn } from "@/lib/utils";
 
 interface HeroTemplate5Props {
   heroData: HeroTemplate5Data;
@@ -30,27 +31,11 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
   const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const { data: themeResponse } = useThemeQuery();
 
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#FFFFFF",
-      primary: "#FFFFFF",
-      primaryForeground: "#000000",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#000000",
-    },
-    fonts: {
-      body: "serif",
-      heading: "serif",
-    },
-  };
-
   const {
     data,
     setData,
     handleTextUpdate,
     handleButtonUpdate,
-    handleImageUpdate: baseHandleImageUpdate,
   } = useBuilderLogic(heroData, onUpdate);
 
   const handleImageUpdate = (imageUrl: string, altText?: string) => {
@@ -111,7 +96,10 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
 
   return (
     <div
-      className="relative flex min-h-screen items-center"
+      className={cn(
+        "relative flex min-h-screen items-center font-body",
+        data.backgroundType !== "image" && !data.backgroundImageUrl && "bg-background text-foreground"
+      )}
       data-component-id={componentId}
       style={{
         ...(data.backgroundType === "image" && data.backgroundImageUrl
@@ -122,7 +110,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
               backgroundRepeat: "no-repeat",
             }
           : {
-              backgroundColor: data.backgroundColor || theme.colors.background,
+              backgroundColor: data.backgroundColor, // keep if manually set, otherwise fallback to class
             }),
       }}
     >
@@ -219,7 +207,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
               style={{
                 color: "#D1D5DB", // text-gray-300 equivalent
               }}
-              className="text-sm font-semibold tracking-wider uppercase border-l-2 pl-4 border-white/50"
+              className="text-sm font-semibold tracking-wider uppercase border-l-2 pl-4 border-white/50 font-body"
               isEditable={isEditable}
               placeholder="Enter subtitle/badge text..."
             />
@@ -231,7 +219,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h2"
-            className="text-5xl font-bold leading-tight tracking-tight sm:text-6xl lg:text-7xl text-white"
+            className="text-5xl font-bold leading-tight tracking-tight sm:text-6xl lg:text-7xl text-white font-heading"
             isEditable={isEditable}
             placeholder="Enter main title..."
             multiline={true}
@@ -243,7 +231,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
             value={data.description}
             onChange={handleTextUpdate("description")}
             as="p"
-            className="text-xl text-gray-300 leading-relaxed max-w-2xl"
+            className="text-xl text-gray-300 leading-relaxed max-w-2xl font-body"
             isEditable={isEditable}
             placeholder="Enter description..."
             multiline={true}
@@ -265,12 +253,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
                 }
                 isEditable={isEditable}
                 siteUser={siteUser}
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  color: theme.colors.primaryForeground,
-                  fontFamily: theme.fonts.body,
-                }}
-                className="px-8 py-4 rounded-lg font-medium transition-transform hover:scale-105"
+                className="px-8 py-4 rounded-lg font-medium transition-transform hover:scale-105 bg-primary text-primary-foreground font-body"
                 textPlaceholder="Primary button text..."
                 hrefPlaceholder="Enter URL..."
               />
@@ -290,7 +273,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
                 }
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="px-8 py-4 rounded-lg font-medium border border-white/30 hover:bg-white/10 transition-colors text-white"
+                className="px-8 py-4 rounded-lg font-medium border border-white/30 hover:bg-white/10 transition-colors text-white font-body"
                 textPlaceholder="Secondary button text..."
                 hrefPlaceholder="Enter URL..."
               />

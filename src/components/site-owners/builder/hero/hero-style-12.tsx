@@ -6,9 +6,9 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate12Data } from "@/types/owner-site/components/hero";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import EiffelTowerBg from "../../../ui/eiffle-tower-bg";
+import { cn } from "@/lib/utils";
 
 interface HeroTemplate12Props {
   heroData: HeroTemplate12Data;
@@ -23,24 +23,6 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const { data: themeResponse } = useThemeQuery();
-
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#ffffff",
-      primary: "#84cc16",
-      primaryForeground: "#013D2F",
-      secondary: "#0A4F3F",
-      secondaryForeground: "#ffffff",
-      background: "#013D2F",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
-
   const {
     data,
     handleTextUpdate,
@@ -76,19 +58,17 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
 
   return (
     <section
-      className="min-h-screen flex items-center justify-center p-4 lg:p-8"
-      style={{ backgroundColor: theme.colors.background }}
+      className="min-h-screen flex items-center justify-center p-4 lg:p-8 bg-background font-body"
     >
-      <div className="relative mx-auto flex min-h-[600px] w-full max-w-7xl items-center overflow-hidden rounded-3xl bg-white/5 p-6 md:p-12 shadow-2xl ring-1 ring-white/10">
+      <div className="relative mx-auto flex min-h-[600px] w-full max-w-7xl items-center overflow-hidden rounded-3xl bg-foreground/5 p-6 md:p-12 shadow-2xl ring-1 ring-foreground/10">
         {/* Background decoration: Eiffel Tower outline */}
-        <div className="pointer-events-none absolute bottom-0 left-0 z-0 w-[300px] text-white opacity-[0.05] lg:w-[500px]">
+        <div className="pointer-events-none absolute bottom-0 left-0 z-0 w-[300px] text-foreground opacity-[0.05] lg:w-[500px]">
           <EiffelTowerBg />
         </div>
 
         {/* Accent decorative circle */}
         <div
-          className="absolute -right-20 -bottom-20 z-0 h-64 w-64 rounded-full blur-3xl opacity-50"
-          style={{ backgroundColor: theme.colors.primary }}
+          className="absolute -right-20 -bottom-20 z-0 h-64 w-64 rounded-full blur-3xl opacity-50 bg-primary"
         ></div>
 
         <div className="relative z-10 grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
@@ -99,7 +79,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
               value={data.title || "Visa Made Easy\nDreams Made\nPossible"}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl tracking-tight"
+              className="text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl tracking-tight font-heading"
               isEditable={isEditable}
               placeholder="Visa Made Easy\nDreams Made\nPossible"
               useHeadingFont={true}
@@ -117,7 +97,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                 }}
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="group flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:bg-white hover:text-black hover:shadow-lg backdrop-blur-sm"
+                className="group flex items-center gap-2 rounded-full border border-foreground/20 bg-foreground/10 px-8 py-4 text-base font-semibold text-foreground transition-all duration-300 hover:bg-foreground hover:text-background hover:shadow-lg backdrop-blur-sm font-body"
                 textPlaceholder="Button text..."
                 hrefPlaceholder="Enter URL..."
               >
@@ -137,18 +117,16 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                 }}
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="group flex cursor-pointer items-center gap-3 text-white transition-opacity hover:opacity-80"
+                className="group flex cursor-pointer items-center gap-3 text-foreground transition-opacity hover:opacity-80 font-body"
                 textPlaceholder="Button text..."
                 hrefPlaceholder="Enter URL..."
               >
                 <div
-                  className="flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-transform group-hover:scale-110"
-                  style={{ backgroundColor: theme.colors.secondary }}
+                  className="flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-transform group-hover:scale-110 bg-secondary text-secondary-foreground"
                 >
                   <Play
                     size={16}
-                    className="ml-1 fill-white text-white"
-                    style={{ color: theme.colors.secondaryForeground }}
+                    className="ml-1 fill-current"
                   />
                 </div>
                 <span className="text-base font-medium">
@@ -160,7 +138,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
 
           {/* Right Content - Image */}
           <div className="relative flex justify-center lg:justify-end">
-            <div className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl border-[6px] border-white/10 shadow-2xl transition-transform duration-500 hover:scale-[1.02] hover:shadow-3xl">
+            <div className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl border-[6px] border-foreground/10 shadow-2xl transition-transform duration-500 hover:scale-[1.02] hover:shadow-3xl">
               <EditableImage
                 src={getImageUrl(data.imageUrl, { width: 800 }) || imageUrl}
                 alt={data.imageAlt || "Happy traveler in Paris"}

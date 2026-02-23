@@ -8,9 +8,9 @@ import { uploadToCloudinary } from "@/utils/cloudinary";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface HeroTemplate2Props {
   heroData: HeroTemplate2Data;
@@ -27,23 +27,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isUploadingBackground, setIsUploadingBackground] = useState(false);
-  const { data: themeResponse } = useThemeQuery();
-
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const {
     data,
@@ -133,9 +116,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
         backgroundPosition: "center",
       };
     }
-    return {
-      backgroundColor: data.backgroundColor || theme.colors.background,
-    };
+    return {};
   };
 
   const nextSlide = () => {
@@ -160,18 +141,16 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     }
   }, [data.showSlider, data.sliderImages?.length]);
 
-  const textColor =
-    data.backgroundType === "image" || data.backgroundColor === "#000000"
-      ? "#FFFFFF"
-      : theme.colors.text;
-
   return (
     <section
-      className="relative flex min-h-screen w-full items-center py-20 lg:py-32"
+      className={cn(
+        "relative flex min-h-screen w-full items-center py-20 lg:py-32 font-body",
+        data.backgroundType !== "image" && !data.backgroundImageUrl && "bg-background text-foreground",
+        (data.backgroundType === "image" || data.backgroundColor === "#000000") && "text-white"
+      )}
       style={{
         ...getBackgroundStyles(),
-        color: textColor,
-        fontFamily: theme.fonts.body,
+        ...(data.backgroundType !== "image" && data.backgroundColor ? { backgroundColor: data.backgroundColor } : {}),
       }}
       data-component-id={componentId}
     >
@@ -267,7 +246,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
+              className="font-heading text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
               isEditable={isEditable}
               placeholder="Enter your hero title..."
             />
@@ -276,7 +255,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
               value={data.subtitle}
               onChange={handleTextUpdate("subtitle")}
               as="p"
-              className="text-lg font-medium opacity-90"
+              className="font-body text-lg font-medium opacity-90"
               isEditable={isEditable}
               placeholder="Enter subtitle..."
             />
@@ -286,7 +265,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="text-lg opacity-80 leading-relaxed max-w-lg"
+                className="font-body text-lg opacity-80 leading-relaxed max-w-lg"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -298,18 +277,12 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
               {data.buttons.map(btn => (
                 <EditableLink
                   key={`btn-${componentId}-${btn.id}`}
-                  style={{
-                    backgroundColor:
-                      btn.variant === "primary"
-                        ? theme.colors.primary
-                        : theme.colors.secondary,
-                    color:
-                      btn.variant === "primary"
-                        ? theme.colors.primaryForeground
-                        : theme.colors.secondaryForeground,
-                    fontFamily: theme.fonts.body,
-                  }}
-                  className="px-8 py-3 rounded-lg font-medium transition-transform hover:scale-105"
+                  className={cn(
+                    "px-8 py-3 rounded-lg font-medium transition-transform hover:scale-105 font-body",
+                    btn.variant === "primary"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground"
+                  )}
                   text={btn.text}
                   href={btn.href || "#"}
                   onChange={(text, href) =>

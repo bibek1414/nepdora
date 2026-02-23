@@ -5,9 +5,9 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate10Data } from "@/types/owner-site/components/hero";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface HeroTemplate10Props {
   heroData: HeroTemplate10Data;
@@ -23,24 +23,6 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
   onUpdate,
 }) => {
   const componentId = React.useId();
-
-  const { data: themeResponse } = useThemeQuery();
-
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#1F2937",
-      primary: "#4F46E5",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const {
     data,
@@ -165,7 +147,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
 
   return (
     <div
-      className="relative overflow-hidden bg-white"
+      className="relative overflow-hidden bg-white font-body"
       data-component-id={componentId}
     >
       <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48">
@@ -175,7 +157,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
               value={data.title || "Summer styles are finally here"}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl text-left"
+              className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl text-left font-heading"
               isEditable={isEditable}
               placeholder="Enter hero title..."
             />
@@ -186,7 +168,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
               }
               onChange={handleTextUpdate("description")}
               as="p"
-              className="mt-4 text-xl text-muted-foreground text-left"
+              className="mt-4 text-xl text-muted-foreground text-left font-body"
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}
@@ -496,13 +478,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                   }}
                   isEditable={isEditable}
                   siteUser={siteUser}
-                  className="inline-flex items-center justify-center rounded-lg px-8 py-3 text-base font-medium shadow-sm transition-all hover:shadow-md hover:translate-y-[-2px]"
-                  style={{
-                    background: theme.colors.primary
-                      ? theme.colors.primary
-                      : "",
-                    color: theme.colors.primaryForeground,
-                  }}
+                  className="inline-flex items-center justify-center rounded-lg px-8 py-3 text-base font-medium shadow-sm transition-all hover:shadow-md hover:translate-y-[-2px] bg-primary text-primary-foreground font-body"
                   textPlaceholder="Button text..."
                   hrefPlaceholder="Enter URL..."
                 >

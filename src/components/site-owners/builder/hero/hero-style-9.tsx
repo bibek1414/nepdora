@@ -5,8 +5,8 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate9Data } from "@/types/owner-site/components/hero";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { cn } from "@/lib/utils";
 
 interface HeroTemplate9Props {
   heroData: HeroTemplate9Data;
@@ -46,23 +46,6 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
   onUpdate,
 }) => {
   const componentId = React.useId();
-
-  const { data: themeResponse } = useThemeQuery();
-
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#1F2937",
-      primary: "#14B8A6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#FF8B7B",
-      secondaryForeground: "#FFFFFF",
-      background: "#F9FAFB",
-    },
-    fonts: {
-      body: "sans-serif",
-      heading: "sans-serif",
-    },
-  };
 
   const { data, handleTextUpdate, handleButtonUpdate, handleArrayItemUpdate } =
     useBuilderLogic(
@@ -118,7 +101,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
 
   return (
     <div
-      className="relative flex min-h-screen items-center justify-center bg-white px-4 py-16 lg:py-24"
+      className="relative flex min-h-screen items-center justify-center bg-white px-4 py-16 lg:py-24 font-body"
       data-component-id={componentId}
     >
       <div className="relative w-full max-w-7xl">
@@ -131,10 +114,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
               value={data.title || "Innovation Meets Elegance"}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="mb-6 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl lg:text-7xl tracking-tight text-foreground"
-              style={{
-                fontFamily: theme.fonts.heading,
-              }}
+              className="mb-6 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl lg:text-7xl tracking-tight text-foreground font-heading"
               isEditable={isEditable}
               placeholder="Enter main title..."
               multiline={true}
@@ -146,7 +126,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="mb-8 max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
+                className="mb-8 max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl font-body"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -168,12 +148,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                   }
                   isEditable={isEditable}
                   siteUser={siteUser}
-                  className="rounded-full px-8 py-4 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                  style={{
-                    background: theme.colors.primary,
-                    color: theme.colors.primaryForeground,
-                    fontFamily: theme.fonts.body,
-                  }}
+                  className="rounded-full px-8 py-4 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl bg-primary text-primary-foreground font-body"
                   textPlaceholder="Button text..."
                   hrefPlaceholder="Enter URL..."
                 />
@@ -296,13 +271,11 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
 
         {/* Decorative elements */}
         <div
-          className="pointer-events-none absolute top-10 right-0 h-40 w-40 rounded-full opacity-20 blur-3xl lg:h-64 lg:w-64"
-          style={{ backgroundColor: theme.colors.primary }}
+          className="pointer-events-none absolute top-10 right-0 h-40 w-40 rounded-full opacity-20 blur-3xl lg:h-64 lg:w-64 bg-primary"
           aria-hidden="true"
         ></div>
         <div
-          className="pointer-events-none absolute bottom-10 left-0 h-40 w-40 rounded-full opacity-15 blur-3xl lg:h-64 lg:w-64"
-          style={{ backgroundColor: theme.colors.secondary }}
+          className="pointer-events-none absolute bottom-10 left-0 h-40 w-40 rounded-full opacity-15 blur-3xl lg:h-64 lg:w-64 bg-secondary"
           aria-hidden="true"
         ></div>
       </div>

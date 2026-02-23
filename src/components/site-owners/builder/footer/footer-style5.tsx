@@ -12,6 +12,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { cn } from "@/lib/utils";
 
 interface FooterStyle5Props {
   footerData: FooterData;
@@ -27,20 +28,6 @@ export function FooterStyle5({
   siteUser,
 }: FooterStyle5Props) {
   const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
@@ -105,7 +92,7 @@ export function FooterStyle5({
 
   return (
     <div className="group relative">
-      <footer className="bg-background-light dark:bg-background-dark font-display border-t px-4 py-16 sm:px-6 lg:px-8">
+      <footer className="bg-background font-heading border-t border-border px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
             {/* Company Info - Takes 2 columns on large screens */}
@@ -115,47 +102,47 @@ export function FooterStyle5({
                 <FooterLogo
                   footerData={data}
                   getImageUrl={getImageUrl}
-                  textClassName="text-heading-light dark:text-heading-dark text-xl font-bold"
+                  textClassName="text-foreground text-xl font-bold font-heading"
                   imageClassName="h-8 w-auto"
                   containerClassName="gap-3"
                 />
               </div>
 
-              <p className="text-text-light dark:text-text-dark max-w-md leading-relaxed">
+              <p className="text-muted-foreground max-w-md leading-relaxed font-body">
                 {data.description}
               </p>
 
               {/* Contact Info */}
               <div className="space-y-3">
                 {data.contactInfo.email && (
-                  <div className="text-text-light dark:text-text-dark flex items-center group">
-                    <div className="p-2 rounded-full bg-primary/10 mr-3 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                  <div className="text-muted-foreground flex items-center group">
+                    <div className="p-2 rounded-full bg-primary/10 mr-3 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
                         <Mail className="h-4 w-4" />
                     </div>
-                    <span className="text-sm font-medium">{data.contactInfo.email}</span>
+                    <span className="text-sm font-medium font-body">{data.contactInfo.email}</span>
                   </div>
                 )}
                 {data.contactInfo.phone && (
-                  <div className="text-text-light dark:text-text-dark flex items-center group">
-                    <div className="p-2 rounded-full bg-primary/10 mr-3 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                  <div className="text-muted-foreground flex items-center group">
+                    <div className="p-2 rounded-full bg-primary/10 mr-3 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
                         <Phone className="h-4 w-4" />
                     </div>
-                    <span className="text-sm font-medium">{data.contactInfo.phone}</span>
+                    <span className="text-sm font-medium font-body">{data.contactInfo.phone}</span>
                   </div>
                 )}
                 {data.contactInfo.address && (
-                  <div className="text-text-light dark:text-text-dark flex items-start group">
-                    <div className="p-2 rounded-full bg-primary/10 mr-3 text-primary group-hover:bg-primary group-hover:text-white transition-all mt-0.5">
+                  <div className="text-muted-foreground flex items-start group">
+                    <div className="p-2 rounded-full bg-primary/10 mr-3 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all mt-0.5">
                         <MapPin className="h-4 w-4" />
                     </div>
-                    <span className="text-sm font-medium leading-relaxed">{data.contactInfo.address}</span>
+                    <span className="text-sm font-medium leading-relaxed font-body">{data.contactInfo.address}</span>
                   </div>
                 )}
               </div>
 
               {/* Social Links - Horizontal Layout */}
               <div>
-                <h4 className="text-heading-light dark:text-heading-dark mb-4 font-semibold text-sm uppercase tracking-wider">
+                <h4 className="text-foreground mb-4 font-semibold text-sm uppercase tracking-wider font-heading">
                   Follow Us
                 </h4>
                 {data.socialLinks.length > 0 ? (
@@ -164,7 +151,7 @@ export function FooterStyle5({
                       <Link
                         key={social.id}
                         href={social.href || "#"}
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-muted transition-all hover:bg-primary hover:text-white hover:-translate-y-1 shadow-sm"
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-muted transition-all hover:bg-primary hover:text-primary-foreground hover:-translate-y-1 shadow-sm"
                         target={
                           social.href?.startsWith("http") ? "_blank" : undefined
                         }
@@ -182,7 +169,7 @@ export function FooterStyle5({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-text-light dark:text-text-dark text-sm opacity-60">
+                  <p className="text-muted-foreground text-sm opacity-60 font-body">
                     No social links available
                   </p>
                 )}
@@ -194,7 +181,7 @@ export function FooterStyle5({
               .filter(section => section.links.length > 0)
               .map(section => (
                 <div key={section.id} className="col-span-1">
-                  <h3 className="text-heading-light dark:text-heading-dark mb-6 font-bold text-lg">
+                  <h3 className="text-foreground mb-6 font-bold text-lg font-heading">
                     {section.title}
                   </h3>
 
@@ -203,7 +190,7 @@ export function FooterStyle5({
                       <li key={link.id}>
                         {isEditable ? (
                           <button
-                            className="text-text-light dark:text-text-dark hover:text-primary text-left transition-colors dark:hover:text-white text-sm font-medium"
+                            className="text-muted-foreground hover:text-primary text-left transition-colors text-sm font-medium font-body"
                             onClick={
                               isEditable ? e => e.preventDefault() : undefined
                             }
@@ -218,7 +205,7 @@ export function FooterStyle5({
                               pathname,
                               isEditable
                             )}
-                            className="text-text-light dark:text-text-dark hover:text-primary block text-left transition-colors dark:hover:text-white text-sm font-medium"
+                            className="text-muted-foreground hover:text-primary block text-left transition-colors text-sm font-medium font-body"
                           >
                             {link.text}
                           </Link>
@@ -231,11 +218,11 @@ export function FooterStyle5({
           </div>
 
           {/* Copyright */}
-          <div className="mx-auto mt-16 border-t border-border pt-8 text-left dark:border-gray-700">
-            <p className="text-muted-foreground flex items-center justify-start gap-1 text-sm font-medium">
+          <div className="mx-auto mt-16 border-t border-border pt-8 text-left">
+            <p className="text-muted-foreground flex items-center justify-start gap-1 text-sm font-medium font-body">
               {data.copyright ||
                 `© ${new Date().getFullYear()} ${data.companyName}. All rights reserved.`}
-              <Heart className="inline h-3 w-3 text-red-500 fill-current" />
+              <Heart className="inline h-3 w-3 text-destructive fill-current" />
             </p>
           </div>
         </div>

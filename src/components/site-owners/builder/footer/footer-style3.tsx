@@ -11,6 +11,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { cn } from "@/lib/utils";
 
 interface FooterStyle3Props {
   footerData: FooterData;
@@ -26,20 +27,6 @@ export function FooterStyle3({
   siteUser,
 }: FooterStyle3Props) {
   const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
@@ -98,11 +85,7 @@ export function FooterStyle3({
   return (
     <div className="group relative">
       <footer
-        style={{
-          background: theme.colors.primary,
-          fontFamily: theme.fonts.heading,
-        }}
-        className="px-4 py-20 text-gray-100 sm:px-6 lg:px-8"
+        className="px-4 py-20 bg-primary text-primary-foreground font-heading sm:px-6 lg:px-8"
       >
         <div className="mx-auto max-w-7xl">
           {/* Footer links grid */}
@@ -110,7 +93,7 @@ export function FooterStyle3({
             {/* Info Section */}
             {mainSections.map((section, index) => (
               <div key={section.id} className="col-span-1">
-                <h3 className="mb-6 text-lg font-bold text-white tracking-wide uppercase">
+                <h3 className="mb-6 text-lg font-bold tracking-wide uppercase">
                   {section.title}
                 </h3>
                 <ul className="space-y-3">
@@ -118,7 +101,7 @@ export function FooterStyle3({
                     <li key={link.id}>
                       {isEditable ? (
                         <button
-                          className="text-left text-sm text-white/70 transition-colors hover:text-white"
+                          className="text-left text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground font-body"
                           onClick={
                             isEditable ? e => e.preventDefault() : undefined
                           }
@@ -133,7 +116,7 @@ export function FooterStyle3({
                             pathname,
                             isEditable
                           )}
-                          className="block text-sm text-white/70 transition-colors hover:text-white"
+                          className="block text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground font-body"
                         >
                           {link.text}
                         </Link>
@@ -147,15 +130,15 @@ export function FooterStyle3({
             {/* Newsletter Section */}
             {data.newsletter.enabled && (
               <div className="col-span-2 lg:col-span-2">
-                <h3 className="mb-6 text-lg font-bold text-white tracking-wide uppercase">
+                <h3 className="mb-6 text-lg font-bold tracking-wide uppercase">
                   {data.newsletter.title}
                 </h3>
-                <p className="mb-6 text-sm text-white/70 leading-relaxed max-w-xs">
+                <p className="mb-6 text-sm text-primary-foreground/70 leading-relaxed max-w-xs font-body">
                   {data.newsletter.description}
                 </p>
 
                 {subscriptionStatus === "success" ? (
-                  <div className="flex items-center gap-2 text-green-300 bg-white/10 p-3 rounded-lg w-fit">
+                  <div className="flex items-center gap-2 text-green-300 bg-primary-foreground/10 p-3 rounded-lg w-fit">
                     <CheckCircle className="h-5 w-5" />
                     <span className="text-sm">Successfully subscribed!</span>
                   </div>
@@ -170,17 +153,14 @@ export function FooterStyle3({
                         placeholder="Your email address"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        className="w-full rounded-full border-none bg-white/10 px-6 py-3 text-white placeholder-white/50 focus:ring-2 focus:ring-white/30 backdrop-blur-sm"
+                        className="w-full rounded-full border-none bg-primary-foreground/10 px-6 py-3 text-primary-foreground placeholder:text-primary-foreground/50 focus:ring-2 focus:ring-primary-foreground/30 backdrop-blur-sm"
                         disabled={
                           isEditable || createNewsletterMutation.isPending
                         }
                       />
                       <Button
                         type="submit"
-                        style={{
-                          backgroundColor: theme.colors.secondary,
-                        }}
-                        className="w-full rounded-full px-8 py-3 font-semibold text-white transition-all hover:brightness-110 sm:w-auto"
+                        className="w-full rounded-full px-8 py-3 font-semibold transition-all hover:brightness-110 sm:w-auto bg-secondary text-secondary-foreground"
                         disabled={
                           isEditable || createNewsletterMutation.isPending
                         }
@@ -192,7 +172,7 @@ export function FooterStyle3({
                     </div>
 
                     {subscriptionStatus === "error" && errorMessage && (
-                      <div className="flex items-center gap-2 text-red-300 text-xs mt-1">
+                      <div className="flex items-center gap-2 text-destructive-foreground text-xs mt-1 bg-destructive p-1 rounded">
                         <AlertCircle className="h-4 w-4" />
                         <span className="text-sm">{errorMessage}</span>
                       </div>
@@ -204,21 +184,21 @@ export function FooterStyle3({
           </div>
 
           {/* Bottom section */}
-          <div className="mt-20 flex flex-col items-center justify-between border-t border-white/10 pt-8 text-sm text-gray-200 md:flex-row gap-6">
+          <div className="mt-20 flex flex-col items-center justify-between border-t border-primary-foreground/10 pt-8 text-sm text-primary-foreground/80 md:flex-row gap-6">
             <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
                 {/* Logo */}
                 <div className="flex items-center">
                 <FooterLogo
                     footerData={data}
                     getImageUrl={getImageUrl}
-                    textClassName="text-white text-xl font-bold"
+                    textClassName="text-primary-foreground text-xl font-bold font-heading"
                     imageClassName="h-8 w-auto"
                     containerClassName="gap-3"
                 />
                 </div>
 
                 {/* Copyright */}
-                <div className="text-center md:text-left text-white/50 text-xs">
+                <div className="text-center md:text-left text-primary-foreground/50 text-xs font-body">
                 <p>{data.copyright}</p>
                 </div>
             </div>
@@ -229,7 +209,7 @@ export function FooterStyle3({
                 <Link
                   key={social.id}
                   href={social.href || "#"}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/70 transition-all hover:bg-white hover:text-primary hover:-translate-y-1"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-foreground/5 text-primary-foreground/70 transition-all hover:bg-primary-foreground hover:text-primary hover:-translate-y-1"
                   target={
                     social.href?.startsWith("http") ? "_blank" : undefined
                   }

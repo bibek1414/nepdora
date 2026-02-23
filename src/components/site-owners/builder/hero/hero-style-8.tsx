@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate8Data } from "@/types/owner-site/components/hero";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { Loader2, ImagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 interface HeroTemplate8Props {
   heroData: HeroTemplate8Data;
@@ -44,23 +44,6 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
 
   const [isUploading, setIsUploading] = useState<string | null>(null);
   const [hoveredImage, setHoveredImage] = useState<string | null>(null);
-  const { data: themeResponse } = useThemeQuery();
-
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#000000",
-      primary: "#8B4513",
-      primaryForeground: "#FFFFFF",
-      secondary: "#D2691E",
-      secondaryForeground: "#FFFFFF",
-      background: "#FDFAF6",
-      backgroundDark: "#1F2937",
-    },
-    fonts: {
-      body: "Poppins, sans-serif",
-      heading: "Unna, serif",
-    },
-  };
 
   const {
     data,
@@ -159,7 +142,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
 
   return (
     <section
-      className="relative mx-auto w-full overflow-hidden bg-white"
+      className="relative mx-auto w-full overflow-hidden bg-white font-body"
       data-component-id={componentId}
     >
       {/* Desktop Layout */}
@@ -236,7 +219,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 value={data.title || "Premium Nepali Hand Knotted Rugs"}
                 onChange={handleTextUpdate("title")}
                 as="h1"
-                className="mb-6 w-full text-4xl leading-tight font-bold md:text-5xl lg:mb-8 lg:text-6xl tracking-tight text-foreground"
+                className="mb-6 w-full text-4xl leading-tight font-bold md:text-5xl lg:mb-8 lg:text-6xl tracking-tight text-foreground font-heading"
                 isEditable={isEditable}
                 placeholder="Enter main title..."
                 multiline={true}
@@ -250,7 +233,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 }
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="mb-8 w-full text-lg leading-relaxed text-muted-foreground md:mb-10 lg:mb-12"
+                className="mb-8 w-full text-lg leading-relaxed text-muted-foreground md:mb-10 lg:mb-12 font-body"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -271,12 +254,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="h-12 rounded-lg px-8 py-3 text-base font-medium shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.primaryForeground,
-                      fontFamily: theme.fonts.body,
-                    }}
+                    className="h-12 rounded-lg px-8 py-3 text-base font-medium shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-1 bg-primary text-primary-foreground font-body"
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter URL..."
                   />
@@ -295,12 +273,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="h-12 rounded-lg border-2 bg-transparent px-8 py-3 text-base font-medium transition-all duration-200 hover:bg-muted"
-                    style={{
-                      borderColor: theme.colors.primary,
-                      color: theme.colors.primary,
-                      fontFamily: theme.fonts.body,
-                    }}
+                    className="h-12 rounded-lg border-2 bg-transparent px-8 py-3 text-base font-medium transition-all duration-200 hover:bg-muted border-primary text-primary font-body"
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter URL..."
                   />
@@ -445,13 +418,10 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 value={data.title || "Premium Nepali Hand Knotted Rugs"}
                 onChange={handleTextUpdate("title")}
                 as="h1"
-                className="mb-4 w-full text-4xl leading-tight font-bold text-white"
+                className="mb-4 w-full text-4xl leading-tight font-bold text-white font-heading"
                 isEditable={isEditable}
                 placeholder="Enter main title..."
                 multiline={true}
-                style={{
-                  fontFamily: theme.fonts.heading,
-                }}
               />
 
               {/* Description */}
@@ -462,13 +432,10 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 }
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="mb-8 w-full text-lg leading-relaxed text-white/90"
+                className="mb-8 w-full text-lg leading-relaxed text-white/90 font-body"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
-                style={{
-                  fontFamily: theme.fonts.body,
-                }}
               />
 
               {/* Action Buttons */}
@@ -486,13 +453,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="h-12 w-full rounded-lg px-8 py-3 text-base font-medium shadow-lg transition-all duration-200"
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.primaryForeground,
-                      fontFamily: theme.fonts.body,
-                      boxShadow: `0 10px 25px ${theme.colors.primary}20`,
-                    }}
+                    className="h-12 w-full rounded-lg px-8 py-3 text-base font-medium shadow-lg transition-all duration-200 bg-primary text-primary-foreground font-body"
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter URL..."
                   />
@@ -511,10 +472,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="h-12 w-full rounded-lg border-2 border-white bg-transparent px-8 py-3 text-base font-medium text-white transition-all duration-200 hover:bg-white/10"
-                    style={{
-                      fontFamily: theme.fonts.body,
-                    }}
+                    className="h-12 w-full rounded-lg border-2 border-white bg-transparent px-8 py-3 text-base font-medium text-white transition-all duration-200 hover:bg-white/10 font-body"
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter URL..."
                   />

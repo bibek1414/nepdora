@@ -13,6 +13,8 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { cn } from "@/lib/utils";
+
 interface HeroTemplate14Props {
   heroData: HeroTemplate14Data;
   isEditable?: boolean;
@@ -55,22 +57,7 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
     },
     onUpdate
   );
-  const { data: themeResponse } = useThemeQuery();
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
+
   useEffect(() => {
     const element = bannerRef.current;
     if (!element) return;
@@ -139,7 +126,7 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
   return (
     <section
       ref={bannerRef}
-      className="relative h-screen min-h-[700px] w-full overflow-hidden bg-gray-900"
+      className="relative h-screen min-h-[700px] w-full overflow-hidden bg-background font-body"
     >
       {isEditable && (
         <div className="absolute top-6 right-4 z-30">
@@ -171,8 +158,10 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
 
       {/* Background Image with Zoom Effect */}
       <div
-        className="absolute inset-0 transition-transform duration-2000 ease-out"
-        style={{ transform: isVisible ? "scale(1.05)" : "scale(1)" }}
+        className={cn(
+          "absolute inset-0 transition-transform duration-[2000ms] ease-out",
+          isVisible ? "scale-105" : "scale-100"
+        )}
       >
         <EditableImage
           src={getImageUrl(data.backgroundImageUrl || defaultImageUrl, {})}
@@ -196,7 +185,7 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
               isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
             }`}
           >
-            <p className="mb-4 text-sm font-bold tracking-[0.2em] text-gray-200 uppercase sm:text-base">
+            <p className="mb-4 text-sm font-bold tracking-[0.2em] text-gray-200 uppercase sm:text-base font-body">
               <EditableText
                 value={data.subtitle || "Exclusive Drop"}
                 onChange={handleTextUpdate("subtitle")}
@@ -205,7 +194,7 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
                 placeholder="Exclusive Drop"
               />
             </p>
-            <h2 className="mb-8 text-5xl font-light tracking-tight text-white sm:text-7xl md:text-8xl lg:text-9xl">
+            <h2 className="mb-8 text-5xl font-light tracking-tight text-white sm:text-7xl md:text-8xl lg:text-9xl font-heading">
               <EditableText
                 value={data.title || "MIDNIGHT SERIES"}
                 onChange={handleTextUpdate("title")}
@@ -232,11 +221,7 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
               siteUser={siteUser}
               textPlaceholder="Shop The Look"
               hrefPlaceholder="Enter URL..."
-              style={{
-                color: theme.colors.primaryForeground,
-                backgroundColor: theme.colors.primary,
-              }}
-              className="inline-flex items-center px-8 py-4 text-base font-medium rounded-full shadow-lg hover:scale-105 transition-transform"
+              className="inline-flex items-center px-8 py-4 text-base font-medium rounded-full shadow-lg hover:scale-105 transition-transform bg-primary text-primary-foreground font-body"
             >
               <>
                 <span className="mr-2">{buttonText}</span>

@@ -14,6 +14,7 @@ import SideCart from "../../cart/side-cart";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { cn } from "@/lib/utils";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -75,9 +76,11 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
   return (
     <>
       <nav
-        className={`bg-background mx-auto flex max-w-7xl items-center justify-between p-4 ${
-          !isEditable ? "sticky top-0 z-40 border-b" : ""
-        } ${disableClicks ? "pointer-events-none" : ""}`}
+        className={cn(
+          "bg-background text-foreground mx-auto flex max-w-7xl items-center justify-between p-4 font-body",
+          !isEditable && "sticky top-0 z-40 border-b",
+          disableClicks && "pointer-events-none"
+        )}
       >
         <div className="flex min-w-0 flex-1 items-center gap-6">
           <div
@@ -139,7 +142,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                   <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
-                    className="cursor-pointer text-sm font-medium whitespace-nowrap text-black transition-colors hover:text-black/80"
+                    className="cursor-pointer text-sm font-medium whitespace-nowrap text-foreground transition-colors hover:text-foreground/80"
                   >
                     {link.text}
                   </Link>
@@ -155,11 +158,12 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                     disableClicks
                   )}
                   onClick={e => handleLinkClick(e, link.href)}
-                  className={`text-sm font-medium whitespace-nowrap transition-colors ${
+                  className={cn(
+                    "text-sm font-medium whitespace-nowrap transition-colors text-foreground",
                     disableClicks
                       ? "cursor-default opacity-60"
                       : "cursor-pointer hover:opacity-80"
-                  }`}
+                  )}
                 >
                   {link.text}
                 </Link>

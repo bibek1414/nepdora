@@ -5,8 +5,8 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate11Data } from "@/types/owner-site/components/hero";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { cn } from "@/lib/utils";
 
 interface HeroTemplate11Props {
   heroData: HeroTemplate11Data;
@@ -21,24 +21,6 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const { data: themeResponse } = useThemeQuery();
-
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#1a1a2e",
-      primary: "#4338ca",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
-
   const {
     data,
     setData,
@@ -89,18 +71,13 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
             {data.subtitle && (
               <div className="flex items-center space-x-4">
                 <div
-                  className="h-0.5 w-12"
-                  style={{ backgroundColor: theme.colors.primary }}
+                  className="h-0.5 w-12 bg-primary"
                 ></div>
                 <EditableText
                   value={data.subtitle}
                   onChange={handleTextUpdate("subtitle")}
                   as="span"
-                  className="text-lg font-bold tracking-wide"
-                  style={{
-                    color: theme.colors.primary,
-                    fontFamily: theme.fonts.body,
-                  }}
+                  className="text-lg font-bold tracking-wide text-primary font-body"
                   isEditable={isEditable}
                   placeholder="Started From - 1998"
                 />
@@ -112,10 +89,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
               value={data.title || "Best Solution For Your Business Strategy."}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-5xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-7xl text-foreground"
-              style={{
-                fontFamily: theme.fonts.heading,
-              }}
+              className="text-5xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-7xl text-foreground font-heading"
               isEditable={isEditable}
               placeholder="Enter your hero title..."
               useHeadingFont={true}
@@ -127,10 +101,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="max-w-lg text-xl text-muted-foreground leading-relaxed"
-                style={{
-                  fontFamily: theme.fonts.body,
-                }}
+                className="max-w-lg text-xl text-muted-foreground leading-relaxed font-body"
                 isEditable={isEditable}
                 placeholder="Whole-Life Business Coaching for committed entrepreneurs"
                 multiline={true}
@@ -160,12 +131,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
                 }}
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="inline-flex h-auto rounded-md px-8 py-4 text-lg font-semibold shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  color: theme.colors.primaryForeground,
-                  fontFamily: theme.fonts.body,
-                }}
+                className="inline-flex h-auto rounded-md px-8 py-4 text-lg font-semibold shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-1 bg-primary text-primary-foreground font-body"
                 textPlaceholder="Button text..."
                 hrefPlaceholder="Enter URL..."
               />

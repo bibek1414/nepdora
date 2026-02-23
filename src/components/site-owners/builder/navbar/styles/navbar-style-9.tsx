@@ -17,6 +17,8 @@ import { NavbarLogo } from "../navbar-logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { cn } from "@/lib/utils";
+
 const EditableItem: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => <div className="group relative">{children}</div>;
@@ -69,9 +71,11 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
   return (
     <>
       <nav
-        className={`bg-background mx-auto flex max-w-7xl items-center justify-between p-4 lg:p-6 ${
-          !isEditable ? "sticky top-0 z-40 border-b" : ""
-        } ${disableClicks ? "pointer-events-none" : ""}`}
+        className={cn(
+          "bg-background mx-auto flex max-w-7xl items-center justify-between p-4 lg:p-6 font-body",
+          !isEditable && "sticky top-0 z-40 border-b",
+          disableClicks && "pointer-events-none"
+        )}
       >
         {/* Logo - Left side */}
         <div className="flex min-w-0 flex-1 items-center lg:gap-6">
@@ -106,7 +110,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
-                    className="cursor-pointer text-base font-medium text-black transition-colors hover:text-black/80"
+                    className="cursor-pointer text-base font-medium text-foreground transition-colors hover:text-foreground/80"
                   >
                     {link.text}
                   </Link>
@@ -122,11 +126,12 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                     disableClicks
                   )}
                   onClick={e => handleLinkClick(e, link.href)}
-                  className={`text-base font-medium transition-colors ${
+                  className={cn(
+                    "text-base font-medium transition-colors text-foreground hover:text-foreground/80",
                     disableClicks
                       ? "cursor-default opacity-60"
-                      : "cursor-pointer text-black hover:text-black/80"
-                  }`}
+                      : "cursor-pointer"
+                  )}
                 >
                   {link.text}
                 </Link>
@@ -143,7 +148,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                     onClick={e => e.preventDefault()}
                     variant="default"
                     size="default"
-                    className="cursor-pointer bg-black px-6 py-2 text-base text-white hover:bg-black/90"
+                    className="cursor-pointer bg-primary px-6 py-2 text-base text-primary-foreground hover:bg-primary/90"
                   >
                     {button.text}
                   </Button>
@@ -154,11 +159,12 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   variant="default"
                   size="default"
                   onClick={disableClicks ? e => e.preventDefault() : undefined}
-                  className={`bg-black px-6 py-2 text-base text-white hover:bg-black/90 ${
+                  className={cn(
+                    "bg-primary px-6 py-2 text-base text-primary-foreground hover:bg-primary/90",
                     disableClicks
                       ? "pointer-events-auto cursor-default opacity-60"
                       : ""
-                  }`}
+                  )}
                   asChild={!disableClicks}
                 >
                   {disableClicks ? (
@@ -191,7 +197,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
             variant="ghost"
             size="icon"
             onClick={toggleMobileMenu}
-            className="h-10 w-10"
+            className="h-10 w-10 text-foreground hover:bg-muted"
           >
             <Menu className="h-5 w-5" />
           </Button>
@@ -200,9 +206,9 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
 
       {/* Mobile Menu Sheet */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent side="right" className="w-1/2 sm:max-w-md">
+        <SheetContent side="right" className="w-1/2 sm:max-w-md font-body">
           <SheetHeader className="flex flex-row items-center justify-between border-b pb-4">
-            <SheetTitle className="text-lg font-semibold">Menu</SheetTitle>
+            <SheetTitle className="text-lg font-semibold font-heading">Menu</SheetTitle>
           </SheetHeader>
 
           <div className="mt-6 flex h-[calc(100vh-100px)] flex-col">
@@ -213,7 +219,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   <EditableItem key={link.id}>
                     <Button
                       variant="ghost"
-                      className="h-12 w-full justify-start px-4 text-lg font-normal text-black hover:bg-gray-100"
+                      className="h-12 w-full justify-start px-4 text-lg font-normal text-foreground hover:bg-muted"
                       onClick={e => e.preventDefault()}
                     >
                       {link.text}
@@ -223,7 +229,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   <SheetClose asChild key={link.id}>
                     <Button
                       variant="ghost"
-                      className="h-12 w-full justify-start px-4 text-lg font-normal text-black hover:bg-gray-100"
+                      className="h-12 w-full justify-start px-4 text-lg font-normal text-foreground hover:bg-muted"
                       asChild={!disableClicks}
                     >
                       <Link
@@ -235,9 +241,10 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                           disableClicks
                         )}
                         onClick={e => handleLinkClick(e, link.href)}
-                        className={`w-full text-left ${
+                        className={cn(
+                          "w-full text-left",
                           disableClicks ? "pointer-events-none opacity-60" : ""
-                        }`}
+                        )}
                       >
                         {link.text}
                       </Link>
@@ -256,7 +263,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                       onClick={e => e.preventDefault()}
                       variant="default"
                       size="default"
-                      className="w-full cursor-pointer justify-center bg-black py-3 text-base font-medium text-white hover:bg-black/90"
+                      className="w-full cursor-pointer justify-center bg-primary py-3 text-base font-medium text-primary-foreground hover:bg-primary/90"
                     >
                       {button.text}
                     </Button>
@@ -269,11 +276,12 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                       onClick={
                         disableClicks ? e => e.preventDefault() : undefined
                       }
-                      className={`w-full justify-center bg-black py-3 text-base font-medium text-white hover:bg-black/90 ${
+                      className={cn(
+                        "w-full justify-center bg-primary py-3 text-base font-medium text-primary-foreground hover:bg-primary/90",
                         disableClicks
                           ? "pointer-events-auto cursor-default opacity-60"
                           : ""
-                      }`}
+                      )}
                       asChild={!disableClicks}
                     >
                       {disableClicks ? (

@@ -5,7 +5,6 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate6Data } from "@/types/owner-site/components/hero";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
@@ -37,22 +36,6 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [isUploadingBackground, setIsUploadingBackground] = useState(false);
-  const { data: themeResponse } = useThemeQuery();
-
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#FFFFFF",
-      primary: "#FFFFFF",
-      primaryForeground: "#000000",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#000000",
-    },
-    fonts: {
-      body: "sans-serif",
-      heading: "sans-serif",
-    },
-  };
 
   const {
     data,
@@ -214,7 +197,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
   };
 
   return (
-    <div className="relative h-screen w-full" data-component-id={componentId}>
+    <div className="relative h-screen w-full font-body" data-component-id={componentId}>
       {isEditable && (
         <div className="absolute top-6 right-4 z-30 flex gap-2">
           <button
@@ -328,7 +311,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
                       value={data.title || "Find your perfect workout attire"}
                       onChange={handleTextUpdate("title")}
                       as="h1"
-                      className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl leading-tight"
+                      className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl leading-tight font-heading"
                       isEditable={isEditable}
                       placeholder="Enter main title..."
                       multiline={true}
@@ -343,7 +326,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
                       }
                       onChange={handleTextUpdate("subtitle")}
                       as="p"
-                      className="text-xl font-medium text-white/90"
+                      className="text-xl font-medium text-white/90 font-body"
                       isEditable={isEditable}
                       placeholder="Enter subtitle..."
                       multiline={true}
@@ -355,7 +338,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
                       value={data.description || "Exclusively online!"}
                       onChange={handleTextUpdate("description")}
                       as="p"
-                      className="text-lg text-white/80"
+                      className="text-lg text-white/80 font-body"
                       isEditable={isEditable}
                       placeholder="Enter additional text..."
                       multiline={true}
@@ -377,11 +360,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
                           }
                           isEditable={isEditable}
                           siteUser={siteUser}
-                          className="rounded-full bg-white px-8 py-4 text-base font-bold text-black shadow-lg transition duration-300 hover:bg-gray-100 hover:scale-105"
-                          style={{
-                            backgroundColor: theme.colors.primary,
-                            color: theme.colors.primaryForeground,
-                          }}
+                          className="rounded-full bg-primary text-primary-foreground font-body px-8 py-4 text-base font-bold shadow-lg transition duration-300 hover:bg-gray-100 hover:scale-105"
                           textPlaceholder="Button text..."
                           hrefPlaceholder="Enter URL..."
                         />

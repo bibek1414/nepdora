@@ -18,6 +18,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { cn } from "@/lib/utils";
 
 interface FooterStyle1Props {
   footerData: FooterData;
@@ -33,20 +34,6 @@ export function FooterStyle1({
   siteUser,
 }: FooterStyle1Props) {
   const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
@@ -58,8 +45,6 @@ export function FooterStyle1({
 
   const createNewsletterMutation = useCreateNewsletter();
   const pathname = usePathname();
-
-  // Function to generate the correct href for links
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,7 +87,7 @@ export function FooterStyle1({
 
   return (
     <div className="group relative">
-      <footer className="bg-background border-t pt-16 pb-8 lg:pt-24 lg:pb-12">
+      <footer className="bg-background border-t border-border pt-16 pb-8 lg:pt-24 lg:pb-12 font-body">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-4 lg:gap-16">
             {/* Company Info */}
@@ -112,7 +97,7 @@ export function FooterStyle1({
                 <FooterLogo
                   footerData={data}
                   getImageUrl={getImageUrl}
-                  textClassName="text-foreground text-xl font-bold"
+                  textClassName="text-foreground text-xl font-bold font-heading"
                   imageClassName="h-8 w-auto"
                   containerClassName="gap-3"
                 />
@@ -151,7 +136,7 @@ export function FooterStyle1({
             <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-8">
                 {data.sections.map(section => (
                 <div key={section.id} className="space-y-4">
-                    <h4 className="text-foreground font-semibold tracking-tight">
+                    <h4 className="text-foreground font-semibold tracking-tight font-heading">
                     {section.title}
                     </h4>
                     <ul className="space-y-3">
@@ -190,7 +175,7 @@ export function FooterStyle1({
              <div className="lg:col-span-1 space-y-8">
                  {/* Contact Info */}
                  <div className="space-y-4">
-                    <h4 className="text-foreground font-semibold tracking-tight">
+                    <h4 className="text-foreground font-semibold tracking-tight font-heading">
                         Contact Us
                     </h4>
                      <div className="space-y-3">
@@ -219,7 +204,7 @@ export function FooterStyle1({
                 {/* Newsletter */}
                 {data.newsletter.enabled && (
                     <div className="space-y-4">
-                        <h4 className="text-foreground font-semibold tracking-tight">
+                        <h4 className="text-foreground font-semibold tracking-tight font-heading">
                         {data.newsletter.title}
                         </h4>
                         <p className="text-muted-foreground text-sm">
@@ -239,16 +224,14 @@ export function FooterStyle1({
                                 placeholder="Your email"
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
-                                className="bg-background"
+                                className="bg-background text-foreground border-input"
                                 disabled={
                                     isEditable || createNewsletterMutation.isPending
                                 }
                                 />
                                 <Button
                                 type="submit"
-                                style={{
-                                    backgroundColor: theme.colors.primary,
-                                }}
+                                className="bg-primary text-primary-foreground hover:bg-primary/90"
                                 disabled={
                                     isEditable || createNewsletterMutation.isPending
                                 }
@@ -260,7 +243,7 @@ export function FooterStyle1({
                             </div>
 
                             {subscriptionStatus === "error" && errorMessage && (
-                                <div className="flex items-center gap-2 text-red-600 text-xs">
+                                <div className="flex items-center gap-2 text-destructive text-xs">
                                 <AlertCircle className="h-3 w-3" />
                                 <span>{errorMessage}</span>
                                 </div>
@@ -273,13 +256,13 @@ export function FooterStyle1({
           </div>
 
           {/* Copyright */}
-          <div className="border-t border-border/40 mt-16 pt-8">
+          <div className="border-t border-border mt-16 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                  <p className="text-muted-foreground text-sm">
                     {data.copyright}
                  </p>
                  <p className="text-muted-foreground text-sm flex items-center gap-1">
-                    Made with <Heart className="h-3 w-3 text-red-500 fill-current" /> by {data.copyright?.split(' ')[0] || 'Us'}
+                    Made with <Heart className="h-3 w-3 text-destructive fill-current" /> by {data.copyright?.split(' ')[0] || 'Us'}
                  </p>
             </div>
           </div>

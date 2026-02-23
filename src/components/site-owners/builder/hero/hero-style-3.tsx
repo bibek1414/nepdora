@@ -8,8 +8,8 @@ import { HeroTemplate3Data } from "@/types/owner-site/components/hero";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { cn } from "@/lib/utils";
 
 interface HeroTemplate3Props {
   heroData: HeroTemplate3Data;
@@ -24,24 +24,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const { data: themeResponse } = useThemeQuery();
-
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
-
   const {
     data,
     handleTextUpdate,
@@ -52,7 +34,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
   } = useBuilderLogic(heroData, onUpdate);
 
   return (
-    <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-background py-16 lg:py-24">
+    <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-background py-16 lg:py-24 font-body">
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left Content */}
@@ -61,12 +43,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
             {data.subtitle && (
               <Badge
                 variant="secondary"
-                className="w-fit rounded-full px-4 py-1.5"
-                style={{
-                  backgroundColor: theme.colors.secondary,
-                  color: theme.colors.text,
-                  fontFamily: theme.fonts.body,
-                }}
+                className="w-fit rounded-full px-4 py-1.5 bg-secondary text-secondary-foreground font-body"
               >
                 <EditableText
                   value={data.subtitle}
@@ -84,7 +61,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl text-foreground"
+              className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl text-foreground font-heading"
               isEditable={isEditable}
               placeholder="Enter your hero title..."
               multiline={true}
@@ -96,7 +73,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="max-w-xl text-lg text-muted-foreground leading-relaxed sm:text-xl"
+                className="max-w-xl text-lg text-muted-foreground leading-relaxed sm:text-xl font-body"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -109,18 +86,12 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                 {data.buttons.map((button, index) => (
                   <EditableLink
                     key={button.id}
-                    style={{
-                      backgroundColor:
-                        button.variant === "primary"
-                          ? theme.colors.primary
-                          : theme.colors.secondary,
-                      color:
-                        button.variant === "primary"
-                          ? theme.colors.primaryForeground
-                          : theme.colors.secondaryForeground,
-                      fontFamily: theme.fonts.body,
-                    }}
-                    className="flex items-center gap-2 px-8 py-4 rounded-lg text-base font-medium transition-transform hover:scale-105"
+                    className={cn(
+                      "flex items-center gap-2 px-8 py-4 rounded-lg text-base font-medium transition-transform hover:scale-105 font-body",
+                      button.variant === "primary"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-secondary-foreground"
+                    )}
                     text={button.text}
                     href={button.href || "#"}
                     onChange={(text, href) =>
@@ -147,7 +118,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                   value={data.statsNumber || "12k+"}
                   onChange={handleTextUpdate("statsNumber")}
                   as="span"
-                  className="text-2xl font-bold text-foreground"
+                  className="text-2xl font-bold text-foreground font-heading"
                   isEditable={isEditable}
                   placeholder="Enter stats number..."
                 />
@@ -155,7 +126,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                   value={data.statsLabel || "Used by teams and professionals."}
                   onChange={handleTextUpdate("statsLabel")}
                   as="span"
-                  className="text-sm font-medium text-muted-foreground"
+                  className="text-sm font-medium text-muted-foreground font-body"
                   isEditable={isEditable}
                   placeholder="Add stats description..."
                 />

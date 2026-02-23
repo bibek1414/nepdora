@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { cn } from "@/lib/utils";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -86,8 +87,8 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
 
   return (
     <>
-      <div className="bg-white">
-        <div className="flex h-10 items-center justify-center bg-black px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
+      <div className="bg-background font-body">
+        <div className="flex h-10 items-center justify-center bg-foreground px-4 text-sm font-medium text-background sm:px-6 lg:px-8">
           {isEditable ? (
             <EditableText
               value={bannerText}
@@ -98,20 +99,21 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
             />
           ) : (
             <div
-              className="prose prose-sm max-w-none leading-relaxed text-white"
+              className="prose prose-sm max-w-none leading-relaxed text-background"
               dangerouslySetInnerHTML={{ __html: bannerText }}
             />
           )}
         </div>
 
-        <header className="relative bg-white">
+        <header className="relative bg-background">
           <nav
             aria-label="Top"
-            className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${
-              disableClicks ? "pointer-events-none" : ""
-            }`}
+            className={cn(
+              "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8",
+              disableClicks && "pointer-events-none"
+            )}
           >
-            <div className="border-b border-gray-200">
+            <div className="border-b border-border">
               <div className="flex h-16 items-center">
                 <button
                   type="button"
@@ -120,11 +122,12 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                       setIsMobileMenuOpen(true);
                     }
                   }}
-                  className={`relative rounded-md bg-white p-2 text-gray-400 lg:hidden ${
+                  className={cn(
+                    "relative rounded-md bg-background p-2 text-muted-foreground lg:hidden",
                     disableClicks || isEditable
                       ? "cursor-default opacity-60"
-                      : "hover:bg-gray-100 hover:text-gray-500"
-                  }`}
+                      : "hover:bg-muted hover:text-foreground"
+                  )}
                   disabled={disableClicks || isEditable}
                 >
                   <span className="absolute -inset-0.5"></span>
@@ -164,7 +167,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                             <Link
                               href={link.href}
                               onClick={e => e.preventDefault()}
-                              className="mt-6 flex items-center text-sm font-medium text-black transition-colors hover:text-black/80"
+                              className="mt-6 flex items-center text-sm font-medium text-foreground transition-colors hover:text-foreground/80"
                             >
                               {link.text}
                             </Link>
@@ -179,11 +182,12 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                               disableClicks
                             )}
                             onClick={e => handleLinkClick(e, link.href)}
-                            className={`flex items-center text-sm font-medium hover:text-gray-800 ${
+                            className={cn(
+                              "flex items-center text-sm font-medium hover:text-foreground/80 text-muted-foreground",
                               disableClicks
                                 ? "cursor-default opacity-60"
                                 : "cursor-pointer"
-                            }`}
+                            )}
                           >
                             {link.text}
                           </Link>
@@ -201,7 +205,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                           <Link
                             href={button.href}
                             onClick={e => e.preventDefault()}
-                            className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
+                            className="cursor-pointer text-sm font-medium text-foreground transition-colors hover:text-foreground/80"
                           >
                             {button.text}
                           </Link>
@@ -217,11 +221,12 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                             disableClicks
                           )}
                           onClick={e => handleLinkClick(e, button.href)}
-                          className={`text-sm font-medium hover:text-gray-800 ${
+                          className={cn(
+                            "text-sm font-medium hover:text-foreground/80 text-muted-foreground",
                             disableClicks
                               ? "cursor-default opacity-60"
                               : "cursor-pointer"
-                          }`}
+                          )}
                         >
                           {button.text}
                         </Link>
@@ -230,7 +235,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                     {buttons.length > 0 && (
                       <span
                         aria-hidden="true"
-                        className="h-6 w-px bg-gray-200"
+                        className="h-6 w-px bg-border"
                       ></span>
                     )}
                   </div>
@@ -242,11 +247,12 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                         e.preventDefault();
                         if (disableClicks || isEditable) return;
                       }}
-                      className={`p-2 text-gray-400 ${
+                      className={cn(
+                        "p-2 text-muted-foreground",
                         disableClicks || isEditable
                           ? "cursor-default opacity-60"
-                          : "cursor-pointer hover:text-gray-500"
-                      }`}
+                          : "cursor-pointer hover:text-foreground"
+                      )}
                     >
                       <span className="sr-only">Search</span>
                       <Search className="h-6 w-6" />
@@ -266,7 +272,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                             onClick={e => e.preventDefault()}
                           >
                             <ShoppingCart className="h-6 w-6" />
-                            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs text-white">
                               0
                             </span>
                           </Button>
@@ -300,7 +306,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                       <Link
                         href={link.href}
                         onClick={e => e.preventDefault()}
-                        className="-m-2 block cursor-pointer p-2 font-medium text-black transition-colors hover:text-black/80"
+                        className="-m-2 block cursor-pointer p-2 font-medium text-foreground transition-colors hover:text-foreground/80"
                       >
                         {link.text}
                       </Link>
@@ -317,7 +323,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                         disableClicks
                       )}
                       onClick={e => handleLinkClick(e, link.href)}
-                      className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
+                      className="-m-2 block cursor-pointer p-2 font-medium text-foreground hover:text-foreground/80"
                     >
                       {link.text}
                     </Link>
@@ -328,7 +334,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
 
             {/* Mobile Buttons */}
             {buttons.length > 0 && (
-              <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+              <div className="space-y-6 border-t border-border px-4 py-6">
                 {buttons.map(button =>
                   isEditable && onEditButton && onDeleteButton ? (
                     <EditableItem key={button.id}>
@@ -336,7 +342,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                         <Link
                           href={button.href}
                           onClick={e => e.preventDefault()}
-                          className="-m-2 block cursor-pointer p-2 font-medium text-black transition-colors hover:text-black/80"
+                          className="-m-2 block cursor-pointer p-2 font-medium text-foreground transition-colors hover:text-foreground/80"
                         >
                           {button.text}
                         </Link>
@@ -353,7 +359,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                           disableClicks
                         )}
                         onClick={e => handleLinkClick(e, button.href)}
-                        className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
+                        className="-m-2 block cursor-pointer p-2 font-medium text-foreground hover:text-foreground/80"
                       >
                         {button.text}
                       </Link>

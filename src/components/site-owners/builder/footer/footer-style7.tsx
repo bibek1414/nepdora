@@ -19,6 +19,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { cn } from "@/lib/utils";
 
 interface FooterStyle7Props {
   footerData: FooterData;
@@ -36,20 +37,6 @@ export function FooterStyle7({
   siteUser,
 }: FooterStyle7Props) {
   const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const { data, getImageUrl, handleTextUpdate } = useBuilderLogic(
     footerData,
@@ -63,12 +50,6 @@ export function FooterStyle7({
   const [errorMessage, setErrorMessage] = useState("");
 
   const createNewsletterMutation = useCreateNewsletter();
-
-  // Get colors from theme with fallbacks
-  const primaryColor = theme.colors?.primary || "#3B82F6";
-  const secondaryColor = theme.colors?.secondary || "#F59E0B";
-  const primaryForeground = theme.colors?.primaryForeground || "#FFFFFF";
-  const secondaryForeground = theme.colors?.secondaryForeground || "#1F2937";
 
   // Extended FooterData with CTA fields
   type ExtendedFooterData = FooterData & {
@@ -144,20 +125,15 @@ export function FooterStyle7({
   );
 
   return (
-    <div className="group relative" style={{ backgroundColor: primaryColor }}>
-      <footer className="relative mx-auto mt-12 max-w-7xl pt-12 text-white sm:mt-16 sm:pt-16 md:mt-20 md:pt-20">
+    <div className="group relative bg-primary">
+      <footer className="relative mx-auto mt-12 max-w-7xl pt-12 text-primary-foreground sm:mt-16 sm:pt-16 md:mt-20 md:pt-20 font-body">
         {/* Floating CTA Bar */}
         <div
-          className="absolute top-0 left-1/2 flex w-[95%] min-w-[288px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-between rounded-2xl border border-white/10 p-6 shadow-2xl sm:w-[90%] sm:rounded-3xl md:w-[80%] md:flex-row md:rounded-full md:px-12 md:py-8"
-          style={{ backgroundColor: primaryColor }}
+          className="absolute top-0 left-1/2 flex w-[95%] min-w-[288px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-between rounded-2xl border border-primary-foreground/10 p-6 shadow-2xl sm:w-[90%] sm:rounded-3xl md:w-[80%] md:flex-row md:rounded-full md:px-12 md:py-8 bg-primary"
         >
           <div className="mb-4 flex items-center gap-4 md:mb-0 w-full md:w-auto">
             <div
-              className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white"
-              style={{
-                backgroundColor: secondaryColor,
-                color: secondaryForeground,
-              }}
+              className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground"
             >
               <svg
                 width="20"
@@ -171,7 +147,7 @@ export function FooterStyle7({
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
               </svg>
             </div>
-            <h3 className="text-lg leading-tight font-bold whitespace-pre-line lg:text-xl">
+            <h3 className="text-lg leading-tight font-bold whitespace-pre-line lg:text-xl font-heading">
               <EditableText
                 value={ctaText1}
                 onChange={handleTextUpdate("ctaText1" as any)}
@@ -183,15 +159,11 @@ export function FooterStyle7({
             </h3>
           </div>
 
-          <div className="mx-8 hidden h-12 w-px bg-white/20 md:block"></div>
+          <div className="mx-8 hidden h-12 w-px bg-primary-foreground/20 md:block"></div>
 
           <div className="flex items-center gap-4 w-full md:w-auto">
             <div
-              className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white"
-              style={{
-                backgroundColor: secondaryColor,
-                color: secondaryForeground,
-              }}
+              className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground"
             >
               <svg
                 width="20"
@@ -206,7 +178,7 @@ export function FooterStyle7({
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
             </div>
-            <h3 className="text-lg leading-tight font-bold whitespace-pre-line lg:text-xl">
+            <h3 className="text-lg leading-tight font-bold whitespace-pre-line lg:text-xl font-heading">
               <EditableText
                 value={ctaText2}
                 onChange={handleTextUpdate("ctaText2" as any)}
@@ -220,18 +192,13 @@ export function FooterStyle7({
         </div>
 
         <div
-          className="grid grid-cols-1 gap-12 border-b border-white/10 px-4 pt-32 pb-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8"
-          style={{ borderColor: `${primaryForeground}10` }}
+          className="grid grid-cols-1 gap-12 border-b border-primary-foreground/10 px-4 pt-32 pb-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8"
         >
           {/* Brand Column */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
               <div
-                className="flex h-10 w-10 items-center justify-center rounded-full text-white"
-                style={{
-                  backgroundColor: primaryForeground,
-                  color: primaryColor,
-                }}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-foreground text-primary"
               >
                 <Plane
                   size={20}
@@ -241,10 +208,10 @@ export function FooterStyle7({
               <FooterLogo
                 footerData={data}
                 getImageUrl={getImageUrl}
-                textClassName="text-white text-2xl font-bold"
+                textClassName="text-primary-foreground text-2xl font-bold font-heading"
               />
             </div>
-            <p className="text-sm leading-relaxed text-white/90">
+            <p className="text-sm leading-relaxed text-primary-foreground/90 font-body">
               {data.description}
             </p>
             <div className="flex gap-4">
@@ -252,7 +219,7 @@ export function FooterStyle7({
                 <Link
                   key={social.id}
                   href={social.href || "#"}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white hover:text-gray-900"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-foreground/10 transition-colors hover:bg-primary-foreground hover:text-primary"
                   target={
                     social.href?.startsWith("http") ? "_blank" : undefined
                   }
@@ -273,16 +240,16 @@ export function FooterStyle7({
 
           {/* Services Links */}
           <div>
-            <h4 className="mb-6 text-lg font-bold">
+            <h4 className="mb-6 text-lg font-bold font-heading">
               {servicesSection?.title || "Services"}
             </h4>
             <ul className="space-y-3 text-sm">
               {(servicesSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex cursor-pointer items-center gap-3 text-white/90 transition-colors hover:text-white group"
+                  className="flex cursor-pointer items-center gap-3 text-primary-foreground/90 transition-colors hover:text-primary-foreground group"
                 >
-                  <span style={{ color: secondaryColor }} className="group-hover:translate-x-1 transition-transform">✓</span>
+                  <span className="group-hover:translate-x-1 transition-transform text-secondary">✓</span>
                   <Link
                     href={generateLinkHref(
                       link.href || "",
@@ -290,12 +257,7 @@ export function FooterStyle7({
                       pathname,
                       isEditable
                     )}
-                    className="transition-colors hover:text-inherit"
-                    style={
-                      {
-                        "--hover-color": secondaryColor,
-                      } as React.CSSProperties
-                    }
+                    className="transition-colors hover:text-secondary"
                     onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
@@ -307,16 +269,16 @@ export function FooterStyle7({
 
           {/* Resources */}
           <div>
-            <h4 className="mb-6 text-lg font-bold">
+            <h4 className="mb-6 text-lg font-bold font-heading">
               {usefulLinksSection?.title || "Resources"}
             </h4>
             <ul className="space-y-3 text-sm">
               {(usefulLinksSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex cursor-pointer items-center gap-3 text-white/90 transition-colors hover:text-white group"
+                  className="flex cursor-pointer items-center gap-3 text-primary-foreground/90 transition-colors hover:text-primary-foreground group"
                 >
-                  <span style={{ color: secondaryColor }} className="group-hover:translate-x-1 transition-transform">&gt;</span>
+                  <span className="group-hover:translate-x-1 transition-transform text-secondary">&gt;</span>
                   <Link
                     href={generateLinkHref(
                       link.href || "",
@@ -324,12 +286,7 @@ export function FooterStyle7({
                       pathname,
                       isEditable
                     )}
-                    className="transition-colors hover:text-inherit"
-                    style={
-                      {
-                        "--hover-color": secondaryColor,
-                      } as React.CSSProperties
-                    }
+                    className="transition-colors hover:text-secondary"
                     onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
@@ -341,10 +298,10 @@ export function FooterStyle7({
 
           {/* Newsletter */}
           <div>
-            <h4 className="mb-6 text-lg font-bold">
+            <h4 className="mb-6 text-lg font-bold font-heading">
               {data.newsletter.title}
             </h4>
-            <p className="mb-4 text-sm leading-relaxed text-white/90">
+            <p className="mb-4 text-sm leading-relaxed text-primary-foreground/90">
               {data.newsletter.description}
             </p>
 
@@ -362,18 +319,14 @@ export function FooterStyle7({
                       placeholder="Enter Email"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
-                      className="w-full rounded-full border-none bg-white/10 px-5 py-3 pr-14 text-sm text-white placeholder-white/50 focus:bg-white/20 focus:ring-0 focus:outline-none"
+                      className="w-full rounded-full border-none bg-primary-foreground/10 px-5 py-3 pr-14 text-sm text-primary-foreground placeholder:text-primary-foreground/50 focus:bg-primary-foreground/20 focus:ring-0 focus:outline-none"
                       disabled={
                         isEditable || createNewsletterMutation.isPending
                       }
                     />
                     <Button
                       type="submit"
-                      className="absolute top-1/2 right-1.5 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full p-0 transition-colors"
-                      style={{
-                        backgroundColor: secondaryColor,
-                        color: secondaryForeground,
-                      }}
+                      className="absolute top-1/2 right-1.5 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full p-0 transition-colors bg-secondary text-secondary-foreground"
                       disabled={
                         isEditable || createNewsletterMutation.isPending
                       }
@@ -383,7 +336,7 @@ export function FooterStyle7({
                   </div>
 
                   {subscriptionStatus === "error" && errorMessage && (
-                    <div className="mt-2 flex items-center justify-start gap-2 text-red-400">
+                    <div className="mt-2 flex items-center justify-start gap-2 text-destructive-foreground bg-destructive p-1 rounded text-xs">
                       <AlertCircle className="h-4 w-4" />
                       <span className="text-sm">{errorMessage}</span>
                     </div>
@@ -391,7 +344,7 @@ export function FooterStyle7({
                 </form>
               )
             ) : (
-              <div className="text-sm text-gray-400">
+              <div className="text-sm text-primary-foreground/50">
                 Newsletter subscription is currently disabled.
               </div>
             )}
@@ -399,7 +352,7 @@ export function FooterStyle7({
         </div>
 
         <div
-          className="flex flex-col items-center justify-between gap-6 px-4 py-8 text-xs leading-relaxed text-white/60 md:flex-row md:px-8"
+          className="flex flex-col items-center justify-between gap-6 px-4 py-8 text-xs leading-relaxed text-primary-foreground/60 md:flex-row md:px-8"
         >
           <p className="text-left">{data.copyright}</p>
           <div className="flex flex-wrap justify-center gap-6 md:justify-end">
@@ -412,7 +365,7 @@ export function FooterStyle7({
                   pathname,
                   isEditable
                 )}
-                className="transition-colors hover:text-white"
+                className="transition-colors hover:text-primary-foreground"
                 style={{ color: "inherit" }}
                 onClick={isEditable ? e => e.preventDefault() : undefined}
               >

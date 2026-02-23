@@ -13,6 +13,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface HeroTemplate13Props {
   heroData: HeroTemplate13Data;
@@ -24,10 +25,10 @@ interface HeroTemplate13Props {
 type CTAButtonVariant = "primary" | "white" | "outline";
 
 const CTA_BUTTON_BASE =
-  "group/cta relative inline-flex items-center justify-between rounded-full px-8 py-4 text-base font-medium transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 hover:shadow-lg hover:-translate-y-1";
+  "group/cta relative inline-flex items-center justify-between rounded-full px-8 py-4 text-base font-medium transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 hover:shadow-lg hover:-translate-y-1 font-body";
 
 const CTA_BUTTON_VARIANTS: Record<CTAButtonVariant, string> = {
-  primary: "bg-primary text-white hover:bg-primary/90 focus:ring-primary",
+  primary: "bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary",
   white: "bg-white text-slate-900 hover:bg-gray-50 focus:ring-gray-200",
   outline:
     "border border-white/30 text-white hover:bg-white/10 focus:ring-white/40",
@@ -175,7 +176,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
 
   return (
     <motion.section
-      className="relative h-screen min-h-[800px] w-full overflow-hidden bg-gray-900"
+      className="relative h-screen min-h-[800px] w-full overflow-hidden bg-background font-body"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -230,7 +231,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
           onImageChange={handleBackgroundUpdate}
           onAltChange={handleAltUpdate("imageAlt")}
           isEditable={isEditable}
-          className="h-full w-full opacity-60"
+          className="h-full w-full opacity-60 object-cover"
           width={1920}
           height={1080}
           imageOptimization={{ width: 1920, quality: "auto", format: "auto" }}
@@ -254,7 +255,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             value={titleContent}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="mb-8 text-5xl leading-[1.1] font-bold text-white md:text-7xl lg:text-8xl tracking-tight"
+            className="mb-8 text-5xl leading-[1.1] font-bold text-white md:text-7xl lg:text-8xl tracking-tight font-heading"
             isEditable={isEditable}
             placeholder="Enter hero title..."
             multiline
@@ -264,7 +265,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             value={descriptionContent}
             onChange={handleTextUpdate("description")}
             as="p"
-            className="mb-12 max-w-2xl text-xl leading-relaxed text-gray-200"
+            className="mb-12 max-w-2xl text-xl leading-relaxed text-gray-200 font-body"
             isEditable={isEditable}
             placeholder="Enter hero description..."
             multiline
@@ -282,14 +283,14 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
               onChange={handlePrimaryButtonUpdate}
               isEditable={isEditable}
               siteUser={siteUser}
-              className={`${CTA_BUTTON_BASE} ${CTA_BUTTON_VARIANTS[buttonVariant]}`}
+              className={cn(CTA_BUTTON_BASE, CTA_BUTTON_VARIANTS[buttonVariant])}
               textPlaceholder="Button text..."
               hrefPlaceholder="Enter URL..."
             >
               <>
                 <span className="mr-2">{primaryButtonText}</span>
                 <span
-                  className={`${CTA_ARROW_BASE} ${CTA_ARROW_VARIANTS[buttonVariant]}`}
+                  className={cn(CTA_ARROW_BASE, CTA_ARROW_VARIANTS[buttonVariant])}
                 >
                   <ArrowUpRight size={18} />
                 </span>

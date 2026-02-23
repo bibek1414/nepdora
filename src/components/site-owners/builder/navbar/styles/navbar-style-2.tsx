@@ -13,6 +13,7 @@ import SideCart from "../../cart/side-cart";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { cn } from "@/lib/utils";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -70,9 +71,11 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   return (
     <>
       <nav
-        className={`bg-background flex items-center justify-between p-4 ${
-          !isEditable ? "sticky top-16 z-40 border-b" : ""
-        } ${disableClicks ? "pointer-events-none" : ""}`}
+        className={cn(
+          "bg-background text-foreground flex items-center justify-between p-4 font-body",
+          !isEditable && "sticky top-16 z-40 border-b",
+          disableClicks && "pointer-events-none"
+        )}
       >
         <div className="hidden flex-1 items-center justify-end gap-4 md:flex">
           {leftLinks.map(link =>
@@ -81,7 +84,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 <Link
                   href={link.href}
                   onClick={e => e.preventDefault()}
-                  className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
+                  className="cursor-pointer text-sm font-medium text-foreground transition-colors hover:text-foreground/80"
                 >
                   {link.text}
                 </Link>
@@ -97,11 +100,12 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                   disableClicks
                 )}
                 onClick={e => handleLinkClick(e, link.href)}
-                className={`text-sm font-medium transition-colors ${
+                className={cn(
+                  "text-sm font-medium transition-colors text-foreground",
                   disableClicks
                     ? "cursor-default opacity-60"
                     : "cursor-pointer hover:opacity-80"
-                }`}
+                )}
               >
                 {link.text}
               </Link>
@@ -132,7 +136,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 <Link
                   href={link.href}
                   onClick={e => e.preventDefault()}
-                  className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
+                  className="cursor-pointer text-sm font-medium text-foreground transition-colors hover:text-foreground/80"
                 >
                   {link.text}
                 </Link>
@@ -148,11 +152,12 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                   disableClicks
                 )}
                 onClick={e => handleLinkClick(e, link.href)}
-                className={`text-sm font-medium transition-colors ${
+                className={cn(
+                  "text-sm font-medium transition-colors text-foreground",
                   disableClicks
                     ? "cursor-default opacity-60"
                     : "cursor-pointer hover:opacity-80"
-                }`}
+                )}
                 style={{
                   pointerEvents: disableClicks ? "auto" : undefined,
                 }}

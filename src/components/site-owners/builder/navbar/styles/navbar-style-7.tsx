@@ -37,6 +37,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { cn } from "@/lib/utils";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -140,13 +141,14 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
 
   return (
     <>
-      <div className="bg-white shadow-md">
-        <header className="relative bg-white">
+      <div className="bg-background shadow-md font-body">
+        <header className="relative bg-background">
           <nav
             aria-label="Top"
-            className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${
-              disableClicks ? "pointer-events-none" : ""
-            }`}
+            className={cn(
+              "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8",
+              disableClicks && "pointer-events-none"
+            )}
           >
             <div className="flex h-20 items-center justify-between">
               {/* Left: Logo */}
@@ -188,7 +190,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                           }}
                           isEditable={isEditable}
                           siteUser={siteUser}
-                          className="flex cursor-pointer items-center gap-1.5 font-medium text-black transition-colors hover:text-black/80"
+                          className="flex cursor-pointer items-center gap-1.5 font-medium text-foreground transition-colors hover:text-foreground/80"
                           textPlaceholder="Link text..."
                           hrefPlaceholder="Enter URL..."
                         />
@@ -203,11 +205,12 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                           disableClicks
                         )}
                         onClick={e => handleLinkClick(e, link.href)}
-                        className={`font-medium text-black transition-colors hover:text-black/80 ${
+                        className={cn(
+                          "font-medium text-foreground transition-colors hover:text-foreground/80",
                           disableClicks
                             ? "cursor-default opacity-60"
                             : "cursor-pointer"
-                        }`}
+                        )}
                       >
                         {link.text}
                       </Link>
@@ -245,14 +248,15 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={e => disableClicks && e.preventDefault()}
-                          className={`rounded-full p-2 transition-colors hover:bg-gray-100 ${
+                          className={cn(
+                            "rounded-full p-2 transition-colors hover:bg-muted",
                             disableClicks
                               ? "cursor-default opacity-60"
                               : "cursor-pointer"
-                          }`}
+                          )}
                           aria-label={social.label}
                         >
-                          <Icon className="h-5 w-5 text-black hover:text-black/80" />
+                          <Icon className="h-5 w-5 text-foreground hover:text-foreground/80" />
                         </Link>
                       );
                     })}
@@ -270,15 +274,16 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                         generateLinkHref("/wishlist", siteUser, pathname)
                       )
                     }
-                    className={`relative flex items-center gap-1 ${
+                    className={cn(
+                      "relative flex items-center gap-1",
                       disableClicks
                         ? "pointer-events-auto cursor-default opacity-60"
                         : ""
-                    }`}
+                    )}
                   >
                     <Heart className="h-5 w-5" />
                     {wishlistCount > 0 && (
-                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
                         {wishlistCount}
                       </span>
                     )}
@@ -299,7 +304,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                           onClick={e => e.preventDefault()}
                         >
                           <ShoppingCart className="h-5 w-5" />
-                          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
                             0
                           </span>
                         </Button>
@@ -315,11 +320,12 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="outline"
-                      className={`flex items-center gap-2 ${
+                      className={cn(
+                        "flex items-center gap-2",
                         disableClicks
                           ? "pointer-events-auto cursor-default opacity-60"
                           : ""
-                      }`}
+                      )}
                       onClick={
                         disableClicks ? e => e.preventDefault() : undefined
                       }
@@ -354,7 +360,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                             <div className="flex w-full items-center justify-between">
                               <span>Wishlist</span>
                               {wishlistCount > 0 && (
-                                <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                                <span className="ml-2 rounded-full bg-destructive px-2 py-0.5 text-xs text-destructive-foreground">
                                   {wishlistCount}
                                 </span>
                               )}
@@ -369,7 +375,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
-                            className="cursor-pointer text-red-600 focus:text-red-600"
+                            className="cursor-pointer text-destructive focus:text-destructive"
                             onClick={() => handleProfileAction("logout")}
                           >
                             <LogOut className="mr-2 h-4 w-4" />
