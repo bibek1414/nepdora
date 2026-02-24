@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,9 +7,10 @@ import { useCart } from "@/hooks/owner-site/admin/use-cart";
 
 interface CartIconProps {
   onToggleCart: () => void;
+  customIcon?: React.ReactNode;
 }
 
-export const CartIcon = ({ onToggleCart }: CartIconProps) => {
+export const CartIcon = ({ onToggleCart, customIcon }: CartIconProps) => {
   const { itemCount } = useCart();
 
   return (
@@ -19,7 +20,7 @@ export const CartIcon = ({ onToggleCart }: CartIconProps) => {
       className="relative"
       onClick={onToggleCart}
     >
-      <ShoppingCart className="h-5 w-5" />
+      {customIcon ? customIcon : <ShoppingCart className="h-5 w-5" />}
       {itemCount > 0 && (
         <Badge
           variant="destructive"

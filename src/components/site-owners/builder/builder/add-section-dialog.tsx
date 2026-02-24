@@ -176,6 +176,21 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 15",
         image: "/images/site-owners/hero/hero15.png",
       },
+      {
+        id: "hero-16",
+        name: "Hero Style 16",
+        image: "/images/sit-owners/hero/hero16.png",
+      },
+      {
+        id: "hero-17",
+        name: "Hero Style 17",
+        image: "/images/sit-owners/hero/hero17.png",
+      },
+      {
+        id: "hero-18",
+        name: "Hero Style 18",
+        image: "/images/site-owners/hero/hero18.png",
+      },
     ],
     others: [
       {
@@ -214,6 +229,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "our-clients-3",
         name: "Our Clients Style 3",
         image: "/images/site-owners/our-clients/ourclients3.png",
+      },
+      {
+        id: "our-clients-4",
+        name: "Our Clients Style 4",
+        image: "/images/site-owners/our-clients/ourclients4.png",
       },
     ],
 
@@ -408,6 +428,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Best Sellers",
         image: "/images/site-owners/products/product10.png",
       },
+      {
+        id: "product-11",
+        name: "Featured Collections",
+        image: "/images/site-owners/products/product11.png",
+      },
     ],
     category: [
       {
@@ -536,6 +561,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Contact Form 9",
         image: "/images/site-owners/contact/contact9.png",
       },
+      {
+        id: "contact-10",
+        name: "Contact Form 10",
+        image: "/images/site-owners/contact/contact10.png",
+      },
     ],
     testimonials: [
       {
@@ -592,6 +622,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "testimonial-11",
         name: "Testimonials Style 11",
         image: "/images/site-owners/testimonials/testimonial11.png",
+      },
+      {
+        id: "testimonial-12",
+        name: "Testimonials Style 12",
+        image: "/images/site-owners/testimonials/testimonial12.png",
       },
     ],
     team: [
@@ -783,6 +818,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "FAQ Style 9",
         image: "/images/site-owners/faq/faq-9.png",
       },
+      {
+        id: "faq-10",
+        name: "FAQ Style 10",
+        image: "/images/site-owners/faq/faq-10.png",
+      },
     ],
     portfolio: [
       {
@@ -943,6 +983,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/navbars/navbar9.png",
         description: "Includes dynamic breadcrumbs for inner pages",
       },
+      {
+        id: "navbar-12",
+        name: "Navbar with Language Switcher",
+        image: "/images/site-owners/navbars/navbar10.png",
+        description: "Includes language switcher",
+      },
     ],
     // FOOTER TEMPLATES
     footer: [
@@ -1004,6 +1050,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "footer-10",
         name: "Footer Style 10",
         image: "/images/site-owners/footers/footer10.png",
+        description: "Footer with social media links",
+      },
+      {
+        id: "footer-11",
+        name: "Footer Style 11",
+        image: "/images/site-owners/footers/footer11.png",
         description: "Footer with social media links",
       },
     ],

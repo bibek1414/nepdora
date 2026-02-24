@@ -28,6 +28,7 @@ import { ProductsStyle7 } from "./products-style/products-style-7";
 import { ProductsStyle8 } from "./products-style/products-style-8";
 import { ProductsStyle9 } from "./products-style/products-style-9";
 import { ProductsStyle10 } from "./products-style/products-style-10";
+import { ProductsStyle11 } from "./products-style/products-style-11";
 
 interface ProductsComponentProps {
   component: ProductsComponentData;
@@ -122,6 +123,8 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
         return <ProductsStyle9 {...commonProps} />;
       case "product-10":
         return <ProductsStyle10 {...commonProps} />;
+      case "product-11":
+        return <ProductsStyle11 {...commonProps} />;
       case "product-1":
       default:
         return <ProductsStyle1 {...commonProps} />;

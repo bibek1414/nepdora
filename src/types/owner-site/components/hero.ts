@@ -254,6 +254,41 @@ export interface HeroTemplate15Data {
   stat2Label?: string;
 }
 
+export interface HeroTemplate16Data {
+  template: "hero-16";
+  title: string;
+  description?: string;
+  badge1Image?: string;
+  badge1Text?: string;
+  badge2Image?: string;
+  badge2Text?: string;
+  buttons: HeroButton[];
+  features?: HeroFeature[];
+  imageUrl?: string;
+  imageAlt?: string;
+}
+
+export interface HeroTemplate17Data {
+  template: "hero-17";
+  title: string;
+  badgeText?: string;
+  buttons: HeroButton[];
+  rightImageUrl?: string;
+  rightImageAlt?: string;
+  rightStampImageUrl?: string;
+  rightStampAlt?: string;
+  features?: HeroFeature[];
+}
+
+export interface HeroTemplate18Data {
+  template: "hero-18";
+  buttons: HeroButton[];
+  collections: HeroCollection[];
+  backgroundType: "color" | "gradient" | "image";
+  backgroundColor?: string;
+  backgroundImageUrl?: string;
+}
+
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data
@@ -270,7 +305,10 @@ export type HeroData =
   | HeroTemplate12Data
   | HeroTemplate13Data
   | HeroTemplate14Data
-  | HeroTemplate15Data;
+  | HeroTemplate15Data
+  | HeroTemplate16Data
+  | HeroTemplate17Data
+  | HeroTemplate18Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -343,8 +381,7 @@ export const defaultHeroTemplate1Data: HeroTemplate1Data = {
   ],
   layout: "text-center",
   showImage: true,
-  imageUrl:
-    "https://images.unsplash.com/photo-1706708709028-9ed38f34115f?q=80&w=1170&auto=format&fit=crop",
+  imageUrl: "/hero-students.webp",
   imageAlt: "Hero image",
 };
 
@@ -689,6 +726,77 @@ export const defaultHeroTemplate15Data: HeroTemplate15Data = {
   stat2Label: "Items Available",
 };
 
+export const defaultHeroTemplate16Data: HeroTemplate16Data = {
+  template: "hero-16",
+  title: "Best Abroad Study Consultancy <br /> In Nepal",
+  description:
+    "Expert guidance for studying in USA, UK, Australia, Canada & New Zealand. From course selection to visa processing — we've got you covered.",
+  badge1Text: "Approved by Ministry of Education",
+  badge1Image: "/ministry-of-education.png",
+  badge2Text: "TITI Certified Counselors",
+  badge2Image: "/titi.png",
+  buttons: [
+    { id: "1", text: "Book Free Consultation", variant: "primary", href: "#" },
+    { id: "2", text: "Learn More About Us", variant: "outline", href: "#" },
+  ],
+  features: [
+    { id: "1", text: "10+ Years Experience" },
+    { id: "2", text: "5000+ Students Placed" },
+    { id: "3", text: "100+ Partner Universities" },
+  ],
+  imageUrl:
+    "https://images.unsplash.com/photo-1523240715639-9942f1476d06?q=80&w=2070&auto=format&fit=crop",
+  imageAlt: "Students graduating",
+};
+
+export const defaultHeroTemplate17Data: HeroTemplate17Data = {
+  template: "hero-17",
+  badgeText: "New Trend 2025",
+  title: "Waves Puffer\nCoat Black",
+  buttons: [{ id: "1", text: "Shop Now", variant: "outline", href: "#" }],
+  rightImageUrl: "/images/site-owners/hero/hero-style-17/hero-right-image.webp",
+  rightImageAlt: "Waves Puffer Coat Black",
+  rightStampImageUrl: "/images/site-owners/hero/hero-style-17/bag.webp",
+  rightStampAlt: "Product Quality Best",
+  features: [
+    { id: "1", text: "Free Shipping|Free Shipping for orders over $90" },
+    { id: "2", text: "Money Back guarantee|100% money back guarantee" },
+    { id: "3", text: "24/7 online support|24 hours a day, 7 days a week" },
+    { id: "4", text: "Flexible Payment|Pay with Multiple Credit Cards" },
+  ],
+};
+
+export const defaultHeroTemplate18Data: HeroTemplate18Data = {
+  template: "hero-18",
+  buttons: [],
+  collections: [
+    {
+      id: "men",
+      title: "Men's\nCollection",
+      subtitle: "",
+      badge: "",
+      imageUrl:
+        "https://images.unsplash.com/photo-1516257984-b1b4d707412e?q=80&w=774&auto=format&fit=crop",
+      imageAlt: "Men's collection",
+      buttonText: "Shop Now",
+      buttonHref: "#",
+    },
+    {
+      id: "women",
+      title: "Women's\nCollection",
+      subtitle: "",
+      badge: "",
+      imageUrl:
+        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1020&auto=format&fit=crop",
+      imageAlt: "Women's collection",
+      buttonText: "Shop Now",
+      buttonHref: "#",
+    },
+  ],
+  backgroundType: "color",
+  backgroundColor: "#FFFFFF",
+};
+
 // Default data map for all hero templates
 export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-1": defaultHeroTemplate1Data,
@@ -706,6 +814,9 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-13": defaultHeroTemplate13Data,
   "hero-14": defaultHeroTemplate14Data,
   "hero-15": defaultHeroTemplate15Data,
+  "hero-16": defaultHeroTemplate16Data,
+  "hero-17": defaultHeroTemplate17Data,
+  "hero-18": defaultHeroTemplate18Data,
 };
 
 // Type guards for each template
@@ -752,3 +863,12 @@ export const isHeroTemplate14 = (data: HeroData): data is HeroTemplate14Data =>
 
 export const isHeroTemplate15 = (data: HeroData): data is HeroTemplate15Data =>
   data.template === "hero-15";
+
+export const isHeroTemplate16 = (data: HeroData): data is HeroTemplate16Data =>
+  data.template === "hero-16";
+
+export const isHeroTemplate17 = (data: HeroData): data is HeroTemplate17Data =>
+  data.template === "hero-17";
+
+export const isHeroTemplate18 = (data: HeroData): data is HeroTemplate18Data =>
+  data.template === "hero-18";

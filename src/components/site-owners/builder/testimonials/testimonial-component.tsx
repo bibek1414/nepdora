@@ -29,6 +29,7 @@ import { TestimonialStyle8 } from "./testimonial-style/testimonial-style-8";
 import { TestimonialStyle9 } from "./testimonial-style/testimonial-style-9";
 import { TestimonialStyle10 } from "./testimonial-style/testimonial-style-10";
 import { TestimonialStyle11 } from "./testimonial-style/testimonial-style-11";
+import { TestimonialStyle12 } from "./testimonial-style/testimonial-style-12";
 
 interface TestimonialsComponentProps {
   component: TestimonialsComponentData;
@@ -125,6 +126,8 @@ export const TestimonialsComponent: React.FC<TestimonialsComponentProps> = ({
         return <TestimonialStyle10 {...commonProps} />;
       case "testimonial-11":
         return <TestimonialStyle11 {...commonProps} />;
+      case "testimonial-12":
+        return <TestimonialStyle12 {...commonProps} />;
       case "testimonial-1":
       default:
         return <TestimonialStyle1 {...commonProps} />;

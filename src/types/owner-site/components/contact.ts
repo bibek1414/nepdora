@@ -23,7 +23,8 @@ export interface ContactData {
     | "contact-6"
     | "contact-7"
     | "contact-8"
-    | "contact-9";
+    | "contact-9"
+    | "contact-10";
   title: string;
   subtitle?: string;
   description?: string;
@@ -297,6 +298,28 @@ export const defaultContactData8: ContactData = {
   button_label: "Send Message",
 };
 
+export const defaultContactData10: ContactData = {
+  component_type: "contact",
+  style: "contact-10",
+  title: "Get In Touch",
+  subtitle: "We'd love to hear from you. Please fill out this form.",
+  description: "",
+  cta_title: "Drop Us A Line",
+  cta_subtitle: "Use the form below to get in touch with the sales team.",
+  button_label: "Send Message",
+  required_fields: {
+    name: true,
+    email: false,
+    phone: true,
+    message: true,
+  },
+  contact_info: {
+    email: "",
+    phone: "",
+    address: "",
+  },
+};
+
 export const DEFAULT_CONTACT_MAP: Record<ContactData["style"], ContactData> = {
   "contact-1": defaultContactData,
   "contact-2": defaultContactData2,
@@ -307,4 +330,5 @@ export const DEFAULT_CONTACT_MAP: Record<ContactData["style"], ContactData> = {
   "contact-7": defaultContactData7,
   "contact-8": defaultContactData8,
   "contact-9": defaultContactData9,
+  "contact-10": defaultContactData10,
 };

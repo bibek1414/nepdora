@@ -1,7 +1,7 @@
 export interface OurClientsData {
   component_id?: string;
   component_type: "our_clients";
-  style: "our-clients-1" | "our-clients-2" | "our-clients-3";
+  style: "our-clients-1" | "our-clients-2" | "our-clients-3" | "our-clients-4";
   title: string;
   subtitle?: string;
   description?: string;
@@ -50,6 +50,16 @@ export const defaultOurClientsData3: OurClientsData = {
   limit: 6,
 };
 
+export const defaultOurClientsData4: OurClientsData = {
+  component_type: "our_clients",
+  style: "our-clients-4",
+  title: "",
+  subtitle: "",
+  description: "",
+  show_all: true,
+  limit: 6,
+};
+
 export const DEFAULT_OUR_CLIENTS_MAP: Record<
   OurClientsData["style"],
   OurClientsData
@@ -57,4 +67,5 @@ export const DEFAULT_OUR_CLIENTS_MAP: Record<
   "our-clients-1": defaultOurClientsData,
   "our-clients-2": defaultOurClientsData2,
   "our-clients-3": defaultOurClientsData3,
+  "our-clients-4": defaultOurClientsData4,
 };

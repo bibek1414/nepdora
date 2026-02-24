@@ -206,17 +206,6 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
           <div className="space-y-2 p-3">
             {/* Category & Rating */}
             <div className="flex items-center justify-between">
-              {product.category && (
-                <span
-                  className="text-[10px] font-medium tracking-wider opacity-70"
-                  style={{
-                    color: theme.colors.primary,
-                    fontFamily: theme.fonts.heading,
-                  }}
-                >
-                  {product.category.name}
-                </span>
-              )}
               {reviewsCount > 0 ? (
                 <div className="flex items-center gap-1">
                   <Star className="h-2.5 w-2.5 fill-yellow-400 text-yellow-400" />
@@ -239,38 +228,6 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
               {product.name}
             </h3>
 
-            {/* Subcategory */}
-            {product.sub_category && (
-              <p className="text-[10px] font-normal text-gray-400">
-                {product.sub_category.name}
-              </p>
-            )}
-
-            {/* Description */}
-            {product.description && (
-              <p className="line-clamp-2 text-[10px] leading-relaxed text-gray-500">
-                {product.description}
-              </p>
-            )}
-
-            {/* Stock Info */}
-            {product.stock > 0 && (
-              <div className="flex items-center gap-1">
-                <div
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    product.stock > 10
-                      ? "bg-green-500"
-                      : product.stock > 5
-                        ? "bg-yellow-500"
-                        : "bg-red-500"
-                  }`}
-                />
-                <span className="text-[10px] font-normal text-gray-400">
-                  {product.stock > 10 ? "In Stock" : `${product.stock} left`}
-                </span>
-              </div>
-            )}
-
             {/* Price Section */}
             <div className="space-y-1">
               <div className="flex items-center gap-1.5">
@@ -284,15 +241,6 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
                   </span>
                 )}
               </div>
-              {discountPercentage > 0 && marketPrice !== null && (
-                <p className="text-[10px] font-medium text-green-600">
-                  Save Rs.
-                  {Number(marketPrice - price).toLocaleString("en-IN", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </p>
-              )}
             </div>
 
             {/* Add to Cart Button */}

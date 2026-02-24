@@ -12,7 +12,8 @@ export interface TestimonialsData {
     | "testimonial-8"
     | "testimonial-9"
     | "testimonial-10"
-    | "testimonial-11";
+    | "testimonial-11"
+    | "testimonial-12";
   title: string;
   subtitle?: string;
   page_size: number;
@@ -55,4 +56,5 @@ export const DEFAULT_TESTIMONIALS_MAP: Record<
   "testimonial-9": { ...defaultTestimonialsData, style: "testimonial-9" },
   "testimonial-10": { ...defaultTestimonialsData, style: "testimonial-10" },
   "testimonial-11": { ...defaultTestimonialsData, style: "testimonial-11" },
+  "testimonial-12": { ...defaultTestimonialsData, style: "testimonial-12" },
 };

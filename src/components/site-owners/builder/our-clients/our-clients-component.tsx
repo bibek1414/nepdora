@@ -21,6 +21,7 @@ import Link from "next/link";
 import { OurClientsStyle1 } from "./our-clients-style-1";
 import { OurClientsStyle2 } from "./our-clients-style-2";
 import { OurClientsStyle3 } from "./our-clients-style-3";
+import { OurClientsStyle4 } from "./our-clients-style-4";
 
 interface OurClientsComponentProps {
   component: OurClientsComponentData;
@@ -89,6 +90,8 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
     };
 
     switch (style) {
+      case "our-clients-4":
+        return <OurClientsStyle4 {...commonProps} />;
       case "our-clients-2":
         return <OurClientsStyle2 {...commonProps} />;
       case "our-clients-3":

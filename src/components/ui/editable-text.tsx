@@ -147,18 +147,35 @@ export const EditableText: React.FC<EditableTextProps> = ({
     }
   }, [Tag, style?.fontSize]);
 
-  // Set initial HTML content with preserved inline styles
+  // Set initial HTML content with preserved inline styles and line breaks
   useEffect(() => {
-    if (textRef.current && value) {
-      if (textRef.current.innerHTML !== value) {
-        textRef.current.innerHTML = value;
+    if (textRef.current && typeof value === "string") {
+      // Treat actual newlines and literal \n string as HTML <br/> for rendering
+      const displayValue = value
+        .replace(/\\n/g, "<br/>")
+        .replace(/\n/g, "<br/>");
+
+      if (textRef.current.innerHTML !== displayValue) {
+        textRef.current.innerHTML = displayValue;
       }
     }
   }, [value]);
 
-  // Handle text changes - Save HTML to preserve inline styles
+  // Handle text changes - Convert HTML breaks back to \n and save
   const handleTextChange = (e: React.FocusEvent<HTMLElement>) => {
-    const newValue = e.target.innerHTML;
+    let newValue = e.target.innerHTML;
+
+    // If the user typed literal <br> or \n, or pressed Enter (which inserts <div> or <br>)
+    // Convert all those variations into a simple \n character for the backend
+    newValue = newValue
+      .replace(/<div>/gi, "\n")
+      .replace(/<\/div>/gi, "")
+      .replace(/<p>/gi, "\n")
+      .replace(/<\/p>/gi, "")
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/&lt;br\s*\/?&gt;/gi, "\n")
+      .replace(/\\n/g, "\n");
+
     if (value !== newValue) {
       onChange(newValue);
     }

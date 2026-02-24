@@ -118,7 +118,7 @@ export const useCreateComponentMutation = (pageSlug: string) => {
           component_type: componentType,
           component_id: generateUUID(),
           data,
-          insert_index: insertIndex,
+          order: insertIndex,
         });
       });
     },
@@ -157,7 +157,14 @@ export const useCreateComponentMutation = (pageSlug: string) => {
           if (!old) return [optimisticComponent];
           const newList = [...old];
           if (typeof insertIndex === "number") {
-            newList.splice(insertIndex, 0, optimisticComponent);
+            const spliceIndex = newList.findIndex(
+              c => (c.order ?? 0) >= insertIndex
+            );
+            if (spliceIndex === -1) {
+              newList.push(optimisticComponent);
+            } else {
+              newList.splice(spliceIndex, 0, optimisticComponent);
+            }
           } else {
             newList.push(optimisticComponent);
           }
@@ -168,6 +175,7 @@ export const useCreateComponentMutation = (pageSlug: string) => {
       if (!silent) {
         return {
           previousComponents,
+          optimisticId,
           toastId: toast.loading(
             `Adding ${
               componentType.charAt(0).toUpperCase() + componentType.slice(1)
@@ -175,11 +183,32 @@ export const useCreateComponentMutation = (pageSlug: string) => {
           ),
         };
       }
-      return { previousComponents };
+      return { previousComponents, optimisticId };
     },
-    onSuccess: (data, variables, context) => {
-      // The WebSocket will provide the real data, but we can update the optimistic one here too if we want.
-      // Or just let the WebSocket handle it.
+    onSuccess: (data, variables, context: any) => {
+      // Replace or remove the optimistic component with the real data from the server
+      if (context?.optimisticId && data) {
+        queryClient.setQueryData(
+          ["pageComponents", pageSlug, "preview"],
+          (old: any[] | undefined) => {
+            if (!old) return [data];
+
+            const realExists = old.some(
+              c => c.component_id === data.component_id
+            );
+            if (realExists) {
+              return old.filter(c => c.component_id !== context.optimisticId);
+            }
+
+            return old.map(c =>
+              c.component_id === context.optimisticId
+                ? { ...data, order: data.order ?? c.order }
+                : c
+            );
+          }
+        );
+      }
+
       if (!variables.silent) {
         toast.success(
           `${
@@ -267,7 +296,20 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
 
       return { previousComponents };
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      if (data) {
+        queryClient.setQueryData(
+          ["pageComponents", pageSlug, "preview"],
+          (old: any[] | undefined) => {
+            if (!old) return old;
+            return old.map(c =>
+              c.component_id === variables.componentId
+                ? { ...c, ...data, data: { ...c.data, ...(data.data || {}) } }
+                : c
+            );
+          }
+        );
+      }
       toast.success("Component updated successfully");
     },
     onError: (error: unknown, __, context) => {
@@ -426,7 +468,20 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
         toastId: toast.loading(`${componentType} component replacing...`),
       };
     },
-    onSuccess: (_, __, context) => {
+    onSuccess: (data, variables, context) => {
+      if (data) {
+        queryClient.setQueryData(
+          ["pageComponents", pageSlug, "preview"],
+          (old: any[] | undefined) => {
+            if (!old) return old;
+            return old.map(c =>
+              c.component_id === variables.componentId
+                ? { ...c, ...data, data: { ...c.data, ...(data.data || {}) } }
+                : c
+            );
+          }
+        );
+      }
       toast.success(`${componentType} component replaced successfully!`, {
         id: context?.toastId,
       });
@@ -517,7 +572,20 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
         ),
       };
     },
-    onSuccess: (_, variables, context) => {
+    onSuccess: (data, variables, context) => {
+      if (data) {
+        queryClient.setQueryData(
+          ["pageComponents", pageSlug, "preview"],
+          (old: any[] | undefined) => {
+            if (!old) return old;
+            return old.map(c =>
+              c.component_id === variables.componentId
+                ? { ...c, ...data, data: { ...c.data, ...(data.data || {}) } }
+                : c
+            );
+          }
+        );
+      }
       toast.success(
         `${variables.componentType} component replaced successfully!`,
         { id: context?.toastId }
@@ -582,17 +650,25 @@ export const useDeletePortfolioComponentMutation = () => {
 };
 
 export const useUpdateComponentOrderMutation = (pageSlug: string) => {
-  const { sendMessage } = useWebsiteSocketContext();
+  const { sendMessage, subscribe } = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ orderUpdates }: { orderUpdates: any[] }) => {
-      sendMessage({
-        action: "update_component_order",
-        page_slug: pageSlug,
-        order_updates: orderUpdates,
+      return new Promise<any>(resolve => {
+        const unsubscribe = subscribe("component_order_updated", message => {
+          unsubscribe();
+          resolve(message.data);
+        });
+
+        setTimeout(() => unsubscribe(), 10000);
+
+        sendMessage({
+          action: "update_component_order",
+          slug: pageSlug,
+          order_updates: orderUpdates,
+        });
       });
-      return Promise.resolve();
     },
     onMutate: async ({ orderUpdates }) => {
       await queryClient.cancelQueries({
@@ -622,9 +698,14 @@ export const useUpdateComponentOrderMutation = (pageSlug: string) => {
 
       return { previousComponents };
     },
-    onSuccess: () => {
-      // Silently handled by global listener "components_reordered" or similar if it exists,
-      // or we just trust the optimistic update.
+    onSuccess: data => {
+      if (Array.isArray(data)) {
+        queryClient.setQueryData(
+          ["pageComponents", pageSlug, "preview"],
+          [...data].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        );
+      }
+      toast.success("Component order updated successfully!");
     },
     onError: (error: unknown, __, context) => {
       if (context?.previousComponents) {

@@ -26,18 +26,21 @@ interface EditableLinkProps {
   siteUser?: string;
   target?: "_blank" | "_self";
   showExternalIcon?: boolean;
+  dropdownPosition?: "top" | "bottom";
 }
 
 interface PageSelectorProps {
   onSelect: (href: string, text?: string) => void;
   onCancel: () => void;
   currentHref: string;
+  dropdownPosition?: "top" | "bottom";
 }
 
 const PageSelector: React.FC<PageSelectorProps> = ({
   onSelect,
   onCancel,
   currentHref,
+  dropdownPosition = "top",
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -98,8 +101,13 @@ const PageSelector: React.FC<PageSelectorProps> = ({
     }
   };
 
+  const positionClass =
+    dropdownPosition === "bottom" ? "top-full mt-1" : "bottom-full mb-1";
+
   return (
-    <Card className="absolute bottom-full left-0 z-[9999] mb-1 w-80 bg-white py-0 shadow-xl">
+    <Card
+      className={`absolute ${positionClass} left-0 z-[9999] w-80 bg-white py-0 shadow-xl`}
+    >
       <CardContent className="p-0">
         {/* Existing Pages - Fixed ScrollArea */}
         <ScrollArea className="max-h-60 overflow-y-auto">
@@ -218,6 +226,7 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
   siteUser,
   target = "_self",
   showExternalIcon = false,
+  dropdownPosition = "top",
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPageSelector, setShowPageSelector] = useState(false);
@@ -317,7 +326,7 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
   // If in edit mode, show inline editing
   if (isEditing && isEditable) {
     return (
-      <Card className="relative z-[9998] inline-block py-0">
+      <Card className="relative z-9998 inline-block py-0">
         <CardContent className="space-y-2 p-3">
           <Input
             ref={textInputRef}
@@ -404,6 +413,7 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
           onSelect={handlePageSelect}
           onCancel={() => setShowPageSelector(false)}
           currentHref={href}
+          dropdownPosition={dropdownPosition}
         />
       )}
     </div>

@@ -10,6 +10,7 @@ import { FooterStyle7 } from "./footer-style7";
 import { FooterStyle8 } from "./footer-style8";
 import { FooterStyle9 } from "./footer-style9";
 import { FooterStyle10 } from "./footer-style10";
+import { FooterStyle11 } from "./footer-style11";
 import { FooterEditorDialog } from "./footer-editor-dialog";
 import {
   Footer as FooterType,
@@ -177,6 +178,8 @@ export function Footer({
         return FooterStyle9;
       case "style-10":
         return FooterStyle10;
+      case "style-11":
+        return FooterStyle11;
       default:
         return FooterStyle1;
     }

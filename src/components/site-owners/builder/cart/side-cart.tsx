@@ -204,50 +204,83 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
           </div>
 
           {/* Footer */}
-          {cartItems.length > 0 && (
-            <div className="space-y-3 border-t border-gray-200 bg-gray-50 p-4 sm:space-y-4 sm:p-5">
-              {/* Free Delivery Badge */}
-              <div className="flex items-center justify-center gap-2 text-xs text-gray-600 sm:text-sm">
-                <div className="flex h-4 w-4 items-center justify-center rounded-full bg-green-500">
-                  <span className="text-xs text-white">✓</span>
+          <div className="mt-auto">
+            {cartItems.length > 0 && (
+              <div className="space-y-3 border-t border-gray-200 bg-gray-50 p-4 pb-2 sm:space-y-4 sm:p-5 sm:pb-3">
+                {/* Free Delivery Badge */}
+                <div className="flex items-center justify-center gap-2 text-xs text-gray-600 sm:text-sm">
+                  <div className="flex h-4 w-4 items-center justify-center rounded-full bg-green-500">
+                    <span className="text-xs text-white">✓</span>
+                  </div>
+                  <span>
+                    <strong>Free Delivery</strong> &{" "}
+                    <strong>Easy Returns</strong>
+                  </span>
                 </div>
-                <span>
-                  <strong>Free Delivery</strong> & <strong>Easy Returns</strong>
-                </span>
-              </div>
 
-              {/* Subtotal */}
-              <div className="flex items-center justify-between border-t border-gray-200 pt-3 sm:pt-4">
-                <span className="text-base font-semibold text-gray-900 sm:text-lg">
-                  SUBTOTAL:
-                </span>
-                <span className="text-lg font-bold text-gray-900 sm:text-xl">
-                  Rs.{totalPrice.toLocaleString("en-IN")}
-                </span>
-              </div>
+                {/* Subtotal */}
+                <div className="flex items-center justify-between border-t border-gray-200 pt-3 sm:pt-4">
+                  <span className="text-base font-semibold text-gray-900 sm:text-lg">
+                    SUBTOTAL:
+                  </span>
+                  <span className="text-lg font-bold text-gray-900 sm:text-xl">
+                    Rs.{totalPrice.toLocaleString("en-IN")}
+                  </span>
+                </div>
 
-              {/* Checkout Button */}
-              <Link href={checkoutUrl} className="w-full">
-                <Button
-                  onClick={onClose}
-                  className="w-full rounded-lg py-3 text-sm font-semibold text-white sm:py-4 sm:text-base"
-                  style={{
-                    background: theme.colors.secondary,
-                    fontFamily: theme.fonts.heading,
-                  }}
-                  size="lg"
+                {/* Checkout Button */}
+                <Link href={checkoutUrl} className="w-full">
+                  <Button
+                    onClick={onClose}
+                    className="w-full rounded-lg py-3 text-sm font-semibold text-white sm:py-4 sm:text-base"
+                    style={{
+                      background: theme.colors.secondary,
+                      fontFamily: theme.fonts.heading,
+                    }}
+                    size="lg"
+                  >
+                    GO TO CHECKOUT
+                  </Button>
+                </Link>
+
+                {/* Security Badge */}
+                <div className="flex items-center justify-center gap-2 pt-1 text-xs text-gray-600 sm:pt-2 sm:text-sm">
+                  <span>🔒</span>
+                  <span>Secure Checkout SSL Encryption</span>
+                </div>
+              </div>
+            )}
+
+            {/* Persistent Links */}
+            <div className="border-t border-gray-200 bg-white p-4 sm:p-5">
+              <div className="grid grid-cols-2 gap-3">
+                <Link
+                  href={generateLinkHref("/login", siteUser, pathname)}
+                  className="w-full"
                 >
-                  GO TO CHECKOUT
-                </Button>
-              </Link>
-
-              {/* Security Badge */}
-              <div className="flex items-center justify-center gap-2 pt-1 text-xs text-gray-600 sm:pt-2 sm:text-sm">
-                <span>🔒</span>
-                <span>Secure Checkout SSL Encryption</span>
+                  <Button
+                    variant="outline"
+                    className="w-full text-xs sm:text-sm"
+                    onClick={onClose}
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link
+                  href={generateLinkHref("/wishlist", siteUser, pathname)}
+                  className="w-full"
+                >
+                  <Button
+                    variant="outline"
+                    className="w-full text-xs sm:text-sm"
+                    onClick={onClose}
+                  >
+                    Wishlist
+                  </Button>
+                </Link>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </>
