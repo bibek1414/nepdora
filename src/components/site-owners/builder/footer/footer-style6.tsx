@@ -81,41 +81,43 @@ export function FooterStyle6({
         style={{
           background: `linear-gradient(to bottom, ${primaryColor} 0%, ${darkerPrimary} 100%)`,
         }}
-        className="w-full py-16 md:py-24 text-white/70 px-4 sm:px-6 lg:px-8"
+        className="w-full px-4 py-16 text-white/70 sm:px-6 md:py-24 lg:px-8"
       >
-        <div className="mx-auto max-w-7xl flex flex-col items-start justify-center">
-            {/* Logo */}
-            <div className="mb-6">
+        <div className="mx-auto flex max-w-7xl flex-col items-start justify-center">
+          {/* Logo */}
+          <div className="mb-6">
             <FooterLogo
-                footerData={data}
-                getImageUrl={getImageUrl}
-                textClassName="text-white text-3xl font-bold tracking-tight"
-                imageClassName="h-10"
-                containerClassName="gap-4"
+              footerData={data}
+              getImageUrl={getImageUrl}
+              textClassName="text-white text-3xl font-bold tracking-tight"
+              imageClassName="h-10"
+              containerClassName="gap-4"
             />
-            </div>
+          </div>
 
-            {/* Social Links */}
-            <div className="mb-8 flex items-center gap-4">
+          {/* Social Links */}
+          <div className="mb-8 flex items-center gap-4">
             {data.socialLinks.map(social => (
-                <Link
+              <Link
                 key={social.id}
                 href={social.href || "#"}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all hover:bg-white hover:text-gray-900 hover:-translate-y-1"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all hover:-translate-y-1 hover:bg-white hover:text-gray-900"
                 target={social.href?.startsWith("http") ? "_blank" : undefined}
                 rel={
-                    social.href?.startsWith("http")
+                  social.href?.startsWith("http")
                     ? "noopener noreferrer"
                     : undefined
                 }
-                >
+              >
                 <SocialIcon platform={social.platform} className="h-5 w-5" />
-                </Link>
+              </Link>
             ))}
-            </div>
+          </div>
 
-            {/* Copyright */}
-            <p className="text-left text-sm font-medium opacity-80">{copyrightText}</p>
+          {/* Copyright */}
+          <p className="text-left text-sm font-medium opacity-80">
+            {copyrightText}
+          </p>
         </div>
       </footer>
     </>

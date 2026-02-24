@@ -102,13 +102,13 @@ export const CTATemplate1: React.FC<CTATemplate1Props> = ({
       )}
 
       <div className="relative z-10 container mx-auto max-w-7xl">
-        <div className={`flex flex-col items-start gap-8 max-w-4xl`}>
+        <div className={`flex max-w-4xl flex-col items-start gap-8`}>
           {/* Title */}
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h2"
-            className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl text-left"
+            className="text-left text-4xl leading-tight font-bold tracking-tight sm:text-5xl lg:text-6xl"
             style={{
               color:
                 data.backgroundType === "color" ||
@@ -126,7 +126,7 @@ export const CTATemplate1: React.FC<CTATemplate1Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="text-lg sm:text-xl leading-relaxed max-w-2xl text-left opacity-90"
+              className="max-w-2xl text-left text-lg leading-relaxed opacity-90 sm:text-xl"
               style={{
                 color:
                   data.backgroundType === "color" ||

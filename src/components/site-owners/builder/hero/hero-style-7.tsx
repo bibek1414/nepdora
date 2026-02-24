@@ -166,10 +166,10 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
 
   return (
     <div
-      className="bg-background min-h-screen py-12 px-4 sm:px-6 lg:px-8"
+      className="bg-background min-h-screen px-4 py-12 sm:px-6 lg:px-8"
       data-component-id={componentId}
     >
-      <div className="mx-auto max-w-7xl grid w-full grid-cols-1 gap-8 md:grid-cols-2">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 md:grid-cols-2">
         {collections.map((collection, index) => (
           <div
             key={collection.id}
@@ -255,9 +255,9 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
             )}
 
             {/* Content Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-8 md:p-12 flex flex-col justify-end items-start text-white">
+            <div className="absolute inset-0 flex flex-col items-start justify-end bg-gradient-to-t from-black/80 via-black/20 to-transparent p-8 text-white md:p-12">
               {/* Content */}
-              <div className="relative z-10 w-full transform transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+              <div className="relative z-10 w-full translate-y-4 transform transition-all duration-500 group-hover:translate-y-0">
                 {/* Subtitle */}
                 <EditableText
                   value={collection.subtitle}
@@ -265,7 +265,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                     handleCollectionUpdate(collection.id, "subtitle", value)
                   }
                   as="p"
-                  className="mb-3 text-sm font-semibold tracking-wider uppercase text-white/90"
+                  className="mb-3 text-sm font-semibold tracking-wider text-white/90 uppercase"
                   isEditable={isEditable}
                   placeholder="Enter subtitle..."
                 />
@@ -277,29 +277,29 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                     handleCollectionUpdate(collection.id, "title", value)
                   }
                   as="h2"
-                  className="mb-6 text-3xl font-bold leading-tight md:text-4xl"
+                  className="mb-6 text-3xl leading-tight font-bold md:text-4xl"
                   isEditable={isEditable}
                   placeholder="Enter collection title..."
                   multiline={true}
                 />
 
                 {/* CTA Button */}
-                <div className="opacity-0 transform translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
-                    <EditableLink
+                <div className="translate-y-4 transform opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                  <EditableLink
                     text={collection.buttonText}
                     href={collection.buttonHref}
                     onChange={(text, href) =>
-                        handleCollectionButtonUpdate(collection.id, text, href)
+                      handleCollectionButtonUpdate(collection.id, text, href)
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-white border-b border-white/0 hover:border-white transition-all pb-1"
+                    className="inline-flex items-center gap-2 border-b border-white/0 pb-1 text-sm font-semibold text-white transition-all hover:border-white"
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter URL..."
-                    >
-                        {collection.buttonText}
-                        <ArrowRight className="h-4 w-4" />
-                    </EditableLink>
+                  >
+                    {collection.buttonText}
+                    <ArrowRight className="h-4 w-4" />
+                  </EditableLink>
                 </div>
               </div>
             </div>

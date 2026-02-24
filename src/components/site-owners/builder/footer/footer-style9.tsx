@@ -20,7 +20,7 @@ interface FooterStyle9Props {
 const ColumnHeader: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <h3 className="mb-6 text-2xl font-bold tracking-wide text-white uppercase text-left">
+  <h3 className="mb-6 text-left text-2xl font-bold tracking-wide text-white uppercase">
     {children}
   </h3>
 );

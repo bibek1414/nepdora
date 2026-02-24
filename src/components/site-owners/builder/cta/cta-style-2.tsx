@@ -94,13 +94,13 @@ export const CTATemplate2: React.FC<CTATemplate2Props> = ({
       style={getBackgroundStyle()}
     >
       <div className="relative z-10 container mx-auto max-w-7xl">
-        <div className="flex flex-col items-start text-left max-w-4xl">
+        <div className="flex max-w-4xl flex-col items-start text-left">
           {/* Badge */}
           {data.showBadge && data.badgeText && (
             <div className="mb-6">
               <Badge
                 variant="secondary"
-                className="px-4 py-1.5 text-sm font-medium rounded-full"
+                className="rounded-full px-4 py-1.5 text-sm font-medium"
                 style={{
                   backgroundColor: theme.colors.secondary,
                   color: theme.colors.text,
@@ -136,7 +136,7 @@ export const CTATemplate2: React.FC<CTATemplate2Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h2"
-            className="mb-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl"
+            className="mb-6 text-4xl leading-tight font-bold sm:text-5xl lg:text-6xl"
             style={{ color: theme.colors.primaryForeground }}
             isEditable={isEditable}
             placeholder="Enter CTA title..."
@@ -148,7 +148,7 @@ export const CTATemplate2: React.FC<CTATemplate2Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="mb-10 text-xl leading-relaxed opacity-90 max-w-2xl"
+              className="mb-10 max-w-2xl text-xl leading-relaxed opacity-90"
               style={{ color: theme.colors.primaryForeground }}
               isEditable={isEditable}
               placeholder="Enter description..."

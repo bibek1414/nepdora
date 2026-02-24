@@ -58,7 +58,7 @@ export const ServicesCard3: React.FC<ServicesPost3Props> = ({
   return (
     <CardWrapper>
       <div
-        className={`grid items-center gap-8 md:grid-cols-2 rounded-2xl bg-card p-6 shadow-sm transition-all hover:shadow-md ${index % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
+        className={`bg-card grid items-center gap-8 rounded-2xl p-6 shadow-sm transition-all hover:shadow-md md:grid-cols-2 ${index % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
       >
         <div className={index % 2 !== 0 ? "md:order-2" : ""}>
           <div className="relative aspect-video w-full overflow-hidden rounded-xl">
@@ -71,16 +71,15 @@ export const ServicesCard3: React.FC<ServicesPost3Props> = ({
           </div>
         </div>
         <div className={index % 2 !== 0 ? "md:order-1" : ""}>
-          <h2 className="mb-4 text-2xl font-bold text-foreground">
+          <h2 className="text-foreground mb-4 text-2xl font-bold">
             {services.title}
           </h2>
-          <p className="mb-6 text-muted-foreground line-clamp-3">
-             {services.description?.replace(/<[^>]*>/g, "") || "Read more about this service."}
+          <p className="text-muted-foreground mb-6 line-clamp-3">
+            {services.description?.replace(/<[^>]*>/g, "") ||
+              "Read more about this service."}
           </p>
 
-          <span
-            className="inline-block border-b-2 border-primary pb-1 text-sm font-semibold tracking-wider text-primary"
-          >
+          <span className="border-primary text-primary inline-block border-b-2 pb-1 text-sm font-semibold tracking-wider">
             READ MORE
           </span>
         </div>

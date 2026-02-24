@@ -66,25 +66,27 @@ export const TestimonialStyle8: React.FC<TestimonialStyleProps> = ({
 
         {!isLoading && !error && testimonials.length > 0 && (
           <div className="relative">
-             {isEditable && <div className="absolute inset-0 z-10 pointer-events-none" />}
+            {isEditable && (
+              <div className="pointer-events-none absolute inset-0 z-10" />
+            )}
             <TestimonialCard8
-                testimonials={testimonials.slice(0, pageSize)}
-                title={title}
-                subtitle={subtitle}
-                backgroundImage={backgroundImage}
-                isEditable={isEditable}
-                onTitleChange={handleTitleChange}
-                onSubtitleChange={handleSubtitleChange}
-                onBackgroundChange={handleBackgroundImageChange}
-                onTestimonialClick={testimonial =>
+              testimonials={testimonials.slice(0, pageSize)}
+              title={title}
+              subtitle={subtitle}
+              backgroundImage={backgroundImage}
+              isEditable={isEditable}
+              onTitleChange={handleTitleChange}
+              onSubtitleChange={handleSubtitleChange}
+              onBackgroundChange={handleBackgroundImageChange}
+              onTestimonialClick={testimonial =>
                 onTestimonialClick?.(testimonial.id)
-                }
+              }
             />
           </div>
         )}
 
         {!isLoading && !error && testimonials.length === 0 && (
-          <div className="mt-10 w-full py-20 text-center bg-muted/30 rounded-2xl border border-dashed">
+          <div className="bg-muted/30 mt-10 w-full rounded-2xl border border-dashed py-20 text-center">
             <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-16 w-16 opacity-50" />
             <h3 className="text-foreground mb-4 text-2xl font-semibold">
               No Testimonials Available

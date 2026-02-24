@@ -36,9 +36,9 @@ export const ServicesStyle6: React.FC<ServicesStyleProps> = ({
   const services = servicesData?.results || [];
 
   return (
-    <div className="relative bg-background py-16 md:py-24">
+    <div className="bg-background relative py-16 md:py-24">
       {isLoading && (
-        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+        <div className="container mx-auto max-w-7xl px-4 md:px-8">
           <div className="mb-12 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
             <div className="space-y-4">
               <Skeleton className="h-6 w-32 rounded-md" />
@@ -69,7 +69,7 @@ export const ServicesStyle6: React.FC<ServicesStyleProps> = ({
       )}
 
       {!isLoading && !error && services.length > 0 && (
-        <div className="relative container mx-auto px-4 md:px-8 max-w-7xl">
+        <div className="relative container mx-auto max-w-7xl px-4 md:px-8">
           {isEditable && (
             <div className="absolute inset-0 z-10 bg-transparent" />
           )}
@@ -87,7 +87,7 @@ export const ServicesStyle6: React.FC<ServicesStyleProps> = ({
 
       {!isLoading && !error && services.length === 0 && (
         <div className="container mx-auto px-4">
-          <div className="bg-muted/30 rounded-2xl py-20 text-center border border-dashed">
+          <div className="bg-muted/30 rounded-2xl border border-dashed py-20 text-center">
             <Briefcase className="text-muted-foreground mx-auto mb-4 h-16 w-16 opacity-50" />
             <h3 className="text-foreground mb-2 text-xl font-semibold">
               No Services Found

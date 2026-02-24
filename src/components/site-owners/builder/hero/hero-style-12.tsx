@@ -76,10 +76,10 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
 
   return (
     <section
-      className="min-h-screen flex items-center justify-center p-4 lg:p-8"
+      className="flex min-h-screen items-center justify-center p-4 lg:p-8"
       style={{ backgroundColor: theme.colors.background }}
     >
-      <div className="relative mx-auto flex min-h-[600px] w-full max-w-7xl items-center overflow-hidden rounded-3xl bg-white/5 p-6 md:p-12 shadow-2xl ring-1 ring-white/10">
+      <div className="relative mx-auto flex min-h-[600px] w-full max-w-7xl items-center overflow-hidden rounded-3xl bg-white/5 p-6 shadow-2xl ring-1 ring-white/10 md:p-12">
         {/* Background decoration: Eiffel Tower outline */}
         <div className="pointer-events-none absolute bottom-0 left-0 z-0 w-[300px] text-white opacity-[0.05] lg:w-[500px]">
           <EiffelTowerBg />
@@ -87,19 +87,19 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
 
         {/* Accent decorative circle */}
         <div
-          className="absolute -right-20 -bottom-20 z-0 h-64 w-64 rounded-full blur-3xl opacity-50"
+          className="absolute -right-20 -bottom-20 z-0 h-64 w-64 rounded-full opacity-50 blur-3xl"
           style={{ backgroundColor: theme.colors.primary }}
         ></div>
 
         <div className="relative z-10 grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left Content */}
-          <div className="flex flex-col items-start text-left space-y-8">
+          <div className="flex flex-col items-start space-y-8 text-left">
             {/* Title */}
             <EditableText
               value={data.title || "Visa Made Easy\nDreams Made\nPossible"}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl tracking-tight"
+              className="text-4xl leading-tight font-bold tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl"
               isEditable={isEditable}
               placeholder="Visa Made Easy\nDreams Made\nPossible"
               useHeadingFont={true}
@@ -117,7 +117,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                 }}
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="group flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:bg-white hover:text-black hover:shadow-lg backdrop-blur-sm"
+                className="group flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-black hover:shadow-lg"
                 textPlaceholder="Button text..."
                 hrefPlaceholder="Enter URL..."
               >
@@ -160,7 +160,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
 
           {/* Right Content - Image */}
           <div className="relative flex justify-center lg:justify-end">
-            <div className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl border-[6px] border-white/10 shadow-2xl transition-transform duration-500 hover:scale-[1.02] hover:shadow-3xl">
+            <div className="hover:shadow-3xl relative z-10 w-full max-w-md overflow-hidden rounded-2xl border-[6px] border-white/10 shadow-2xl transition-transform duration-500 hover:scale-[1.02]">
               <EditableImage
                 src={getImageUrl(data.imageUrl, { width: 800 }) || imageUrl}
                 alt={data.imageAlt || "Happy traveler in Paris"}
@@ -183,9 +183,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
               />
 
               {/* Overlay gradient */}
-              <div
-                className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"
-              ></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
             </div>
           </div>
         </div>

@@ -60,7 +60,7 @@ export function FooterStyle8({
                 containerClassName="gap-3"
               />
             </div>
-            <p className="max-w-md text-lg leading-relaxed text-gray-400 text-left">
+            <p className="max-w-md text-left text-lg leading-relaxed text-gray-400">
               {data.description}
             </p>
           </div>
@@ -135,7 +135,7 @@ export function FooterStyle8({
             </div>
 
             {/* Contact Column */}
-            <div className="flex flex-1 flex-col justify-start gap-8 p-8 lg:p-16 text-left">
+            <div className="flex flex-1 flex-col justify-start gap-8 p-8 text-left lg:p-16">
               {data.contactInfo.address && (
                 <div className="flex items-start gap-4">
                   <div className="mt-1">

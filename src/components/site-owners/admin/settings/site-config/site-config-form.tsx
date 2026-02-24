@@ -17,9 +17,15 @@ import {
   Image as ImageIcon,
   Link as LinkIcon,
   X,
+  Building,
+  Phone,
+  Mail,
+  Clock,
+  Info,
 } from "lucide-react";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { useAuth } from "@/hooks/use-auth";
+import Tiptap from "@/components/ui/tip-tap";
 
 interface FieldErrors {
   [fieldName: string]: string[];
@@ -34,6 +40,12 @@ export const SiteConfigForm: React.FC = () => {
   console.log("siteConfig", siteConfig);
 
   const [formData, setFormData] = useState({
+    business_name: "",
+    business_details: "",
+    address: "",
+    phone: "",
+    email: "",
+    working_hours: "",
     instagram_url: "",
     facebook_url: "",
     twitter_url: "",
@@ -61,6 +73,12 @@ export const SiteConfigForm: React.FC = () => {
   useEffect(() => {
     if (siteConfig && !hasJustCreated) {
       setFormData({
+        business_name: siteConfig.business_name || "",
+        business_details: siteConfig.business_details || "",
+        address: siteConfig.address || "",
+        phone: siteConfig.phone || "",
+        email: siteConfig.email || "",
+        working_hours: siteConfig.working_hours || "",
         instagram_url: siteConfig.instagram_url || "",
         facebook_url: siteConfig.facebook_url || "",
         twitter_url: siteConfig.twitter_url || "",
@@ -122,6 +140,12 @@ export const SiteConfigForm: React.FC = () => {
     // Reset form to original state
     if (siteConfig) {
       setFormData({
+        business_name: siteConfig.business_name || "",
+        business_details: siteConfig.business_details || "",
+        address: siteConfig.address || "",
+        phone: siteConfig.phone || "",
+        email: siteConfig.email || "",
+        working_hours: siteConfig.working_hours || "",
         instagram_url: siteConfig.instagram_url || "",
         facebook_url: siteConfig.facebook_url || "",
         twitter_url: siteConfig.twitter_url || "",
@@ -147,8 +171,17 @@ export const SiteConfigForm: React.FC = () => {
   const validateSocialUrls = (): { valid: boolean; errors: FieldErrors } => {
     const errors: FieldErrors = {};
 
+    const urlFields = [
+      "instagram_url",
+      "facebook_url",
+      "twitter_url",
+      "linkedin_url",
+      "youtube_url",
+      "tiktok_url",
+    ];
+
     Object.entries(formData).forEach(([key, value]) => {
-      if (value && !validateUrl(value)) {
+      if (urlFields.includes(key) && value && !validateUrl(value)) {
         errors[key] = ["Enter a valid URL"];
       }
     });
@@ -384,6 +417,168 @@ export const SiteConfigForm: React.FC = () => {
                 <p className="text-muted-foreground text-sm">
                   Your site logo displayed in the header
                 </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Business Information Section */}
+        <Card className="p-4">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building className="h-5 w-5" />
+              Business Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="business_name">Business Name</Label>
+              <Input
+                id="business_name"
+                name="business_name"
+                value={formData.business_name}
+                onChange={handleInputChange}
+                placeholder="Enter business name"
+                className={fieldErrors.business_name ? "border-red-500" : ""}
+              />
+              {fieldErrors.business_name && (
+                <p className="text-sm text-red-500">
+                  {fieldErrors.business_name.join(", ")}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2">
+                <Info className="h-4 w-4" />
+                Business Details
+              </Label>
+              <div
+                className={
+                  fieldErrors.business_details
+                    ? "rounded-md border border-red-500"
+                    : ""
+                }
+              >
+                <Tiptap
+                  value={formData.business_details}
+                  onChange={content => {
+                    setFormData(prev => ({
+                      ...prev,
+                      business_details: content,
+                    }));
+                    if (!isCreateMode) {
+                      setModifiedFields(prev =>
+                        new Set(prev).add("business_details")
+                      );
+                    }
+                  }}
+                  toolbar="standard"
+                  placeholder="Tell us about your business..."
+                  minHeight="200px"
+                />
+              </div>
+              {fieldErrors.business_details && (
+                <p className="text-sm text-red-500">
+                  {fieldErrors.business_details.join(", ")}
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Contact Information Section */}
+        <Card className="p-4">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Phone className="h-5 w-5" />
+              Contact Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  Email Address
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="business@example.com"
+                  className={fieldErrors.email ? "border-red-500" : ""}
+                />
+                {fieldErrors.email && (
+                  <p className="text-sm text-red-500">
+                    {fieldErrors.email.join(", ")}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  Phone Number
+                </Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="+977 98XXXXXXXX"
+                  className={fieldErrors.phone ? "border-red-500" : ""}
+                />
+                {fieldErrors.phone && (
+                  <p className="text-sm text-red-500">
+                    {fieldErrors.phone.join(", ")}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="address" className="flex items-center gap-2">
+                  <Building className="h-4 w-4" />
+                  Physical Address
+                </Label>
+                <Input
+                  id="address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  placeholder="Address, City, Country"
+                  className={fieldErrors.address ? "border-red-500" : ""}
+                />
+                {fieldErrors.address && (
+                  <p className="text-sm text-red-500">
+                    {fieldErrors.address.join(", ")}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label
+                  htmlFor="working_hours"
+                  className="flex items-center gap-2"
+                >
+                  <Clock className="h-4 w-4" />
+                  Working Hours
+                </Label>
+                <Input
+                  id="working_hours"
+                  name="working_hours"
+                  value={formData.working_hours}
+                  onChange={handleInputChange}
+                  placeholder="Mon-Fri: 9am - 5pm"
+                  className={fieldErrors.working_hours ? "border-red-500" : ""}
+                />
+                {fieldErrors.working_hours && (
+                  <p className="text-sm text-red-500">
+                    {fieldErrors.working_hours.join(", ")}
+                  </p>
+                )}
               </div>
             </div>
           </CardContent>

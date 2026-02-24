@@ -77,7 +77,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   value={data.title}
                   onChange={handleTextUpdate("title")}
                   as="h1"
-                  className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl text-foreground"
+                  className="text-foreground text-4xl leading-tight font-bold tracking-tight sm:text-5xl lg:text-6xl"
                   isEditable={isEditable}
                   placeholder="Enter main title..."
                   multiline={true}
@@ -87,7 +87,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   value={data.subtitle}
                   onChange={handleTextUpdate("subtitle")}
                   as="h2"
-                  className="text-3xl font-bold leading-tight text-primary sm:text-4xl lg:text-5xl"
+                  className="text-primary text-3xl leading-tight font-bold sm:text-4xl lg:text-5xl"
                   isEditable={isEditable}
                   placeholder="Highlighted text..."
                   multiline={true}
@@ -99,7 +99,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="max-w-lg text-lg leading-relaxed text-muted-foreground sm:text-xl"
+                className="text-muted-foreground max-w-lg text-lg leading-relaxed sm:text-xl"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -126,7 +126,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                         color: theme.colors.primaryForeground,
                         fontFamily: theme.fonts.body,
                       }}
-                      className="px-8 py-4 rounded-lg font-medium shadow-lg transition-all hover:shadow-xl hover:-translate-y-1 flex items-center gap-2"
+                      className="flex items-center gap-2 rounded-lg px-8 py-4 font-medium shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
                       textPlaceholder="Button text..."
                       hrefPlaceholder="Enter URL..."
                     >
@@ -142,7 +142,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
             </div>
 
             {/* Stats */}
-            <div className="flex flex-wrap gap-8 pt-8 border-t border-muted w-full">
+            <div className="border-muted flex w-full flex-wrap gap-8 border-t pt-8">
               <div className="min-w-[120px]">
                 <EditableText
                   value={firstStatNumber}
@@ -152,7 +152,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                     handleTextUpdate("statsNumber")(newValue);
                   }}
                   as="h3"
-                  className="text-3xl font-bold text-foreground sm:text-4xl"
+                  className="text-foreground text-3xl font-bold sm:text-4xl"
                   isEditable={isEditable}
                   placeholder="788+"
                 />
@@ -164,7 +164,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                     handleTextUpdate("statsLabel")(newValue);
                   }}
                   as="div"
-                  className="mt-1 text-sm font-medium text-muted-foreground uppercase tracking-wide"
+                  className="text-muted-foreground mt-1 text-sm font-medium tracking-wide uppercase"
                   isEditable={isEditable}
                   placeholder="Stats description..."
                   multiline={true}
@@ -179,7 +179,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                     handleTextUpdate("statsNumber")(newValue);
                   }}
                   as="h3"
-                  className="text-3xl font-bold text-foreground sm:text-4xl"
+                  className="text-foreground text-3xl font-bold sm:text-4xl"
                   isEditable={isEditable}
                   placeholder="8k+"
                 />
@@ -191,7 +191,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                     handleTextUpdate("statsLabel")(newValue);
                   }}
                   as="div"
-                  className="mt-1 text-sm font-medium text-muted-foreground uppercase tracking-wide"
+                  className="text-muted-foreground mt-1 text-sm font-medium tracking-wide uppercase"
                   isEditable={isEditable}
                   placeholder="Second stats description..."
                   multiline={true}
@@ -202,7 +202,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
 
           {/* Right Content - Product Image */}
           <div className="relative flex items-center justify-center lg:order-2 lg:justify-end">
-            <div className="relative w-full max-w-lg lg:max-w-xl aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl transition-all hover:shadow-3xl">
+            <div className="hover:shadow-3xl relative aspect-[4/5] w-full max-w-lg overflow-hidden rounded-2xl shadow-2xl transition-all lg:max-w-xl">
               {/* Main Product Image */}
               {data.showImage ? (
                 <EditableImage
@@ -210,7 +210,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   alt={data.imageAlt || "Hero image"}
                   onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
                   isEditable={isEditable}
-                  className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
+                  className="h-full w-full transform object-cover transition-transform duration-700 hover:scale-105"
                   width={800}
                   height={1000}
                   cloudinaryOptions={{
@@ -224,13 +224,13 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   }}
                 />
               ) : (
-                <div className="w-full h-full bg-muted flex items-center justify-center">
+                <div className="bg-muted flex h-full w-full items-center justify-center">
                   <EditableImage
                     src=""
                     alt="Hero image placeholder"
                     onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
                     isEditable={isEditable}
-                    className="w-full h-full object-cover opacity-0"
+                    className="h-full w-full object-cover opacity-0"
                     width={800}
                     height={1000}
                     cloudinaryOptions={{
@@ -243,8 +243,8 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                       text: "Upload main product image",
                     }}
                   />
-                  <div className="absolute inset-0 flex items-center justify-center text-muted-foreground pointer-events-none">
-                      Upload Image
+                  <div className="text-muted-foreground pointer-events-none absolute inset-0 flex items-center justify-center">
+                    Upload Image
                   </div>
                 </div>
               )}

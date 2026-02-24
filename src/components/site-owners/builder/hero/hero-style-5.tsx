@@ -207,8 +207,8 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
       )}
 
       {/* Content - Make sure it's above the overlay */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="max-w-3xl flex flex-col items-start text-left space-y-8">
+      <div className="relative z-10 container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex max-w-3xl flex-col items-start space-y-8 text-left">
           {/* Badge/Subtitle */}
           <div className="inline-block">
             <EditableText
@@ -219,7 +219,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
               style={{
                 color: "#D1D5DB", // text-gray-300 equivalent
               }}
-              className="text-sm font-semibold tracking-wider uppercase border-l-2 pl-4 border-white/50"
+              className="border-l-2 border-white/50 pl-4 text-sm font-semibold tracking-wider uppercase"
               isEditable={isEditable}
               placeholder="Enter subtitle/badge text..."
             />
@@ -231,7 +231,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h2"
-            className="text-5xl font-bold leading-tight tracking-tight sm:text-6xl lg:text-7xl text-white"
+            className="text-5xl leading-tight font-bold tracking-tight text-white sm:text-6xl lg:text-7xl"
             isEditable={isEditable}
             placeholder="Enter main title..."
             multiline={true}
@@ -243,7 +243,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
             value={data.description}
             onChange={handleTextUpdate("description")}
             as="p"
-            className="text-xl text-gray-300 leading-relaxed max-w-2xl"
+            className="max-w-2xl text-xl leading-relaxed text-gray-300"
             isEditable={isEditable}
             placeholder="Enter description..."
             multiline={true}
@@ -270,7 +270,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
                   color: theme.colors.primaryForeground,
                   fontFamily: theme.fonts.body,
                 }}
-                className="px-8 py-4 rounded-lg font-medium transition-transform hover:scale-105"
+                className="rounded-lg px-8 py-4 font-medium transition-transform hover:scale-105"
                 textPlaceholder="Primary button text..."
                 hrefPlaceholder="Enter URL..."
               />
@@ -290,7 +290,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
                 }
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="px-8 py-4 rounded-lg font-medium border border-white/30 hover:bg-white/10 transition-colors text-white"
+                className="rounded-lg border border-white/30 px-8 py-4 font-medium text-white transition-colors hover:bg-white/10"
                 textPlaceholder="Secondary button text..."
                 hrefPlaceholder="Enter URL..."
               />

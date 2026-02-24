@@ -84,7 +84,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24 lg:py-32">
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
           {/* Left Content */}
-          <div className="flex max-w-2xl flex-col items-start text-left space-y-8">
+          <div className="flex max-w-2xl flex-col items-start space-y-8 text-left">
             {/* Subtitle with line indicator */}
             {data.subtitle && (
               <div className="flex items-center space-x-4">
@@ -112,7 +112,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
               value={data.title || "Best Solution For Your Business Strategy."}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-5xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-7xl text-foreground"
+              className="text-foreground text-5xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-7xl"
               style={{
                 fontFamily: theme.fonts.heading,
               }}
@@ -127,7 +127,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="max-w-lg text-xl text-muted-foreground leading-relaxed"
+                className="text-muted-foreground max-w-lg text-xl leading-relaxed"
                 style={{
                   fontFamily: theme.fonts.body,
                 }}
@@ -160,7 +160,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
                 }}
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="inline-flex h-auto rounded-md px-8 py-4 text-lg font-semibold shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
+                className="inline-flex h-auto rounded-md px-8 py-4 text-lg font-semibold shadow-lg transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
                 style={{
                   backgroundColor: theme.colors.primary,
                   color: theme.colors.primaryForeground,
@@ -175,9 +175,9 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
           {/* Right Image */}
           <div className="relative w-full lg:-mt-8">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-2xl">
-                <EditableImage
+              <EditableImage
                 src={
-                    getImageUrl(data.imageUrl, { width: 800 }) || defaultImageUrl
+                  getImageUrl(data.imageUrl, { width: 800 }) || defaultImageUrl
                 }
                 alt={data.imageAlt || "Business strategy meeting"}
                 onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
@@ -187,19 +187,19 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
                 width={800}
                 height={600}
                 cloudinaryOptions={{
-                    folder: "hero-images",
-                    resourceType: "image",
+                  folder: "hero-images",
+                  resourceType: "image",
                 }}
                 showAltEditor={isEditable}
                 placeholder={{
-                    width: 800,
-                    height: 600,
-                    text: "Upload hero image",
+                  width: 800,
+                  height: 600,
+                  text: "Upload hero image",
                 }}
-                />
+              />
             </div>
             {/* Decorative elements */}
-            <div className="absolute -bottom-6 -right-6 -z-10 h-full w-full rounded-2xl bg-muted/30" />
+            <div className="bg-muted/30 absolute -right-6 -bottom-6 -z-10 h-full w-full rounded-2xl" />
           </div>
         </div>
       </div>

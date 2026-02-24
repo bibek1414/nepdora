@@ -131,7 +131,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
               value={data.title || "Innovation Meets Elegance"}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="mb-6 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl lg:text-7xl tracking-tight text-foreground"
+              className="text-foreground mb-6 text-4xl leading-tight font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
               style={{
                 fontFamily: theme.fonts.heading,
               }}
@@ -146,7 +146,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="mb-8 max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
+                className="text-muted-foreground mb-8 max-w-xl text-lg leading-relaxed sm:text-xl"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -182,7 +182,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
           </div>
 
           {/* Top left image */}
-          <div className="absolute top-0 left-0 h-40 w-32 -rotate-6 transform overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:rotate-0 hover:scale-105 sm:h-64 sm:w-56 md:h-80 md:w-72 lg:h-96 lg:w-80">
+          <div className="absolute top-0 left-0 h-40 w-32 -rotate-6 transform overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:scale-105 hover:rotate-0 sm:h-64 sm:w-56 md:h-80 md:w-72 lg:h-96 lg:w-80">
             <EditableImage
               key={`collage-${componentId}-0-${collageImages[0].url}`}
               src={collageImages[0].url}
@@ -210,7 +210,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
           </div>
 
           {/* Top right image */}
-          <div className="absolute top-0 right-0 h-44 w-36 rotate-3 transform overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:rotate-0 hover:scale-105 sm:h-72 sm:w-56 md:h-88 md:w-72 lg:h-[400px] lg:w-80">
+          <div className="absolute top-0 right-0 h-44 w-36 rotate-3 transform overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:scale-105 hover:rotate-0 sm:h-72 sm:w-56 md:h-88 md:w-72 lg:h-[400px] lg:w-80">
             <EditableImage
               key={`collage-${componentId}-1-${collageImages[1].url}`}
               src={collageImages[1].url}
@@ -238,7 +238,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
           </div>
 
           {/* Bottom left image */}
-          <div className="absolute bottom-0 left-10 h-36 w-28 -rotate-3 transform overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:rotate-0 hover:scale-105 sm:left-20 sm:h-56 sm:w-48 md:left-32 md:h-72 md:w-64 lg:left-40 lg:h-80 lg:w-72">
+          <div className="absolute bottom-0 left-10 h-36 w-28 -rotate-3 transform overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:scale-105 hover:rotate-0 sm:left-20 sm:h-56 sm:w-48 md:left-32 md:h-72 md:w-64 lg:left-40 lg:h-80 lg:w-72">
             <EditableImage
               key={`collage-${componentId}-2-${collageImages[2].url}`}
               src={collageImages[2].url}
@@ -266,7 +266,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
           </div>
 
           {/* Bottom right image */}
-          <div className="absolute right-10 bottom-0 h-40 w-32 rotate-6 transform overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:rotate-0 hover:scale-105 sm:right-20 sm:h-64 sm:w-56 md:right-32 md:h-80 md:w-72 lg:right-40 lg:h-96 lg:w-80">
+          <div className="absolute right-10 bottom-0 h-40 w-32 rotate-6 transform overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:scale-105 hover:rotate-0 sm:right-20 sm:h-64 sm:w-56 md:right-32 md:h-80 md:w-72 lg:right-40 lg:h-96 lg:w-80">
             <EditableImage
               key={`collage-${componentId}-3-${collageImages[3].url}`}
               src={collageImages[3].url}

@@ -115,7 +115,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
             value={data.title || "Our Latest Creations"}
             onChange={handleTextUpdate("title")}
             isEditable={isEditable}
-            className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4"
+            className="text-foreground mb-4 text-4xl font-bold tracking-tight sm:text-5xl"
           />
           <EditableText
             value={
@@ -124,13 +124,15 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
             }
             onChange={handleTextUpdate("subtitle")}
             isEditable={isEditable}
-            className="text-lg text-muted-foreground leading-relaxed max-w-3xl"
+            className="text-muted-foreground max-w-3xl text-lg leading-relaxed"
           />
         </div>
 
         <div className="flex w-full flex-wrap items-center gap-4">
           {filteredImages.map((image, index) => {
-            const actualIndex = data.images.findIndex(img => img.id === image.id);
+            const actualIndex = data.images.findIndex(
+              img => img.id === image.id
+            );
             return (
               <div
                 key={image.id}
@@ -194,20 +196,24 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
                 )}
 
                 {/* Overlay Text */}
-                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    {image.title && (
-                        <h3 className="text-white text-xl font-bold mb-1">{image.title}</h3>
-                    )}
-                    {image.description && (
-                        <p className="text-white/80 text-sm line-clamp-2">{image.description}</p>
-                    )}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                  {image.title && (
+                    <h3 className="mb-1 text-xl font-bold text-white">
+                      {image.title}
+                    </h3>
+                  )}
+                  {image.description && (
+                    <p className="line-clamp-2 text-sm text-white/80">
+                      {image.description}
+                    </p>
+                  )}
                 </div>
               </div>
             );
           })}
 
           {isEditable && (
-            <div className="relative flex h-[450px] w-64 grow items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors">
+            <div className="relative flex h-[450px] w-64 grow items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:bg-gray-100">
               <label
                 htmlFor={`gallery5-add-${componentId}`}
                 className="flex cursor-pointer flex-col items-center gap-2"
@@ -220,7 +226,9 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
                 ) : (
                   <>
                     <Plus className="h-8 w-8 text-gray-400" />
-                    <span className="text-sm text-gray-500 font-medium">Add Image</span>
+                    <span className="text-sm font-medium text-gray-500">
+                      Add Image
+                    </span>
                     <input
                       id={`gallery5-add-${componentId}`}
                       type="file"

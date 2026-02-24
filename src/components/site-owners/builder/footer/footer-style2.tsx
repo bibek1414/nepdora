@@ -105,11 +105,11 @@ export function FooterStyle2({
       <footer className="bg-muted/50 border-t">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           {/* Main Content Card */}
-          <Card className="mb-8 border-none shadow-sm bg-white/50 backdrop-blur-sm">
+          <Card className="mb-8 border-none bg-white/50 shadow-sm backdrop-blur-sm">
             <CardContent className="p-8 md:p-12">
               <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
                 {/* Company Section */}
-                <div className="lg:col-span-1 space-y-6">
+                <div className="space-y-6 lg:col-span-1">
                   {/* Logo */}
                   <div>
                     <FooterLogo
@@ -123,15 +123,15 @@ export function FooterStyle2({
 
                   <div className="flex flex-col gap-4">
                     <Badge
-                        className="w-fit text-white"
-                        style={{
+                      className="w-fit text-white"
+                      style={{
                         backgroundColor: theme.colors.primary,
-                        }}
+                      }}
                     >
-                        {data.companyName}
+                      {data.companyName}
                     </Badge>
                     <p className="text-muted-foreground leading-relaxed">
-                        {data.description}
+                      {data.description}
                     </p>
                   </div>
 
@@ -141,7 +141,7 @@ export function FooterStyle2({
                       <Link
                         key={social.id}
                         href={social.href || "#"}
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm transition-all hover:bg-primary hover:text-white hover:-translate-y-1"
+                        className="hover:bg-primary flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm transition-all hover:-translate-y-1 hover:text-white"
                         target={
                           social.href?.startsWith("http") ? "_blank" : undefined
                         }
@@ -214,7 +214,7 @@ export function FooterStyle2({
 
           {/* Newsletter Card */}
           {data.newsletter.enabled && (
-            <Card className="mb-8 border-none shadow-sm bg-primary/5">
+            <Card className="bg-primary/5 mb-8 border-none shadow-sm">
               <CardContent className="p-8">
                 <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
                   <div>
@@ -227,9 +227,11 @@ export function FooterStyle2({
                   </div>
 
                   {subscriptionStatus === "success" ? (
-                    <div className="flex items-center gap-2 text-green-600 bg-green-50 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 rounded-lg bg-green-50 p-4 text-green-600">
                       <CheckCircle className="h-5 w-5" />
-                      <span className="text-sm font-medium">Successfully subscribed!</span>
+                      <span className="text-sm font-medium">
+                        Successfully subscribed!
+                      </span>
                     </div>
                   ) : (
                     <form onSubmit={handleNewsletterSubmit} className="w-full">
@@ -262,7 +264,7 @@ export function FooterStyle2({
                         </div>
 
                         {subscriptionStatus === "error" && errorMessage && (
-                          <div className="flex items-center gap-2 text-red-600 text-sm">
+                          <div className="flex items-center gap-2 text-sm text-red-600">
                             <AlertCircle className="h-4 w-4" />
                             <span>{errorMessage}</span>
                           </div>
@@ -280,28 +282,24 @@ export function FooterStyle2({
             <CardContent className="p-6">
               <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-3">
                 {data.contactInfo.email && (
-                  <div className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors">
-                    <div className="p-2 rounded-full bg-primary/10 text-primary">
-                        <Mail className="h-4 w-4" />
+                  <div className="text-muted-foreground hover:text-foreground flex items-center gap-3 transition-colors">
+                    <div className="bg-primary/10 text-primary rounded-full p-2">
+                      <Mail className="h-4 w-4" />
                     </div>
-                    <span className="text-sm">
-                      {data.contactInfo.email}
-                    </span>
+                    <span className="text-sm">{data.contactInfo.email}</span>
                   </div>
                 )}
                 {data.contactInfo.phone && (
-                  <div className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors">
-                    <div className="p-2 rounded-full bg-primary/10 text-primary">
-                        <Phone className="h-4 w-4" />
+                  <div className="text-muted-foreground hover:text-foreground flex items-center gap-3 transition-colors">
+                    <div className="bg-primary/10 text-primary rounded-full p-2">
+                      <Phone className="h-4 w-4" />
                     </div>
-                    <span className="text-sm">
-                      {data.contactInfo.phone}
-                    </span>
+                    <span className="text-sm">{data.contactInfo.phone}</span>
                   </div>
                 )}
-                <div className="flex items-center justify-start md:justify-end gap-2 text-sm text-muted-foreground">
-                    <span>{data.copyright}</span>
-                    <Heart className="h-3 w-3 text-red-500 fill-current" />
+                <div className="text-muted-foreground flex items-center justify-start gap-2 text-sm md:justify-end">
+                  <span>{data.copyright}</span>
+                  <Heart className="h-3 w-3 fill-current text-red-500" />
                 </div>
               </div>
             </CardContent>

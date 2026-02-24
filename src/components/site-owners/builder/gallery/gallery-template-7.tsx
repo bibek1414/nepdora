@@ -123,11 +123,11 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
             return (
               <div
                 key={image.id}
-                className="relative overflow-hidden rounded-xl shadow-sm hover:shadow-lg transition-all group"
+                className="group relative overflow-hidden rounded-xl shadow-sm transition-all hover:shadow-lg"
               >
                 <div
-                    className="relative aspect-square w-full cursor-pointer"
-                    onClick={() => !isEditable && setSelectedImage(image)}
+                  className="relative aspect-square w-full cursor-pointer"
+                  onClick={() => !isEditable && setSelectedImage(image)}
                 >
                   <EditableImage
                     src={getImageUrl(image.image)}
@@ -147,8 +147,8 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
                   />
 
                   {!isEditable && (
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                        <ZoomIn className="text-white w-8 h-8 drop-shadow-lg" />
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
+                      <ZoomIn className="h-8 w-8 text-white drop-shadow-lg" />
                     </div>
                   )}
 
@@ -179,7 +179,7 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
           })}
 
           {isEditable && (
-            <div className="flex aspect-square w-full items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors">
+            <div className="flex aspect-square w-full items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:bg-gray-100">
               <label
                 htmlFor={`gallery7-add-${componentId}`}
                 className="flex cursor-pointer flex-col items-center gap-2"
@@ -192,7 +192,9 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
                 ) : (
                   <>
                     <Plus className="h-8 w-8 text-gray-400" />
-                    <span className="text-sm text-gray-500 font-medium">Add Image</span>
+                    <span className="text-sm font-medium text-gray-500">
+                      Add Image
+                    </span>
                     <input
                       id={`gallery7-add-${componentId}`}
                       type="file"
@@ -213,16 +215,16 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
           open={!!selectedImage}
           onOpenChange={() => setSelectedImage(null)}
         >
-          <DialogContent className="max-w-5xl p-0 bg-transparent border-none shadow-none overflow-hidden sm:max-w-fit">
-            <div className="relative group">
-                <img
+          <DialogContent className="max-w-5xl overflow-hidden border-none bg-transparent p-0 shadow-none sm:max-w-fit">
+            <div className="group relative">
+              <img
                 src={getImageUrl(selectedImage.image)}
                 alt={selectedImage.image_alt_description}
-                className="max-h-[85vh] w-auto max-w-full rounded-lg shadow-2xl object-contain mx-auto"
-                />
-                <DialogClose className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors">
-                    <X className="h-5 w-5" />
-                </DialogClose>
+                className="mx-auto max-h-[85vh] w-auto max-w-full rounded-lg object-contain shadow-2xl"
+              />
+              <DialogClose className="absolute top-4 right-4 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70">
+                <X className="h-5 w-5" />
+              </DialogClose>
             </div>
           </DialogContent>
         </Dialog>

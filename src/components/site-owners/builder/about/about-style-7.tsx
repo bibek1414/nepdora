@@ -127,7 +127,7 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
     <div className="bg-background-light dark:bg-background-dark font-display min-h-screen text-gray-800 dark:text-gray-200">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-24 lg:px-8">
         {/* Header */}
-        <div className="text-left mb-16">
+        <div className="mb-16 text-left">
           <EditableText
             value={data.subtitle}
             onChange={handleTextUpdate("subtitle")}
@@ -135,7 +135,7 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
             style={{
               color: theme.colors.primary,
             }}
-            className="text-lg font-bold uppercase tracking-wider mb-2"
+            className="mb-2 text-lg font-bold tracking-wider uppercase"
             isEditable={isEditable}
             placeholder="What we do"
           />
@@ -143,7 +143,7 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h2"
-            className="text-4xl md:text-5xl font-bold leading-tight"
+            className="text-4xl leading-tight font-bold md:text-5xl"
             style={{
               color: theme.colors.secondary,
               fontFamily: theme.fonts.heading,
@@ -222,7 +222,7 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
                   value={training.title}
                   onChange={handleTrainingUpdate(idx, "title")}
                   as="h3"
-                  className="text-white text-xl font-bold"
+                  className="text-xl font-bold text-white"
                   isEditable={isEditable}
                   placeholder="Training Title"
                 />

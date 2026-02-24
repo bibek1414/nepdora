@@ -122,7 +122,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
             value={data.title || "Our Latest Creations"}
             onChange={handleTextUpdate("title")}
             isEditable={isEditable}
-            className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4"
+            className="text-foreground mb-4 text-4xl font-bold tracking-tight sm:text-5xl"
           />
           <EditableText
             value={
@@ -131,7 +131,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
             }
             onChange={handleTextUpdate("subtitle")}
             isEditable={isEditable}
-            className="text-lg text-muted-foreground leading-relaxed max-w-3xl"
+            className="text-muted-foreground max-w-3xl text-lg leading-relaxed"
           />
         </div>
 
@@ -143,11 +143,11 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
             return (
               <div
                 key={image.id}
-                className="relative overflow-hidden rounded-xl h-[300px] flex-grow min-w-[250px] md:min-w-[300px] lg:min-w-[350px] shadow-sm hover:shadow-lg transition-shadow group"
+                className="group relative h-[300px] min-w-[250px] flex-grow overflow-hidden rounded-xl shadow-sm transition-shadow hover:shadow-lg md:min-w-[300px] lg:min-w-[350px]"
               >
                 <div
-                    className="relative w-full h-full"
-                    onClick={() => !isEditable && setSelectedImage(image)}
+                  className="relative h-full w-full"
+                  onClick={() => !isEditable && setSelectedImage(image)}
                 >
                   <EditableImage
                     src={getImageUrl(image.image)}
@@ -156,7 +156,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                       handleImageUpdateLocal(actualIndex, imageUrl, altText)
                     }
                     isEditable={isEditable}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     cloudinaryOptions={{
                       folder: "gallery-images",
                       resourceType: "image",
@@ -189,7 +189,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                   )}
                 </div>
 
-                <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 via-transparent to-transparent p-6 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none">
+                <div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 via-transparent to-transparent p-6 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   {image.title && (
                     <EditableText
                       value={image.title}
@@ -206,7 +206,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
           })}
 
           {isEditable && (
-            <div className="flex h-[300px] min-w-[250px] flex-grow items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/50 hover:bg-gray-50 transition-colors">
+            <div className="flex h-[300px] min-w-[250px] flex-grow items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/50 transition-colors hover:bg-gray-50">
               <label
                 htmlFor={`gallery4-add-${componentId}`}
                 className="flex cursor-pointer flex-col items-center gap-2"
@@ -219,7 +219,9 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                 ) : (
                   <>
                     <Plus className="h-8 w-8 text-gray-400" />
-                    <span className="text-sm text-gray-500 font-medium">Add Image</span>
+                    <span className="text-sm font-medium text-gray-500">
+                      Add Image
+                    </span>
                     <input
                       id={`gallery4-add-${componentId}`}
                       type="file"
@@ -240,22 +242,22 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
           open={!!selectedImage}
           onOpenChange={() => setSelectedImage(null)}
         >
-          <DialogContent className="max-w-5xl p-0 bg-transparent border-none shadow-none overflow-hidden sm:max-w-fit">
-            <div className="relative group">
-                <img
+          <DialogContent className="max-w-5xl overflow-hidden border-none bg-transparent p-0 shadow-none sm:max-w-fit">
+            <div className="group relative">
+              <img
                 src={getImageUrl(selectedImage.image)}
                 alt={selectedImage.image_alt_description}
-                className="max-h-[85vh] w-auto max-w-full rounded-lg shadow-2xl object-contain mx-auto"
-                />
-                <DialogClose className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors">
-                    <X className="h-5 w-5" />
-                </DialogClose>
+                className="mx-auto max-h-[85vh] w-auto max-w-full rounded-lg object-contain shadow-2xl"
+              />
+              <DialogClose className="absolute top-4 right-4 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70">
+                <X className="h-5 w-5" />
+              </DialogClose>
             </div>
 
             {(selectedImage.title || selectedImage.description) && (
-              <div className="bg-background/90 backdrop-blur-md p-6 rounded-xl max-w-2xl mx-auto mt-4 border shadow-lg">
+              <div className="bg-background/90 mx-auto mt-4 max-w-2xl rounded-xl border p-6 shadow-lg backdrop-blur-md">
                 {selectedImage.title && (
-                  <h3 className="text-xl font-bold text-foreground mb-2">
+                  <h3 className="text-foreground mb-2 text-xl font-bold">
                     {selectedImage.title}
                   </h3>
                 )}

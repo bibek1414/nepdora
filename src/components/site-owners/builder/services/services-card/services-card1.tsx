@@ -50,14 +50,17 @@ export const ServicesCard1: React.FC<ServicesCard1Props> = ({
         </Link>
       )
     : ({ children }: { children: React.ReactNode }) => (
-        <div onClick={handleClick} className="group block h-full cursor-pointer">
+        <div
+          onClick={handleClick}
+          className="group block h-full cursor-pointer"
+        >
           {children}
         </div>
       );
 
   return (
     <CardWrapper>
-      <div className="h-full overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-zinc-900/50">
+      <div className="bg-card text-card-foreground h-full overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-zinc-900/50">
         <div className="relative aspect-video w-full overflow-hidden">
           <Image
             src={servicesImage}
@@ -67,7 +70,7 @@ export const ServicesCard1: React.FC<ServicesCard1Props> = ({
           />
         </div>
         <div className="p-6">
-          <h2 className="line-clamp-2 text-xl font-bold leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
+          <h2 className="text-foreground group-hover:text-primary line-clamp-2 text-xl leading-tight font-bold tracking-tight transition-colors">
             {services.title}
           </h2>
           {/* Optional: Add a short excerpt here if description is plain text */}

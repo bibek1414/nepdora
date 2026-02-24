@@ -138,7 +138,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
               handleTextUpdate("title")(currentParts.join("<br />"));
             }}
             as="h1"
-            className="mb-8 text-5xl leading-[0.95] font-black text-foreground md:text-6xl lg:text-7xl"
+            className="text-foreground mb-8 text-5xl leading-[0.95] font-black md:text-6xl lg:text-7xl"
             isEditable={isEditable}
             placeholder="First line..."
           />
@@ -151,7 +151,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
             }
             onChange={handleTextUpdate("description")}
             as="p"
-            className="mb-12 max-w-lg text-lg leading-relaxed text-muted-foreground"
+            className="text-muted-foreground mb-12 max-w-lg text-lg leading-relaxed"
             isEditable={isEditable}
             placeholder="Description..."
             multiline
@@ -163,7 +163,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
                 value={data.stat1Value || "23"}
                 onChange={handleTextUpdate("stat1Value")}
                 as="div"
-                className="mb-2 text-5xl font-black text-foreground"
+                className="text-foreground mb-2 text-5xl font-black"
                 isEditable={isEditable}
                 placeholder="Stat value..."
               />
@@ -171,7 +171,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
                 value={data.stat1Label || "Daily Orders"}
                 onChange={handleTextUpdate("stat1Label")}
                 as="div"
-                className="text-sm font-bold tracking-wider text-muted-foreground uppercase"
+                className="text-muted-foreground text-sm font-bold tracking-wider uppercase"
                 isEditable={isEditable}
                 placeholder="Stat label..."
               />
@@ -181,7 +181,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
                 value={data.stat2Value || "56+"}
                 onChange={handleTextUpdate("stat2Value")}
                 as="div"
-                className="mb-2 text-5xl font-black text-foreground"
+                className="text-foreground mb-2 text-5xl font-black"
                 isEditable={isEditable}
                 placeholder="Stat value..."
               />
@@ -189,7 +189,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
                 value={data.stat2Label || "Items Available"}
                 onChange={handleTextUpdate("stat2Label")}
                 as="div"
-                className="text-sm font-bold tracking-wider text-muted-foreground uppercase"
+                className="text-muted-foreground text-sm font-bold tracking-wider uppercase"
                 isEditable={isEditable}
                 placeholder="Stat label..."
               />

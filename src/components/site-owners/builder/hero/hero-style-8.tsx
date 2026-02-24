@@ -170,7 +170,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
             {/* Left Image Column */}
             <div className="relative h-full min-h-[600px] lg:min-h-[700px]">
               <div
-                className="relative h-full w-full cursor-pointer overflow-hidden group"
+                className="group relative h-full w-full cursor-pointer overflow-hidden"
                 onMouseEnter={() => setHoveredImage("leftImage")}
                 onMouseLeave={() => setHoveredImage(null)}
               >
@@ -230,13 +230,13 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
             </div>
 
             {/* Center Content Column */}
-            <div className="relative flex h-full min-h-[600px] flex-col items-start justify-center px-8 py-12 lg:min-h-[700px] lg:px-12 text-left bg-background">
+            <div className="bg-background relative flex h-full min-h-[600px] flex-col items-start justify-center px-8 py-12 text-left lg:min-h-[700px] lg:px-12">
               {/* Main Heading */}
               <EditableText
                 value={data.title || "Premium Nepali Hand Knotted Rugs"}
                 onChange={handleTextUpdate("title")}
                 as="h1"
-                className="mb-6 w-full text-4xl leading-tight font-bold md:text-5xl lg:mb-8 lg:text-6xl tracking-tight text-foreground"
+                className="text-foreground mb-6 w-full text-4xl leading-tight font-bold tracking-tight md:text-5xl lg:mb-8 lg:text-6xl"
                 isEditable={isEditable}
                 placeholder="Enter main title..."
                 multiline={true}
@@ -250,7 +250,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 }
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="mb-8 w-full text-lg leading-relaxed text-muted-foreground md:mb-10 lg:mb-12"
+                className="text-muted-foreground mb-8 w-full text-lg leading-relaxed md:mb-10 lg:mb-12"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -258,7 +258,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
 
               {/* Action Buttons */}
               <div className="flex w-full flex-wrap items-center gap-4 sm:gap-6">
-                 {data.buttons.length > 0 && (
+                {data.buttons.length > 0 && (
                   <EditableLink
                     text={data.buttons[0]?.text || "Order Now"}
                     href={data.buttons[0]?.href || "#"}
@@ -271,7 +271,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="h-12 rounded-lg px-8 py-3 text-base font-medium shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
+                    className="h-12 rounded-lg px-8 py-3 text-base font-medium shadow-lg transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
                     style={{
                       backgroundColor: theme.colors.primary,
                       color: theme.colors.primaryForeground,
@@ -295,7 +295,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="h-12 rounded-lg border-2 bg-transparent px-8 py-3 text-base font-medium transition-all duration-200 hover:bg-muted"
+                    className="hover:bg-muted h-12 rounded-lg border-2 bg-transparent px-8 py-3 text-base font-medium transition-all duration-200"
                     style={{
                       borderColor: theme.colors.primary,
                       color: theme.colors.primary,
@@ -311,7 +311,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
             {/* Right Image Column */}
             <div className="relative h-full min-h-[600px] lg:min-h-[700px]">
               <div
-                className="relative h-full w-full cursor-pointer overflow-hidden group"
+                className="group relative h-full w-full cursor-pointer overflow-hidden"
                 onMouseEnter={() => setHoveredImage("rightImage")}
                 onMouseLeave={() => setHoveredImage(null)}
               >
@@ -388,7 +388,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                   priority
                   sizes="100vw"
                 />
-                 <div className="absolute inset-0 bg-black/60" />
+                <div className="absolute inset-0 bg-black/60" />
 
                 {isEditable && (
                   <>
@@ -473,7 +473,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
 
               {/* Action Buttons */}
               <div className="flex w-full flex-col gap-4">
-                 {data.buttons.length > 0 && (
+                {data.buttons.length > 0 && (
                   <EditableLink
                     text={data.buttons[0]?.text || "Order Now"}
                     href={data.buttons[0]?.href || "#"}

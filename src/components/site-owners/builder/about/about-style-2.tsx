@@ -66,7 +66,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
             onImageChange={handleImageUpdate("heroImageUrl", "heroImageAlt")}
             onAltChange={handleAltUpdate("heroImageAlt")}
             isEditable={isEditable}
-            className="object-cover opacity-30 w-full h-full"
+            className="h-full w-full object-cover opacity-30"
             cloudinaryOptions={{
               folder: "about-us-images",
               resourceType: "image",
@@ -89,7 +89,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
               color: "#FFFFFF",
               fontFamily: theme.fonts.heading,
             }}
-            className="mb-4 text-5xl md:text-6xl font-bold tracking-wide max-w-4xl"
+            className="mb-4 max-w-4xl text-5xl font-bold tracking-wide md:text-6xl"
             isEditable={isEditable}
             placeholder="Enter hero title..."
           />
@@ -115,7 +115,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
         <div className="mb-20 grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           <div className="space-y-6">
             <div className="transform overflow-hidden rounded-2xl bg-white shadow-xl transition-transform duration-300 hover:scale-[1.02]">
-              <div className="flex h-80 items-center justify-center relative">
+              <div className="relative flex h-80 items-center justify-center">
                 <EditableImage
                   src={data.journeyImageUrl}
                   alt={data.journeyImageAlt}
@@ -125,7 +125,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
                   )}
                   onAltChange={handleAltUpdate("journeyImageAlt")}
                   isEditable={isEditable}
-                  className="w-full h-full object-cover"
+                  className="h-full w-full object-cover"
                   width={600}
                   height={400}
                   cloudinaryOptions={{
@@ -168,23 +168,23 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
             />
 
             <div className="pt-4">
-                <EditableLink
+              <EditableLink
                 text={data.ctaText}
                 href={data.ctaLink}
                 onChange={handleLinkUpdate}
                 className="inline-flex transform items-center space-x-2 rounded-full px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105"
                 style={{
-                    backgroundColor: theme.colors.primary,
-                    fontFamily: theme.fonts.heading,
+                  backgroundColor: theme.colors.primary,
+                  fontFamily: theme.fonts.heading,
                 }}
                 isEditable={isEditable}
                 textPlaceholder="Button text..."
                 hrefPlaceholder="Enter link URL..."
                 siteUser={siteUser}
-                >
+              >
                 <span>{data.ctaText || "Let's Go"}</span>
                 <ChevronRight className="h-5 w-5" />
-                </EditableLink>
+              </EditableLink>
             </div>
           </div>
         </div>

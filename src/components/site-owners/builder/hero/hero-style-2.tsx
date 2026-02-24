@@ -259,15 +259,15 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
       )}
 
       {/* Main Content Container */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 items-center">
+      <div className="relative z-10 container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Text Content */}
-          <div className="flex flex-col items-start text-left gap-6 order-2 lg:order-1">
+          <div className="order-2 flex flex-col items-start gap-6 text-left lg:order-1">
             <EditableText
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
+              className="text-4xl leading-tight font-bold tracking-tight sm:text-5xl lg:text-6xl"
               isEditable={isEditable}
               placeholder="Enter your hero title..."
             />
@@ -286,7 +286,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="text-lg opacity-80 leading-relaxed max-w-lg"
+                className="max-w-lg text-lg leading-relaxed opacity-80"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -294,7 +294,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             )}
 
             {/* Buttons */}
-            <div className="flex flex-wrap items-center gap-4 mt-2">
+            <div className="mt-2 flex flex-wrap items-center gap-4">
               {data.buttons.map(btn => (
                 <EditableLink
                   key={`btn-${componentId}-${btn.id}`}
@@ -309,7 +309,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                         : theme.colors.secondaryForeground,
                     fontFamily: theme.fonts.body,
                   }}
-                  className="px-8 py-3 rounded-lg font-medium transition-transform hover:scale-105"
+                  className="rounded-lg px-8 py-3 font-medium transition-transform hover:scale-105"
                   text={btn.text}
                   href={btn.href || "#"}
                   onChange={(text, href) =>
@@ -328,15 +328,15 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
           {data.showSlider &&
             data.sliderImages &&
             data.sliderImages.length > 0 && (
-              <div className="group relative w-full order-1 lg:order-2">
-                <div className="relative overflow-hidden rounded-2xl shadow-2xl aspect-[4/3]">
+              <div className="group relative order-1 w-full lg:order-2">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl">
                   <div
                     className="flex h-full transition-transform duration-500 ease-in-out"
                     style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                   >
                     {data.sliderImages.map((img, index) => (
                       <div
-                        className="w-full flex-shrink-0 h-full relative"
+                        className="relative h-full w-full flex-shrink-0"
                         key={`slide-${componentId}-${img.id || index}`}
                       >
                         <EditableImage
@@ -352,7 +352,8 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                           }
                           onAltChange={altText => {
                             const imgId =
-                              data.sliderImages?.[index]?.id || `slide-${index}`;
+                              data.sliderImages?.[index]?.id ||
+                              `slide-${index}`;
                             handleArrayItemUpdate(
                               "sliderImages",
                               imgId
@@ -383,7 +384,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm rounded-full"
+                        className="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/20 text-white backdrop-blur-sm hover:bg-black/40"
                         onClick={prevSlide}
                       >
                         <ChevronLeft className="h-6 w-6" />
@@ -392,7 +393,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm rounded-full"
+                        className="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/20 text-white backdrop-blur-sm hover:bg-black/40"
                         onClick={nextSlide}
                       >
                         <ChevronRight className="h-6 w-6" />
@@ -404,7 +405,9 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                           <button
                             key={index}
                             className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                              index === currentSlide ? "bg-white w-6" : "bg-white/50"
+                              index === currentSlide
+                                ? "w-6 bg-white"
+                                : "bg-white/50"
                             }`}
                             onClick={() => setCurrentSlide(index)}
                             aria-label={`Go to slide ${index + 1}`}

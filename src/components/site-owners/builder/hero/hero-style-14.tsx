@@ -189,11 +189,13 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
 
       {/* Content Container - Left Aligned */}
       <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-start text-left max-w-4xl">
+        <div className="flex max-w-4xl flex-col items-start text-left">
           {/* Title & Subtitle with Fade Up Animation */}
           <div
             className={`transition-all delay-100 duration-1000 ease-out ${
-              isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
+              isVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-12 opacity-0"
             }`}
           >
             <p className="mb-4 text-sm font-bold tracking-[0.2em] text-gray-200 uppercase sm:text-base">
@@ -236,7 +238,7 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
                 color: theme.colors.primaryForeground,
                 backgroundColor: theme.colors.primary,
               }}
-              className="inline-flex items-center px-8 py-4 text-base font-medium rounded-full shadow-lg hover:scale-105 transition-transform"
+              className="inline-flex items-center rounded-full px-8 py-4 text-base font-medium shadow-lg transition-transform hover:scale-105"
             >
               <>
                 <span className="mr-2">{buttonText}</span>

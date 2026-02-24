@@ -40,7 +40,7 @@ export function AboutUsTemplate1({
         >
           {/* Content Section */}
           <div
-            className={`flex flex-col gap-6 items-start text-left ${
+            className={`flex flex-col items-start gap-6 text-left ${
               data.layout === "image-left" ? "lg:col-start-2" : ""
             }`}
           >
@@ -51,7 +51,7 @@ export function AboutUsTemplate1({
                   value={data.subtitle}
                   onChange={handleTextUpdate("subtitle")}
                   as="p"
-                  className="text-sm font-semibold tracking-wider uppercase text-primary"
+                  className="text-primary text-sm font-semibold tracking-wider uppercase"
                   isEditable={isEditable}
                   placeholder="Enter subtitle..."
                 />
@@ -63,7 +63,7 @@ export function AboutUsTemplate1({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h2"
-              className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl text-foreground"
+              className="text-foreground text-4xl leading-tight font-bold tracking-tight sm:text-5xl lg:text-6xl"
               isEditable={isEditable}
               placeholder="Enter main title..."
             />
@@ -73,7 +73,7 @@ export function AboutUsTemplate1({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="text-lg text-muted-foreground leading-relaxed sm:text-xl"
+              className="text-muted-foreground text-lg leading-relaxed sm:text-xl"
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}
@@ -81,8 +81,8 @@ export function AboutUsTemplate1({
 
             {/* Stats Grid */}
             {data.stats && data.stats.length > 0 && (
-              <div className="mt-8 grid grid-cols-2 gap-8 border-t pt-8 sm:grid-cols-3 w-full">
-                {data.stats.map((stat) => (
+              <div className="mt-8 grid w-full grid-cols-2 gap-8 border-t pt-8 sm:grid-cols-3">
+                {data.stats.map(stat => (
                   <div
                     key={stat.id}
                     className="group relative space-y-1 text-left"
@@ -91,7 +91,7 @@ export function AboutUsTemplate1({
                       value={stat.value}
                       onChange={handleStatsUpdate(stat.id, "value")}
                       as="p"
-                      className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl text-foreground"
+                      className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl"
                       isEditable={isEditable}
                       placeholder="Value"
                     />
@@ -99,7 +99,7 @@ export function AboutUsTemplate1({
                       value={stat.label}
                       onChange={handleStatsUpdate(stat.id, "label")}
                       as="p"
-                      className="text-xs font-medium tracking-wider uppercase text-muted-foreground"
+                      className="text-muted-foreground text-xs font-medium tracking-wider uppercase"
                       isEditable={isEditable}
                       placeholder="Label"
                     />
@@ -140,7 +140,7 @@ export function AboutUsTemplate1({
             </div>
 
             {/* Decorative element */}
-            <div className="absolute -right-4 -bottom-4 -z-10 h-full w-full rounded-2xl bg-muted/50" />
+            <div className="bg-muted/50 absolute -right-4 -bottom-4 -z-10 h-full w-full rounded-2xl" />
           </div>
         </div>
       </div>

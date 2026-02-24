@@ -175,7 +175,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
               value={data.title || "Summer styles are finally here"}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl text-left"
+              className="text-foreground text-left text-4xl font-bold tracking-tight sm:text-6xl"
               isEditable={isEditable}
               placeholder="Enter hero title..."
             />
@@ -186,7 +186,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
               }
               onChange={handleTextUpdate("description")}
               as="p"
-              className="mt-4 text-xl text-muted-foreground text-left"
+              className="text-muted-foreground mt-4 text-left text-xl"
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}
@@ -496,7 +496,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                   }}
                   isEditable={isEditable}
                   siteUser={siteUser}
-                  className="inline-flex items-center justify-center rounded-lg px-8 py-3 text-base font-medium shadow-sm transition-all hover:shadow-md hover:translate-y-[-2px]"
+                  className="inline-flex items-center justify-center rounded-lg px-8 py-3 text-base font-medium shadow-sm transition-all hover:translate-y-[-2px] hover:shadow-md"
                   style={{
                     background: theme.colors.primary
                       ? theme.colors.primary

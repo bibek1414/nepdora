@@ -95,7 +95,7 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
             value={data.headline}
             onChange={handleTextUpdate("headline")}
             as="h1"
-            className="text-3xl leading-tight font-bold text-foreground md:text-4xl lg:text-5xl max-w-4xl"
+            className="text-foreground max-w-4xl text-3xl leading-tight font-bold md:text-4xl lg:text-5xl"
             isEditable={isEditable}
             placeholder="Brewhaus is where flavor meets craft. From bean to cup, we focus on quality, speed, and simplicity — perfect for busy mornings or laid-back afternoons."
             multiline={true}
@@ -168,7 +168,7 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
                 onImageChange={handleImageUpdate("image1Url", "image1Alt")}
                 onAltChange={handleAltUpdate("image1Alt")}
                 isEditable={isEditable}
-                className="h-full w-full object-cover transition-transform hover:scale-105 duration-500"
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                 width={600}
                 height={800}
                 cloudinaryOptions={{
@@ -186,7 +186,7 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
           </div>
 
           {/* Center Image */}
-          <div className="col-span-1 overflow-hidden rounded-xl md:col-span-2 lg:col-span-1 shadow-md">
+          <div className="col-span-1 overflow-hidden rounded-xl shadow-md md:col-span-2 lg:col-span-1">
             <EditableImage
               src={data.centerImageUrl}
               alt={data.centerImageAlt}
@@ -196,7 +196,7 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
               )}
               onAltChange={handleAltUpdate("centerImageAlt")}
               isEditable={isEditable}
-              className="h-full w-full object-cover transition-transform hover:scale-105 duration-500"
+              className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
               width={600}
               height={800}
               cloudinaryOptions={{
@@ -256,7 +256,7 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
                 onImageChange={handleImageUpdate("image2Url", "image2Alt")}
                 onAltChange={handleAltUpdate("image2Alt")}
                 isEditable={isEditable}
-                className="h-full w-full object-cover transition-transform hover:scale-105 duration-500"
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                 width={600}
                 height={800}
                 cloudinaryOptions={{

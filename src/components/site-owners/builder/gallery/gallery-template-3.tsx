@@ -207,7 +207,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
               value={data.subtitle}
               onChange={handleTextUpdate("subtitle")}
               isEditable={isEditable}
-              className="text-lg text-muted-foreground leading-relaxed max-w-3xl"
+              className="text-muted-foreground max-w-3xl text-lg leading-relaxed"
             />
           )}
         </div>
@@ -281,7 +281,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
               </div>
             </motion.div>
           </motion.div>
-          <div className="flex w-full snap-x snap-mandatory gap-4 overflow-x-auto px-2 py-4 lg:hidden scrollbar-hide">
+          <div className="scrollbar-hide flex w-full snap-x snap-mandatory gap-4 overflow-x-auto px-2 py-4 lg:hidden">
             {activeImages.map(image => {
               const actualIndex = data.images.findIndex(
                 img => img.id === image.id
@@ -332,7 +332,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
         <div className="mt-8 text-center">
           <label
             htmlFor={`gallery-add-${componentId}`}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-3 hover:bg-gray-100 transition-colors"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-3 transition-colors hover:bg-gray-100"
           >
             {isAddingImage ? (
               <div className="flex items-center gap-2 text-gray-500">
@@ -342,7 +342,9 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
             ) : (
               <>
                 <Plus className="h-5 w-5 text-gray-400" />
-                <span className="text-sm font-medium text-gray-600">Add New Image</span>
+                <span className="text-sm font-medium text-gray-600">
+                  Add New Image
+                </span>
                 <input
                   id={`gallery-add-${componentId}`}
                   type="file"
@@ -361,22 +363,22 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
           open={!!selectedImage}
           onOpenChange={() => setSelectedImage(null)}
         >
-          <DialogContent className="max-w-5xl p-0 bg-transparent border-none shadow-none overflow-hidden sm:max-w-fit">
-            <div className="relative group">
-                <img
+          <DialogContent className="max-w-5xl overflow-hidden border-none bg-transparent p-0 shadow-none sm:max-w-fit">
+            <div className="group relative">
+              <img
                 src={getImageUrl(selectedImage.image)}
                 alt={selectedImage.image_alt_description}
-                className="max-h-[85vh] w-auto max-w-full rounded-lg shadow-2xl object-contain mx-auto"
-                />
-                <DialogClose className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors">
-                    <X className="h-5 w-5" />
-                </DialogClose>
+                className="mx-auto max-h-[85vh] w-auto max-w-full rounded-lg object-contain shadow-2xl"
+              />
+              <DialogClose className="absolute top-4 right-4 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70">
+                <X className="h-5 w-5" />
+              </DialogClose>
             </div>
 
             {(selectedImage.title || selectedImage.description) && (
-              <div className="bg-background/90 backdrop-blur-md p-6 rounded-xl max-w-2xl mx-auto mt-4 border shadow-lg">
+              <div className="bg-background/90 mx-auto mt-4 max-w-2xl rounded-xl border p-6 shadow-lg backdrop-blur-md">
                 {selectedImage.title && (
-                  <h3 className="text-xl font-bold text-foreground mb-2">
+                  <h3 className="text-foreground mb-2 text-xl font-bold">
                     {selectedImage.title}
                   </h3>
                 )}
@@ -460,7 +462,7 @@ const PhotoCard = ({
       draggable={false}
       tabIndex={0}
     >
-      <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-shadow">
+      <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-xl transition-shadow hover:shadow-2xl">
         {isEditable ? (
           <EditableImage
             src={getImageUrl(image.image)}

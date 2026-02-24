@@ -185,13 +185,13 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
 
       <div className="relative z-10 container mx-auto max-w-7xl">
         <div className="rounded-[32px] bg-white p-8 shadow-2xl sm:p-12 md:p-16 lg:p-20">
-          <div className="flex flex-col items-start text-left max-w-4xl">
+          <div className="flex max-w-4xl flex-col items-start text-left">
             {/* Title */}
             <EditableText
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h2"
-              className="mb-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl"
+              className="mb-6 text-4xl leading-tight font-bold sm:text-5xl lg:text-6xl"
               style={{ color: theme.colors.text }}
               isEditable={isEditable}
               placeholder="Enter CTA title..."
@@ -203,7 +203,7 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="mb-10 text-xl leading-relaxed text-gray-600 max-w-2xl"
+                className="mb-10 max-w-2xl text-xl leading-relaxed text-gray-600"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}

@@ -320,15 +320,15 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
 
               {/* Text content with proper container */}
               <div className="absolute inset-0 flex items-center">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-                  <div className="max-w-2xl flex flex-col items-start text-left space-y-6">
+                <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                  <div className="flex max-w-2xl flex-col items-start space-y-6 text-left">
                     {/* Main Title */}
                     <EditableText
                       key={`title-${componentId}`}
                       value={data.title || "Find your perfect workout attire"}
                       onChange={handleTextUpdate("title")}
                       as="h1"
-                      className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl leading-tight"
+                      className="text-5xl leading-tight font-black tracking-tight text-white sm:text-6xl lg:text-7xl"
                       isEditable={isEditable}
                       placeholder="Enter main title..."
                       multiline={true}
@@ -377,7 +377,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
                           }
                           isEditable={isEditable}
                           siteUser={siteUser}
-                          className="rounded-full bg-white px-8 py-4 text-base font-bold text-black shadow-lg transition duration-300 hover:bg-gray-100 hover:scale-105"
+                          className="rounded-full bg-white px-8 py-4 text-base font-bold text-black shadow-lg transition duration-300 hover:scale-105 hover:bg-gray-100"
                           style={{
                             backgroundColor: theme.colors.primary,
                             color: theme.colors.primaryForeground,
@@ -402,7 +402,9 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
               onClick={() => api?.scrollTo(index)}
               className={cn(
                 "h-2 rounded-full transition-all duration-300",
-                current === index ? "w-8 bg-white" : "w-2 bg-white/50 hover:bg-white/80"
+                current === index
+                  ? "w-8 bg-white"
+                  : "w-2 bg-white/50 hover:bg-white/80"
               )}
             />
           ))}

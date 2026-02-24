@@ -110,7 +110,7 @@ export function FooterStyle3({
             {/* Info Section */}
             {mainSections.map((section, index) => (
               <div key={section.id} className="col-span-1">
-                <h3 className="mb-6 text-lg font-bold text-white tracking-wide uppercase">
+                <h3 className="mb-6 text-lg font-bold tracking-wide text-white uppercase">
                   {section.title}
                 </h3>
                 <ul className="space-y-3">
@@ -147,22 +147,22 @@ export function FooterStyle3({
             {/* Newsletter Section */}
             {data.newsletter.enabled && (
               <div className="col-span-2 lg:col-span-2">
-                <h3 className="mb-6 text-lg font-bold text-white tracking-wide uppercase">
+                <h3 className="mb-6 text-lg font-bold tracking-wide text-white uppercase">
                   {data.newsletter.title}
                 </h3>
-                <p className="mb-6 text-sm text-white/70 leading-relaxed max-w-xs">
+                <p className="mb-6 max-w-xs text-sm leading-relaxed text-white/70">
                   {data.newsletter.description}
                 </p>
 
                 {subscriptionStatus === "success" ? (
-                  <div className="flex items-center gap-2 text-green-300 bg-white/10 p-3 rounded-lg w-fit">
+                  <div className="flex w-fit items-center gap-2 rounded-lg bg-white/10 p-3 text-green-300">
                     <CheckCircle className="h-5 w-5" />
                     <span className="text-sm">Successfully subscribed!</span>
                   </div>
                 ) : (
                   <form
                     onSubmit={handleNewsletterSubmit}
-                    className="flex flex-col gap-3 max-w-sm"
+                    className="flex max-w-sm flex-col gap-3"
                   >
                     <div className="flex flex-col gap-3 sm:flex-row">
                       <Input
@@ -170,7 +170,7 @@ export function FooterStyle3({
                         placeholder="Your email address"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        className="w-full rounded-full border-none bg-white/10 px-6 py-3 text-white placeholder-white/50 focus:ring-2 focus:ring-white/30 backdrop-blur-sm"
+                        className="w-full rounded-full border-none bg-white/10 px-6 py-3 text-white placeholder-white/50 backdrop-blur-sm focus:ring-2 focus:ring-white/30"
                         disabled={
                           isEditable || createNewsletterMutation.isPending
                         }
@@ -185,14 +185,12 @@ export function FooterStyle3({
                           isEditable || createNewsletterMutation.isPending
                         }
                       >
-                        {createNewsletterMutation.isPending
-                          ? "..."
-                          : "Join"}
+                        {createNewsletterMutation.isPending ? "..." : "Join"}
                       </Button>
                     </div>
 
                     {subscriptionStatus === "error" && errorMessage && (
-                      <div className="flex items-center gap-2 text-red-300 text-xs mt-1">
+                      <div className="mt-1 flex items-center gap-2 text-xs text-red-300">
                         <AlertCircle className="h-4 w-4" />
                         <span className="text-sm">{errorMessage}</span>
                       </div>
@@ -204,23 +202,23 @@ export function FooterStyle3({
           </div>
 
           {/* Bottom section */}
-          <div className="mt-20 flex flex-col items-center justify-between border-t border-white/10 pt-8 text-sm text-gray-200 md:flex-row gap-6">
-            <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
-                {/* Logo */}
-                <div className="flex items-center">
+          <div className="mt-20 flex flex-col items-center justify-between gap-6 border-t border-white/10 pt-8 text-sm text-gray-200 md:flex-row">
+            <div className="flex flex-col items-center gap-6 md:flex-row md:gap-8">
+              {/* Logo */}
+              <div className="flex items-center">
                 <FooterLogo
-                    footerData={data}
-                    getImageUrl={getImageUrl}
-                    textClassName="text-white text-xl font-bold"
-                    imageClassName="h-8 w-auto"
-                    containerClassName="gap-3"
+                  footerData={data}
+                  getImageUrl={getImageUrl}
+                  textClassName="text-white text-xl font-bold"
+                  imageClassName="h-8 w-auto"
+                  containerClassName="gap-3"
                 />
-                </div>
+              </div>
 
-                {/* Copyright */}
-                <div className="text-center md:text-left text-white/50 text-xs">
+              {/* Copyright */}
+              <div className="text-center text-xs text-white/50 md:text-left">
                 <p>{data.copyright}</p>
-                </div>
+              </div>
             </div>
 
             {/* Social links */}
@@ -229,7 +227,7 @@ export function FooterStyle3({
                 <Link
                   key={social.id}
                   href={social.href || "#"}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/70 transition-all hover:bg-white hover:text-primary hover:-translate-y-1"
+                  className="hover:text-primary flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/70 transition-all hover:-translate-y-1 hover:bg-white"
                   target={
                     social.href?.startsWith("http") ? "_blank" : undefined
                   }

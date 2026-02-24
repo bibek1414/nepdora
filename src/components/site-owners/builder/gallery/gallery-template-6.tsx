@@ -255,7 +255,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                 className="leading-tight"
               />
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-muted-foreground text-lg">
               <EditableText
                 value={
                   data.subtitle ||
@@ -270,7 +270,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
           <div className="flex gap-3">
             <button
               onClick={scrollLeft}
-              className="rounded-full border border-gray-200 bg-white p-3 text-gray-700 transition-colors hover:bg-gray-50 hover:text-black shadow-sm"
+              className="rounded-full border border-gray-200 bg-white p-3 text-gray-700 shadow-sm transition-colors hover:bg-gray-50 hover:text-black"
               type="button"
               aria-label="Scroll left"
             >
@@ -278,7 +278,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
             </button>
             <button
               onClick={scrollRight}
-              className="rounded-full border border-gray-200 bg-white p-3 text-gray-700 transition-colors hover:bg-gray-50 hover:text-black shadow-sm"
+              className="rounded-full border border-gray-200 bg-white p-3 text-gray-700 shadow-sm transition-colors hover:bg-gray-50 hover:text-black"
               type="button"
               aria-label="Scroll right"
             >
@@ -299,7 +299,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
           <div
             ref={scrollContainerRef}
             onScroll={updateFadeVisibility}
-            className="scrollbar-hide -mx-4 flex gap-6 overflow-x-auto px-4 pb-8 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden snap-x snap-mandatory"
+            className="scrollbar-hide -mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-8 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden"
           >
             {filteredImages.map(image => {
               const actualIndex = data.images.findIndex(
@@ -308,7 +308,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
               return (
                 <motion.div
                   key={image.id}
-                  className="group/card relative h-[450px] min-w-[300px] cursor-pointer overflow-hidden rounded-2xl md:min-w-[350px] snap-center shadow-md transition-shadow hover:shadow-xl"
+                  className="group/card relative h-[450px] min-w-[300px] cursor-pointer snap-center overflow-hidden rounded-2xl shadow-md transition-shadow hover:shadow-xl md:min-w-[350px]"
                   variants={fadeInUp}
                   initial={false}
                   whileInView="visible"
@@ -389,7 +389,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                                 )
                               }
                               isEditable={isEditable}
-                              className="text-sm leading-relaxed text-gray-200 mt-2"
+                              className="mt-2 text-sm leading-relaxed text-gray-200"
                               placeholder="Add description"
                               multiline
                             />
@@ -403,10 +403,10 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
             })}
 
             {isEditable && (
-              <div className="flex h-[450px] min-w-[300px] items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 md:min-w-[350px] shrink-0 snap-center">
+              <div className="flex h-[450px] min-w-[300px] shrink-0 snap-center items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 md:min-w-[350px]">
                 <label
                   htmlFor={`gallery6-add-${componentId}`}
-                  className="flex cursor-pointer flex-col items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors"
+                  className="flex cursor-pointer flex-col items-center gap-2 text-gray-500 transition-colors hover:text-gray-700"
                 >
                   {isAddingImage ? (
                     <div className="flex flex-col items-center gap-2">
@@ -415,7 +415,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                     </div>
                   ) : (
                     <>
-                      <div className="p-4 bg-white rounded-full shadow-sm">
+                      <div className="rounded-full bg-white p-4 shadow-sm">
                         <Plus className="h-8 w-8" />
                       </div>
                       <span className="text-sm font-medium">

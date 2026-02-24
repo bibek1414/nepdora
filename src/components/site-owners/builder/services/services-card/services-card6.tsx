@@ -78,7 +78,7 @@ const ServiceCard: React.FC<ServiceCardProps & { pathname: string | null }> = ({
         {service.title}
       </h3>
 
-      <p className="text-xs leading-relaxed text-gray-500 sm:text-sm md:text-sm lg:text-base line-clamp-3 mb-6">
+      <p className="mb-6 line-clamp-3 text-xs leading-relaxed text-gray-500 sm:text-sm md:text-sm lg:text-base">
         {stripHtml(service.description || "")}
       </p>
 
@@ -137,7 +137,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
       <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12">
         {/* Header Section with Navigation */}
         <div className="mb-8 flex flex-col items-start justify-between sm:mb-10 md:mb-14 lg:mb-16 lg:flex-row lg:items-end">
-          <div className="mb-6 max-w-4xl sm:mb-7 md:mb-8 lg:mb-0 text-left">
+          <div className="mb-6 max-w-4xl text-left sm:mb-7 md:mb-8 lg:mb-0">
             <div className="mb-4 flex items-center gap-2">
               <span
                 className="text-xs font-bold tracking-[0.2em] uppercase"
@@ -166,7 +166,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
         </div>
 
         {/* Cards Container */}
-        <div className="relative grid grid-cols-1 items-stretch justify-center gap-4 sm:gap-5 md:grid-cols-2 md:gap-6 lg:flex lg:flex-row lg:gap-8 lg:flex-wrap lg:justify-start">
+        <div className="relative grid grid-cols-1 items-stretch justify-center gap-4 sm:gap-5 md:grid-cols-2 md:gap-6 lg:flex lg:flex-row lg:flex-wrap lg:justify-start lg:gap-8">
           {services.map((service, index) => (
             <ServiceCard
               key={service.id}

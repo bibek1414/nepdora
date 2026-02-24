@@ -132,9 +132,9 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
           )}
         </div>
 
-        <div className="space-y-4 mb-6 flex-grow">
+        <div className="mb-6 flex-grow space-y-4">
           <h3
-            className="text-2xl font-semibold leading-tight"
+            className="text-2xl leading-tight font-semibold"
             style={{
               color: textColor,
               fontFamily: headingFont,

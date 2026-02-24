@@ -60,7 +60,7 @@ export const ServicesCard4: React.FC<ServicesPost4Props> = ({
 
   return (
     <CardWrapper>
-      <div className="group relative h-full overflow-hidden rounded-2xl bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+      <div className="group bg-card relative h-full overflow-hidden rounded-2xl shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
         {/* Image Container */}
         <div className="relative aspect-[4/3] w-full overflow-hidden">
           <Image
@@ -74,12 +74,12 @@ export const ServicesCard4: React.FC<ServicesPost4Props> = ({
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100" />
 
           {/* Content Overlay */}
-          <div className="absolute bottom-0 left-0 w-full p-6 text-white text-left">
-            <h2 className="mb-2 line-clamp-2 text-xl font-bold leading-tight">
+          <div className="absolute bottom-0 left-0 w-full p-6 text-left text-white">
+            <h2 className="mb-2 line-clamp-2 text-xl leading-tight font-bold">
               {services.title}
             </h2>
             <p className="mb-4 line-clamp-2 text-sm text-white/80">
-                {truncatedDescription}
+              {truncatedDescription}
             </p>
             <span className="inline-block rounded-md bg-white/20 px-4 py-2 text-xs font-semibold backdrop-blur-sm transition-colors hover:bg-white/30">
               Learn More

@@ -106,7 +106,7 @@ export function FooterStyle1({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-4 lg:gap-16">
             {/* Company Info */}
-            <div className="lg:col-span-1 space-y-8">
+            <div className="space-y-8 lg:col-span-1">
               {/* Logo */}
               <div>
                 <FooterLogo
@@ -118,7 +118,7 @@ export function FooterStyle1({
                 />
               </div>
 
-              <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
+              <p className="text-muted-foreground max-w-sm text-sm leading-relaxed">
                 {data.description}
               </p>
 
@@ -128,7 +128,7 @@ export function FooterStyle1({
                   <Link
                     key={social.id}
                     href={social.href || "#"}
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-all hover:bg-primary hover:text-primary-foreground hover:-translate-y-1"
+                    className="bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground flex h-10 w-10 items-center justify-center rounded-full transition-all hover:-translate-y-1"
                     target={
                       social.href?.startsWith("http") ? "_blank" : undefined
                     }
@@ -148,139 +148,141 @@ export function FooterStyle1({
             </div>
 
             {/* Link Sections */}
-            <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-8">
-                {data.sections.map(section => (
+            <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-2">
+              {data.sections.map(section => (
                 <div key={section.id} className="space-y-4">
-                    <h4 className="text-foreground font-semibold tracking-tight">
+                  <h4 className="text-foreground font-semibold tracking-tight">
                     {section.title}
-                    </h4>
-                    <ul className="space-y-3">
+                  </h4>
+                  <ul className="space-y-3">
                     {section.links.map(link => (
-                        <li key={link.id}>
+                      <li key={link.id}>
                         {isEditable ? (
-                            <button
-                            className="text-muted-foreground hover:text-primary text-sm transition-colors block"
+                          <button
+                            className="text-muted-foreground hover:text-primary block text-sm transition-colors"
                             onClick={
-                                isEditable ? e => e.preventDefault() : undefined
+                              isEditable ? e => e.preventDefault() : undefined
                             }
-                            >
+                          >
                             {link.text}
-                            </button>
+                          </button>
                         ) : (
-                            <Link
+                          <Link
                             href={generateLinkHref(
-                                link.href || "",
-                                siteUser,
-                                pathname,
-                                isEditable
+                              link.href || "",
+                              siteUser,
+                              pathname,
+                              isEditable
                             )}
-                            className="text-muted-foreground hover:text-primary text-sm transition-colors block"
-                            >
+                            className="text-muted-foreground hover:text-primary block text-sm transition-colors"
+                          >
                             {link.text}
-                            </Link>
+                          </Link>
                         )}
-                        </li>
+                      </li>
                     ))}
-                    </ul>
+                  </ul>
                 </div>
-                ))}
+              ))}
             </div>
 
             {/* Contact & Newsletter - Combined in last column or separate */}
-             <div className="lg:col-span-1 space-y-8">
-                 {/* Contact Info */}
-                 <div className="space-y-4">
-                    <h4 className="text-foreground font-semibold tracking-tight">
-                        Contact Us
-                    </h4>
-                     <div className="space-y-3">
-                        {data.contactInfo.email && (
-                        <div className="text-muted-foreground flex items-center group">
-                            <Mail className="mr-3 h-4 w-4 text-primary group-hover:text-foreground transition-colors" />
-                            <span className="text-sm">{data.contactInfo.email}</span>
-                        </div>
-                        )}
-                        {data.contactInfo.phone && (
-                        <div className="text-muted-foreground flex items-center group">
-                            <Phone className="mr-3 h-4 w-4 text-primary group-hover:text-foreground transition-colors" />
-                            <span className="text-sm">{data.contactInfo.phone}</span>
-                        </div>
-                        )}
-                        {data.contactInfo.address && (
-                        <div className="text-muted-foreground flex items-start group">
-                            <MapPin className="mr-3 h-4 w-4 mt-1 text-primary group-hover:text-foreground transition-colors" />
-                            <span className="text-sm leading-relaxed">{data.contactInfo.address}</span>
-                        </div>
-                        )}
+            <div className="space-y-8 lg:col-span-1">
+              {/* Contact Info */}
+              <div className="space-y-4">
+                <h4 className="text-foreground font-semibold tracking-tight">
+                  Contact Us
+                </h4>
+                <div className="space-y-3">
+                  {data.contactInfo.email && (
+                    <div className="text-muted-foreground group flex items-center">
+                      <Mail className="text-primary group-hover:text-foreground mr-3 h-4 w-4 transition-colors" />
+                      <span className="text-sm">{data.contactInfo.email}</span>
                     </div>
+                  )}
+                  {data.contactInfo.phone && (
+                    <div className="text-muted-foreground group flex items-center">
+                      <Phone className="text-primary group-hover:text-foreground mr-3 h-4 w-4 transition-colors" />
+                      <span className="text-sm">{data.contactInfo.phone}</span>
+                    </div>
+                  )}
+                  {data.contactInfo.address && (
+                    <div className="text-muted-foreground group flex items-start">
+                      <MapPin className="text-primary group-hover:text-foreground mt-1 mr-3 h-4 w-4 transition-colors" />
+                      <span className="text-sm leading-relaxed">
+                        {data.contactInfo.address}
+                      </span>
+                    </div>
+                  )}
                 </div>
+              </div>
 
+              {/* Newsletter */}
+              {data.newsletter.enabled && (
+                <div className="space-y-4">
+                  <h4 className="text-foreground font-semibold tracking-tight">
+                    {data.newsletter.title}
+                  </h4>
+                  <p className="text-muted-foreground text-sm">
+                    {data.newsletter.description}
+                  </p>
 
-                {/* Newsletter */}
-                {data.newsletter.enabled && (
-                    <div className="space-y-4">
-                        <h4 className="text-foreground font-semibold tracking-tight">
-                        {data.newsletter.title}
-                        </h4>
-                        <p className="text-muted-foreground text-sm">
-                        {data.newsletter.description}
-                        </p>
-
-                        {subscriptionStatus === "success" ? (
-                        <div className="flex items-center gap-2 text-green-600 bg-green-50 p-3 rounded-lg">
-                            <CheckCircle className="h-5 w-5" />
-                            <span className="text-sm font-medium">Subscribed!</span>
-                        </div>
-                        ) : (
-                        <form onSubmit={handleNewsletterSubmit} className="space-y-2">
-                            <div className="flex gap-2">
-                                <Input
-                                type="email"
-                                placeholder="Your email"
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
-                                className="bg-background"
-                                disabled={
-                                    isEditable || createNewsletterMutation.isPending
-                                }
-                                />
-                                <Button
-                                type="submit"
-                                style={{
-                                    backgroundColor: theme.colors.primary,
-                                }}
-                                disabled={
-                                    isEditable || createNewsletterMutation.isPending
-                                }
-                                >
-                                {createNewsletterMutation.isPending
-                                    ? "..."
-                                    : "Join"}
-                                </Button>
-                            </div>
-
-                            {subscriptionStatus === "error" && errorMessage && (
-                                <div className="flex items-center gap-2 text-red-600 text-xs">
-                                <AlertCircle className="h-3 w-3" />
-                                <span>{errorMessage}</span>
-                                </div>
-                            )}
-                        </form>
-                        )}
+                  {subscriptionStatus === "success" ? (
+                    <div className="flex items-center gap-2 rounded-lg bg-green-50 p-3 text-green-600">
+                      <CheckCircle className="h-5 w-5" />
+                      <span className="text-sm font-medium">Subscribed!</span>
                     </div>
-                )}
-             </div>
+                  ) : (
+                    <form
+                      onSubmit={handleNewsletterSubmit}
+                      className="space-y-2"
+                    >
+                      <div className="flex gap-2">
+                        <Input
+                          type="email"
+                          placeholder="Your email"
+                          value={email}
+                          onChange={e => setEmail(e.target.value)}
+                          className="bg-background"
+                          disabled={
+                            isEditable || createNewsletterMutation.isPending
+                          }
+                        />
+                        <Button
+                          type="submit"
+                          style={{
+                            backgroundColor: theme.colors.primary,
+                          }}
+                          disabled={
+                            isEditable || createNewsletterMutation.isPending
+                          }
+                        >
+                          {createNewsletterMutation.isPending ? "..." : "Join"}
+                        </Button>
+                      </div>
+
+                      {subscriptionStatus === "error" && errorMessage && (
+                        <div className="flex items-center gap-2 text-xs text-red-600">
+                          <AlertCircle className="h-3 w-3" />
+                          <span>{errorMessage}</span>
+                        </div>
+                      )}
+                    </form>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Copyright */}
-          <div className="border-t border-border/40 mt-16 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                 <p className="text-muted-foreground text-sm">
-                    {data.copyright}
-                 </p>
-                 <p className="text-muted-foreground text-sm flex items-center gap-1">
-                    Made with <Heart className="h-3 w-3 text-red-500 fill-current" /> by {data.copyright?.split(' ')[0] || 'Us'}
-                 </p>
+          <div className="border-border/40 mt-16 border-t pt-8">
+            <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+              <p className="text-muted-foreground text-sm">{data.copyright}</p>
+              <p className="text-muted-foreground flex items-center gap-1 text-sm">
+                Made with{" "}
+                <Heart className="h-3 w-3 fill-current text-red-500" /> by{" "}
+                {data.copyright?.split(" ")[0] || "Us"}
+              </p>
             </div>
           </div>
         </div>

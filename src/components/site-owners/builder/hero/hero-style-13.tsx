@@ -254,7 +254,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             value={titleContent}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="mb-8 text-5xl leading-[1.1] font-bold text-white md:text-7xl lg:text-8xl tracking-tight"
+            className="mb-8 text-5xl leading-[1.1] font-bold tracking-tight text-white md:text-7xl lg:text-8xl"
             isEditable={isEditable}
             placeholder="Enter hero title..."
             multiline

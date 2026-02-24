@@ -93,7 +93,7 @@ export const ServicesStyle2: React.FC<ServicesStyleProps> = ({
         )}
 
         {!isLoading && !error && services.length > 0 && (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:gap-10 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
             {services.slice(0, pageSize).map(service => (
               <div
                 key={service.id}
@@ -113,7 +113,7 @@ export const ServicesStyle2: React.FC<ServicesStyleProps> = ({
         )}
 
         {!isLoading && !error && services.length === 0 && (
-          <div className="py-20 text-center rounded-2xl bg-muted/30 border border-dashed">
+          <div className="bg-muted/30 rounded-2xl border border-dashed py-20 text-center">
             <Briefcase className="text-muted-foreground mx-auto mb-6 h-16 w-16 opacity-50" />
             <h3 className="text-foreground mb-3 text-2xl font-semibold">
               No Services Available

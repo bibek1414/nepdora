@@ -15,13 +15,13 @@ export const TestimonialCard11: React.FC<TestimonialCard11Props> = ({
 }) => {
   return (
     <Card
-      className="group h-full cursor-pointer overflow-hidden rounded-2xl border bg-card shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-zinc-900/50"
+      className="group bg-card h-full cursor-pointer overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-zinc-900/50"
       onClick={onClick}
     >
       <CardContent className="flex h-full flex-col justify-between p-6 sm:p-8">
         <div className="relative">
           <Quote className="text-primary/20 mb-4 h-10 w-10" />
-          <blockquote className="text-foreground text-lg font-medium leading-relaxed">
+          <blockquote className="text-foreground text-lg leading-relaxed font-medium">
             &quot;{testimonial.comment}&quot;
           </blockquote>
         </div>
@@ -39,7 +39,7 @@ export const TestimonialCard11: React.FC<TestimonialCard11Props> = ({
             />
           </div>
           <div className="flex flex-col">
-            <h3 className="text-foreground font-semibold leading-tight">
+            <h3 className="text-foreground leading-tight font-semibold">
               {testimonial.name}
             </h3>
             <p className="text-muted-foreground text-sm">

@@ -125,20 +125,20 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
               value={data.subtitle}
               onChange={handleTextUpdate("subtitle")}
               isEditable={isEditable}
-              className="text-lg text-muted-foreground leading-relaxed max-w-3xl"
+              className="text-muted-foreground max-w-3xl text-lg leading-relaxed"
             />
           )}
         </div>
 
         {/* Masonry Grid */}
-        <div className="columns-1 gap-6 sm:columns-2 md:columns-3 lg:columns-4 space-y-6">
+        <div className="columns-1 gap-6 space-y-6 sm:columns-2 md:columns-3 lg:columns-4">
           {activeImages.map((image, index) => (
             <div
               key={image.id}
-              className="relative mb-6 break-inside-avoid overflow-hidden rounded-xl bg-muted transition-all hover:shadow-lg"
+              className="bg-muted relative mb-6 break-inside-avoid overflow-hidden rounded-xl transition-all hover:shadow-lg"
             >
               <div
-                className="relative cursor-pointer group"
+                className="group relative cursor-pointer"
                 onClick={() => !isEditable && setSelectedImage(image)}
               >
                 <EditableImage
@@ -159,9 +159,9 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                 />
 
                 {!isEditable && (
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                        <ZoomIn className="text-white w-8 h-8 drop-shadow-lg" />
-                    </div>
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
+                    <ZoomIn className="h-8 w-8 text-white drop-shadow-lg" />
+                  </div>
                 )}
 
                 {isEditable && (
@@ -189,12 +189,14 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
 
               {/* Image Info */}
               {(image.title || image.description) && (
-                <div className="p-4 bg-card">
+                <div className="bg-card p-4">
                   {image.title && (
-                    <h3 className="font-semibold text-foreground">{image.title}</h3>
+                    <h3 className="text-foreground font-semibold">
+                      {image.title}
+                    </h3>
                   )}
                   {image.description && (
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className="text-muted-foreground mt-1 text-sm">
                       {image.description}
                     </p>
                   )}
@@ -209,7 +211,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
           <div className="mt-8 text-center">
             <label
               htmlFor={`gallery-add-${componentId}`}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-3 hover:bg-gray-100 transition-colors"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-3 transition-colors hover:bg-gray-100"
             >
               {isAddingImage ? (
                 <div className="flex items-center gap-2 text-gray-500">
@@ -219,7 +221,9 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
               ) : (
                 <>
                   <Plus className="h-5 w-5 text-gray-400" />
-                  <span className="text-sm font-medium text-gray-600">Add New Image</span>
+                  <span className="text-sm font-medium text-gray-600">
+                    Add New Image
+                  </span>
                   <input
                     id={`gallery-add-${componentId}`}
                     type="file"
@@ -240,22 +244,22 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
           open={!!selectedImage}
           onOpenChange={() => setSelectedImage(null)}
         >
-          <DialogContent className="max-w-5xl p-0 bg-transparent border-none shadow-none overflow-hidden sm:max-w-fit">
-            <div className="relative group">
-                <img
+          <DialogContent className="max-w-5xl overflow-hidden border-none bg-transparent p-0 shadow-none sm:max-w-fit">
+            <div className="group relative">
+              <img
                 src={getImageUrl(selectedImage.image)}
                 alt={selectedImage.image_alt_description}
-                className="max-h-[85vh] w-auto max-w-full rounded-lg shadow-2xl object-contain mx-auto"
-                />
-                <DialogClose className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors">
-                    <X className="h-5 w-5" />
-                </DialogClose>
+                className="mx-auto max-h-[85vh] w-auto max-w-full rounded-lg object-contain shadow-2xl"
+              />
+              <DialogClose className="absolute top-4 right-4 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70">
+                <X className="h-5 w-5" />
+              </DialogClose>
             </div>
 
             {(selectedImage.title || selectedImage.description) && (
-              <div className="bg-background/90 backdrop-blur-md p-6 rounded-xl max-w-2xl mx-auto mt-4 border shadow-lg">
+              <div className="bg-background/90 mx-auto mt-4 max-w-2xl rounded-xl border p-6 shadow-lg backdrop-blur-md">
                 {selectedImage.title && (
-                  <h3 className="text-xl font-bold text-foreground mb-2">
+                  <h3 className="text-foreground mb-2 text-xl font-bold">
                     {selectedImage.title}
                   </h3>
                 )}

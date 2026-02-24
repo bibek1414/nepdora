@@ -71,7 +71,7 @@ export const ServicesCard2: React.FC<ServicesCard2Props> = ({
 
   return (
     <CardWrapper>
-      <article className="group h-full overflow-hidden rounded-xl bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+      <article className="group bg-card h-full overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
         {/* Image */}
         <div className="relative aspect-[4/3] w-full overflow-hidden">
           <Image
@@ -85,7 +85,7 @@ export const ServicesCard2: React.FC<ServicesCard2Props> = ({
         <div className="p-6">
           {/* Title */}
           <h2
-            className="mb-2 text-xl font-bold leading-tight"
+            className="mb-2 text-xl leading-tight font-bold"
             style={{
               color: theme.colors.primary,
               fontFamily: theme.fonts.heading,
@@ -93,8 +93,9 @@ export const ServicesCard2: React.FC<ServicesCard2Props> = ({
           >
             {services.title}
           </h2>
-          <p className="line-clamp-2 text-muted-foreground text-sm">
-            {services.description?.replace(/<[^>]*>/g, "") || "Read more about this service."}
+          <p className="text-muted-foreground line-clamp-2 text-sm">
+            {services.description?.replace(/<[^>]*>/g, "") ||
+              "Read more about this service."}
           </p>
         </div>
       </article>

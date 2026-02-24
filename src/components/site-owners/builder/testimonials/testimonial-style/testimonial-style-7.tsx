@@ -40,25 +40,25 @@ export const TestimonialStyle7: React.FC<TestimonialStyleProps> = ({
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
       `}</style>
-      <div className="w-full mb-12">
+      <div className="mb-12 w-full">
         <EditableText
-            value={title}
-            onChange={handleTitleChange}
-            as="h1"
-            className="mt-4 bg-gradient-to-r from-slate-800 to-slate-500 bg-clip-text text-4xl font-semibold text-transparent tracking-tight"
-            isEditable={isEditable}
-            placeholder="Enter title..."
+          value={title}
+          onChange={handleTitleChange}
+          as="h1"
+          className="mt-4 bg-gradient-to-r from-slate-800 to-slate-500 bg-clip-text text-4xl font-semibold tracking-tight text-transparent"
+          isEditable={isEditable}
+          placeholder="Enter title..."
         />
         {subtitle && (
-            <EditableText
+          <EditableText
             value={subtitle}
             onChange={handleSubtitleChange}
             as="p"
-            className="mt-4 max-w-2xl text-lg text-slate-500 leading-relaxed"
+            className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-500"
             isEditable={isEditable}
             placeholder="Enter subtitle..."
             multiline={true}
-            />
+          />
         )}
       </div>
 
@@ -108,7 +108,7 @@ export const TestimonialStyle7: React.FC<TestimonialStyleProps> = ({
       )}
 
       {!isLoading && !error && testimonials.length === 0 && (
-        <div className="mt-10 w-full py-20 text-center bg-muted/30 rounded-2xl border border-dashed">
+        <div className="bg-muted/30 mt-10 w-full rounded-2xl border border-dashed py-20 text-center">
           <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-16 w-16 opacity-50" />
           <h3 className="text-foreground mb-4 text-2xl font-semibold">
             No Testimonials Available

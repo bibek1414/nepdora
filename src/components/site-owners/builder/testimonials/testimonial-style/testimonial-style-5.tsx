@@ -97,7 +97,7 @@ export const TestimonialStyle5: React.FC<TestimonialStyleProps> = ({
         )}
 
         {!isLoading && !error && testimonials.length === 0 && (
-          <div className="py-20 text-center rounded-2xl bg-muted/30 border border-dashed">
+          <div className="bg-muted/30 rounded-2xl border border-dashed py-20 text-center">
             <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-16 w-16 opacity-50" />
             <h3 className="text-foreground mb-3 text-2xl font-semibold">
               No Testimonials Available

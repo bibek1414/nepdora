@@ -151,7 +151,7 @@ export function FooterStyle7({
           className="absolute top-0 left-1/2 flex w-[95%] min-w-[288px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-between rounded-2xl border border-white/10 p-6 shadow-2xl sm:w-[90%] sm:rounded-3xl md:w-[80%] md:flex-row md:rounded-full md:px-12 md:py-8"
           style={{ backgroundColor: primaryColor }}
         >
-          <div className="mb-4 flex items-center gap-4 md:mb-0 w-full md:w-auto">
+          <div className="mb-4 flex w-full items-center gap-4 md:mb-0 md:w-auto">
             <div
               className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white"
               style={{
@@ -185,7 +185,7 @@ export function FooterStyle7({
 
           <div className="mx-8 hidden h-12 w-px bg-white/20 md:block"></div>
 
-          <div className="flex items-center gap-4 w-full md:w-auto">
+          <div className="flex w-full items-center gap-4 md:w-auto">
             <div
               className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white"
               style={{
@@ -233,10 +233,7 @@ export function FooterStyle7({
                   color: primaryColor,
                 }}
               >
-                <Plane
-                  size={20}
-                  className="-rotate-45 fill-current"
-                />
+                <Plane size={20} className="-rotate-45 fill-current" />
               </div>
               <FooterLogo
                 footerData={data}
@@ -262,10 +259,7 @@ export function FooterStyle7({
                       : undefined
                   }
                 >
-                  <SocialIcon
-                    platform={social.platform}
-                    className="h-4 w-4"
-                  />
+                  <SocialIcon platform={social.platform} className="h-4 w-4" />
                 </Link>
               ))}
             </div>
@@ -280,9 +274,14 @@ export function FooterStyle7({
               {(servicesSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex cursor-pointer items-center gap-3 text-white/90 transition-colors hover:text-white group"
+                  className="group flex cursor-pointer items-center gap-3 text-white/90 transition-colors hover:text-white"
                 >
-                  <span style={{ color: secondaryColor }} className="group-hover:translate-x-1 transition-transform">✓</span>
+                  <span
+                    style={{ color: secondaryColor }}
+                    className="transition-transform group-hover:translate-x-1"
+                  >
+                    ✓
+                  </span>
                   <Link
                     href={generateLinkHref(
                       link.href || "",
@@ -314,9 +313,14 @@ export function FooterStyle7({
               {(usefulLinksSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex cursor-pointer items-center gap-3 text-white/90 transition-colors hover:text-white group"
+                  className="group flex cursor-pointer items-center gap-3 text-white/90 transition-colors hover:text-white"
                 >
-                  <span style={{ color: secondaryColor }} className="group-hover:translate-x-1 transition-transform">&gt;</span>
+                  <span
+                    style={{ color: secondaryColor }}
+                    className="transition-transform group-hover:translate-x-1"
+                  >
+                    &gt;
+                  </span>
                   <Link
                     href={generateLinkHref(
                       link.href || "",
@@ -341,9 +345,7 @@ export function FooterStyle7({
 
           {/* Newsletter */}
           <div>
-            <h4 className="mb-6 text-lg font-bold">
-              {data.newsletter.title}
-            </h4>
+            <h4 className="mb-6 text-lg font-bold">{data.newsletter.title}</h4>
             <p className="mb-4 text-sm leading-relaxed text-white/90">
               {data.newsletter.description}
             </p>
@@ -398,9 +400,7 @@ export function FooterStyle7({
           </div>
         </div>
 
-        <div
-          className="flex flex-col items-center justify-between gap-6 px-4 py-8 text-xs leading-relaxed text-white/60 md:flex-row md:px-8"
-        >
+        <div className="flex flex-col items-center justify-between gap-6 px-4 py-8 text-xs leading-relaxed text-white/60 md:flex-row md:px-8">
           <p className="text-left">{data.copyright}</p>
           <div className="flex flex-wrap justify-center gap-6 md:justify-end">
             {(legalSection?.links || []).map(link => (

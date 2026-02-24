@@ -49,8 +49,8 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
   } = useBuilderLogic(heroData, onUpdate);
 
   return (
-    <section className="relative overflow-hidden bg-background py-16 sm:py-24 lg:py-32">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <section className="bg-background relative overflow-hidden py-16 sm:py-24 lg:py-32">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
           className={`grid items-center gap-12 lg:gap-16 ${data.showImage ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"}`}
         >
@@ -84,7 +84,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-foreground text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
+              className="text-foreground text-4xl leading-tight font-bold tracking-tight sm:text-5xl lg:text-6xl"
               isEditable={isEditable}
               placeholder="Enter your hero title..."
             />
@@ -124,7 +124,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                     }}
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="!text-white hover:scale-105 rounded-lg px-8 py-3 font-medium transition-transform"
+                    className="rounded-lg px-8 py-3 font-medium !text-white transition-transform hover:scale-105"
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter URL..."
                   />
