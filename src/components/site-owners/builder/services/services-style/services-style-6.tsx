@@ -36,20 +36,22 @@ export const ServicesStyle6: React.FC<ServicesStyleProps> = ({
   const services = servicesData?.results || [];
 
   return (
-    <div className="bg-background relative py-16 md:py-24">
+    <div className="relative">
       {isLoading && (
-        <div className="container mx-auto max-w-7xl px-4 md:px-8">
-          <div className="mb-12 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-            <div className="space-y-4">
-              <Skeleton className="h-6 w-32 rounded-md" />
-              <Skeleton className="h-12 w-64 rounded-md" />
+        <div className="py-20">
+          <div className="container mx-auto px-4 md:px-8">
+            <div className="mb-12 flex flex-col items-end justify-between md:flex-row">
+              <div className="mb-4 md:mb-0">
+                <Skeleton className="mb-2 h-4 w-32" />
+                <Skeleton className="h-12 w-64" />
+              </div>
+              <Skeleton className="h-10 w-32" />
             </div>
-            <Skeleton className="h-10 w-32 rounded-md" />
-          </div>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton key={index} className="h-[320px] rounded-2xl" />
-            ))}
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="h-64 rounded-3xl" />
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -69,7 +71,7 @@ export const ServicesStyle6: React.FC<ServicesStyleProps> = ({
       )}
 
       {!isLoading && !error && services.length > 0 && (
-        <div className="relative container mx-auto max-w-7xl px-4 md:px-8">
+        <div className="relative">
           {isEditable && (
             <div className="absolute inset-0 z-10 bg-transparent" />
           )}
@@ -86,16 +88,14 @@ export const ServicesStyle6: React.FC<ServicesStyleProps> = ({
       )}
 
       {!isLoading && !error && services.length === 0 && (
-        <div className="container mx-auto px-4">
-          <div className="bg-muted/30 rounded-2xl border border-dashed py-20 text-center">
-            <Briefcase className="text-muted-foreground mx-auto mb-4 h-16 w-16 opacity-50" />
-            <h3 className="text-foreground mb-2 text-xl font-semibold">
-              No Services Found
-            </h3>
-            <p className="text-muted-foreground">
-              Add some services to your site to display them here.
-            </p>
-          </div>
+        <div className="bg-muted/50 rounded-lg py-12 text-center">
+          <Briefcase className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+          <h3 className="text-foreground mb-2 text-lg font-semibold">
+            No Services Found
+          </h3>
+          <p className="text-muted-foreground">
+            Add some services to your site to display them here.
+          </p>
         </div>
       )}
     </div>

@@ -108,141 +108,121 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
   const filteredImages = data.images.filter(img => img.is_active);
 
   return (
-    <div className="w-full py-16 md:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-left">
-          <EditableText
-            value={data.title || "Our Latest Creations"}
-            onChange={handleTextUpdate("title")}
-            isEditable={isEditable}
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight sm:text-5xl"
-          />
-          <EditableText
-            value={
-              data.subtitle ||
-              "A visual collection of our most recent works - each piece crafted with intention, emotion, and style."
-            }
-            onChange={handleTextUpdate("subtitle")}
-            isEditable={isEditable}
-            className="text-muted-foreground max-w-3xl text-lg leading-relaxed"
-          />
-        </div>
+    <>
+      <h1 className="mx-auto text-center text-3xl font-semibold">
+        <EditableText
+          value={data.title || "Our Latest Creations"}
+          onChange={handleTextUpdate("title")}
+          isEditable={isEditable}
+        />
+      </h1>
+      <p className="mx-auto mt-2 max-w-lg text-center text-sm text-slate-500">
+        <EditableText
+          value={
+            data.subtitle ||
+            "A visual collection of our most recent works - each piece crafted with intention, emotion, and style."
+          }
+          onChange={handleTextUpdate("subtitle")}
+          isEditable={isEditable}
+        />
+      </p>
 
-        <div className="flex w-full flex-wrap items-center gap-4">
-          {filteredImages.map((image, index) => {
-            const actualIndex = data.images.findIndex(
-              img => img.id === image.id
-            );
-            return (
-              <div
-                key={image.id}
-                className="group relative h-[450px] w-64 grow overflow-hidden rounded-2xl transition-all duration-700 hover:w-[400px] hover:grow-[2]"
-              >
-                {!isEditable ? (
-                  <img
-                    className="h-full w-full object-cover object-center"
+      <div className="mx-auto mt-10 flex h-[400px] w-full max-w-4xl items-center gap-2">
+        {filteredImages.map((image, index) => {
+          const actualIndex = data.images.findIndex(img => img.id === image.id);
+          return (
+            <div
+              key={image.id}
+              className="group relative h-[400px] w-56 grow overflow-hidden rounded-lg transition-all duration-500 hover:w-full"
+            >
+              {!isEditable ? (
+                <img
+                  className="h-full w-full object-cover object-center"
+                  src={getImageUrl(image.image)}
+                  alt={image.image_alt_description}
+                />
+              ) : (
+                <div className="h-full w-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-center [&>div]:relative! [&>div]:h-full [&>div]:w-full">
+                  <EditableImage
                     src={getImageUrl(image.image)}
                     alt={image.image_alt_description}
+                    onImageChange={(imageUrl, altText) =>
+                      handleImageUpdateLocal(actualIndex, imageUrl, altText)
+                    }
+                    isEditable={isEditable}
+                    className="h-full w-full"
+                    width={800}
+                    height={800}
+                    imageOptimization={{
+                      width: 800,
+                      height: 800,
+                      quality: "auto",
+                      format: "auto",
+                      crop: "fill",
+                    }}
+                    cloudinaryOptions={{
+                      folder: "gallery-images",
+                      resourceType: "image",
+                    }}
+                    disableImageChange={true}
+                    showAltEditor={false}
+                    inputId={`gallery5-upload-${componentId}-${actualIndex}`}
                   />
-                ) : (
-                  <div className="h-full w-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-center [&>div]:relative! [&>div]:h-full [&>div]:w-full">
-                    <EditableImage
-                      src={getImageUrl(image.image)}
-                      alt={image.image_alt_description}
-                      onImageChange={(imageUrl, altText) =>
-                        handleImageUpdateLocal(actualIndex, imageUrl, altText)
-                      }
-                      isEditable={isEditable}
-                      className="h-full w-full"
-                      width={800}
-                      height={800}
-                      imageOptimization={{
-                        width: 800,
-                        height: 800,
-                        quality: "auto",
-                        format: "auto",
-                        crop: "fill",
-                      }}
-                      cloudinaryOptions={{
-                        folder: "gallery-images",
-                        resourceType: "image",
-                      }}
-                      disableImageChange={true}
-                      showAltEditor={false}
-                      inputId={`gallery5-upload-${componentId}-${actualIndex}`}
-                    />
-                  </div>
-                )}
-                {isEditable && (
-                  <div className="absolute top-2 right-2 z-10 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                    <label
-                      htmlFor={`gallery5-upload-${componentId}-${actualIndex}`}
-                      className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg hover:bg-white"
-                    >
-                      Change
-                    </label>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={e => {
-                        e.stopPropagation();
-                        handleRemoveImage(actualIndex);
-                      }}
-                      className="h-6 px-2"
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                )}
-
-                {/* Overlay Text */}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                  {image.title && (
-                    <h3 className="mb-1 text-xl font-bold text-white">
-                      {image.title}
-                    </h3>
-                  )}
-                  {image.description && (
-                    <p className="line-clamp-2 text-sm text-white/80">
-                      {image.description}
-                    </p>
-                  )}
                 </div>
-              </div>
-            );
-          })}
-
-          {isEditable && (
-            <div className="relative flex h-[450px] w-64 grow items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:bg-gray-100">
-              <label
-                htmlFor={`gallery5-add-${componentId}`}
-                className="flex cursor-pointer flex-col items-center gap-2"
-              >
-                {isAddingImage ? (
-                  <div className="flex flex-col items-center gap-2 text-gray-500">
-                    <Loader2 className="h-8 w-8 animate-spin" />
-                    <span className="text-sm font-medium">Uploading...</span>
-                  </div>
-                ) : (
-                  <>
-                    <Plus className="h-8 w-8 text-gray-400" />
-                    <span className="text-sm font-medium text-gray-500">
-                      Add Image
-                    </span>
-                    <input
-                      id={`gallery5-add-${componentId}`}
-                      type="file"
-                      accept="image/*"
-                      onChange={e => handleImageFileChange(e)}
-                      className="hidden"
-                    />
-                  </>
-                )}
-              </label>
+              )}
+              {isEditable && (
+                <div className="absolute top-2 right-2 z-10 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                  <label
+                    htmlFor={`gallery5-upload-${componentId}-${actualIndex}`}
+                    className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg hover:bg-white"
+                  >
+                    Change
+                  </label>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleRemoveImage(actualIndex);
+                    }}
+                    className="h-6 px-2"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          );
+        })}
+
+        {isEditable && (
+          <div className="relative flex h-[400px] w-56 grow items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
+            <label
+              htmlFor={`gallery5-add-${componentId}`}
+              className="flex cursor-pointer flex-col items-center gap-2"
+            >
+              {isAddingImage ? (
+                <div className="flex flex-col items-center gap-2 text-gray-500">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                  <span className="text-sm font-medium">Uploading...</span>
+                </div>
+              ) : (
+                <>
+                  <Plus className="h-8 w-8 text-gray-400" />
+                  <span className="text-sm text-gray-500">Add Image</span>
+                  <input
+                    id={`gallery5-add-${componentId}`}
+                    type="file"
+                    accept="image/*"
+                    onChange={e => handleImageFileChange(e)}
+                    className="hidden"
+                  />
+                </>
+              )}
+            </label>
+          </div>
+        )}
       </div>
-    </div>
+    </>
   );
 };

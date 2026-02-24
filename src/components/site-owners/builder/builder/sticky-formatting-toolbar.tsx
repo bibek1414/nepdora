@@ -387,6 +387,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 setSelectionFontSize(newSize);
                 applyFontSize(newSize);
                 console.log("newSize", newSize);
+                clearSelection();
                 setFontSizeInput((current - 2).toString());
               }
             }}
@@ -400,12 +401,6 @@ export const StickyFormattingToolbar: React.FC = () => {
             <input
               type="text"
               value={fontSizeInput}
-              onClick={e => {
-                e.stopPropagation();
-                const willShow = !showFontSizePicker;
-                closeAllDropdowns();
-                setShowFontSizePicker(willShow);
-              }}
               onChange={e => {
                 const value = e.target.value.replace(/[^0-9]/g, "");
                 setFontSizeInput(value);
@@ -419,6 +414,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                   const newSize = `${size}px`;
                   setSelectionFontSize(newSize);
                   applyFontSize(newSize);
+                  clearSelection();
                   setFontSizeInput(size.toString());
                 } else {
                   setFontSizeInput(parseInt(selectionFontSize).toString());
@@ -429,7 +425,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                   (e.target as HTMLInputElement).blur();
                 }
               }}
-              className="w-12 cursor-text rounded border border-gray-300 px-1 py-1.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:border-blue-400 focus:outline-none"
+              className="w-12 rounded border border-gray-300 px-1 py-1.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:border-blue-400 focus:outline-none"
               title="Font Size"
             />
             <button
@@ -442,25 +438,6 @@ export const StickyFormattingToolbar: React.FC = () => {
             >
               <ChevronDown className="h-3 w-3" />
             </button>
-
-            {/* Font Size Dropdown - Moved inside for relative positioning */}
-            {showFontSizePicker && (
-              <div className="absolute top-full left-0 z-50 mt-1 max-h-60 w-32 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
-                {quickFontSizes.map(size => (
-                  <button
-                    key={size}
-                    onClick={() => {
-                      applyFontSize(size);
-                      setFontSizeInput(parseInt(size).toString());
-                      setShowFontSizePicker(false);
-                    }}
-                    className="hover:text-primary block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50"
-                  >
-                    {parseInt(size)}px
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
           <button
@@ -470,6 +447,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 const newSize = `${current + 2}px`;
                 setSelectionFontSize(newSize);
                 applyFontSize(newSize);
+                clearSelection();
                 setFontSizeInput((current + 2).toString());
               }
             }}
@@ -479,6 +457,25 @@ export const StickyFormattingToolbar: React.FC = () => {
             <Plus className="h-4 w-4 text-gray-700" />
           </button>
         </div>
+
+        {/* Font Size Dropdown */}
+        {showFontSizePicker && (
+          <div className="absolute top-full left-[180px] z-50 mt-1 max-h-60 w-32 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
+            {quickFontSizes.map(size => (
+              <button
+                key={size}
+                onClick={() => {
+                  applyFontSize(size);
+                  clearSelection();
+                  setFontSizeInput(parseInt(size).toString());
+                }}
+                className="hover:text-primary block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50"
+              >
+                {parseInt(size)}px
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="h-6 w-px bg-gray-300" />
 

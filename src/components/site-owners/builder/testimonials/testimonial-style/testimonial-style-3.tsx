@@ -36,14 +36,14 @@ export const TestimonialStyle3: React.FC<TestimonialStyleProps> = ({
   };
 
   return (
-    <section className="bg-background py-16 md:py-24">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 md:mb-16">
+    <section className="bg-background py-12 md:py-16">
+      <div className="container mx-auto max-w-7xl px-4">
+        <div className="mb-12 text-center">
           <EditableText
             value={title}
             onChange={handleTitleChange}
             as="h2"
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight sm:text-5xl"
+            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
             isEditable={isEditable}
             placeholder="Enter title..."
           />
@@ -51,7 +51,7 @@ export const TestimonialStyle3: React.FC<TestimonialStyleProps> = ({
             value={subtitle || ""}
             onChange={handleSubtitleChange}
             as="p"
-            className="text-muted-foreground max-w-3xl text-xl leading-relaxed"
+            className="text-muted-foreground mx-auto max-w-3xl text-xl"
             isEditable={isEditable}
             placeholder="Enter subtitle..."
             multiline={true}
@@ -62,10 +62,10 @@ export const TestimonialStyle3: React.FC<TestimonialStyleProps> = ({
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex flex-col space-y-4">
-                <Skeleton className="h-[200px] w-full rounded-2xl" />
+                <Skeleton className="h-[200px] w-full rounded-lg" />
                 <div className="space-y-3">
-                  <Skeleton className="h-6 w-3/4 rounded-md" />
-                  <Skeleton className="h-4 w-1/2 rounded-md" />
+                  <Skeleton className="h-6 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
                 </div>
               </div>
             ))}
@@ -85,11 +85,11 @@ export const TestimonialStyle3: React.FC<TestimonialStyleProps> = ({
         )}
 
         {!isLoading && !error && testimonials.length > 0 && (
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-10">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {testimonials.slice(0, pageSize).map(testimonial => (
               <div
                 key={testimonial.id}
-                className="relative h-full transform transition-transform duration-300 hover:-translate-y-1"
+                className="relative transform transition-transform duration-200 hover:scale-105"
               >
                 {isEditable && <div className="absolute inset-0 z-10" />}
                 <TestimonialCard3
@@ -102,9 +102,9 @@ export const TestimonialStyle3: React.FC<TestimonialStyleProps> = ({
         )}
 
         {!isLoading && !error && testimonials.length === 0 && (
-          <div className="bg-muted/30 rounded-2xl border border-dashed py-20 text-center">
-            <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-16 w-16 opacity-50" />
-            <h3 className="text-foreground mb-3 text-2xl font-semibold">
+          <div className="py-16 text-center">
+            <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
+            <h3 className="text-foreground mb-4 text-2xl font-semibold">
               No Testimonials Available
             </h3>
             <p className="text-muted-foreground mx-auto max-w-md text-lg">

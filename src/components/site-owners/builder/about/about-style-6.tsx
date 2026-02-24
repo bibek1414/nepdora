@@ -82,9 +82,9 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
 
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
-      <div className="container mx-auto max-w-7xl px-4 py-16 md:py-24">
+      <div className="container mx-auto max-w-7xl px-4 py-16">
         {/* Header */}
-        <header className="mb-12 text-left">
+        <header className="mb-12 text-center">
           <div
             className="mb-4 inline-block rounded-xl p-3"
             style={{ backgroundColor: theme.colors.primary }}
@@ -95,7 +95,7 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
             value={data.headline}
             onChange={handleTextUpdate("headline")}
             as="h1"
-            className="text-foreground max-w-4xl text-3xl leading-tight font-bold md:text-4xl lg:text-5xl"
+            className="mx-auto max-w-4xl text-xl leading-tight font-bold text-black md:text-3xl"
             isEditable={isEditable}
             placeholder="Brewhaus is where flavor meets craft. From bean to cup, we focus on quality, speed, and simplicity — perfect for busy mornings or laid-back afternoons."
             multiline={true}
@@ -103,7 +103,7 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
         </header>
 
         {/* Buttons */}
-        <div className="mb-16 flex items-center justify-start space-x-4">
+        <div className="mb-16 flex items-center justify-center space-x-4">
           <EditableLink
             text={data.buttonText}
             href={data.buttonLink}
@@ -112,7 +112,7 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
               backgroundColor: theme.colors.primary,
               color: theme.colors.primaryForeground,
             }}
-            className="rounded-full px-8 py-3 font-medium transition-colors hover:opacity-90"
+            className="rounded-full px-6 py-3 font-medium transition-colors"
             isEditable={isEditable}
             textPlaceholder="Our News"
             hrefPlaceholder="#news"
@@ -128,16 +128,16 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
           <div className="flex flex-col gap-8 lg:col-span-1">
             {/* Stat Card 1 */}
             <div
-              className="flex h-full flex-col justify-between rounded-xl p-8 shadow-sm"
+              className="flex h-full flex-col justify-between rounded-xl p-8"
               style={{
                 backgroundColor: theme.colors.primary,
                 color: theme.colors.primaryForeground,
               }}
             >
-              <div className="flex justify-end opacity-50">
+              <div className="flex justify-end">
                 {getIconComponent(data.stats[0].topIcon)}
               </div>
-              <div className="my-auto text-left">
+              <div className="my-auto text-center">
                 <EditableText
                   value={data.stats[0].value}
                   onChange={handleStatUpdate(0, "value")}
@@ -150,25 +150,25 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
                   value={data.stats[0].label}
                   onChange={handleStatUpdate(0, "label")}
                   as="p"
-                  className="mt-2 text-lg font-medium opacity-90"
+                  className="mt-2 text-lg"
                   isEditable={isEditable}
                   placeholder="Happy Customers"
                 />
               </div>
-              <div className="flex justify-start opacity-50">
+              <div className="flex justify-start">
                 {getIconComponent(data.stats[0].bottomIcon)}
               </div>
             </div>
 
             {/* Image 1 */}
-            <div className="h-full overflow-hidden rounded-xl shadow-md">
+            <div className="h-full overflow-hidden rounded-xl">
               <EditableImage
                 src={data.image1Url}
                 alt={data.image1Alt}
                 onImageChange={handleImageUpdate("image1Url", "image1Alt")}
                 onAltChange={handleAltUpdate("image1Alt")}
                 isEditable={isEditable}
-                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                className="h-full w-full object-cover"
                 width={600}
                 height={800}
                 cloudinaryOptions={{
@@ -186,7 +186,7 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
           </div>
 
           {/* Center Image */}
-          <div className="col-span-1 overflow-hidden rounded-xl shadow-md md:col-span-2 lg:col-span-1">
+          <div className="col-span-1 overflow-hidden rounded-xl md:col-span-2 lg:col-span-1">
             <EditableImage
               src={data.centerImageUrl}
               alt={data.centerImageAlt}
@@ -196,7 +196,7 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
               )}
               onAltChange={handleAltUpdate("centerImageAlt")}
               isEditable={isEditable}
-              className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+              className="h-full w-full object-cover"
               width={600}
               height={800}
               cloudinaryOptions={{
@@ -216,16 +216,16 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
           <div className="flex flex-col gap-8 lg:col-span-1">
             {/* Stat Card 2 */}
             <div
-              className="flex h-full flex-col justify-between rounded-xl p-8 shadow-sm"
+              className="flex h-full flex-col justify-between rounded-xl p-8"
               style={{
                 backgroundColor: theme.colors.primary,
                 color: theme.colors.primaryForeground,
               }}
             >
-              <div className="flex justify-end opacity-50">
+              <div className="flex justify-end">
                 {getIconComponent(data.stats[1].topIcon)}
               </div>
-              <div className="my-auto text-left">
+              <div className="my-auto text-center">
                 <EditableText
                   value={data.stats[1].value}
                   onChange={handleStatUpdate(1, "value")}
@@ -238,25 +238,25 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
                   value={data.stats[1].label}
                   onChange={handleStatUpdate(1, "label")}
                   as="p"
-                  className="mt-2 text-lg font-medium opacity-90"
+                  className="mt-2 text-lg"
                   isEditable={isEditable}
                   placeholder="Products"
                 />
               </div>
-              <div className="flex justify-start opacity-50">
+              <div className="flex justify-start">
                 {getIconComponent(data.stats[1].bottomIcon)}
               </div>
             </div>
 
             {/* Image 2 */}
-            <div className="h-full overflow-hidden rounded-xl shadow-md">
+            <div className="h-full overflow-hidden rounded-xl">
               <EditableImage
                 src={data.image2Url}
                 alt={data.image2Alt}
                 onImageChange={handleImageUpdate("image2Url", "image2Alt")}
                 onAltChange={handleAltUpdate("image2Alt")}
                 isEditable={isEditable}
-                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                className="h-full w-full object-cover"
                 width={600}
                 height={800}
                 cloudinaryOptions={{

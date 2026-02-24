@@ -24,39 +24,37 @@ export const AboutUsTemplate4: React.FC<AboutUsTemplate4Props> = ({
     <section className="relative overflow-hidden bg-white py-16 sm:py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8">
-          <div className="relative order-2 mt-16 sm:mt-24 lg:order-1 lg:col-span-6 lg:mt-0">
-            <div className="relative mx-auto w-full max-w-xl overflow-hidden rounded-xl shadow-xl lg:max-w-none">
-              <EditableImage
-                src={data.imageUrl}
-                alt={data.imageAlt}
-                onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
-                onAltChange={handleAltUpdate("imageAlt")}
-                isEditable={isEditable}
-                className="h-full w-full object-cover"
-                width={700}
-                height={500}
-                priority
-                cloudinaryOptions={{
-                  folder: "about-us-images",
-                  resourceType: "image",
-                }}
-                showAltEditor={isEditable}
-                placeholder={{
-                  width: 700,
-                  height: 500,
-                  text: "Upload your about us image",
-                }}
-              />
-            </div>
+          <div className="relative mt-16 sm:mt-24 lg:col-span-6 lg:mt-0">
+            <EditableImage
+              src={data.imageUrl}
+              alt={data.imageAlt}
+              onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+              onAltChange={handleAltUpdate("imageAlt")}
+              isEditable={isEditable}
+              className="relative mx-auto w-full max-w-xl overflow-hidden rounded-xl lg:max-w-none"
+              width={700}
+              height={500}
+              priority
+              cloudinaryOptions={{
+                folder: "about-us-images",
+                resourceType: "image",
+              }}
+              showAltEditor={isEditable}
+              placeholder={{
+                width: 700,
+                height: 500,
+                text: "Upload your about us image",
+              }}
+            />
           </div>
 
           {/* Text on the right */}
-          <div className="mb-12 text-left lg:order-2 lg:col-span-6 lg:mb-0">
+          <div className="text-center lg:col-span-6 lg:text-left">
             <EditableText
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="p"
-              className="text-primary text-base leading-7 font-semibold"
+              className="text-base leading-7 font-semibold"
               isEditable={isEditable}
               placeholder="Enter section title..."
             />

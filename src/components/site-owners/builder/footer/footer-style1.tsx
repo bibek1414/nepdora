@@ -102,25 +102,47 @@ export function FooterStyle1({
 
   return (
     <div className="group relative">
-      <footer className="bg-background border-t pt-16 pb-8 lg:pt-24 lg:pb-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-4 lg:gap-16">
+      <footer className="bg-background border-t">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {/* Company Info */}
-            <div className="space-y-8 lg:col-span-1">
+            <div className="lg:col-span-2">
               {/* Logo */}
-              <div>
+              <div className="mb-4">
                 <FooterLogo
                   footerData={data}
                   getImageUrl={getImageUrl}
-                  textClassName="text-foreground text-xl font-bold"
-                  imageClassName="h-8 w-auto"
+                  textClassName="text-foreground text-xl"
+                  imageClassName="h-8"
                   containerClassName="gap-3"
                 />
               </div>
 
-              <p className="text-muted-foreground max-w-sm text-sm leading-relaxed">
+              <p className="text-muted-foreground mb-6 max-w-md">
                 {data.description}
               </p>
+
+              {/* Contact Info */}
+              <div className="mb-6 space-y-2">
+                {data.contactInfo.email && (
+                  <div className="text-muted-foreground flex items-center">
+                    <Mail className="mr-2 h-4 w-4" />
+                    <span className="text-sm">{data.contactInfo.email}</span>
+                  </div>
+                )}
+                {data.contactInfo.phone && (
+                  <div className="text-muted-foreground flex items-center">
+                    <Phone className="mr-2 h-4 w-4" />
+                    <span className="text-sm">{data.contactInfo.phone}</span>
+                  </div>
+                )}
+                {data.contactInfo.address && (
+                  <div className="text-muted-foreground flex items-center">
+                    <MapPin className="mr-2 h-4 w-4" />
+                    <span className="text-sm">{data.contactInfo.address}</span>
+                  </div>
+                )}
+              </div>
 
               {/* Social Links */}
               <div className="flex space-x-4">
@@ -128,7 +150,7 @@ export function FooterStyle1({
                   <Link
                     key={social.id}
                     href={social.href || "#"}
-                    className="bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground flex h-10 w-10 items-center justify-center rounded-full transition-all hover:-translate-y-1"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
                     target={
                       social.href?.startsWith("http") ? "_blank" : undefined
                     }
@@ -140,7 +162,7 @@ export function FooterStyle1({
                   >
                     <SocialIcon
                       platform={social.platform}
-                      className="h-5 w-5"
+                      className="h-4 w-4"
                     />
                   </Link>
                 ))}
@@ -148,102 +170,69 @@ export function FooterStyle1({
             </div>
 
             {/* Link Sections */}
-            <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-2">
-              {data.sections.map(section => (
-                <div key={section.id} className="space-y-4">
-                  <h4 className="text-foreground font-semibold tracking-tight">
-                    {section.title}
-                  </h4>
-                  <ul className="space-y-3">
-                    {section.links.map(link => (
-                      <li key={link.id}>
-                        {isEditable ? (
-                          <button
-                            className="text-muted-foreground hover:text-primary block text-sm transition-colors"
-                            onClick={
-                              isEditable ? e => e.preventDefault() : undefined
-                            }
-                          >
-                            {link.text}
-                          </button>
-                        ) : (
-                          <Link
-                            href={generateLinkHref(
-                              link.href || "",
-                              siteUser,
-                              pathname,
-                              isEditable
-                            )}
-                            className="text-muted-foreground hover:text-primary block text-sm transition-colors"
-                          >
-                            {link.text}
-                          </Link>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-
-            {/* Contact & Newsletter - Combined in last column or separate */}
-            <div className="space-y-8 lg:col-span-1">
-              {/* Contact Info */}
-              <div className="space-y-4">
-                <h4 className="text-foreground font-semibold tracking-tight">
-                  Contact Us
+            {data.sections.map(section => (
+              <div key={section.id}>
+                <h4 className="text-foreground mb-4 font-semibold">
+                  {section.title}
                 </h4>
-                <div className="space-y-3">
-                  {data.contactInfo.email && (
-                    <div className="text-muted-foreground group flex items-center">
-                      <Mail className="text-primary group-hover:text-foreground mr-3 h-4 w-4 transition-colors" />
-                      <span className="text-sm">{data.contactInfo.email}</span>
-                    </div>
-                  )}
-                  {data.contactInfo.phone && (
-                    <div className="text-muted-foreground group flex items-center">
-                      <Phone className="text-primary group-hover:text-foreground mr-3 h-4 w-4 transition-colors" />
-                      <span className="text-sm">{data.contactInfo.phone}</span>
-                    </div>
-                  )}
-                  {data.contactInfo.address && (
-                    <div className="text-muted-foreground group flex items-start">
-                      <MapPin className="text-primary group-hover:text-foreground mt-1 mr-3 h-4 w-4 transition-colors" />
-                      <span className="text-sm leading-relaxed">
-                        {data.contactInfo.address}
-                      </span>
-                    </div>
-                  )}
-                </div>
+                <ul className="space-y-2">
+                  {section.links.map(link => (
+                    <li key={link.id}>
+                      {isEditable ? (
+                        <button
+                          className="text-muted-foreground hover:text-foreground text-left text-sm transition-colors"
+                          onClick={
+                            isEditable ? e => e.preventDefault() : undefined
+                          }
+                        >
+                          {link.text}
+                        </button>
+                      ) : (
+                        <Link
+                          href={generateLinkHref(
+                            link.href || "",
+                            siteUser,
+                            pathname,
+                            isEditable
+                          )}
+                          className="text-muted-foreground hover:text-foreground block text-left text-sm transition-colors"
+                        >
+                          {link.text}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
               </div>
+            ))}
+          </div>
 
-              {/* Newsletter */}
-              {data.newsletter.enabled && (
-                <div className="space-y-4">
-                  <h4 className="text-foreground font-semibold tracking-tight">
-                    {data.newsletter.title}
-                  </h4>
-                  <p className="text-muted-foreground text-sm">
-                    {data.newsletter.description}
-                  </p>
+          {/* Newsletter */}
+          {data.newsletter.enabled && (
+            <div className="border-border mt-12 border-t pt-8">
+              <div className="mx-auto max-w-md text-center">
+                <h4 className="text-foreground mb-2 font-semibold">
+                  {data.newsletter.title}
+                </h4>
+                <p className="text-muted-foreground mb-4 text-sm">
+                  {data.newsletter.description}
+                </p>
 
-                  {subscriptionStatus === "success" ? (
-                    <div className="flex items-center gap-2 rounded-lg bg-green-50 p-3 text-green-600">
-                      <CheckCircle className="h-5 w-5" />
-                      <span className="text-sm font-medium">Subscribed!</span>
-                    </div>
-                  ) : (
-                    <form
-                      onSubmit={handleNewsletterSubmit}
-                      className="space-y-2"
-                    >
+                {subscriptionStatus === "success" ? (
+                  <div className="flex items-center justify-center gap-2 text-green-600">
+                    <CheckCircle className="h-5 w-5" />
+                    <span className="text-sm">Successfully subscribed!</span>
+                  </div>
+                ) : (
+                  <form onSubmit={handleNewsletterSubmit}>
+                    <div className="flex flex-col gap-2">
                       <div className="flex gap-2">
                         <Input
                           type="email"
-                          placeholder="Your email"
+                          placeholder="Enter your email"
                           value={email}
                           onChange={e => setEmail(e.target.value)}
-                          className="bg-background"
+                          className="flex-1"
                           disabled={
                             isEditable || createNewsletterMutation.isPending
                           }
@@ -257,33 +246,31 @@ export function FooterStyle1({
                             isEditable || createNewsletterMutation.isPending
                           }
                         >
-                          {createNewsletterMutation.isPending ? "..." : "Join"}
+                          {createNewsletterMutation.isPending
+                            ? "Subscribing..."
+                            : "Subscribe"}
                         </Button>
                       </div>
 
                       {subscriptionStatus === "error" && errorMessage && (
-                        <div className="flex items-center gap-2 text-xs text-red-600">
-                          <AlertCircle className="h-3 w-3" />
-                          <span>{errorMessage}</span>
+                        <div className="flex items-center justify-center gap-2 text-red-600">
+                          <AlertCircle className="h-4 w-4" />
+                          <span className="text-sm">{errorMessage}</span>
                         </div>
                       )}
-                    </form>
-                  )}
-                </div>
-              )}
+                    </div>
+                  </form>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Copyright */}
-          <div className="border-border/40 mt-16 border-t pt-8">
-            <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-              <p className="text-muted-foreground text-sm">{data.copyright}</p>
-              <p className="text-muted-foreground flex items-center gap-1 text-sm">
-                Made with{" "}
-                <Heart className="h-3 w-3 fill-current text-red-500" /> by{" "}
-                {data.copyright?.split(" ")[0] || "Us"}
-              </p>
-            </div>
+          <div className="border-border mt-8 border-t pt-8 text-center">
+            <p className="text-muted-foreground flex items-center justify-center gap-1 text-sm">
+              {data.copyright}
+              <Heart className="inline h-3 w-3 text-red-500" />
+            </p>
           </div>
         </div>
       </footer>

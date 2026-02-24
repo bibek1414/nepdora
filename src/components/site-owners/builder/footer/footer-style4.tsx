@@ -99,54 +99,48 @@ export function FooterStyle4({
         }}
         className="text-white"
       >
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           {/* Main content */}
-          <div className="grid grid-cols-1 gap-16 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
             {/* Company Info */}
-            <div className="space-y-8 lg:col-span-2">
+            <div className="lg:col-span-2">
               {/* Logo */}
-              <div>
+              <div className="mb-6">
                 <FooterLogo
                   footerData={data}
                   getImageUrl={getImageUrl}
-                  textClassName="text-foreground text-2xl font-bold"
-                  imageClassName="h-10 w-auto"
-                  containerClassName="gap-4"
+                  textClassName="text-foreground text-xl"
+                  imageClassName="h-8"
+                  containerClassName="gap-3"
                 />
               </div>
 
-              <p className="max-w-md text-lg leading-relaxed text-white/90">
+              <p className="mb-6 text-lg leading-relaxed text-white/90">
                 {data.description}
               </p>
 
               {/* Contact Info */}
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {data.contactInfo.email && (
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-full bg-white/10 p-2">
-                      <Mail className="h-4 w-4 text-white" />
-                    </div>
-                    <span className="text-sm font-medium text-white/90">
+                  <div className="flex items-center">
+                    <Mail className="mr-3 h-5 w-5 text-white/80" />
+                    <span className="text-white/90">
                       {data.contactInfo.email}
                     </span>
                   </div>
                 )}
                 {data.contactInfo.phone && (
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-full bg-white/10 p-2">
-                      <Phone className="h-4 w-4 text-white" />
-                    </div>
-                    <span className="text-sm font-medium text-white/90">
+                  <div className="flex items-center">
+                    <Phone className="mr-3 h-5 w-5 text-white/80" />
+                    <span className="text-white/90">
                       {data.contactInfo.phone}
                     </span>
                   </div>
                 )}
                 {data.contactInfo.address && (
-                  <div className="flex items-start gap-3">
-                    <div className="mt-1 rounded-full bg-white/10 p-2">
-                      <MapPin className="h-4 w-4 text-white" />
-                    </div>
-                    <span className="text-sm leading-relaxed font-medium text-white/90">
+                  <div className="flex items-center">
+                    <MapPin className="mr-3 h-5 w-5 text-white/80" />
+                    <span className="text-white/90">
                       {data.contactInfo.address}
                     </span>
                   </div>
@@ -155,124 +149,116 @@ export function FooterStyle4({
             </div>
 
             {/* Link Sections */}
-            <div className="grid grid-cols-2 gap-8 lg:col-span-2">
-              {data.sections.map(section => (
-                <div key={section.id}>
-                  <h4 className="mb-6 text-lg font-bold tracking-wide">
-                    {section.title}
-                  </h4>
-                  <ul className="space-y-3">
-                    {section.links.map(link => (
-                      <li key={link.id}>
-                        {isEditable ? (
-                          <button
-                            className="text-left text-sm text-white/80 transition-all hover:translate-x-1 hover:text-white"
-                            onClick={
-                              isEditable ? e => e.preventDefault() : undefined
-                            }
-                          >
-                            {link.text}
-                          </button>
-                        ) : (
-                          <Link
-                            href={generateLinkHref(
-                              link.href || "",
-                              siteUser,
-                              pathname,
-                              isEditable
-                            )}
-                            className="block text-left text-sm text-white/80 transition-all hover:translate-x-1 hover:text-white"
-                          >
-                            {link.text}
-                          </Link>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+            {data.sections.map(section => (
+              <div key={section.id}>
+                <h4 className="mb-6 text-xl font-semibold">{section.title}</h4>
+                <ul className="space-y-3">
+                  {section.links.map(link => (
+                    <li key={link.id}>
+                      {isEditable ? (
+                        <button
+                          className="text-left text-white/80 transition-all hover:translate-x-1 hover:text-white"
+                          onClick={
+                            isEditable ? e => e.preventDefault() : undefined
+                          }
+                        >
+                          {link.text}
+                        </button>
+                      ) : (
+                        <Link
+                          href={generateLinkHref(
+                            link.href || "",
+                            siteUser,
+                            pathname,
+                            isEditable
+                          )}
+                          className="block text-white/80 transition-all hover:translate-x-1 hover:text-white"
+                        >
+                          {link.text}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
 
           {/* Newsletter Section */}
           {data.newsletter.enabled && (
-            <div className="mt-20 rounded-3xl border border-white/10 bg-white/10 p-8 backdrop-blur-md md:p-12">
-              <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
-                <div className="space-y-3">
-                  <h4 className="text-2xl font-bold">
+            <div className="mt-16 rounded-2xl bg-white/10 p-8 backdrop-blur-sm">
+              <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
+                <div>
+                  <h4 className="mb-3 text-2xl font-bold">
                     {data.newsletter.title}
                   </h4>
-                  <p className="max-w-md text-base text-white/80">
+                  <p className="text-lg text-white/80">
                     {data.newsletter.description}
                   </p>
                 </div>
 
-                <div className="flex flex-col justify-center">
-                  {subscriptionStatus === "success" ? (
-                    <div className="flex w-fit items-center gap-3 rounded-xl bg-green-900/20 p-4 text-green-300">
-                      <CheckCircle className="h-6 w-6" />
-                      <span className="text-lg font-medium">
-                        Successfully subscribed!
-                      </span>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleNewsletterSubmit} className="w-full">
-                      <div className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-3 sm:flex-row">
-                          <Input
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                            className="flex-1 rounded-full border-none bg-white/20 px-6 py-6 text-white placeholder-white/60 backdrop-blur-sm focus:bg-white/30 focus:text-white focus:ring-2 focus:ring-white/50"
-                            disabled={
-                              isEditable || createNewsletterMutation.isPending
-                            }
-                          />
-                          <Button
-                            type="submit"
-                            style={{
-                              backgroundColor: theme.colors.secondary,
-                            }}
-                            className="rounded-full px-8 py-6 font-bold text-white shadow-md transition-all hover:scale-105 hover:shadow-lg"
-                            disabled={
-                              isEditable || createNewsletterMutation.isPending
-                            }
-                          >
-                            {createNewsletterMutation.isPending
-                              ? "..."
-                              : "Subscribe"}
-                          </Button>
-                        </div>
-
-                        {subscriptionStatus === "error" && errorMessage && (
-                          <div className="flex items-center gap-2 px-4 text-sm text-red-200">
-                            <AlertCircle className="h-4 w-4" />
-                            <span>{errorMessage}</span>
-                          </div>
-                        )}
+                {subscriptionStatus === "success" ? (
+                  <div className="flex items-center justify-center gap-3 text-green-300 md:justify-end">
+                    <CheckCircle className="h-6 w-6" />
+                    <span className="text-lg">Successfully subscribed!</span>
+                  </div>
+                ) : (
+                  <form onSubmit={handleNewsletterSubmit}>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-3 sm:flex-row">
+                        <Input
+                          type="email"
+                          placeholder="Enter your email"
+                          value={email}
+                          onChange={e => setEmail(e.target.value)}
+                          className="flex-1 rounded-full border-none bg-white/20 px-6 py-4 text-white placeholder-white/60 backdrop-blur-sm focus:bg-white/30 focus:text-white focus:ring-2 focus:ring-white/50"
+                          disabled={
+                            isEditable || createNewsletterMutation.isPending
+                          }
+                        />
+                        <Button
+                          type="submit"
+                          style={{
+                            backgroundColor: theme.colors.secondary,
+                          }}
+                          className="rounded-full px-8 py-4 font-semibold text-white transition-all hover:scale-105 hover:shadow-lg"
+                          disabled={
+                            isEditable || createNewsletterMutation.isPending
+                          }
+                        >
+                          {createNewsletterMutation.isPending
+                            ? "Subscribing..."
+                            : "Subscribe Now"}
+                        </Button>
                       </div>
-                    </form>
-                  )}
-                </div>
+
+                      {subscriptionStatus === "error" && errorMessage && (
+                        <div className="flex items-center gap-2 text-red-300">
+                          <AlertCircle className="h-4 w-4" />
+                          <span className="text-sm">{errorMessage}</span>
+                        </div>
+                      )}
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           )}
 
           {/* Bottom Section */}
-          <div className="mt-16 flex flex-col items-center justify-between gap-6 border-t border-white/20 pt-8 md:flex-row">
+          <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 md:flex-row">
             {/* Copyright */}
-            <div className="text-center text-sm text-white/60 md:text-left">
-              <p>{data.copyright}</p>
+            <div className="mb-4 flex items-center md:mb-0">
+              <p className="text-white/80">{data.copyright}</p>
             </div>
 
             {/* Social Links */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center space-x-4">
               {data.socialLinks.map(social => (
                 <Link
                   key={social.id}
                   href={social.href || "#"}
-                  className="hover:text-primary flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all hover:-translate-y-1 hover:bg-white"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
                   target={
                     social.href?.startsWith("http") ? "_blank" : undefined
                   }
@@ -282,7 +268,7 @@ export function FooterStyle4({
                       : undefined
                   }
                 >
-                  <SocialIcon platform={social.platform} className="h-5 w-5" />
+                  <SocialIcon platform={social.platform} className="h-4 w-4" />
                 </Link>
               ))}
             </div>

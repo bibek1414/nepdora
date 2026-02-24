@@ -36,37 +36,35 @@ export const TestimonialStyle7: React.FC<TestimonialStyleProps> = ({
   };
 
   return (
-    <section className="mx-auto flex max-w-7xl flex-col items-start px-4 py-16 md:px-8 md:py-24 lg:px-12">
+    <section className="mx-auto flex max-w-6xl flex-col items-start px-6 py-12 text-sm md:px-16 md:py-16 lg:px-24">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
       `}</style>
-      <div className="mb-12 w-full">
+      <EditableText
+        value={title}
+        onChange={handleTitleChange}
+        as="h1"
+        className="mt-4 bg-gradient-to-r from-slate-800 to-slate-500 bg-clip-text text-3xl font-medium text-transparent"
+        isEditable={isEditable}
+        placeholder="Enter title..."
+      />
+      {subtitle && (
         <EditableText
-          value={title}
-          onChange={handleTitleChange}
-          as="h1"
-          className="mt-4 bg-gradient-to-r from-slate-800 to-slate-500 bg-clip-text text-4xl font-semibold tracking-tight text-transparent"
+          value={subtitle}
+          onChange={handleSubtitleChange}
+          as="p"
+          className="mt-4 max-w-2xl text-slate-500"
           isEditable={isEditable}
-          placeholder="Enter title..."
+          placeholder="Enter subtitle..."
+          multiline={true}
         />
-        {subtitle && (
-          <EditableText
-            value={subtitle}
-            onChange={handleSubtitleChange}
-            as="p"
-            className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-500"
-            isEditable={isEditable}
-            placeholder="Enter subtitle..."
-            multiline={true}
-          />
-        )}
-      </div>
+      )}
 
       {isLoading && (
-        <div className="mt-10 grid w-full grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="flex flex-col space-y-4">
-              <Skeleton className="h-[200px] w-full rounded-2xl" />
+              <Skeleton className="h-[200px] w-full rounded-lg" />
               <div className="space-y-3">
                 <Skeleton className="h-6 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />
@@ -91,11 +89,11 @@ export const TestimonialStyle7: React.FC<TestimonialStyleProps> = ({
       )}
 
       {!isLoading && !error && testimonials.length > 0 && (
-        <div className="mt-10 grid w-full grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.slice(0, pageSize).map(testimonial => (
             <div
               key={testimonial.id}
-              className="relative transform transition-transform duration-200 hover:-translate-y-1"
+              className="relative transform transition-transform duration-200 hover:scale-105"
             >
               {isEditable && <div className="absolute inset-0 z-10" />}
               <TestimonialCard7
@@ -108,8 +106,8 @@ export const TestimonialStyle7: React.FC<TestimonialStyleProps> = ({
       )}
 
       {!isLoading && !error && testimonials.length === 0 && (
-        <div className="bg-muted/30 mt-10 w-full rounded-2xl border border-dashed py-20 text-center">
-          <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-16 w-16 opacity-50" />
+        <div className="mt-10 w-full py-16 text-center">
+          <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
           <h3 className="text-foreground mb-4 text-2xl font-semibold">
             No Testimonials Available
           </h3>

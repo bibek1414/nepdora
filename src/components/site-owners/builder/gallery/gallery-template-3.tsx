@@ -193,26 +193,26 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
   };
 
   return (
-    <div className="w-full space-y-12 py-16 md:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-left">
+    <div className="w-full space-y-8 py-16">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="mb-6 text-center">
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
             isEditable={isEditable}
-            className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl"
+            className="mb-2 text-4xl font-bold"
           />
           {data.subtitle && (
             <EditableText
               value={data.subtitle}
               onChange={handleTextUpdate("subtitle")}
               isEditable={isEditable}
-              className="text-muted-foreground max-w-3xl text-lg leading-relaxed"
+              className="text-sm text-gray-600"
             />
           )}
         </div>
 
-        <div className="relative mb-8 w-full lg:min-h-[400px]">
+        <div className="relative mb-8 w-full lg:min-h-[350px]">
           <motion.div
             className="relative mx-auto hidden w-full max-w-7xl justify-center lg:flex"
             initial={{ opacity: 0 }}
@@ -225,7 +225,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
               initial="hidden"
               animate={isLoaded ? "visible" : "hidden"}
             >
-              <div className="relative h-[250px] w-[250px]">
+              <div className="relative h-[220px] w-[220px]">
                 {[...displayed].reverse().map((image, idx) => {
                   const pos = positions[idx] ?? positions[positions.length - 1];
                   const actualIndex = data.images.findIndex(
@@ -281,13 +281,13 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
               </div>
             </motion.div>
           </motion.div>
-          <div className="scrollbar-hide flex w-full snap-x snap-mandatory gap-4 overflow-x-auto px-2 py-4 lg:hidden">
+          <div className="flex w-full snap-x snap-mandatory gap-4 overflow-x-auto px-2 py-4 lg:hidden">
             {activeImages.map(image => {
               const actualIndex = data.images.findIndex(
                 img => img.id === image.id
               );
               return (
-                <div key={image.id} className="relative shrink-0 snap-center">
+                <div key={image.id} className="relative shrink-0">
                   <PhotoCard
                     image={image}
                     isEditable={isEditable}
@@ -296,7 +296,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
                       handleImageUpdateLocal(actualIndex, imageUrl, altText)
                     }
                     inputId={`gallery-upload-${componentId}-${actualIndex}`}
-                    size={220}
+                    size={180}
                     enableHover={!isEditable}
                     enableRandomRotation={false}
                   />
@@ -329,10 +329,10 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
       </div>
 
       {isEditable && (
-        <div className="mt-8 text-center">
+        <div className="mt-4 text-center">
           <label
             htmlFor={`gallery-add-${componentId}`}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-3 transition-colors hover:bg-gray-100"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-2 hover:bg-gray-100"
           >
             {isAddingImage ? (
               <div className="flex items-center gap-2 text-gray-500">
@@ -342,9 +342,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
             ) : (
               <>
                 <Plus className="h-5 w-5 text-gray-400" />
-                <span className="text-sm font-medium text-gray-600">
-                  Add New Image
-                </span>
+                <span className="text-sm text-gray-600">Add Image</span>
                 <input
                   id={`gallery-add-${componentId}`}
                   type="file"
@@ -363,32 +361,27 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
           open={!!selectedImage}
           onOpenChange={() => setSelectedImage(null)}
         >
-          <DialogContent className="max-w-5xl overflow-hidden border-none bg-transparent p-0 shadow-none sm:max-w-fit">
-            <div className="group relative">
-              <img
-                src={getImageUrl(selectedImage.image)}
-                alt={selectedImage.image_alt_description}
-                className="mx-auto max-h-[85vh] w-auto max-w-full rounded-lg object-contain shadow-2xl"
-              />
-              <DialogClose className="absolute top-4 right-4 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70">
-                <X className="h-5 w-5" />
-              </DialogClose>
-            </div>
-
+          <DialogContent className="max-w-4xl">
+            <img
+              src={getImageUrl(selectedImage.image)}
+              alt={selectedImage.image_alt_description}
+              className="h-[480px] w-full rounded-lg object-cover"
+            />
             {(selectedImage.title || selectedImage.description) && (
-              <div className="bg-background/90 mx-auto mt-4 max-w-2xl rounded-xl border p-6 shadow-lg backdrop-blur-md">
+              <div className="mt-4">
                 {selectedImage.title && (
-                  <h3 className="text-foreground mb-2 text-xl font-bold">
+                  <h3 className="text-xl font-semibold">
                     {selectedImage.title}
                   </h3>
                 )}
                 {selectedImage.description && (
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="mt-2 text-gray-600">
                     {selectedImage.description}
                   </p>
                 )}
               </div>
             )}
+            <DialogClose className="absolute top-2 right-2" />
           </DialogContent>
         </Dialog>
       )}
@@ -420,7 +413,7 @@ const PhotoCard = ({
   onOpenLightbox,
   onImageChange,
   inputId,
-  size = 250,
+  size = 220,
   enableHover = true,
   enableRandomRotation = true,
 }: {
@@ -462,7 +455,7 @@ const PhotoCard = ({
       draggable={false}
       tabIndex={0}
     >
-      <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-xl transition-shadow hover:shadow-2xl">
+      <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-sm">
         {isEditable ? (
           <EditableImage
             src={getImageUrl(image.image)}
@@ -492,10 +485,10 @@ const PhotoCard = ({
         {!isEditable && (
           <button
             type="button"
-            className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-opacity hover:bg-black/30 hover:opacity-100"
+            className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-opacity hover:bg-black/40 hover:opacity-100"
             onClick={onOpenLightbox}
           >
-            <ZoomIn className="h-8 w-8 text-white drop-shadow-md" />
+            <ZoomIn className="h-6 w-6 text-white" />
           </button>
         )}
       </div>

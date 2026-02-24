@@ -316,54 +316,52 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
                 )}
               </div>
 
-              <div className="absolute inset-0 bg-black/40"></div>
+              <div className="absolute inset-0 bg-black/50"></div>
 
               {/* Text content with proper container */}
-              <div className="absolute inset-0 flex items-center">
-                <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                  <div className="flex max-w-2xl flex-col items-start space-y-6 text-left">
-                    {/* Main Title */}
-                    <EditableText
-                      key={`title-${componentId}`}
-                      value={data.title || "Find your perfect workout attire"}
-                      onChange={handleTextUpdate("title")}
-                      as="h1"
-                      className="text-5xl leading-tight font-black tracking-tight text-white sm:text-6xl lg:text-7xl"
-                      isEditable={isEditable}
-                      placeholder="Enter main title..."
-                      multiline={true}
-                    />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+                  <div className="flex items-center justify-center md:justify-start">
+                    <div className="max-w-xl space-y-4 text-center text-white md:space-y-6 md:text-left">
+                      {/* Main Title */}
+                      <EditableText
+                        key={`title-${componentId}`}
+                        value={data.title || "Find your perfect workout attire"}
+                        onChange={handleTextUpdate("title")}
+                        as="h1"
+                        className="font-black tracking-wider"
+                        isEditable={isEditable}
+                        placeholder="Enter main title..."
+                        multiline={true}
+                      />
 
-                    {/* Subtitle */}
-                    <EditableText
-                      key={`subtitle-${componentId}`}
-                      value={
-                        data.subtitle ||
-                        "An exclusive selection of this season's trends."
-                      }
-                      onChange={handleTextUpdate("subtitle")}
-                      as="p"
-                      className="text-xl font-medium text-white/90"
-                      isEditable={isEditable}
-                      placeholder="Enter subtitle..."
-                      multiline={true}
-                    />
+                      {/* Subtitle */}
+                      <EditableText
+                        key={`subtitle-${componentId}`}
+                        value={
+                          data.subtitle ||
+                          "An exclusive selection of this season's trends."
+                        }
+                        onChange={handleTextUpdate("subtitle")}
+                        as="p"
+                        isEditable={isEditable}
+                        placeholder="Enter subtitle..."
+                        multiline={true}
+                      />
 
-                    {/* Additional Text */}
-                    <EditableText
-                      key={`description-${componentId}`}
-                      value={data.description || "Exclusively online!"}
-                      onChange={handleTextUpdate("description")}
-                      as="p"
-                      className="text-lg text-white/80"
-                      isEditable={isEditable}
-                      placeholder="Enter additional text..."
-                      multiline={true}
-                    />
+                      {/* Additional Text */}
+                      <EditableText
+                        key={`description-${componentId}`}
+                        value={data.description || "Exclusively online!"}
+                        onChange={handleTextUpdate("description")}
+                        as="p"
+                        isEditable={isEditable}
+                        placeholder="Enter additional text..."
+                        multiline={true}
+                      />
 
-                    {/* CTA Button */}
-                    {data.buttons.length > 0 && (
-                      <div className="pt-4">
+                      {/* CTA Button */}
+                      {data.buttons.length > 0 && (
                         <EditableLink
                           key={`button-${componentId}`}
                           text={data.buttons[0]?.text || "SHOP COLLECTION"}
@@ -377,7 +375,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
                           }
                           isEditable={isEditable}
                           siteUser={siteUser}
-                          className="rounded-full bg-white px-8 py-4 text-base font-bold text-black shadow-lg transition duration-300 hover:scale-105 hover:bg-gray-100"
+                          className="rounded-full bg-white px-6 py-2 text-sm font-bold text-black shadow-lg transition duration-300 hover:bg-gray-200 sm:px-8 sm:py-3 sm:text-base"
                           style={{
                             backgroundColor: theme.colors.primary,
                             color: theme.colors.primaryForeground,
@@ -385,8 +383,8 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
                           textPlaceholder="Button text..."
                           hrefPlaceholder="Enter URL..."
                         />
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -395,16 +393,14 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
         </CarouselContent>
 
         {/* Dots navigation */}
-        <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 space-x-3">
+        <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 space-x-2 sm:bottom-10 sm:space-x-3">
           {slides.map((_, index) => (
             <button
               key={index}
               onClick={() => api?.scrollTo(index)}
               className={cn(
-                "h-2 rounded-full transition-all duration-300",
-                current === index
-                  ? "w-8 bg-white"
-                  : "w-2 bg-white/50 hover:bg-white/80"
+                "h-2 w-2 rounded-full transition-all sm:h-1 sm:w-20",
+                current === index ? "bg-white" : "bg-white/50"
               )}
             />
           ))}

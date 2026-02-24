@@ -108,9 +108,9 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
 
   return (
     <CardWrapper>
-      <article className="border-border/60 relative flex h-full flex-col items-start rounded-[32px] border bg-white p-8 text-left shadow-[0_35px_60px_-15px_rgba(15,23,42,0.15)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_40px_80px_-20px_rgba(79,70,229,0.35)] dark:border-white/10 dark:bg-slate-900 dark:text-white">
+      <article className="border-border/60 relative flex h-full flex-col rounded-[32px] border bg-white p-8 text-center shadow-[0_35px_60px_-15px_rgba(15,23,42,0.15)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_40px_80px_-20px_rgba(79,70,229,0.35)] dark:border-white/10 dark:bg-slate-900 dark:text-white">
         <div
-          className="mb-6 flex h-16 w-16 items-center justify-center rounded-full"
+          className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full"
           style={{
             backgroundColor: hexToRgba(primaryColor, 0.08),
             boxShadow: `0 12px 30px ${hexToRgba(primaryColor, 0.25)}`,
@@ -132,9 +132,9 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
           )}
         </div>
 
-        <div className="mb-6 flex-grow space-y-4">
+        <div className="space-y-4">
           <h3
-            className="text-2xl leading-tight font-semibold"
+            className="text-2xl font-semibold"
             style={{
               color: textColor,
               fontFamily: headingFont,
@@ -152,7 +152,7 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
           </p>
         </div>
 
-        <div className="mt-auto flex items-center text-sm font-semibold">
+        <div className="mt-6 flex items-center justify-center text-sm font-semibold">
           <span
             className="inline-flex items-center gap-2"
             style={{ color: primaryColor }}

@@ -55,7 +55,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
   return (
     <div className="relative min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="relative flex h-96 items-center overflow-hidden bg-gradient-to-r from-gray-800 to-gray-600">
+      <div className="relative flex h-96 items-center justify-center overflow-hidden bg-gradient-to-r from-gray-800 to-gray-600">
         <div className="absolute inset-0 bg-black/40"></div>
 
         {/* Background sneaker image */}
@@ -66,7 +66,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
             onImageChange={handleImageUpdate("heroImageUrl", "heroImageAlt")}
             onAltChange={handleAltUpdate("heroImageAlt")}
             isEditable={isEditable}
-            className="h-full w-full object-cover opacity-30"
+            className="object-cover opacity-30"
             cloudinaryOptions={{
               folder: "about-us-images",
               resourceType: "image",
@@ -80,7 +80,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
           />
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 text-left text-white">
+        <div className="relative z-10 text-center text-white">
           <EditableText
             value={data.heroTitle}
             onChange={handleTextUpdate("heroTitle")}
@@ -89,7 +89,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
               color: "#FFFFFF",
               fontFamily: theme.fonts.heading,
             }}
-            className="mb-4 max-w-4xl text-5xl font-bold tracking-wide md:text-6xl"
+            className="mb-4 text-6xl font-bold tracking-wide"
             isEditable={isEditable}
             placeholder="Enter hero title..."
           />
@@ -97,7 +97,7 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
       </div>
 
       {/* Our Story Section */}
-      <div className="mx-auto max-w-7xl px-4 py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-4 py-16">
         <EditableText
           value={data.storyTitle}
           onChange={handleTextUpdate("storyTitle")}
@@ -114,8 +114,8 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
         {/* Our Sneaker Journey */}
         <div className="mb-20 grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           <div className="space-y-6">
-            <div className="transform overflow-hidden rounded-2xl bg-white shadow-xl transition-transform duration-300 hover:scale-[1.02]">
-              <div className="relative flex h-80 items-center justify-center">
+            <div className="transform overflow-hidden rounded-2xl bg-white shadow-xl transition-transform duration-300 hover:scale-105">
+              <div className="flex h-80 items-center justify-center">
                 <EditableImage
                   src={data.journeyImageUrl}
                   alt={data.journeyImageAlt}
@@ -125,17 +125,17 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
                   )}
                   onAltChange={handleAltUpdate("journeyImageAlt")}
                   isEditable={isEditable}
-                  className="h-full w-full object-cover"
-                  width={600}
-                  height={400}
+                  className="-rotate-12 transform rounded-xl object-cover shadow-lg transition-transform duration-500 hover:rotate-0"
+                  width={400}
+                  height={300}
                   cloudinaryOptions={{
                     folder: "about-us-images",
                     resourceType: "image",
                   }}
                   showAltEditor={isEditable}
                   placeholder={{
-                    width: 600,
-                    height: 400,
+                    width: 400,
+                    height: 300,
                     text: "Upload journey image",
                   }}
                 />
@@ -167,25 +167,24 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
               multiline={true}
             />
 
-            <div className="pt-4">
-              <EditableLink
-                text={data.ctaText}
-                href={data.ctaLink}
-                onChange={handleLinkUpdate}
-                className="inline-flex transform items-center space-x-2 rounded-full px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105"
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  fontFamily: theme.fonts.heading,
-                }}
-                isEditable={isEditable}
-                textPlaceholder="Button text..."
-                hrefPlaceholder="Enter link URL..."
-                siteUser={siteUser}
-              >
-                <span>{data.ctaText || "Let's Go"}</span>
-                <ChevronRight className="h-5 w-5" />
-              </EditableLink>
-            </div>
+            <EditableLink
+              text={data.ctaText}
+              href={data.ctaLink}
+              onChange={handleLinkUpdate}
+              className="flex transform items-center space-x-2 rounded-full px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105"
+              style={{
+                backgroundColor: theme.colors.primary,
+
+                fontFamily: theme.fonts.heading,
+              }}
+              isEditable={isEditable}
+              textPlaceholder="Button text..."
+              hrefPlaceholder="Enter link URL..."
+              siteUser={siteUser}
+            >
+              <span>{data.ctaText || "Let's Go"}</span>
+              <ChevronRight className="h-5 w-5" />
+            </EditableLink>
           </div>
         </div>
       </div>

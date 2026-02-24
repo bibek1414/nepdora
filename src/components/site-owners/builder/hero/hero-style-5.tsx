@@ -111,7 +111,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
 
   return (
     <div
-      className="relative flex min-h-screen items-center"
+      className="relative flex min-h-screen items-center justify-center text-center text-white"
       data-component-id={componentId}
       style={{
         ...(data.backgroundType === "image" && data.backgroundImageUrl
@@ -207,95 +207,88 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
       )}
 
       {/* Content - Make sure it's above the overlay */}
-      <div className="relative z-10 container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex max-w-3xl flex-col items-start space-y-8 text-left">
-          {/* Badge/Subtitle */}
-          <div className="inline-block">
-            <EditableText
-              key={`subtitle-${componentId}`}
-              value={data.subtitle || "Introducing the UA-01"}
-              onChange={handleTextUpdate("subtitle")}
-              as="h1"
-              style={{
-                color: "#D1D5DB", // text-gray-300 equivalent
-              }}
-              className="border-l-2 border-white/50 pl-4 text-sm font-semibold tracking-wider uppercase"
+      <div className="relative z-10 max-w-3xl px-6">
+        {/* Badge/Subtitle */}
+        <EditableText
+          key={`subtitle-${componentId}`}
+          value={data.subtitle || "Introducing the UA-01"}
+          onChange={handleTextUpdate("subtitle")}
+          as="h1"
+          style={{
+            color: "#D1D5DB", // text-gray-300 equivalent
+          }}
+          isEditable={isEditable}
+          placeholder="Enter subtitle/badge text..."
+        />
+
+        {/* Main Title */}
+        <EditableText
+          key={`title-${componentId}`}
+          value={data.title}
+          onChange={handleTextUpdate("title")}
+          as="h2"
+          isEditable={isEditable}
+          placeholder="Enter main title..."
+          multiline={true}
+        />
+
+        {/* Description */}
+        <EditableText
+          key={`description-${componentId}`}
+          value={data.description}
+          onChange={handleTextUpdate("description")}
+          as="p"
+          className="mt-6"
+          isEditable={isEditable}
+          placeholder="Enter description..."
+          multiline={true}
+        />
+
+        {/* Buttons */}
+        <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+          {data.buttons.length > 0 && (
+            <EditableLink
+              key={`button-1-${componentId}`}
+              text={data.buttons[0]?.text || "Discover More"}
+              href={data.buttons[0]?.href || "#"}
+              onChange={(text, href) =>
+                handleButtonUpdate("buttons")(
+                  data.buttons[0]?.id || "1",
+                  text,
+                  href
+                )
+              }
               isEditable={isEditable}
-              placeholder="Enter subtitle/badge text..."
+              siteUser={siteUser}
+              style={{
+                backgroundColor: theme.colors.primary,
+                color: theme.colors.primaryForeground,
+                fontFamily: theme.fonts.body,
+              }}
+              textPlaceholder="Primary button text..."
+              hrefPlaceholder="Enter URL..."
             />
-          </div>
+          )}
 
-          {/* Main Title */}
-          <EditableText
-            key={`title-${componentId}`}
-            value={data.title}
-            onChange={handleTextUpdate("title")}
-            as="h2"
-            className="text-5xl leading-tight font-bold tracking-tight text-white sm:text-6xl lg:text-7xl"
-            isEditable={isEditable}
-            placeholder="Enter main title..."
-            multiline={true}
-          />
-
-          {/* Description */}
-          <EditableText
-            key={`description-${componentId}`}
-            value={data.description}
-            onChange={handleTextUpdate("description")}
-            as="p"
-            className="max-w-2xl text-xl leading-relaxed text-gray-300"
-            isEditable={isEditable}
-            placeholder="Enter description..."
-            multiline={true}
-          />
-
-          {/* Buttons */}
-          <div className="flex flex-wrap items-center gap-4 pt-4">
-            {data.buttons.length > 0 && (
-              <EditableLink
-                key={`button-1-${componentId}`}
-                text={data.buttons[0]?.text || "Discover More"}
-                href={data.buttons[0]?.href || "#"}
-                onChange={(text, href) =>
-                  handleButtonUpdate("buttons")(
-                    data.buttons[0]?.id || "1",
-                    text,
-                    href
-                  )
-                }
-                isEditable={isEditable}
-                siteUser={siteUser}
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  color: theme.colors.primaryForeground,
-                  fontFamily: theme.fonts.body,
-                }}
-                className="rounded-lg px-8 py-4 font-medium transition-transform hover:scale-105"
-                textPlaceholder="Primary button text..."
-                hrefPlaceholder="Enter URL..."
-              />
-            )}
-
-            {data.buttons.length > 1 && (
-              <EditableLink
-                key={`button-2-${componentId}`}
-                text={data.buttons[1]?.text || "Explore Collection"}
-                href={data.buttons[1]?.href || "#"}
-                onChange={(text, href) =>
-                  handleButtonUpdate("buttons")(
-                    data.buttons[1]?.id || "2",
-                    text,
-                    href
-                  )
-                }
-                isEditable={isEditable}
-                siteUser={siteUser}
-                className="rounded-lg border border-white/30 px-8 py-4 font-medium text-white transition-colors hover:bg-white/10"
-                textPlaceholder="Secondary button text..."
-                hrefPlaceholder="Enter URL..."
-              />
-            )}
-          </div>
+          {data.buttons.length > 1 && (
+            <EditableLink
+              key={`button-2-${componentId}`}
+              text={data.buttons[1]?.text || "Explore Collection"}
+              href={data.buttons[1]?.href || "#"}
+              onChange={(text, href) =>
+                handleButtonUpdate("buttons")(
+                  data.buttons[1]?.id || "2",
+                  text,
+                  href
+                )
+              }
+              isEditable={isEditable}
+              siteUser={siteUser}
+              className="border"
+              textPlaceholder="Secondary button text..."
+              hrefPlaceholder="Enter URL..."
+            />
+          )}
         </div>
       </div>
     </div>

@@ -102,23 +102,23 @@ export function FooterStyle3({
           background: theme.colors.primary,
           fontFamily: theme.fonts.heading,
         }}
-        className="px-4 py-20 text-gray-100 sm:px-6 lg:px-8"
+        className="px-4 py-16 text-gray-100 sm:px-6 lg:px-8"
       >
         <div className="mx-auto max-w-7xl">
           {/* Footer links grid */}
-          <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
             {/* Info Section */}
             {mainSections.map((section, index) => (
               <div key={section.id} className="col-span-1">
-                <h3 className="mb-6 text-lg font-bold tracking-wide text-white uppercase">
+                <h3 className="mb-4 text-xl font-semibold text-white">
                   {section.title}
                 </h3>
-                <ul className="space-y-3">
+                <ul className="space-y-2">
                   {section.links.map(link => (
                     <li key={link.id}>
                       {isEditable ? (
                         <button
-                          className="text-left text-sm text-white/70 transition-colors hover:text-white"
+                          className="text-left text-white/80 transition-colors hover:text-white"
                           onClick={
                             isEditable ? e => e.preventDefault() : undefined
                           }
@@ -133,7 +133,7 @@ export function FooterStyle3({
                             pathname,
                             isEditable
                           )}
-                          className="block text-sm text-white/70 transition-colors hover:text-white"
+                          className="block text-white/80 transition-colors hover:text-white"
                         >
                           {link.text}
                         </Link>
@@ -147,30 +147,30 @@ export function FooterStyle3({
             {/* Newsletter Section */}
             {data.newsletter.enabled && (
               <div className="col-span-2 lg:col-span-2">
-                <h3 className="mb-6 text-lg font-bold tracking-wide text-white uppercase">
+                <h3 className="mb-4 text-xl font-semibold text-white">
                   {data.newsletter.title}
                 </h3>
-                <p className="mb-6 max-w-xs text-sm leading-relaxed text-white/70">
+                <p className="mb-4 text-sm text-white/80">
                   {data.newsletter.description}
                 </p>
 
                 {subscriptionStatus === "success" ? (
-                  <div className="flex w-fit items-center gap-2 rounded-lg bg-white/10 p-3 text-green-300">
+                  <div className="flex items-center gap-2 text-green-300">
                     <CheckCircle className="h-5 w-5" />
                     <span className="text-sm">Successfully subscribed!</span>
                   </div>
                 ) : (
                   <form
                     onSubmit={handleNewsletterSubmit}
-                    className="flex max-w-sm flex-col gap-3"
+                    className="flex flex-col gap-3"
                   >
-                    <div className="flex flex-col gap-3 sm:flex-row">
+                    <div className="flex flex-col items-center gap-3 sm:flex-row">
                       <Input
                         type="email"
                         placeholder="Your email address"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        className="w-full rounded-full border-none bg-white/10 px-6 py-3 text-white placeholder-white/50 backdrop-blur-sm focus:ring-2 focus:ring-white/30"
+                        className="w-full rounded-full border-none bg-white px-4 py-3 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-green-300"
                         disabled={
                           isEditable || createNewsletterMutation.isPending
                         }
@@ -180,17 +180,19 @@ export function FooterStyle3({
                         style={{
                           backgroundColor: theme.colors.secondary,
                         }}
-                        className="w-full rounded-full px-8 py-3 font-semibold text-white transition-all hover:brightness-110 sm:w-auto"
+                        className="w-full rounded-full px-8 py-3 font-semibold text-white transition-colors hover:opacity-90 sm:w-auto"
                         disabled={
                           isEditable || createNewsletterMutation.isPending
                         }
                       >
-                        {createNewsletterMutation.isPending ? "..." : "Join"}
+                        {createNewsletterMutation.isPending
+                          ? "Subscribing..."
+                          : "Subscribe"}
                       </Button>
                     </div>
 
                     {subscriptionStatus === "error" && errorMessage && (
-                      <div className="mt-1 flex items-center gap-2 text-xs text-red-300">
+                      <div className="flex items-center gap-2 text-red-300">
                         <AlertCircle className="h-4 w-4" />
                         <span className="text-sm">{errorMessage}</span>
                       </div>
@@ -202,32 +204,30 @@ export function FooterStyle3({
           </div>
 
           {/* Bottom section */}
-          <div className="mt-20 flex flex-col items-center justify-between gap-6 border-t border-white/10 pt-8 text-sm text-gray-200 md:flex-row">
-            <div className="flex flex-col items-center gap-6 md:flex-row md:gap-8">
-              {/* Logo */}
-              <div className="flex items-center">
-                <FooterLogo
-                  footerData={data}
-                  getImageUrl={getImageUrl}
-                  textClassName="text-white text-xl font-bold"
-                  imageClassName="h-8 w-auto"
-                  containerClassName="gap-3"
-                />
-              </div>
+          <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 text-sm text-gray-200 md:flex-row">
+            {/* Logo and Company Name */}
+            <div className="mb-4 flex items-center md:mb-0">
+              <FooterLogo
+                footerData={data}
+                getImageUrl={getImageUrl}
+                textClassName="text-white text-xl"
+                imageClassName="h-8"
+                containerClassName="gap-3"
+              />
+            </div>
 
-              {/* Copyright */}
-              <div className="text-center text-xs text-white/50 md:text-left">
-                <p>{data.copyright}</p>
-              </div>
+            {/* Copyright */}
+            <div className="mb-4 text-center md:mb-0 md:text-left">
+              <p>{data.copyright}</p>
             </div>
 
             {/* Social links */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center space-x-4">
               {data.socialLinks.map(social => (
                 <Link
                   key={social.id}
                   href={social.href || "#"}
-                  className="hover:text-primary flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/70 transition-all hover:-translate-y-1 hover:bg-white"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
                   target={
                     social.href?.startsWith("http") ? "_blank" : undefined
                   }
@@ -237,7 +237,7 @@ export function FooterStyle3({
                       : undefined
                   }
                 >
-                  <SocialIcon platform={social.platform} className="h-5 w-5" />
+                  <SocialIcon platform={social.platform} className="h-4 w-4" />
                 </Link>
               ))}
             </div>

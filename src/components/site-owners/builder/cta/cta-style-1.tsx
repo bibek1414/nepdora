@@ -44,7 +44,7 @@ export const CTATemplate1: React.FC<CTATemplate1Props> = ({
 
   const getButtonClassesLocal = (variant: string) => {
     const baseClasses =
-      " px-8 py-4 font-bold transition-all duration-300 min-w-[140px] text-center rounded-lg hover:shadow-lg hover:-translate-y-0.5";
+      " px-6 py-3 font-bold transition-colors min-w-[120px] text-center rounded-lg";
 
     const buttonStyles = {
       backgroundColor:
@@ -89,7 +89,7 @@ export const CTATemplate1: React.FC<CTATemplate1Props> = ({
 
   return (
     <section
-      className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8 lg:py-24"
+      className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-8"
       style={getBackgroundStyle()}
     >
       {data.backgroundType === "image" && data.showOverlay && (
@@ -101,14 +101,14 @@ export const CTATemplate1: React.FC<CTATemplate1Props> = ({
         />
       )}
 
-      <div className="relative z-10 container mx-auto max-w-7xl">
-        <div className={`flex max-w-4xl flex-col items-start gap-8`}>
+      <div className="relative z-10 container mx-auto max-w-4xl">
+        <div className={`flex flex-col gap-6`}>
           {/* Title */}
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h2"
-            className="text-left text-4xl leading-tight font-bold tracking-tight sm:text-5xl lg:text-6xl"
+            className="text-3xl font-bold sm:text-4xl md:text-5xl"
             style={{
               color:
                 data.backgroundType === "color" ||
@@ -126,7 +126,7 @@ export const CTATemplate1: React.FC<CTATemplate1Props> = ({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="max-w-2xl text-left text-lg leading-relaxed opacity-90 sm:text-xl"
+              className="max-w-2xl text-lg"
               style={{
                 color:
                   data.backgroundType === "color" ||
@@ -142,7 +142,7 @@ export const CTATemplate1: React.FC<CTATemplate1Props> = ({
 
           {/* Buttons */}
           {data.buttons.length > 0 && (
-            <div className="mt-2 flex flex-wrap justify-start gap-4">
+            <div className="mt-4 flex flex-wrap justify-center gap-4">
               {data.buttons.map(button => {
                 const buttonClass = getButtonClassesLocal(button.variant);
                 return (

@@ -52,16 +52,16 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
   } = useBuilderLogic(heroData, onUpdate);
 
   return (
-    <section className="bg-background relative flex min-h-screen w-full items-center overflow-hidden py-16 lg:py-24">
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+    <section className="relative flex min-h-screen w-full items-center overflow-hidden">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
           {/* Left Content */}
-          <div className="flex flex-col items-start gap-8 text-left">
+          <div className="flex flex-col gap-4 sm:gap-6">
             {/* Subtitle Badge */}
             {data.subtitle && (
               <Badge
                 variant="secondary"
-                className="w-fit rounded-full px-4 py-1.5"
+                className="w-fit"
                 style={{
                   backgroundColor: theme.colors.secondary,
                   color: theme.colors.text,
@@ -72,7 +72,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                   value={data.subtitle}
                   onChange={handleTextUpdate("subtitle")}
                   as="span"
-                  className="text-sm font-medium tracking-wide uppercase"
+                  className="text-xs sm:text-sm"
                   isEditable={isEditable}
                   placeholder="Enter subtitle..."
                 />
@@ -84,7 +84,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-foreground text-4xl leading-tight font-bold tracking-tight sm:text-5xl lg:text-6xl"
+              className="!sm:text-4xl !md:text-5xl !lg:text-6xl !text-3xl leading-tight font-bold"
               isEditable={isEditable}
               placeholder="Enter your hero title..."
               multiline={true}
@@ -96,7 +96,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="text-muted-foreground max-w-xl text-lg leading-relaxed sm:text-xl"
+                className="max-w-lg text-base leading-relaxed opacity-90 sm:text-lg"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -105,7 +105,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
 
             {/* Buttons with theme styling */}
             {data.buttons.length > 0 && (
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                 {data.buttons.map((button, index) => (
                   <EditableLink
                     key={button.id}
@@ -120,7 +120,7 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                           : theme.colors.secondaryForeground,
                       fontFamily: theme.fonts.body,
                     }}
-                    className="flex items-center gap-2 rounded-lg px-8 py-4 text-base font-medium transition-transform hover:scale-105"
+                    className="px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base"
                     text={button.text}
                     href={button.href || "#"}
                     onChange={(text, href) =>
@@ -131,7 +131,9 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter button URL..."
                   >
-                    {index === 1 && <Play size={20} className="fill-current" />}
+                    {index === 1 && (
+                      <Play size={16} className="sm:h-[18px] sm:w-[18px]" />
+                    )}
                     <span>{button.text}</span>
                   </EditableLink>
                 ))}
@@ -139,40 +141,44 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
             )}
 
             {/* Users Stats */}
-            <div className="border-primary mt-4 flex items-center gap-4 border-l-4 pl-6">
-              <div className="flex flex-col">
-                <EditableText
-                  value={data.statsNumber || "12k+"}
-                  onChange={handleTextUpdate("statsNumber")}
-                  as="span"
-                  className="text-foreground text-2xl font-bold"
-                  isEditable={isEditable}
-                  placeholder="Enter stats number..."
-                />
-                <EditableText
-                  value={data.statsLabel || "Used by teams and professionals."}
-                  onChange={handleTextUpdate("statsLabel")}
-                  as="span"
-                  className="text-muted-foreground text-sm font-medium"
-                  isEditable={isEditable}
-                  placeholder="Add stats description..."
-                />
-              </div>
+            <div className="mt-2 flex flex-wrap items-center gap-2 sm:mt-4 sm:gap-3">
+              <EditableText
+                value={data.statsNumber || "12k+"}
+                onChange={handleTextUpdate("statsNumber")}
+                as="span"
+                className="text-base font-medium sm:text-lg"
+                isEditable={isEditable}
+                placeholder="Enter stats number..."
+              />
+              <EditableText
+                value={data.statsLabel || "Used by teams and professionals."}
+                onChange={handleTextUpdate("statsLabel")}
+                as="span"
+                className="text-sm font-normal opacity-75 sm:text-base"
+                isEditable={isEditable}
+                placeholder="Add stats description..."
+              />
             </div>
           </div>
 
           {/* Right Side Image/Illustration */}
-          <div className="relative flex items-center justify-center lg:justify-end">
-            <div className="relative aspect-square w-full max-w-lg lg:max-w-xl">
-              {data.showImage && data.imageUrl ? (
-                <div className="hover:shadow-3xl relative h-full w-full overflow-hidden rounded-3xl shadow-2xl transition-all">
+          <div className="relative flex items-center justify-center lg:order-2 lg:justify-end">
+            {data.showImage && data.imageUrl ? (
+              <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg">
+                <div
+                  className="rounded-2xl border shadow-xl backdrop-blur-sm"
+                  style={{
+                    backgroundColor: `${theme.colors.background}1a`,
+                    borderColor: `${theme.colors.primary}33`,
+                  }}
+                >
                   <EditableImage
                     src={getImageUrl(data.imageUrl, { width: 800 })}
                     alt={data.imageAlt || "Hero image"}
                     onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
                     onAltChange={handleAltUpdate("imageAlt")}
                     isEditable={isEditable}
-                    className="h-full w-full transform object-cover transition-transform duration-700 hover:scale-105"
+                    className="h-64 w-full rounded-lg object-contain sm:h-80 md:h-96"
                     width={800}
                     height={800}
                     cloudinaryOptions={{
@@ -187,15 +193,23 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                     }}
                   />
                 </div>
-              ) : (
-                <div className="border-muted-foreground/20 bg-muted/10 relative flex h-full w-full items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed">
+              </div>
+            ) : (
+              <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg">
+                <div
+                  className="flex h-64 items-center justify-center rounded-2xl border p-4 shadow-xl backdrop-blur-sm sm:h-80 sm:p-6 md:h-96"
+                  style={{
+                    backgroundColor: `${theme.colors.background}1a`,
+                    borderColor: `${theme.colors.primary}33`,
+                  }}
+                >
                   <EditableImage
                     src=""
                     alt="Hero illustration"
                     onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
                     onAltChange={handleAltUpdate("imageAlt")}
                     isEditable={isEditable}
-                    className="h-full w-full object-cover opacity-0"
+                    className="h-full w-full rounded-lg object-contain"
                     width={800}
                     height={800}
                     cloudinaryOptions={{
@@ -209,14 +223,9 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                       text: "Upload hero image",
                     }}
                   />
-                  <div className="text-muted-foreground pointer-events-none absolute inset-0 flex items-center justify-center">
-                    Upload Image
-                  </div>
                 </div>
-              )}
-              {/* Decorative elements */}
-              <div className="bg-primary/10 absolute -right-6 -bottom-6 -z-10 h-full w-full rounded-3xl" />
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

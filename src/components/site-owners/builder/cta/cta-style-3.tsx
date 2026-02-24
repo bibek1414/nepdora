@@ -104,7 +104,7 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
 
   const getButtonClassesLocal = (variant: string) => {
     const baseClasses =
-      " px-8 py-4 font-bold transition-all duration-300 min-w-[140px] text-center rounded-lg hover:shadow-lg hover:-translate-y-0.5";
+      " px-6 py-3 font-bold transition-colors min-w-[120px] text-center rounded-lg";
 
     const buttonStyles = {
       backgroundColor:
@@ -130,7 +130,7 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
 
   return (
     <section
-      className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-8 lg:py-24"
+      className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-8"
       style={{
         ...(data.backgroundType === "image" && data.backgroundImageUrl
           ? {
@@ -183,15 +183,15 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
         </div>
       )}
 
-      <div className="relative z-10 container mx-auto max-w-7xl">
-        <div className="rounded-[32px] bg-white p-8 shadow-2xl sm:p-12 md:p-16 lg:p-20">
-          <div className="flex max-w-4xl flex-col items-start text-left">
+      <div className="relative z-10 container mx-auto max-w-5xl">
+        <div className="rounded-2xl bg-white p-8 shadow-xl sm:p-12 md:p-16">
+          <div className="text-center">
             {/* Title */}
             <EditableText
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h2"
-              className="mb-6 text-4xl leading-tight font-bold sm:text-5xl lg:text-6xl"
+              className="mb-4 text-2xl font-bold sm:text-3xl md:text-4xl"
               style={{ color: theme.colors.text }}
               isEditable={isEditable}
               placeholder="Enter CTA title..."
@@ -203,7 +203,7 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
                 value={data.description}
                 onChange={handleTextUpdate("description")}
                 as="p"
-                className="mb-10 max-w-2xl text-xl leading-relaxed text-gray-600"
+                className="mx-auto mb-8 max-w-2xl text-lg text-gray-600"
                 isEditable={isEditable}
                 placeholder="Enter description..."
                 multiline={true}
@@ -212,11 +212,11 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
 
             {/* Feature Icons */}
             {data.showFeatureIcons && data.featureIcons && (
-              <div className="mb-10 flex flex-wrap gap-8">
+              <div className="mb-8 flex justify-center gap-6">
                 {data.featureIcons.map((icon, index) => (
                   <div
                     key={index}
-                    className="text-3xl"
+                    className="text-2xl"
                     style={{ color: theme.colors.primary }}
                   >
                     {icon}
@@ -227,7 +227,7 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
 
             {/* Buttons */}
             {data.buttons.length > 0 && (
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap justify-center gap-4">
                 {data.buttons.map(button => {
                   const buttonClass = getButtonClassesLocal(button.variant);
                   return (

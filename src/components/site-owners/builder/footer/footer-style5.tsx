@@ -105,63 +105,51 @@ export function FooterStyle5({
 
   return (
     <div className="group relative">
-      <footer className="bg-background-light dark:bg-background-dark font-display border-t px-4 py-16 sm:px-6 lg:px-8">
+      <footer className="bg-background-light dark:bg-background-dark font-display border-t px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {/* Company Info - Takes 2 columns on large screens */}
-            <div className="space-y-8 lg:col-span-2">
+            <div className="lg:col-span-2">
               {/* Logo */}
-              <div>
+              <div className="mb-4">
                 <FooterLogo
                   footerData={data}
                   getImageUrl={getImageUrl}
-                  textClassName="text-heading-light dark:text-heading-dark text-xl font-bold"
-                  imageClassName="h-8 w-auto"
+                  textClassName="text-heading-light dark:text-heading-dark text-xl"
+                  imageClassName="h-8"
                   containerClassName="gap-3"
                 />
               </div>
 
-              <p className="text-text-light dark:text-text-dark max-w-md leading-relaxed">
+              <p className="text-text-light dark:text-text-dark mb-6 max-w-md">
                 {data.description}
               </p>
 
               {/* Contact Info */}
-              <div className="space-y-3">
+              <div className="mb-6 space-y-2">
                 {data.contactInfo.email && (
-                  <div className="text-text-light dark:text-text-dark group flex items-center">
-                    <div className="bg-primary/10 text-primary group-hover:bg-primary mr-3 rounded-full p-2 transition-all group-hover:text-white">
-                      <Mail className="h-4 w-4" />
-                    </div>
-                    <span className="text-sm font-medium">
-                      {data.contactInfo.email}
-                    </span>
+                  <div className="text-text-light dark:text-text-dark flex items-center">
+                    <Mail className="mr-2 h-4 w-4" />
+                    <span className="text-sm">{data.contactInfo.email}</span>
                   </div>
                 )}
                 {data.contactInfo.phone && (
-                  <div className="text-text-light dark:text-text-dark group flex items-center">
-                    <div className="bg-primary/10 text-primary group-hover:bg-primary mr-3 rounded-full p-2 transition-all group-hover:text-white">
-                      <Phone className="h-4 w-4" />
-                    </div>
-                    <span className="text-sm font-medium">
-                      {data.contactInfo.phone}
-                    </span>
+                  <div className="text-text-light dark:text-text-dark flex items-center">
+                    <Phone className="mr-2 h-4 w-4" />
+                    <span className="text-sm">{data.contactInfo.phone}</span>
                   </div>
                 )}
                 {data.contactInfo.address && (
-                  <div className="text-text-light dark:text-text-dark group flex items-start">
-                    <div className="bg-primary/10 text-primary group-hover:bg-primary mt-0.5 mr-3 rounded-full p-2 transition-all group-hover:text-white">
-                      <MapPin className="h-4 w-4" />
-                    </div>
-                    <span className="text-sm leading-relaxed font-medium">
-                      {data.contactInfo.address}
-                    </span>
+                  <div className="text-text-light dark:text-text-dark flex items-center">
+                    <MapPin className="mr-2 h-4 w-4" />
+                    <span className="text-sm">{data.contactInfo.address}</span>
                   </div>
                 )}
               </div>
 
               {/* Social Links - Horizontal Layout */}
               <div>
-                <h4 className="text-heading-light dark:text-heading-dark mb-4 text-sm font-semibold tracking-wider uppercase">
+                <h4 className="text-heading-light dark:text-heading-dark mb-3 font-semibold">
                   Follow Us
                 </h4>
                 {data.socialLinks.length > 0 ? (
@@ -170,7 +158,7 @@ export function FooterStyle5({
                       <Link
                         key={social.id}
                         href={social.href || "#"}
-                        className="bg-muted hover:bg-primary flex h-10 w-10 items-center justify-center rounded-full shadow-sm transition-all hover:-translate-y-1 hover:text-white"
+                        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
                         target={
                           social.href?.startsWith("http") ? "_blank" : undefined
                         }
@@ -200,7 +188,7 @@ export function FooterStyle5({
               .filter(section => section.links.length > 0)
               .map(section => (
                 <div key={section.id} className="col-span-1">
-                  <h3 className="text-heading-light dark:text-heading-dark mb-6 text-lg font-bold">
+                  <h3 className="text-heading-light dark:text-heading-dark mb-4 font-bold">
                     {section.title}
                   </h3>
 
@@ -209,7 +197,7 @@ export function FooterStyle5({
                       <li key={link.id}>
                         {isEditable ? (
                           <button
-                            className="text-text-light dark:text-text-dark hover:text-primary text-left text-sm font-medium transition-colors dark:hover:text-white"
+                            className="text-text-light dark:text-text-dark hover:text-primary text-left transition-colors dark:hover:text-white"
                             onClick={
                               isEditable ? e => e.preventDefault() : undefined
                             }
@@ -224,7 +212,7 @@ export function FooterStyle5({
                               pathname,
                               isEditable
                             )}
-                            className="text-text-light dark:text-text-dark hover:text-primary block text-left text-sm font-medium transition-colors dark:hover:text-white"
+                            className="text-text-light dark:text-text-dark hover:text-primary block text-left transition-colors dark:hover:text-white"
                           >
                             {link.text}
                           </Link>
@@ -237,11 +225,11 @@ export function FooterStyle5({
           </div>
 
           {/* Copyright */}
-          <div className="border-border mx-auto mt-16 border-t pt-8 text-left dark:border-gray-700">
-            <p className="text-muted-foreground flex items-center justify-start gap-1 text-sm font-medium">
+          <div className="mx-auto mt-12 border-t border-gray-300 pt-8 text-center dark:border-gray-700">
+            <p className="text-text-light dark:text-text-dark flex items-center justify-center gap-1 text-sm">
               {data.copyright ||
                 `© ${new Date().getFullYear()} ${data.companyName}. All rights reserved.`}
-              <Heart className="inline h-3 w-3 fill-current text-red-500" />
+              <Heart className="inline h-3 w-3 text-red-500" />
             </p>
           </div>
         </div>

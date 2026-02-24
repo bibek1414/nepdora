@@ -26,8 +26,8 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
   const pageSize = 6;
 
   return (
-    <section className="bg-background py-16 md:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="bg-background">
+      <div className="mx-auto max-w-7xl px-4">
         {isLoading && (
           <div className="mx-auto max-w-7xl">
             <Skeleton className="h-[400px] w-full rounded-[40px]" />
@@ -57,8 +57,8 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
         )}
 
         {!isLoading && !error && testimonials.length === 0 && (
-          <div className="bg-muted/30 rounded-2xl border border-dashed py-20 text-center">
-            <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-16 w-16 opacity-50" />
+          <div className="py-16 text-center">
+            <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
             <h3 className="text-foreground mb-4 text-2xl font-semibold">
               No Testimonials Available
             </h3>

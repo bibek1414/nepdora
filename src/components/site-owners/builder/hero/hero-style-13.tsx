@@ -24,7 +24,7 @@ interface HeroTemplate13Props {
 type CTAButtonVariant = "primary" | "white" | "outline";
 
 const CTA_BUTTON_BASE =
-  "group/cta relative inline-flex items-center justify-between rounded-full px-8 py-4 text-base font-medium transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 hover:shadow-lg hover:-translate-y-1";
+  "group/cta relative inline-flex items-center justify-between rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2";
 
 const CTA_BUTTON_VARIANTS: Record<CTAButtonVariant, string> = {
   primary: "bg-primary text-white hover:bg-primary/90 focus:ring-primary",
@@ -34,7 +34,7 @@ const CTA_BUTTON_VARIANTS: Record<CTAButtonVariant, string> = {
 };
 
 const CTA_ARROW_BASE =
-  "flex h-8 w-8 items-center justify-center rounded-full transition-transform duration-300 group-hover/cta:rotate-45 ml-2";
+  "flex h-8 w-8 items-center justify-center rounded-full transition-transform duration-300 group-hover/cta:rotate-45";
 
 const CTA_ARROW_VARIANTS: Record<CTAButtonVariant, string> = {
   primary:
@@ -175,7 +175,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
 
   return (
     <motion.section
-      className="relative h-screen min-h-[800px] w-full overflow-hidden bg-gray-900"
+      className="relative h-screen min-h-[700px] w-full overflow-hidden bg-gray-900"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -240,13 +240,13 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             text: "Upload hero background",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
       </motion.div>
 
       {/* Content */}
-      <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-4 md:px-6">
         <motion.div
-          className="max-w-4xl text-left"
+          className="max-w-3xl text-white"
           variants={fadeInUp}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
@@ -254,7 +254,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             value={titleContent}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="mb-8 text-5xl leading-[1.1] font-bold tracking-tight text-white md:text-7xl lg:text-8xl"
+            className="mb-6 font-sans text-5xl leading-tight font-semibold md:text-7xl"
             isEditable={isEditable}
             placeholder="Enter hero title..."
             multiline
@@ -264,14 +264,14 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             value={descriptionContent}
             onChange={handleTextUpdate("description")}
             as="p"
-            className="mb-12 max-w-2xl text-xl leading-relaxed text-gray-200"
+            className="mb-10 max-w-xl text-lg leading-relaxed text-gray-200"
             isEditable={isEditable}
             placeholder="Enter hero description..."
             multiline
           />
 
           <motion.div
-            className="flex flex-wrap gap-6"
+            className="flex flex-wrap gap-4"
             variants={fadeInUp}
             transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
           >
@@ -287,11 +287,11 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
               hrefPlaceholder="Enter URL..."
             >
               <>
-                <span className="mr-2">{primaryButtonText}</span>
+                <span className="mr-4">{primaryButtonText}</span>
                 <span
                   className={`${CTA_ARROW_BASE} ${CTA_ARROW_VARIANTS[buttonVariant]}`}
                 >
-                  <ArrowUpRight size={18} />
+                  <ArrowUpRight size={16} />
                 </span>
               </>
             </EditableLink>

@@ -175,7 +175,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
               value={data.title || "Summer styles are finally here"}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-foreground text-left text-4xl font-bold tracking-tight sm:text-6xl"
+              className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl"
               isEditable={isEditable}
               placeholder="Enter hero title..."
             />
@@ -186,7 +186,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
               }
               onChange={handleTextUpdate("description")}
               as="p"
-              className="text-muted-foreground mt-4 text-left text-xl"
+              className="mt-4 text-xl text-gray-500"
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}
@@ -204,7 +204,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                     {/* Column 1 - 2 images */}
                     <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
                       <div
-                        className={`h-64 w-44 overflow-hidden rounded-xl sm:opacity-0 lg:opacity-100 ${isEditable ? "pointer-events-auto" : ""}`}
+                        className={`h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100 ${isEditable ? "pointer-events-auto" : ""}`}
                       >
                         <EditableImage
                           key={`grid-${componentId}-0-${finalGridImages[0].url}`}
@@ -241,7 +241,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                         />
                       </div>
                       <div
-                        className={`h-64 w-44 overflow-hidden rounded-xl ${isEditable ? "pointer-events-auto" : ""}`}
+                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
                       >
                         <EditableImage
                           key={`grid-${componentId}-1-${finalGridImages[1].url}`}
@@ -281,7 +281,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                     {/* Column 2 - 3 images */}
                     <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
                       <div
-                        className={`h-64 w-44 overflow-hidden rounded-xl ${isEditable ? "pointer-events-auto" : ""}`}
+                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
                       >
                         <EditableImage
                           key={`grid-${componentId}-2-${finalGridImages[2].url}`}
@@ -318,7 +318,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                         />
                       </div>
                       <div
-                        className={`h-64 w-44 overflow-hidden rounded-xl ${isEditable ? "pointer-events-auto" : ""}`}
+                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
                       >
                         <EditableImage
                           key={`grid-${componentId}-3-${finalGridImages[3].url}`}
@@ -355,7 +355,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                         />
                       </div>
                       <div
-                        className={`h-64 w-44 overflow-hidden rounded-xl ${isEditable ? "pointer-events-auto" : ""}`}
+                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
                       >
                         <EditableImage
                           key={`grid-${componentId}-4-${finalGridImages[4].url}`}
@@ -395,7 +395,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                     {/* Column 3 - 2 images */}
                     <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
                       <div
-                        className={`h-64 w-44 overflow-hidden rounded-xl ${isEditable ? "pointer-events-auto" : ""}`}
+                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
                       >
                         <EditableImage
                           key={`grid-${componentId}-5-${finalGridImages[5].url}`}
@@ -432,7 +432,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                         />
                       </div>
                       <div
-                        className={`h-64 w-44 overflow-hidden rounded-xl ${isEditable ? "pointer-events-auto" : ""}`}
+                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
                       >
                         <EditableImage
                           key={`grid-${componentId}-6-${finalGridImages[6].url}`}
@@ -474,44 +474,39 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
               </div>
 
               {/* Button */}
-              <div className="flex justify-start">
-                <EditableLink
-                  text={button.text || "Shop Collection"}
-                  href={button.href || "#"}
-                  onChange={(text, href) => {
-                    // If button doesn't exist in data.buttons, create it
-                    if (!data.buttons || data.buttons.length === 0) {
-                      const newButton = {
-                        id: "1",
-                        text,
-                        href: href || "#",
-                        variant: "primary" as const,
-                      };
-                      const updatedData = { ...data, buttons: [newButton] };
-                      setData(updatedData);
-                      onUpdate?.({ buttons: [newButton] });
-                    } else {
-                      handleButtonUpdate("buttons")(button.id, text, href);
-                    }
-                  }}
-                  isEditable={isEditable}
-                  siteUser={siteUser}
-                  className="inline-flex items-center justify-center rounded-lg px-8 py-3 text-base font-medium shadow-sm transition-all hover:translate-y-[-2px] hover:shadow-md"
-                  style={{
-                    background: theme.colors.primary
-                      ? theme.colors.primary
-                      : "",
-                    color: theme.colors.primaryForeground,
-                  }}
-                  textPlaceholder="Button text..."
-                  hrefPlaceholder="Enter URL..."
-                >
-                  <span>{button.text}</span>
-                  <span className="ml-2">
-                    <ChevronRight />
-                  </span>
-                </EditableLink>
-              </div>
+              <EditableLink
+                text={button.text || "Shop Collection"}
+                href={button.href || "#"}
+                onChange={(text, href) => {
+                  // If button doesn't exist in data.buttons, create it
+                  if (!data.buttons || data.buttons.length === 0) {
+                    const newButton = {
+                      id: "1",
+                      text,
+                      href: href || "#",
+                      variant: "primary" as const,
+                    };
+                    const updatedData = { ...data, buttons: [newButton] };
+                    setData(updatedData);
+                    onUpdate?.({ buttons: [newButton] });
+                  } else {
+                    handleButtonUpdate("buttons")(button.id, text, href);
+                  }
+                }}
+                isEditable={isEditable}
+                siteUser={siteUser}
+                style={{
+                  background: theme.colors.primary ? theme.colors.primary : "",
+                  color: theme.colors.primaryForeground,
+                }}
+                textPlaceholder="Button text..."
+                hrefPlaceholder="Enter URL..."
+              >
+                <span>{button.text}</span>
+                <span className="ml-2">
+                  <ChevronRight />
+                </span>
+              </EditableLink>
             </div>
           </div>
         </div>

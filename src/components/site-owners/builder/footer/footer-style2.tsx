@@ -103,45 +103,43 @@ export function FooterStyle2({
   return (
     <div className="group relative">
       <footer className="bg-muted/50 border-t">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           {/* Main Content Card */}
-          <Card className="mb-8 border-none bg-white/50 shadow-sm backdrop-blur-sm">
-            <CardContent className="p-8 md:p-12">
-              <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+          <Card className="mb-8">
+            <CardContent className="p-8">
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                 {/* Company Section */}
-                <div className="space-y-6 lg:col-span-1">
+                <div className="lg:col-span-1">
                   {/* Logo */}
-                  <div>
+                  <div className="mb-4">
                     <FooterLogo
                       footerData={data}
                       getImageUrl={getImageUrl}
-                      textClassName="text-foreground text-xl font-bold"
-                      imageClassName="h-8 w-auto"
+                      textClassName="text-foreground text-xl"
+                      imageClassName="h-8"
                       containerClassName="gap-3"
                     />
                   </div>
 
-                  <div className="flex flex-col gap-4">
-                    <Badge
-                      className="w-fit text-white"
-                      style={{
-                        backgroundColor: theme.colors.primary,
-                      }}
-                    >
-                      {data.companyName}
-                    </Badge>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {data.description}
-                    </p>
-                  </div>
+                  <Badge
+                    className="mb-4 text-white"
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                    }}
+                  >
+                    {data.companyName}
+                  </Badge>
+                  <p className="text-muted-foreground mb-6">
+                    {data.description}
+                  </p>
 
                   {/* Social Links */}
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2">
                     {data.socialLinks.map(social => (
                       <Link
                         key={social.id}
                         href={social.href || "#"}
-                        className="hover:bg-primary flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm transition-all hover:-translate-y-1 hover:text-white"
+                        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
                         target={
                           social.href?.startsWith("http") ? "_blank" : undefined
                         }
@@ -153,7 +151,7 @@ export function FooterStyle2({
                       >
                         <SocialIcon
                           platform={social.platform}
-                          className="h-5 w-5"
+                          className="h-4 w-4"
                         />
                       </Link>
                     ))}
@@ -161,11 +159,12 @@ export function FooterStyle2({
                 </div>
 
                 {/* Links Grid */}
-                <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 lg:col-span-2">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:col-span-2">
                   {data.sections.map(section => (
                     <div key={section.id}>
-                      <h4 className="text-foreground mb-6 flex items-center font-semibold tracking-tight">
+                      <h4 className="text-foreground mb-4 flex items-center font-semibold">
                         {section.title}
+                        <ExternalLink className="text-muted-foreground ml-2 h-3 w-3" />
                       </h4>
                       <ul className="space-y-3">
                         {section.links.map(link => (
@@ -174,7 +173,7 @@ export function FooterStyle2({
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="text-muted-foreground hover:text-primary h-auto justify-start p-0 font-normal transition-colors"
+                                className="text-muted-foreground hover:text-foreground h-auto justify-start p-0 font-normal"
                                 onClick={
                                   isEditable
                                     ? e => e.preventDefault()
@@ -187,7 +186,7 @@ export function FooterStyle2({
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="text-muted-foreground hover:text-primary h-auto justify-start p-0 font-normal transition-colors"
+                                className="text-muted-foreground hover:text-foreground h-auto justify-start p-0 font-normal"
                                 asChild
                               >
                                 <Link
@@ -214,35 +213,33 @@ export function FooterStyle2({
 
           {/* Newsletter Card */}
           {data.newsletter.enabled && (
-            <Card className="bg-primary/5 mb-8 border-none shadow-sm">
-              <CardContent className="p-8">
-                <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
+            <Card className="mb-8">
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-2">
                   <div>
-                    <h4 className="text-foreground mb-2 text-lg font-semibold">
+                    <h4 className="text-foreground mb-2 font-semibold">
                       {data.newsletter.title}
                     </h4>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       {data.newsletter.description}
                     </p>
                   </div>
 
                   {subscriptionStatus === "success" ? (
-                    <div className="flex items-center gap-2 rounded-lg bg-green-50 p-4 text-green-600">
+                    <div className="flex items-center justify-center gap-2 text-green-600 md:justify-start">
                       <CheckCircle className="h-5 w-5" />
-                      <span className="text-sm font-medium">
-                        Successfully subscribed!
-                      </span>
+                      <span className="text-sm">Successfully subscribed!</span>
                     </div>
                   ) : (
-                    <form onSubmit={handleNewsletterSubmit} className="w-full">
-                      <div className="flex flex-col gap-3">
-                        <div className="flex gap-3">
+                    <form onSubmit={handleNewsletterSubmit}>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-2">
                           <Input
                             type="email"
                             placeholder="Enter your email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
-                            className="flex-1 border-gray-200 bg-white"
+                            className="flex-1 border-gray-300 placeholder:text-gray-400"
                             disabled={
                               isEditable || createNewsletterMutation.isPending
                             }
@@ -252,21 +249,20 @@ export function FooterStyle2({
                             style={{
                               backgroundColor: theme.colors.primary,
                             }}
-                            className="px-6"
                             disabled={
                               isEditable || createNewsletterMutation.isPending
                             }
                           >
                             {createNewsletterMutation.isPending
-                              ? "..."
+                              ? "Subscribing..."
                               : "Subscribe"}
                           </Button>
                         </div>
 
                         {subscriptionStatus === "error" && errorMessage && (
-                          <div className="flex items-center gap-2 text-sm text-red-600">
+                          <div className="flex items-center justify-center gap-2 text-red-600 md:justify-start">
                             <AlertCircle className="h-4 w-4" />
-                            <span>{errorMessage}</span>
+                            <span className="text-sm">{errorMessage}</span>
                           </div>
                         )}
                       </div>
@@ -278,28 +274,45 @@ export function FooterStyle2({
           )}
 
           {/* Contact Info Card */}
-          <Card className="border-none shadow-sm">
+          <Card>
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-3">
+              <div className="grid grid-cols-1 items-center gap-6 text-center md:grid-cols-3 md:text-left">
                 {data.contactInfo.email && (
-                  <div className="text-muted-foreground hover:text-foreground flex items-center gap-3 transition-colors">
-                    <div className="bg-primary/10 text-primary rounded-full p-2">
-                      <Mail className="h-4 w-4" />
-                    </div>
-                    <span className="text-sm">{data.contactInfo.email}</span>
+                  <div className="flex items-center justify-center md:justify-start">
+                    <Mail
+                      style={{
+                        color: theme.colors.primary,
+                      }}
+                      className="mr-2 h-4 w-4"
+                    />
+                    <span className="text-muted-foreground text-sm">
+                      {data.contactInfo.email}
+                    </span>
                   </div>
                 )}
                 {data.contactInfo.phone && (
-                  <div className="text-muted-foreground hover:text-foreground flex items-center gap-3 transition-colors">
-                    <div className="bg-primary/10 text-primary rounded-full p-2">
-                      <Phone className="h-4 w-4" />
-                    </div>
-                    <span className="text-sm">{data.contactInfo.phone}</span>
+                  <div className="flex items-center justify-center md:justify-start">
+                    <Phone
+                      style={{
+                        color: theme.colors.primary,
+                      }}
+                      className="mr-2 h-4 w-4"
+                    />
+                    <span className="text-muted-foreground text-sm">
+                      {data.contactInfo.phone}
+                    </span>
                   </div>
                 )}
-                <div className="text-muted-foreground flex items-center justify-start gap-2 text-sm md:justify-end">
-                  <span>{data.copyright}</span>
-                  <Heart className="h-3 w-3 fill-current text-red-500" />
+                <div className="text-center md:text-right">
+                  <p className="text-muted-foreground flex items-center justify-center gap-1 text-sm md:justify-end">
+                    {data.copyright}
+                    <Heart
+                      style={{
+                        color: theme.colors.primary,
+                      }}
+                      className="h-3 w-3 text-red-500"
+                    />
+                  </p>
                 </div>
               </div>
             </CardContent>

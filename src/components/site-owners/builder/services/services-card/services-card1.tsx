@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { formatDate } from "@/utils/date";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 
 interface ServicesCard1Props {
@@ -45,35 +46,29 @@ export const ServicesCard1: React.FC<ServicesCard1Props> = ({
 
   const CardWrapper = siteUser
     ? ({ children }: { children: React.ReactNode }) => (
-        <Link href={getDetailsUrl()} className="group block h-full">
-          {children}
-        </Link>
+        <Link href={getDetailsUrl()}>{children}</Link>
       )
     : ({ children }: { children: React.ReactNode }) => (
-        <div
-          onClick={handleClick}
-          className="group block h-full cursor-pointer"
-        >
+        <div onClick={handleClick} className="cursor-pointer">
           {children}
         </div>
       );
 
   return (
     <CardWrapper>
-      <div className="bg-card text-card-foreground h-full overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-zinc-900/50">
-        <div className="relative aspect-video w-full overflow-hidden">
+      <div className="bg-background-light h-full overflow-hidden rounded-lg shadow-md dark:bg-zinc-800">
+        <div className="relative h-56 w-full">
           <Image
             src={servicesImage}
             alt={services.thumbnail_image_alt_description || services.title}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover"
           />
         </div>
         <div className="p-6">
-          <h2 className="text-foreground group-hover:text-primary line-clamp-2 text-xl leading-tight font-bold tracking-tight transition-colors">
+          <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-white">
             {services.title}
           </h2>
-          {/* Optional: Add a short excerpt here if description is plain text */}
         </div>
       </div>
     </CardWrapper>
