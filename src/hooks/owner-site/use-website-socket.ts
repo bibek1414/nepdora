@@ -373,13 +373,13 @@ export const useWebsiteSocket = ({
     socketRef.current = socket;
 
     socket.onopen = () => {
-      console.log("WebSocket Connected");
+      console.log("WebSocket Connected (Main Thread Fallback)");
       setIsConnected(true);
       flushQueue(); // ← FLUSH QUEUED MESSAGES
     };
 
     socket.onclose = () => {
-      console.log("WebSocket Disconnected");
+      console.log("WebSocket Disconnected (Main Thread Fallback)");
       setIsConnected(false);
       if (enabled) {
         reconnectTimeoutRef.current = setTimeout(() => connect(), 3000);
@@ -395,7 +395,25 @@ export const useWebsiteSocket = ({
         console.error("Error parsing WebSocket message:", error);
       }
     };
-  }, [enabled, schema_name, flushQueue]);
+  }, [enabled, schema_name, flushQueue, handleMessage]);
+
+  // --- Standard WebSocket Fallback Path ---
+  // This will run if the browser doesn't support SharedWorker (like Mobile Chrome/Safari)
+  useEffect(() => {
+    if (useSharedWorker.current) return; // Skip if we are using the SharedWorker
+    if (!enabled || !schema_name) return;
+
+    connect();
+
+    return () => {
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    };
+  }, [connect, enabled, schema_name]);
 
   return { isConnected, sendMessage, subscribe };
 };
