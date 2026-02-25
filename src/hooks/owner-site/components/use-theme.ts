@@ -9,21 +9,23 @@ import { useWebsiteSocketContext } from "@/providers/website-socket-provider";
 
 const THEME_QUERY_KEY = ["themes"];
 
-export const useThemeQuery = () => {
+export const useThemeQuery = (enabled: boolean = true) => {
   return useQuery({
     queryKey: THEME_QUERY_KEY,
     queryFn: useThemeApi.getThemes,
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
+    enabled,
   });
 };
 
-export const useThemeQueryPublished = () => {
+export const useThemeQueryPublished = (enabled: boolean = true) => {
   return useQuery({
-    queryKey: THEME_QUERY_KEY,
+    queryKey: ["themes", "published"],
     queryFn: useThemeApi.getThemesPublished,
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
+    enabled,
   });
 };
 

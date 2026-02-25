@@ -4,7 +4,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { CustomerAuthProvider } from "@/contexts/customer/AuthContext";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { QueryProvider } from "@/providers/query-provider";
-import NextTopLoader from "nextjs-toploader";
+import SmartTopLoader from "@/components/smart-top-loader";
 
 import { Suspense } from "react";
 import { Toaster } from "sonner";
@@ -70,7 +70,7 @@ export default function RootLayout({
               <QueryProvider>
                 <TextSelectionProvider>
                   <CartProvider>
-                    <NextTopLoader color="#4b74f5" height={3} />
+                    <SmartTopLoader />
 
                     {children}
                     <Analytics />

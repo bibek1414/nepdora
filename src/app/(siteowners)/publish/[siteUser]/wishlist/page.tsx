@@ -15,4 +15,3 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function WishListUserPage() {
   return <WishlistPage />;
 }
-
