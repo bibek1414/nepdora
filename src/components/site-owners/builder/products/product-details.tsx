@@ -41,6 +41,8 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
+import { useRecentlyViewed } from "@/hooks/customer/use-recently-viewed";
+import { ProductRecommendations } from "./product-recommendations";
 
 interface ProductDetailProps {
   slug: string;
@@ -57,6 +59,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const { addToCart } = useCart();
   const [quantity, setQuantity] = React.useState(1);
   const { data: themeResponse } = useThemeQuery();
+  const { addRecentlyViewed } = useRecentlyViewed();
 
   // Get theme colors with fallback to defaults (consistent with product-card4)
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -108,6 +111,13 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
       setSelectedImage(product.thumbnail_image || defaultImage);
     }
   }, [product, selectedImage]);
+
+  React.useEffect(() => {
+    if (product) {
+      addRecentlyViewed(product);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?.id]);
 
   // Initialize selected options when product loads
   React.useEffect(() => {
@@ -941,6 +951,10 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
           </div>
         </div>
       </div>
+
+      {product && (
+        <ProductRecommendations currentProduct={product} siteUser={siteUser} />
+      )}
     </div>
   );
 };

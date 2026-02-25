@@ -18,6 +18,8 @@ export interface ProductsData {
   order?: number;
   categoryId?: number;
   subCategoryId?: number;
+  category?: string | null;
+  subCategory?: string | null;
 }
 
 export interface ProductsComponentData {
