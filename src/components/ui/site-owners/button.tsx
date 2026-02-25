@@ -9,6 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        primary: "shadow-xs cursor-pointer",
         default: "shadow-xs cursor-pointer",
         destructive:
           "shadow-xs cursor-pointer focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
@@ -77,7 +78,10 @@ function Button({
           backgroundColor: theme.colors.primary,
           color: theme.colors.primaryForeground,
         };
-
+      case "primary":
+        return {
+          ...baseStyles,
+        };
       case "secondary":
         return {
           ...baseStyles,
@@ -128,7 +132,11 @@ function Button({
           "--hover-bg": `${theme.colors.primary}e6`, // 90% opacity
           "--hover-color": theme.colors.primaryForeground, // Keep text color consistent
         } as React.CSSProperties;
-
+      case "primary":
+        return {
+          "--hover-bg": `${theme.colors.primary}e6`, // 90% opacity
+          "--hover-color": theme.colors.primaryForeground, // Keep text color consistent
+        } as React.CSSProperties;
       case "secondary":
         return {
           "--hover-bg": `${theme.colors.secondary}cc`, // 80% opacity

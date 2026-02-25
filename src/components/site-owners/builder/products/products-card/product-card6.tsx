@@ -102,11 +102,6 @@ export const ProductCard6: React.FC<ProductCard6Props> = ({
     e.preventDefault();
     e.stopPropagation();
 
-    if (!isAuthenticated) {
-      toast.error("Please login to add items to your wishlist");
-      return;
-    }
-
     try {
       if (isWishlisted && wishlistItem) {
         // Remove from wishlist
@@ -118,7 +113,7 @@ export const ProductCard6: React.FC<ProductCard6Props> = ({
         }
       } else {
         // Add to wishlist
-        await addToWishlistMutation.mutateAsync(product.id);
+        await addToWishlistMutation.mutateAsync(product);
 
         // Call the optional callback if provided
         if (onWishlistToggle) {

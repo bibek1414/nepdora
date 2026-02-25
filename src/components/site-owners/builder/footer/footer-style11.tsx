@@ -87,8 +87,8 @@ export const FooterStyle11: React.FC<FooterStyle11Props> = ({
   const helpSection = data.sections[1];
 
   return (
-    <footer className="w-full bg-white px-6 pt-20 pb-10 font-sans text-gray-900 lg:px-24 dark:bg-[#020205] dark:text-gray-100">
-      <div className="mx-auto max-w-[1400px]">
+    <footer className="w-full bg-white pt-20 pb-10 font-sans text-gray-900 dark:bg-[#020205] dark:text-gray-100">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
           {/* Column 1: Logo, Newsletter, Social */}
           <div className="flex flex-col space-y-6 lg:col-span-4 lg:pr-12">
@@ -124,12 +124,12 @@ export const FooterStyle11: React.FC<FooterStyle11Props> = ({
                 ) : (
                   <form
                     onSubmit={handleNewsletterSubmit}
-                    className="relative flex items-center"
+                    className="relative w-full"
                   >
                     <Input
                       type="email"
                       placeholder="Enter your email..."
-                      className="w-full rounded-full border-none bg-gray-50 px-6 py-6 pr-12 text-sm placeholder:text-gray-400 focus-visible:border-transparent focus-visible:ring-1 focus-visible:ring-gray-200 dark:bg-white/5 dark:focus-visible:ring-gray-700"
+                      className="h-14 w-full rounded-full border-none bg-gray-50 px-6 pr-14 text-sm text-gray-900 placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-gray-200 dark:bg-white/5 dark:text-white dark:focus-visible:ring-gray-700"
                       value={email}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setEmail(e.target.value)
@@ -138,17 +138,15 @@ export const FooterStyle11: React.FC<FooterStyle11Props> = ({
                         isEditable || createNewsletterMutation.isPending
                       }
                     />
-                    <Button
+                    <button
                       type="submit"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-2 rounded-full text-gray-900 hover:bg-transparent dark:text-white"
+                      className="absolute top-1/2 right-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center text-gray-900 transition-colors hover:text-gray-600 disabled:opacity-50 dark:text-white dark:hover:text-gray-300"
                       disabled={
                         isEditable || createNewsletterMutation.isPending
                       }
                     >
                       <ArrowRight className="h-5 w-5" />
-                    </Button>
+                    </button>
                   </form>
                 )}
                 {subscriptionStatus === "error" && errorMessage && (
@@ -365,8 +363,8 @@ export const FooterStyle11: React.FC<FooterStyle11Props> = ({
               `© ${new Date().getFullYear()} ${data.companyName}. All Rights Reserved.`}
           </p>
 
-          {data.policyLinks && data.policyLinks.length > 0 ? (
-            <div className="flex items-center gap-6">
+          {data.policyLinks && data.policyLinks.length > 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-6">
               {data.policyLinks.map((link: any) => (
                 <FooterLink
                   key={link.id}
@@ -381,21 +379,6 @@ export const FooterStyle11: React.FC<FooterStyle11Props> = ({
                   {link.text}
                 </FooterLink>
               ))}
-            </div>
-          ) : (
-            <div className="flex items-center gap-6">
-              <Link
-                href="#"
-                className="text-xs text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-              >
-                Terms & Conditions
-              </Link>
-              <Link
-                href="#"
-                className="text-xs text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-              >
-                Legal & Privacy
-              </Link>
             </div>
           )}
         </div>

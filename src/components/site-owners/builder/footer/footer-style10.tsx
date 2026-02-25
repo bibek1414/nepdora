@@ -234,9 +234,30 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
 
         {/* Bottom Bar */}
         <div className="flex flex-col items-center justify-between space-y-4 border-t border-gray-200 pt-6 transition-colors duration-300 md:flex-row md:space-y-0 dark:border-gray-900">
-          <p className="text-xs text-gray-500">
-            {data.copyright || "© Copyright 2025 All rights reserved."}
-          </p>
+          <div className="flex flex-col items-center gap-2 md:items-start">
+            <p className="text-xs text-gray-500">
+              {data.copyright || "© Copyright 2025 All rights reserved."}
+            </p>
+            {data.policyLinks && data.policyLinks.length > 0 && (
+              <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
+                {data.policyLinks.map(link => (
+                  <Link
+                    key={link.id}
+                    href={generateLinkHref(
+                      link.href || "",
+                      siteUser,
+                      pathname,
+                      isEditable
+                    )}
+                    className="text-xs text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-white"
+                    onClick={isEditable ? e => e.preventDefault() : undefined}
+                  >
+                    {link.text}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
           <div className="flex items-center gap-3">
             {data.socialLinks.map(social => (
               <Link

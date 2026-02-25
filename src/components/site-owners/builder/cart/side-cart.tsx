@@ -252,34 +252,6 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
             )}
 
             {/* Persistent Links */}
-            <div className="border-t border-gray-200 bg-white p-4 sm:p-5">
-              <div className="grid grid-cols-2 gap-3">
-                <Link
-                  href={generateLinkHref("/login", siteUser, pathname)}
-                  className="w-full"
-                >
-                  <Button
-                    variant="outline"
-                    className="w-full text-xs sm:text-sm"
-                    onClick={onClose}
-                  >
-                    Login
-                  </Button>
-                </Link>
-                <Link
-                  href={generateLinkHref("/wishlist", siteUser, pathname)}
-                  className="w-full"
-                >
-                  <Button
-                    variant="outline"
-                    className="w-full text-xs sm:text-sm"
-                    onClick={onClose}
-                  >
-                    Wishlist
-                  </Button>
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </div>

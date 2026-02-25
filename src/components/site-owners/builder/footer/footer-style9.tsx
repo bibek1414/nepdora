@@ -82,6 +82,7 @@ export function FooterStyle9({
   };
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
+  const pathname = usePathname();
 
   // Map sections to specific columns
   const studentServices = data.sections[0];
@@ -223,13 +224,19 @@ export function FooterStyle9({
           {/* Right: Policy Links */}
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 md:justify-end">
             {policyLinks.map(link => (
-              <a
+              <Link
                 key={link.id}
-                href={link.href || "#"}
+                href={generateLinkHref(
+                  link.href || "",
+                  siteUser,
+                  pathname,
+                  isEditable
+                )}
                 className="transition-colors hover:text-white"
+                onClick={isEditable ? e => e.preventDefault() : undefined}
               >
                 {link.text}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

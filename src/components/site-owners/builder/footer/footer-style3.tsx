@@ -217,8 +217,27 @@ export function FooterStyle3({
             </div>
 
             {/* Copyright */}
-            <div className="mb-4 text-center md:mb-0 md:text-left">
+            <div className="mb-4 flex flex-col items-center gap-2 md:mb-0 md:items-start md:text-left">
               <p>{data.copyright}</p>
+              {data.policyLinks && data.policyLinks.length > 0 && (
+                <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
+                  {data.policyLinks.map(link => (
+                    <Link
+                      key={link.id}
+                      href={generateLinkHref(
+                        link.href || "",
+                        siteUser,
+                        pathname,
+                        isEditable
+                      )}
+                      className="text-white/80 transition-colors hover:text-white"
+                      onClick={isEditable ? e => e.preventDefault() : undefined}
+                    >
+                      {link.text}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Social links */}

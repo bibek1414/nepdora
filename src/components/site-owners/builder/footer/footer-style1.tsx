@@ -266,11 +266,30 @@ export function FooterStyle1({
           )}
 
           {/* Copyright */}
-          <div className="border-border mt-8 border-t pt-8 text-center">
+          <div className="border-border mt-8 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row">
             <p className="text-muted-foreground flex items-center justify-center gap-1 text-sm">
               {data.copyright}
               <Heart className="inline h-3 w-3 text-red-500" />
             </p>
+            {data.policyLinks && data.policyLinks.length > 0 && (
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                {data.policyLinks.map(link => (
+                  <Link
+                    key={link.id}
+                    href={generateLinkHref(
+                      link.href || "",
+                      siteUser,
+                      pathname,
+                      isEditable
+                    )}
+                    className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+                    onClick={isEditable ? e => e.preventDefault() : undefined}
+                  >
+                    {link.text}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </footer>

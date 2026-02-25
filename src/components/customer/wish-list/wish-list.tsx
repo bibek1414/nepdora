@@ -1,69 +1,18 @@
 "use client";
 
 import React from "react";
-import { ProductCard1 } from "@/components/site-owners/builder/products/products-card/product-card1";
-import {
-  useWishlist,
-  useAddToWishlist,
-  useRemoveFromWishlist,
-} from "@/hooks/customer/use-wishlist";
+import { ProductCard4 } from "@/components/site-owners/builder/products/products-card/product-card4";
+import { useWishlist } from "@/hooks/customer/use-wishlist";
 import { useAuth } from "@/hooks/customer/use-auth";
 import { Loader2, Heart, ShoppingBag } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 const WishlistPage = () => {
-  const { isAuthenticated } = useAuth();
   const { data: wishlistItems, isLoading, error } = useWishlist();
-
-  // Separate mutation hooks
-  const addToWishlistMutation = useAddToWishlist();
-  const removeFromWishlistMutation = useRemoveFromWishlist();
-
-  // Handle wishlist toggle
-  const handleWishlistToggle = (productId: number, isWishlisted: boolean) => {
-    if (isWishlisted) {
-      // Adding to wishlist
-      addToWishlistMutation.mutate(productId);
-    } else {
-      // Removing from wishlist - need to find the wishlist item ID
-      const wishlistItem = wishlistItems?.find(
-        item => item.product.id === productId
-      );
-      if (wishlistItem) {
-        removeFromWishlistMutation.mutate(wishlistItem.id);
-      } else {
-        console.error(
-          "Unable to find wishlist item for product ID:",
-          productId
-        );
-      }
-    }
-  };
-
-  // Show login message if not authenticated
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="container mx-auto px-4 py-16">
-          <div className="mx-auto max-w-md text-center">
-            <Heart className="mx-auto mb-4 h-16 w-16 text-gray-400" />
-            <h1 className="mb-2 text-2xl font-bold text-gray-900">
-              Sign in to see your wishlist
-            </h1>
-            <p className="mb-6 text-gray-600">
-              Save your favorite rugs and access them from any device
-            </p>
-            <Link href="/login">
-              <Button className="bg-black text-white hover:bg-gray-800">
-                Sign In
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const pathname = usePathname();
 
   // Show loading state
   if (isLoading) {
@@ -113,10 +62,6 @@ const WishlistPage = () => {
             <h1 className="mb-4 text-3xl font-bold text-gray-900">
               My Favourites
             </h1>
-            <p className="mx-auto max-w-2xl text-gray-600">
-              Whether they&apos;re boho, modern, or seasonal, we&apos;re helping
-              you keep track of all the rugs you love.
-            </p>
           </div>
 
           {/* Empty State */}
@@ -131,7 +76,7 @@ const WishlistPage = () => {
               Start browsing and save your favorite rugs to keep track of them
               here.
             </p>
-            <Link href="/products">
+            <Link href={generateLinkHref("/collections", undefined, pathname)}>
               <Button className="bg-black text-white hover:bg-gray-800">
                 <ShoppingBag className="mr-2 h-4 w-4" />
                 Browse Products
@@ -151,10 +96,6 @@ const WishlistPage = () => {
           <h1 className="mb-4 text-3xl font-bold text-gray-900">
             My Favourites
           </h1>
-          <p className="mx-auto mb-8 max-w-2xl text-gray-600">
-            Whether they&apos;re boho, modern, or seasonal, we&apos;re helping
-            you keep track of all the rugs you love.
-          </p>
 
           {/* Item Count */}
           <div className="inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2">
@@ -167,7 +108,7 @@ const WishlistPage = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
           {wishlistItems.map(item => {
             // Ensure the product has the is_wishlist flag set to true since it's in wishlist
             const productWithWishlistStatus = {
@@ -176,28 +117,16 @@ const WishlistPage = () => {
             };
 
             return (
-              <ProductCard1
+              <ProductCard4
                 key={item.product.id}
                 product={productWithWishlistStatus}
-                onWishlistToggle={handleWishlistToggle}
               />
             );
           })}
         </div>
 
-        {/* Loading states for mutations */}
-        {(addToWishlistMutation.isPending ||
-          removeFromWishlistMutation.isPending) && (
-          <div className="mt-8 flex items-center justify-center">
-            <Loader2 className="h-4 w-4 animate-spin text-gray-600" />
-            <span className="ml-2 text-sm text-gray-600">
-              Updating wishlist...
-            </span>
-          </div>
-        )}
-
         <div className="mt-12 text-center">
-          <Link href="/products">
+          <Link href={generateLinkHref("/collections", undefined, pathname)}>
             <Button
               variant="outline"
               className="border-gray-300 bg-white hover:bg-gray-50"

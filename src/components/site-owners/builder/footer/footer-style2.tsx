@@ -303,7 +303,7 @@ export function FooterStyle2({
                     </span>
                   </div>
                 )}
-                <div className="text-center md:text-right">
+                <div className="flex flex-col items-center gap-2 text-center md:items-end md:text-right">
                   <p className="text-muted-foreground flex items-center justify-center gap-1 text-sm md:justify-end">
                     {data.copyright}
                     <Heart
@@ -313,6 +313,28 @@ export function FooterStyle2({
                       className="h-3 w-3 text-red-500"
                     />
                   </p>
+
+                  {data.policyLinks && data.policyLinks.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-4 md:justify-end">
+                      {data.policyLinks.map(link => (
+                        <Link
+                          key={link.id}
+                          href={generateLinkHref(
+                            link.href || "",
+                            siteUser,
+                            pathname,
+                            isEditable
+                          )}
+                          className="text-muted-foreground hover:text-foreground text-xs transition-colors"
+                          onClick={
+                            isEditable ? e => e.preventDefault() : undefined
+                          }
+                        >
+                          {link.text}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>

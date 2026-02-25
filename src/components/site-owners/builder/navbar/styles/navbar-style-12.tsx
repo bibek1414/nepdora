@@ -13,10 +13,11 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
-import { Search, ChevronRight } from "lucide-react";
+import { Search, ChevronRight, Heart } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useProductsWithParams } from "@/hooks/owner-site/admin/use-product";
+import { useWishlist } from "@/hooks/customer/use-wishlist";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -61,6 +62,8 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { data: wishlistData } = useWishlist();
+  const wishlistCount = wishlistData?.length || 0;
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300);
@@ -137,8 +140,11 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
         } ${disableClicks ? "pointer-events-none" : ""}`}
       >
         {/* Top Dark Bar */}
-        <div className="bg-black px-4 py-2 text-xs text-white sm:text-sm">
-          <div className="mx-auto flex max-w-7xl items-center justify-between">
+        <div
+          className="bg-cover bg-center bg-no-repeat py-4 text-xs text-white sm:text-sm"
+          style={{ backgroundImage: "url('/images/icons/top-bar.webp')" }}
+        >
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
             <div className="flex flex-1 items-center justify-start gap-2">
               <span className="text-gray-300">
                 <EditableText
@@ -218,8 +224,8 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
         </div>
 
         {/* Main White Navbar */}
-        <div className="border-b border-gray-100 bg-white px-4 py-4 sm:px-6 lg:px-8">
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 lg:gap-8">
+        <div className="border-b border-gray-100 bg-white py-5 sm:py-6">
+          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:gap-8 lg:px-8">
             {/* Logo */}
             <div
               className={
@@ -252,11 +258,11 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
                 <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="Search anything..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
-                  className="w-full rounded-full border border-gray-100 bg-gray-50/50 py-2.5 pr-4 pl-10 text-sm transition-all focus:border-transparent focus:ring-2 focus:ring-black focus:outline-none"
+                  className="w-full rounded-full border border-gray-100 bg-gray-50/50 py-3 pr-4 pl-11 text-sm transition-all focus:border-transparent focus:ring-2 focus:ring-black focus:outline-none"
                   disabled={disableClicks || isEditable}
                 />
 
@@ -323,6 +329,32 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
 
             {/* Right Side: Links & Cart */}
             <div className="flex items-center gap-6">
+              {/* Wishlist Icon */}
+              {!isEditable && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    !disableClicks &&
+                    router.push(
+                      generateLinkHref("/wishlist", siteUser, pathname)
+                    )
+                  }
+                  className={`relative flex items-center gap-1 hover:bg-transparent ${
+                    disableClicks
+                      ? "pointer-events-auto cursor-default opacity-60"
+                      : ""
+                  }`}
+                >
+                  <Heart className="h-6 w-6 stroke-[1.5]" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </Button>
+              )}
+
               {/* Cart Icon */}
               {showCart && (
                 <div className={disableClicks ? "pointer-events-auto" : ""}>

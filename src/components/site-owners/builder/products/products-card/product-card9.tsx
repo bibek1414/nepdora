@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 import { ShoppingBag } from "lucide-react";
 import { Product } from "@/types/owner-site/admin/product";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
@@ -134,12 +134,17 @@ export const ProductCard9: React.FC<ProductCard9Props> = ({
             </div>
 
             <Button
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-black transition-colors hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-gray-600 bg-transparent p-0 hover:border-none!"
+              variant="primary"
               disabled={product.stock === 0}
               onClick={handleAddToCart}
               data-cart-action="true"
             >
-              <ShoppingBag className="h-4 w-4" />
+              <img
+                src="/images/site-owners/bag.webp"
+                alt="bag"
+                className="h-auto w-5"
+              />
             </Button>
           </div>
         </CardContent>

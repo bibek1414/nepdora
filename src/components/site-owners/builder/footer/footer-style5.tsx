@@ -225,12 +225,31 @@ export function FooterStyle5({
           </div>
 
           {/* Copyright */}
-          <div className="mx-auto mt-12 border-t border-gray-300 pt-8 text-center dark:border-gray-700">
+          <div className="mx-auto mt-12 flex flex-col items-center gap-4 border-t border-gray-300 pt-8 text-center dark:border-gray-700">
             <p className="text-text-light dark:text-text-dark flex items-center justify-center gap-1 text-sm">
               {data.copyright ||
                 `© ${new Date().getFullYear()} ${data.companyName}. All rights reserved.`}
               <Heart className="inline h-3 w-3 text-red-500" />
             </p>
+            {data.policyLinks && data.policyLinks.length > 0 && (
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                {data.policyLinks.map(link => (
+                  <Link
+                    key={link.id}
+                    href={generateLinkHref(
+                      link.href || "",
+                      siteUser,
+                      pathname,
+                      isEditable
+                    )}
+                    className="text-text-light dark:text-text-dark hover:text-primary text-sm transition-colors"
+                    onClick={isEditable ? e => e.preventDefault() : undefined}
+                  >
+                    {link.text}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </footer>

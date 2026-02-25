@@ -162,10 +162,10 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
 
   return (
     <div
-      className="bg-background-light dark:bg-background-dark flex items-center justify-center"
+      className="bg-background-light dark:bg-background-dark flex items-center justify-center py-6 sm:py-8 lg:py-12"
       data-component-id={componentId}
     >
-      <div className="grid w-full max-w-7xl grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 sm:px-6 md:grid-cols-2 lg:gap-8 lg:px-8">
         {collections.map((collection, index) => {
           // Different backgrounds based on index to match the design (darker left, lighter right)
           const cardBgClass = index % 2 === 0 ? "bg-[#8A95A5]" : "bg-[#E6E6E6]";

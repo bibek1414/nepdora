@@ -95,7 +95,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const [selectedVariant, setSelectedVariant] = React.useState<any>(null);
 
   // Wishlist hooks
-  const { isAuthenticated } = useAuth();
   const { data: wishlistItems } = useWishlist();
   const addToWishlistMutation = useAddToWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlist();
@@ -156,18 +155,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const handleFavorite = async () => {
     if (!product) return;
 
-    if (!isAuthenticated) {
-      toast.error("Please login to add items to your wishlist");
-      return;
-    }
-
     try {
       if (isWishlisted && wishlistItem) {
         await removeFromWishlistMutation.mutateAsync(wishlistItem.id);
-        toast.success(`${product.name} removed from wishlist!`);
       } else {
-        await addToWishlistMutation.mutateAsync(product.id);
-        toast.success(`${product.name} added to wishlist!`);
+        await addToWishlistMutation.mutateAsync(product);
       }
     } catch (error) {
       console.error("Wishlist operation failed:", error);
@@ -582,7 +574,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                         backgroundColor: subtleSecondaryBg,
                         color: theme.colors.secondary,
                       }
-                    : { backgroundColor: "#F9FAFB", color: theme.colors.text }
+                    : { backgroundColor: "#F9FAFB", color: "black" }
                 }
                 onClick={handleFavorite}
                 disabled={isWishlistLoading}
@@ -714,25 +706,25 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   <Button
                     variant="outline"
                     size="icon"
-                    style={outlineButtonStyle}
+                    className="border-black text-black"
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
                   >
                     -
                   </Button>
                   <Input
-                    type="number"
+                    type="text"
                     value={quantity}
                     onChange={e =>
                       setQuantity(Math.max(1, parseInt(e.target.value) || 1))
                     }
-                    className="w-16 text-center"
+                    className="w-24 text-center"
                     min="1"
                     max={currentStock}
                   />
                   <Button
                     variant="outline"
                     size="icon"
-                    style={outlineButtonStyle}
+                    className="border-black text-black"
                     onClick={() =>
                       setQuantity(q => Math.min(currentStock, q + 1))
                     }
@@ -742,7 +734,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-muted-foreground text-sm">Stock:</span>
-                  <Badge variant={currentStock > 0 ? "default" : "destructive"}>
+                  <Badge
+                    variant={currentStock > 0 ? "default" : "destructive"}
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                      borderColor: theme.colors.primary,
+                    }}
+                  >
                     {currentStock > 0
                       ? `${currentStock} available`
                       : "Out of stock"}
@@ -768,18 +767,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <AccordionTrigger>Product Specifications</AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="font-medium">Product ID:</span>
-                      <span className="text-muted-foreground">
-                        {product.id}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium">SKU:</span>
-                      <span className="text-muted-foreground">
-                        {product.slug}
-                      </span>
-                    </div>
                     <div className="flex justify-between">
                       <span className="font-medium">Price:</span>
                       <span className="text-muted-foreground">

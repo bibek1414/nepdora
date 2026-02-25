@@ -97,6 +97,26 @@ export function FooterStyle6({
         {/* Copyright */}
         <p className="mt-4 text-center">{copyrightText}</p>
 
+        {data.policyLinks && data.policyLinks.length > 0 && (
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
+            {data.policyLinks.map(link => (
+              <Link
+                key={link.id}
+                href={generateLinkHref(
+                  link.href || "",
+                  siteUser,
+                  pathname,
+                  isEditable
+                )}
+                className="text-sm text-white/70 transition-colors hover:text-white"
+                onClick={isEditable ? e => e.preventDefault() : undefined}
+              >
+                {link.text}
+              </Link>
+            ))}
+          </div>
+        )}
+
         {/* Social Links */}
         <div className="mt-5 flex items-center gap-4">
           {data.socialLinks.map(social => (

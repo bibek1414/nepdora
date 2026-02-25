@@ -159,7 +159,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         textRef.current.innerHTML = displayValue;
       }
     }
-  }, [value]);
+  }, [value, Tag]);
 
   // Handle text changes - Convert HTML breaks back to \n and save
   const handleTextChange = (e: React.FocusEvent<HTMLElement>) => {

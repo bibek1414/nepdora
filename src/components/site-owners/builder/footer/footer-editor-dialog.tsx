@@ -38,6 +38,7 @@ import {
   ImageIcon,
   Check,
   ChevronsUpDown,
+  Shield,
 } from "lucide-react";
 import {
   Command,
@@ -222,7 +223,7 @@ export function FooterEditorDialog({
   const showNewsletter = footerStyle !== "FooterStyle5";
 
   // Determine grid columns based on whether newsletter is shown
-  const tabsGridCols = showNewsletter ? "grid-cols-6" : "grid-cols-5";
+  const tabsGridCols = showNewsletter ? "grid-cols-7" : "grid-cols-6";
 
   // Update editing data when footerData prop changes
   useEffect(() => {
@@ -611,6 +612,47 @@ export function FooterEditorDialog({
     }
   };
 
+  const addPolicyLink = () => {
+    const newLink: FooterLink = {
+      id: Date.now().toString(),
+      text: "Legal & Privacy",
+      href: "#",
+    };
+    setEditingData(prev => ({
+      ...prev,
+      policyLinks: [...(prev.policyLinks || []), newLink],
+    }));
+  };
+
+  const updatePolicyLink = (linkId: string, field: string, value: string) => {
+    let finalValue = value;
+    if (
+      field === "href" &&
+      value.length > 0 &&
+      !value.startsWith("/") &&
+      !value.startsWith("http") &&
+      !value.startsWith("mailto:") &&
+      !value.startsWith("tel:") &&
+      !value.startsWith("#")
+    ) {
+      finalValue = `/${value}`;
+    }
+
+    setEditingData(prev => ({
+      ...prev,
+      policyLinks: (prev.policyLinks || []).map(link =>
+        link.id === linkId ? { ...link, [field]: finalValue } : link
+      ),
+    }));
+  };
+
+  const removePolicyLink = (linkId: string) => {
+    setEditingData(prev => ({
+      ...prev,
+      policyLinks: (prev.policyLinks || []).filter(link => link.id !== linkId),
+    }));
+  };
+
   // Get available platforms for dropdown (platforms not already used)
   const getAvailablePlatforms = () => {
     const usedPlatforms = new Set(
@@ -660,6 +702,10 @@ export function FooterEditorDialog({
             <TabsTrigger value="sections" className="flex items-center gap-1">
               <Link className="h-4 w-4" />
               Sections
+            </TabsTrigger>
+            <TabsTrigger value="policies" className="flex items-center gap-1">
+              <Shield className="h-4 w-4" />
+              Policies
             </TabsTrigger>
             <TabsTrigger value="social" className="flex items-center gap-1">
               <Share2 className="h-4 w-4" />
@@ -1126,6 +1172,97 @@ export function FooterEditorDialog({
                       </div>
                     </Card>
                   ))}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Policies Sections Tab */}
+            <TabsContent value="policies" className="space-y-4">
+              <Card className="border-none shadow-none">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between text-lg">
+                    Policy Links
+                    <Button
+                      onClick={addPolicyLink}
+                      size="sm"
+                      disabled={isLoading}
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Policy Link
+                    </Button>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {(editingData.policyLinks || []).map(link => (
+                    <Card key={link.id} className="p-4">
+                      <div className="space-y-2">
+                        <div className="relative flex gap-1.5">
+                          <Input
+                            value={link.text}
+                            onChange={e =>
+                              updatePolicyLink(link.id, "text", e.target.value)
+                            }
+                            placeholder="Policy Name (e.g. Terms & Conditions)"
+                            className="h-9 flex-1 text-sm font-medium"
+                            disabled={isLoading}
+                          />
+                          <div className="relative flex-1">
+                            <Input
+                              value={link.href || ""}
+                              onChange={e =>
+                                updatePolicyLink(
+                                  link.id,
+                                  "href",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Select or enter URL"
+                              className="h-9 pr-8 text-sm"
+                              disabled={isLoading}
+                            />
+                            <PageSelector
+                              onSelect={(href, text) => {
+                                let shouldUpdateText = false;
+                                const linkToUpdate = (
+                                  editingData.policyLinks || []
+                                ).find(l => l.id === link.id);
+                                if (
+                                  linkToUpdate &&
+                                  (!linkToUpdate.text ||
+                                    linkToUpdate.text === "Legal & Privacy")
+                                ) {
+                                  shouldUpdateText = true;
+                                }
+
+                                updatePolicyLink(link.id, "href", href);
+                                if (text && shouldUpdateText) {
+                                  updatePolicyLink(link.id, "text", text);
+                                }
+                              }}
+                              currentHref={link.href || ""}
+                              currentText={link.text}
+                            />
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removePolicyLink(link.id)}
+                            className="text-destructive hover:bg-destructive/10 hover:text-destructive h-9 w-9"
+                            disabled={isLoading}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                  {(!editingData.policyLinks ||
+                    editingData.policyLinks.length === 0) && (
+                    <div className="text-muted-foreground py-4 text-center text-sm">
+                      No policy links added yet. Add "Terms & Conditions" or
+                      "Legal & Privacy" links here.
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>

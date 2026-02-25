@@ -32,7 +32,7 @@ export const OurClients4: React.FC<OurClients4Props> = ({ data }) => {
 
   return (
     <div className="flex w-full items-center justify-center border-y border-gray-100 py-8 dark:border-gray-800">
-      <div className="flex w-full flex-wrap items-center justify-center gap-8 px-4 sm:gap-12 md:gap-16 lg:gap-24">
+      <div className="flex w-full flex-wrap items-center justify-center gap-8 px-4 sm:gap-12 md:gap-16 lg:gap-16">
         {clients.slice(0, 6).map((client, index) => (
           <div
             key={`${client.id}-${index}`}

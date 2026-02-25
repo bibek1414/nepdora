@@ -98,17 +98,12 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
     e.preventDefault();
     e.stopPropagation();
 
-    if (!isAuthenticated) {
-      toast.error("Please login to add to wishlist");
-      return;
-    }
-
     try {
       if (isWishlisted && wishlistItem) {
         await removeFromWishlistMutation.mutateAsync(wishlistItem.id);
         onWishlistToggle?.(product.id, false);
       } else {
-        await addToWishlistMutation.mutateAsync(product.id);
+        await addToWishlistMutation.mutateAsync(product);
         onWishlistToggle?.(product.id, true);
       }
     } catch (err) {

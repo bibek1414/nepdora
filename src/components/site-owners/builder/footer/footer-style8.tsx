@@ -199,12 +199,34 @@ export function FooterStyle8({
             ))}
           </div>
 
-          {/* Copyright */}
-          <div className="text-right text-sm leading-relaxed text-gray-300 md:text-base">
-            <p>{data.copyright}</p>
-            <p>
-              Powered By <span className="font-medium text-white">Nepdora</span>
-            </p>
+          {/* Copyright & Policies */}
+          <div className="flex flex-col items-center gap-2 text-center text-sm leading-relaxed text-gray-300 md:items-end md:text-right md:text-base">
+            <div>
+              <p>{data.copyright}</p>
+              <p>
+                Powered By{" "}
+                <span className="font-medium text-white">Nepdora</span>
+              </p>
+            </div>
+            {data.policyLinks && data.policyLinks.length > 0 && (
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-4 md:justify-end">
+                {data.policyLinks.map(link => (
+                  <Link
+                    key={link.id}
+                    href={generateLinkHref(
+                      link.href || "",
+                      siteUser,
+                      pathname,
+                      isEditable
+                    )}
+                    className="text-sm text-gray-400 transition-colors hover:text-white"
+                    onClick={isEditable ? e => e.preventDefault() : undefined}
+                  >
+                    {link.text}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

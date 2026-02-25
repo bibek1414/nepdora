@@ -410,7 +410,10 @@ export function FooterStyle7({
         >
           <p>{data.copyright}</p>
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:justify-start md:gap-8">
-            {(legalSection?.links || []).map(link => (
+            {(data.policyLinks && data.policyLinks.length > 0
+              ? data.policyLinks
+              : legalSection?.links || []
+            ).map(link => (
               <Link
                 key={link.id}
                 href={generateLinkHref(

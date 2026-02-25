@@ -10,26 +10,79 @@ import {
 } from "@/services/api/customer/wishlist";
 import { WishlistItem } from "@/types/customer/wishlist";
 
+const getLocalWishlist = (): WishlistItem[] => {
+  if (typeof window === "undefined") return [];
+  const stored = localStorage.getItem("nepdora_wishlist");
+  if (!stored) return [];
+  try {
+    return JSON.parse(stored);
+  } catch (e) {
+    return [];
+  }
+};
+
+const saveLocalWishlist = (items: WishlistItem[]) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("nepdora_wishlist", JSON.stringify(items));
+  }
+};
+
 export const useWishlist = () => {
-  const { tokens, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return useQuery<WishlistItem[], Error>({
     queryKey: ["wishlist"],
-    queryFn: () => getWishlist(),
-    enabled: isAuthenticated,
+    queryFn: async () => {
+      if (isAuthenticated) {
+        return getWishlist();
+      } else {
+        return getLocalWishlist();
+      }
+    },
   });
 };
 
 export const useAddToWishlist = () => {
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuth();
 
   return useMutation({
-    mutationFn: (productId: number) => addToWishlist({ productId }),
+    mutationFn: async (product: any) => {
+      if (isAuthenticated) {
+        const productId = typeof product === "number" ? product : product.id;
+        return addToWishlist({ productId });
+      } else {
+        if (typeof product === "number") {
+          throw new Error("Full product object is required for local wishlist");
+        }
+
+        const localItems = getLocalWishlist();
+        if (localItems.some(item => item.product.id === product.id)) {
+          return localItems.find(
+            item => item.product.id === product.id
+          ) as WishlistItem;
+        }
+
+        const newItem: WishlistItem = {
+          id: Date.now(), // Create a pseudo ID for local storage
+          user: 0,
+          product: product,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+
+        const newItems = [...localItems, newItem];
+        saveLocalWishlist(newItems);
+        return newItem;
+      }
+    },
     onSuccess: newItem => {
       queryClient.invalidateQueries({ queryKey: ["wishlist"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("Added to Wishlist", {
-        description: `${newItem.product.name} has been added to your wishlist.`,
+        description: `${
+          newItem?.product?.name || "Item"
+        } has been added to your wishlist.`,
       });
     },
     onError: error => {
@@ -42,10 +95,19 @@ export const useAddToWishlist = () => {
 
 export const useRemoveFromWishlist = () => {
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuth();
 
   return useMutation({
-    mutationFn: (wishlistItemId: number) =>
-      removeFromWishlist({ wishlistItemId }),
+    mutationFn: async (wishlistItemId: number) => {
+      if (isAuthenticated) {
+        return removeFromWishlist({ wishlistItemId });
+      } else {
+        const localItems = getLocalWishlist();
+        const newItems = localItems.filter(item => item.id !== wishlistItemId);
+        saveLocalWishlist(newItems);
+        return;
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wishlist"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
