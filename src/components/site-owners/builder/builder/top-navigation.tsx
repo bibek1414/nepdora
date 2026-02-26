@@ -123,7 +123,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
                 </button>
 
                 {/* Delete button */}
-                {pages.length > 1 && (
+                {pages.length > 1 && !page.slug.includes("-details-draft") && (
                   <DeletePageDialog page={page} onPageDeleted={onPageDeleted} />
                 )}
               </div>
@@ -160,16 +160,17 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
                       }`}
                     >
                       <span>{page.title}</span>
-                      {pages.length > 1 && (
-                        <div
-                          onClick={e => {
-                            e.stopPropagation();
-                            setPageToDelete(page);
-                          }}
-                        >
-                          <X className="text-muted-foreground hover:text-destructive mr-1 h-4 w-4 cursor-pointer transition-colors" />
-                        </div>
-                      )}
+                      {pages.length > 1 &&
+                        !page.slug.includes("-details-draft") && (
+                          <div
+                            onClick={e => {
+                              e.stopPropagation();
+                              setPageToDelete(page);
+                            }}
+                          >
+                            <X className="text-muted-foreground hover:text-destructive mr-1 h-4 w-4 cursor-pointer transition-colors" />
+                          </div>
+                        )}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>

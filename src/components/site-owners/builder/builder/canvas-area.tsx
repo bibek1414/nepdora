@@ -32,6 +32,10 @@ interface CanvasAreaProps {
 
   onAddSection: (position?: "above" | "below", index?: number) => void;
   onReplaceSection: (componentId: string, category?: string) => void;
+  onProductClick?: (productSlug: string, order: number) => void;
+  onBlogClick?: (blogSlug: string, order: number) => void;
+  onPortfolioClick?: (portfolioSlug: string, order: number) => void;
+  onServiceClick?: (serviceSlug: string, order: number) => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -44,6 +48,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   error,
   onAddSection,
   onReplaceSection,
+  onProductClick,
+  onBlogClick,
+  onPortfolioClick,
+  onServiceClick,
 }) => {
   // Local state to manage component order optimistically
   const [pageComponents, setPageComponents] = useState<ComponentResponse[]>(
@@ -163,9 +171,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     // Specific props (empty handlers for builder mode)
     const specificProps = {
-      onProductClick: () => {},
-      onBlogClick: () => {},
-      onServiceClick: () => {},
+      onProductClick: onProductClick || (() => {}),
+      onBlogClick: onBlogClick || (() => {}),
+      onServiceClick: onServiceClick || (() => {}),
+      onPortfolioClick: onPortfolioClick || (() => {}),
       onCategoryClick: () => {},
       onSubCategoryClick: () => {},
       onMemberClick: () => {},

@@ -22,6 +22,10 @@ interface PageComponentRendererProps {
   onCategoryClick: (categoryId: number, order: number) => void;
   onSubCategoryClick: (subcategoryId: number, order: number) => void;
   onComponentUpdate: (componentId: string, newData: any) => void;
+  productSlug?: string;
+  blogSlug?: string;
+  portfolioSlug?: string;
+  serviceSlug?: string;
 }
 
 export function PageComponentRenderer({
@@ -34,6 +38,10 @@ export function PageComponentRenderer({
   onCategoryClick,
   onSubCategoryClick,
   onComponentUpdate,
+  productSlug,
+  blogSlug,
+  portfolioSlug,
+  serviceSlug,
 }: PageComponentRendererProps) {
   const renderComponent = (component: PageComponent) => {
     const type = component.component_type as keyof ComponentTypeMap;
@@ -54,6 +62,10 @@ export function PageComponentRenderer({
       pageSlug: pageSlug,
       onUpdate: (componentId: string, newData: any) =>
         onComponentUpdate(componentId, newData),
+      productSlug,
+      blogSlug,
+      portfolioSlug,
+      serviceSlug,
     };
 
     // Specific props for certain components (passed regardless, but used by those that need them)

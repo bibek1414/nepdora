@@ -87,7 +87,10 @@ export function usePageData(siteUser: string, pageSlug: string) {
       router.push(routePrefix || "/");
     },
     handleProductClick: (productSlug: string, _order: number) => {
-      router.push(`${routePrefix}/products/${productSlug}`);
+      const basePath = isPreview
+        ? "/product-details-draft"
+        : "/product-details";
+      router.push(`${routePrefix}${basePath}/${productSlug}`);
     },
     handleBlogClick: (blogSlug: string, _order: number) => {
       router.push(`${routePrefix}/blog/${blogSlug}`);

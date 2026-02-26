@@ -96,12 +96,15 @@ export const useCreateComponentMutation = (pageSlug: string) => {
       data,
       insertIndex,
       silent,
+      pageSlug: overrideSlug,
     }: {
       componentType: keyof ComponentTypeMap;
       data: ComponentTypeMap[keyof ComponentTypeMap];
       insertIndex?: number;
       silent?: boolean;
+      pageSlug?: string;
     }) => {
+      const targetSlug = overrideSlug || pageSlug;
       return new Promise<any>((resolve, reject) => {
         const unsubscribe = subscribe("component_created", (message: any) => {
           unsubscribe();
@@ -114,7 +117,7 @@ export const useCreateComponentMutation = (pageSlug: string) => {
 
         sendMessage({
           action: "create_component",
-          slug: pageSlug,
+          slug: targetSlug,
           component_type: componentType,
           component_id: generateUUID(),
           data,
@@ -123,17 +126,24 @@ export const useCreateComponentMutation = (pageSlug: string) => {
       });
     },
     onMutate: async variables => {
-      const { componentType, data, insertIndex, silent } = variables;
+      const {
+        componentType,
+        data,
+        insertIndex,
+        silent,
+        pageSlug: overrideSlug,
+      } = variables;
+      const targetSlug = overrideSlug || pageSlug;
 
       // Cancel refetching
       await queryClient.cancelQueries({
-        queryKey: ["pageComponents", pageSlug, "preview"],
+        queryKey: ["pageComponents", targetSlug, "preview"],
       });
 
       // Snapshot previous
       const previousComponents = queryClient.getQueryData([
         "pageComponents",
-        pageSlug,
+        targetSlug,
         "preview",
       ]);
 
@@ -143,7 +153,7 @@ export const useCreateComponentMutation = (pageSlug: string) => {
         component_id: optimisticId,
         component_type: componentType,
         data: data,
-        page_slug: pageSlug,
+        page_slug: targetSlug,
         status: "draft",
         order:
           insertIndex ??
@@ -152,7 +162,7 @@ export const useCreateComponentMutation = (pageSlug: string) => {
       };
 
       queryClient.setQueryData(
-        ["pageComponents", pageSlug, "preview"],
+        ["pageComponents", targetSlug, "preview"],
         (old: any[] | undefined) => {
           if (!old) return [optimisticComponent];
           const newList = [...old];

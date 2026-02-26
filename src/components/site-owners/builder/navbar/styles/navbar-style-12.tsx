@@ -279,7 +279,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
                           <Link
                             key={product.id}
                             href={generateLinkHref(
-                              `/products/${product.slug}`,
+                              `${pathname?.includes("/preview/") ? "/product-details-draft" : "/product-details"}/${product.slug}`,
                               siteUser,
                               pathname,
                               isEditable,

@@ -56,7 +56,11 @@ export const ProductCard7: React.FC<ProductCard7Props> = ({
   ];
 
   const getDetailsUrl = (product: Product): string => {
-    return generateLinkHref(`/products/${product.slug}`, siteUser, pathname);
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/product-details-draft"
+      : "/product-details";
+    return generateLinkHref(`${basePath}/${product.slug}`, siteUser, pathname);
   };
 
   const checkScroll = () => {

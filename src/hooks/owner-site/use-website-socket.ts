@@ -6,7 +6,7 @@ import { getApiBaseUrl } from "@/config/site";
 type WebSocketMessage = {
   action?: string;
   data?: any;
-  error?: string;
+  error?: any;
   id?: string | number;
   slug?: string;
   [key: string]: any;
@@ -72,7 +72,30 @@ export const useWebsiteSocket = ({
       const { action, data, error, slug } = message;
 
       if (error) {
-        toast.error(error);
+        let errorMessage = "An error occurred";
+        if (typeof error === "string") {
+          errorMessage = error;
+        } else if (typeof error === "object" && error !== null) {
+          if (error.non_field_errors && Array.isArray(error.non_field_errors)) {
+            errorMessage = error.non_field_errors[0];
+          } else if (error.detail) {
+            errorMessage = error.detail;
+          } else if (error.message) {
+            errorMessage = error.message;
+          } else {
+            const values = Object.values(error);
+            if (
+              values.length > 0 &&
+              Array.isArray(values[0]) &&
+              values[0].length > 0
+            ) {
+              errorMessage = String(values[0][0]);
+            } else {
+              errorMessage = JSON.stringify(error);
+            }
+          }
+        }
+        toast.error(errorMessage);
         return;
       }
 

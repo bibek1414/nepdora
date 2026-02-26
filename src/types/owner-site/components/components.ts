@@ -21,6 +21,10 @@ import { CTAData } from "./cta";
 import { PricingData } from "./pricing";
 import { OurClientsData } from "./our-client";
 import { OthersData } from "./others";
+import { ProductDetailsData } from "./product-details";
+import { BlogDetailsData } from "./blog-details";
+import { PortfolioDetailsData } from "./portfolio-details";
+import { ServiceDetailsData } from "./service-details";
 
 export interface ComponentTypeMap {
   hero: HeroData;
@@ -46,6 +50,10 @@ export interface ComponentTypeMap {
   pricing: PricingData;
   our_clients: OurClientsData;
   others: OthersData;
+  product_details: ProductDetailsData;
+  blog_details: BlogDetailsData;
+  portfolio_details: PortfolioDetailsData;
+  service_details: ServiceDetailsData;
 }
 
 // Generic interfaces

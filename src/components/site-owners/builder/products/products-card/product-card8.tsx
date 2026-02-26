@@ -82,7 +82,7 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
     addToWishlistMutation.isPending || removeFromWishlistMutation.isPending;
 
   const detailsUrl = generateLinkHref(
-    `/products/${product.slug}`,
+    `${pathname?.includes("/preview/") ? "/product-details-draft" : "/product-details"}/${product.slug}`,
     siteUser,
     pathname
   );

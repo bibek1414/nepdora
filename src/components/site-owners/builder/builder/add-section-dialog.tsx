@@ -64,7 +64,14 @@ type ComponentItem = {
   hasTemplates?: boolean;
   templates?: TemplateItem[];
   popular?: boolean;
-  type?: "section" | "navbar" | "footer";
+  type?:
+    | "section"
+    | "navbar"
+    | "footer"
+    | "product_details"
+    | "blog_details"
+    | "portfolio_details"
+    | "service_details";
   hideForService?: boolean;
   showForWebsiteTypes?: string[];
 };
@@ -432,6 +439,74 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "product-11",
         name: "Featured Collections",
         image: "/images/site-owners/products/product11.png",
+      },
+    ],
+    product_details: [
+      {
+        id: "product-details-style-1",
+        name: "Product Details Style 1",
+        image: "/images/builder/product-details/style-1.png",
+      },
+      {
+        id: "product-details-style-2",
+        name: "Product Details Style 2",
+        image: "/images/builder/product-details/style-2.png",
+      },
+      {
+        id: "product-details-style-3",
+        name: "Product Details Style 3",
+        image: "/images/builder/product-details/style-3.png",
+      },
+    ],
+    blog_details: [
+      {
+        id: "blog-details-style-1",
+        name: "Blog Details Style 1",
+        image: "/images/builder/blog-details/style-1.png",
+      },
+      {
+        id: "blog-details-style-2",
+        name: "Blog Details Style 2",
+        image: "/images/builder/blog-details/style-2.png",
+      },
+      {
+        id: "blog-details-style-3",
+        name: "Blog Details Style 3",
+        image: "/images/builder/blog-details/style-3.png",
+      },
+    ],
+    portfolio_details: [
+      {
+        id: "portfolio-details-style-1",
+        name: "Portfolio Details Style 1",
+        image: "/images/builder/portfolio-details/style-1.png",
+      },
+      {
+        id: "portfolio-details-style-2",
+        name: "Portfolio Details Style 2",
+        image: "/images/builder/portfolio-details/style-2.png",
+      },
+      {
+        id: "portfolio-details-style-3",
+        name: "Portfolio Details Style 3",
+        image: "/images/builder/portfolio-details/style-3.png",
+      },
+    ],
+    service_details: [
+      {
+        id: "service-details-style-1",
+        name: "Service Details Style 1",
+        image: "/images/builder/service-details/style-1.png",
+      },
+      {
+        id: "service-details-style-2",
+        name: "Service Details Style 2",
+        image: "/images/builder/service-details/style-2.png",
+      },
+      {
+        id: "service-details-style-3",
+        name: "Service Details Style 3",
+        image: "/images/builder/service-details/style-3.png",
       },
     ],
     category: [
@@ -1162,6 +1237,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       type: "section",
     },
     {
+      id: "blog-details-sections",
+      label: "Blog Details",
+      icon: FileText,
+      keywords: ["blog", "details", "single blog", "article"],
+      description: "Setup layout for your single blog post view",
+      hasTemplates: true,
+      templates: templates.blog_details,
+      type: "blog_details" as any,
+    },
+    {
       id: "cta-sections",
       label: "Call to Action",
       icon: Type,
@@ -1256,6 +1341,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       type: "section",
     },
     {
+      id: "portfolio-details-sections",
+      label: "Portfolio Details",
+      icon: FolderOpen,
+      keywords: ["portfolio", "details", "single project", "case study"],
+      description: "Setup layout for your single portfolio project view",
+      hasTemplates: true,
+      templates: templates.portfolio_details,
+      type: "portfolio_details" as any,
+    },
+    {
       id: "pricing-sections",
       label: "Pricing",
       icon: DollarSign,
@@ -1277,6 +1372,17 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hideForService: true,
     },
     {
+      id: "product-details-sections",
+      label: "Product Details",
+      icon: Package,
+      keywords: ["product", "details", "single product", "item page"],
+      description: "Setup layout for your single product view",
+      hasTemplates: true,
+      templates: templates.product_details,
+      type: "product_details" as any,
+      showForWebsiteTypes: ["ecommerce"],
+    },
+    {
       id: "services-sections",
       label: "Services",
       icon: Menu,
@@ -1285,6 +1391,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       templates: templates.services,
       popular: true,
       type: "section",
+    },
+    {
+      id: "service-details-sections",
+      label: "Service Details",
+      icon: Menu,
+      keywords: ["service", "details", "single service"],
+      description: "Setup layout for your single service view",
+      hasTemplates: true,
+      templates: templates.service_details,
+      type: "service_details" as any,
     },
     {
       id: "subcategories-sections",

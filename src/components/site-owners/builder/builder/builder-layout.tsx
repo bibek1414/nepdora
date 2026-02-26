@@ -41,6 +41,10 @@ import BuilderSkeleton from "./builder-skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { Facebook, Twitter } from "lucide-react";
 import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
+import { DEFAULT_PRODUCT_DETAILS_MAP } from "@/types/owner-site/components/product-details-map";
+import { DEFAULT_BLOG_DETAILS_MAP } from "@/types/owner-site/components/blog-details-map";
+import { DEFAULT_PORTFOLIO_DETAILS_MAP } from "@/types/owner-site/components/portfolio-details-map";
+import { DEFAULT_SERVICE_DETAILS_MAP } from "@/types/owner-site/components/service-details-map";
 
 interface BuilderLayoutProps {
   params: {
@@ -95,6 +99,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   // Mutations
   const createComponentMutation = useCreateComponentMutation(pageSlug);
   const replaceComponentMutation = useGenericReplaceComponentMutation(pageSlug);
+  const createProductDetailsComponentMutation =
+    useCreateComponentMutation("product-details");
+  const createBlogDetailsComponentMutation =
+    useCreateComponentMutation("blog-details");
+  const createPortfolioDetailsComponentMutation =
+    useCreateComponentMutation("portfolio-details");
+  const createServiceDetailsComponentMutation =
+    useCreateComponentMutation("service-details");
 
   // Process page components
   const pageComponents = React.useMemo(() => {
@@ -178,6 +190,20 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           }
         }, 100);
       }
+
+      // Auto-create product details page when adding a products section
+      if (componentType === "products") {
+        ensureProductDetailsPageExists();
+      }
+      if (componentType === "blog") {
+        ensureBlogDetailsPageExists();
+      }
+      if (componentType === "portfolio") {
+        ensurePortfolioDetailsPageExists();
+      }
+      if (componentType === "services") {
+        ensureServiceDetailsPageExists();
+      }
     } catch (error) {
       console.error(`Failed to ${mode} ${componentType} component:`, error);
       // Toast is handled by the mutation hook
@@ -217,6 +243,179 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     router,
     siteUser,
     pageSlug,
+  ]);
+
+  // Auto-create details page templates if missing
+  const [isCreatingProductPage, setIsCreatingProductPage] = useState(false);
+  const [isCreatingBlogPage, setIsCreatingBlogPage] = useState(false);
+  const [isCreatingPortfolioPage, setIsCreatingPortfolioPage] = useState(false);
+  const [isCreatingServicePage, setIsCreatingServicePage] = useState(false);
+
+  const ensureProductDetailsPageExists = useCallback(() => {
+    if (
+      !isPagesLoading &&
+      pagesData &&
+      !pagesData.find(
+        p => p.slug === "product-details" || p.slug === "product-details-draft"
+      ) &&
+      !isCreatingProductPage
+    ) {
+      setIsCreatingProductPage(true);
+      createPageMutation.mutate(
+        { title: "Product Details" }, // The backend slugifies this to product-details
+        {
+          onSuccess: (data: Page) => {
+            // Add a default product_details component after page creation
+            const defaultData =
+              DEFAULT_PRODUCT_DETAILS_MAP["product-details-style-1"];
+            createProductDetailsComponentMutation.mutate({
+              componentType: "product_details",
+              data: defaultData,
+              silent: true,
+              pageSlug: data.slug,
+            });
+            setIsCreatingProductPage(false);
+          },
+          onError: () => setIsCreatingProductPage(false),
+        }
+      );
+    }
+  }, [
+    isPagesLoading,
+    pagesData,
+    isCreatingProductPage,
+    createPageMutation,
+    createProductDetailsComponentMutation,
+  ]);
+
+  const ensureBlogDetailsPageExists = useCallback(() => {
+    if (
+      !isPagesLoading &&
+      pagesData &&
+      !pagesData.find(
+        p => p.slug === "blog-details" || p.slug === "blog-details-draft"
+      ) &&
+      !isCreatingBlogPage
+    ) {
+      setIsCreatingBlogPage(true);
+      createPageMutation.mutate(
+        { title: "Blog Details" },
+        {
+          onSuccess: (data: Page) => {
+            const defaultData =
+              DEFAULT_BLOG_DETAILS_MAP["blog-details-style-1"];
+            createBlogDetailsComponentMutation.mutate({
+              componentType: "blog_details",
+              data: defaultData,
+              silent: true,
+              pageSlug: data.slug,
+            });
+            setIsCreatingBlogPage(false);
+          },
+          onError: () => setIsCreatingBlogPage(false),
+        }
+      );
+    }
+  }, [
+    isPagesLoading,
+    pagesData,
+    isCreatingBlogPage,
+    createPageMutation,
+    createBlogDetailsComponentMutation,
+  ]);
+
+  const ensurePortfolioDetailsPageExists = useCallback(() => {
+    if (
+      !isPagesLoading &&
+      pagesData &&
+      !pagesData.find(
+        p =>
+          p.slug === "portfolio-details" || p.slug === "portfolio-details-draft"
+      ) &&
+      !isCreatingPortfolioPage
+    ) {
+      setIsCreatingPortfolioPage(true);
+      createPageMutation.mutate(
+        { title: "Portfolio Details" },
+        {
+          onSuccess: (data: Page) => {
+            const defaultData =
+              DEFAULT_PORTFOLIO_DETAILS_MAP["portfolio-details-style-1"];
+            createPortfolioDetailsComponentMutation.mutate({
+              componentType: "portfolio_details",
+              data: defaultData,
+              silent: true,
+              pageSlug: data.slug,
+            });
+            setIsCreatingPortfolioPage(false);
+          },
+          onError: () => setIsCreatingPortfolioPage(false),
+        }
+      );
+    }
+  }, [
+    isPagesLoading,
+    pagesData,
+    isCreatingPortfolioPage,
+    createPageMutation,
+    createPortfolioDetailsComponentMutation,
+  ]);
+
+  const ensureServiceDetailsPageExists = useCallback(() => {
+    if (
+      !isPagesLoading &&
+      pagesData &&
+      !pagesData.find(
+        p => p.slug === "service-details" || p.slug === "service-details-draft"
+      ) &&
+      !isCreatingServicePage
+    ) {
+      setIsCreatingServicePage(true);
+      createPageMutation.mutate(
+        { title: "Service Details" },
+        {
+          onSuccess: (data: Page) => {
+            const defaultData =
+              DEFAULT_SERVICE_DETAILS_MAP["service-details-style-1"];
+            createServiceDetailsComponentMutation.mutate({
+              componentType: "service_details",
+              data: defaultData,
+              silent: true,
+              pageSlug: data.slug,
+            });
+            setIsCreatingServicePage(false);
+          },
+          onError: () => setIsCreatingServicePage(false),
+        }
+      );
+    }
+  }, [
+    isPagesLoading,
+    pagesData,
+    isCreatingServicePage,
+    createPageMutation,
+    createServiceDetailsComponentMutation,
+  ]);
+
+  useEffect(() => {
+    if (pageSlug === "product-details") {
+      ensureProductDetailsPageExists();
+    }
+    if (pageSlug === "blog-details") {
+      ensureBlogDetailsPageExists();
+    }
+    if (pageSlug === "portfolio-details") {
+      ensurePortfolioDetailsPageExists();
+    }
+    if (pageSlug === "service-details") {
+      ensureServiceDetailsPageExists();
+    }
+  }, [
+    pageSlug,
+    ensureProductDetailsPageExists,
+    ensureBlogDetailsPageExists,
+    ensurePortfolioDetailsPageExists,
+    ensureServiceDetailsPageExists,
   ]);
 
   // Validate current page exists
@@ -498,6 +697,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       "newsletter-sections": "newsletter",
       "policies-sections": "policies",
       "text-editor-sections": "text_editor",
+      "product-details-sections": "product_details",
+      "blog-details-sections": "blog_details",
+      "portfolio-details-sections": "portfolio_details",
+      "service-details-sections": "service_details",
     };
 
     const type = sectionToType[sectionId];
@@ -585,6 +788,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                     error={pageComponentsError}
                     onAddSection={handleAddSection}
                     onReplaceSection={handleReplaceSection}
+                    onProductClick={() => {
+                      router.push(`/builder/${siteUser}/product-details`);
+                    }}
+                    onBlogClick={() => {
+                      router.push(`/builder/${siteUser}/blog-details`);
+                    }}
+                    onPortfolioClick={() => {
+                      router.push(`/builder/${siteUser}/portfolio-details`);
+                    }}
+                    onServiceClick={() => {
+                      router.push(`/builder/${siteUser}/service-details`);
+                    }}
                   />
                 </div>
               </div>

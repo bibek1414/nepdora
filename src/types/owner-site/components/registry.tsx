@@ -23,6 +23,10 @@ import { DEFAULT_OUR_CLIENTS_MAP } from "./our-client";
 import { DEFAULT_OTHERS_MAP } from "./others";
 import { DEFAULT_CATEGORY_MAP } from "./category";
 import { DEFAULT_SUB_CATEGORY_MAP } from "./sub-category";
+import { DEFAULT_PRODUCT_DETAILS_MAP } from "./product-details-map";
+import { DEFAULT_BLOG_DETAILS_MAP } from "./blog-details-map";
+import { DEFAULT_PORTFOLIO_DETAILS_MAP } from "./portfolio-details-map";
+import { DEFAULT_SERVICE_DETAILS_MAP } from "./service-details-map";
 
 // Component Imports
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
@@ -48,6 +52,10 @@ import { PolicyComponent } from "@/components/site-owners/builder/policies/polic
 import { TextEditorComponent } from "@/components/site-owners/builder/text-editor/text-editor-component";
 import { PricingComponent } from "@/components/site-owners/builder/pricing/pricing-component";
 import { OthersComponent } from "@/components/site-owners/builder/others/others-component";
+import { ProductDetailsComponent } from "@/components/site-owners/builder/products/product-details-component";
+import { BlogDetailsComponent } from "@/components/site-owners/builder/blog/blog-details-component";
+import { PortfolioDetailsComponent } from "@/components/site-owners/builder/portfolio/portfolio-details-component";
+import { ServiceDetailsComponent } from "@/components/site-owners/builder/services/services-details-component";
 
 export type ComponentCategory =
   | "basic"
@@ -277,5 +285,45 @@ export const COMPONENT_REGISTRY: {
       DEFAULT_OTHERS_MAP[variant as keyof typeof DEFAULT_OTHERS_MAP] ||
       DEFAULT_OTHERS_MAP["others-1"],
     component: OthersComponent,
+  },
+  product_details: {
+    type: "product_details",
+    displayName: "Product Details",
+    category: "ecommerce",
+    getDefaultData: variant =>
+      DEFAULT_PRODUCT_DETAILS_MAP[
+        variant as keyof typeof DEFAULT_PRODUCT_DETAILS_MAP
+      ] || DEFAULT_PRODUCT_DETAILS_MAP["product-details-style-1"],
+    component: ProductDetailsComponent,
+  },
+  blog_details: {
+    type: "blog_details",
+    displayName: "Blog Details",
+    category: "dynamic",
+    getDefaultData: variant =>
+      DEFAULT_BLOG_DETAILS_MAP[
+        variant as keyof typeof DEFAULT_BLOG_DETAILS_MAP
+      ] || DEFAULT_BLOG_DETAILS_MAP["blog-details-style-1"],
+    component: BlogDetailsComponent,
+  },
+  portfolio_details: {
+    type: "portfolio_details",
+    displayName: "Portfolio Details",
+    category: "dynamic",
+    getDefaultData: variant =>
+      DEFAULT_PORTFOLIO_DETAILS_MAP[
+        variant as keyof typeof DEFAULT_PORTFOLIO_DETAILS_MAP
+      ] || DEFAULT_PORTFOLIO_DETAILS_MAP["portfolio-details-style-1"],
+    component: PortfolioDetailsComponent,
+  },
+  service_details: {
+    type: "service_details",
+    displayName: "Service Details",
+    category: "dynamic",
+    getDefaultData: variant =>
+      DEFAULT_SERVICE_DETAILS_MAP[
+        variant as keyof typeof DEFAULT_SERVICE_DETAILS_MAP
+      ] || DEFAULT_SERVICE_DETAILS_MAP["service-details-style-1"],
+    component: ServiceDetailsComponent,
   },
 };

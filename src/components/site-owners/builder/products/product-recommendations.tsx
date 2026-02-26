@@ -45,7 +45,7 @@ export const ProductRecommendations: React.FC<ProductRecommendationsProps> = ({
   }
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8 md:py-12">
+    <div className="container mx-auto max-w-7xl px-8 py-8 md:py-12">
       {/* Products You May Like Section */}
       {relatedProducts.length > 0 && (
         <div className="mt-32 mb-32">
