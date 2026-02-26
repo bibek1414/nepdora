@@ -20,6 +20,8 @@ export interface ProductsData {
   subCategoryId?: number;
   category?: string | null;
   subCategory?: string | null;
+  buttonText?: string;
+  buttonLink?: string;
 }
 
 export interface ProductsComponentData {

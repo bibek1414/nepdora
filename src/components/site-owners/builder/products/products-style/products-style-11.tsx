@@ -8,9 +8,8 @@ import { AlertCircle, ShoppingBag } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { generateLinkHref } from "@/lib/link-utils";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { EditableLink } from "@/components/ui/editable-link";
 
 interface ProductsStyleProps {
   data: ProductsComponentData["data"];
@@ -27,11 +26,12 @@ export const ProductsStyle11: React.FC<ProductsStyleProps> = ({
   onUpdate,
   onProductClick,
 }) => {
-  const pathname = usePathname();
   const {
     title = "Featured Collections",
     subtitle = "Top sale on this week",
     categoryId,
+    buttonText = "View All",
+    buttonLink = "/products",
   } = data || {};
 
   const { data: themeResponse } = useThemeQuery();
@@ -64,6 +64,10 @@ export const ProductsStyle11: React.FC<ProductsStyleProps> = ({
 
   const handleSubtitleChange = (newSubtitle: string) => {
     onUpdate?.({ subtitle: newSubtitle });
+  };
+
+  const handleLinkChange = (newText: string, newLink: string) => {
+    onUpdate?.({ buttonText: newText, buttonLink: newLink });
   };
 
   return (
@@ -145,13 +149,15 @@ export const ProductsStyle11: React.FC<ProductsStyleProps> = ({
             </div>
 
             <div className="mt-16 flex justify-center">
-              <Link
-                href={generateLinkHref("/products", siteUser, pathname)}
+              <EditableLink
+                href={buttonLink}
+                text={buttonText}
+                onChange={handleLinkChange}
+                isEditable={isEditable}
+                siteUser={siteUser}
                 className="inline-flex h-12 min-w-[160px] items-center justify-center rounded-full border border-black bg-white px-8 py-3 text-base font-medium text-black transition-colors hover:bg-black hover:text-white"
                 style={{ fontFamily: theme.fonts.body }}
-              >
-                View All
-              </Link>
+              />
             </div>
           </>
         )}
