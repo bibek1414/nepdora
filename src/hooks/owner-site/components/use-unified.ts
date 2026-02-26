@@ -458,7 +458,9 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
         (old: any[] | undefined) => {
           if (!old) return old;
           return old.map(c =>
-            c.component_id === componentId ? { ...c, data } : c
+            c.component_id === componentId
+              ? { ...c, component_type: componentType, data }
+              : c
           );
         }
       );
@@ -556,6 +558,7 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
               c.component_id === variables.componentId
                 ? {
                     ...c,
+                    component_type: variables.componentType,
                     data: variables.data,
                     order: variables.order ?? c.order,
                   }

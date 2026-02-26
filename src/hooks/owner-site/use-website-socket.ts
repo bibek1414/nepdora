@@ -167,17 +167,41 @@ export const useWebsiteSocket = ({
                 ["pageComponents", firstComp.page_slug, statusKey],
                 (old: any[] | undefined) => {
                   if (!old) return data;
-                  // Remove the old one(s) with the same IDs or handle replacement logic
-                  // Replaced message usually means one ID was replaced by one or more.
-                  // For now, let's assume we replace the specific ID if we had it.
-                  // Since replace_component in backend deletes then creates, we might need more info.
-                  // But list_components is the safest fallback if complex.
-                  return data.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+                  // Merge new replaced components with existing ones
+                  const newDataMap = new Map();
+                  data.forEach(d => newDataMap.set(d.component_id, d));
+
+                  const mergedList = old.map(c => {
+                    if (newDataMap.has(c.component_id)) {
+                      const updated = newDataMap.get(c.component_id);
+                      newDataMap.delete(c.component_id);
+                      return updated;
+                    }
+                    return c;
+                  });
+
+                  // Any remaining components in `data` are additions
+                  const additions = Array.from(newDataMap.values());
+
+                  return [...mergedList, ...additions].sort(
+                    (a, b) => (a.order ?? 0) - (b.order ?? 0)
+                  );
                 }
               );
             }
+          } else if (data && data.component_id) {
+            // If data is just one component object
+            const statusKey = data.status === "draft" ? "preview" : "published";
+            queryClient.setQueryData(
+              ["pageComponents", data.page_slug, statusKey],
+              (old: any[] | undefined) => {
+                if (!old) return [data];
+                return old
+                  .map(c => (c.component_id === data.component_id ? data : c))
+                  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+              }
+            );
           } else {
-            // If data is just one component
             queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
           }
           break;
