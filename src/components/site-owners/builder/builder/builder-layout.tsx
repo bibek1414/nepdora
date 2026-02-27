@@ -6,6 +6,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useRouter } from "next/navigation";
 import { CanvasArea } from "@/components/site-owners/builder/builder/canvas-area";
 import { TopNavigation } from "@/components/site-owners/builder/builder/top-navigation";
+import { PageManagementSidebar } from "@/components/site-owners/builder/builder/page-management-sidebar";
 import { AddSectionDialog } from "@/components/site-owners/builder/builder/add-section-dialog";
 import {
   useNavbarQuery,
@@ -785,8 +786,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           currentPage={currentPage}
           siteUser={siteUser}
           onPageChange={handlePageChange}
-          onPageCreated={handlePageCreated}
-          onPageDeleted={handlePageDeleted}
         />
 
         {/* Sticky Formatting Toolbar */}
@@ -795,6 +794,15 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         {/* Main Layout */}
         <div className="bg-background flex min-h-screen flex-col">
           <div className="flex flex-1">
+            <PageManagementSidebar
+              pages={pagesData}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              onPageCreated={handlePageCreated}
+              onPageDeleted={handlePageDeleted}
+              siteUser={siteUser}
+            />
+
             <div className="flex flex-1 flex-col">
               <div className="mt-10 flex-1 overflow-auto bg-gray-200 p-6">
                 <div className="mx-auto max-w-7xl origin-top scale-75">

@@ -1,25 +1,14 @@
 import React, { useState } from "react";
-import { NewPageDialog } from "@/components/site-owners/builder/new-page/new-page-dialog";
-import { DeletePageDialog } from "@/components/site-owners/builder/new-page/delete-page-dialog";
-import { ThemeDialog } from "@/components/site-owners/builder/theme/theme-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Page } from "@/types/owner-site/components/page";
+import { ThemeDialog } from "@/components/site-owners/builder/theme/theme-dialog";
 import {
   ArrowLeft,
   Palette,
-  Eye,
-  Upload,
   ExternalLink,
-  ChevronDown,
   RotateCcw,
   Loader2,
-  X,
+  Upload,
 } from "lucide-react";
 import Link from "next/link";
 import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
@@ -39,8 +28,6 @@ interface TopNavigationProps {
   pages: Page[];
   currentPage: string;
   onPageChange: (pageSlug: string) => void;
-  onPageCreated: (page: Page) => void;
-  onPageDeleted: (deletedSlug: string) => void;
   siteUser: string;
   isSidebarCollapsed?: boolean;
 }
@@ -49,40 +36,19 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   pages,
   currentPage,
   onPageChange,
-  onPageCreated,
-  onPageDeleted,
   siteUser,
   isSidebarCollapsed = false,
 }) => {
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [pageToDelete, setPageToDelete] = useState<Page | null>(null);
   const { mutate: publish, isPending } = usePublishSite();
   const { mutate: resetUi, isPending: isResetUiPending } = useResetUi();
-  // Find current page object
-  const currentPageObj = pages.find(p => p.slug === currentPage);
-
-  // Reorder pages to show active page in first 3
-  const reorderedPages = React.useMemo(() => {
-    if (!currentPageObj) return pages;
-
-    // Remove current page from array
-    const otherPages = pages.filter(p => p.slug !== currentPage);
-
-    // Put current page first, then other pages
-    return [currentPageObj, ...otherPages];
-  }, [pages, currentPage, currentPageObj]);
-
-  // Get first 3 pages (including active) and remaining pages
-  const visiblePages = reorderedPages.slice(0, 3);
-  const remainingPages = reorderedPages.slice(3);
 
   return (
     <header className="fixed top-0 right-0 left-0 z-45 h-16 border-b bg-white">
       <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left Section - Dashboard & Page Management */}
         <div className="flex items-center gap-4">
-          {/* Dashboard Button - Far Left */}
+          {/* Dashboard Button */}
           <Link href="/admin" target="_blank" rel="noopener noreferrer">
             <Button
               variant="outline"
@@ -93,94 +59,6 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
               Dashboard
             </Button>
           </Link>
-
-          {/* Page Management Section */}
-          <div className="flex items-center gap-2 border-l pl-4">
-            <span className="text-xs font-medium text-gray-600">
-              Page Management
-            </span>
-          </div>
-
-          {/* New Page Dialog */}
-          <NewPageDialog onPageCreated={onPageCreated} />
-
-          {/* First 3 Pages */}
-          <div className="flex items-center gap-2">
-            {visiblePages.map(page => (
-              <div
-                key={page.slug}
-                className={`flex items-center gap-1 rounded-md border text-xs ${
-                  currentPage === page.slug
-                    ? "border-gray-600 bg-gray-600 text-white"
-                    : "border-gray-200 bg-white hover:bg-gray-50"
-                }`}
-              >
-                <button
-                  onClick={() => onPageChange(page.slug)}
-                  className="px-3 py-1.5 capitalize"
-                >
-                  {page.title}
-                </button>
-
-                {/* Delete button */}
-                {pages.length > 1 && !page.slug.includes("-details-draft") && (
-                  <DeletePageDialog page={page} onPageDeleted={onPageDeleted} />
-                )}
-              </div>
-            ))}
-
-            {/* Other Pages Dropdown */}
-            {remainingPages.length > 0 && (
-              <DropdownMenu
-                open={isDropdownOpen}
-                onOpenChange={setIsDropdownOpen}
-              >
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-1 rounded-md border-gray-200 text-xs hover:bg-gray-50"
-                  >
-                    Other Pages
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-56">
-                  {remainingPages.map(page => (
-                    <DropdownMenuItem
-                      key={page.slug}
-                      onClick={() => {
-                        onPageChange(page.slug);
-                        setIsDropdownOpen(false);
-                      }}
-                      className={`flex items-center justify-between capitalize ${
-                        currentPage === page.slug
-                          ? "bg-gray-100 font-medium"
-                          : ""
-                      }`}
-                    >
-                      <span>{page.title}</span>
-                      {pages.length > 1 &&
-                        !page.slug.includes("-details-draft") && (
-                          <div
-                            onClick={e => {
-                              e.stopPropagation();
-                              setPageToDelete(page);
-                            }}
-                          >
-                            <X className="text-muted-foreground hover:text-destructive mr-1 h-4 w-4 cursor-pointer transition-colors" />
-                          </div>
-                        )}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-          </div>
-
-          <div className="text-xs text-gray-500">
-            {pages.length} page{pages.length !== 1 ? "s" : ""}
-          </div>
         </div>
 
         {/* Right Section - Actions */}
@@ -264,19 +142,6 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         open={isThemeDialogOpen}
         onOpenChange={setIsThemeDialogOpen}
       />
-
-      {/* Delete Page Dialog (Controlled) */}
-      {pageToDelete && (
-        <DeletePageDialog
-          page={pageToDelete}
-          open={true}
-          onOpenChange={open => {
-            if (!open) setPageToDelete(null);
-          }}
-          showTrigger={false}
-          onPageDeleted={onPageDeleted}
-        />
-      )}
       {/* Reset UI Loading Overlay */}
       {isResetUiPending && (
         <div className="fixed inset-0 z-100 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm">

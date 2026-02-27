@@ -19,18 +19,6 @@ export const BuilderSkeleton: React.FC<BuilderSkeletonProps> = ({
           <div className="flex items-center gap-4">
             {/* Dashboard Button */}
             <Skeleton className="h-8 w-28 rounded-full bg-gray-200" />
-
-            {/* Page Management Divider & Text */}
-            <div className="flex items-center gap-2 border-l border-gray-200 pl-4">
-              <Skeleton className="h-4 w-28 bg-gray-200" />
-            </div>
-
-            {/* Page Tabs */}
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-8 w-24 rounded-md bg-gray-200" />
-              <Skeleton className="h-8 w-24 rounded-md bg-gray-200" />
-              <Skeleton className="h-8 w-8 rounded-md bg-gray-200" />
-            </div>
           </div>
 
           {/* Right Section */}
@@ -44,8 +32,26 @@ export const BuilderSkeleton: React.FC<BuilderSkeletonProps> = ({
         </div>
       </header>
 
-      {/* Main Layout Area */}
       <div className="flex min-h-screen pt-16">
+        {/* Left Sidebar (Page Management) */}
+        <aside className="sticky top-16 left-0 h-[calc(100vh-4rem)] w-56 shrink-0 overflow-y-auto border-r bg-white">
+          <div className="flex items-center justify-between border-b px-4 py-3">
+            <Skeleton className="h-4 w-12 bg-gray-200" />
+            <Skeleton className="h-8 w-24 rounded-md bg-gray-200" />
+          </div>
+          <div className="space-y-1 p-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-2 rounded-md px-2 py-2"
+              >
+                <Skeleton className="h-4 w-4 bg-gray-200" />
+                <Skeleton className="h-4 w-24 bg-gray-200" />
+              </div>
+            ))}
+          </div>
+        </aside>
+
         {/* Canvas Area (Centered) */}
         <div className="flex flex-1 flex-col">
           <div className="mt-10 flex-1 overflow-hidden bg-gray-200 p-6">

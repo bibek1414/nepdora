@@ -10,7 +10,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { X, Loader2 } from "lucide-react";
+import { Trash2, Loader2 } from "lucide-react";
 import { useDeletePage } from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";
 
@@ -61,7 +61,7 @@ export const DeletePageDialog: React.FC<DeletePageDialogProps> = ({
 
   if (showTrigger && disabled) {
     return (
-      <X className="text-muted-foreground/50 mr-1 h-4 w-4 cursor-not-allowed" />
+      <Trash2 className="text-muted-foreground/50 mr-1 h-4 w-4 cursor-not-allowed" />
     );
   }
 
@@ -69,7 +69,7 @@ export const DeletePageDialog: React.FC<DeletePageDialogProps> = ({
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       {showTrigger && (
         <AlertDialogTrigger asChild>
-          <X className="text-muted-foreground hover:text-destructive mr-1 h-4 w-4 cursor-pointer transition-colors" />
+          <Trash2 className="hover:text-destructive mr-1 h-4 w-4 cursor-pointer text-gray-500 transition-colors" />
         </AlertDialogTrigger>
       )}
       <AlertDialogContent>
