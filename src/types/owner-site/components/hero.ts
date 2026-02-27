@@ -292,7 +292,6 @@ export interface HeroTemplate18Data {
 export interface HeroTemplate19Data {
   template: "hero-19";
   titlePart1: string;
-  titlePart2: string;
   description: string;
   buttons: HeroButton[];
   imageUrl: string;
