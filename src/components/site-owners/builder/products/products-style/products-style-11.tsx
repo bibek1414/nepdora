@@ -75,18 +75,15 @@ export const ProductsStyle11: React.FC<ProductsStyleProps> = ({
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 flex flex-col items-center justify-center text-center">
           <div className="mb-6 inline-block">
-            <span
+            <EditableText
+              value={subtitle || "Top sale on this week"}
+              onChange={handleSubtitleChange}
+              as="span"
+              isEditable={isEditable}
               className="rounded-full px-4 py-1.5 text-sm font-medium text-black"
               style={{ backgroundColor: theme.colors.primary || "#B9FF66" }}
-            >
-              <EditableText
-                value={subtitle || "Top sale on this week"}
-                onChange={handleSubtitleChange}
-                as="span"
-                isEditable={isEditable}
-                placeholder="Enter subtitle..."
-              />
-            </span>
+              placeholder="Enter subtitle..."
+            />
           </div>
 
           <EditableText

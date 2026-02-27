@@ -71,21 +71,17 @@ export const HeroTemplate17: React.FC<HeroTemplate17Props> = ({
           <div className="max-w-2xl">
             {/* Badge */}
             <div className="mb-6 inline-block">
-              <span
-                className="rounded-full px-2 py-1.5 text-sm font-medium text-black"
+              <EditableText
+                value={data.badgeText || "New Trend 2025"}
+                onChange={handleTextUpdate("badgeText")}
+                as="p"
                 style={{
                   backgroundColor: theme.colors.primary || "#B9FF66",
                 }}
-              >
-                <EditableText
-                  value={data.badgeText || "New Trend 2025"}
-                  onChange={handleTextUpdate("badgeText")}
-                  as="p"
-                  className="text-center! text-white"
-                  isEditable={isEditable}
-                  placeholder="Badge text..."
-                />
-              </span>
+                className="rounded-full! px-2 py-1.5 text-sm font-medium text-black"
+                isEditable={isEditable}
+                placeholder="Badge text..."
+              />
             </div>
             {/* Title */}
             <EditableText
