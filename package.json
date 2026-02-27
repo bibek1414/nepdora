@@ -90,6 +90,7 @@
     "react-hook-form": "^7.62.0",
     "react-icons": "^5.5.0",
     "sanitize-html": "^2.17.0",
+    "sharp": "^0.34.5",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "use-debounce": "^10.0.5",

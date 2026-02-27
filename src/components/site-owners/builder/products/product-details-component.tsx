@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { ProductDetailsData } from "@/types/owner-site/components/product-details";
 import { ProductDetail as Style1 } from "./details-style/product-details-style-1";
 import { ProductDetail as Style2 } from "./details-style/product-details-style-2";
-import { ProductDetail3 as Style3 } from "./details-style/product-details-style-3";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Trash2, RefreshCw } from "lucide-react";
@@ -95,8 +94,6 @@ export const ProductDetailsComponent: React.FC<
 
   const renderContent = () => {
     switch (style) {
-      case "style-3":
-        return <Style3 slug={slug} siteUser={siteUser} />;
       case "style-2":
         return <Style2 slug={slug} siteUser={siteUser} />;
       case "style-1":

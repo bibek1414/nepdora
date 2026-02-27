@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { usePortfolio } from "@/hooks/owner-site/admin/use-portfolio";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -27,6 +26,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/utils/date";
+import { sanitizeContent } from "@/utils/html-sanitizer";
 
 interface PortfolioDetailProps {
   slug: string;
@@ -39,45 +39,25 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
 }) => {
   const pathname = usePathname();
   const { data: portfolio, isLoading, error } = usePortfolio(slug);
-  const { data: themeResponse } = useThemeQuery();
-
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
 
   const defaultImage =
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=800&fit=crop";
 
   if (isLoading) {
     return (
-      <div>
-        <div className="container mx-auto px-4 py-8">
-          <div className="mb-6">
+      <div className="bg-background pt-20 pb-0">
+        <div className="container mx-auto mb-12 px-4 md:px-8">
+          <div className="mb-6 flex justify-center">
             <Skeleton className="h-5 w-64" />
           </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="space-y-4 md:col-span-2">
-              <Skeleton className="h-10 w-3/4" />
-              <Skeleton className="h-6 w-1/3" />
-              <Skeleton className="aspect-video w-full rounded-lg" />
-              <Skeleton className="h-40 w-full" />
-              <Skeleton className="h-8 w-full" />
-            </div>
-            <div className="space-y-4 md:col-span-1">
-              <Skeleton className="h-32 w-full" />
-              <Skeleton className="h-24 w-full" />
-            </div>
+          <div className="mx-auto mb-8 max-w-4xl space-y-4 text-center">
+            <Skeleton className="mx-auto h-12 w-3/4" />
+          </div>
+          <Skeleton className="mx-auto mb-10 aspect-[16/9] h-[300px] w-full rounded-xl md:h-[450px]" />
+          <div className="mx-auto max-w-3xl space-y-4">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
           </div>
         </div>
       </div>
@@ -86,9 +66,9 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
 
   if (error || !portfolio) {
     return (
-      <div style={{ backgroundColor: theme.colors.background }}>
+      <div className="bg-background pt-20 pb-0">
         <div className="container mx-auto px-4 py-8">
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="mx-auto max-w-2xl">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>
@@ -104,144 +84,127 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
   const portfolioImage = portfolio.thumbnail_image || defaultImage;
 
   return (
-    <div>
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        <Breadcrumb className="mb-8">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link
-                  href={
-                    siteUser
-                      ? pathname?.includes("/preview/")
-                        ? `/preview/${siteUser}`
-                        : `/`
-                      : "/"
-                  }
-                  className="flex items-center gap-2"
-                >
-                  <Home className="h-4 w-4" /> Home
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link
-                  href={
-                    siteUser
-                      ? pathname?.includes("/preview/")
-                        ? `/preview/${siteUser}/portfolio`
-                        : `/portfolio`
-                      : "/portfolio"
-                  }
-                >
-                  Portfolio
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage style={{ fontFamily: theme.fonts.heading }}>
-                {portfolio.title}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-
-        <div className="grid gap-8 md:grid-cols-3 lg:gap-16">
-          <div className="md:col-span-2">
-            <h1
-              className="mb-4 text-3xl font-bold md:text-5xl"
-              style={{ fontFamily: theme.fonts.heading }}
-            >
+    <div className="bg-background pt-20 pb-0">
+      <div className="container mx-auto mb-12 px-4 md:px-8">
+        <nav className="mb-6">
+          <ol className="text-muted-foreground flex flex-wrap items-center justify-center gap-2 text-sm">
+            <li>
+              <Link
+                href={
+                  siteUser
+                    ? pathname?.includes("/preview/")
+                      ? `/preview/${siteUser}`
+                      : `/`
+                    : "/"
+                }
+                className="hover:text-primary font-medium transition-colors"
+              >
+                Home
+              </Link>
+            </li>
+            <li>/</li>
+            <li>
+              <Link
+                href={
+                  siteUser
+                    ? pathname?.includes("/preview/")
+                      ? `/preview/${siteUser}/portfolio`
+                      : `/portfolio`
+                    : "/portfolio"
+                }
+                className="hover:text-primary font-medium transition-colors"
+              >
+                Portfolio
+              </Link>
+            </li>
+            <li>/</li>
+            <li className="text-foreground line-clamp-1 text-center font-medium">
               {portfolio.title}
-            </h1>
+            </li>
+          </ol>
+        </nav>
 
-            <div className="mb-6 flex flex-wrap items-center gap-4 text-sm">
-              {portfolio.category && (
-                <div
-                  className="flex text-base"
-                  style={{
-                    color: theme.colors.primary,
-                    fontFamily: theme.fonts.heading,
-                  }}
-                >
-                  <Folder className="mr-1 w-4" />
-                  {portfolio.category.name}
-                </div>
-              )}
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <span>{formatDate(portfolio.created_at)}</span>
-              </div>
+        <div className="mx-auto mb-8 max-w-4xl text-center">
+          {portfolio.category && (
+            <div className="text-primary mb-4 flex items-center justify-center text-sm font-semibold tracking-wider uppercase">
+              <Folder className="mr-2 h-4 w-4" />
+              {portfolio.category.name}
             </div>
+          )}
+          <h1 className="text-foreground mb-6 text-3xl font-bold md:text-5xl lg:text-7xl">
+            {portfolio.title}
+          </h1>
 
-            <div className="mb-8 flex flex-wrap gap-3">
-              {portfolio.project_url && (
+          <div className="text-muted-foreground mb-8 flex items-center justify-center gap-2 text-sm font-medium">
+            <Calendar className="h-4 w-4" />
+            <span>{formatDate(portfolio.created_at)}</span>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {portfolio.project_url && (
+              <Button asChild size="lg" className="rounded-full px-8 shadow-md">
                 <a
                   href={portfolio.project_url}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.primaryForeground,
-                      fontFamily: theme.fonts.body,
-                    }}
-                  >
-                    <ExternalLink className="mr-2 h-4 w-4" /> View Live Project
-                  </Button>
+                  <ExternalLink className="mr-2 h-4 w-4" /> Live Project
                 </a>
-              )}
-              {portfolio.github_url && (
+              </Button>
+            )}
+            {portfolio.github_url && (
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="rounded-full px-8"
+              >
                 <a
                   href={portfolio.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button
-                    variant="outline"
-                    style={{
-                      borderColor: theme.colors.primary,
-                      color: theme.colors.primary,
-                      fontFamily: theme.fonts.body,
-                    }}
-                  >
-                    <Github className="mr-2 h-4 w-4" /> View Source Code
-                  </Button>
+                  <Github className="mr-2 h-4 w-4" /> View Source
                 </a>
-              )}
-            </div>
-
-            <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-lg">
-              <Image
-                src={portfolioImage}
-                alt={portfolio.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            <div
-              className="prose prose-lg dark:prose-invert max-w-none"
-              style={{ fontFamily: theme.fonts.body }}
-              dangerouslySetInnerHTML={{ __html: portfolio.content }}
-            />
-
-            {portfolio.tags && portfolio.tags.length > 0 && (
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                {portfolio.tags.map(tag => (
-                  <Badge key={tag.id} variant="outline">
-                    <Tag className="mr-1 h-3 w-3" />
-                    {tag.name}
-                  </Badge>
-                ))}
-              </div>
+              </Button>
             )}
           </div>
         </div>
+
+        <div className="mx-auto mb-12 aspect-[16/9] h-[300px] overflow-hidden rounded-2xl shadow-xl md:h-[500px]">
+          <Image
+            src={portfolioImage}
+            alt={portfolio.title}
+            width={1200}
+            height={600}
+            className="h-full w-full object-cover"
+            priority
+          />
+        </div>
+
+        <div className="prose prose-xl dark:prose-invert rich-text mx-auto mb-16 max-w-3xl space-y-8 leading-8">
+          <div
+            dangerouslySetInnerHTML={{
+              __html: sanitizeContent(portfolio.content),
+            }}
+          />
+        </div>
+
+        {portfolio.tags && portfolio.tags.length > 0 && (
+          <div className="mx-auto mb-20 flex max-w-3xl flex-wrap items-center justify-center gap-3 border-t pt-10">
+            <span className="text-foreground font-semibold">Technologies:</span>
+            {portfolio.tags.map(tag => (
+              <Badge
+                key={tag.id}
+                variant="secondary"
+                className="px-4 py-1.5 text-sm"
+              >
+                <Tag className="mr-2 h-3 w-3" />
+                {tag.name}
+              </Badge>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

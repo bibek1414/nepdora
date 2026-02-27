@@ -186,12 +186,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "hero-16",
         name: "Hero Style 16",
-        image: "/images/sit-owners/hero/hero16.png",
+        image: "/images/site-owners/hero/hero16.png",
       },
       {
         id: "hero-17",
         name: "Hero Style 17",
-        image: "/images/sit-owners/hero/hero17.png",
+        image: "/images/site-owners/hero/hero17.png",
       },
       {
         id: "hero-18",
@@ -266,11 +266,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "our-clients-4",
         name: "Our Clients Style 4",
         image: "/images/site-owners/our-clients/ourclients4.png",
-      },
-      {
-        id: "our-clients-5",
-        name: "Brand Ticker",
-        image: "/images/site-owners/our-clients/ourclients5.png",
       },
     ],
 
@@ -480,68 +475,63 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "product-details-style-1",
         name: "Product Details Style 1",
-        image: "/images/builder/product-details/style-1.png",
+        image: "/images/site-owners/product-details/product-details-1.png",
       },
       {
         id: "product-details-style-2",
         name: "Product Details Style 2",
-        image: "/images/builder/product-details/style-2.png",
-      },
-      {
-        id: "product-details-style-3",
-        name: "Product Details Style 3",
-        image: "/images/builder/product-details/style-3.png",
+        image: "/images/site-owners/product-details/product-details-2.png",
       },
     ],
     blog_details: [
       {
         id: "blog-details-style-1",
         name: "Blog Details Style 1",
-        image: "/images/builder/blog-details/style-1.png",
+        image: "/images/site-owners/blog-details/blog-details-1.png",
       },
       {
         id: "blog-details-style-2",
         name: "Blog Details Style 2",
-        image: "/images/builder/blog-details/style-2.png",
+        image: "/images/site-owners/blog-details/blog-details-2.png",
       },
       {
         id: "blog-details-style-3",
         name: "Blog Details Style 3",
-        image: "/images/builder/blog-details/style-3.png",
+        image: "/images/site-owners/blog-details/blog-details-3.png",
       },
     ],
     portfolio_details: [
       {
         id: "portfolio-details-style-1",
         name: "Portfolio Details Style 1",
-        image: "/images/builder/portfolio-details/style-1.png",
+        image: "/images/site-owners/portfolio-details/portfolio-details-1.png",
       },
       {
         id: "portfolio-details-style-2",
         name: "Portfolio Details Style 2",
-        image: "/images/builder/portfolio-details/style-2.png",
+        image: "/images/site-owners/portfolio-details/portfolio-details-2.png",
       },
       {
         id: "portfolio-details-style-3",
         name: "Portfolio Details Style 3",
-        image: "/images/builder/portfolio-details/style-3.png",
+        image: "/images/site-owners/portfolio-details/portfolio-details-3.png",
       },
     ],
     service_details: [
       {
         id: "service-details-style-1",
         name: "Service Details Style 1",
-        image: "/images/builder/service-details/style-1.png",
+        image: "/images/site-owners/service-details/service-details-1.png",
       },
       {
         id: "service-details-style-2",
         name: "Service Details Style 2",
-        image: "/images/builder/service-details/style-2.png",
+        image: "/images/site-owners/service-details/service-details-2.png",
       },
       {
         id: "service-details-style-3",
         name: "Service Details Style 3",
-        image: "/images/builder/service-details/style-3.png",
+        image: "/images/site-owners/service-details/service-details-3.png",
       },
     ],
     category: [
@@ -946,12 +936,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "faq-10",
         name: "FAQ Style 10",
-        image: "/images/site-owners/faq/faq10.png",
+        image: "/images/site-owners/faq/faq-10.png",
       },
       {
         id: "faq-11",
         name: "FAQ Style 11",
-        image: "/images/site-owners/faq/faq11.png",
+        image: "/images/site-owners/faq/faq-11.png",
       },
     ],
     portfolio: [
@@ -1115,13 +1105,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "navbar-11",
         name: "Navbar with Breadcrumbs",
-        image: "/images/site-owners/navbars/navbar9.png",
+        image: "/images/site-owners/navbars/navbar11.png",
         description: "Includes dynamic breadcrumbs for inner pages",
       },
       {
         id: "navbar-12",
         name: "Navbar with Language Switcher",
-        image: "/images/site-owners/navbars/navbar10.png",
+        image: "/images/site-owners/navbars/navbar12.png",
         description: "Includes language switcher",
       },
     ],

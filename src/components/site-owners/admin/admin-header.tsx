@@ -42,7 +42,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
   const { logout, user: authUser, updateUser, isLoading } = useAuth();
   const currentUser = authUser || user;
   const [showOnboarding, setShowOnboarding] = useState(
-    user?.is_onboarding_complete
+    !user?.is_onboarding_complete
   );
 
   const handleOpenOnboarding = () => setShowOnboarding(true);
@@ -50,7 +50,6 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
 
   const handleOnboardingComplete = () => {
     setShowOnboarding(false);
-    toast.success("Onboarding completed!");
   };
 
   const handleNavigation = (href: string) => {

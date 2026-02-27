@@ -2,9 +2,11 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useService } from "@/hooks/owner-site/admin/use-services";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle, Home } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,8 +15,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { AlertCircle, Home } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { sanitizeContent } from "@/utils/html-sanitizer";
 
 interface ServiceDetailProps {
   slug: string;
@@ -33,19 +34,19 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
 
   if (isLoading) {
     return (
-      <div className="bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <div className="mb-6">
+      <div className="bg-background pt-20 pb-0">
+        <div className="container mx-auto mb-12 px-4 md:px-8">
+          <div className="mb-6 flex justify-center">
             <Skeleton className="h-5 w-64" />
           </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="space-y-4 md:col-span-2">
-              <Skeleton className="h-10 w-3/4" />
-              <Skeleton className="h-6 w-1/3" />
-              <Skeleton className="aspect-video w-full rounded-lg" />
-              <Skeleton className="h-40 w-full" />
-              <Skeleton className="h-8 w-full" />
-            </div>
+          <div className="mx-auto mb-8 max-w-4xl space-y-4 text-center">
+            <Skeleton className="mx-auto h-12 w-3/4" />
+          </div>
+          <Skeleton className="mx-auto mb-10 aspect-[16/9] h-[300px] w-full rounded-xl md:h-[450px]" />
+          <div className="mx-auto max-w-3xl space-y-4">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
           </div>
         </div>
       </div>
@@ -54,9 +55,9 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
 
   if (error || !service) {
     return (
-      <div className="bg-background">
+      <div className="bg-background pt-20 pb-0">
         <div className="container mx-auto px-4 py-8">
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="mx-auto max-w-2xl">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>
@@ -72,71 +73,69 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
   const serviceImage = service.thumbnail_image || defaultImage;
 
   return (
-    <div className="bg-background">
-      <div className="container mx-auto max-w-7xl px-4 py-8 md:py-16">
-        <Breadcrumb className="mb-8">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link
-                  href={
-                    siteUser
-                      ? pathname?.includes("/preview/")
-                        ? `/preview/${siteUser}`
-                        : `/`
-                      : "/"
-                  }
-                  className="flex items-center gap-2"
-                >
-                  <Home className="h-4 w-4" /> Home
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link
-                  href={
-                    siteUser
-                      ? pathname?.includes("/preview/")
-                        ? `/preview/${siteUser}/services`
-                        : `/services`
-                      : "/services"
-                  }
-                >
-                  Services
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage className="text-foreground font-medium">
-                {service.title}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-
-        <div className="grid gap-8 md:grid-cols-3 lg:gap-16">
-          <div className="md:col-span-2">
-            <h1 className="text-foreground mb-4 text-3xl font-bold md:text-5xl">
+    <div className="bg-background pt-20 pb-0">
+      <div className="container mx-auto mb-12 px-4 md:px-8">
+        <nav className="mb-6">
+          <ol className="text-muted-foreground flex flex-wrap items-center justify-center gap-2 text-sm">
+            <li>
+              <Link
+                href={
+                  siteUser
+                    ? pathname?.includes("/preview/")
+                      ? `/preview/${siteUser}`
+                      : `/`
+                    : "/"
+                }
+                className="hover:text-primary font-medium transition-colors"
+              >
+                Home
+              </Link>
+            </li>
+            <li>/</li>
+            <li>
+              <Link
+                href={
+                  siteUser
+                    ? pathname?.includes("/preview/")
+                      ? `/preview/${siteUser}/services`
+                      : `/services`
+                    : "/services"
+                }
+                className="hover:text-primary font-medium transition-colors"
+              >
+                Services
+              </Link>
+            </li>
+            <li>/</li>
+            <li className="text-foreground line-clamp-1 text-center font-medium">
               {service.title}
-            </h1>
+            </li>
+          </ol>
+        </nav>
 
-            <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-lg shadow-sm">
-              <Image
-                src={serviceImage}
-                alt={service.title}
-                fill
-                className="object-cover"
-              />
-            </div>
+        <div className="mx-auto mb-8 max-w-4xl text-center">
+          <h1 className="text-foreground mb-4 text-3xl leading-[1.15] font-semibold md:text-5xl lg:text-6xl">
+            {service.title}
+          </h1>
+        </div>
 
-            <div
-              className="prose prose-lg dark:prose-invert text-muted-foreground max-w-none"
-              dangerouslySetInnerHTML={{ __html: service.description }}
-            />
-          </div>
+        <div className="mx-auto mb-10 aspect-[16/9] h-[300px] overflow-hidden rounded-xl shadow-lg md:h-[450px]">
+          <Image
+            src={serviceImage}
+            alt={service.title}
+            width={1200}
+            height={600}
+            className="h-full w-full object-cover"
+            priority
+          />
+        </div>
+
+        <div className="prose prose-xl dark:prose-invert rich-text mx-auto mb-20 max-w-3xl space-y-8 leading-8">
+          <div
+            dangerouslySetInnerHTML={{
+              __html: sanitizeContent(service.description),
+            }}
+          />
         </div>
       </div>
     </div>

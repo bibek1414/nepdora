@@ -133,7 +133,31 @@ export const useWebsiteSocket = ({
                 if (old.some(c => c.component_id === data.component_id))
                   return old;
 
-                const newComponents = [...old, data];
+                const newComponents = [...old];
+
+                // Shift existing components if there's an order conflict
+                const insertOrder = data.order;
+                if (typeof insertOrder === "number") {
+                  newComponents.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+                  const conflict = newComponents.some(
+                    c => c.order === insertOrder
+                  );
+                  if (conflict) {
+                    for (let i = 0; i < newComponents.length; i++) {
+                      if (
+                        typeof newComponents[i].order === "number" &&
+                        newComponents[i].order >= insertOrder
+                      ) {
+                        newComponents[i] = {
+                          ...newComponents[i],
+                          order: newComponents[i].order + 1,
+                        };
+                      }
+                    }
+                  }
+                }
+
+                newComponents.push(data);
                 return newComponents.sort(
                   (a, b) => (a.order ?? 0) - (b.order ?? 0)
                 );
@@ -177,6 +201,19 @@ export const useWebsiteSocket = ({
             queryClient.invalidateQueries({
               queryKey: ["pageComponents", "types", data.component_type],
             });
+          }
+          break;
+        case "component_order_updated":
+          if (data && Array.isArray(data) && data.length > 0) {
+            const firstComp = data[0];
+            const statusKey =
+              firstComp.status === "draft" ? "preview" : "published";
+            queryClient.setQueryData(
+              ["pageComponents", firstComp.page_slug, statusKey],
+              [...data].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+            );
+          } else {
+            queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
           }
           break;
         case "component_replaced":
