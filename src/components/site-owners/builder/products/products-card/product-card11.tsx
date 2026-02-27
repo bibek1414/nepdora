@@ -35,6 +35,10 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.nativeEvent) {
+      e.nativeEvent.preventDefault();
+      e.nativeEvent.stopPropagation();
+    }
 
     addToCart(product, 1);
     setIsAdded(true);
@@ -52,7 +56,20 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
   );
 
   return (
-    <Link href={detailsUrl} className="group block h-full">
+    <div
+      onClick={e => {
+        const target = e.target as HTMLElement;
+        if (
+          target.closest("button") ||
+          target.closest("a") ||
+          target.closest("[data-cart-action]") ||
+          target.closest("[data-wishlist]")
+        )
+          return;
+        window.location.href = detailsUrl;
+      }}
+      className="group block h-full cursor-pointer"
+    >
       <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
         {/* Image - Taller aspect ratio [3/4] as requested */}
         <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-50">
@@ -108,6 +125,6 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };

@@ -90,6 +90,10 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
   const handleAddToCart = (e?: React.MouseEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
+    if (e?.nativeEvent) {
+      e.nativeEvent.preventDefault();
+      e.nativeEvent.stopPropagation();
+    }
     addToCart(product, 1);
     toast.success(`${product.name} added to cart`);
   };
@@ -97,6 +101,10 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.nativeEvent) {
+      e.nativeEvent.preventDefault();
+      e.nativeEvent.stopPropagation();
+    }
 
     try {
       if (isWishlisted && wishlistItem) {
@@ -138,7 +146,20 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
 
   return (
     <Card className="w-[260px] overflow-hidden border-none shadow-none transition-shadow duration-200 sm:w-[280px]">
-      <Link href={detailsUrl} onClick={onClick}>
+      <div
+        onClick={e => {
+          const target = e.target as HTMLElement;
+          if (
+            target.closest("button") ||
+            target.closest("a") ||
+            target.closest("[data-cart-action]") ||
+            target.closest("[data-wishlist]")
+          )
+            return;
+          window.location.href = detailsUrl;
+        }}
+        className="cursor-pointer"
+      >
         <CardContent className="py-0">
           {/* Image Container */}
           <div className="relative aspect-3/4 h-auto w-full overflow-hidden">
@@ -217,6 +238,14 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
               onClick={e => {
                 e.preventDefault();
                 e.stopPropagation();
+                if (e.nativeEvent) {
+                  e.nativeEvent.preventDefault();
+                  e.nativeEvent.stopPropagation();
+                }
+                if (e.nativeEvent) {
+                  e.nativeEvent.preventDefault();
+                  e.nativeEvent.stopPropagation();
+                }
                 handleAddToCart(e);
               }}
             >
@@ -225,7 +254,7 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
             </Button>
           </div>
         </CardFooter>
-      </Link>
+      </div>
     </Card>
   );
 };

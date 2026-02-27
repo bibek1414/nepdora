@@ -85,6 +85,10 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.nativeEvent) {
+      e.nativeEvent.preventDefault();
+      e.nativeEvent.stopPropagation();
+    }
 
     addToCart(product, 1);
     toast.success(`${product.name} added to cart!`);
@@ -93,6 +97,10 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
   const handleViewDetails = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.nativeEvent) {
+      e.nativeEvent.preventDefault();
+      e.nativeEvent.stopPropagation();
+    }
     const detailsUrl = getDetailsUrl();
     window.location.href = detailsUrl;
   };
@@ -100,6 +108,10 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.nativeEvent) {
+      e.nativeEvent.preventDefault();
+      e.nativeEvent.stopPropagation();
+    }
 
     try {
       if (isWishlisted && wishlistItem) {
@@ -140,7 +152,20 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
     addToWishlistMutation.isPending || removeFromWishlistMutation.isPending;
 
   return (
-    <Link href={detailsUrl} className="block">
+    <div
+      onClick={e => {
+        const target = e.target as HTMLElement;
+        if (
+          target.closest("button") ||
+          target.closest("a") ||
+          target.closest("[data-cart-action]") ||
+          target.closest("[data-wishlist]")
+        )
+          return;
+        window.location.href = detailsUrl;
+      }}
+      className="block cursor-pointer"
+    >
       <Card className="group relative overflow-hidden border border-gray-200 bg-white py-0 transition-all duration-300 hover:-translate-y-1">
         <CardContent className="p-0">
           {/* Image Section */}
@@ -260,6 +285,6 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
           </div>
         </CardContent>
       </Card>
-    </Link>
+    </div>
   );
 };

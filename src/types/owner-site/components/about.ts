@@ -967,7 +967,7 @@ export const defaultAboutUs18Data: AboutUs18Data = {
   subheadline: "Your Journey into",
   description:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet rcus nunc. Duis egestas ac ante sed tincidunt.",
-  experienceYears: "10+",
+  experienceYears: "10+ years of experiences",
   features: [
     {
       id: "1",

@@ -113,7 +113,7 @@ const PageSelector: React.FC<PageSelectorProps> = ({
         <PopoverContent className="w-[200px] p-0" align="end">
           <Command>
             <CommandInput placeholder="Search pages..." />
-            <CommandList>
+            <CommandList onWheel={e => e.stopPropagation()}>
               <CommandEmpty>No page found.</CommandEmpty>
               <CommandGroup heading="Pages">
                 {isLoading ? (

@@ -54,7 +54,6 @@ export const defaultFAQData11: FAQData = {
   style: "faq-11",
   title: "Frequently Asked Questions",
   subtitle: "Everything you need to know about Nepglass.",
-  buttonText: "View All FAQs",
 };
 
 export const DEFAULT_FAQ_MAP: Record<FAQData["style"], FAQData> = {

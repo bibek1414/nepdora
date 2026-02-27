@@ -126,24 +126,6 @@ export const FAQStyle11: React.FC<FAQStyle11Props> = ({
             })}
           </div>
         )}
-
-        <div className="mt-12 text-center">
-          <EditableLink
-            text={data.buttonText || "View All FAQs"}
-            href="/faq"
-            onChange={(text, href) => {
-              if (text !== undefined) handleUpdate("buttonText")(text);
-            }}
-            className="group inline-flex items-center justify-center text-lg font-semibold transition-all"
-            style={{ color: theme.colors.primary }}
-            isEditable={isEditable}
-          >
-            {data.buttonText || "View All FAQs"}
-            <span className="ml-2 transition-transform group-hover:translate-x-1">
-              →
-            </span>
-          </EditableLink>
-        </div>
       </div>
     </section>
   );

@@ -78,6 +78,10 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.nativeEvent) {
+      e.nativeEvent.preventDefault();
+      e.nativeEvent.stopPropagation();
+    }
 
     addToCart(product, 1);
     toast.success(`${product.name} added to cart!`);
@@ -86,6 +90,10 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   const handleViewDetails = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.nativeEvent) {
+      e.nativeEvent.preventDefault();
+      e.nativeEvent.stopPropagation();
+    }
     const detailsUrl = getDetailsUrl();
     window.location.href = detailsUrl;
   };
@@ -93,6 +101,10 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.nativeEvent) {
+      e.nativeEvent.preventDefault();
+      e.nativeEvent.stopPropagation();
+    }
 
     try {
       if (isWishlisted && wishlistItem) {
@@ -133,7 +145,20 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
     addToWishlistMutation.isPending || removeFromWishlistMutation.isPending;
 
   return (
-    <Link href={detailsUrl} className="block">
+    <div
+      onClick={e => {
+        const target = e.target as HTMLElement;
+        if (
+          target.closest("button") ||
+          target.closest("a") ||
+          target.closest("[data-cart-action]") ||
+          target.closest("[data-wishlist]")
+        )
+          return;
+        window.location.href = detailsUrl;
+      }}
+      className="block cursor-pointer"
+    >
       <Card className="overflow-hidden border border-gray-200 bg-linear-to-r from-white to-gray-50">
         <CardContent className="p-0">
           <div className="flex flex-col sm:flex-row">
@@ -353,6 +378,6 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
           </div>
         </CardContent>
       </Card>
-    </Link>
+    </div>
   );
 };

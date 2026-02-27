@@ -10,7 +10,6 @@ import {
   FileText,
   Bug,
   MessageSquare,
-  User as UserIcon,
   Mail,
   PanelRight,
   PanelLeft,
@@ -20,7 +19,6 @@ import {
   Facebook,
   LayoutPanelTop,
   Settings,
-  GalleryHorizontal,
   Calendar,
   IndianRupee,
   Database,
@@ -40,7 +38,6 @@ const navigationGroups = [
     items: [
       { name: "Template", href: "/admin/template", icon: LayoutPanelTop },
     ],
-    hideForService: true,
   },
   {
     items: [{ name: "Products", href: "/admin/products", icon: Package }],
@@ -85,13 +82,6 @@ const navigationGroups = [
   },
   {
     items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
-  },
-  {
-    items: [
-      { name: "Facebook", href: "/admin/facebook", icon: Facebook },
-      { name: "Messenger", href: "/admin/messenger", icon: MessageSquare },
-    ],
-    hideForService: true,
   },
   {
     items: [

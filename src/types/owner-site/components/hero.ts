@@ -820,9 +820,9 @@ export const defaultHeroTemplate19Data: HeroTemplate19Data = {
       id: "1",
       text: "Explore Collection",
       variant: "primary",
-      href: "/products",
+      href: "#",
     },
-    { id: "2", text: "Our Story", variant: "outline", href: "/about" },
+    { id: "2", text: "Our Story", variant: "outline", href: "#" },
   ],
   imageUrl:
     "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=800",

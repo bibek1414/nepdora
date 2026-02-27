@@ -45,13 +45,13 @@ export const OthersTemplate5: React.FC<OthersTemplate5Props> = ({
   const isReverse = othersData.imagePosition === "right";
 
   return (
-    <section className="py-8 transition-colors duration-300">
+    <section className="py-20 transition-colors duration-300">
       <EditableText
         value={othersData.heading}
         onChange={handleUpdate("heading")}
         isEditable={isEditable}
         multiline
-        as="h3"
+        as="h1"
         className="mb-10 text-center"
       />
       <div className="container mx-auto max-w-7xl px-4">
@@ -83,7 +83,7 @@ export const OthersTemplate5: React.FC<OthersTemplate5Props> = ({
                 onChange={handleUpdate("description")}
                 isEditable={isEditable}
                 multiline
-                as="span"
+                as="p"
                 className="text-gray-600"
               />
             </div>

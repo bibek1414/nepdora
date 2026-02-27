@@ -128,17 +128,12 @@ export function AboutUsTemplate18({
             <EditableText
               value={data.experienceYears}
               onChange={handleTextUpdate("experienceYears")}
-              as="span"
+              as="p"
               isEditable={isEditable}
-              placeholder="10+"
-              className="text-center text-5xl font-bold lg:text-6xl"
+              placeholder="10+ years of experiences"
+              className="px-10 text-center text-5xl font-bold lg:text-6xl"
               style={{ fontFamily: theme.fonts.heading }}
             />
-            <span className="mt-1 max-w-[80%] text-center text-sm leading-tight font-medium lg:text-base">
-              years of
-              <br />
-              experiences
-            </span>
           </div>
         </div>
 

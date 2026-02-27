@@ -52,6 +52,10 @@ export const ProductCard9: React.FC<ProductCard9Props> = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.nativeEvent) {
+      e.nativeEvent.preventDefault();
+      e.nativeEvent.stopPropagation();
+    }
 
     addToCart(product, 1);
     toast.success(`${product.name} added to cart!`);
@@ -76,15 +80,31 @@ export const ProductCard9: React.FC<ProductCard9Props> = ({
 
   const detailsUrl = getDetailsUrl();
 
-  const CardWrapper = siteUser
-    ? ({ children }: { children: React.ReactNode }) => (
-        <Link href={detailsUrl}>{children}</Link>
-      )
-    : ({ children }: { children: React.ReactNode }) => (
-        <div onClick={handleClick} className="cursor-pointer">
-          {children}
-        </div>
-      );
+  const CardWrapper = ({ children }: { children: React.ReactNode }) => {
+    return (
+      <div
+        onClick={e => {
+          // If they clicked a button or something interactive inside, don't navigate
+          const target = e.target as HTMLElement;
+          if (
+            target.closest("button") ||
+            target.closest("[data-cart-action]") ||
+            target.closest("[data-wishlist]")
+          )
+            return;
+
+          if (siteUser) {
+            window.location.href = detailsUrl;
+          } else {
+            handleClick();
+          }
+        }}
+        className="cursor-pointer"
+      >
+        {children}
+      </div>
+    );
+  };
 
   return (
     <CardWrapper>
