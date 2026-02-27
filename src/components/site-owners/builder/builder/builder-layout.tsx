@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useRouter } from "next/navigation";
@@ -211,13 +211,16 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   // Auto-create home page
+  const hasAttemptedCreateHome = useRef(false);
   useEffect(() => {
     if (
       !isPagesLoading &&
       pagesData &&
       pagesData.length === 0 &&
-      !isCreatingHomePage
+      !isCreatingHomePage &&
+      !hasAttemptedCreateHome.current
     ) {
+      hasAttemptedCreateHome.current = true;
       setIsCreatingHomePage(true);
       createPageMutation.mutate(
         { title: "Home" },
@@ -231,6 +234,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onError: error => {
             console.error("Failed to create default home page:", error);
             setIsCreatingHomePage(false);
+            hasAttemptedCreateHome.current = false;
           },
         }
       );
@@ -251,6 +255,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isCreatingPortfolioPage, setIsCreatingPortfolioPage] = useState(false);
   const [isCreatingServicePage, setIsCreatingServicePage] = useState(false);
 
+  const hasAttemptedCreateProduct = useRef(false);
   const ensureProductDetailsPageExists = useCallback(() => {
     if (
       !isPagesLoading &&
@@ -258,8 +263,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       !pagesData.find(
         p => p.slug === "product-details" || p.slug === "product-details-draft"
       ) &&
-      !isCreatingProductPage
+      !isCreatingProductPage &&
+      !hasAttemptedCreateProduct.current
     ) {
+      hasAttemptedCreateProduct.current = true;
       setIsCreatingProductPage(true);
       createPageMutation.mutate(
         { title: "Product Details" }, // The backend slugifies this to product-details
@@ -276,7 +283,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             });
             setIsCreatingProductPage(false);
           },
-          onError: () => setIsCreatingProductPage(false),
+          onError: () => {
+            setIsCreatingProductPage(false);
+            hasAttemptedCreateProduct.current = false;
+          },
         }
       );
     }
@@ -288,6 +298,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     createProductDetailsComponentMutation,
   ]);
 
+  const hasAttemptedCreateBlog = useRef(false);
   const ensureBlogDetailsPageExists = useCallback(() => {
     if (
       !isPagesLoading &&
@@ -295,8 +306,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       !pagesData.find(
         p => p.slug === "blog-details" || p.slug === "blog-details-draft"
       ) &&
-      !isCreatingBlogPage
+      !isCreatingBlogPage &&
+      !hasAttemptedCreateBlog.current
     ) {
+      hasAttemptedCreateBlog.current = true;
       setIsCreatingBlogPage(true);
       createPageMutation.mutate(
         { title: "Blog Details" },
@@ -312,7 +325,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             });
             setIsCreatingBlogPage(false);
           },
-          onError: () => setIsCreatingBlogPage(false),
+          onError: () => {
+            setIsCreatingBlogPage(false);
+            hasAttemptedCreateBlog.current = false;
+          },
         }
       );
     }
@@ -324,6 +340,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     createBlogDetailsComponentMutation,
   ]);
 
+  const hasAttemptedCreatePortfolio = useRef(false);
   const ensurePortfolioDetailsPageExists = useCallback(() => {
     if (
       !isPagesLoading &&
@@ -332,8 +349,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         p =>
           p.slug === "portfolio-details" || p.slug === "portfolio-details-draft"
       ) &&
-      !isCreatingPortfolioPage
+      !isCreatingPortfolioPage &&
+      !hasAttemptedCreatePortfolio.current
     ) {
+      hasAttemptedCreatePortfolio.current = true;
       setIsCreatingPortfolioPage(true);
       createPageMutation.mutate(
         { title: "Portfolio Details" },
@@ -349,7 +368,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             });
             setIsCreatingPortfolioPage(false);
           },
-          onError: () => setIsCreatingPortfolioPage(false),
+          onError: () => {
+            setIsCreatingPortfolioPage(false);
+            hasAttemptedCreatePortfolio.current = false;
+          },
         }
       );
     }
@@ -361,6 +383,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     createPortfolioDetailsComponentMutation,
   ]);
 
+  const hasAttemptedCreateService = useRef(false);
   const ensureServiceDetailsPageExists = useCallback(() => {
     if (
       !isPagesLoading &&
@@ -368,8 +391,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       !pagesData.find(
         p => p.slug === "service-details" || p.slug === "service-details-draft"
       ) &&
-      !isCreatingServicePage
+      !isCreatingServicePage &&
+      !hasAttemptedCreateService.current
     ) {
+      hasAttemptedCreateService.current = true;
       setIsCreatingServicePage(true);
       createPageMutation.mutate(
         { title: "Service Details" },
@@ -385,7 +410,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             });
             setIsCreatingServicePage(false);
           },
-          onError: () => setIsCreatingServicePage(false),
+          onError: () => {
+            setIsCreatingServicePage(false);
+            hasAttemptedCreateService.current = false;
+          },
         }
       );
     }

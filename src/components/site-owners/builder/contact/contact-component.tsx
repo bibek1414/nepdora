@@ -27,6 +27,7 @@ import { ContactStyle7 } from "./contact-style/contact-style-7";
 import { ContactStyle8 } from "./contact-style/contact-style-8";
 import { ContactStyle9 } from "./contact-style/contact-style-9";
 import { ContactStyle10 } from "./contact-style/contact-style-10";
+import { ContactStyle11 } from "./contact-style/contact-style-11";
 
 interface ContactComponentProps {
   component: ContactComponentData;
@@ -115,6 +116,8 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
         return <ContactStyle9 {...commonProps} />;
       case "contact-10":
         return <ContactStyle10 {...commonProps} />;
+      case "contact-11":
+        return <ContactStyle11 {...commonProps} />;
       case "contact-1":
       default:
         return <ContactStyle1 {...commonProps} />;

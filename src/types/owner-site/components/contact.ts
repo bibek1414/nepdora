@@ -24,7 +24,8 @@ export interface ContactData {
     | "contact-7"
     | "contact-8"
     | "contact-9"
-    | "contact-10";
+    | "contact-10"
+    | "contact-11";
   title: string;
   subtitle?: string;
   description?: string;
@@ -320,6 +321,27 @@ export const defaultContactData10: ContactData = {
   },
 };
 
+export const defaultContactData11: ContactData = {
+  component_type: "contact",
+  style: "contact-11",
+  title: "Get in touch",
+  description:
+    "Have a question about our collections or need help finding the perfect fit? We're here to help.",
+  subtitle: "Our working hours are Monday to Friday, 10 AM to 6 PM NPT.",
+  contact_info: {
+    email: "hello@nepglass.com",
+    phone: "+977 1-4000000",
+    address: "Kathmandu, Nepal",
+  },
+  required_fields: {
+    name: true,
+    email: true,
+    phone: true,
+    message: true,
+  },
+  button_label: "Send Message",
+};
+
 export const DEFAULT_CONTACT_MAP: Record<ContactData["style"], ContactData> = {
   "contact-1": defaultContactData,
   "contact-2": defaultContactData2,
@@ -331,4 +353,5 @@ export const DEFAULT_CONTACT_MAP: Record<ContactData["style"], ContactData> = {
   "contact-8": defaultContactData8,
   "contact-9": defaultContactData9,
   "contact-10": defaultContactData10,
+  "contact-11": defaultContactData11,
 };

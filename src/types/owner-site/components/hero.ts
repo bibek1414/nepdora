@@ -289,6 +289,19 @@ export interface HeroTemplate18Data {
   backgroundImageUrl?: string;
 }
 
+export interface HeroTemplate19Data {
+  template: "hero-19";
+  titlePart1: string;
+  titlePart2: string;
+  description: string;
+  buttons: HeroButton[];
+  imageUrl: string;
+  imageAlt: string;
+  backgroundType: "color" | "gradient" | "image";
+  backgroundColor?: string;
+  backgroundImageUrl?: string;
+}
+
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data
@@ -308,7 +321,8 @@ export type HeroData =
   | HeroTemplate15Data
   | HeroTemplate16Data
   | HeroTemplate17Data
-  | HeroTemplate18Data;
+  | HeroTemplate18Data
+  | HeroTemplate19Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -797,6 +811,27 @@ export const defaultHeroTemplate18Data: HeroTemplate18Data = {
   backgroundColor: "#FFFFFF",
 };
 
+export const defaultHeroTemplate19Data: HeroTemplate19Data = {
+  template: "hero-19",
+  titlePart1: "Premium Eyewear <br /> Made for Nepal",
+  description:
+    "Thoughtfully designed eyewear that blends comfort, clarity, and modern style for everyday life.",
+  buttons: [
+    {
+      id: "1",
+      text: "Explore Collection",
+      variant: "primary",
+      href: "/products",
+    },
+    { id: "2", text: "Our Story", variant: "outline", href: "/about" },
+  ],
+  imageUrl:
+    "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=800",
+  imageAlt: "NepGlass Premium Sunglasses",
+  backgroundType: "color",
+  backgroundColor: "#FFFFFF",
+};
+
 // Default data map for all hero templates
 export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-1": defaultHeroTemplate1Data,
@@ -817,6 +852,7 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-16": defaultHeroTemplate16Data,
   "hero-17": defaultHeroTemplate17Data,
   "hero-18": defaultHeroTemplate18Data,
+  "hero-19": defaultHeroTemplate19Data,
 };
 
 // Type guards for each template
@@ -872,3 +908,6 @@ export const isHeroTemplate17 = (data: HeroData): data is HeroTemplate17Data =>
 
 export const isHeroTemplate18 = (data: HeroData): data is HeroTemplate18Data =>
   data.template === "hero-18";
+
+export const isHeroTemplate19 = (data: HeroData): data is HeroTemplate19Data =>
+  data.template === "hero-19";

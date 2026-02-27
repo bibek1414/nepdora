@@ -186,7 +186,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
             </div>
             <div className="hidden items-center gap-4 text-gray-300 sm:flex">
               <div className="hidden items-center gap-6 md:flex">
-                {links.map(link =>
+                {links.slice(0, 3).map((link: NavbarLink) =>
                   isEditable && onEditLink && onDeleteLink ? (
                     <EditableItem key={link.id}>
                       <Link
@@ -329,6 +329,44 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
 
             {/* Right Side: Links & Cart */}
             <div className="flex items-center gap-6">
+              {/* Extra Links (Index 3+) */}
+              {links.length > 3 && (
+                <div className="hidden items-center gap-6 lg:flex">
+                  {links.slice(3).map((link: NavbarLink) =>
+                    isEditable && onEditLink && onDeleteLink ? (
+                      <EditableItem key={link.id}>
+                        <Link
+                          href={link.href}
+                          onClick={e => e.preventDefault()}
+                          className="cursor-pointer text-sm font-medium text-gray-900 transition-colors hover:text-gray-600"
+                        >
+                          {link.text}
+                        </Link>
+                      </EditableItem>
+                    ) : (
+                      <Link
+                        key={link.id}
+                        href={generateLinkHref(
+                          link.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
+                        onClick={e => handleLinkClick(e, link.href)}
+                        className={`text-sm font-medium text-gray-900 transition-colors ${
+                          disableClicks
+                            ? "cursor-default opacity-60"
+                            : "cursor-pointer hover:text-gray-600"
+                        }`}
+                      >
+                        {link.text}
+                      </Link>
+                    )
+                  )}
+                </div>
+              )}
+
               {/* Wishlist Icon */}
               {!isEditable && (
                 <Button

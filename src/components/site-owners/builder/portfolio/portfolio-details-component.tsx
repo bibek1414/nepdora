@@ -33,7 +33,7 @@ interface PortfolioDetailsComponentProps {
   pageSlug: string;
   siteUser: string;
   portfolioSlug?: string;
-  onReplace?: (componentId: string) => void;
+  onReplace?: (componentId: string, category?: string) => void;
 }
 
 export const PortfolioDetailsComponent: React.FC<
@@ -99,7 +99,12 @@ export const PortfolioDetailsComponent: React.FC<
             <Button
               size="sm"
               variant="outline"
-              onClick={() => onReplace?.(component.component_id)}
+              onClick={() =>
+                onReplace?.(
+                  component.component_id,
+                  "portfolio-details-sections"
+                )
+              }
               className="h-8 w-fit justify-start bg-white px-3"
             >
               <RefreshCw className="mr-1 h-4 w-4" />

@@ -11,7 +11,8 @@ export interface FAQData {
     | "faq-7"
     | "faq-8"
     | "faq-9"
-    | "faq-10";
+    | "faq-10"
+    | "faq-11";
 
   title: string;
   subtitle?: string;
@@ -48,6 +49,14 @@ export const defaultFAQData: FAQData = {
   subtitle: "Find answers to common questions about our services",
 };
 
+export const defaultFAQData11: FAQData = {
+  component_type: "faq",
+  style: "faq-11",
+  title: "Frequently Asked Questions",
+  subtitle: "Everything you need to know about Nepglass.",
+  buttonText: "View All FAQs",
+};
+
 export const DEFAULT_FAQ_MAP: Record<FAQData["style"], FAQData> = {
   "faq-1": { ...defaultFAQData, style: "faq-1" },
   "faq-2": { ...defaultFAQData, style: "faq-2" },
@@ -59,4 +68,5 @@ export const DEFAULT_FAQ_MAP: Record<FAQData["style"], FAQData> = {
   "faq-8": { ...defaultFAQData, style: "faq-8" },
   "faq-9": { ...defaultFAQData, style: "faq-9" },
   "faq-10": { ...defaultFAQData, style: "faq-10" },
+  "faq-11": { ...defaultFAQData11, style: "faq-11" },
 };

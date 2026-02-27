@@ -281,7 +281,12 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const Wrapper = Tag === "p" || Tag === "span" ? "span" : "div";
 
   return (
-    <Wrapper className="relative inline-block w-full">
+    <Wrapper
+      className={cn(
+        "relative w-full",
+        Tag === "span" || Tag === "p" ? "block" : "block"
+      )}
+    >
       {React.createElement(Tag, commonProps)}
     </Wrapper>
   );

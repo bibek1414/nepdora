@@ -19,11 +19,20 @@ import {
   isOthersTemplate2,
   isOthersTemplate3,
   isOthersTemplate4,
+  isOthersTemplate5,
+  isOthersTemplate6,
+  isOthersTemplate7,
+  isOthersTemplate8,
 } from "@/types/owner-site/components/others";
 import { OthersTemplate1 } from "./others-style-1";
 import { OthersTemplate2 } from "./others-style-2";
 import { OthersTemplate3 } from "./others-style-3";
 import { OthersTemplate4 } from "./others-style-4";
+import { OthersTemplate5 } from "./others-style-5";
+import { OthersTemplate6 } from "./others-style-6";
+import { OthersTemplate7 } from "./others-style-7";
+import { OthersTemplate8 } from "./others-style-8";
+
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -108,6 +117,18 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
     }
     if (isOthersTemplate4(component.data)) {
       return <OthersTemplate4 othersData={component.data} {...commonProps} />;
+    }
+    if (isOthersTemplate5(component.data)) {
+      return <OthersTemplate5 othersData={component.data} {...commonProps} />;
+    }
+    if (isOthersTemplate6(component.data)) {
+      return <OthersTemplate6 othersData={component.data} {...commonProps} />;
+    }
+    if (isOthersTemplate7(component.data)) {
+      return <OthersTemplate7 othersData={component.data} {...commonProps} />;
+    }
+    if (isOthersTemplate8(component.data)) {
+      return <OthersTemplate8 othersData={component.data} {...commonProps} />;
     }
 
     // Fallback for unknown templates

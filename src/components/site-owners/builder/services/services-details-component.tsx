@@ -33,7 +33,7 @@ interface ServiceDetailsComponentProps {
   pageSlug: string;
   siteUser: string;
   serviceSlug?: string;
-  onReplace?: (componentId: string) => void;
+  onReplace?: (componentId: string, category?: string) => void;
 }
 
 export const ServiceDetailsComponent: React.FC<
@@ -99,7 +99,9 @@ export const ServiceDetailsComponent: React.FC<
             <Button
               size="sm"
               variant="outline"
-              onClick={() => onReplace?.(component.component_id)}
+              onClick={() =>
+                onReplace?.(component.component_id, "service-details-sections")
+              }
               className="h-8 w-fit justify-start bg-white px-3"
             >
               <RefreshCw className="mr-1 h-4 w-4" />

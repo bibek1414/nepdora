@@ -198,6 +198,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 18",
         image: "/images/site-owners/hero/hero18.png",
       },
+      {
+        id: "hero-19",
+        name: "Hero Style 19",
+        image: "/images/site-owners/hero/hero19.png",
+      },
     ],
     others: [
       {
@@ -220,6 +225,26 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Visa Immigration Hero",
         image: "/images/site-owners/others/others4.png",
       },
+      {
+        id: "others-5",
+        name: "Others Style 5",
+        image: "/images/site-owners/others/others5.png",
+      },
+      {
+        id: "others-6",
+        name: "Others Style 6",
+        image: "/images/site-owners/others/others6.png",
+      },
+      {
+        id: "others-7",
+        name: "Others Style 7",
+        image: "/images/site-owners/others/others7.png",
+      },
+      {
+        id: "others-8",
+        name: "Others Style 8",
+        image: "/images/site-owners/others/others8.png",
+      },
     ],
     our_clients: [
       {
@@ -241,6 +266,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "our-clients-4",
         name: "Our Clients Style 4",
         image: "/images/site-owners/our-clients/ourclients4.png",
+      },
+      {
+        id: "our-clients-5",
+        name: "Brand Ticker",
+        image: "/images/site-owners/our-clients/ourclients5.png",
       },
     ],
 
@@ -440,6 +470,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Featured Collections",
         image: "/images/site-owners/products/product11.png",
       },
+      {
+        id: "product-12",
+        name: "Featured Collections",
+        image: "/images/site-owners/products/product12.png",
+      },
     ],
     product_details: [
       {
@@ -540,6 +575,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Category Style 6",
         image: "/images/site-owners/categories/category6.png",
       },
+      {
+        id: "category-7",
+        name: "Category Style 7",
+        image: "/images/site-owners/categories/category7.png",
+      },
     ],
     subcategory: [
       {
@@ -638,8 +678,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       },
       {
         id: "contact-10",
-        name: "Contact Form 10",
+        name: "Contact Style 10",
         image: "/images/site-owners/contact/contact10.png",
+      },
+      {
+        id: "contact-11",
+        name: "Contact Style 11",
+        image: "/images/site-owners/contact/contact11.png",
       },
     ],
     testimonials: [
@@ -702,6 +747,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "testimonial-12",
         name: "Testimonials Style 12",
         image: "/images/site-owners/testimonials/testimonial12.png",
+      },
+      {
+        id: "testimonial-13",
+        name: "Testimonials Style 13",
+        image: "/images/site-owners/testimonials/testimonial13.png",
       },
     ],
     team: [
@@ -896,7 +946,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "faq-10",
         name: "FAQ Style 10",
-        image: "/images/site-owners/faq/faq-10.png",
+        image: "/images/site-owners/faq/faq10.png",
+      },
+      {
+        id: "faq-11",
+        name: "FAQ Style 11",
+        image: "/images/site-owners/faq/faq11.png",
       },
     ],
     portfolio: [
@@ -936,6 +991,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "newsletter-3",
         name: "Newsletter Style 3",
         image: "/images/site-owners/newsletter/newsletter3.png",
+      },
+      {
+        id: "newsletter-4",
+        name: "Newsletter Style 4",
+        image: "/images/site-owners/newsletter/newsletter4.png",
       },
     ],
     videos: [

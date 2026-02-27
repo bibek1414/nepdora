@@ -11,7 +11,9 @@ export interface ProductsData {
     | "product-8"
     | "product-9"
     | "product-10"
-    | "product-11";
+    | "product-10"
+    | "product-11"
+    | "product-12";
 
   title: string;
   subtitle?: string;
@@ -65,5 +67,13 @@ export const DEFAULT_PRODUCTS_MAP: Record<ProductsData["style"], ProductsData> =
       style: "product-11",
       title: "Featured Collections",
       subtitle: "Top sale on this week",
+    },
+    "product-12": {
+      ...defaultProductsData,
+      style: "product-12",
+      title: "New Arrivals",
+      subtitle: "Discover the latest additions to our collection",
+      buttonText: "View All Products",
+      buttonLink: "/products",
     },
   };
