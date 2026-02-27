@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useBlog } from "@/hooks/owner-site/admin/use-blogs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -13,17 +14,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  AlertCircle,
-  CalendarDays,
-  User,
-  Clock,
-  Home,
-  Tag,
-} from "lucide-react";
+import { AlertCircle, CalendarDays, User, Home } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/utils/date";
-import { usePathname } from "next/navigation";
+import { sanitizeContent } from "@/utils/html-sanitizer";
 
 interface BlogDetailProps {
   slug: string;
@@ -39,10 +33,14 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
 
   if (isLoading) {
     return (
-      <div className="bg-background">
-        <Skeleton className="mb-12 h-[500px] w-full" />
-        <div className="container mx-auto max-w-3xl px-4 pb-8">
-          <Skeleton className="h-40 w-full" />
+      <div className="bg-background pt-0 pb-0">
+        <Skeleton className="h-[60vh] min-h-[500px] w-full" />
+        <div className="relative z-20 container mx-auto -mt-32 max-w-4xl px-4 pb-16">
+          <div className="bg-card rounded-2xl border p-8 shadow-xl">
+            <Skeleton className="mx-auto h-40 w-full" />
+            <Skeleton className="mx-auto mt-8 h-8 w-3/4" />
+            <Skeleton className="mx-auto mt-4 h-8 w-1/2" />
+          </div>
         </div>
       </div>
     );
@@ -50,8 +48,8 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
 
   if (error || !blog) {
     return (
-      <div className="bg-background">
-        <div className="container mx-auto px-4 py-8">
+      <div className="bg-background pt-20 pb-0">
+        <div className="container mx-auto max-w-7xl px-4 py-8">
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
@@ -68,9 +66,9 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
   const blogImage = blog.thumbnail_image || defaultImage;
 
   return (
-    <div className="bg-background">
-      {/* Hero Header with Overlay */}
-      <div className="relative flex h-[60vh] min-h-[400px] w-full items-center justify-center text-center">
+    <div className="bg-muted/10 min-h-screen pt-0 pb-0">
+      {/* Immersive Hero Header */}
+      <div className="relative flex h-[70vh] min-h-[500px] w-full items-center justify-center pt-20">
         <Image
           src={blogImage}
           alt={blog.title}
@@ -78,27 +76,34 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/60 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
 
-        <div className="relative z-10 container mx-auto max-w-4xl px-4 text-white">
+        <div className="relative z-10 container mx-auto mt-12 max-w-4xl px-4 text-center">
           {blog.tags && blog.tags.length > 0 && (
             <div className="mb-6 flex justify-center gap-2">
-              <span className="text-primary text-sm font-bold tracking-widest uppercase">
+              <Badge className="bg-primary hover:bg-primary border-none px-4 py-1.5 font-bold tracking-widest uppercase shadow-xl">
                 {blog.tags[0].name}
-              </span>
+              </Badge>
             </div>
           )}
-          <h1 className="mb-6 text-4xl font-black drop-shadow-md md:text-6xl">
+          <h1 className="mb-8 text-4xl leading-tight font-black text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
             {blog.title}
           </h1>
-          <div className="flex flex-wrap items-center justify-center gap-6 text-gray-200">
+          <div className="flex flex-wrap items-center justify-center gap-6 text-lg font-medium text-white/90 drop-shadow-md">
             {blog.author && (
-              <div className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                <span className="font-medium">{blog.author.username}</span>
+              <div className="flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md">
+                <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/50">
+                  <Image
+                    src={`https://ui-avatars.com/api/?name=${blog.author.username}&background=random&color=fff`}
+                    alt={blog.author.username}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <span>{blog.author.username}</span>
               </div>
             )}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 backdrop-blur-md">
               <CalendarDays className="h-5 w-5" />
               <span>{formatDate(blog.created_at)}</span>
             </div>
@@ -106,56 +111,61 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="container mx-auto max-w-3xl px-4 py-12 md:py-20">
-        <div className="mb-12 border-b pb-4">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link
-                    href={
-                      siteUser
-                        ? pathname?.includes("/preview/")
-                          ? `/preview/${siteUser}`
-                          : `/`
-                        : "/"
-                    }
-                    className="flex items-center gap-2"
-                  >
-                    <Home className="h-4 w-4" />
-                    Home
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link
-                    href={
-                      siteUser
-                        ? pathname?.includes("/preview/")
-                          ? `/preview/${siteUser}/blogs`
-                          : `/blogs`
-                        : "/blogs"
-                    }
-                  >
-                    Blogs
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{blog.title}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
+      {/* Floating Card Content Container */}
+      <div className="relative z-20 container mx-auto -mt-24 max-w-4xl px-4 pb-24 md:-mt-32">
+        <div className="bg-background rounded-3xl border p-8 shadow-[0_20px_50px_rgba(8,_112,_184,_0.07)] md:p-12 lg:p-16">
+          <div className="border-border/60 mb-10 flex justify-center border-b pb-8">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link
+                      href={
+                        siteUser
+                          ? pathname?.includes("/preview/")
+                            ? `/preview/${siteUser}`
+                            : `/`
+                          : "/"
+                      }
+                      className="text-muted-foreground hover:text-primary flex items-center gap-2 font-medium transition-colors"
+                    >
+                      <Home className="h-4 w-4" />
+                      Home
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link
+                      href={
+                        siteUser
+                          ? pathname?.includes("/preview/")
+                            ? `/preview/${siteUser}/blogs`
+                            : `/blogs`
+                          : "/blogs"
+                      }
+                      className="text-muted-foreground hover:text-primary font-medium transition-colors"
+                    >
+                      Blogs
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-foreground max-w-[150px] truncate font-semibold sm:max-w-[250px]">
+                    {blog.title}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
 
-        <div
-          className="prose prose-xl dark:prose-invert text-foreground max-w-none leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: blog.content }}
-        />
+          <div
+            className="prose prose-xl dark:prose-invert rich-text text-foreground mx-auto max-w-none leading-relaxed break-words"
+            dangerouslySetInnerHTML={{ __html: sanitizeContent(blog.content) }}
+          />
+        </div>
       </div>
     </div>
   );

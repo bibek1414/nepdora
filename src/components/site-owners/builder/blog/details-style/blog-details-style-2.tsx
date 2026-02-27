@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useBlog } from "@/hooks/owner-site/admin/use-blogs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -13,17 +14,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  AlertCircle,
-  CalendarDays,
-  User,
-  Clock,
-  Home,
-  Tag,
-} from "lucide-react";
+import { AlertCircle, CalendarDays, Home, Tag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/utils/date";
-import { usePathname } from "next/navigation";
+import { sanitizeContent } from "@/utils/html-sanitizer";
 
 interface BlogDetailProps {
   slug: string;
@@ -39,12 +33,22 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
 
   if (isLoading) {
     return (
-      <div className="bg-background">
-        <div className="container mx-auto px-4 py-8">
+      <div className="bg-background pt-20 pb-0">
+        <div className="container mx-auto max-w-7xl px-4 py-8">
           <Skeleton className="mb-6 h-5 w-64" />
-          <Skeleton className="mx-auto mb-4 h-12 w-3/4" />
-          <Skeleton className="mx-auto mb-8 h-6 w-1/3" />
-          <Skeleton className="mb-12 h-[400px] w-full rounded-xl" />
+          <Skeleton className="mb-4 h-12 w-2/3" />
+          <Skeleton className="mb-8 h-6 w-1/4" />
+          <Skeleton className="mb-12 h-[450px] w-full rounded-2xl" />
+          <div className="grid gap-12 lg:grid-cols-3">
+            <div className="space-y-4 lg:col-span-2">
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-3/4" />
+            </div>
+            <div className="lg:col-span-1">
+              <Skeleton className="h-48 w-full rounded-xl" />
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -52,8 +56,8 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
 
   if (error || !blog) {
     return (
-      <div className="bg-background">
-        <div className="container mx-auto px-4 py-8">
+      <div className="bg-background pt-20 pb-0">
+        <div className="container mx-auto max-w-7xl px-4 py-8">
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
@@ -70,10 +74,11 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
   const blogImage = blog.thumbnail_image || defaultImage;
 
   return (
-    <div className="bg-background">
-      <div className="container mx-auto max-w-4xl px-4 py-8 md:py-16">
-        <div className="mb-8 flex justify-center">
-          <Breadcrumb>
+    <div className="bg-background pt-20 pb-0">
+      <div className="container mx-auto max-w-7xl px-4 py-8 md:py-16">
+        {/* Header Section */}
+        <div className="mb-8">
+          <Breadcrumb className="mb-6">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
@@ -110,94 +115,112 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>{blog.title}</BreadcrumbPage>
+                <BreadcrumbPage className="line-clamp-1 max-w-[200px] font-medium md:max-w-[400px]">
+                  {blog.title}
+                </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-        </div>
 
-        <div className="mb-12 text-center">
-          {blog.tags && blog.tags.length > 0 && (
-            <div className="mb-4 flex justify-center gap-2">
-              <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none">
-                {blog.tags[0].name}
-              </Badge>
-            </div>
-          )}
-          <h1 className="text-foreground mb-6 text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl">
+          <h1 className="text-foreground mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-7xl">
             {blog.title}
           </h1>
-          <div className="text-muted-foreground flex items-center justify-center gap-6 text-sm">
-            {blog.author && (
-              <div className="flex items-center gap-2">
-                <Image
-                  src={`https://ui-avatars.com/api/?name=${blog.author.username}&background=random&color=fff`}
-                  alt={blog.author.username}
-                  width={24}
-                  height={24}
-                  className="rounded-full"
-                />
-                <span className="text-foreground font-medium">
-                  {blog.author.username}
-                </span>
-              </div>
-            )}
-            <div className="flex items-center gap-1">
-              <CalendarDays className="h-4 w-4" />
+
+          <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm font-medium">
+            <div className="flex items-center gap-2">
+              <CalendarDays className="h-4 w-4 shrink-0" />
               <span>{formatDate(blog.created_at)}</span>
             </div>
+            {blog.time_to_read && (
+              <>
+                <span className="bg-muted-foreground hidden h-1 w-1 rounded-full sm:block" />
+                <span>{blog.time_to_read} min read</span>
+              </>
+            )}
           </div>
         </div>
 
-        <div className="relative mb-12 h-[300px] w-full overflow-hidden rounded-2xl shadow-xl md:h-[500px]">
+        {/* Big Hero Image */}
+        <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-3xl shadow-sm md:h-[550px] lg:mb-20">
           <Image
             src={blogImage}
             alt={blog.title}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-700 ease-in-out hover:scale-105"
+            priority
           />
         </div>
 
-        <div
-          className="prose prose-lg dark:prose-invert mx-auto break-words"
-          dangerouslySetInnerHTML={{ __html: blog.content }}
-        />
-
-        {/* Footer author bio */}
-        {blog.author && (
-          <div className="mt-16 flex flex-col items-center gap-6 border-t pt-8 text-center sm:flex-row sm:items-start sm:text-left">
-            <Image
-              src={`https://ui-avatars.com/api/?name=${blog.author.username}&background=random&color=fff`}
-              alt={blog.author.username}
-              width={80}
-              height={80}
-              className="overflow-hidden rounded-full shadow-md"
+        {/* Content Layout (Sidebar approach) */}
+        <div className="grid gap-12 lg:grid-cols-12">
+          {/* Main Content Area */}
+          <div className="lg:col-span-8">
+            <div
+              className="prose prose-xl dark:prose-invert rich-text max-w-none break-words"
+              dangerouslySetInnerHTML={{
+                __html: sanitizeContent(blog.content),
+              }}
             />
-            <div>
-              <h4 className="mb-2 text-xl font-bold">
-                Written by {blog.author.username}
-              </h4>
-              <p className="text-muted-foreground mb-4">
-                Sharing insights and knowledge from across the industry.
-                Delivering quality content to readers worldwide.
-              </p>
-              <Button variant="outline" size="sm">
-                Follow Author
-              </Button>
-            </div>
           </div>
-        )}
+
+          {/* Sidebar */}
+          <aside className="space-y-8 lg:col-span-4">
+            {/* Author Card */}
+            {blog.author && (
+              <div className="bg-muted/30 flex flex-col items-center rounded-2xl border p-8 text-center shadow-sm">
+                <div className="border-background relative mb-4 h-24 w-24 overflow-hidden rounded-full border-4 shadow-md">
+                  <Image
+                    src={`https://ui-avatars.com/api/?name=${blog.author.username}&background=random&color=fff&size=128`}
+                    alt={blog.author.username}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <h3 className="mb-1 text-xl font-bold">
+                  {blog.author.username}
+                </h3>
+                <p className="text-muted-foreground mb-6 text-sm">
+                  Expert contributor and content writer sharing insights and
+                  thoughts on this topic.
+                </p>
+                <Link
+                  href={
+                    siteUser
+                      ? pathname?.includes("/preview/")
+                        ? `/preview/${siteUser}/blogs`
+                        : `/blogs`
+                      : "/blogs"
+                  }
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-xl px-4 py-3 text-sm font-medium transition-colors"
+                >
+                  View more articles
+                </Link>
+              </div>
+            )}
+
+            {/* Tags Card */}
+            {blog.tags && blog.tags.length > 0 && (
+              <div className="bg-muted/30 rounded-2xl border p-6 shadow-sm">
+                <h4 className="mb-4 flex items-center gap-2 text-lg font-bold">
+                  <Tag className="h-5 w-5" />
+                  Related Tags
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {blog.tags.map(tag => (
+                    <Badge
+                      key={tag.id}
+                      variant="secondary"
+                      className="hover:bg-secondary/80 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
+                    >
+                      {tag.name}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </aside>
+        </div>
       </div>
     </div>
   );
 };
-
-// Assuming Button might not be imported from lucide-react, I will just output standard HTML button to avoid complex imports not explicitly set
-const Button: React.FC<any> = ({ children, variant, size, ...props }) => (
-  <button
-    className="hover:bg-muted rounded-md border px-4 py-2 text-sm"
-    {...props}
-  >
-    {children}
-  </button>
-);
