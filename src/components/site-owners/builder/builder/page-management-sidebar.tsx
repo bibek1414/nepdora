@@ -30,7 +30,7 @@ export const PageManagementSidebar: React.FC<PageManagementSidebarProps> = ({
         {pages.map(page => (
           <div
             key={page.slug}
-            className={`group flex cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-2 text-xs transition-colors ${
+            className={`group flex cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-2 text-[10px] transition-colors ${
               currentPage === page.slug
                 ? "bg-gray-100 font-medium text-gray-900"
                 : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"

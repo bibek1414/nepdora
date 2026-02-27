@@ -57,7 +57,7 @@ export const ContactForm11: React.FC<ContactForm11Props> = ({
   };
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="mx-auto max-w-2xl">
       <EditableText
         value={data.title}
         onChange={handleUpdate("title")}
