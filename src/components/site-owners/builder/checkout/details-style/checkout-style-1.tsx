@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -50,14 +50,34 @@ import { checkoutFormSchema, CheckoutFormValues } from "@/schemas/chekout.form";
 import { usePaymentGateways } from "@/hooks/owner-site/admin/use-payment-gateway";
 import { motion, AnimatePresence } from "framer-motion";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { PromoCodeInput } from "./promo-code-input";
+import { PromoCodeInput } from "../promo-code-input";
 import { PromoCode } from "@/types/owner-site/admin/promo-code-validate";
 import { useDeliveryChargeCalculator } from "@/hooks/owner-site/admin/use-delivery-charge-calculator";
 
-const CheckoutPage = () => {
+interface CheckoutStyleProps {
+  siteUser?: string;
+}
+
+const MOCK_CART = [
+  {
+    product: {
+      id: 1,
+      name: "Sample Product A",
+      thumbnail_image:
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+      price: "700.00",
+      weight: 0.5,
+    },
+    quantity: 2,
+    selectedVariant: null,
+  },
+];
+
+const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
   const router = useRouter();
   const params = useParams();
-  const { cartItems, clearCart } = useCart();
+  const pathname = usePathname();
+  const { cartItems: realCartItems, clearCart } = useCart();
   const createOrderMutation = useCreateOrder();
   const { user, isAuthenticated } = useAuth();
   const { data: paymentGateways, isLoading: isLoadingGateways } =
@@ -70,9 +90,11 @@ const CheckoutPage = () => {
     null
   );
   const [openBillingCity, setOpenBillingCity] = useState(false);
-  const [openShippingCity, setOpenShippingCity] = useState(false);
   const isPreviewMode = !!params?.siteUser;
-  const siteUser = params?.siteUser as string;
+  const siteUser = propSiteUser || (params?.siteUser as string);
+  const isBuilder = pathname?.includes("/builder/");
+  const cartItems =
+    realCartItems.length > 0 ? realCartItems : isBuilder ? MOCK_CART : [];
 
   const {
     register,
@@ -144,6 +166,12 @@ const CheckoutPage = () => {
   );
 
   const uniquePaymentTypes = ["cod", ...gatewayPaymentTypes];
+
+  useEffect(() => {
+    if (uniquePaymentTypes.includes("cod") && !selectedPaymentMethod) {
+      setSelectedPaymentMethod("cod");
+    }
+  }, [uniquePaymentTypes, selectedPaymentMethod]);
 
   // Theme setup
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -305,7 +333,7 @@ const CheckoutPage = () => {
             key={cartItemKey}
             className="flex gap-4 border-b border-gray-100 pb-4 last:border-b-0"
           >
-            <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border">
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border">
               <Image
                 src={item.product.thumbnail_image || ""}
                 alt={item.product.name}
@@ -446,7 +474,7 @@ const CheckoutPage = () => {
     </>
   );
 
-  if (cartItems.length === 0) {
+  if (cartItems.length === 0 && !isBuilder) {
     return (
       <div className="container mx-auto max-w-5xl px-4 py-8">
         <div className="text-center">
@@ -458,6 +486,17 @@ const CheckoutPage = () => {
             Continue Shopping
           </Button>
         </div>
+      </div>
+    );
+  }
+
+  // If still empty in builder (shouldn't happen with MOCK_CART), show a placeholder
+  if (cartItems.length === 0) {
+    return (
+      <div className="mx-auto max-w-5xl px-4 py-8 text-center">
+        <p className="text-gray-500 italic">
+          No checkout items available for preview.
+        </p>
       </div>
     );
   }
@@ -764,7 +803,7 @@ const CheckoutPage = () => {
                                 disabled={isSubmitting}
                               >
                                 <div className="relative z-10 flex items-center gap-3">
-                                  <div className="relative h-8 w-8 flex-shrink-0">
+                                  <div className="relative h-8 w-8 shrink-0">
                                     <Image
                                       src={getPaymentImage(type)}
                                       alt={getPaymentLabel(type)}
@@ -839,4 +878,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default CheckoutPage;
+export default CheckoutStyle1;

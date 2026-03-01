@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,17 +16,53 @@ import { useOrder } from "@/hooks/owner-site/admin/use-orders";
 import { CheckCircle, Package, Truck, Mail } from "lucide-react";
 import Image from "next/image";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { usePathname } from "next/navigation";
 
-interface PreviewOrderConfirmationPageProps {
-  params: { siteUser: string; orderId: string };
+const MOCK_ORDER = {
+  id: 0,
+  order_number: "ORD-SAMPLE-002",
+  created_at: new Date().toISOString(),
+  status: "confirmed",
+  customer_name: "Jane Doe (Sample)",
+  customer_email: "jane.sample@example.com",
+  customer_phone: "+977-9800000001",
+  shipping_address: "456 Sample Blvd, Pokhara",
+  city: "Pokhara",
+  total_amount: "2500.00",
+  delivery_charge: "150.00",
+  order_items: [
+    {
+      id: 1,
+      product_id: 1,
+      price: "1175.00",
+      quantity: 2,
+      product: {
+        name: "Sample Luxury Product",
+        thumbnail_image:
+          "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+      },
+    },
+  ],
+};
+
+interface OrderConfirmationStyleProps {
+  siteUser?: string;
+  orderId?: string;
 }
 
-const PreviewOrderConfirmationPage: React.FC<
-  PreviewOrderConfirmationPageProps
-> = ({ params }) => {
+const OrderConfirmationStyle2 = ({
+  siteUser: propSiteUser,
+  orderId: propOrderId,
+}: OrderConfirmationStyleProps) => {
   const router = useRouter();
-  const { siteUser, orderId } = params;
-  const { data: order, isLoading, error } = useOrder(parseInt(orderId));
+  const params = useParams();
+  const pathname = usePathname();
+  const siteUser = propSiteUser || (params?.siteUser as string);
+  const orderId = propOrderId || (params?.orderId as string);
+  const isBuilder = pathname?.includes("/builder/");
+  const { data: orderResponse, isLoading, error } = useOrder(parseInt(orderId));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const order = (orderResponse || (isBuilder ? MOCK_ORDER : null)) as any;
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -68,7 +104,7 @@ const PreviewOrderConfirmationPage: React.FC<
     );
   }
 
-  if (error || !order) {
+  if ((error || !order) && !isBuilder) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
@@ -83,6 +119,8 @@ const PreviewOrderConfirmationPage: React.FC<
       </div>
     );
   }
+
+  if (!order) return null;
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -159,14 +197,14 @@ const PreviewOrderConfirmationPage: React.FC<
                   <Mail className="mr-2 h-4 w-4" />
                   Customer Details
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-800">
                   <strong>Name:</strong> {order.customer_name}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-800">
                   <strong>Email:</strong> {order.customer_email}
                 </p>
                 {order.customer_phone && (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-800">
                     <strong>Phone:</strong> {order.customer_phone}
                   </p>
                 )}
@@ -197,7 +235,7 @@ const PreviewOrderConfirmationPage: React.FC<
                 Order Items
               </h3>
               <div className="space-y-3">
-                {orderItems.map((item, index) => {
+                {orderItems.map((item: any, index: number) => {
                   // Use variant data if available, otherwise use product data
                   const displayImage =
                     item.variant?.image || item.product?.thumbnail_image;
@@ -230,7 +268,7 @@ const PreviewOrderConfirmationPage: React.FC<
                           {/* Display variant options as badges if variant exists */}
                           {item.variant && item.variant.option_values && (
                             <div className="mt-2 flex flex-wrap gap-1">
-                              {item.variant.option_values.map(option => (
+                              {item.variant.option_values.map((option: any) => (
                                 <Badge
                                   key={option.id}
                                   variant="secondary"
@@ -392,4 +430,4 @@ const PreviewOrderConfirmationPage: React.FC<
   );
 };
 
-export default PreviewOrderConfirmationPage;
+export default OrderConfirmationStyle2;

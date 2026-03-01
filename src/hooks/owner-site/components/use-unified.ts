@@ -106,9 +106,17 @@ export const useCreateComponentMutation = (pageSlug: string) => {
     }) => {
       const targetSlug = overrideSlug || pageSlug;
       return new Promise<any>((resolve, reject) => {
+        const expectedType = componentType;
+        const expectedSlug = targetSlug;
         const unsubscribe = subscribe("component_created", (message: any) => {
-          unsubscribe();
-          resolve(message.data);
+          if (
+            message.data &&
+            message.data.component_type === expectedType &&
+            message.data.page_slug === expectedSlug
+          ) {
+            unsubscribe();
+            resolve(message.data);
+          }
         });
 
         setTimeout(() => {
@@ -266,9 +274,12 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
       data: Partial<ComponentTypeMap[T]>;
     }) => {
       return new Promise<any>(resolve => {
+        const expectedComponentId = componentId;
         const unsubscribe = subscribe("component_updated", message => {
-          unsubscribe();
-          resolve(message.data);
+          if (message.data?.component_id === expectedComponentId) {
+            unsubscribe();
+            resolve(message.data);
+          }
         });
 
         setTimeout(() => unsubscribe(), 10000);
@@ -437,9 +448,12 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
       data: ComponentTypeMap[T];
     }) => {
       return new Promise<any>(resolve => {
+        const expectedComponentId = componentId;
         const unsubscribe = subscribe("component_replaced", message => {
-          unsubscribe();
-          resolve(message.data);
+          if (message.data?.component_id === expectedComponentId) {
+            unsubscribe();
+            resolve(message.data);
+          }
         });
 
         setTimeout(() => unsubscribe(), 10000);
@@ -532,9 +546,12 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
       order?: number;
     }) => {
       return new Promise<any>(resolve => {
+        const expectedComponentId = componentId;
         const unsubscribe = subscribe("component_replaced", message => {
-          unsubscribe();
-          resolve(message.data);
+          if (message.data?.component_id === expectedComponentId) {
+            unsubscribe();
+            resolve(message.data);
+          }
         });
 
         setTimeout(() => unsubscribe(), 10000);
@@ -670,8 +687,16 @@ export const useUpdateComponentOrderMutation = (pageSlug: string) => {
     mutationFn: ({ orderUpdates }: { orderUpdates: any[] }) => {
       return new Promise<any>(resolve => {
         const unsubscribe = subscribe("component_order_updated", message => {
-          unsubscribe();
-          resolve(message.data);
+          // Verify that this order update corresponds to the one we requested by checking pageSlug
+          // If we had a specific request ID we'd use it, otherwise we check if a component matches
+          if (
+            message.data &&
+            message.data.length > 0 &&
+            message.data[0].page_slug === pageSlug
+          ) {
+            unsubscribe();
+            resolve(message.data);
+          }
         });
 
         setTimeout(() => unsubscribe(), 10000);

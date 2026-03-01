@@ -1,12 +1,12 @@
-import OrderConfirmationPage from "@/components/site-owners/builder/checkout/order-confirmation-page";
-import { use } from "react";
+import React from "react";
+import { Metadata } from "next";
 import { generatePublishPageMetadata } from "@/lib/metadata-utils";
-import type { Metadata } from "next";
+import DynamicPageClient from "../../[...pageSlug]/dynamic-page-client";
 
 interface PageProps {
   params: Promise<{
-    orderId: string;
     siteUser: string;
+    orderId: string;
   }>;
 }
 
@@ -17,18 +17,18 @@ export async function generateMetadata({
 
   return generatePublishPageMetadata({
     pageName: `Order Confirmation #${orderId}`,
-    pageDescription:
-      "Thank you for your purchase from {storeName}. Review your order details and track your order status here.",
-    pageRoute: `/checkout/order-confirmation/${orderId}`,
+    pageDescription: `Order confirmation page for ${siteUser}, order #${orderId}.`,
+    pageRoute: `/${siteUser}/order-confirmation/${orderId}`,
   });
 }
 
-export default function OrderConfirmation({ params }: PageProps) {
-  const { orderId, siteUser } = use(params);
+export default async function OrderConfirmation({ params }: PageProps) {
+  const { siteUser } = await params;
 
   return (
-    <OrderConfirmationPage
-      params={{ siteUser: siteUser, orderId: orderId.toString() }}
+    <DynamicPageClient
+      siteUser={siteUser}
+      currentPageSlug="order-confirmation-draft"
     />
   );
 }

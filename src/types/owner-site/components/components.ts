@@ -25,6 +25,8 @@ import { ProductDetailsData } from "./product-details";
 import { BlogDetailsData } from "./blog-details";
 import { PortfolioDetailsData } from "./portfolio-details";
 import { ServiceDetailsData } from "./service-details";
+import { CheckoutData } from "./checkout";
+import { OrderConfirmationData } from "./order-confirmation";
 
 export interface ComponentTypeMap {
   hero: HeroData;
@@ -54,6 +56,8 @@ export interface ComponentTypeMap {
   blog_details: BlogDetailsData;
   portfolio_details: PortfolioDetailsData;
   service_details: ServiceDetailsData;
+  checkout: CheckoutData;
+  order_confirmation: OrderConfirmationData;
 }
 
 // Generic interfaces

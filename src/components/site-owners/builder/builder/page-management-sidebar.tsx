@@ -42,11 +42,17 @@ export const PageManagementSidebar: React.FC<PageManagementSidebarProps> = ({
               <span className="truncate capitalize">{page.title}</span>
             </div>
 
-            {pages.length > 1 && !page.slug.includes("-details-draft") && (
-              <div className="flex shrink-0" onClick={e => e.stopPropagation()}>
-                <DeletePageDialog page={page} onPageDeleted={onPageDeleted} />
-              </div>
-            )}
+            {pages.length > 1 &&
+              !page.slug.includes("-details-draft") &&
+              !page.slug.includes("checkout-draft") &&
+              !page.slug.includes("order-confirmation-draft") && (
+                <div
+                  className="flex shrink-0"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <DeletePageDialog page={page} onPageDeleted={onPageDeleted} />
+                </div>
+              )}
           </div>
         ))}
       </div>

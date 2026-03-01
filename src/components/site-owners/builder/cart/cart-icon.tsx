@@ -4,22 +4,19 @@ import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
+import Link from "next/link";
 
 interface CartIconProps {
-  onToggleCart: () => void;
+  onToggleCart?: () => void;
   customIcon?: React.ReactNode;
+  href?: string;
 }
 
-export const CartIcon = ({ onToggleCart, customIcon }: CartIconProps) => {
+export const CartIcon = ({ onToggleCart, customIcon, href }: CartIconProps) => {
   const { itemCount } = useCart();
 
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="relative"
-      onClick={onToggleCart}
-    >
+  const content = (
+    <>
       {customIcon ? customIcon : <ShoppingCart className="h-5 w-5" />}
       {itemCount > 0 && (
         <Badge
@@ -30,6 +27,25 @@ export const CartIcon = ({ onToggleCart, customIcon }: CartIconProps) => {
         </Badge>
       )}
       <span className="sr-only">Shopping Cart</span>
+    </>
+  );
+
+  if (href && href !== "#") {
+    return (
+      <Button variant="ghost" size="icon" className="relative" asChild>
+        <Link href={href}>{content}</Link>
+      </Button>
+    );
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="relative"
+      onClick={onToggleCart}
+    >
+      {content}
     </Button>
   );
 };

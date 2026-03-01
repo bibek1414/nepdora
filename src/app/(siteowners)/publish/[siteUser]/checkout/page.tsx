@@ -1,16 +1,30 @@
-import CheckoutPage from "@/components/site-owners/builder/checkout/checkout-page";
+import React from "react";
+import { Metadata } from "next";
 import { generatePublishPageMetadata } from "@/lib/metadata-utils";
-import type { Metadata } from "next";
+import DynamicPageClient from "../[...pageSlug]/dynamic-page-client";
 
-export async function generateMetadata(): Promise<Metadata> {
+interface PageProps {
+  params: Promise<{
+    siteUser: string;
+  }>;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { siteUser } = await params;
+
   return generatePublishPageMetadata({
     pageName: "Checkout",
-    pageDescription:
-      "Complete your purchase for {storeName}. Review your order, enter payment details, and finalize your transaction securely.",
-    pageRoute: "/checkout",
+    pageDescription: `Secure checkout page for ${siteUser}.`,
+    pageRoute: `/${siteUser}/checkout`,
   });
 }
 
-export default function Checkout() {
-  return <CheckoutPage />;
+export default async function Checkout({ params }: PageProps) {
+  const { siteUser } = await params;
+
+  return (
+    <DynamicPageClient siteUser={siteUser} currentPageSlug="checkout-draft" />
+  );
 }

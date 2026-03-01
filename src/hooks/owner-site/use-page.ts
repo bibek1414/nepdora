@@ -39,8 +39,10 @@ export const useCreatePage = () => {
       return new Promise<Page>((resolve, reject) => {
         // Subscribe to page_created event
         const unsubscribe = subscribe("page_created", (message: any) => {
-          unsubscribe();
-          resolve(message.data as Page);
+          if (message.data && message.data.title === pageData.title) {
+            unsubscribe();
+            resolve(message.data as Page);
+          }
         });
 
         // Set a timeout in case of failure

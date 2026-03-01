@@ -46,6 +46,8 @@ import { DEFAULT_PRODUCT_DETAILS_MAP } from "@/types/owner-site/components/produ
 import { DEFAULT_BLOG_DETAILS_MAP } from "@/types/owner-site/components/blog-details-map";
 import { DEFAULT_PORTFOLIO_DETAILS_MAP } from "@/types/owner-site/components/portfolio-details-map";
 import { DEFAULT_SERVICE_DETAILS_MAP } from "@/types/owner-site/components/service-details-map";
+import { DEFAULT_CHECKOUT_MAP } from "@/types/owner-site/components/checkout-map";
+import { DEFAULT_ORDER_CONFIRMATION_MAP } from "@/types/owner-site/components/order-confirmation-map";
 
 interface BuilderLayoutProps {
   params: {
@@ -84,6 +86,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
   const createPageMutation = useCreatePage();
+  const createProductDetailsPageMutation = useCreatePage();
+  const createBlogDetailsPageMutation = useCreatePage();
+  const createPortfolioDetailsPageMutation = useCreatePage();
+  const createServiceDetailsPageMutation = useCreatePage();
+  const createCheckoutPageMutation = useCreatePage();
+  const createOrderConfirmationPageMutation = useCreatePage();
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
   const {
     data: pageComponentsResponse,
@@ -108,6 +116,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useCreateComponentMutation("portfolio-details");
   const createServiceDetailsComponentMutation =
     useCreateComponentMutation("service-details");
+  const createCheckoutComponentMutation =
+    useCreateComponentMutation("checkout");
+  const createOrderConfirmationComponentMutation =
+    useCreateComponentMutation("order-confirmation");
 
   // Process page components
   const pageComponents = React.useMemo(() => {
@@ -195,6 +207,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       // Auto-create product details page when adding a products section
       if (componentType === "products") {
         ensureProductDetailsPageExists();
+        ensureCheckoutPageExists();
+        ensureOrderConfirmationPageExists();
       }
       if (componentType === "blog") {
         ensureBlogDetailsPageExists();
@@ -255,6 +269,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isCreatingBlogPage, setIsCreatingBlogPage] = useState(false);
   const [isCreatingPortfolioPage, setIsCreatingPortfolioPage] = useState(false);
   const [isCreatingServicePage, setIsCreatingServicePage] = useState(false);
+  const [isCreatingCheckoutPage, setIsCreatingCheckoutPage] = useState(false);
+  const [isCreatingOrderConfirmationPage, setIsCreatingOrderConfirmationPage] =
+    useState(false);
 
   const hasAttemptedCreateProduct = useRef(false);
   const ensureProductDetailsPageExists = useCallback(() => {
@@ -269,7 +286,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     ) {
       hasAttemptedCreateProduct.current = true;
       setIsCreatingProductPage(true);
-      createPageMutation.mutate(
+      createProductDetailsPageMutation.mutate(
         { title: "Product Details" }, // The backend slugifies this to product-details
         {
           onSuccess: (data: Page) => {
@@ -295,7 +312,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     isPagesLoading,
     pagesData,
     isCreatingProductPage,
-    createPageMutation,
+    createProductDetailsPageMutation,
     createProductDetailsComponentMutation,
   ]);
 
@@ -312,7 +329,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     ) {
       hasAttemptedCreateBlog.current = true;
       setIsCreatingBlogPage(true);
-      createPageMutation.mutate(
+      createBlogDetailsPageMutation.mutate(
         { title: "Blog Details" },
         {
           onSuccess: (data: Page) => {
@@ -337,7 +354,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     isPagesLoading,
     pagesData,
     isCreatingBlogPage,
-    createPageMutation,
+    createBlogDetailsPageMutation,
     createBlogDetailsComponentMutation,
   ]);
 
@@ -355,7 +372,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     ) {
       hasAttemptedCreatePortfolio.current = true;
       setIsCreatingPortfolioPage(true);
-      createPageMutation.mutate(
+      createPortfolioDetailsPageMutation.mutate(
         { title: "Portfolio Details" },
         {
           onSuccess: (data: Page) => {
@@ -380,7 +397,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     isPagesLoading,
     pagesData,
     isCreatingPortfolioPage,
-    createPageMutation,
+    createPortfolioDetailsPageMutation,
     createPortfolioDetailsComponentMutation,
   ]);
 
@@ -397,7 +414,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     ) {
       hasAttemptedCreateService.current = true;
       setIsCreatingServicePage(true);
-      createPageMutation.mutate(
+      createServiceDetailsPageMutation.mutate(
         { title: "Service Details" },
         {
           onSuccess: (data: Page) => {
@@ -422,8 +439,93 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     isPagesLoading,
     pagesData,
     isCreatingServicePage,
-    createPageMutation,
+    createServiceDetailsPageMutation,
     createServiceDetailsComponentMutation,
+  ]);
+
+  const hasAttemptedCreateCheckout = useRef(false);
+  const ensureCheckoutPageExists = useCallback(() => {
+    if (
+      !isPagesLoading &&
+      pagesData &&
+      !pagesData.find(
+        p => p.slug === "checkout" || p.slug === "checkout-draft"
+      ) &&
+      !isCreatingCheckoutPage &&
+      !hasAttemptedCreateCheckout.current
+    ) {
+      hasAttemptedCreateCheckout.current = true;
+      setIsCreatingCheckoutPage(true);
+      createCheckoutPageMutation.mutate(
+        { title: "Checkout" },
+        {
+          onSuccess: (data: Page) => {
+            const defaultData = DEFAULT_CHECKOUT_MAP["checkout-style-1"];
+            createCheckoutComponentMutation.mutate({
+              componentType: "checkout",
+              data: defaultData,
+              silent: true,
+              pageSlug: data.slug,
+            });
+            setIsCreatingCheckoutPage(false);
+          },
+          onError: () => {
+            setIsCreatingCheckoutPage(false);
+            hasAttemptedCreateCheckout.current = false;
+          },
+        }
+      );
+    }
+  }, [
+    isPagesLoading,
+    pagesData,
+    isCreatingCheckoutPage,
+    createCheckoutPageMutation,
+    createCheckoutComponentMutation,
+  ]);
+
+  const hasAttemptedCreateOrderConfirmation = useRef(false);
+  const ensureOrderConfirmationPageExists = useCallback(() => {
+    if (
+      !isPagesLoading &&
+      pagesData &&
+      !pagesData.find(
+        p =>
+          p.slug === "order-confirmation" ||
+          p.slug === "order-confirmation-draft"
+      ) &&
+      !isCreatingOrderConfirmationPage &&
+      !hasAttemptedCreateOrderConfirmation.current
+    ) {
+      hasAttemptedCreateOrderConfirmation.current = true;
+      setIsCreatingOrderConfirmationPage(true);
+      createOrderConfirmationPageMutation.mutate(
+        { title: "Order Confirmation" },
+        {
+          onSuccess: (data: Page) => {
+            const defaultData =
+              DEFAULT_ORDER_CONFIRMATION_MAP["order-confirmation-style-1"];
+            createOrderConfirmationComponentMutation.mutate({
+              componentType: "order_confirmation",
+              data: defaultData,
+              silent: true,
+              pageSlug: data.slug,
+            });
+            setIsCreatingOrderConfirmationPage(false);
+          },
+          onError: () => {
+            setIsCreatingOrderConfirmationPage(false);
+            hasAttemptedCreateOrderConfirmation.current = false;
+          },
+        }
+      );
+    }
+  }, [
+    isPagesLoading,
+    pagesData,
+    isCreatingOrderConfirmationPage,
+    createOrderConfirmationPageMutation,
+    createOrderConfirmationComponentMutation,
   ]);
 
   useEffect(() => {
@@ -439,12 +541,20 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     if (pageSlug === "service-details") {
       ensureServiceDetailsPageExists();
     }
+    if (pageSlug === "checkout-draft") {
+      ensureCheckoutPageExists();
+    }
+    if (pageSlug === "order-confirmation-draft") {
+      ensureOrderConfirmationPageExists();
+    }
   }, [
     pageSlug,
     ensureProductDetailsPageExists,
     ensureBlogDetailsPageExists,
     ensurePortfolioDetailsPageExists,
     ensureServiceDetailsPageExists,
+    ensureCheckoutPageExists,
+    ensureOrderConfirmationPageExists,
   ]);
 
   // Validate current page exists

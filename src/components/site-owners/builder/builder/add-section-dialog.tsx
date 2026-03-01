@@ -483,6 +483,32 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/product-details/product-details-2.png",
       },
     ],
+    checkout: [
+      {
+        id: "checkout-style-1",
+        name: "Checkout Style 1",
+        image: "/images/site-owners/checkout/checkout-1.png", // Using placeholder image for now
+      },
+      {
+        id: "checkout-style-2",
+        name: "Checkout Style 2",
+        image: "/images/site-owners/checkout/checkout-2.png", // Using placeholder image for now
+      },
+    ],
+    order_confirmation: [
+      {
+        id: "order-confirmation-style-1",
+        name: "Order Confirmation Style 1",
+        image:
+          "/images/site-owners/order-confirmation/order-confirmation-1.png", // Using placeholder image for now
+      },
+      {
+        id: "order-confirmation-style-2",
+        name: "Order Confirmation Style 2",
+        image:
+          "/images/site-owners/order-confirmation/order-confirmation-2.png", // Using placeholder image for now
+      },
+    ],
     blog_details: [
       {
         id: "blog-details-style-1",
@@ -1430,6 +1456,28 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.product_details,
       type: "product_details" as any,
+      showForWebsiteTypes: ["ecommerce"],
+    },
+    {
+      id: "checkout-sections",
+      label: "Checkout",
+      icon: Package,
+      keywords: ["checkout", "cart", "payment", "order"],
+      description: "Setup layout for your checkout page",
+      hasTemplates: true,
+      templates: templates.checkout,
+      type: "checkout" as any,
+      showForWebsiteTypes: ["ecommerce"],
+    },
+    {
+      id: "order-confirmation-sections",
+      label: "Order Confirmation",
+      icon: Package,
+      keywords: ["order", "confirmation", "success", "receipt"],
+      description: "Setup layout for your order confirmation page",
+      hasTemplates: true,
+      templates: templates.order_confirmation,
+      type: "order_confirmation" as any,
       showForWebsiteTypes: ["ecommerce"],
     },
     {

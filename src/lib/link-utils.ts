@@ -18,21 +18,40 @@ export const generateLinkHref = (
     cleanHref === "#" ||
     cleanHref === "home";
 
-  // Check if we are in preview or publish mode based on the current URL
+  // Check if we are in preview, publish or builder mode based on the current URL
   const isPreviewMode = pathname?.includes("/preview/");
   const isPublishMode = pathname?.includes("/publish/");
+  const isBuilderMode = pathname?.includes("/builder/");
 
-  // Try to recover siteUser from pathname if not provided
-  if (!siteUser && pathname && (isPreviewMode || isPublishMode)) {
+  // Try to recover siteUser (or siteId) from pathname if not provided
+  if (
+    !siteUser &&
+    pathname &&
+    (isPreviewMode || isPublishMode || isBuilderMode)
+  ) {
     const parts = pathname.split("/");
-    // parts[0] is empty, parts[1] is 'preview' or 'publish', parts[2] is siteUser
+    // For /preview/{siteUser}... parts[2] is siteUser
+    // For /builder/{siteId}... parts[2] is siteId
     if (parts.length >= 3) {
       siteUser = parts[2];
     }
   }
 
+  // Handle special page mappings in builder
+  let builderSlug = cleanHref;
+  if (isBuilderMode) {
+    if (cleanHref === "checkout") builderSlug = "checkout-draft";
+    if (cleanHref === "order-confirmation")
+      builderSlug = "order-confirmation-draft";
+  }
+
   let finalHref = "";
-  if (isPreviewMode && siteUser) {
+  if (isBuilderMode && siteUser) {
+    // In builder, we stay in builder but switch page slug
+    finalHref = isHomePage
+      ? `/builder/${siteUser}` // Note: usually builder home is just the site editor
+      : `/builder/${siteUser}/${builderSlug}`;
+  } else if (isPreviewMode && siteUser) {
     finalHref = isHomePage
       ? `/preview/${siteUser}`
       : `/preview/${siteUser}/${cleanHref}`;
@@ -41,6 +60,18 @@ export const generateLinkHref = (
   } else {
     finalHref = isHomePage ? "/" : `/${cleanHref}`;
   }
+
+  // Relax the '#' check for builder/preview navigation if desired
+  // But usually we want links to be disabled only when explicitly editing the link itself
+  if ((isEditable || disableClicks) && !isBuilderMode) return "#";
+  // For builder mode, we might want to allow the Cart Icon to navigate even if navbar is technically "editable"
+  // but let's keep it safe for now and only return if NOT editable, OR we let the caller decide.
+  if (
+    (isEditable || disableClicks) &&
+    isBuilderMode &&
+    cleanHref !== "checkout"
+  )
+    return "#";
 
   // Add redirect parameter for login links
   if (cleanHref === "login" && pathname) {

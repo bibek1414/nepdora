@@ -305,7 +305,16 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                         </Button>
                       </EditableItem>
                     ) : (
-                      <CartIcon onToggleCart={toggleCart} />
+                      <CartIcon
+                        onToggleCart={toggleCart}
+                        href={generateLinkHref(
+                          "/checkout",
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
+                      />
                     )}
                   </div>
                 )}

@@ -27,6 +27,8 @@ import { DEFAULT_PRODUCT_DETAILS_MAP } from "./product-details-map";
 import { DEFAULT_BLOG_DETAILS_MAP } from "./blog-details-map";
 import { DEFAULT_PORTFOLIO_DETAILS_MAP } from "./portfolio-details-map";
 import { DEFAULT_SERVICE_DETAILS_MAP } from "./service-details-map";
+import { DEFAULT_CHECKOUT_MAP } from "./checkout-map";
+import { DEFAULT_ORDER_CONFIRMATION_MAP } from "./order-confirmation-map";
 
 // Component Imports
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
@@ -56,6 +58,8 @@ import { ProductDetailsComponent } from "@/components/site-owners/builder/produc
 import { BlogDetailsComponent } from "@/components/site-owners/builder/blog/blog-details-component";
 import { PortfolioDetailsComponent } from "@/components/site-owners/builder/portfolio/portfolio-details-component";
 import { ServiceDetailsComponent } from "@/components/site-owners/builder/services/services-details-component";
+import { CheckoutComponent } from "@/components/site-owners/builder/checkout/checkout-component";
+import { OrderConfirmationComponent } from "@/components/site-owners/builder/order-confirmation/order-confirmation-component";
 
 export type ComponentCategory =
   | "basic"
@@ -325,5 +329,24 @@ export const COMPONENT_REGISTRY: {
         variant as keyof typeof DEFAULT_SERVICE_DETAILS_MAP
       ] || DEFAULT_SERVICE_DETAILS_MAP["service-details-style-1"],
     component: ServiceDetailsComponent,
+  },
+  checkout: {
+    type: "checkout",
+    displayName: "Checkout",
+    category: "ecommerce",
+    getDefaultData: variant =>
+      DEFAULT_CHECKOUT_MAP[variant as keyof typeof DEFAULT_CHECKOUT_MAP] ||
+      DEFAULT_CHECKOUT_MAP["checkout-1"],
+    component: CheckoutComponent,
+  },
+  order_confirmation: {
+    type: "order_confirmation",
+    displayName: "Order Confirmation",
+    category: "ecommerce",
+    getDefaultData: variant =>
+      DEFAULT_ORDER_CONFIRMATION_MAP[
+        variant as keyof typeof DEFAULT_ORDER_CONFIRMATION_MAP
+      ] || DEFAULT_ORDER_CONFIRMATION_MAP["order-confirmation-1"],
+    component: OrderConfirmationComponent,
   },
 };

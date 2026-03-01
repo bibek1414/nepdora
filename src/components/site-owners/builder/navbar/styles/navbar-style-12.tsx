@@ -414,6 +414,13 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
                   ) : (
                     <CartIcon
                       onToggleCart={toggleCart}
+                      href={generateLinkHref(
+                        "/checkout",
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        disableClicks
+                      )}
                       customIcon={
                         <Image
                           src="/images/site-owners/bag.webp"
