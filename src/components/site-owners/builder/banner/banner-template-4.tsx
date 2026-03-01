@@ -59,8 +59,7 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
   // Get main image
   const mainImage = data.images?.[0] || {
     id: 1,
-    image:
-      "/fallback/image-not-found.png",
+    image: "/fallback/image-not-found.png",
     image_alt_description: "Optimo Team",
     link: "",
     is_active: true,

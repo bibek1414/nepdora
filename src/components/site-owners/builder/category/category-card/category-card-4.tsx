@@ -175,8 +175,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
   };
 
   const addBackgroundImage = () => {
-    const newImageUrl =
-      "/fallback/image-not-found.png";
+    const newImageUrl = "/fallback/image-not-found.png";
     const updatedContent = {
       ...featuredContent,
       backgroundImages: [...featuredContent.backgroundImages, newImageUrl],
@@ -359,8 +358,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
                           <img
                             key={`mobile-cat-img-${componentId}-${category.id}`}
                             src={getImageUrl(
-                              category.image ||
-                                "/fallback/image-not-found.png",
+                              category.image || "/fallback/image-not-found.png",
                               { width: 64 }
                             )}
                             alt={category.name}

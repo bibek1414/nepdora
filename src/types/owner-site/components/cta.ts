@@ -120,8 +120,7 @@ export const defaultCTATemplate3Data: CTATemplate3Data = {
     { id: "2", text: "Schedule Demo", variant: "secondary", href: "#" },
   ],
   backgroundType: "image",
-  backgroundImageUrl:
-    "/fallback/image-not-found.png",
+  backgroundImageUrl: "/fallback/image-not-found.png",
   showFeatureIcons: true,
   featureIcons: ["✓", "✓", "✓"],
 };

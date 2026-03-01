@@ -18,9 +18,7 @@ export const CategoryCard2: React.FC<CategoryCard2Props> = ({
   onClick,
 }) => {
   const pathname = usePathname();
-  const categoryImage =
-    category.image ||
-    "/fallback/image-not-found.png";
+  const categoryImage = category.image || "/fallback/image-not-found.png";
 
   const getCategoryUrl = (): string => {
     return generateLinkHref(

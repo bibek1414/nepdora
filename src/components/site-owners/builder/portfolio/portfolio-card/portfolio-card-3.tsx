@@ -22,8 +22,7 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
 }) => {
   const pathname = usePathname();
   const portfolioImage =
-    portfolio.thumbnail_image ||
-    "/fallback/image-not-found.png";
+    portfolio.thumbnail_image || "/fallback/image-not-found.png";
 
   const getDetailsUrl = (): string => {
     const isPreviewMode = pathname?.includes("/preview/");

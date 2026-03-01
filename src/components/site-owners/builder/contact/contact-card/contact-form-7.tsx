@@ -36,20 +36,17 @@ const FALLBACK_LOCATION_GALLERY: ContactLocationGalleryItem[] = [
   {
     id: "dublin",
     label: "Dublin",
-    image_url:
-      "/fallback/image-not-found.png",
+    image_url: "/fallback/image-not-found.png",
   },
   {
     id: "los-angeles",
     label: "Los Angeles",
-    image_url:
-      "/fallback/image-not-found.png",
+    image_url: "/fallback/image-not-found.png",
   },
   {
     id: "remote",
     label: "Remote",
-    image_url:
-      "/fallback/image-not-found.png",
+    image_url: "/fallback/image-not-found.png",
   },
 ];
 

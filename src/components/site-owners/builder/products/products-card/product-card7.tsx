@@ -177,8 +177,7 @@ export const ProductCard7: React.FC<ProductCard7Props> = ({
           >
             {infiniteProducts.map((product, index) => {
               const productImage =
-                product.thumbnail_image ||
-                "/fallback/image-not-found.png";
+                product.thumbnail_image || "/fallback/image-not-found.png";
               const price = parseFloat(product.price || "0");
               const marketPrice = product.market_price
                 ? parseFloat(product.market_price)

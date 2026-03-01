@@ -19,9 +19,7 @@ export const BlogCard5: React.FC<BlogCard5Props> = ({
   siteUser,
   onClick,
 }) => {
-  const blogImage =
-    blog.thumbnail_image ||
-    "/fallback/image-not-found.png";
+  const blogImage = blog.thumbnail_image || "/fallback/image-not-found.png";
 
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {

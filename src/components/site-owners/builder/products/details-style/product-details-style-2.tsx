@@ -62,8 +62,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedVariant, setSelectedVariant] = useState<any>(null);
 
-  const defaultImage =
-    "/fallback/image-not-found.png";
+  const defaultImage = "/fallback/image-not-found.png";
 
   React.useEffect(() => {
     if (product && !selectedImage) {

@@ -28,8 +28,7 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
   const pathname = usePathname();
   const { data: blog, isLoading, error } = useBlog(slug);
 
-  const defaultImage =
-    "/fallback/image-not-found.png";
+  const defaultImage = "/fallback/image-not-found.png";
 
   if (isLoading) {
     return (

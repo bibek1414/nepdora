@@ -56,8 +56,7 @@ export const ProductCard5: React.FC<ProductCard5Props> = ({
 
   // Use actual product data from backend
   const productImage =
-    product.thumbnail_image ||
-    "/fallback/image-not-found.png";
+    product.thumbnail_image || "/fallback/image-not-found.png";
 
   const price = parseFloat(product.price);
   const marketPrice = product.market_price

@@ -20,9 +20,7 @@ export const SubCategoryCard1: React.FC<SubCategoryCard1Props> = ({
   siteUser,
   onClick,
 }) => {
-  const subcategoryImage =
-    subcategory.image ||
-    "/fallback/image-not-found.png";
+  const subcategoryImage = subcategory.image || "/fallback/image-not-found.png";
 
   const getSubCategoryUrl = (): string => {
     if (siteUser) {

@@ -31,8 +31,7 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
       title: "Men's\nCollection",
       subtitle: "",
       badge: "",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Men's collection",
       buttonText: "Shop Now",
       buttonHref: "#",
@@ -42,8 +41,7 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
       title: "Women's\nCollection",
       subtitle: "",
       badge: "",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Women's collection",
       buttonText: "Shop Now",
       buttonHref: "#",

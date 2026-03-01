@@ -35,8 +35,7 @@ export const defaultBannerData: BannerData = {
   images: [
     {
       id: 1,
-      image:
-        "/fallback/image-not-found.png",
+      image: "/fallback/image-not-found.png",
       image_alt_description: "Featured banner image",
       link: "#",
       is_active: true,

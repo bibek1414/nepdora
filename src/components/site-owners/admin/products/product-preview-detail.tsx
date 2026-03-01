@@ -83,8 +83,7 @@ export const ProductPreviewDetail: React.FC<ProductPreviewDetailProps> = ({
     },
   };
 
-  const defaultImage =
-    "/fallback/image-not-found.png";
+  const defaultImage = "/fallback/image-not-found.png";
 
   const [selectedImage, setSelectedImage] = React.useState<string>("");
   const [quantity, setQuantity] = React.useState(1);

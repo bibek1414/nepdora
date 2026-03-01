@@ -23,8 +23,7 @@ export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
   const pathname = usePathname();
   // ✅ Fallback image
   const portfolioImage =
-    portfolio.thumbnail_image ||
-    "/fallback/image-not-found.png";
+    portfolio.thumbnail_image || "/fallback/image-not-found.png";
 
   // ✅ Theme handling
   const { data: themeResponse } = useThemeQuery();

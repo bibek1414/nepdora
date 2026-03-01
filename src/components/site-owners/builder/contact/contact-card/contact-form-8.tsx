@@ -139,9 +139,7 @@ export const ContactForm8: React.FC<ContactForm8Props> = ({
   // Default values with proper fallbacks
   const title = data.title || "Let Your Wanderlust Guide You";
   const subtitle = data.subtitle || "CONTACT INFORMATION";
-  const imageUrl =
-    data.image_url ||
-    "/fallback/image-not-found.png";
+  const imageUrl = data.image_url || "/fallback/image-not-found.png";
   const imageAlt = data.image_alt || "Traveler smiling";
 
   return (

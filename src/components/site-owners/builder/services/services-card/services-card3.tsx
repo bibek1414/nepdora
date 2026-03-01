@@ -21,8 +21,7 @@ export const ServicesCard3: React.FC<ServicesPost3Props> = ({
 }) => {
   const pathname = usePathname();
   const serviceImage =
-    services.thumbnail_image ||
-    "/fallback/image-not-found.png";
+    services.thumbnail_image || "/fallback/image-not-found.png";
 
   const getDetailsUrl = (): string => {
     const isPreviewMode = pathname?.includes("/preview/");

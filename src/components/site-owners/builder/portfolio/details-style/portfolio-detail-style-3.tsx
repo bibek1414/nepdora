@@ -33,8 +33,7 @@ export const PortfolioDetail3: React.FC<{
   const pathname = usePathname();
   const { data: portfolio, isLoading, error } = usePortfolio(slug);
 
-  const defaultImage =
-    "/fallback/image-not-found.png";
+  const defaultImage = "/fallback/image-not-found.png";
 
   if (isLoading) {
     return (

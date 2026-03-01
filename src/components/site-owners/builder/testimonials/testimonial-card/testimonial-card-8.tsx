@@ -7,8 +7,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 
-const DEFAULT_BACKGROUND =
-  "/fallback/image-not-found.png";
+const DEFAULT_BACKGROUND = "/fallback/image-not-found.png";
 
 interface TestimonialCard8Props {
   testimonials: Testimonial[];

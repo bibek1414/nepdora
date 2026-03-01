@@ -438,8 +438,7 @@ export const defaultAboutUs1Data: AboutUs1Data = {
   subtitle: "Driving Innovation and Excellence Since 2010",
   description:
     "We are a passionate team dedicated to creating cutting-edge solutions that empower businesses and individuals. Our journey began with a simple idea: to make technology accessible and impactful.",
-  imageUrl:
-    "/fallback/image-not-found.png",
+  imageUrl: "/fallback/image-not-found.png",
   imageAlt: "A team of professionals collaborating in a modern office.",
   layout: "image-right",
   stats: [
@@ -474,23 +473,20 @@ export const defaultAboutUs4Data: AboutUs4Data = {
   subtitle: "Simple, Elegant, Effective.",
   subSubtitle:
     "We believe in crafting solutions that truly make a difference, solutions that go beyond the surface and create real impact. Every challenge is an opportunity to innovate, to design with both purpose and creativity. With precision and care, we transform ideas into meaningful outcomes that empower people. Our focus is always on building tools and experiences that inspire growth and progress. In everything we create, we strive to shape a future where positive change becomes possible.",
-  imageUrl:
-    "/fallback/image-not-found.png",
+  imageUrl: "/fallback/image-not-found.png",
   imageAlt: "A minimalist office setting with a computer and plants.",
 };
 
 export const defaultAboutUs2Data: AboutUs2Data = {
   template: "about-2",
   heroTitle: "ABOUT",
-  heroImageUrl:
-    "/fallback/image-not-found.png",
+  heroImageUrl: "/fallback/image-not-found.png",
   heroImageAlt: "Sneaker background",
   storyTitle: "Our Story",
   journeyTitle: "Our Sneaker Journey",
   journeyDescription:
     "Sneaker Story Began With A Love For Sneakers. We've Evolved Into A Hub For Innovation, Style, And Community. Uniting Enthusiasts Globally With Our Curated Selection And Passion-Driven Approach.",
-  journeyImageUrl:
-    "/fallback/image-not-found.png",
+  journeyImageUrl: "/fallback/image-not-found.png",
   journeyImageAlt: "Sneaker Journey",
   ctaText: "Let's Go",
   ctaLink: "#",
@@ -506,8 +502,7 @@ export const defaultAboutUs5Data: AboutUs5Data = {
     "https://plus.unsplash.com/premium_photo-1661627374844-11ca6ddb3633?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   image1Alt: "Woman with laptop",
   image1Tag: "Tech Blog",
-  image2Url:
-    "/fallback/image-not-found.png",
+  image2Url: "/fallback/image-not-found.png",
   image2Alt: "Team meeting",
   image2Tag: "Trends",
   teamImageUrl:
@@ -524,8 +519,7 @@ export const defaultAboutUs5Data: AboutUs5Data = {
   avatars: [
     {
       id: "1",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       alt: "Avatar A",
     },
     {
@@ -536,8 +530,7 @@ export const defaultAboutUs5Data: AboutUs5Data = {
     },
     {
       id: "3",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       alt: "Avatar C",
     },
   ],
@@ -567,14 +560,11 @@ export const defaultAboutUs6Data: AboutUs6Data = {
       bottomIcon: "Lightbulb",
     },
   ],
-  image1Url:
-    "/fallback/image-not-found.png",
+  image1Url: "/fallback/image-not-found.png",
   image1Alt: "A female barista smiling while holding a coffee cup",
-  centerImageUrl:
-    "/fallback/image-not-found.png",
+  centerImageUrl: "/fallback/image-not-found.png",
   centerImageAlt: "A close-up of coffee beans being roasted",
-  image2Url:
-    "/fallback/image-not-found.png",
+  image2Url: "/fallback/image-not-found.png",
   image2Alt: "A female barista smiling while holding a coffee cup",
 };
 
@@ -587,29 +577,25 @@ export const defaultAboutUs7Data: AboutUs7Data = {
     {
       id: "1",
       title: "Speed & Endurance Training",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Athlete running on track",
     },
     {
       id: "2",
       title: "Agility & Quickness Drills",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Athlete doing agility drills",
     },
     {
       id: "3",
       title: "Jump & Plyometric Training",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Athlete doing jump training",
     },
     {
       id: "4",
       title: "Strength & Power Training",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Athlete lifting weights",
     },
   ],
@@ -713,8 +699,7 @@ export const defaultAboutUs10Data: AboutUs10Data = {
   buttonLink: "#",
   supportText: "Need help?",
   supportNumber: "(808) 555-0111",
-  imageUrl:
-    "/fallback/image-not-found.png",
+  imageUrl: "/fallback/image-not-found.png",
   imageAlt: "Traveler with backpack",
   circularStampText: "World Wide Access • Immigration Agency •",
 };
@@ -778,8 +763,7 @@ export const defaultAboutUs12Data: AboutUs12Data = {
     { id: "2", name: "Courtney Henry", role: "Marketing Coordinator" },
     { id: "3", name: "Albert Flores", role: "Web Designer" },
   ],
-  imageUrl:
-    "/fallback/image-not-found.png",
+  imageUrl: "/fallback/image-not-found.png",
   imageAlt: "Professional Team Member",
 };
 
@@ -915,8 +899,7 @@ export const defaultAboutUs15Data: AboutUs15Data = {
       description: "Transforming businesses through technology.",
     },
   ],
-  imageUrl:
-    "/fallback/image-not-found.png",
+  imageUrl: "/fallback/image-not-found.png",
   imageAlt: "Senior Consultant",
 };
 
@@ -932,12 +915,9 @@ export const defaultAboutUs16Data: AboutUs16Data = {
     "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure.",
   buttonText: "Explore More",
   buttonLink: "#",
-  mainImage:
-    "/fallback/image-not-found.png",
-  smallImage1:
-    "/fallback/image-not-found.png",
-  smallImage2:
-    "/fallback/image-not-found.png",
+  mainImage: "/fallback/image-not-found.png",
+  smallImage1: "/fallback/image-not-found.png",
+  smallImage2: "/fallback/image-not-found.png",
 };
 
 export const defaultAboutUs17Data: AboutUs17Data = {
@@ -955,8 +935,7 @@ export const defaultAboutUs17Data: AboutUs17Data = {
   button1Link: "#",
   button2Text: "Read More Stories",
   button2Link: "#",
-  imageUrl:
-    "/fallback/image-not-found.png",
+  imageUrl: "/fallback/image-not-found.png",
   imageAlt: "Visa approval document",
 };
 
@@ -982,11 +961,9 @@ export const defaultAboutUs18Data: AboutUs18Data = {
   ],
   buttonText: "Read More",
   buttonLink: "#",
-  mainImageUrl:
-    "/fallback/image-not-found.png",
+  mainImageUrl: "/fallback/image-not-found.png",
   mainImageAlt: "Wooden boat on turquoise mountain lake",
-  secondaryImageUrl:
-    "/fallback/image-not-found.png",
+  secondaryImageUrl: "/fallback/image-not-found.png",
   secondaryImageAlt: "Travel essentials flat lay with map and camera",
 };
 

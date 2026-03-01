@@ -37,9 +37,7 @@ export const CategoryCard5: React.FC<CategoryCard5Props> = ({
     },
   };
 
-  const categoryImage =
-    category.image ||
-    "/fallback/image-not-found.png";
+  const categoryImage = category.image || "/fallback/image-not-found.png";
 
   const getCategoryUrl = (): string => {
     return generateLinkHref(

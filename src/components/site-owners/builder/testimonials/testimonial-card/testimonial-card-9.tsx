@@ -54,10 +54,7 @@ export const TestimonialCard9: React.FC<TestimonialCard9Props> = ({
       <div className="h-[400px] overflow-hidden rounded-[40px] bg-gray-200 lg:col-span-4 lg:h-auto">
         <div className="relative h-full w-full">
           <Image
-            src={
-              activeTestimonial.image ||
-              "/fallback/image-not-found.png"
-            }
+            src={activeTestimonial.image || "/fallback/image-not-found.png"}
             alt={activeTestimonial.name}
             fill
             className="object-cover"

@@ -61,8 +61,7 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
         };
 
   // Default image if none provided
-  const defaultImageUrl =
-    "/fallback/image-not-found.png";
+  const defaultImageUrl = "/fallback/image-not-found.png";
   const imageUrl = data.imageUrl || defaultImageUrl;
 
   return (

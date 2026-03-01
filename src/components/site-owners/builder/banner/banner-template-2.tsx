@@ -70,8 +70,7 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
   const handleAddImage = () => {
     const newImage = {
       id: Date.now(),
-      image:
-        "/fallback/image-not-found.png",
+      image: "/fallback/image-not-found.png",
       image_alt_description: "New slider image",
       link: "",
       is_active: true,

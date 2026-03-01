@@ -434,8 +434,7 @@ export const defaultHeroTemplate2Data: HeroTemplate2Data = {
   ],
   backgroundType: "image",
   backgroundColor: "#FFFFFF",
-  backgroundImageUrl:
-    "/fallback/image-not-found.png",
+  backgroundImageUrl: "/fallback/image-not-found.png",
 };
 
 export const defaultHeroTemplate3Data: HeroTemplate3Data = {
@@ -449,8 +448,7 @@ export const defaultHeroTemplate3Data: HeroTemplate3Data = {
     { id: "2", text: "Watch Demo", variant: "outline", href: "#" },
   ],
   showImage: true,
-  imageUrl:
-    "/fallback/image-not-found.png",
+  imageUrl: "/fallback/image-not-found.png",
   imageAlt: "Platform interface",
   statsNumber: "12k+",
   statsLabel: "Used by teams and professionals.",
@@ -485,8 +483,7 @@ export const defaultHeroTemplate5Data: HeroTemplate5Data = {
     { id: "2", text: "Explore Collection", variant: "outline", href: "#" },
   ],
   backgroundType: "image",
-  backgroundImageUrl:
-    "/fallback/image-not-found.png",
+  backgroundImageUrl: "/fallback/image-not-found.png",
   showOverlay: true,
   overlayOpacity: 0.7,
   imageAlt: "Minimalist design",
@@ -532,8 +529,7 @@ export const defaultHeroTemplate7Data: HeroTemplate7Data = {
       title: "WOMEN'S COLLECTION",
       subtitle: "NEW COLLECTION",
       badge: "WOMEN",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Woman in yellow sportswear stretching on stairs",
       buttonText: "DISCOVER MORE",
       buttonHref: "#",
@@ -543,8 +539,7 @@ export const defaultHeroTemplate7Data: HeroTemplate7Data = {
       title: "MEN'S COLLECTION",
       subtitle: "SAVE 50% OFF",
       badge: "MEN",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Man in red t-shirt resting after a workout",
       buttonText: "DISCOVER MORE",
       buttonHref: "#",
@@ -573,11 +568,9 @@ export const defaultHeroTemplate8Data: HeroTemplate8Data = {
     features: ["Free Shipping", "30-Day Returns"],
     customerText: "Trusted by 1000+ customers worldwide",
   },
-  leftImageUrl:
-    "/fallback/image-not-found.png",
+  leftImageUrl: "/fallback/image-not-found.png",
   leftImageAlt: "Left rug image",
-  rightImageUrl:
-    "/fallback/image-not-found.png",
+  rightImageUrl: "/fallback/image-not-found.png",
   rightImageAlt: "Right rug image",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",
@@ -677,8 +670,7 @@ export const defaultHeroTemplate11Data: HeroTemplate11Data = {
   buttons: [
     { id: "1", text: "Get started today", variant: "primary", href: "#" },
   ],
-  imageUrl:
-    "/fallback/image-not-found.png",
+  imageUrl: "/fallback/image-not-found.png",
   imageAlt: "Business strategy meeting",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",
@@ -691,8 +683,7 @@ export const defaultHeroTemplate12Data: HeroTemplate12Data = {
     { id: "1", text: "Read More", variant: "primary", href: "#" },
     { id: "2", text: "Watch Our Videos", variant: "secondary", href: "#" },
   ],
-  imageUrl:
-    "/fallback/image-not-found.png",
+  imageUrl: "/fallback/image-not-found.png",
   imageAlt: "Happy traveler in Paris",
   backgroundType: "color",
   backgroundColor: "#013D2F",
@@ -717,8 +708,7 @@ export const defaultHeroTemplate14Data: HeroTemplate14Data = {
   subtitle: "Exclusive Drop",
   title: "MIDNIGHT SERIES",
   buttons: [{ id: "1", text: "Shop The Look", variant: "primary", href: "#" }],
-  backgroundImageUrl:
-    "/fallback/image-not-found.png",
+  backgroundImageUrl: "/fallback/image-not-found.png",
   imageAlt: "Featured Collection",
 };
 
@@ -757,8 +747,7 @@ export const defaultHeroTemplate16Data: HeroTemplate16Data = {
     { id: "2", text: "5000+ Students Placed" },
     { id: "3", text: "100+ Partner Universities" },
   ],
-  imageUrl:
-    "/fallback/image-not-found.png",
+  imageUrl: "/fallback/image-not-found.png",
   imageAlt: "Students graduating",
 };
 
@@ -788,8 +777,7 @@ export const defaultHeroTemplate18Data: HeroTemplate18Data = {
       title: "Men's\nCollection",
       subtitle: "",
       badge: "",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Men's collection",
       buttonText: "Shop Now",
       buttonHref: "#",
@@ -799,8 +787,7 @@ export const defaultHeroTemplate18Data: HeroTemplate18Data = {
       title: "Women's\nCollection",
       subtitle: "",
       badge: "",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Women's collection",
       buttonText: "Shop Now",
       buttonHref: "#",
@@ -824,8 +811,7 @@ export const defaultHeroTemplate19Data: HeroTemplate19Data = {
     },
     { id: "2", text: "Our Story", variant: "outline", href: "#" },
   ],
-  imageUrl:
-    "/fallback/image-not-found.png",
+  imageUrl: "/fallback/image-not-found.png",
   imageAlt: "NepGlass Premium Sunglasses",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",

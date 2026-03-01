@@ -98,10 +98,7 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
                 <Image
                   width={800}
                   height={600}
-                  src={
-                    cat.image ||
-                    "/fallback/image-not-found.png"
-                  }
+                  src={cat.image || "/fallback/image-not-found.png"}
                   alt={cat.name}
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />

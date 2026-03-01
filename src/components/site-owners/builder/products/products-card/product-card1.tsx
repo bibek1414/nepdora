@@ -55,8 +55,7 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
   };
   // Use actual product data instead of mock data
   const productImage =
-    product.thumbnail_image ||
-    "/fallback/image-not-found.png";
+    product.thumbnail_image || "/fallback/image-not-found.png";
   const price = parseFloat(product.price);
   const marketPrice = product.market_price
     ? parseFloat(product.market_price)

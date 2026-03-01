@@ -21,8 +21,7 @@ export const ServicesCard2: React.FC<ServicesCard2Props> = ({
 }) => {
   const pathname = usePathname();
   const servicesImage =
-    services.thumbnail_image ||
-    "/fallback/image-not-found.png";
+    services.thumbnail_image || "/fallback/image-not-found.png";
 
   const getDetailsUrl = (): string => {
     const isPreviewMode = pathname?.includes("/preview/");

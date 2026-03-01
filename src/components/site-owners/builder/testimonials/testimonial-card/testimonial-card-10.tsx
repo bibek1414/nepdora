@@ -12,8 +12,7 @@ interface TestimonialCard10Props {
   onBackgroundChange?: (imageUrl: string) => void;
 }
 
-const DEFAULT_BACKGROUND_IMAGE =
-  "/fallback/image-not-found.png";
+const DEFAULT_BACKGROUND_IMAGE = "/fallback/image-not-found.png";
 
 const QuoteIcon: React.FC<{ color: string }> = ({ color }) => {
   return (

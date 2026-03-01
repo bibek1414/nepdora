@@ -26,8 +26,7 @@ export const ServiceDetail3: React.FC<{ slug: string; siteUser?: string }> = ({
   const pathname = usePathname();
   const { data: service, isLoading, error } = useService(slug);
 
-  const defaultImage =
-    "/fallback/image-not-found.png";
+  const defaultImage = "/fallback/image-not-found.png";
 
   if (isLoading) {
     return (

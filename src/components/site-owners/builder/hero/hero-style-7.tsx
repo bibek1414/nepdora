@@ -32,8 +32,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
       title: "WOMEN'S COLLECTION",
       subtitle: "NEW COLLECTION",
       badge: "WOMEN",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Woman in yellow sportswear stretching on stairs",
       buttonText: "DISCOVER MORE",
       buttonHref: "#",
@@ -43,8 +42,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
       title: "MEN'S COLLECTION",
       subtitle: "SAVE 50% OFF",
       badge: "MEN",
-      imageUrl:
-        "/fallback/image-not-found.png",
+      imageUrl: "/fallback/image-not-found.png",
       imageAlt: "Man in red t-shirt resting after a workout",
       buttonText: "DISCOVER MORE",
       buttonHref: "#",

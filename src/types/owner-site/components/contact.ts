@@ -185,8 +185,7 @@ export const defaultContactData6: ContactData = {
     phone: "+1 (555) 999-8888",
     address: "555 Partnership Way, Collaboration City, CC 99999",
   },
-  image_url:
-    "/fallback/image-not-found.png",
+  image_url: "/fallback/image-not-found.png",
   image_alt: "Traveler smiling",
   cta_title: "Let's Do Great!",
   cta_subtitle:
@@ -232,20 +231,17 @@ export const defaultContactData7: ContactData = {
     {
       id: "dublin",
       label: "Dublin",
-      image_url:
-        "/fallback/image-not-found.png",
+      image_url: "/fallback/image-not-found.png",
     },
     {
       id: "los-angeles",
       label: "Los Angeles",
-      image_url:
-        "/fallback/image-not-found.png",
+      image_url: "/fallback/image-not-found.png",
     },
     {
       id: "remote",
       label: "Remote",
-      image_url:
-        "/fallback/image-not-found.png",
+      image_url: "/fallback/image-not-found.png",
     },
   ],
 };
@@ -293,8 +289,7 @@ export const defaultContactData8: ContactData = {
     phone: "",
     address: "",
   },
-  image_url:
-    "/fallback/image-not-found.png",
+  image_url: "/fallback/image-not-found.png",
   image_alt: "Traveler smiling",
   button_label: "Send Message",
 };

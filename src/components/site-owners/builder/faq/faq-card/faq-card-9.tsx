@@ -56,15 +56,9 @@ export const FaqCard9: React.FC<FaqCard9Props> = ({
   // Show only first 4 FAQs
   const displayedFaqs = faqs.slice(0, 4);
 
-  const defaultLeftImage1 =
-    leftImage1 ||
-    "/fallback/image-not-found.png";
-  const defaultLeftImage2 =
-    leftImage2 ||
-    "/fallback/image-not-found.png";
-  const defaultLeftImage3 =
-    leftImage3 ||
-    "/fallback/image-not-found.png";
+  const defaultLeftImage1 = leftImage1 || "/fallback/image-not-found.png";
+  const defaultLeftImage2 = leftImage2 || "/fallback/image-not-found.png";
+  const defaultLeftImage3 = leftImage3 || "/fallback/image-not-found.png";
 
   return (
     <div className="container mx-auto px-2 py-1">

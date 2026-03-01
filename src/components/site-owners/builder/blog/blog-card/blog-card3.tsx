@@ -52,9 +52,7 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
   onClick,
   index = 0,
 }) => {
-  const blogImage =
-    blog.thumbnail_image ||
-    "/fallback/image-not-found.png";
+  const blogImage = blog.thumbnail_image || "/fallback/image-not-found.png";
 
   const pathname = usePathname();
 

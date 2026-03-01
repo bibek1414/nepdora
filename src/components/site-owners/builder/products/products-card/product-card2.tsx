@@ -51,8 +51,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
 
   // Use actual product data
   const productImage =
-    product.thumbnail_image ||
-    "/fallback/image-not-found.png";
+    product.thumbnail_image || "/fallback/image-not-found.png";
   const price = parseFloat(product.price);
   const marketPrice = product.market_price
     ? parseFloat(product.market_price)
@@ -202,8 +201,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
                 fill
                 className="object-cover"
                 onError={e => {
-                  e.currentTarget.src =
-                    "/fallback/image-not-found.png";
+                  e.currentTarget.src = "/fallback/image-not-found.png";
                 }}
               />
               <div className="absolute inset-0 bg-linear-to-t from-white/10 via-transparent to-black/5" />

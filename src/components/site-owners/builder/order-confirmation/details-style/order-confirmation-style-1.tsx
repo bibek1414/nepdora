@@ -38,8 +38,7 @@ const MOCK_ORDER = {
       quantity: 2,
       product: {
         name: "Sample Product A",
-        thumbnail_image:
-          "/fallback/image-not-found.png",
+        thumbnail_image: "/fallback/image-not-found.png",
       },
     },
   ],

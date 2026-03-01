@@ -121,9 +121,7 @@ export const CategoryStyle6: React.FC<CategoryStyleProps> = ({
   };
 
   const renderCategoryCard = (category: Category) => {
-    const categoryImage =
-      category.image ||
-      "/fallback/image-not-found.png";
+    const categoryImage = category.image || "/fallback/image-not-found.png";
 
     const categoryUrl = getCategoryUrl(category);
 

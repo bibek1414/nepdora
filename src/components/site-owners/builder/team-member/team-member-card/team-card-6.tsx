@@ -9,8 +9,7 @@ interface TeamCard6Props {
   onClick?: () => void;
 }
 
-const FALLBACK_IMAGE =
-  "/fallback/image-not-found.png";
+const FALLBACK_IMAGE = "/fallback/image-not-found.png";
 
 export const TeamCard6: React.FC<TeamCard6Props> = ({ member, onClick }) => {
   const { data: themeResponse } = useThemeQuery();

@@ -84,9 +84,7 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
   const handleAddImage = (imageUrl?: string) => {
     const newImage: GalleryImage = {
       id: Date.now(),
-      image:
-        imageUrl ||
-        "/fallback/image-not-found.png",
+      image: imageUrl || "/fallback/image-not-found.png",
       image_alt_description: "New gallery image",
       title: "New Image",
       description: "Add description here",

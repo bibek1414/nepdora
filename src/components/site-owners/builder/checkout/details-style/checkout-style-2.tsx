@@ -63,8 +63,7 @@ const MOCK_CART = [
     product: {
       id: 1,
       name: "Sample Product B",
-      thumbnail_image:
-        "/fallback/image-not-found.png",
+      thumbnail_image: "/fallback/image-not-found.png",
       price: "1200.00",
       weight: 0.8,
     },

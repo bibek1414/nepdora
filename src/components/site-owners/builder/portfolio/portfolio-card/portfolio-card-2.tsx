@@ -21,8 +21,7 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
   const pathname = usePathname();
   // ✅ Fallback image
   const portfolioImage =
-    portfolio.thumbnail_image ||
-    "/fallback/image-not-found.png";
+    portfolio.thumbnail_image || "/fallback/image-not-found.png";
 
   // ✅ Theme handling
   const { data: themeResponse } = useThemeQuery();
