@@ -75,6 +75,7 @@ type ComponentItem = {
     | "service_details";
   hideForService?: boolean;
   showForWebsiteTypes?: string[];
+  isSpecialized?: boolean;
 };
 
 type TemplateItem = {
@@ -1323,6 +1324,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.login_form,
       type: "login_form" as any,
+      isSpecialized: true,
     },
     {
       id: "signup-sections",
@@ -1333,6 +1335,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.signup_form,
       type: "signup_form" as any,
+      isSpecialized: true,
     },
     {
       id: "our-clients-sections",
@@ -1370,6 +1373,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.blog_details,
       type: "blog_details" as any,
+      isSpecialized: true,
     },
     {
       id: "cta-sections",
@@ -1474,6 +1478,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.portfolio_details,
       type: "portfolio_details" as any,
+      isSpecialized: true,
     },
     {
       id: "pricing-sections",
@@ -1506,6 +1511,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       templates: templates.product_details,
       type: "product_details" as any,
       showForWebsiteTypes: ["ecommerce"],
+      isSpecialized: true,
     },
     {
       id: "checkout-sections",
@@ -1517,6 +1523,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       templates: templates.checkout,
       type: "checkout" as any,
       showForWebsiteTypes: ["ecommerce"],
+      isSpecialized: true,
     },
     {
       id: "order-confirmation-sections",
@@ -1528,6 +1535,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       templates: templates.order_confirmation,
       type: "order_confirmation" as any,
       showForWebsiteTypes: ["ecommerce"],
+      isSpecialized: true,
     },
     {
       id: "services-sections",
@@ -1548,6 +1556,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.service_details,
       type: "service_details" as any,
+      isSpecialized: true,
     },
     {
       id: "subcategories-sections",
@@ -1607,20 +1616,27 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
   // Filter components based on website type
   const filteredComponents = useMemo(() => {
     return components.filter(component => {
-      // If showForWebsiteTypes is defined, only show for those specific types
-      if (component.showForWebsiteTypes) {
-        return component.showForWebsiteTypes.includes(websiteType);
+      // 1. Website Type Filter (If defined, must match)
+      if (
+        component.showForWebsiteTypes &&
+        !component.showForWebsiteTypes.includes(websiteType)
+      ) {
+        return false;
       }
 
-      // If hideForService is true and websiteType is "service", hide it
+      // 2. Service-specific Filter
       if (component.hideForService && websiteType === "service") {
         return false;
       }
 
-      // Otherwise, show the component
+      // 3. Specialized Component Filter (Only show in Replace mode)
+      if (component.isSpecialized && !categoryFilter) {
+        return false;
+      }
+
       return true;
     });
-  }, [websiteType]);
+  }, [websiteType, categoryFilter]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

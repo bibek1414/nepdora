@@ -15,14 +15,20 @@ import {
 } from "@/types/owner-site/components/components";
 import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
 
+import { SidebarSkeleton } from "./builder-skeleton";
+
 interface ComponentOutlineSidebarProps {
   currentPageSlug: string;
   components: ComponentResponse[];
+  isLoading?: boolean;
 }
 
 export const ComponentOutlineSidebar: React.FC<
   ComponentOutlineSidebarProps
-> = ({ currentPageSlug, components }) => {
+> = ({ currentPageSlug, components, isLoading }) => {
+  if (isLoading) {
+    return <SidebarSkeleton side="right" />;
+  }
   const ordered = useMemo(
     () => [...components].sort((a, b) => (a.order || 0) - (b.order || 0)),
     [components]

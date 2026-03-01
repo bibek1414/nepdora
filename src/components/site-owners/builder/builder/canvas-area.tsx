@@ -18,6 +18,7 @@ import { Plus, ChevronUp, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
 import { ComponentTypeMap } from "@/types/owner-site/components/components";
+import { CanvasSkeleton } from "./builder-skeleton";
 
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
@@ -313,15 +314,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       {/* Main Content Area with Drag and Drop */}
       <div className="min-h-[400px]">
         {/* Loading state */}
-        {isLoading && (
-          <div className="flex items-center justify-center py-12">
-            <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
-            <span className="text-muted-foreground ml-2 text-sm">
-              Loading components...
-            </span>
-          </div>
-        )}
-
+        {isLoading && <CanvasSkeleton />}
         {/* Error state */}
         {error && (
           <div className="mx-8 my-4 rounded-lg border border-red-200 bg-red-50 p-4">
@@ -330,7 +323,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             </p>
           </div>
         )}
-
         {/* Draggable Components */}
         {!isLoading && pageComponents.length > 0 && (
           <DragDropContext onDragEnd={handleDragEnd}>
@@ -355,7 +347,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             </Droppable>
           </DragDropContext>
         )}
-
         {/* Empty state */}
         {!isLoading && pageComponents.length === 0 && (
           <div className="p-8">

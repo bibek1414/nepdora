@@ -994,13 +994,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   };
 
-  const isLoading =
-    isNavbarLoading ||
-    isFooterLoading ||
-    isPagesLoading ||
-    isPageComponentsLoading ||
-    isCreatingHomePage;
-  if (isLoading) {
+  const isInitialLoading =
+    isNavbarLoading || isFooterLoading || isPagesLoading || isCreatingHomePage;
+
+  if (isInitialLoading) {
     return <BuilderSkeleton isCreatingHomePage={isCreatingHomePage} />;
   }
 
@@ -1096,6 +1093,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
             <ComponentOutlineSidebar
               currentPageSlug={currentPage}
               components={pageComponents}
+              isLoading={isPageComponentsLoading}
             />
           </div>
         </div>
