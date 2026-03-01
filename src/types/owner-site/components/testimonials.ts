@@ -39,7 +39,7 @@ export const defaultTestimonialsData: TestimonialsData = {
     "Don't just take our word for it - hear from our satisfied customers",
   page_size: 6,
   backgroundImage:
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1600&q=80",
+    "/fallback/image-not-found.png",
 };
 
 export const DEFAULT_TESTIMONIALS_MAP: Record<

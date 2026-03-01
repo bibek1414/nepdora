@@ -90,8 +90,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const addToWishlistMutation = useAddToWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlist();
 
-  const defaultImage =
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop";
+  const defaultImage = "/fallback/image-not-found.png";
 
   React.useEffect(() => {
     if (product && !selectedImage) {
@@ -402,11 +401,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
         <div className="grid items-start gap-12 md:grid-cols-12 lg:gap-16">
           {/* Left Column: Traditional Image Gallery */}
           <div className="flex flex-col gap-4 md:col-span-6 lg:col-span-7">
-            <div className="border-border bg-card relative aspect-[4/5] w-full overflow-hidden rounded-3xl border shadow-sm">
+            <div className="bg-card relative w-full overflow-hidden">
               <Image
                 src={selectedImage || defaultImage}
                 alt={product.thumbnail_alt_description || product.name}
-                fill
+                height={600}
+                width={600}
                 className="object-cover"
                 onError={e => {
                   const target = e.currentTarget as HTMLImageElement;

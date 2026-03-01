@@ -64,7 +64,7 @@ const MOCK_CART = [
       id: 1,
       name: "Sample Product B",
       thumbnail_image:
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+        "/fallback/image-not-found.png",
       price: "1200.00",
       weight: 0.8,
     },

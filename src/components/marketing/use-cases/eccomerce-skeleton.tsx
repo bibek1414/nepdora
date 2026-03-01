@@ -67,7 +67,7 @@ const EcommerceSkeleton: React.FC = () => {
                 {/* Product Image */}
                 <div className="relative aspect-square w-1/3 overflow-hidden rounded-lg bg-slate-100 shadow-sm">
                   <img
-                    src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=300&auto=format&fit=crop"
+                    src="/fallback/image-not-found.png"
                     alt="Himalayan Hemp Backpack"
                     className="h-full w-full object-cover"
                   />

@@ -71,7 +71,7 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
     const newImage = {
       id: Date.now(),
       image:
-        "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=1200&h=400&q=80&fit=crop",
+        "/fallback/image-not-found.png",
       image_alt_description: "New slider image",
       link: "",
       is_active: true,
@@ -158,7 +158,7 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
     if (typeof img === "string") return img;
     if (img instanceof File || img instanceof Blob)
       return URL.createObjectURL(img);
-    return "/fallback.png";
+    return "/fallback/image-not-found.png";
   };
 
   if (allActiveImages.length === 0 && !isEditable) {

@@ -171,7 +171,7 @@ export const ContactForm6: React.FC<ContactForm6Props> = ({
     "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standard dummy.";
   const imageUrl =
     data.image_url ||
-    "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2940&auto=format&fit=crop";
+    "/fallback/image-not-found.png";
   const imageAlt = data.image_alt || "Traveler smiling";
 
   // Contact info with fallbacks

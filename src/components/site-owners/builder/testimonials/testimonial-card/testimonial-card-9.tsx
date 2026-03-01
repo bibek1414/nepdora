@@ -56,7 +56,7 @@ export const TestimonialCard9: React.FC<TestimonialCard9Props> = ({
           <Image
             src={
               activeTestimonial.image ||
-              "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2942&auto=format&fit=crop"
+              "/fallback/image-not-found.png"
             }
             alt={activeTestimonial.name}
             fill

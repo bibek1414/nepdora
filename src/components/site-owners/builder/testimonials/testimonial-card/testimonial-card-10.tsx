@@ -13,7 +13,7 @@ interface TestimonialCard10Props {
 }
 
 const DEFAULT_BACKGROUND_IMAGE =
-  "https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=1200&q=80";
+  "/fallback/image-not-found.png";
 
 const QuoteIcon: React.FC<{ color: string }> = ({ color }) => {
   return (

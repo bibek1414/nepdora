@@ -60,7 +60,7 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
   const mainImage = data.images?.[0] || {
     id: 1,
     image:
-      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1742&q=80",
+      "/fallback/image-not-found.png",
     image_alt_description: "Optimo Team",
     link: "",
     is_active: true,

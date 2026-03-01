@@ -20,7 +20,7 @@ export const CategoryCard1: React.FC<CategoryCard1Props> = ({
   // Use actual category data
   const categoryImage =
     category.image ||
-    "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop";
+    "/fallback/image-not-found.png";
 
   const getCategoryUrl = (): string => {
     return generateLinkHref(

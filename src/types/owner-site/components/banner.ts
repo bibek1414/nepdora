@@ -36,7 +36,7 @@ export const defaultBannerData: BannerData = {
     {
       id: 1,
       image:
-        "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987",
+        "/fallback/image-not-found.png",
       image_alt_description: "Featured banner image",
       link: "#",
       is_active: true,

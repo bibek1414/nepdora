@@ -77,7 +77,7 @@ const BlogPostCard6: React.FC<{
 }> = ({ blog, colors, fonts, siteUser, onClick }) => {
   const blogImage =
     blog.thumbnail_image ||
-    "https://images.unsplash.com/photo-1492538368677-f6e0ac4024a1?w=1000&h=600&fit=crop";
+    "/fallback/image-not-found.png";
 
   const authorName = blog.author
     ? `${blog.author.first_name} ${blog.author.last_name}`.trim() ||

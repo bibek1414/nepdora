@@ -59,9 +59,9 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
 
   // Default images for the gray areas
   const defaultLeftImage =
-    "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=2874&auto=format&fit=crop";
+    "/fallback/image-not-found.png";
   const defaultRightImage =
-    "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2940&auto=format&fit=crop";
+    "/fallback/image-not-found.png";
 
   return (
     <section

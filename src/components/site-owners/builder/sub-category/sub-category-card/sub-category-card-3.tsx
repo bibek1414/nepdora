@@ -36,7 +36,7 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
 
   const subcategoryImage =
     subcategory.image ||
-    "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop";
+    "/fallback/image-not-found.png";
 
   // Dynamic gradient from primary → secondary
   const gradientStyle = {

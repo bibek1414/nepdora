@@ -32,9 +32,9 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
   const componentId = React.useId();
 
   const defaultImages = [
-    "https://images.unsplash.com/photo-1491933382434-500287f9b54b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1064",
-    "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987",
-    "https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1064",
+    "/fallback/image-not-found.png",
+    "/fallback/image-not-found.png",
+    "/fallback/image-not-found.png",
   ];
 
   // Initialize with default images if no images are provided

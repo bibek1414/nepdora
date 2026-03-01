@@ -50,7 +50,7 @@ const Concierge: React.FC = () => {
           <div className="w-full flex-1">
             <div className="relative aspect-4/3 overflow-hidden rounded-lg border border-slate-200 bg-slate-100 sm:rounded-xl">
               <img
-                src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1000&auto=format&fit=crop"
+                src="/fallback/image-not-found.png"
                 alt="Team working"
                 className="h-full w-full object-cover"
               />

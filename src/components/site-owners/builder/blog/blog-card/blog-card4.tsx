@@ -22,7 +22,7 @@ export const BlogCard4: React.FC<BlogCard4Props> = ({
 }) => {
   const blogImage =
     blog.thumbnail_image ||
-    "https://images.unsplash.com/photo-1492538368677-f6e0ac4024a1?w=600&h=400&fit=crop";
+    "/fallback/image-not-found.png";
 
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {

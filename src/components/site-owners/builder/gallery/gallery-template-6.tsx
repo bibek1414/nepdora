@@ -16,7 +16,7 @@ import { uploadToCloudinary } from "@/utils/cloudinary";
 const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
   {
     id: "gallery6-case-1",
-    image: "https://picsum.photos/id/1033/400/600",
+    image: "/fallback/image-not-found.png",
     image_alt_description: "Revive & Rise showcase",
     title: "Revive & Rise",
     description:
@@ -25,7 +25,7 @@ const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
   },
   {
     id: "gallery6-case-2",
-    image: "https://picsum.photos/id/101/400/600",
+    image: "/fallback/image-not-found.png",
     image_alt_description: "Scaling Made Simple showcase",
     title: "Scaling Made Simple",
     description:
@@ -34,7 +34,7 @@ const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
   },
   {
     id: "gallery6-case-3",
-    image: "https://picsum.photos/id/1031/400/600",
+    image: "/fallback/image-not-found.png",
     image_alt_description: "Fast-Track Growth showcase",
     title: "Fast-Track Growth",
     description:
@@ -43,7 +43,7 @@ const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
   },
   {
     id: "gallery6-case-4",
-    image: "https://picsum.photos/id/1029/400/600",
+    image: "/fallback/image-not-found.png",
     image_alt_description: "Future-Proofing showcase",
     title: "Future-Proofing",
     description:
@@ -160,7 +160,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
       id: Date.now(),
       image:
         imageUrl ||
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800&q=80",
+        "/fallback/image-not-found.png",
       image_alt_description: "New gallery card",
       title: "New Case Study",
       description: "Add a short descriptor",

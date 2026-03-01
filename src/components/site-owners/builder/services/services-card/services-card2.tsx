@@ -22,7 +22,7 @@ export const ServicesCard2: React.FC<ServicesCard2Props> = ({
   const pathname = usePathname();
   const servicesImage =
     services.thumbnail_image ||
-    "https://images.unsplash.com/photo-1507925921958-8186109cbb5a?w=600&h=400&fit=crop";
+    "/fallback/image-not-found.png";
 
   const getDetailsUrl = (): string => {
     const isPreviewMode = pathname?.includes("/preview/");

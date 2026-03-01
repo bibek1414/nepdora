@@ -63,7 +63,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const [selectedVariant, setSelectedVariant] = useState<any>(null);
 
   const defaultImage =
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop";
+    "/fallback/image-not-found.png";
 
   React.useEffect(() => {
     if (product && !selectedImage) {

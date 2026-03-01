@@ -186,7 +186,7 @@ export const defaultContactData6: ContactData = {
     address: "555 Partnership Way, Collaboration City, CC 99999",
   },
   image_url:
-    "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2940&auto=format&fit=crop",
+    "/fallback/image-not-found.png",
   image_alt: "Traveler smiling",
   cta_title: "Let's Do Great!",
   cta_subtitle:
@@ -233,19 +233,19 @@ export const defaultContactData7: ContactData = {
       id: "dublin",
       label: "Dublin",
       image_url:
-        "https://images.unsplash.com/photo-1549918864-48ac978761a4?auto=format&fit=crop&w=800&q=80",
+        "/fallback/image-not-found.png",
     },
     {
       id: "los-angeles",
       label: "Los Angeles",
       image_url:
-        "https://images.unsplash.com/photo-1534237710431-e2fc698436d0?auto=format&fit=crop&w=800&q=80",
+        "/fallback/image-not-found.png",
     },
     {
       id: "remote",
       label: "Remote",
       image_url:
-        "https://images.unsplash.com/photo-1593642532400-2682810df593?auto=format&fit=crop&w=1600&q=80",
+        "/fallback/image-not-found.png",
     },
   ],
 };
@@ -294,7 +294,7 @@ export const defaultContactData8: ContactData = {
     address: "",
   },
   image_url:
-    "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2940&auto=format&fit=crop",
+    "/fallback/image-not-found.png",
   image_alt: "Traveler smiling",
   button_label: "Send Message",
 };

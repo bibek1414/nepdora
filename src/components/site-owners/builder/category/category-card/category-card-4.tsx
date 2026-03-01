@@ -58,9 +58,9 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
     buttonText: "Shop now",
     buttonHref: "/products",
     backgroundImages: [
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1560472355-536de3962603?w=1200&h=800&fit=crop",
+      "/fallback/image-not-found.png",
+      "/fallback/image-not-found.png",
+      "/fallback/image-not-found.png",
     ],
     currentImageIndex: 0,
   };
@@ -176,7 +176,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
 
   const addBackgroundImage = () => {
     const newImageUrl =
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=800&fit=crop";
+      "/fallback/image-not-found.png";
     const updatedContent = {
       ...featuredContent,
       backgroundImages: [...featuredContent.backgroundImages, newImageUrl],
@@ -360,14 +360,14 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
                             key={`mobile-cat-img-${componentId}-${category.id}`}
                             src={getImageUrl(
                               category.image ||
-                                "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=32&h=32&fit=crop",
+                                "/fallback/image-not-found.png",
                               { width: 64 }
                             )}
                             alt={category.name}
                             className="h-9 w-9 rounded object-cover"
                             onError={e => {
                               (e.target as HTMLImageElement).src =
-                                "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=32&h=32&fit=crop";
+                                "/fallback/image-not-found.png";
                             }}
                           />
                           <span className="text-sm font-medium text-gray-800">
@@ -478,14 +478,14 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
                               key={`cat-img-${componentId}-${category.id}`}
                               src={getImageUrl(
                                 category.image ||
-                                  "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=32&h=32&fit=crop",
+                                  "/fallback/image-not-found.png",
                                 { width: 64 }
                               )}
                               alt={category.name}
                               className="h-8 w-8 rounded object-cover"
                               onError={e => {
                                 (e.target as HTMLImageElement).src =
-                                  "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=32&h=32&fit=crop";
+                                  "/fallback/image-not-found.png";
                               }}
                             />
                           </div>

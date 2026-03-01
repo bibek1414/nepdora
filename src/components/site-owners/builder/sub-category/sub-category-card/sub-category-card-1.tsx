@@ -22,7 +22,7 @@ export const SubCategoryCard1: React.FC<SubCategoryCard1Props> = ({
 }) => {
   const subcategoryImage =
     subcategory.image ||
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop";
+    "/fallback/image-not-found.png";
 
   const getSubCategoryUrl = (): string => {
     if (siteUser) {

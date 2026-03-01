@@ -29,7 +29,7 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
   const { data: blog, isLoading, error } = useBlog(slug);
 
   const defaultImage =
-    "https://images.unsplash.com/photo-1492538368677-f6e0ac4024a1?w=800&h=600&fit=crop";
+    "/fallback/image-not-found.png";
 
   if (isLoading) {
     return (

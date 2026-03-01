@@ -134,7 +134,7 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
   };
 
   const defaultImageUrl =
-    "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2576&auto=format&fit=crop";
+    "/fallback/image-not-found.png";
 
   return (
     <section

@@ -141,7 +141,7 @@ export const ContactForm8: React.FC<ContactForm8Props> = ({
   const subtitle = data.subtitle || "CONTACT INFORMATION";
   const imageUrl =
     data.image_url ||
-    "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2940&auto=format&fit=crop";
+    "/fallback/image-not-found.png";
   const imageAlt = data.image_alt || "Traveler smiling";
 
   return (

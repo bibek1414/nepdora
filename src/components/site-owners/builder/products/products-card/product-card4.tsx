@@ -58,7 +58,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
   // Use actual product data
   const productImage =
     product.thumbnail_image ||
-    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop";
+    "/fallback/image-not-found.png";
   const price = parseFloat(product.price);
   const marketPrice = product.market_price
     ? parseFloat(product.market_price)
@@ -178,7 +178,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 onError={e => {
                   e.currentTarget.src =
-                    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop";
+                    "/fallback/image-not-found.png";
                 }}
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/10 to-transparent transition-all duration-300" />

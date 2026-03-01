@@ -100,7 +100,7 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
                   height={600}
                   src={
                     cat.image ||
-                    "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&q=80&w=600"
+                    "/fallback/image-not-found.png"
                   }
                   alt={cat.name}
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"

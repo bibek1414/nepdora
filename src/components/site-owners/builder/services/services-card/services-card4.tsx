@@ -23,7 +23,7 @@ export const ServicesCard4: React.FC<ServicesPost4Props> = ({
   const pathname = usePathname();
   const serviceImage =
     services.thumbnail_image ||
-    "https://images.unsplash.com/photo-1516251193007-4560f385c53b?w=800&h=450&fit=crop";
+    "/fallback/image-not-found.png";
 
   const getDetailsUrl = (): string => {
     const isPreviewMode = pathname?.includes("/preview/");

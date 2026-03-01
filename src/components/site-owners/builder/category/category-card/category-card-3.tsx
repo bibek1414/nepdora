@@ -42,7 +42,7 @@ export const CategoryCard3: React.FC<CategoryCard3Props> = ({
   // Use actual category data with fallback
   const categoryImage =
     category.image ||
-    "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop";
+    "/fallback/image-not-found.png";
 
   // Dynamic gradient from primary → secondary
   const gradientStyle = {

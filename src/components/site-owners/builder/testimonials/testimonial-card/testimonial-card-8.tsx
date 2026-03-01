@@ -8,7 +8,7 @@ import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
 
 const DEFAULT_BACKGROUND =
-  "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1800&q=80";
+  "/fallback/image-not-found.png";
 
 interface TestimonialCard8Props {
   testimonials: Testimonial[];

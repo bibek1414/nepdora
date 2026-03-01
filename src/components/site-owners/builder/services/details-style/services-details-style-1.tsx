@@ -30,7 +30,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
   const { data: service, isLoading, error } = useService(slug);
 
   const defaultImage =
-    "https://images.unsplash.com/photo-1492538368677-f6e0ac4024a1?w=800&h=600&fit=crop";
+    "/fallback/image-not-found.png";
 
   if (isLoading) {
     return (

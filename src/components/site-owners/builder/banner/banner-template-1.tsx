@@ -64,7 +64,7 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
     const newImage = {
       id: Date.now(),
       image:
-        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=200&q=80&fit=crop",
+        "/fallback/image-not-found.png",
       image_alt_description: "New banner image",
       link: "",
       is_active: true,

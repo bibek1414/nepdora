@@ -85,7 +85,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
       id: Date.now(),
       image:
         imageUrl ||
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+        "/fallback/image-not-found.png",
       image_alt_description: "New gallery image",
       title: "New Image",
       description: "Add description here",

@@ -10,7 +10,7 @@ interface TeamCard6Props {
 }
 
 const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80";
+  "/fallback/image-not-found.png";
 
 export const TeamCard6: React.FC<TeamCard6Props> = ({ member, onClick }) => {
   const { data: themeResponse } = useThemeQuery();

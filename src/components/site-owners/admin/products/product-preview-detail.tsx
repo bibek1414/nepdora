@@ -84,7 +84,7 @@ export const ProductPreviewDetail: React.FC<ProductPreviewDetailProps> = ({
   };
 
   const defaultImage =
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop";
+    "/fallback/image-not-found.png";
 
   const [selectedImage, setSelectedImage] = React.useState<string>("");
   const [quantity, setQuantity] = React.useState(1);

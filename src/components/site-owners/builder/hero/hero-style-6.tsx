@@ -86,22 +86,22 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
   const defaultSlides = [
     {
       id: "1",
-      url: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0",
+      url: "/fallback/image-not-found.png",
       alt: "Workout attire collection",
     },
     {
       id: "2",
-      url: "https://images.unsplash.com/photo-1545151414-8a948e1ea54f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0",
+      url: "/fallback/image-not-found.png",
       alt: "Fitness clothing",
     },
     {
       id: "3",
-      url: "https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.1.0",
+      url: "/fallback/image-not-found.png",
       alt: "Activewear selection",
     },
     {
       id: "4",
-      url: "https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.1.0",
+      url: "/fallback/image-not-found.png",
       alt: "Workout gear",
     },
   ];
@@ -147,7 +147,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
   const addSlide = () => {
     const newSlide = {
       id: `slide-${Date.now()}`,
-      url: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0",
+      url: "/fallback/image-not-found.png",
       alt: "New slide",
     };
     const updatedSliderImages = [...slides, newSlide];

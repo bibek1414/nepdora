@@ -37,19 +37,19 @@ const FALLBACK_LOCATION_GALLERY: ContactLocationGalleryItem[] = [
     id: "dublin",
     label: "Dublin",
     image_url:
-      "https://images.unsplash.com/photo-1549918864-48ac978761a4?auto=format&fit=crop&w=800&q=80",
+      "/fallback/image-not-found.png",
   },
   {
     id: "los-angeles",
     label: "Los Angeles",
     image_url:
-      "https://images.unsplash.com/photo-1534237710431-e2fc698436d0?auto=format&fit=crop&w=800&q=80",
+      "/fallback/image-not-found.png",
   },
   {
     id: "remote",
     label: "Remote",
     image_url:
-      "https://images.unsplash.com/photo-1593642532400-2682810df593?auto=format&fit=crop&w=1600&q=80",
+      "/fallback/image-not-found.png",
   },
 ];
 

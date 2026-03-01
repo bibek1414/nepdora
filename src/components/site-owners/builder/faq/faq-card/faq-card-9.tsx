@@ -58,13 +58,13 @@ export const FaqCard9: React.FC<FaqCard9Props> = ({
 
   const defaultLeftImage1 =
     leftImage1 ||
-    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop";
+    "/fallback/image-not-found.png";
   const defaultLeftImage2 =
     leftImage2 ||
-    "https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?q=80&w=2070&auto=format&fit=crop";
+    "/fallback/image-not-found.png";
   const defaultLeftImage3 =
     leftImage3 ||
-    "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2074&auto=format&fit=crop";
+    "/fallback/image-not-found.png";
 
   return (
     <div className="container mx-auto px-2 py-1">

@@ -136,7 +136,7 @@ export function VariantSelectionDialog({
   const selectedVariant = variants.find(v => v.id === selectedVariantId);
   const availableOptions = getAvailableOptions();
   const defaultImage =
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop";
+    "/fallback/image-not-found.png";
 
   // Calculate price and discount
   const price = selectedVariant?.price ? parseFloat(selectedVariant.price) : 0;

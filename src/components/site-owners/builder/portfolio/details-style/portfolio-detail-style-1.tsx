@@ -41,7 +41,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
   const { data: portfolio, isLoading, error } = usePortfolio(slug);
 
   const defaultImage =
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=800&fit=crop";
+    "/fallback/image-not-found.png";
 
   if (isLoading) {
     return (

@@ -54,7 +54,7 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
 }) => {
   const blogImage =
     blog.thumbnail_image ||
-    "https://images.unsplash.com/photo-1516251193007-4560f385c53b?w=800&h=450&fit=crop";
+    "/fallback/image-not-found.png";
 
   const pathname = usePathname();
 

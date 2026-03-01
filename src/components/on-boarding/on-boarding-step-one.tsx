@@ -140,7 +140,7 @@ export const OnboardingStepOne = ({
                       </div>
                       <div className="hidden md:block">
                         <img
-                          src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop"
+                          src="/fallback/image-not-found.png"
                           alt="AI Website Preview"
                           className="h-32 w-48 rounded-lg object-cover shadow-md"
                         />

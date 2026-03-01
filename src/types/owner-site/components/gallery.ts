@@ -49,7 +49,7 @@ export const defaultGalleryData: GalleryData = {
     {
       id: 1,
       image:
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+        "/fallback/image-not-found.png",
       image_alt_description: "Gallery image 1",
       title: "Mountain View",
       description: "Beautiful mountain landscape",
@@ -58,7 +58,7 @@ export const defaultGalleryData: GalleryData = {
     {
       id: 2,
       image:
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80",
+        "/fallback/image-not-found.png",
       image_alt_description: "Gallery image 2",
       title: "Forest Path",
       description: "Serene forest trail",
@@ -67,7 +67,7 @@ export const defaultGalleryData: GalleryData = {
     {
       id: 3,
       image:
-        "https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=800&q=80",
+        "/fallback/image-not-found.png",
       image_alt_description: "Gallery image 3",
       title: "Ocean Sunset",
       description: "Stunning ocean view",
@@ -76,7 +76,7 @@ export const defaultGalleryData: GalleryData = {
     {
       id: 4,
       image:
-        "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=800&q=80",
+        "/fallback/image-not-found.png",
       image_alt_description: "Gallery image 4",
       title: "Mountain Peak",
       description: "Snow-capped mountains",

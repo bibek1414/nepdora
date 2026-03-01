@@ -39,7 +39,7 @@ const MOCK_ORDER = {
       product: {
         name: "Sample Luxury Product",
         thumbnail_image:
-          "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+          "/fallback/image-not-found.png",
       },
     },
   ],
