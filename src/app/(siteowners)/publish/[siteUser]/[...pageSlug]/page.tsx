@@ -29,8 +29,13 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
   const { siteUser, pageSlug } = await params;
   const currentPageSlug =
     pageSlug && pageSlug.length > 0 ? pageSlug[0] : "home";
+  const contentSlug = pageSlug && pageSlug.length > 1 ? pageSlug[1] : undefined;
 
   return (
-    <DynamicPageClient siteUser={siteUser} currentPageSlug={currentPageSlug} />
+    <DynamicPageClient
+      siteUser={siteUser}
+      currentPageSlug={currentPageSlug}
+      contentSlug={contentSlug}
+    />
   );
 }

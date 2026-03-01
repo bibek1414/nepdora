@@ -29,10 +29,13 @@ import { DEFAULT_PORTFOLIO_DETAILS_MAP } from "./portfolio-details-map";
 import { DEFAULT_SERVICE_DETAILS_MAP } from "./service-details-map";
 import { DEFAULT_CHECKOUT_MAP } from "./checkout-map";
 import { DEFAULT_ORDER_CONFIRMATION_MAP } from "./order-confirmation-map";
+import { DEFAULT_LOGIN_MAP, DEFAULT_SIGNUP_MAP } from "./auth-form-map";
 
 // Component Imports
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
 import { AboutUsComponent } from "@/components/site-owners/builder/about/about-component";
+import { LoginForm } from "@/components/site-owners/builder/auth/login-form-component";
+import { SignupForm } from "@/components/site-owners/builder/auth/signup-form-component";
 import { ProductsComponent } from "@/components/site-owners/builder/products/products-component";
 import { BlogComponent } from "@/components/site-owners/builder/blog/blog-components";
 import { ServicesComponent } from "@/components/site-owners/builder/services/services-component";
@@ -348,5 +351,23 @@ export const COMPONENT_REGISTRY: {
         variant as keyof typeof DEFAULT_ORDER_CONFIRMATION_MAP
       ] || DEFAULT_ORDER_CONFIRMATION_MAP["order-confirmation-1"],
     component: OrderConfirmationComponent,
+  },
+  login_form: {
+    type: "login_form",
+    displayName: "Login Form",
+    category: "basic",
+    getDefaultData: variant =>
+      DEFAULT_LOGIN_MAP[variant as keyof typeof DEFAULT_LOGIN_MAP] ||
+      DEFAULT_LOGIN_MAP["style-1"],
+    component: LoginForm,
+  },
+  signup_form: {
+    type: "signup_form",
+    displayName: "Signup Form",
+    category: "basic",
+    getDefaultData: variant =>
+      DEFAULT_SIGNUP_MAP[variant as keyof typeof DEFAULT_SIGNUP_MAP] ||
+      DEFAULT_SIGNUP_MAP["style-1"],
+    component: SignupForm,
   },
 };

@@ -10,6 +10,7 @@ import {
   useUpdateNavbarMutation,
   useDeleteNavbarMutation,
 } from "@/hooks/owner-site/components/use-navbar";
+import { useAuth } from "@/hooks/use-auth";
 import { NavbarEditorDialog } from "./navbar-settings";
 import { NavbarStyle1 } from "./styles/navbar-style-1";
 import { NavbarStyle2 } from "./styles/navbar-style-2";
@@ -80,6 +81,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
   disableClicks = false,
   onReplace,
 }) => {
+  const { user } = useAuth();
   const { mutate: updateNavbar, isPending: isUpdating } =
     useUpdateNavbarMutation();
   const { mutate: deleteNavbar, isPending: isDeleting } =
@@ -247,6 +249,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
           onClose={() => setIsEditorOpen(false)}
           onSave={handleSaveNavbar}
           initialData={navbarData}
+          user={user!}
         />
       )}
 

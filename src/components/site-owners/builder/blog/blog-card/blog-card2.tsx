@@ -5,6 +5,7 @@ import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface BlogCard2Props {
   blog: BlogPost;
@@ -38,16 +39,9 @@ export const BlogCard2: React.FC<BlogCard2Props> = ({
   const pathname = usePathname();
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      if (pathname?.includes("/preview/")) {
-        return `/preview/${siteUser}/blogs/${blog.slug}`;
-      }
-      if (pathname?.includes("/publish/")) {
-        return `/blogs/${blog.slug}`;
-      }
-      return `/blogs/${blog.slug}`;
-    }
-    return `/blogs/${blog.slug}`;
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode ? "/blog-details-draft" : "/blog-details";
+    return generateLinkHref(`${basePath}/${blog.slug}`, siteUser, pathname);
   };
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {

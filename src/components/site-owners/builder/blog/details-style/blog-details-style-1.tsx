@@ -84,21 +84,7 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
               </Link>
             </li>
             <li>/</li>
-            <li>
-              <Link
-                href={
-                  siteUser
-                    ? pathname?.includes("/preview/")
-                      ? `/preview/${siteUser}/blogs`
-                      : `/blogs`
-                    : "/blogs"
-                }
-                className="hover:text-primary font-medium transition-colors"
-              >
-                Blogs
-              </Link>
-            </li>
-            <li>/</li>
+
             <li className="text-foreground line-clamp-1 text-center font-medium">
               {blog.title}
             </li>

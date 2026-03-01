@@ -9,7 +9,7 @@ type WebsiteSocketContextType = {
   subscribe: (action: string, callback: (data: any) => void) => () => void;
 };
 
-const WebsiteSocketContext = createContext<
+export const WebsiteSocketContext = createContext<
   WebsiteSocketContextType | undefined
 >(undefined);
 

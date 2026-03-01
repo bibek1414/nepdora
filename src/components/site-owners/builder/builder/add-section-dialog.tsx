@@ -30,6 +30,7 @@ import {
   Calendar,
   DollarSign,
   Users,
+  LogIn,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NavbarData } from "@/types/owner-site/components/navbar";
@@ -1210,6 +1211,34 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         description: "Footer with social media links",
       },
     ],
+    login_form: [
+      {
+        id: "login-style-1",
+        name: "Login Style 1",
+        image: "/images/site-owners/auth/login1.png",
+        description: "Classic login form",
+      },
+      {
+        id: "login-style-2",
+        name: "Login Style 2",
+        image: "/images/site-owners/auth/login2.png",
+        description: "Modern split-screen login",
+      },
+    ],
+    signup_form: [
+      {
+        id: "signup-style-1",
+        name: "Signup Style 1",
+        image: "/images/site-owners/auth/signup1.png",
+        description: "Classic signup form",
+      },
+      {
+        id: "signup-style-2",
+        name: "Signup Style 2",
+        image: "/images/site-owners/auth/signup2.png",
+        description: "Modern minimalist signup",
+      },
+    ],
   };
 
   // Define which templates to show in the "All Templates" view based on website type
@@ -1284,6 +1313,26 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.appointment,
       type: "section",
+    },
+    {
+      id: "login-sections",
+      label: "Login",
+      icon: LogIn,
+      keywords: ["login", "signin", "auth", "account"],
+      description: "Login forms for your customers",
+      hasTemplates: true,
+      templates: templates.login_form,
+      type: "login_form" as any,
+    },
+    {
+      id: "signup-sections",
+      label: "Signup",
+      icon: LogIn,
+      keywords: ["signup", "register", "auth", "account"],
+      description: "Signup forms for your customers",
+      hasTemplates: true,
+      templates: templates.signup_form,
+      type: "signup_form" as any,
     },
     {
       id: "our-clients-sections",

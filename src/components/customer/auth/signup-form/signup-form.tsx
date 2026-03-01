@@ -10,12 +10,15 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signupSchema, SignupFormValues } from "@/schemas/customer/signup.form";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useState } from "react";
+import { AlertCircle } from "lucide-react";
 
 export function SignupForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   const { signup, isLoading } = useAuth();
+  const [error, setErrorState] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: themeResponse } = useThemeQuery();
@@ -38,6 +41,7 @@ export function SignupForm({
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
     watch,
   } = useForm<SignupFormValues>({
@@ -49,9 +53,26 @@ export function SignupForm({
 
   const onSubmit = async (data: SignupFormValues) => {
     try {
+      setErrorState(null);
       await signup(data);
-    } catch (error) {
-      console.error("Signup error:", error);
+    } catch (err: any) {
+      console.error("Signup error:", err);
+      const errorData = err.response?.data?.error;
+
+      if (errorData?.params?.field_errors) {
+        Object.entries(errorData.params.field_errors).forEach(
+          ([field, messages]) => {
+            setError(field as any, {
+              type: "manual",
+              message: (messages as string[])[0],
+            });
+          }
+        );
+      } else {
+        setErrorState(
+          errorData?.message || "Registration failed. Please try again."
+        );
+      }
     }
   };
 
@@ -93,6 +114,12 @@ export function SignupForm({
         <div className="rounded-lg bg-white p-8">
           <div className={cn("grid gap-6", className)} {...props}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {error && (
+                <div className="flex items-center rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+                  <AlertCircle className="mr-2 h-4 w-4 shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
               <div className="mb-8 text-center">
                 <h2 className="text-3xl font-bold text-gray-900">
                   Create New Account

@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import Image from "next/image";
 import { ChevronRight, Briefcase } from "lucide-react";
 import { ServicesPost } from "@/types/owner-site/admin/services";
@@ -76,16 +77,11 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
   }, [services.description]);
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      if (pathname?.includes("/preview/")) {
-        return `/preview/${siteUser}/services/${services.slug}`;
-      }
-      if (pathname?.includes("/publish/")) {
-        return `/services/${services.slug}`;
-      }
-      return `/services/${services.slug}`;
-    }
-    return `/services/${services.slug}`;
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/service-details-draft"
+      : "/service-details";
+    return generateLinkHref(`${basePath}/${services.slug}`, siteUser, pathname);
   };
 
   const handleClick = () => {

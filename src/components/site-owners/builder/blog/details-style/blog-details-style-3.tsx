@@ -136,23 +136,6 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link
-                      href={
-                        siteUser
-                          ? pathname?.includes("/preview/")
-                            ? `/preview/${siteUser}/blogs`
-                            : `/blogs`
-                          : "/blogs"
-                      }
-                      className="text-muted-foreground hover:text-primary font-medium transition-colors"
-                    >
-                      Blogs
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
                   <BreadcrumbPage className="text-foreground max-w-[150px] truncate font-semibold sm:max-w-[250px]">
                     {blog.title}
                   </BreadcrumbPage>

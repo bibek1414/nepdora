@@ -119,8 +119,19 @@ export const useWebsiteSocket = ({
           }
           break;
         case "page_published":
-        case "page_deleted":
           queryClient.invalidateQueries({ queryKey: ["pages"] });
+          if (slug || data?.slug) {
+            queryClient.invalidateQueries({
+              queryKey: ["pages", slug || data?.slug],
+            });
+          }
+          break;
+        case "page_deleted":
+          const deletedSlug = slug || data?.slug || message.slug;
+          queryClient.invalidateQueries({ queryKey: ["pages"] });
+          if (deletedSlug) {
+            queryClient.removeQueries({ queryKey: ["pages", deletedSlug] });
+          }
           break;
         case "component_created":
           if (data) {
@@ -348,14 +359,16 @@ export const useWebsiteSocket = ({
           break;
         case "theme_published":
           queryClient.invalidateQueries({ queryKey: ["themes"] });
+          queryClient.invalidateQueries({ queryKey: ["themes", "published"] });
           break;
         case "theme_deleted":
-          const themeId = message.id || data?.id;
+          const themeId = message.id || data?.id || message.data?.id;
+          queryClient.invalidateQueries({ queryKey: ["themes"] });
+          queryClient.invalidateQueries({ queryKey: ["themes", "published"] });
           if (themeId) {
-            queryClient.setQueryData(["themes"], (old: any[] | undefined) => {
-              if (!old) return old;
-              return old.filter(t => t.id !== themeId);
-            });
+            // We don't know if it was preview or published, so we invalidate both
+            // or we could try to remove from both.
+            queryClient.removeQueries({ queryKey: ["themes", themeId] });
           }
           break;
         case "site_config":

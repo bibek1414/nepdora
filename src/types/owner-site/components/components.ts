@@ -27,6 +27,7 @@ import { PortfolioDetailsData } from "./portfolio-details";
 import { ServiceDetailsData } from "./service-details";
 import { CheckoutData } from "./checkout";
 import { OrderConfirmationData } from "./order-confirmation";
+import { AuthFormData } from "./auth-form-map";
 
 export interface ComponentTypeMap {
   hero: HeroData;
@@ -58,6 +59,8 @@ export interface ComponentTypeMap {
   service_details: ServiceDetailsData;
   checkout: CheckoutData;
   order_confirmation: OrderConfirmationData;
+  login_form: AuthFormData;
+  signup_form: AuthFormData;
 }
 
 // Generic interfaces

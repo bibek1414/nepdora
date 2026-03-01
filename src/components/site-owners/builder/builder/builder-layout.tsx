@@ -15,8 +15,11 @@ import {
 } from "@/hooks/owner-site/components/use-navbar";
 import { NavbarData } from "@/types/owner-site/components/navbar";
 import { NavbarTemplateDialog } from "@/components/site-owners/builder/navbar/navbar-template-dialog";
-import { usePages } from "@/hooks/owner-site/use-page";
-import { useCreatePage } from "@/hooks/owner-site/use-page";
+import {
+  usePages,
+  useCreatePage,
+  useDeletePage,
+} from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";
 import {
   useFooterQuery,
@@ -48,6 +51,10 @@ import { DEFAULT_PORTFOLIO_DETAILS_MAP } from "@/types/owner-site/components/por
 import { DEFAULT_SERVICE_DETAILS_MAP } from "@/types/owner-site/components/service-details-map";
 import { DEFAULT_CHECKOUT_MAP } from "@/types/owner-site/components/checkout-map";
 import { DEFAULT_ORDER_CONFIRMATION_MAP } from "@/types/owner-site/components/order-confirmation-map";
+import {
+  DEFAULT_LOGIN_MAP,
+  DEFAULT_SIGNUP_MAP,
+} from "@/types/owner-site/components/auth-form-map";
 
 interface BuilderLayoutProps {
   params: {
@@ -92,7 +99,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createServiceDetailsPageMutation = useCreatePage();
   const createCheckoutPageMutation = useCreatePage();
   const createOrderConfirmationPageMutation = useCreatePage();
+  const createLoginPageMutation = useCreatePage();
+  const createSignupPageMutation = useCreatePage();
+  const deletePageMutation = useDeletePage();
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
+  const [isCreatingLoginPage, setIsCreatingLoginPage] = useState(false);
+  const [isCreatingSignupPage, setIsCreatingSignupPage] = useState(false);
   const {
     data: pageComponentsResponse,
     isLoading: isPageComponentsLoading,
@@ -528,6 +540,113 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     createOrderConfirmationComponentMutation,
   ]);
 
+  const hasAttemptedCreateLogin = useRef(false);
+  const ensureLoginPageExists = useCallback(() => {
+    if (
+      !isPagesLoading &&
+      pagesData &&
+      !pagesData.find(p => p.slug === "login" || p.slug === "login-draft") &&
+      !isCreatingLoginPage &&
+      !hasAttemptedCreateLogin.current
+    ) {
+      hasAttemptedCreateLogin.current = true;
+      setIsCreatingLoginPage(true);
+      createLoginPageMutation.mutate(
+        { title: "Login" },
+        {
+          onSuccess: (data: Page) => {
+            const defaultData = DEFAULT_LOGIN_MAP["style-1"];
+            createComponentMutation.mutate({
+              componentType: "login_form",
+              data: defaultData,
+              silent: true,
+              pageSlug: data.slug,
+            });
+            setIsCreatingLoginPage(false);
+          },
+          onError: () => {
+            setIsCreatingLoginPage(false);
+            hasAttemptedCreateLogin.current = false;
+          },
+        }
+      );
+    }
+  }, [
+    isPagesLoading,
+    pagesData,
+    isCreatingLoginPage,
+    createLoginPageMutation,
+    createComponentMutation,
+  ]);
+
+  const hasAttemptedCreateSignup = useRef(false);
+  const ensureSignupPageExists = useCallback(() => {
+    if (
+      !isPagesLoading &&
+      pagesData &&
+      !pagesData.find(p => p.slug === "signup" || p.slug === "signup-draft") &&
+      !isCreatingSignupPage &&
+      !hasAttemptedCreateSignup.current
+    ) {
+      hasAttemptedCreateSignup.current = true;
+      setIsCreatingSignupPage(true);
+      createSignupPageMutation.mutate(
+        { title: "Signup" },
+        {
+          onSuccess: (data: Page) => {
+            const defaultData = DEFAULT_SIGNUP_MAP["style-1"];
+            createComponentMutation.mutate({
+              componentType: "signup_form",
+              data: defaultData,
+              silent: true,
+              pageSlug: data.slug,
+            });
+            setIsCreatingSignupPage(false);
+          },
+          onError: () => {
+            setIsCreatingSignupPage(false);
+            hasAttemptedCreateSignup.current = false;
+          },
+        }
+      );
+    }
+  }, [
+    isPagesLoading,
+    pagesData,
+    isCreatingSignupPage,
+    createSignupPageMutation,
+    createComponentMutation,
+  ]);
+
+  const hasAttemptedDeleteLogin = useRef(false);
+  const hasAttemptedDeleteSignup = useRef(false);
+
+  const deleteAuthPages = useCallback(() => {
+    const loginPage = pagesData?.find(
+      p => p.slug === "login" || p.slug === "login-draft"
+    );
+    const signupPage = pagesData?.find(
+      p => p.slug === "signup" || p.slug === "signup-draft"
+    );
+
+    if (loginPage && !hasAttemptedDeleteLogin.current) {
+      hasAttemptedDeleteLogin.current = true;
+      deletePageMutation.mutate(loginPage.slug, {
+        onError: () => {
+          hasAttemptedDeleteLogin.current = false;
+        },
+      });
+    }
+    if (signupPage && !hasAttemptedDeleteSignup.current) {
+      hasAttemptedDeleteSignup.current = true;
+      deletePageMutation.mutate(signupPage.slug, {
+        onError: () => {
+          hasAttemptedDeleteSignup.current = false;
+        },
+      });
+    }
+  }, [pagesData, deletePageMutation]);
+
   useEffect(() => {
     if (pageSlug === "product-details") {
       ensureProductDetailsPageExists();
@@ -647,6 +766,33 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       });
     }
   };
+
+  // Centralized Auth Page Management Effect
+  useEffect(() => {
+    if (!navbarResponse?.data?.data) return;
+
+    const { enableLogin } = navbarResponse.data.data;
+
+    if (enableLogin) {
+      // If enabled, ensure pages exist
+      ensureLoginPageExists();
+      ensureSignupPageExists();
+      // Reset deletion refs so we can delete again if disabled later
+      hasAttemptedDeleteLogin.current = false;
+      hasAttemptedDeleteSignup.current = false;
+    } else {
+      // If disabled, delete pages
+      deleteAuthPages();
+      // Reset creation refs so we can create again if enabled later
+      hasAttemptedCreateLogin.current = false;
+      hasAttemptedCreateSignup.current = false;
+    }
+  }, [
+    navbarResponse?.data?.data?.enableLogin,
+    ensureLoginPageExists,
+    ensureSignupPageExists,
+    deleteAuthPages,
+  ]);
 
   const handleNavbarTemplateSelect = (templateData: NavbarData) => {
     const payload = {

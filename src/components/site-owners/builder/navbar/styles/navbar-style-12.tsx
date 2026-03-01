@@ -13,7 +13,23 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
-import { Search, ChevronRight, Heart } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/customer/use-auth";
+import {
+  Heart,
+  Package,
+  LogOut,
+  ChevronDown,
+  Search,
+  ChevronRight,
+  User,
+} from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useProductsWithParams } from "@/hooks/owner-site/admin/use-product";
@@ -55,13 +71,14 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
     navbarData,
     undefined
   );
-  const { links, showCart, bannerText, topBarItems } = data;
+  const { links, showCart, bannerText, topBarItems, enableLogin } = data;
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { isAuthenticated, user, logout } = useAuth();
   const { data: wishlistData } = useWishlist();
   const wishlistCount = wishlistData?.length || 0;
 
@@ -123,6 +140,30 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
       e.preventDefault();
       return;
     }
+  };
+
+  const handleProfileAction = (action: string) => {
+    if (disableClicks || isEditable) return;
+
+    switch (action) {
+      case "profile":
+        router.push(generateLinkHref("/profile", siteUser, pathname));
+        break;
+      case "wishlist":
+        router.push(generateLinkHref("/wishlist", siteUser, pathname));
+        break;
+      case "orders":
+        router.push(generateLinkHref("/orders", siteUser, pathname));
+        break;
+      case "logout":
+        logout();
+        break;
+    }
+  };
+
+  const handleLoginClick = () => {
+    if (disableClicks || isEditable) return;
+    router.push(generateLinkHref("/login", siteUser, pathname));
   };
 
   // Ensure topBarItems exists or use defaults for the EditableLink
@@ -432,6 +473,96 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
                       }
                     />
                   )}
+                </div>
+              )}
+
+              {enableLogin && (
+                <div className={disableClicks ? "pointer-events-auto" : ""}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className={`flex items-center gap-1 p-2 text-black transition-colors hover:text-black/80 ${
+                          disableClicks || isEditable
+                            ? "cursor-default opacity-60"
+                            : "cursor-pointer"
+                        }`}
+                        onClick={
+                          disableClicks ? e => e.preventDefault() : undefined
+                        }
+                      >
+                        <User className="h-6 w-6 stroke-[1.5]" />
+                        {isAuthenticated ? (
+                          <>
+                            <span className="hidden text-sm font-medium lg:inline-block">
+                              {user?.first_name || "Account"}
+                            </span>
+                            <ChevronDown className="h-4 w-4" />
+                          </>
+                        ) : null}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    {!disableClicks && !isEditable && (
+                      <DropdownMenuContent className="w-48" align="end">
+                        {isAuthenticated ? (
+                          <>
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => handleProfileAction("profile")}
+                            >
+                              <User className="mr-2 h-4 w-4" />
+                              My Profile
+                            </DropdownMenuItem>
+                            {(!user?.website_type ||
+                              user.website_type === "ecommerce") && (
+                              <>
+                                <DropdownMenuItem
+                                  className="cursor-pointer"
+                                  onClick={() =>
+                                    handleProfileAction("wishlist")
+                                  }
+                                >
+                                  <Heart className="mr-2 h-4 w-4" />
+                                  <div className="flex w-full items-center justify-between">
+                                    <span>Wishlist</span>
+                                    {wishlistCount > 0 && (
+                                      <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                                        {wishlistCount}
+                                      </span>
+                                    )}
+                                  </div>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  className="cursor-pointer"
+                                  onClick={() => handleProfileAction("orders")}
+                                >
+                                  <Package className="mr-2 h-4 w-4" />
+                                  My Orders
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              className="cursor-pointer text-red-600 focus:text-red-600"
+                              onClick={() => handleProfileAction("logout")}
+                            >
+                              <LogOut className="mr-2 h-4 w-4" />
+                              Logout
+                            </DropdownMenuItem>
+                          </>
+                        ) : (
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={handleLoginClick}
+                          >
+                            <User className="mr-2 h-4 w-4" />
+                            Login / Register
+                          </DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    )}
+                  </DropdownMenu>
                 </div>
               )}
             </div>

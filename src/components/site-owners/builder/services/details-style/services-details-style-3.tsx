@@ -121,23 +121,6 @@ export const ServiceDetail3: React.FC<{ slug: string; siteUser?: string }> = ({
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link
-                      href={
-                        siteUser
-                          ? pathname?.includes("/preview/")
-                            ? `/preview/${siteUser}/services`
-                            : `/services`
-                          : "/services"
-                      }
-                      className="text-muted-foreground hover:text-primary font-medium transition-colors"
-                    >
-                      Services
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
                   <BreadcrumbPage className="text-foreground max-w-[150px] truncate font-semibold sm:max-w-[250px]">
                     {service.title}
                   </BreadcrumbPage>

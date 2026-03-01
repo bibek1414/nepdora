@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface BlogCard7Props {
   blog: BlogPost;
@@ -66,16 +67,9 @@ export const BlogCard7: React.FC<BlogCard7Props> = ({
   const pathname = usePathname();
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      if (pathname?.includes("/preview/")) {
-        return `/preview/${siteUser}/blogs/${blog.slug}`;
-      }
-      if (pathname?.includes("/publish/")) {
-        return `/blogs/${blog.slug}`;
-      }
-      return `/blogs/${blog.slug}`;
-    }
-    return `/blogs/${blog.slug}`;
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode ? "/blog-details-draft" : "/blog-details";
+    return generateLinkHref(`${basePath}/${blog.slug}`, siteUser, pathname);
   };
 
   const handleClick = () => {

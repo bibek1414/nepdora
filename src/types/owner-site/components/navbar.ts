@@ -25,6 +25,7 @@ export interface NavbarData {
   buttons: NavbarButton[];
   style: string;
   showCart: boolean;
+  enableLogin?: boolean;
   bannerText?: string;
   topBarItems?: TopBarItem[];
 }

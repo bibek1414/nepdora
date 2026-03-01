@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import { Send } from "lucide-react";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
@@ -23,16 +24,11 @@ const ServiceCard: React.FC<ServiceCardProps & { pathname: string | null }> = ({
   pathname,
 }) => {
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      if (pathname?.includes("/preview/")) {
-        return `/preview/${siteUser}/services/${service.slug}`;
-      }
-      if (pathname?.includes("/publish/")) {
-        return `/services/${service.slug}`;
-      }
-      return `/services/${service.slug}`;
-    }
-    return `/services/${service.slug}`;
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/service-details-draft"
+      : "/service-details";
+    return generateLinkHref(`${basePath}/${service.slug}`, siteUser, pathname);
   };
 
   const detailsUrl = getDetailsUrl();

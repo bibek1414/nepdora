@@ -40,9 +40,22 @@ export const generateLinkHref = (
   // Handle special page mappings in builder
   let builderSlug = cleanHref;
   if (isBuilderMode) {
+    if (cleanHref === "login") builderSlug = "login-draft";
+    if (cleanHref === "signup") builderSlug = "signup-draft";
     if (cleanHref === "checkout") builderSlug = "checkout-draft";
     if (cleanHref === "order-confirmation")
       builderSlug = "order-confirmation-draft";
+  }
+
+  // Handle preview slugs
+  let previewSlug = cleanHref;
+  if (isPreviewMode) {
+    if (isHomePage) previewSlug = "home-draft";
+    if (cleanHref === "login") previewSlug = "login-draft";
+    if (cleanHref === "signup") previewSlug = "signup-draft";
+    if (cleanHref === "checkout") previewSlug = "checkout-draft";
+    if (cleanHref === "order-confirmation")
+      previewSlug = "order-confirmation-draft";
   }
 
   let finalHref = "";
@@ -52,9 +65,7 @@ export const generateLinkHref = (
       ? `/builder/${siteUser}` // Note: usually builder home is just the site editor
       : `/builder/${siteUser}/${builderSlug}`;
   } else if (isPreviewMode && siteUser) {
-    finalHref = isHomePage
-      ? `/preview/${siteUser}`
-      : `/preview/${siteUser}/${cleanHref}`;
+    finalHref = `/preview/${siteUser}/${previewSlug}`;
   } else if (isPublishMode && siteUser) {
     finalHref = isHomePage ? `/` : `/${cleanHref}`;
   } else {

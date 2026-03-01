@@ -276,9 +276,16 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
       return new Promise<any>(resolve => {
         const expectedComponentId = componentId;
         const unsubscribe = subscribe("component_updated", message => {
-          if (message.data?.component_id === expectedComponentId) {
+          const data = message.data;
+          const component = Array.isArray(data)
+            ? data.find((c: any) => c.component_id === expectedComponentId)
+            : data?.component_id === expectedComponentId
+              ? data
+              : null;
+
+          if (component) {
             unsubscribe();
-            resolve(message.data);
+            resolve(component);
           }
         });
 
@@ -450,9 +457,16 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
       return new Promise<any>(resolve => {
         const expectedComponentId = componentId;
         const unsubscribe = subscribe("component_replaced", message => {
-          if (message.data?.component_id === expectedComponentId) {
+          const data = message.data;
+          const component = Array.isArray(data)
+            ? data.find((c: any) => c.component_id === expectedComponentId)
+            : data?.component_id === expectedComponentId
+              ? data
+              : null;
+
+          if (component) {
             unsubscribe();
-            resolve(message.data);
+            resolve(component);
           }
         });
 
@@ -548,9 +562,16 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
       return new Promise<any>(resolve => {
         const expectedComponentId = componentId;
         const unsubscribe = subscribe("component_replaced", message => {
-          if (message.data?.component_id === expectedComponentId) {
+          const data = message.data;
+          const component = Array.isArray(data)
+            ? data.find((c: any) => c.component_id === expectedComponentId)
+            : data?.component_id === expectedComponentId
+              ? data
+              : null;
+
+          if (component) {
             unsubscribe();
-            resolve(message.data);
+            resolve(component);
           }
         });
 

@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 import { formatDate } from "@/utils/date";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -24,16 +25,11 @@ export const ServicesCard2: React.FC<ServicesCard2Props> = ({
     "https://images.unsplash.com/photo-1507925921958-8186109cbb5a?w=600&h=400&fit=crop";
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      if (pathname?.includes("/preview/")) {
-        return `/preview/${siteUser}/services/${services.slug}`;
-      }
-      if (pathname?.includes("/publish/")) {
-        return `/services/${services.slug}`;
-      }
-      return `/services/${services.slug}`;
-    }
-    return `/services/${services.slug}`;
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/service-details-draft"
+      : "/service-details";
+    return generateLinkHref(`${basePath}/${services.slug}`, siteUser, pathname);
   };
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {

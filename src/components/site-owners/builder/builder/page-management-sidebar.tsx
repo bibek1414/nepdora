@@ -45,6 +45,8 @@ export const PageManagementSidebar: React.FC<PageManagementSidebarProps> = ({
             {pages.length > 1 &&
               !page.slug.includes("-details-draft") &&
               !page.slug.includes("checkout-draft") &&
+              !page.slug.includes("login-draft") &&
+              !page.slug.includes("signup-draft") &&
               !page.slug.includes("order-confirmation-draft") && (
                 <div
                   className="flex shrink-0"

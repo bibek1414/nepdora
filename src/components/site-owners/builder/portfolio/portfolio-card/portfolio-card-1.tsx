@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Github, Tag } from "lucide-react";
 import { Portfolio } from "@/types/owner-site/admin/portfolio";
@@ -24,16 +25,15 @@ export const PortfolioCard1: React.FC<PortfolioCard1Props> = ({
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop";
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      if (pathname?.includes("/preview/")) {
-        return `/preview/${siteUser}/portfolio/${portfolio.slug}`;
-      }
-      if (pathname?.includes("/publish/")) {
-        return `/portfolio/${portfolio.slug}`;
-      }
-      return `/portfolio/${portfolio.slug}`;
-    }
-    return `/portfolio/${portfolio.slug}`;
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/portfolio-details-draft"
+      : "/portfolio-details";
+    return generateLinkHref(
+      `${basePath}/${portfolio.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const { data: themeResponse } = useThemeQuery();

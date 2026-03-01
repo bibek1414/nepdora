@@ -3,16 +3,46 @@ import { useThemeApi } from "@/services/api/owner-sites/components/theme";
 import {
   CreateThemeRequest,
   UpdateThemeRequest,
+  GetThemeResponse,
 } from "@/types/owner-site/components/theme";
 import { toast } from "sonner";
-import { useWebsiteSocketContext } from "@/providers/website-socket-provider";
+import {
+  WebsiteSocketContext,
+  useWebsiteSocketContext,
+} from "@/providers/website-socket-provider";
+import { useContext } from "react";
 
 const THEME_QUERY_KEY = ["themes"];
 
 export const useThemeQuery = (enabled: boolean = true) => {
+  const socket = useContext(WebsiteSocketContext);
+
   return useQuery({
     queryKey: THEME_QUERY_KEY,
-    queryFn: useThemeApi.getThemes,
+    queryFn: () => {
+      if (!socket || !enabled) {
+        return useThemeApi.getThemes();
+      }
+      return new Promise<GetThemeResponse>((resolve, reject) => {
+        const unsubscribe = socket.subscribe("themes_list", (message: any) => {
+          unsubscribe();
+          resolve({
+            data: message.data || [],
+            message: "Themes retrieved successfully",
+          });
+        });
+
+        setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for themes list"));
+        }, 10000);
+
+        socket.sendMessage({
+          action: "list_themes",
+          status: "preview",
+        });
+      });
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
     enabled,
@@ -20,9 +50,34 @@ export const useThemeQuery = (enabled: boolean = true) => {
 };
 
 export const useThemeQueryPublished = (enabled: boolean = true) => {
+  const socket = useContext(WebsiteSocketContext);
+
   return useQuery({
     queryKey: ["themes", "published"],
-    queryFn: useThemeApi.getThemesPublished,
+    queryFn: () => {
+      if (!socket || !enabled) {
+        return useThemeApi.getThemesPublished();
+      }
+      return new Promise<GetThemeResponse>((resolve, reject) => {
+        const unsubscribe = socket.subscribe("themes_list", (message: any) => {
+          unsubscribe();
+          resolve({
+            data: message.data || [],
+            message: "Themes retrieved successfully",
+          });
+        });
+
+        setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for published themes list"));
+        }, 10000);
+
+        socket.sendMessage({
+          action: "list_themes",
+          status: "published",
+        });
+      });
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
     enabled,
@@ -30,20 +85,26 @@ export const useThemeQueryPublished = (enabled: boolean = true) => {
 };
 
 export const useCreateThemeMutation = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useContext(WebsiteSocketContext);
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateThemeRequest) => {
-      return new Promise<any>(resolve => {
-        const unsubscribe = subscribe("theme_created", message => {
+      if (!socket) {
+        return useThemeApi.createTheme(data);
+      }
+      return new Promise<any>((resolve, reject) => {
+        const unsubscribe = socket.subscribe("theme_created", message => {
           unsubscribe();
           resolve(message.data);
         });
 
-        setTimeout(() => unsubscribe(), 10000);
+        setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for theme creation"));
+        }, 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "create_theme",
           ...data,
         });
@@ -83,20 +144,28 @@ export const useCreateThemeMutation = () => {
 };
 
 export const useUpdateThemeMutation = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useContext(WebsiteSocketContext);
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: UpdateThemeRequest) => {
-      return new Promise<any>(resolve => {
-        const unsubscribe = subscribe("theme_updated", message => {
-          unsubscribe();
-          resolve(message.data);
+      if (!socket) {
+        return useThemeApi.updateTheme(data);
+      }
+      return new Promise<any>((resolve, reject) => {
+        const unsubscribe = socket.subscribe("theme_updated", message => {
+          if (message.id === data.id || message.data?.id === data.id) {
+            unsubscribe();
+            resolve(message.data);
+          }
         });
 
-        setTimeout(() => unsubscribe(), 10000);
+        setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for theme update"));
+        }, 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "update_theme",
           ...data,
         });
@@ -120,12 +189,91 @@ export const useUpdateThemeMutation = () => {
     },
     onSuccess: data => {
       toast.success("Theme updated successfully");
+      queryClient.invalidateQueries({ queryKey: THEME_QUERY_KEY });
     },
     onError: (error: any, __, context) => {
       if (context?.previousThemes) {
         queryClient.setQueryData(THEME_QUERY_KEY, context.previousThemes);
       }
       toast.error(error.message || "Failed to update theme");
+    },
+  });
+};
+
+export const usePublishThemeMutation = () => {
+  const socket = useContext(WebsiteSocketContext);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      if (!socket) {
+        throw new Error("WebSocket context required for theme publication");
+      }
+      return new Promise<any>((resolve, reject) => {
+        const unsubscribe = socket.subscribe("theme_published", message => {
+          if (message.id === id || message.data?.id === id) {
+            unsubscribe();
+            resolve(message.data);
+          }
+        });
+
+        setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for theme publication"));
+        }, 10000);
+
+        socket.sendMessage({
+          action: "publish_theme",
+          id,
+        });
+      });
+    },
+    onSuccess: () => {
+      toast.success("Theme published successfully");
+      queryClient.invalidateQueries({ queryKey: THEME_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ["themes", "published"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to publish theme");
+    },
+  });
+};
+
+export const useDeleteThemeMutation = () => {
+  const socket = useContext(WebsiteSocketContext);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      if (!socket) {
+        throw new Error("WebSocket context required for theme deletion");
+      }
+      return new Promise<any>((resolve, reject) => {
+        const unsubscribe = socket.subscribe("theme_deleted", message => {
+          if (message.id === id || message.data?.id === id) {
+            unsubscribe();
+            resolve(message.data);
+          }
+        });
+
+        setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for theme deletion"));
+        }, 10000);
+
+        socket.sendMessage({
+          action: "delete_theme",
+          id,
+        });
+      });
+    },
+    onSuccess: () => {
+      toast.success("Theme deleted successfully");
+      queryClient.invalidateQueries({ queryKey: THEME_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ["themes", "published"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to delete theme");
     },
   });
 };

@@ -33,6 +33,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
     handleServiceClick,
     handleCategoryClick,
     handleSubCategoryClick,
+    handlePortfolioClick
   } = usePageData(siteUser, homePageSlug);
 
   const handleComponentUpdate = () => {};
@@ -81,6 +82,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
           onServiceClick={handleServiceClick}
           onCategoryClick={handleCategoryClick}
           onSubCategoryClick={handleSubCategoryClick}
+          onPortfolioClick={handlePortfolioClick}
         />
       )}
 

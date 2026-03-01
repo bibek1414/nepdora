@@ -93,22 +93,7 @@ export const ServiceDetail2: React.FC<{ slug: string; siteUser?: string }> = ({
                   </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link
-                    href={
-                      siteUser
-                        ? pathname?.includes("/preview/")
-                          ? `/preview/${siteUser}/services`
-                          : `/services`
-                        : "/services"
-                    }
-                  >
-                    Services
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
+
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbPage className="line-clamp-1 max-w-[200px] font-medium md:max-w-[400px]">

@@ -6,6 +6,7 @@ export interface User {
   phone?: string | null;
   address?: string | null;
   username?: string;
+  website_type?: string;
 }
 
 export interface AuthTokens {
@@ -24,6 +25,7 @@ export interface DecodedAccessToken {
   email: string;
   phone?: string;
   address?: string;
+  website_type?: string;
 }
 
 // API Response Types

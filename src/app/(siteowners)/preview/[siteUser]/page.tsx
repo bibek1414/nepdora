@@ -15,12 +15,18 @@ interface PreviewPageProps {
 export default function PreviewPage({ params }: PreviewPageProps) {
   const { siteUser } = use(params);
 
-  const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
+  const { data: pagesData = [], isLoading: isPagesLoading } =
+    usePages("preview");
 
-  const homePage =
-    pagesData.find(page => page.title?.trim().toLowerCase() === "home") ??
-    pagesData[0];
-  const homePageSlug = homePage?.slug || "home";
+  const homePage = React.useMemo(() => {
+    if (isPagesLoading) return null;
+    return (
+      pagesData.find(page => page.title?.trim().toLowerCase() === "home") ??
+      pagesData[0]
+    );
+  }, [pagesData, isPagesLoading]);
+
+  const homePageSlug = homePage?.slug || (isPagesLoading ? "" : "home");
 
   const {
     pageComponents,
@@ -31,7 +37,23 @@ export default function PreviewPage({ params }: PreviewPageProps) {
     handleServiceClick,
     handleCategoryClick,
     handleSubCategoryClick,
+    handlePortfolioClick,
   } = usePageData(siteUser, homePageSlug);
+
+  const router = React.useMemo(() => {
+    try {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return require("next/navigation").useRouter();
+    } catch {
+      return null;
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (!isPagesLoading && homePageSlug && homePageSlug !== "home") {
+      router?.replace(`/preview/${siteUser}/${homePageSlug}`);
+    }
+  }, [homePageSlug, isPagesLoading, router, siteUser]);
 
   const handleComponentUpdate = () => {};
 
@@ -54,6 +76,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
           onServiceClick={handleServiceClick}
           onCategoryClick={handleCategoryClick}
           onSubCategoryClick={handleSubCategoryClick}
+          onPortfolioClick={handlePortfolioClick}
         />
       )}
 

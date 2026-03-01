@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 import { Button } from "@/components/ui/site-owners/button";
 
@@ -25,16 +26,11 @@ export const ServicesCard4: React.FC<ServicesPost4Props> = ({
     "https://images.unsplash.com/photo-1516251193007-4560f385c53b?w=800&h=450&fit=crop";
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      if (pathname?.includes("/preview/")) {
-        return `/preview/${siteUser}/services/${services.slug}`;
-      }
-      if (pathname?.includes("/publish/")) {
-        return `/services/${services.slug}`;
-      }
-      return `/services/${services.slug}`;
-    }
-    return `/services/${services.slug}`;
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/service-details-draft"
+      : "/service-details";
+    return generateLinkHref(`${basePath}/${services.slug}`, siteUser, pathname);
   };
 
   const handleClick = () => {

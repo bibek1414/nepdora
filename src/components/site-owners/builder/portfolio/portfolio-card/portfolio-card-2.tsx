@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import { ExternalLink, Github } from "lucide-react";
 import { Portfolio } from "@/types/owner-site/admin/portfolio";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -40,14 +41,19 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
     },
   };
 
-  // ✅ Generate portfolio details URL
-  const detailsUrl = siteUser
-    ? pathname?.includes("/preview/")
-      ? `/preview/${siteUser}/portfolio/${portfolio.slug}`
-      : pathname?.includes("/publish/")
-        ? `/portfolio/${portfolio.slug}`
-        : `/portfolio/${portfolio.slug}`
-    : `/portfolio/${portfolio.slug}`;
+  const getDetailsUrl = (): string => {
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/portfolio-details-draft"
+      : "/portfolio-details";
+    return generateLinkHref(
+      `${basePath}/${portfolio.slug}`,
+      siteUser,
+      pathname
+    );
+  };
+
+  const detailsUrl = getDetailsUrl();
 
   // ✅ Click handler
   const handleClick = () => {

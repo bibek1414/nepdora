@@ -72,7 +72,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
   onEditCart,
   disableClicks = false,
 }) => {
-  const { links, buttons, showCart } = navbarData;
+  const { links, buttons, showCart, enableLogin } = navbarData;
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
@@ -385,80 +385,91 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
             )
           )}
 
-          {!isAuthenticated ? (
-            <Button
-              variant="default"
-              size="sm"
-              onClick={isEditable ? undefined : handleLoginClick}
-              className={`bg-black text-white hover:bg-black/90 ${
-                isEditable
-                  ? "pointer-events-none opacity-60"
-                  : disableClicks
-                    ? "pointer-events-auto cursor-default opacity-60"
-                    : "pointer-events-auto"
-              }`}
-            >
-              {isEditable ? "Login (Preview Only)" : "Login"}
-            </Button>
-          ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+          {enableLogin && (
+            <>
+              {!isAuthenticated ? (
                 <Button
                   variant="default"
                   size="sm"
-                  className={`flex items-center gap-1 bg-black text-white hover:bg-black/90 ${
-                    isEditable || disableClicks
-                      ? "pointer-events-auto cursor-default opacity-60"
-                      : ""
+                  onClick={isEditable ? undefined : handleLoginClick}
+                  className={`bg-black text-white hover:bg-black/90 ${
+                    isEditable
+                      ? "pointer-events-none opacity-60"
+                      : disableClicks
+                        ? "pointer-events-auto cursor-default opacity-60"
+                        : "pointer-events-auto"
                   }`}
-                  onClick={disableClicks ? e => e.preventDefault() : undefined}
                 >
-                  <User className="h-4 w-4" />
-                  {user?.first_name || "Profile"}
-                  <ChevronDown className="h-4 w-4" />
+                  {isEditable ? "Login (Preview Only)" : "Login"}
                 </Button>
-              </DropdownMenuTrigger>
-              {!disableClicks && !isEditable && (
-                <DropdownMenuContent className="w-48" align="end">
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => handleProfileAction("profile")}
-                  >
-                    <User className="mr-2 h-4 w-4" />
-                    My Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => handleProfileAction("wishlist")}
-                  >
-                    <Heart className="mr-2 h-4 w-4" />
-                    <div className="flex w-full items-center justify-between">
-                      <span>Wishlist</span>
-                      {wishlistCount > 0 && (
-                        <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
-                          {wishlistCount}
-                        </span>
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className={`flex items-center gap-1 bg-black text-white hover:bg-black/90 ${
+                        isEditable || disableClicks
+                          ? "pointer-events-auto cursor-default opacity-60"
+                          : ""
+                      }`}
+                      onClick={
+                        disableClicks ? e => e.preventDefault() : undefined
+                      }
+                    >
+                      <User className="h-4 w-4" />
+                      {user?.first_name || "Profile"}
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  {!disableClicks && !isEditable && (
+                    <DropdownMenuContent className="w-48" align="end">
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={() => handleProfileAction("profile")}
+                      >
+                        <User className="mr-2 h-4 w-4" />
+                        My Profile
+                      </DropdownMenuItem>
+                      {(!user?.website_type ||
+                        user.website_type === "ecommerce") && (
+                        <>
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => handleProfileAction("wishlist")}
+                          >
+                            <Heart className="mr-2 h-4 w-4" />
+                            <div className="flex w-full items-center justify-between">
+                              <span>Wishlist</span>
+                              {wishlistCount > 0 && (
+                                <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                                  {wishlistCount}
+                                </span>
+                              )}
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => handleProfileAction("orders")}
+                          >
+                            <Package className="mr-2 h-4 w-4" />
+                            My Orders
+                          </DropdownMenuItem>
+                        </>
                       )}
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => handleProfileAction("orders")}
-                  >
-                    <Package className="mr-2 h-4 w-4" />
-                    My Orders
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="cursor-pointer text-red-600 focus:text-red-600"
-                    onClick={() => handleProfileAction("logout")}
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="cursor-pointer text-red-600 focus:text-red-600"
+                        onClick={() => handleProfileAction("logout")}
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  )}
+                </DropdownMenu>
               )}
-            </DropdownMenu>
+            </>
           )}
 
           {showCart && (

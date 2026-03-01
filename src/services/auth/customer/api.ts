@@ -29,7 +29,14 @@ export async function signupUser(data: SignupData): Promise<SignupResponse> {
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || "Signup failed");
+    const error = new Error(
+      errorData.error?.message || errorData.message || "Signup failed"
+    ) as any;
+    error.response = {
+      data: errorData,
+      status: response.status,
+    };
+    throw error;
   }
   return response.json();
 }
@@ -47,7 +54,14 @@ export async function loginUser(data: LoginData): Promise<LoginResponse> {
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.error || errorData.message || "Login failed");
+    const error = new Error(
+      errorData.error?.message || errorData.message || "Login failed"
+    ) as any;
+    error.response = {
+      data: errorData,
+      status: response.status,
+    };
+    throw error;
   }
   return response.json();
 }

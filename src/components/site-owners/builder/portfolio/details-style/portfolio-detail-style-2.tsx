@@ -103,22 +103,7 @@ export const PortfolioDetail2: React.FC<{
                   </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link
-                    href={
-                      siteUser
-                        ? pathname?.includes("/preview/")
-                          ? `/preview/${siteUser}/portfolio`
-                          : `/portfolio`
-                        : "/portfolio"
-                    }
-                  >
-                    Portfolio
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
+
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbPage className="line-clamp-1 max-w-[200px] font-medium md:max-w-[400px]">

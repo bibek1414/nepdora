@@ -21,6 +21,7 @@ interface PageComponentRendererProps {
   onServiceClick: (serviceSlug: string, order: number) => void;
   onCategoryClick: (categoryId: number, order: number) => void;
   onSubCategoryClick: (subcategoryId: number, order: number) => void;
+  onPortfolioClick: (portfolioSlug: string, order: number) => void;
   onComponentUpdate: (componentId: string, newData: any) => void;
   productSlug?: string;
   blogSlug?: string;
@@ -37,6 +38,7 @@ export function PageComponentRenderer({
   onServiceClick,
   onCategoryClick,
   onSubCategoryClick,
+  onPortfolioClick,
   onComponentUpdate,
   productSlug,
   blogSlug,
@@ -75,6 +77,7 @@ export function PageComponentRenderer({
       onServiceClick,
       onCategoryClick,
       onSubCategoryClick,
+      onPortfolioClick,
     };
 
     return <Component key={component.id} {...commonProps} {...specificProps} />;

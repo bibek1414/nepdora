@@ -70,7 +70,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
   onEditCart,
   disableClicks = false,
 }) => {
-  const { links, showCart } = navbarData;
+  const { links, showCart, enableLogin } = navbarData;
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
@@ -355,27 +355,32 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
                             <User className="mr-2 h-4 w-4" />
                             My Profile
                           </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="cursor-pointer"
-                            onClick={() => handleProfileAction("wishlist")}
-                          >
-                            <Heart className="mr-2 h-4 w-4" />
-                            <div className="flex w-full items-center justify-between">
-                              <span>Wishlist</span>
-                              {wishlistCount > 0 && (
-                                <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
-                                  {wishlistCount}
-                                </span>
-                              )}
-                            </div>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="cursor-pointer"
-                            onClick={() => handleProfileAction("orders")}
-                          >
-                            <Package className="mr-2 h-4 w-4" />
-                            My Orders
-                          </DropdownMenuItem>
+                          {(!user?.website_type ||
+                            user.website_type === "ecommerce") && (
+                            <>
+                              <DropdownMenuItem
+                                className="cursor-pointer"
+                                onClick={() => handleProfileAction("wishlist")}
+                              >
+                                <Heart className="mr-2 h-4 w-4" />
+                                <div className="flex w-full items-center justify-between">
+                                  <span>Wishlist</span>
+                                  {wishlistCount > 0 && (
+                                    <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                                      {wishlistCount}
+                                    </span>
+                                  )}
+                                </div>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="cursor-pointer"
+                                onClick={() => handleProfileAction("orders")}
+                              >
+                                <Package className="mr-2 h-4 w-4" />
+                                My Orders
+                              </DropdownMenuItem>
+                            </>
+                          )}
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="cursor-pointer text-red-600 focus:text-red-600"

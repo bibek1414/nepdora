@@ -11,11 +11,13 @@ import { PageComponentRenderer } from "@/components/site-owners/shared/page-comp
 interface DynamicPageClientProps {
   siteUser: string;
   currentPageSlug: string;
+  contentSlug?: string;
 }
 
 export default function DynamicPageClient({
   siteUser,
   currentPageSlug,
+  contentSlug,
 }: DynamicPageClientProps) {
   const router = useRouter();
   const { data: domainsData, isLoading: isDomainsLoading } = useDomains(1, 100);
@@ -29,6 +31,7 @@ export default function DynamicPageClient({
     handleServiceClick,
     handleCategoryClick,
     handleSubCategoryClick,
+    handlePortfolioClick,
   } = usePageData(siteUser, currentPageSlug);
 
   const handleComponentUpdate = () => {
@@ -85,6 +88,11 @@ export default function DynamicPageClient({
           onServiceClick={handleServiceClick}
           onCategoryClick={handleCategoryClick}
           onSubCategoryClick={handleSubCategoryClick}
+          onPortfolioClick={handlePortfolioClick}
+          productSlug={contentSlug}
+          blogSlug={contentSlug}
+          serviceSlug={contentSlug}
+          portfolioSlug={contentSlug}
         />
       )}
 

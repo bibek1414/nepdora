@@ -65,6 +65,7 @@ import {
   useSiteConfig,
   usePatchSiteConfig,
 } from "@/hooks/owner-site/admin/use-site-config";
+import { User } from "@/types/auth/auth";
 
 interface NavbarEditorDialogProps {
   isOpen: boolean;
@@ -72,6 +73,7 @@ interface NavbarEditorDialogProps {
   onSave: (navbarData: NavbarData) => void;
   initialData: NavbarData;
   siteUser?: string;
+  user: User;
 }
 
 // Page Selector Component for Links and Buttons
@@ -172,6 +174,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
   onSave,
   initialData,
   siteUser,
+  user,
 }) => {
   const [navbarData, setNavbarData] = useState<NavbarData>(initialData);
   const [activeTab, setActiveTab] = useState("logo");
@@ -793,21 +796,45 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 px-0">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label className="text-sm font-medium">
-                        Show Cart Icon
-                      </Label>
-                      <p className="text-muted-foreground text-xs">
-                        Display shopping cart in navigation
-                      </p>
+                  <div className="space-y-4">
+                    {user?.website_type === "ecommerce" && (
+                      <>
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <Label className="text-sm font-medium">
+                              Show Cart Icon
+                            </Label>
+                            <p className="text-muted-foreground text-xs">
+                              Display shopping cart in navigation
+                            </p>
+                          </div>
+                          <Switch
+                            checked={navbarData.showCart ?? true}
+                            onCheckedChange={checked =>
+                              handleInputChange("showCart", checked)
+                            }
+                          />
+                        </div>
+                        <Separator />
+                      </>
+                    )}
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-sm font-medium">
+                          Enable Login
+                        </Label>
+                        <p className="text-muted-foreground text-xs">
+                          Allow customers to login and signup
+                        </p>
+                      </div>
+                      <Switch
+                        checked={navbarData.enableLogin ?? false}
+                        onCheckedChange={checked =>
+                          handleInputChange("enableLogin", checked)
+                        }
+                      />
                     </div>
-                    <Switch
-                      checked={navbarData.showCart ?? true}
-                      onCheckedChange={checked =>
-                        handleInputChange("showCart", checked)
-                      }
-                    />
                   </div>
                 </CardContent>
               </Card>

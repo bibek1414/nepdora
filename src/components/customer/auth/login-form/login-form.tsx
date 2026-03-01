@@ -58,79 +58,72 @@ export function LoginForm({
 
       // Reset attempt count on successful login
       setAttemptCount(0);
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       // Increment attempt count
       setAttemptCount(prev => prev + 1);
 
       // Get the error response data
-      const errorData = error.response?.data;
-      const errorCode = errorData?.errors?.[0]?.code;
-      const errorMessage = errorData?.errors?.[0]?.message;
+      const errorData = error.response?.data?.error;
+      const errorCode = errorData?.code;
+      const errorMessage = errorData?.message;
 
-      // Handle specific error codes from backend
-      if (errorCode === "too_many_login_attempts") {
+      // Handle field-level errors first
+      if (errorData?.params?.field_errors) {
+        Object.entries(errorData.params.field_errors).forEach(
+          ([field, messages]) => {
+            setError(field as any, {
+              type: "manual",
+              message: (messages as string[])[0],
+            });
+          }
+        );
+      }
+
+      // Handle specific error codes and status codes
+      if (
+        errorCode === "too_many_login_attempts" ||
+        error.response?.status === 429
+      ) {
         setLoginError(
           "Too many failed login attempts. Please wait a few minutes before trying again."
         );
       } else if (
         errorCode === "invalid_credentials" ||
-        errorMessage?.includes("email address and/or password") ||
-        errorMessage?.includes("not correct")
+        error.response?.status === 401
       ) {
         setLoginError(
           "The email address and/or password you specified are not correct."
         );
 
-        // Set field-specific errors for wrong credentials
-        setError("email", {
-          type: "manual",
-          message: "Please verify your email address",
-        });
-        setError("password", {
-          type: "manual",
-          message: "Please verify your password",
-        });
-      } else if (errorCode === "user_not_found") {
+        if (!errorData?.params?.field_errors) {
+          setError("email", {
+            type: "manual",
+            message: "Please verify your email address",
+          });
+          setError("password", {
+            type: "manual",
+            message: "Please verify your password",
+          });
+        }
+      } else if (
+        errorCode === "user_not_found" ||
+        error.response?.status === 404
+      ) {
         setLoginError("Account not found. Please check your email or sign up.");
-        setError("email", {
-          type: "manual",
-          message: "Email not found in our system",
-        });
+        if (!errorData?.params?.field_errors) {
+          setError("email", {
+            type: "manual",
+            message: "Email not found in our system",
+          });
+        }
       } else if (errorCode === "account_disabled") {
         setLoginError(
           "Your account has been disabled. Please contact support for assistance."
         );
-      } else if (error.response?.status === 401) {
-        setLoginError(
-          "Invalid email or password. Please check your credentials."
-        );
-
-        // Set field-specific errors for wrong credentials
-        setError("email", {
-          type: "manual",
-          message: "Please verify your email address",
-        });
-        setError("password", {
-          type: "manual",
-          message: "Please verify your password",
-        });
-      } else if (error.response?.status === 429) {
-        setLoginError(
-          "Too many login attempts. Please wait before trying again."
-        );
-      } else if (error.response?.status === 404) {
-        setLoginError("Account not found. Please check your email or sign up.");
-        setError("email", {
-          type: "manual",
-          message: "Email not found in our system",
-        });
       } else {
-        // Use the error message from backend if available, otherwise use a generic message
         setLoginError(errorMessage || "Login failed. Please try again.");
       }
 
-      // Log detailed error information for debugging
       console.error("Login error details:", {
         status: error.response?.status,
         errorCode,

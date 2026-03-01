@@ -55,6 +55,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
             last_name: decodedAccess.last_name,
             phone: decodedAccess.phone,
             address: decodedAccess.address,
+            website_type: decodedAccess.website_type,
           });
           setTokens(parsedTokens);
         } else {
@@ -107,7 +108,12 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
         case 404:
           return "Account not found.";
         default:
-          return data?.message || data?.error || "Login failed.";
+          return (
+            data?.error?.message ||
+            data?.message ||
+            data?.error ||
+            "An error occurred."
+          );
       }
     } else if (error.request) {
       return "Network error. Please check your connection.";
@@ -135,6 +141,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
         last_name: decodedAccess.last_name,
         phone: decodedAccess.phone,
         address: decodedAccess.address,
+        website_type: decodedAccess.website_type,
       };
 
       handleAuthSuccess(loggedInUser, {
@@ -248,6 +255,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
       router.push(loginPath);
     } catch (error: any) {
       toast.error(getErrorMessage(error));
+      throw error;
     } finally {
       setIsLoading(false);
     }

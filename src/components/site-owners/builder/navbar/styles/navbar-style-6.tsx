@@ -74,6 +74,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
     links,
     buttons,
     showCart,
+    enableLogin,
     topBarItems: initialTopBarItems,
   } = navbarData;
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -419,83 +420,92 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   </div>
                 )}
 
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={`flex items-center gap-2 ${
-                        disableClicks
-                          ? "pointer-events-auto cursor-default opacity-60"
-                          : ""
-                      }`}
-                      onClick={
-                        disableClicks ? e => e.preventDefault() : undefined
-                      }
-                    >
-                      <User className="h-5 w-5" />
-                      {isAuthenticated ? (
-                        <>
-                          {user?.first_name || "My Account"}
-                          <ChevronDown className="h-4 w-4" />
-                        </>
-                      ) : (
-                        "Login"
-                      )}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  {!disableClicks && !isEditable && (
-                    <DropdownMenuContent className="w-48" align="end">
-                      {isAuthenticated ? (
-                        <>
+                {enableLogin && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={`flex items-center gap-2 ${
+                          disableClicks
+                            ? "pointer-events-auto cursor-default opacity-60"
+                            : ""
+                        }`}
+                        onClick={
+                          disableClicks ? e => e.preventDefault() : undefined
+                        }
+                      >
+                        <User className="h-5 w-5" />
+                        {isAuthenticated ? (
+                          <>
+                            {user?.first_name || "My Account"}
+                            <ChevronDown className="h-4 w-4" />
+                          </>
+                        ) : (
+                          "Login"
+                        )}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    {!disableClicks && !isEditable && (
+                      <DropdownMenuContent className="w-48" align="end">
+                        {isAuthenticated ? (
+                          <>
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => handleProfileAction("profile")}
+                            >
+                              <User className="mr-2 h-4 w-4" />
+                              My Profile
+                            </DropdownMenuItem>
+                            {(!user?.website_type ||
+                              user.website_type === "ecommerce") && (
+                              <>
+                                <DropdownMenuItem
+                                  className="cursor-pointer"
+                                  onClick={() =>
+                                    handleProfileAction("wishlist")
+                                  }
+                                >
+                                  <Heart className="mr-2 h-4 w-4" />
+                                  <div className="flex w-full items-center justify-between">
+                                    <span>Wishlist</span>
+                                    {wishlistCount > 0 && (
+                                      <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                                        {wishlistCount}
+                                      </span>
+                                    )}
+                                  </div>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  className="cursor-pointer"
+                                  onClick={() => handleProfileAction("orders")}
+                                >
+                                  <Package className="mr-2 h-4 w-4" />
+                                  My Orders
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              className="cursor-pointer text-red-600 focus:text-red-600"
+                              onClick={() => handleProfileAction("logout")}
+                            >
+                              <LogOut className="mr-2 h-4 w-4" />
+                              Logout
+                            </DropdownMenuItem>
+                          </>
+                        ) : (
                           <DropdownMenuItem
                             className="cursor-pointer"
-                            onClick={() => handleProfileAction("profile")}
+                            onClick={handleLoginClick}
                           >
                             <User className="mr-2 h-4 w-4" />
-                            My Profile
+                            Login / Register
                           </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="cursor-pointer"
-                            onClick={() => handleProfileAction("wishlist")}
-                          >
-                            <Heart className="mr-2 h-4 w-4" />
-                            <div className="flex w-full items-center justify-between">
-                              <span>Wishlist</span>
-                              {wishlistCount > 0 && (
-                                <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
-                                  {wishlistCount}
-                                </span>
-                              )}
-                            </div>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="cursor-pointer"
-                            onClick={() => handleProfileAction("orders")}
-                          >
-                            <Package className="mr-2 h-4 w-4" />
-                            My Orders
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="cursor-pointer text-red-600 focus:text-red-600"
-                            onClick={() => handleProfileAction("logout")}
-                          >
-                            <LogOut className="mr-2 h-4 w-4" />
-                            Logout
-                          </DropdownMenuItem>
-                        </>
-                      ) : (
-                        <DropdownMenuItem
-                          className="cursor-pointer"
-                          onClick={handleLoginClick}
-                        >
-                          <User className="mr-2 h-4 w-4" />
-                          Login / Register
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  )}
-                </DropdownMenu>
+                        )}
+                      </DropdownMenuContent>
+                    )}
+                  </DropdownMenu>
+                )}
               </div>
             </div>
           </nav>

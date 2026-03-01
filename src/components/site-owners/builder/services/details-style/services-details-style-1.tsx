@@ -92,21 +92,6 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
               </Link>
             </li>
             <li>/</li>
-            <li>
-              <Link
-                href={
-                  siteUser
-                    ? pathname?.includes("/preview/")
-                      ? `/preview/${siteUser}/services`
-                      : `/services`
-                    : "/services"
-                }
-                className="hover:text-primary font-medium transition-colors"
-              >
-                Services
-              </Link>
-            </li>
-            <li>/</li>
             <li className="text-foreground line-clamp-1 text-center font-medium">
               {service.title}
             </li>

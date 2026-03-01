@@ -4,6 +4,7 @@ import Link from "next/link";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { formatDate } from "@/utils/date";
 import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface BlogCard3Props {
   blog: BlogPost;
@@ -58,16 +59,9 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
   const pathname = usePathname();
 
   const getDetailsUrl = (): string => {
-    if (siteUser) {
-      if (pathname?.includes("/preview/")) {
-        return `/preview/${siteUser}/blogs/${blog.slug}`;
-      }
-      if (pathname?.includes("/publish/")) {
-        return `/blogs/${blog.slug}`;
-      }
-      return `/blogs/${blog.slug}`;
-    }
-    return `/blogs/${blog.slug}`;
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode ? "/blog-details-draft" : "/blog-details";
+    return generateLinkHref(`${basePath}/${blog.slug}`, siteUser, pathname);
   };
 
   const handleClick = () => {

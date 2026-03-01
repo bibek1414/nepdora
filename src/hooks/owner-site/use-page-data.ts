@@ -93,16 +93,28 @@ export function usePageData(siteUser: string, pageSlug: string) {
       router.push(`${routePrefix}${basePath}/${productSlug}`);
     },
     handleBlogClick: (blogSlug: string, _order: number) => {
-      router.push(`${routePrefix}/blog/${blogSlug}`);
+      const basePath = isPreview ? "/blog-details-draft" : "/blog-details";
+      router.push(`${routePrefix}${basePath}/${blogSlug}`);
     },
     handleServiceClick: (serviceSlug: string, _order: number) => {
-      router.push(`${routePrefix}/services/${serviceSlug}`);
+      const basePath = isPreview
+        ? "/service-details-draft"
+        : "/service-details";
+      router.push(`${routePrefix}${basePath}/${serviceSlug}`);
     },
     handleCategoryClick: (categoryId: number, _order: number) => {
+      // Categories usually link to a category-draft or similar in preview?
+      // For now keeping it as is or matching the pattern if there's a category details page
       router.push(`${routePrefix}/categories/${categoryId}`);
     },
     handleSubCategoryClick: (subcategoryId: number, _order: number) => {
       router.push(`${routePrefix}/subcategories/${subcategoryId}`);
+    },
+    handlePortfolioClick: (portfolioSlug: string, _order: number) => {
+      const basePath = isPreview
+        ? "/portfolio-details-draft"
+        : "/portfolio-details";
+      router.push(`${routePrefix}${basePath}/${portfolioSlug}`);
     },
   };
 

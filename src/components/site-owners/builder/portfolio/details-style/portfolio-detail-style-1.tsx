@@ -102,21 +102,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
                 Home
               </Link>
             </li>
-            <li>/</li>
-            <li>
-              <Link
-                href={
-                  siteUser
-                    ? pathname?.includes("/preview/")
-                      ? `/preview/${siteUser}/portfolio`
-                      : `/portfolio`
-                    : "/portfolio"
-                }
-                className="hover:text-primary font-medium transition-colors"
-              >
-                Portfolio
-              </Link>
-            </li>
+
             <li>/</li>
             <li className="text-foreground line-clamp-1 text-center font-medium">
               {portfolio.title}
