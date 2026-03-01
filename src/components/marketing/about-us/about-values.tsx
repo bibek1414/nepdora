@@ -26,7 +26,7 @@ const AboutValues: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              src="/fallback/image-not-found.png"
+              src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg"
               className="h-48 w-full rounded-xl object-cover transition-transform duration-700 hover:scale-105 sm:h-56 md:h-64 md:rounded-2xl"
               alt="Local artisan"
             />
@@ -35,7 +35,7 @@ const AboutValues: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              src="/fallback/image-not-found.png"
+              src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?q=80&w=600&auto=format&fit=crop"
               className="mt-8 h-48 w-full rounded-xl object-cover transition-transform duration-700 hover:scale-105 sm:mt-12 sm:h-56 md:mt-12 md:h-64 md:rounded-2xl"
               alt="Coding"
             />

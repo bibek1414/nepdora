@@ -304,7 +304,7 @@ const Hero: React.FC = () => {
                           className="relative overflow-hidden rounded-lg bg-slate-100"
                         >
                           <img
-                            src="/fallback/image-not-found.png"
+                            src="https://images.unsplash.com/photo-1576053139778-7e32f2ae3cfd?auto=format&fit=crop&q=80&w=1200"
                             className="h-full w-full object-cover"
                             alt="Pashmina"
                           />

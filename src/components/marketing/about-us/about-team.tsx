@@ -8,25 +8,25 @@ const AboutTeam: React.FC = () => {
     {
       name: "Sushil Sharma",
       role: "CEO",
-      img: "/fallback/image-not-found.png",
+      img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&auto=format&fit=crop",
       delay: 0,
     },
     {
       name: "Priya KC",
       role: "Product",
-      img: "/fallback/image-not-found.png",
+      img: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
       delay: 0.2,
     },
     {
       name: "Amit Pradhan",
       role: "Tech Lead",
-      img: "/fallback/image-not-found.png",
+      img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop",
       delay: 0.4,
     },
     {
       name: "Sita Gurung",
       role: "Customer Success",
-      img: "/fallback/image-not-found.png",
+      img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop",
       delay: 0.6,
     },
   ];

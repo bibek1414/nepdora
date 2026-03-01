@@ -46,7 +46,7 @@ const AboutHero: React.FC = () => {
         >
           <div className="overflow-hidden rounded-[1.8rem] sm:rounded-[2.2rem]">
             <img
-              src="/fallback/image-not-found.png"
+              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000&auto=format&fit=crop"
               alt="Himalayan Presence"
               className="aspect-video w-full object-cover transition-transform duration-1000 hover:scale-105"
             />
