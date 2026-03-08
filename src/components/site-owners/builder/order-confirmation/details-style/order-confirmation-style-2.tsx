@@ -13,10 +13,20 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useOrder } from "@/hooks/owner-site/admin/use-orders";
-import { CheckCircle, Package, Truck, Mail } from "lucide-react";
+import {
+  CheckCircle,
+  Package,
+  Truck,
+  Mail,
+  ArrowLeft,
+  ShoppingBag,
+} from "lucide-react";
 import Image from "next/image";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
+import { EditableText } from "@/components/ui/editable-text";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const MOCK_ORDER = {
   id: 0,
@@ -144,98 +154,79 @@ const OrderConfirmationStyle2 = ({
   const orderItems = order.order_items || order.items || [];
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-8">
-      <div className="mx-auto max-w-5xl">
+    <div
+      className="min-h-full px-4 py-12 font-sans transition-colors duration-500 sm:px-6 lg:px-8"
+      style={{
+        backgroundColor: `${theme.colors.primary}05`,
+        color: theme.colors.text,
+        fontFamily: `var(--font-body, ${theme.fonts.body})`,
+      }}
+    >
+      <div className="mx-auto max-w-4xl">
         {/* Success Header */}
-        <div className="mb-8 text-center">
-          <CheckCircle
-            className="mx-auto mb-4 h-16 w-16"
-            style={{ color: theme.colors.primary }}
+        <div className="mb-12 text-center">
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, type: "spring" }}
+            className="mb-8 inline-block"
+          >
+            <div
+              className="rounded-full p-6"
+              style={{ backgroundColor: `${theme.colors.primary}15` }}
+            >
+              <CheckCircle
+                className="h-16 w-16"
+                style={{ color: theme.colors.primary }}
+              />
+            </div>
+          </motion.div>
+          <EditableText
+            value="Order Confirmed!"
+            onChange={() => {}}
+            as="h1"
+            className="mb-4 text-4xl font-medium md:text-5xl"
+            style={{
+              color: theme.colors.text,
+              fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+            }}
+            isEditable={isBuilder}
           />
-          <h1 className="mb-2 text-3xl font-bold text-gray-900">
-            Order Confirmed!
-          </h1>
-          <p className="text-gray-600">
-            Thank you for your purchase. Your order has been received and is
-            being processed.
-          </p>
+          <EditableText
+            value="Thank you for your purchase. Your order has been received and is being processed."
+            onChange={() => {}}
+            as="p"
+            className="mx-auto mt-3 max-w-lg opacity-70"
+            style={{
+              fontFamily: `var(--font-body, ${theme.fonts.body})`,
+            }}
+            isEditable={isBuilder}
+          />
         </div>
 
-        {/* Order Details Card */}
-        <Card className="mb-8">
-          <CardHeader>
-            <div className="flex items-start justify-between">
-              <div>
-                <CardTitle className="text-xl">
-                  Order #
-                  {order.order_number ||
-                    `ORD-${order.id.toString().padStart(6, "0")}`}
-                </CardTitle>
-                <CardDescription>
-                  Placed on{" "}
-                  {new Date(order.created_at).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </CardDescription>
-              </div>
-              <Badge className={getStatusColor(order.status || "pending")}>
-                {order.status?.charAt(0).toUpperCase() +
-                  order.status?.slice(1) || "Pending"}
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Customer Information */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div>
-                <h3 className="mb-2 flex items-center font-semibold">
-                  <Mail className="mr-2 h-4 w-4" />
-                  Customer Details
-                </h3>
-                <p className="text-sm text-gray-800">
-                  <strong>Name:</strong> {order.customer_name}
-                </p>
-                <p className="text-sm text-gray-800">
-                  <strong>Email:</strong> {order.customer_email}
-                </p>
-                {order.customer_phone && (
-                  <p className="text-sm text-gray-800">
-                    <strong>Phone:</strong> {order.customer_phone}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <h3 className="mb-2 flex items-center font-semibold">
-                  <Truck className="mr-2 h-4 w-4" />
-                  Shipping Address
-                </h3>
-                <p className="text-sm whitespace-pre-line text-gray-600">
-                  {order.shipping_address}
-                </p>
-                {order.city && (
-                  <p className="mt-1 text-sm text-gray-600">
-                    <strong>City:</strong> {order.city}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <Separator />
-
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          {/* Main Content */}
+          <div className="space-y-8 lg:col-span-2">
             {/* Order Items */}
-            <div>
-              <h3 className="mb-4 flex items-center font-semibold">
-                <Package className="mr-2 h-4 w-4" />
+            <div
+              className="rounded-3xl border p-8 transition-all duration-300"
+              style={{
+                backgroundColor: theme.colors.background,
+                borderColor: `${theme.colors.primary}10`,
+              }}
+            >
+              <h3
+                className="mb-6 flex items-center gap-2 text-xl font-medium"
+                style={{
+                  color: theme.colors.text,
+                  fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+                }}
+              >
+                <Package className="h-5 w-5 opacity-70" />
                 Order Items
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-6">
                 {orderItems.map((item: any, index: number) => {
-                  // Use variant data if available, otherwise use product data
                   const displayImage =
                     item.variant?.image || item.product?.thumbnail_image;
                   const displayName =
@@ -247,57 +238,50 @@ const OrderConfirmationStyle2 = ({
                   return (
                     <div
                       key={item.id || index}
-                      className="flex items-center justify-between border-b border-gray-100 py-3 last:border-b-0"
+                      className="flex items-center gap-4 border-b pb-6 last:border-0 last:pb-0"
+                      style={{ borderColor: `${theme.colors.primary}05` }}
                     >
-                      <div className="flex flex-1 items-center space-x-4">
-                        {/* Product/Variant Image */}
-                        {displayImage && (
-                          <Image
-                            src={displayImage}
-                            alt={displayName}
-                            width={60}
-                            height={60}
-                            className="h-15 w-15 rounded object-cover"
-                          />
-                        )}
-
-                        <div className="flex-1">
-                          <p className="font-medium">{displayName}</p>
-
-                          {/* Display variant options as badges if variant exists */}
-                          {item.variant && item.variant.option_values && (
-                            <div className="mt-2 flex flex-wrap gap-1">
-                              {item.variant.option_values.map((option: any) => (
-                                <Badge
-                                  key={option.id}
-                                  variant="secondary"
-                                  className="text-xs capitalize"
-                                  style={{
-                                    backgroundColor: subtlePrimaryBg,
-                                    color: theme.colors.primary,
-                                  }}
-                                >
-                                  {option.value}
-                                </Badge>
-                              ))}
-                            </div>
-                          )}
-
-                          <p className="mt-1 text-sm text-gray-600">
-                            Quantity: {item.quantity}
-                          </p>
-                        </div>
+                      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-stone-100 shadow-sm">
+                        <Image
+                          src={displayImage || "/fallback/image-not-found.png"}
+                          alt={displayName}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
-
+                      <div className="flex-1">
+                        <h4 className="line-clamp-1 text-base font-medium">
+                          {displayName}
+                        </h4>
+                        <p className="text-sm opacity-50">
+                          Qty: {item.quantity}
+                        </p>
+                        {item.variant && item.variant.option_values && (
+                          <div className="mt-1 flex flex-wrap gap-1">
+                            {item.variant.option_values.map((option: any) => (
+                              <span
+                                key={option.id}
+                                className="rounded-full px-1.5 py-0.5 text-[10px]"
+                                style={{
+                                  backgroundColor: `${theme.colors.primary}10`,
+                                  color: theme.colors.primary,
+                                }}
+                              >
+                                {option.value}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                       <div className="text-right">
                         <p className="font-medium">
-                          Rs.{Number(itemPrice).toLocaleString("en-IN")}
+                          Rs.
+                          {Number(
+                            Number(itemPrice) * item.quantity
+                          ).toLocaleString("en-IN")}
                         </p>
-                        <p className="text-sm text-gray-600">
-                          Total: Rs.
-                          {(Number(itemPrice) * item.quantity).toLocaleString(
-                            "en-IN"
-                          )}
+                        <p className="text-xs opacity-40">
+                          Rs.{Number(itemPrice).toLocaleString("en-IN")} each
                         </p>
                       </div>
                     </div>
@@ -306,123 +290,193 @@ const OrderConfirmationStyle2 = ({
               </div>
             </div>
 
-            <Separator />
-
-            {/* Order Summary */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Subtotal:</span>
-                <span className="font-medium">
-                  Rs.
-                  {(
-                    Number(order.total_amount) -
-                    Number(order.delivery_charge || 0)
-                  ).toLocaleString("en-IN")}
-                </span>
+            {/* Customer & Shipping Information */}
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+              <div
+                className="rounded-3xl border p-8 transition-all duration-300"
+                style={{
+                  backgroundColor: theme.colors.background,
+                  borderColor: `${theme.colors.primary}10`,
+                }}
+              >
+                <h3
+                  className="mb-4 flex items-center gap-2 text-lg font-medium"
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+                  }}
+                >
+                  <Mail className="h-5 w-5 opacity-70" />
+                  Details
+                </h3>
+                <div className="space-y-2 text-sm">
+                  <p className="opacity-70">
+                    <span className="block font-medium">Name:</span>{" "}
+                    {order.customer_name}
+                  </p>
+                  <p className="opacity-70">
+                    <span className="block font-medium">Email:</span>{" "}
+                    {order.customer_email}
+                  </p>
+                  {order.customer_phone && (
+                    <p className="opacity-70">
+                      <span className="block font-medium">Phone:</span>{" "}
+                      {order.customer_phone}
+                    </p>
+                  )}
+                </div>
               </div>
 
-              {order.delivery_charge && Number(order.delivery_charge) > 0 && (
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Delivery Charge:</span>
-                  <span className="font-medium">
-                    Rs.{Number(order.delivery_charge).toLocaleString("en-IN")}
+              <div
+                className="rounded-3xl border p-8 transition-all duration-300"
+                style={{
+                  backgroundColor: theme.colors.background,
+                  borderColor: `${theme.colors.primary}10`,
+                }}
+              >
+                <h3
+                  className="mb-4 flex items-center gap-2 text-lg font-medium"
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+                  }}
+                >
+                  <Truck className="h-5 w-5 opacity-70" />
+                  Shipping
+                </h3>
+                <div className="space-y-2 text-sm">
+                  <p className="whitespace-pre-line opacity-70">
+                    {order.shipping_address}
+                  </p>
+                  {order.city && (
+                    <p className="mt-1 opacity-70">
+                      <span className="font-medium">City:</span> {order.city}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar: Summary & Status */}
+          <div className="space-y-8">
+            {/* Order Info */}
+            <div
+              className="rounded-3xl border p-8 transition-all duration-300"
+              style={{
+                backgroundColor: theme.colors.background,
+                borderColor: theme.colors.primary,
+                borderWidth: "1px",
+              }}
+            >
+              <div className="mb-6">
+                <Badge
+                  className={cn(
+                    "mb-3 rounded-full px-3 py-1 text-xs",
+                    getStatusColor(order.status || "pending")
+                  )}
+                >
+                  {order.status?.charAt(0).toUpperCase() +
+                    order.status?.slice(1) || "Pending"}
+                </Badge>
+                <p className="mb-1 text-xs opacity-50">Order Number</p>
+                <h4 className="text-lg font-semibold">
+                  #{order.order_number || order.id}
+                </h4>
+              </div>
+
+              <div
+                className="mt-6 space-y-4 border-t pt-6"
+                style={{ borderColor: `${theme.colors.primary}10` }}
+              >
+                <div className="flex justify-between text-sm opacity-70">
+                  <span>Subtotal</span>
+                  <span>
+                    Rs.
+                    {Number(
+                      Number(order.total_amount) -
+                        Number(order.delivery_charge || 0)
+                    ).toLocaleString("en-IN")}
                   </span>
                 </div>
-              )}
-
-              <Separator className="my-2" />
-
-              <div className="flex items-center justify-between text-lg font-semibold">
-                <span>Total Amount:</span>
-                <span>
-                  Rs.{Number(order.total_amount).toLocaleString("en-IN")}
-                </span>
+                {order.delivery_charge && Number(order.delivery_charge) > 0 && (
+                  <div className="flex justify-between text-sm opacity-70">
+                    <span>Delivery</span>
+                    <span>
+                      Rs.{Number(order.delivery_charge).toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between pt-4">
+                  <span className="font-medium">Total</span>
+                  <span
+                    className="text-2xl font-semibold"
+                    style={{ color: theme.colors.primary }}
+                  >
+                    Rs.{Number(order.total_amount).toLocaleString("en-IN")}
+                  </span>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
 
-        {/* Next Steps */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>What&apos;s Next?</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-start space-x-3">
-              <div
-                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: subtlePrimaryBg }}
+              <Button
+                onClick={() => router.push(`/preview/${siteUser}`)}
+                className="group relative mt-8 w-full overflow-hidden rounded-full py-6 font-medium transition-all"
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  color: theme.colors.primaryForeground,
+                }}
               >
-                <span
-                  className="text-sm font-semibold"
-                  style={{ color: theme.colors.primary }}
-                >
-                  1
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  <ShoppingBag className="h-4 w-4" />
+                  Continue Shopping
                 </span>
-              </div>
-              <div>
-                <h4 className="font-semibold">Order Confirmation</h4>
-                <p className="text-sm text-gray-600">
-                  You&apos;ll receive an email confirmation shortly with your
-                  order details.
-                </p>
-              </div>
+                <div className="absolute inset-0 translate-y-full bg-black/10 transition-transform duration-300 group-hover:translate-y-0" />
+              </Button>
             </div>
 
-            <div className="flex items-start space-x-3">
-              <div
-                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: subtlePrimaryBg }}
-              >
-                <span
-                  className="text-sm font-semibold"
-                  style={{ color: theme.colors.primary }}
-                >
-                  2
-                </span>
-              </div>
-              <div>
-                <h4 className="font-semibold">Processing</h4>
-                <p className="text-sm text-gray-600">
-                  We&apos;ll start preparing your order for shipment within 1-2
-                  business days.
-                </p>
+            {/* Next Steps */}
+            <div
+              className="rounded-3xl border p-8 transition-all duration-300"
+              style={{
+                backgroundColor: theme.colors.background,
+                borderColor: `${theme.colors.primary}10`,
+              }}
+            >
+              <h3 className="mb-6 font-medium">What&apos;s Next?</h3>
+              <div className="space-y-6">
+                {[
+                  {
+                    title: "Confirmation",
+                    desc: "You'll receive an email confirmation shortly.",
+                  },
+                  {
+                    title: "Processing",
+                    desc: "We'll prepare your order within 1-2 days.",
+                  },
+                  {
+                    title: "Shipping",
+                    desc: "We'll send tracking once it ships.",
+                  },
+                ].map((step, i) => (
+                  <div key={i} className="flex gap-4">
+                    <div
+                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
+                      style={{
+                        backgroundColor: `${theme.colors.primary}10`,
+                        color: theme.colors.primary,
+                      }}
+                    >
+                      {i + 1}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium">{step.title}</h4>
+                      <p className="mt-1 text-xs opacity-50">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-
-            <div className="flex items-start space-x-3">
-              <div
-                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: subtlePrimaryBg }}
-              >
-                <span
-                  className="text-sm font-semibold"
-                  style={{ color: theme.colors.primary }}
-                >
-                  3
-                </span>
-              </div>
-              <div>
-                <h4 className="font-semibold">Shipping Updates</h4>
-                <p className="text-sm text-gray-600">
-                  You&apos;ll receive tracking information once your order
-                  ships.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col justify-center gap-4 sm:flex-row">
-          <Button
-            onClick={() => router.push(`/preview/${siteUser}`)}
-            variant="outline"
-            className="px-8"
-            style={outlineButtonStyle}
-          >
-            Continue Shopping
-          </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -53,6 +53,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { PromoCodeInput } from "../promo-code-input";
 import { PromoCode } from "@/types/owner-site/admin/promo-code-validate";
 import { useDeliveryChargeCalculator } from "@/hooks/owner-site/admin/use-delivery-charge-calculator";
+import { EditableText } from "@/components/ui/editable-text";
 
 interface CheckoutStyleProps {
   siteUser?: string;
@@ -500,356 +501,501 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold">Checkout</h1>
-
-      <div className="flex flex-col gap-8 lg:grid lg:grid-cols-3 lg:flex-row-reverse">
-        {/* Order Summary on Left for Style 2 */}
-        <div className="hidden lg:order-first lg:block">
-          <Card className="sticky top-24">
-            <CardHeader>
-              <CardTitle>Order Summary</CardTitle>
-              <CardDescription>
-                {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <OrderSummaryContent />
-            </CardContent>
-          </Card>
+    <div
+      className="min-h-full px-4 py-12 font-sans transition-colors duration-500 sm:px-6 lg:px-8"
+      style={{
+        backgroundColor: `${theme.colors.primary}05`,
+        color: theme.colors.text,
+        fontFamily: `var(--font-body, ${theme.fonts.body})`,
+      }}
+    >
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-12 text-center">
+          <EditableText
+            value="Complete Your Order"
+            onChange={() => {}}
+            as="h1"
+            className="text-4xl font-medium md:text-5xl"
+            style={{
+              color: theme.colors.text,
+              fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+            }}
+            isEditable={isBuilder}
+          />
+          <EditableText
+            value="Please fill in your details below"
+            onChange={() => {}}
+            as="p"
+            className="mt-3 italic opacity-70"
+            style={{
+              fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+            }}
+            isEditable={isBuilder}
+          />
         </div>
 
-        {/* Shipping Information */}
-        <div className="lg:order-last lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Shipping Information</CardTitle>
-              <CardDescription>
-                Please fill in your details to complete your order
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Input
-                      id="customer_name"
-                      type="text"
-                      label="Full Name"
-                      autoComplete="name"
-                      disabled={isSubmitting}
-                      className={cn(
-                        errors.customer_name
-                          ? "border-red-300 focus:ring-red-500"
-                          : "focus:ring-primary border-gray-300"
-                      )}
-                      {...register("customer_name")}
-                    />
-                    {errors.customer_name && (
-                      <p className="text-sm text-red-600">
-                        {errors.customer_name.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Input
-                      id="customer_email"
-                      type="email"
-                      label="Email"
-                      autoCapitalize="none"
-                      autoComplete="email"
-                      autoCorrect="off"
-                      disabled={isSubmitting}
-                      className={cn(
-                        errors.customer_email
-                          ? "border-red-300 focus:ring-red-500"
-                          : "focus:ring-primary border-gray-300"
-                      )}
-                      {...register("customer_email")}
-                    />
-                    {errors.customer_email && (
-                      <p className="text-sm text-red-600">
-                        {errors.customer_email.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Input
-                    id="customer_phone"
-                    type="tel"
-                    label="Phone Number"
-                    placeholder="+1 (555) 123-4567"
-                    autoComplete="tel"
-                    disabled={isSubmitting}
-                    className={cn(
-                      errors.customer_phone
-                        ? "border-red-300 focus:ring-red-500"
-                        : "focus:ring-primary border-gray-300"
-                    )}
-                    {...register("customer_phone")}
-                  />
-                  {errors.customer_phone && (
-                    <p className="text-sm text-red-600">
-                      {errors.customer_phone.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Billing City/District with Search */}
-                <div className="space-y-2">
-                  <Label htmlFor="city">City/District *</Label>
-                  <Popover
-                    open={openBillingCity}
-                    onOpenChange={setOpenBillingCity}
+        <div
+          className="rounded-[32px] p-6 shadow-xl shadow-stone-200/50 transition-all duration-300 md:p-10 lg:p-14"
+          style={{ backgroundColor: theme.colors.background }}
+        >
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-20">
+            {/* Left Column: Form */}
+            <div className="space-y-10">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+                <section>
+                  <h2
+                    className="mb-6 text-2xl font-medium"
+                    style={{
+                      color: theme.colors.text,
+                      fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+                    }}
                   >
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={openBillingCity}
-                        className={cn(
-                          "w-full justify-between",
-                          !cityDistrict && "text-muted-foreground",
-                          errors.city && "border-red-300"
-                        )}
-                        disabled={isSubmitting || isLoadingDeliveryCharges}
-                      >
-                        {cityDistrict
-                          ? citiesDistricts.find(city => city === cityDistrict)
-                          : "Select city/district"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                      <Command>
-                        <CommandInput
-                          placeholder="Search city/district..."
-                          value={searchQuery}
-                          onValueChange={setSearchQuery}
-                        />
-                        <CommandEmpty>No city found.</CommandEmpty>
-                        <CommandGroup className="max-h-64 overflow-auto">
-                          {citiesDistricts.map(city => (
-                            <CommandItem
-                              key={city}
-                              value={city}
-                              onSelect={() => {
-                                setValue("city", city);
-                                setOpenBillingCity(false);
-                                setSearchQuery("");
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  cityDistrict === city
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {city}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  {errors.city && (
-                    <p className="text-sm text-red-600">
-                      {errors.city.message}
-                    </p>
-                  )}
-                </div>
+                    Shipping Information
+                  </h2>
 
-                <div className="space-y-2">
-                  <Label htmlFor="customer_address">Billing Address</Label>
-                  <Textarea
-                    id="customer_address"
-                    placeholder="Enter your billing address"
-                    rows={3}
-                    disabled={isSubmitting}
-                    className={cn(
-                      errors.customer_address
-                        ? "border-red-300 focus:ring-red-500"
-                        : "focus:ring-primary border-gray-300"
-                    )}
-                    {...register("customer_address")}
-                  />
-                  {errors.customer_address && (
-                    <p className="text-sm text-red-600">
-                      {errors.customer_address.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="same_as_customer_address"
-                    checked={sameAsCustomerAddress}
-                    onCheckedChange={checked =>
-                      setValue("same_as_customer_address", checked === true)
-                    }
-                    disabled={isSubmitting}
-                  />
-                  <Label
-                    htmlFor="same_as_customer_address"
-                    className="cursor-pointer text-sm font-normal"
-                  >
-                    Shipping address same as billing address
-                  </Label>
-                </div>
-
-                {!sameAsCustomerAddress && (
-                  <>
-                    <div className="space-y-2">
-                      <Label htmlFor="shipping_address">Shipping Address</Label>
-                      <Textarea
-                        id="shipping_address"
-                        placeholder="Enter your shipping address"
-                        rows={3}
+                  <div className="space-y-5">
+                    <div>
+                      <Input
+                        {...register("customer_name")}
+                        className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
+                        style={{
+                          backgroundColor: `${theme.colors.primary}0A`,
+                          color: theme.colors.text,
+                        }}
+                        placeholder="Full Name"
                         disabled={isSubmitting}
-                        className={cn(
-                          errors.shipping_address
-                            ? "border-red-300 focus:ring-red-500"
-                            : "focus:ring-primary border-gray-300"
-                        )}
-                        {...register("shipping_address")}
                       />
-                      {errors.shipping_address && (
-                        <p className="text-sm text-red-600">
-                          {errors.shipping_address.message}
+                      {errors.customer_name && (
+                        <p className="mt-1 px-2 text-xs text-red-500">
+                          {errors.customer_name.message}
                         </p>
                       )}
                     </div>
-                  </>
-                )}
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                      <div>
+                        <Input
+                          {...register("customer_email")}
+                          type="email"
+                          className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
+                          style={{
+                            backgroundColor: `${theme.colors.primary}0A`,
+                            color: theme.colors.text,
+                          }}
+                          placeholder="Email"
+                          disabled={isSubmitting}
+                        />
+                        {errors.customer_email && (
+                          <p className="mt-1 px-2 text-xs text-red-500">
+                            {errors.customer_email.message}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <Input
+                          {...register("customer_phone")}
+                          type="tel"
+                          className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
+                          style={{
+                            backgroundColor: `${theme.colors.primary}0A`,
+                            color: theme.colors.text,
+                          }}
+                          placeholder="+1 (555) 123-4567"
+                          disabled={isSubmitting}
+                        />
+                        {errors.customer_phone && (
+                          <p className="mt-1 px-2 text-xs text-red-500">
+                            {errors.customer_phone.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
 
-                {/* Order Notes */}
-                <div className="space-y-2">
-                  <Label htmlFor="note">Order Notes (Optional)</Label>
-                  <Textarea
-                    id="note"
-                    placeholder="Any special instructions for your order..."
-                    rows={3}
-                    disabled={isSubmitting}
-                    className={cn(
-                      errors.note
-                        ? "border-red-300 focus:ring-red-500"
-                        : "focus:ring-primary border-gray-300"
-                    )}
-                    {...register("note")}
-                  />
-                  {errors.note && (
-                    <p className="text-sm text-red-600">
-                      {errors.note.message}
-                    </p>
-                  )}
-                  <p className="text-xs text-gray-500">
-                    {watch("note")?.length || 0}/500 characters
-                  </p>
-                </div>
-
-                {/* Payment Method Selection */}
-                {uniquePaymentTypes.length > 0 && (
-                  <div className="space-y-4 pt-4">
-                    <Separator />
                     <div>
-                      <h3 className="mb-3 text-lg font-semibold">
-                        Payment Method
-                      </h3>
-                      <p className="mb-4 text-sm text-gray-600">
-                        Select your preferred payment option
-                      </p>
-
-                      <div className="grid gap-3">
-                        <AnimatePresence mode="wait">
-                          {uniquePaymentTypes.map(type => (
-                            <motion.div
-                              key={type}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ duration: 0.3 }}
-                              whileHover={{ scale: 1.02 }}
-                              whileTap={{ scale: 0.98 }}
-                            >
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                className={cn(
-                                  "relative h-16 w-full justify-start overflow-hidden border text-left font-normal transition-all duration-300",
-                                  selectedPaymentMethod === type
-                                    ? "border-2"
-                                    : "border border-gray-300"
-                                )}
-                                style={{
-                                  borderColor:
-                                    selectedPaymentMethod === type
-                                      ? theme.colors.primary
-                                      : "#D1D5DB",
-                                  backgroundColor:
-                                    selectedPaymentMethod === type
-                                      ? subtlePrimaryBg
-                                      : "transparent",
-                                }}
-                                onClick={() => setSelectedPaymentMethod(type)}
-                                disabled={isSubmitting}
-                              >
-                                <div className="relative z-10 flex items-center gap-3">
-                                  <div className="relative h-8 w-8 shrink-0">
-                                    <Image
-                                      src={getPaymentImage(type)}
-                                      alt={getPaymentLabel(type)}
-                                      fill
-                                      className="object-contain"
-                                      sizes="32px"
-                                    />
-                                  </div>
-                                  <span className="text-base font-medium capitalize">
-                                    {getPaymentLabel(type)}
-                                  </span>
-                                </div>
-
-                                {selectedPaymentMethod === type && (
-                                  <motion.div
-                                    className="absolute inset-0 z-0"
-                                    style={{ backgroundColor: subtlePrimaryBg }}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ duration: 0.3 }}
+                      <Popover
+                        open={openBillingCity}
+                        onOpenChange={setOpenBillingCity}
+                      >
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={openBillingCity}
+                            className="h-auto w-full justify-between rounded-2xl border-transparent px-5 py-4 font-normal"
+                            style={{
+                              backgroundColor: `${theme.colors.primary}0A`,
+                              color: cityDistrict ? theme.colors.text : "gray",
+                            }}
+                            disabled={isSubmitting || isLoadingDeliveryCharges}
+                          >
+                            {cityDistrict
+                              ? citiesDistricts.find(
+                                  city => city === cityDistrict
+                                )
+                              : "Select city/district"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                          <Command>
+                            <CommandInput
+                              placeholder="Search city/district..."
+                              value={searchQuery}
+                              onValueChange={setSearchQuery}
+                            />
+                            <CommandEmpty>No city found.</CommandEmpty>
+                            <CommandGroup className="max-h-64 overflow-auto">
+                              {citiesDistricts.map(city => (
+                                <CommandItem
+                                  key={city}
+                                  value={city}
+                                  onSelect={() => {
+                                    setValue("city", city);
+                                    setOpenBillingCity(false);
+                                    setSearchQuery("");
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      cityDistrict === city
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
                                   />
-                                )}
-                              </Button>
-                            </motion.div>
-                          ))}
-                        </AnimatePresence>
+                                  {city}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      {errors.city && (
+                        <p className="mt-1 px-2 text-xs text-red-500">
+                          {errors.city.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <Input
+                        {...register("customer_address")}
+                        className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
+                        style={{
+                          backgroundColor: `${theme.colors.primary}0A`,
+                          color: theme.colors.text,
+                        }}
+                        placeholder="Billing Address"
+                        disabled={isSubmitting}
+                      />
+                      {errors.customer_address && (
+                        <p className="mt-1 px-2 text-xs text-red-500">
+                          {errors.customer_address.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex items-center space-x-2 px-2">
+                      <Checkbox
+                        id="same_as_customer_address"
+                        checked={sameAsCustomerAddress}
+                        onCheckedChange={checked =>
+                          setValue("same_as_customer_address", checked === true)
+                        }
+                        disabled={isSubmitting}
+                      />
+                      <Label
+                        htmlFor="same_as_customer_address"
+                        className="cursor-pointer text-sm font-normal opacity-70"
+                      >
+                        Shipping address same as billing address
+                      </Label>
+                    </div>
+
+                    {!sameAsCustomerAddress && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="space-y-5"
+                      >
+                        <Input
+                          {...register("shipping_address")}
+                          className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
+                          style={{
+                            backgroundColor: `${theme.colors.primary}0A`,
+                            color: theme.colors.text,
+                          }}
+                          placeholder="Shipping Address"
+                          disabled={isSubmitting}
+                        />
+                        {errors.shipping_address && (
+                          <p className="mt-1 px-2 text-xs text-red-500">
+                            {errors.shipping_address.message}
+                          </p>
+                        )}
+                      </motion.div>
+                    )}
+
+                    <div>
+                      <Textarea
+                        {...register("note")}
+                        rows={3}
+                        className="w-full resize-none rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
+                        style={{
+                          backgroundColor: `${theme.colors.primary}0A`,
+                          color: theme.colors.text,
+                        }}
+                        placeholder="Any special instructions for your order..."
+                        disabled={isSubmitting}
+                      />
+                      <div className="mt-2 px-2 text-right text-xs opacity-50">
+                        {watch("note")?.length || 0}/500 characters
                       </div>
                     </div>
                   </div>
-                )}
+                </section>
 
-                <div className="pt-6">
-                  <Button
-                    type="submit"
-                    className="w-full py-3 font-semibold"
-                    size="lg"
-                    style={primaryButtonStyle}
-                    disabled={isSubmitting || createOrderMutation.isPending}
+                <section>
+                  <h2
+                    className="mb-6 text-2xl font-medium"
+                    style={{
+                      color: theme.colors.text,
+                      fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+                    }}
                   >
+                    Payment Method
+                  </h2>
+
+                  <div className="space-y-4">
+                    {uniquePaymentTypes.map(type => (
+                      <label
+                        key={type}
+                        className={cn(
+                          "flex cursor-pointer items-center rounded-2xl border-2 p-5 transition-all",
+                          selectedPaymentMethod === type
+                            ? "bg-white shadow-sm"
+                            : "opacity-60"
+                        )}
+                        style={{
+                          borderColor:
+                            selectedPaymentMethod === type
+                              ? theme.colors.primary
+                              : "transparent",
+                          backgroundColor:
+                            selectedPaymentMethod === type
+                              ? "white"
+                              : `${theme.colors.primary}05`,
+                        }}
+                        onClick={() => setSelectedPaymentMethod(type)}
+                      >
+                        <div
+                          className="mr-4 flex h-6 w-6 items-center justify-center rounded-full border-2 transition-colors"
+                          style={{
+                            borderColor: theme.colors.primary,
+                            backgroundColor:
+                              selectedPaymentMethod === type
+                                ? theme.colors.primary
+                                : "transparent",
+                          }}
+                        >
+                          {selectedPaymentMethod === type && (
+                            <Check className="h-4 w-4 text-white" />
+                          )}
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="relative h-6 w-6 shrink-0">
+                            <Image
+                              src={getPaymentImage(type)}
+                              alt={getPaymentLabel(type)}
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
+                          <span
+                            className="font-medium"
+                            style={{ color: theme.colors.text }}
+                          >
+                            {getPaymentLabel(type)}
+                          </span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </section>
+
+                <Button
+                  type="submit"
+                  className="group relative w-full overflow-hidden rounded-full py-6 text-lg font-medium shadow-lg transition-all"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                    fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+                  }}
+                  disabled={isSubmitting || createOrderMutation.isPending}
+                >
+                  <span className="relative z-10">
                     {isSubmitting || createOrderMutation.isPending
                       ? "Processing..."
-                      : selectedPaymentMethod
-                        ? selectedPaymentMethod.toLowerCase() === "cod"
-                          ? "Place Order (Cash on Delivery)"
-                          : `Pay with ${getPaymentLabel(selectedPaymentMethod)}`
-                        : "Place Order"}
-                  </Button>
-                </div>
+                      : selectedPaymentMethod === "cod"
+                        ? "Place Order (Cash on Delivery)"
+                        : `Pay with ${getPaymentLabel(selectedPaymentMethod || "")}`}
+                  </span>
+                  <div
+                    className="absolute inset-0 translate-y-full bg-black/10 transition-transform duration-300 group-hover:translate-y-0"
+                    style={{ transitionTimingFunction: "ease-out" }}
+                  />
+                </Button>
               </form>
-            </CardContent>
-          </Card>
+            </div>
+
+            {/* Right Column: Order Summary */}
+            <div
+              className="sticky top-24 h-fit rounded-[24px] border p-8"
+              style={{
+                borderColor: `${theme.colors.primary}20`,
+                backgroundColor: `${theme.colors.primary}03`,
+              }}
+            >
+              <h2
+                className="mb-2 text-2xl font-medium"
+                style={{
+                  color: theme.colors.text,
+                  fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+                }}
+              >
+                Order Summary
+              </h2>
+              <p className="mb-8 opacity-50">
+                {cartItems.length} {cartItems.length === 1 ? "item" : "items"}{" "}
+                in your cart
+              </p>
+
+              <div className="custom-scrollbar mb-8 max-h-[400px] space-y-6 overflow-auto pr-2">
+                {cartItems.map((item, index) => {
+                  const displayPrice =
+                    item.selectedVariant?.price || item.product.price;
+                  const cartItemKey = `${item.product.id}-${item.selectedVariant?.id || "no-variant"}-${index}`;
+
+                  return (
+                    <div key={cartItemKey} className="flex items-center gap-4">
+                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-stone-100 shadow-sm">
+                        <Image
+                          src={item.product.thumbnail_image || ""}
+                          alt={item.product.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="line-clamp-1 text-sm font-medium">
+                          {item.product.name}
+                        </h4>
+                        <p className="text-xs opacity-50">
+                          Qty: {item.quantity}
+                        </p>
+                        {item.selectedVariant && (
+                          <div className="mt-1 flex flex-wrap gap-1">
+                            {Object.entries(
+                              item.selectedVariant.option_values
+                            ).map(([k, v]) => (
+                              <span
+                                key={k}
+                                className="rounded-full px-1.5 py-0.5 text-[10px]"
+                                style={{
+                                  backgroundColor: `${theme.colors.primary}10`,
+                                  color: theme.colors.primary,
+                                }}
+                              >
+                                {v}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium">
+                          Rs.
+                          {Number(
+                            Number(displayPrice) * item.quantity
+                          ).toLocaleString("en-IN")}
+                        </p>
+                        <p className="text-[10px] opacity-40">
+                          Rs.{Number(displayPrice).toLocaleString("en-IN")} each
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div
+                className="space-y-6 border-t pt-6"
+                style={{ borderColor: `${theme.colors.primary}10` }}
+              >
+                <PromoCodeInput
+                  onPromoCodeApplied={handlePromoCodeApplied}
+                  appliedPromoCode={appliedPromoCode}
+                  primaryColor={theme.colors.primary}
+                  subtlePrimaryBg={`${theme.colors.primary}10`}
+                />
+
+                <div className="space-y-3 text-sm opacity-70">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span className="font-medium">
+                      Rs.{Number(subtotalAmount).toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                  {appliedPromoCode && (
+                    <div className="flex justify-between text-green-600">
+                      <span>
+                        Discount ({appliedPromoCode.discount_percentage}%)
+                      </span>
+                      <span className="font-medium">
+                        -Rs.{Number(discountAmount).toLocaleString("en-IN")}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span>Delivery</span>
+                    <span className="font-medium">
+                      Rs.{Number(deliveryCharge).toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Total Weight</span>
+                    <span className="font-medium">
+                      {totalWeight.toFixed(2)} kg
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Delivery To</span>
+                    <span className="font-medium">
+                      {sameAsCustomerAddress
+                        ? cityDistrict || "Not selected"
+                        : shippingCityDistrict || "Not selected"}
+                    </span>
+                  </div>
+                </div>
+
+                <div
+                  className="flex items-center justify-between border-t pt-6"
+                  style={{ borderColor: `${theme.colors.primary}10` }}
+                >
+                  <span className="text-lg font-medium">Total</span>
+                  <span
+                    className="text-3xl font-medium"
+                    style={{
+                      color: theme.colors.primary,
+                      fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+                    }}
+                  >
+                    Rs.{Number(totalAmount).toLocaleString("en-IN")}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
