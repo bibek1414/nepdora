@@ -8,6 +8,9 @@ import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
+import { Category } from "@/types/owner-site/admin/product";
 
 interface CategoryStyleProps {
   data: CategoryComponentData["data"];
@@ -26,7 +29,16 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
 }) => {
   const { title = "Shop by Category" } = data || {};
   const { data: categoriesData, isLoading, error } = useCategories();
-  const categories = categoriesData?.results || [];
+  const categories = (categoriesData?.results || []) as Category[];
+  const pathname = usePathname();
+
+  const getCategoryUrl = (category: Category): string => {
+    return generateLinkHref(
+      `/collections?category=${category.slug}`,
+      siteUser,
+      pathname
+    );
+  };
 
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -85,7 +97,7 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
             {categories.slice(0, 3).map(cat => (
               <Link
                 key={cat.slug}
-                href={`/categories/${cat.slug}`}
+                href={getCategoryUrl(cat)}
                 className="group relative h-[400px] overflow-hidden rounded-2xl md:h-[450px]"
                 onClick={e => {
                   if (isEditable) {

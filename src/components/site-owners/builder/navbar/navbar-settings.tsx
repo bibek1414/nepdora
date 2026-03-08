@@ -181,6 +181,13 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
+  // Sync navbarData with initialData when the dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      setNavbarData(initialData);
+    }
+  }, [isOpen, initialData]);
+
   // We don't need showPageSelectorFor anymore as the Popover is local to each PageSelector instance
 
   // Use site config hooks

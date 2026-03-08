@@ -739,9 +739,29 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   // Navbar handlers
   const handleNavbarSelectFromDialog = (navbarData: NavbarData) => {
+    const isReplacing = pendingCategoryFilter === "navbar-sections";
+    const currentData = navbarResponse?.data?.data;
+
+    let finalData = navbarData;
+    if (isReplacing && currentData) {
+      finalData = {
+        ...navbarData, // Start with new template's base structure
+        // Preserve user's content and settings
+        links: currentData.links && currentData.links.length > 0 ? currentData.links : navbarData.links,
+        buttons: currentData.buttons && currentData.buttons.length > 0 ? currentData.buttons : navbarData.buttons,
+        logoText: currentData.logoText || navbarData.logoText,
+        logoType: currentData.logoType || navbarData.logoType,
+        logoImage: currentData.logoImage !== undefined ? currentData.logoImage : navbarData.logoImage,
+        showCart: currentData.showCart ?? navbarData.showCart,
+        enableLogin: currentData.enableLogin ?? navbarData.enableLogin,
+        bannerText: currentData.bannerText || navbarData.bannerText,
+        topBarItems: currentData.topBarItems && currentData.topBarItems.length > 0 ? currentData.topBarItems : navbarData.topBarItems,
+      };
+    }
+
     const payload = {
       content: "navbar content",
-      data: navbarData,
+      data: finalData,
       component_id: `nav-${Date.now()}`,
     };
 
