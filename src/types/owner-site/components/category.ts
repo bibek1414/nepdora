@@ -27,6 +27,12 @@ export const DEFAULT_CATEGORY_MAP: Record<CategoryData["style"], CategoryData> =
       title: "Shop by Category",
       subtitle: "",
     },
+    "category-8": {
+      ...defaultCategoryData,
+      style: "category-8",
+      title: "Browse Categories",
+      subtitle: "",
+    },
   };
 
 export interface FeaturedContent {
@@ -48,7 +54,8 @@ export interface CategoryData {
     | "category-4"
     | "category-5"
     | "category-6"
-    | "category-7";
+    | "category-7"
+    | "category-8";
 
   title: string;
   subtitle?: string;
