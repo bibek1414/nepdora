@@ -96,20 +96,14 @@ export const NewsletterForm3: React.FC<NewsletterForm3Props> = ({
         <div className="flex flex-col items-center gap-6 sm:gap-8 md:grid md:grid-cols-2 md:items-center md:gap-8 lg:gap-12">
           {/* Title Section */}
           <div className="w-full text-center md:text-left">
-            {isEditable ? (
-              <EditableText
-                value={data.title}
-                onChange={value => updateData("title", value)}
-                as="h2"
-                className="mb-0 text-2xl leading-tight font-black tracking-tight text-neutral-900 sm:text-3xl md:text-4xl lg:text-5xl"
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-            ) : (
-              <h2 className="mb-0 text-2xl leading-tight font-black tracking-tight text-neutral-900 sm:text-3xl md:text-4xl lg:text-5xl">
-                {data.title}
-              </h2>
-            )}
+            <EditableText
+              value={data.title}
+              onChange={value => updateData("title", value)}
+              as="h2"
+              className="mb-0 text-2xl leading-tight font-black tracking-tight text-neutral-900 sm:text-3xl md:text-4xl lg:text-5xl"
+              isEditable={isEditable}
+              placeholder="Enter title..."
+            />
           </div>
 
           {/* Form Section */}

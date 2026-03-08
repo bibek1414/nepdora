@@ -9,7 +9,6 @@ import {
   ChevronDown,
   HelpCircle,
   Phone,
-  ArrowRightLeft,
   User,
   LogOut,
   Package,
@@ -248,27 +247,6 @@ export const NavbarStyle13: React.FC<NavbarStyleProps> = ({
                 {enableLogin && (
                   <div className="hidden h-8 w-px bg-gray-200 md:block"></div>
                 )}
-
-                {/* Compare Icon */}
-                <Link
-                  href={generateLinkHref(
-                    "/compare",
-                    siteUser,
-                    pathname,
-                    isEditable,
-                    disableClicks
-                  )}
-                  onClick={e => handleLinkClick(e)}
-                  className={`group relative hidden rounded-full p-2 transition-colors hover:bg-gray-50 md:flex ${disableClicks || isEditable ? "cursor-default opacity-60" : "cursor-pointer"}`}
-                  title="Compare Products"
-                >
-                  <ArrowRightLeft className="group-hover:text-brand-600 h-6 w-6 text-gray-700 transition-colors" />
-                  {compareItems && compareItems.length > 0 && (
-                    <span className="bg-brand-600 absolute -top-1 -right-1 inline-flex h-5 w-5 items-center justify-center rounded-full text-[10px] leading-none font-bold text-white ring-2 ring-white">
-                      {compareItems.length}
-                    </span>
-                  )}
-                </Link>
 
                 {/* Cart Icon */}
                 {showCart && (

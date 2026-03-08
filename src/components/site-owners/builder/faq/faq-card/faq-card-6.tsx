@@ -78,36 +78,24 @@ export const FaqCard6: React.FC<FAQCard6Props> = ({
           {/* Right side - Content */}
           <div className="space-y-6">
             <div className="space-y-2">
-              {isEditable && onTitleChange ? (
-                <EditableText
-                  value={title}
-                  onChange={onTitleChange}
-                  as="p"
-                  className="text-sm font-semibold tracking-wider text-blue-400 uppercase"
-                  isEditable={true}
-                  placeholder="Enter label..."
-                />
-              ) : (
-                <p className="text-sm font-semibold tracking-wider text-blue-400 uppercase">
-                  {title}
-                </p>
-              )}
+              <EditableText
+                value={title}
+                onChange={onTitleChange || (() => {})}
+                as="p"
+                className="text-sm font-semibold tracking-wider text-blue-400 uppercase"
+                isEditable={isEditable}
+                placeholder="Enter label..."
+              />
 
-              {isEditable && onSubtitleChange ? (
-                <EditableText
-                  value={subtitle}
-                  onChange={onSubtitleChange}
-                  as="h2"
-                  className="text-4xl leading-tight font-bold text-white lg:text-5xl"
-                  isEditable={true}
-                  placeholder="Enter subtitle..."
-                  useHeadingFont={true}
-                />
-              ) : (
-                <h2 className="text-4xl leading-tight font-bold text-white lg:text-5xl">
-                  <span className="text-balance">{subtitle}</span>
-                </h2>
-              )}
+              <EditableText
+                value={subtitle}
+                onChange={onSubtitleChange || (() => {})}
+                as="h2"
+                className="text-4xl leading-tight font-bold text-white lg:text-5xl"
+                isEditable={isEditable}
+                placeholder="Enter subtitle..."
+                useHeadingFont={true}
+              />
             </div>
 
             {/* Accordion */}

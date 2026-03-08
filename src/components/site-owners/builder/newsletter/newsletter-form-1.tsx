@@ -92,34 +92,23 @@ export const NewsletterForm1: React.FC<NewsletterForm1Props> = ({
     <div className="mx-auto max-w-md bg-white">
       <div className="p-8">
         <div className="mb-6 text-center">
-          {data.subtitle &&
-            (isEditable ? (
-              <EditableText
-                value={data.subtitle}
-                onChange={value => updateData("subtitle", value)}
-                as="h1"
-                className="mb-4 text-lg text-gray-600"
-                isEditable={true}
-                placeholder="Enter subtitle..."
-              />
-            ) : (
-              <p className="mb-4 text-lg text-gray-600">{data.subtitle}</p>
-            ))}
-
-          {data.description &&
-            (isEditable ? (
-              <EditableText
-                value={data.description}
-                onChange={value => updateData("description", value)}
-                as="p"
-                className="text-gray-500"
-                isEditable={true}
-                placeholder="Enter description..."
-                multiline={true}
-              />
-            ) : (
-              <p className="text-gray-500">{data.description}</p>
-            ))}
+          <EditableText
+            value={data.subtitle || ""}
+            onChange={value => updateData("subtitle", value)}
+            as="h1"
+            className="mb-4 text-lg text-gray-600"
+            isEditable={isEditable}
+            placeholder="Enter subtitle..."
+          />
+          <EditableText
+            value={data.description || ""}
+            onChange={value => updateData("description", value)}
+            as="p"
+            className="text-gray-500"
+            isEditable={isEditable}
+            placeholder="Enter description..."
+            multiline={true}
+          />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

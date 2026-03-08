@@ -2,9 +2,13 @@ import { BannerImage } from "../admin/banner";
 export interface BannerData {
   title: string;
   subtitle?: string;
+  description?: string;
+  bgClass?: string;
+  buttonText?: string;
+  buttonLink?: string;
   bannerType: "Slider" | "Sidebar" | "Banner";
   images: BannerImage[];
-  template: "banner-1" | "banner-2" | "banner-3" | "banner-4" | "banner-5";
+  template: "banner-1" | "banner-2" | "banner-3" | "banner-4" | "banner-5" | "banner-6" | "banner-7";
 }
 
 export interface BannerComponentData {
@@ -31,6 +35,7 @@ export interface UpdateBannerComponentRequest {
 export const defaultBannerData: BannerData = {
   title: "Featured Content",
   subtitle: "Discover our latest offerings",
+  description: "Unlock the potential of our exclusive collection with amazing deals.",
   bannerType: "Banner",
   images: [
     {
@@ -50,4 +55,6 @@ export const DEFAULT_BANNER_MAP: Record<BannerData["template"], BannerData> = {
   "banner-3": { ...defaultBannerData, template: "banner-3" },
   "banner-4": { ...defaultBannerData, template: "banner-4" },
   "banner-5": { ...defaultBannerData, template: "banner-5" },
+  "banner-6": { ...defaultBannerData, template: "banner-6" },
+  "banner-7": { ...defaultBannerData, template: "banner-7" },
 };

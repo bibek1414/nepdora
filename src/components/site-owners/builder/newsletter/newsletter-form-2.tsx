@@ -101,72 +101,29 @@ export const NewsletterForm2: React.FC<NewsletterForm2Props> = ({
   }
 
   return (
-    <div className="relative overflow-hidden rounded-xl bg-slate-800 p-4 sm:rounded-2xl sm:p-6 md:p-8 lg:p-12">
+    <div className="relative overflow-hidden rounded-xl p-4 sm:rounded-2xl sm:p-6 md:p-8 lg:p-12">
       {/* Background Decorative Elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-2 left-2 sm:top-4 sm:left-4">
-          <Sparkles className="h-4 w-4 text-slate-50 sm:h-5 sm:w-5 md:h-6 md:w-6" />
-        </div>
-        <div className="absolute top-4 right-4 sm:top-8 sm:right-8">
-          <Mail className="h-5 w-5 text-slate-50 sm:h-6 sm:w-6 md:h-8 md:w-8" />
-        </div>
-        <div className="absolute bottom-3 left-6 sm:bottom-6 sm:left-12">
-          <Sparkles className="h-3 w-3 text-slate-50 sm:h-4 sm:w-4" />
-        </div>
-        <div className="absolute right-3 bottom-6 sm:right-6 sm:bottom-12">
-          <Mail className="h-4 w-4 text-slate-50 sm:h-5 sm:w-5" />
-        </div>
-      </div>
 
       <div className="relative z-10">
         <div className="mb-4 text-center sm:mb-6 md:mb-8">
-          {isEditable ? (
-            <EditableText
-              value={data.title}
-              onChange={value => updateData("title", value)}
-              as="h2"
-              className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl md:text-4xl"
-              isEditable={true}
-              placeholder="Enter title..."
-            />
-          ) : (
-            <h2 className="mb-3 text-2xl font-bold text-slate-50 sm:mb-4 sm:text-3xl md:text-4xl">
-              {data.title}
-            </h2>
-          )}
+          <EditableText
+            value={data.title || ""}
+            onChange={value => updateData("title", value)}
+            as="h2"
+            className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl md:text-4xl"
+            isEditable={isEditable}
+            placeholder="Enter title..."
+          />
 
-          {data.subtitle &&
-            (isEditable ? (
-              <EditableText
-                value={data.subtitle}
-                onChange={value => updateData("subtitle", value)}
-                as="p"
-                className="mb-4 text-base sm:mb-6 sm:text-lg md:text-xl"
-                isEditable={true}
-                placeholder="Enter subtitle..."
-              />
-            ) : (
-              <p className="mb-4 text-base text-slate-50 opacity-90 sm:mb-6 sm:text-lg md:text-xl">
-                {data.subtitle}
-              </p>
-            ))}
-
-          {data.description &&
-            (isEditable ? (
-              <EditableText
-                value={data.description}
-                onChange={value => updateData("description", value)}
-                as="p"
-                className="mx-auto max-w-2xl text-sm sm:text-base md:text-lg"
-                isEditable={true}
-                placeholder="Enter description..."
-                multiline={true}
-              />
-            ) : (
-              <p className="mx-auto max-w-2xl text-sm text-slate-50 opacity-80 sm:text-base md:text-lg">
-                {data.description}
-              </p>
-            ))}
+          <EditableText
+            value={data.description || ""}
+            onChange={value => updateData("description", value)}
+            as="p"
+            className="mx-auto max-w-2xl text-sm sm:text-base md:text-lg"
+            isEditable={isEditable}
+            placeholder="Enter description..."
+            multiline={true}
+          />
         </div>
 
         <form onSubmit={handleSubmit} className="mx-auto max-w-md">
@@ -186,7 +143,7 @@ export const NewsletterForm2: React.FC<NewsletterForm2Props> = ({
               disabled={
                 createNewsletter.isPending || isPreview || !formData.email
               }
-              className="bg-primary w-full px-4 text-sm font-semibold text-white hover:bg-white/90 sm:w-auto sm:px-6 sm:text-base md:px-8"
+              className="bg-primary w-full px-4 mt-1 text-sm font-semibold text-white hover:bg-white/90 sm:w-auto sm:px-6 sm:text-base md:px-8"
             >
               {createNewsletter.isPending ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" />

@@ -136,24 +136,15 @@ export const FaqCard9: React.FC<FaqCard9Props> = ({
         <div className="flex flex-col justify-center">
           <div className="mb-8">
             <div className="mb-4 flex items-center gap-2">
-              {isEditable && onSubtitleChange ? (
-                <EditableText
-                  value={subtitle}
-                  onChange={onSubtitleChange}
-                  as="span"
-                  className="text-sm font-bold tracking-wider uppercase"
-                  style={{ color: primaryColor }}
-                  isEditable={true}
-                  placeholder="SUBTITLE..."
-                />
-              ) : (
-                <span
-                  className="text-sm font-bold tracking-wider uppercase"
-                  style={{ color: primaryColor }}
-                >
-                  {subtitle}
-                </span>
-              )}
+              <EditableText
+                value={subtitle}
+                onChange={onSubtitleChange || (() => {})}
+                as="span"
+                className="text-sm font-bold tracking-wider uppercase"
+                style={{ color: primaryColor }}
+                isEditable={isEditable}
+                placeholder="SUBTITLE..."
+              />
               {/* Squiggly Arrow SVG */}
               <svg
                 width="40"
@@ -179,52 +170,39 @@ export const FaqCard9: React.FC<FaqCard9Props> = ({
               </svg>
             </div>
 
-            {isEditable && onTitleChange ? (
-              <EditableText
-                value={title}
-                onChange={onTitleChange}
-                as="h2"
-                className="text-4xl leading-tight font-bold md:text-5xl"
-                style={{ color: primaryColor }}
-                isEditable={true}
-                placeholder="Enter title..."
-              />
-            ) : (
-              <h2
-                className="text-4xl leading-tight font-bold md:text-5xl"
-                style={{ color: primaryColor }}
-              >
-                {title}
-              </h2>
-            )}
+            <EditableText
+              value={title}
+              onChange={onTitleChange || (() => {})}
+              as="h2"
+              className="text-4xl leading-tight font-bold md:text-5xl"
+              style={{ color: primaryColor }}
+              isEditable={isEditable}
+              placeholder="Enter title..."
+            />
           </div>
 
-          {isEditable && onContactTitleChange ? (
+          {(contactTitle || isEditable) && (
             <EditableText
               value={contactTitle || ""}
-              onChange={onContactTitleChange}
+              onChange={onContactTitleChange || (() => {})}
               as="h3"
               className="text-xl font-semibold"
-              isEditable={true}
+              isEditable={isEditable}
               placeholder="Contact title..."
             />
-          ) : contactTitle ? (
-            <h3 className="text-xl font-semibold">{contactTitle}</h3>
-          ) : null}
+          )}
 
-          {isEditable && onContactDescriptionChange ? (
+          {(contactDescription || isEditable) && (
             <EditableText
               value={contactDescription || ""}
-              onChange={onContactDescriptionChange}
+              onChange={onContactDescriptionChange || (() => {})}
               as="p"
               className="text-muted-foreground mt-2"
-              isEditable={true}
+              isEditable={isEditable}
               placeholder="Contact description..."
               multiline
             />
-          ) : contactDescription ? (
-            <p className="text-muted-foreground mt-2">{contactDescription}</p>
-          ) : null}
+          )}
 
           <div className="space-y-4">
             {displayedFaqs.map(faq => {

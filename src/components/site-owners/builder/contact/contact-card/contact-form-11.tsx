@@ -143,6 +143,7 @@ export const ContactForm11: React.FC<ContactForm11Props> = ({
 
           <Button
             type="submit"
+            variant="default"
             disabled={submitContactMutation.isPending}
             className="flex h-12 w-full items-center justify-center gap-2 rounded-full text-sm font-bold text-white transition-all active:scale-95 disabled:opacity-70"
             style={{ backgroundColor: theme?.colors?.primary || "#000" }}

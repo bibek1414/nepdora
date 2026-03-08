@@ -85,56 +85,40 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
             variants={fadeInUp}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <h2 className="mb-6 text-4xl font-semibold">
-              {isEditable && onTitleChange ? (
-                <EditableText
-                  value={title}
-                  onChange={onTitleChange}
-                  as="span"
-                  className="text-4xl font-semibold"
-                  isEditable={true}
-                  placeholder="Enter title..."
-                />
-              ) : (
-                title
-              )}
-            </h2>
+              <EditableText
+                value={title}
+                onChange={onTitleChange || (() => {})}
+                as="h2"
+                className="mb-6 text-4xl font-semibold"
+                isEditable={isEditable}
+                placeholder="Enter title..."
+              />
 
             <div className="mb-6 rounded-2xl border border-gray-100 bg-white p-6">
-              {isEditable && onContactTitleChange ? (
-                <EditableText
-                  value={contactTitle}
-                  onChange={onContactTitleChange}
-                  as="h4"
-                  className="mb-2 text-lg font-bold"
-                  isEditable={true}
-                  placeholder="Enter contact title..."
-                />
-              ) : (
-                <h4 className="mb-2 text-lg font-bold">{contactTitle}</h4>
-              )}
+              <EditableText
+                value={contactTitle}
+                onChange={onContactTitleChange || (() => {})}
+                as="h4"
+                className="mb-2 text-lg font-bold"
+                isEditable={isEditable}
+                placeholder="Enter contact title..."
+              />
 
-              {isEditable && onContactDescriptionChange ? (
-                <EditableText
-                  value={contactDescription}
-                  onChange={onContactDescriptionChange}
-                  as="p"
-                  className="mb-6 text-sm text-gray-500"
-                  isEditable={true}
-                  placeholder="Enter contact description..."
-                  multiline={true}
-                />
-              ) : (
-                <p className="mb-6 text-sm text-gray-500">
-                  {contactDescription}
-                </p>
-              )}
+              <EditableText
+                value={contactDescription}
+                onChange={onContactDescriptionChange || (() => {})}
+                as="p"
+                className="mb-6 text-sm text-gray-500"
+                isEditable={isEditable}
+                placeholder="Enter contact description..."
+                multiline={true}
+              />
 
-              {isEditable && onButtonTextChange ? (
+              {isEditable ? (
                 <div className="relative inline-flex w-full">
                   <EditableText
                     value={buttonText}
-                    onChange={onButtonTextChange}
+                    onChange={onButtonTextChange || (() => {})}
                     as="span"
                     className="sr-only"
                     isEditable={true}
@@ -204,7 +188,7 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
                       {faq.question}
                     </span>
                     <div
-                      className={`flex-shrink-0 rounded-full p-2 transition-all duration-300 ease-in-out ${
+                      className={`shrink-0 rounded-full p-2 transition-all duration-300 ease-in-out ${
                         isOpen ? "bg-opacity-10" : "border bg-white"
                       }`}
                       style={{

@@ -10,7 +10,7 @@ import Image from "next/image";
 interface NewsletterStylesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStyleSelect: (style: "style-1" | "style-2" | "style-3") => void;
+  onStyleSelect: (style: "style-1" | "style-2" | "style-3" | "style-4") => void;
 }
 
 export const NewsletterStylesDialog: React.FC<NewsletterStylesDialogProps> = ({
@@ -19,7 +19,7 @@ export const NewsletterStylesDialog: React.FC<NewsletterStylesDialogProps> = ({
   onStyleSelect,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<
-    "style-1" | "style-2" | "style-3" | null
+    "style-1" | "style-2" | "style-3" | "style-4" | null
   >(null);
 
   const templates = [
@@ -38,10 +38,15 @@ export const NewsletterStylesDialog: React.FC<NewsletterStylesDialogProps> = ({
       name: "Newsletter style 3",
       description: "Professional layout with statistics",
     },
+    {
+      id: "style-4" as const,
+      name: "Newsletter style 4",
+      description: "Elite Tech Community styled newsletter",
+    },
   ];
 
   const handleSelect = (template: {
-    id: "style-1" | "style-2" | "style-3";
+    id: "style-1" | "style-2" | "style-3" | "style-4";
   }) => {
     setSelectedStyle(template.id);
     setTimeout(() => {
@@ -53,7 +58,7 @@ export const NewsletterStylesDialog: React.FC<NewsletterStylesDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="fixed right-0 !left-auto h-full w-full max-w-2xl transform overflow-y-auto rounded-none border-l bg-white p-6 shadow-xl transition-all duration-300 data-[state=closed]:translate-x-full data-[state=open]:translate-x-0">
+      <DialogContent className="fixed right-0 left-auto! h-full w-full max-w-2xl transform overflow-y-auto rounded-none border-l bg-white p-6 shadow-xl transition-all duration-300 data-[state=closed]:translate-x-full data-[state=open]:translate-x-0">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Choose a Newsletter Style

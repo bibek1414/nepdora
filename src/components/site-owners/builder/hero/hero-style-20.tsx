@@ -47,26 +47,26 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
     },
   };
 
-  const {
-    data,
-    setData,
-    handleArrayItemUpdate,
-  } = useBuilderLogic(heroData, onUpdate);
+  const { data, setData, handleArrayItemUpdate } = useBuilderLogic(
+    heroData,
+    onUpdate
+  );
 
   const heroSlides = data.slides && data.slides.length > 0 ? data.slides : [];
 
   useEffect(() => {
     if (isEditable || heroSlides.length === 0) return;
     const timer = setInterval(() => {
-      setHeroIndex((prev) => (prev + 1) % heroSlides.length);
+      setHeroIndex(prev => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(timer);
   }, [heroSlides.length, isEditable]);
 
   // Handle slide text updates
-  const handleSlideUpdate = (slideId: string, field: string) => (value: string) => {
-    handleArrayItemUpdate("slides", slideId)({ [field]: value });
-  };
+  const handleSlideUpdate =
+    (slideId: string, field: string) => (value: string) => {
+      handleArrayItemUpdate("slides", slideId)({ [field]: value });
+    };
 
   const handleSlideImageUpdate = (
     imageUrl: string,
@@ -130,7 +130,7 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
     const updatedData = { ...data, slides: updatedSlides };
     setData(updatedData);
     onUpdate?.({ slides: updatedSlides });
-    
+
     if (heroIndex >= updatedSlides.length) {
       setHeroIndex(Math.max(0, updatedSlides.length - 1));
     }
@@ -145,7 +145,9 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
 
     const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
     if (!allowedTypes.includes(file.type)) {
-      toast.error(`Please select a valid image file (${allowedTypes.join(", ")})`);
+      toast.error(
+        `Please select a valid image file (${allowedTypes.join(", ")})`
+      );
       return;
     }
 
@@ -178,7 +180,10 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
   const currentSlide = heroSlides[heroIndex];
 
   return (
-    <div className="relative overflow-hidden h-screen md:h-[100vh]" data-component-id={componentId}>
+    <div
+      className="relative h-[70vh] overflow-hidden"
+      data-component-id={componentId}
+    >
       {isEditable && (
         <div className="absolute top-6 right-4 z-30 flex gap-2">
           <button
@@ -225,7 +230,9 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
               key={`slide-${componentId}-${heroIndex}-${currentSlide.url}`}
               src={currentSlide.url}
               alt={currentSlide.alt}
-              onImageChange={(url, alt) => handleSlideImageUpdate(url, alt, heroIndex)}
+              onImageChange={(url, alt) =>
+                handleSlideImageUpdate(url, alt, heroIndex)
+              }
               isEditable={isEditable}
               className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
               cloudinaryOptions={{
@@ -251,7 +258,9 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
                 <label
                   htmlFor={`slide-upload-${componentId}-${heroIndex}`}
                   className={`cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-3 py-1 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
-                    isUploadingBackground ? "pointer-events-none opacity-50" : ""
+                    isUploadingBackground
+                      ? "pointer-events-none opacity-50"
+                      : ""
                   }`}
                 >
                   {isUploadingBackground ? (
@@ -277,23 +286,23 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
 
           {/* Gradient Overlay based on currentSlide.color */}
           <div
-            className={`absolute inset-0 bg-gradient-to-r ${currentSlide.color || "from-black/90"} via-transparent to-transparent flex items-center`}
+            className={`absolute inset-0 bg-gradient-to-r ${currentSlide.color || "from-black/90"} flex items-center via-transparent to-transparent`}
           >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
+            <div className="z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="max-w-xl text-white pt-10"
+                className="max-w-xl pt-10 text-white"
               >
                 <div className="mb-6 inline-block w-full">
-                  <div className="w-auto inline-block border border-white/20 bg-white/10 backdrop-blur-md rounded-full px-3 py-1">
+                  <div className="inline-block w-auto rounded-full border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-md">
                     <EditableText
                       value={currentSlide.subtitle}
                       onChange={handleSlideUpdate(currentSlide.id, "subtitle")}
                       isEditable={isEditable}
                       as="span"
-                      className="text-xs font-bold uppercase tracking-wider text-white"
+                      className="text-xs font-bold tracking-wider text-white uppercase"
                       placeholder="Subtitle"
                     />
                   </div>
@@ -305,7 +314,7 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
                   isEditable={isEditable}
                   multiline
                   as="h1"
-                  className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-none tracking-tight shadow-sm"
+                  className="mb-6 text-4xl leading-none font-extrabold tracking-tight shadow-sm md:text-6xl lg:text-7xl"
                   placeholder="Hero Title"
                 />
 
@@ -315,7 +324,7 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
                   isEditable={isEditable}
                   multiline
                   as="p"
-                  className="text-lg md:text-xl text-white/90 mb-8 font-light max-w-md leading-relaxed"
+                  className="mb-8 max-w-md text-lg leading-relaxed font-light text-white/90 md:text-xl"
                   placeholder="Hero Description"
                 />
 
@@ -332,7 +341,7 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
                     backgroundColor: theme.colors.primary,
                     color: theme.colors.primaryForeground,
                   }}
-                  className="inline-flex items-center px-8 py-4 rounded-full font-bold transition-all shadow-xl hover:scale-105"
+                  className="inline-flex items-center rounded-full px-8 py-4 font-bold shadow-xl transition-all hover:scale-105"
                   textPlaceholder="Button text..."
                   hrefPlaceholder="Button link..."
                 />
@@ -342,13 +351,15 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
         </motion.div>
       </AnimatePresence>
 
-      <div className="absolute bottom-8 left-0 right-0 z-20 flex justify-center gap-3">
+      <div className="absolute right-0 bottom-8 left-0 z-20 flex justify-center gap-3">
         {heroSlides.map((_, i) => (
           <button
             key={i}
             onClick={() => setHeroIndex(i)}
             className={`h-2 rounded-full transition-all duration-300 ${
-              i === heroIndex ? "bg-white w-8" : "bg-white/40 hover:bg-white/60 w-2"
+              i === heroIndex
+                ? "w-8 bg-white"
+                : "w-2 bg-white/40 hover:bg-white/60"
             }`}
             aria-label={`Go to slide ${i + 1}`}
           />

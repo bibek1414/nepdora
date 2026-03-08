@@ -9,6 +9,7 @@ export const ourClientsSchema = z.object({
     "our-clients-2",
     "our-clients-3",
     "our-clients-4",
+    "our-clients-5",
   ]),
   show_all: z.boolean().default(true),
   limit: z.number().min(1).max(50).default(10),

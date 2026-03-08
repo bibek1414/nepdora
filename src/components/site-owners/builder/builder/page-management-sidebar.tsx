@@ -20,43 +20,72 @@ export const PageManagementSidebar: React.FC<PageManagementSidebarProps> = ({
   onPageCreated,
   onPageDeleted,
 }) => {
+  const detailsPages = pages.filter(page => page.slug.includes("-details-draft"));
+  const storePages = pages.filter(page => page.slug.includes("checkout-draft") || page.slug.includes("order-confirmation-draft"));
+  const authPages = pages.filter(page => page.slug.includes("login-draft") || page.slug.includes("signup-draft"));
+  const mainPages = pages.filter(page => 
+    !page.slug.includes("-details-draft") && 
+    !page.slug.includes("checkout-draft") && 
+    !page.slug.includes("order-confirmation-draft") &&
+    !page.slug.includes("login-draft") && 
+    !page.slug.includes("signup-draft")
+  );
+
+  const renderPageList = (title: string, list: Page[]) => {
+    if (list.length === 0) return null;
+
+    return (
+      <div className="mb-4">
+        <div className="px-4 py-1.5 text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+          {title}
+        </div>
+        <div className="space-y-1 px-2">
+          {list.map(page => (
+            <div
+              key={page.slug}
+              className={`group flex cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-2 text-[10px] transition-colors ${
+                currentPage === page.slug
+                  ? "bg-gray-100 font-medium text-gray-900"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+              }`}
+              onClick={() => onPageChange(page.slug)}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <FileText className="h-4 w-4 shrink-0 text-gray-400" />
+                <span className="truncate capitalize">{page.title}</span>
+              </div>
+
+              {pages.length > 1 &&
+                !page.slug.includes("-details-draft") &&
+                !page.slug.includes("checkout-draft") &&
+                !page.slug.includes("login-draft") &&
+                !page.slug.includes("signup-draft") &&
+                !page.slug.includes("order-confirmation-draft") && (
+                  <div
+                    className="flex shrink-0"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <DeletePageDialog page={page} onPageDeleted={onPageDeleted} />
+                  </div>
+                )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <aside className="sticky top-16 left-0 flex h-[calc(100vh-4rem)] w-56 shrink-0 flex-col overflow-y-auto border-r bg-white">
       <div className="flex items-center justify-between border-b px-4 py-3">
         <span className="text-sm font-semibold text-gray-700">Pages</span>
         <NewPageDialog onPageCreated={onPageCreated} />
       </div>
-      <div className="flex-1 space-y-1 p-2">
-        {pages.map(page => (
-          <div
-            key={page.slug}
-            className={`group flex cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-2 text-[10px] transition-colors ${
-              currentPage === page.slug
-                ? "bg-gray-100 font-medium text-gray-900"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-            onClick={() => onPageChange(page.slug)}
-          >
-            <div className="flex items-center gap-2 truncate">
-              <FileText className="h-4 w-4 shrink-0 text-gray-400" />
-              <span className="truncate capitalize">{page.title}</span>
-            </div>
-
-            {pages.length > 1 &&
-              !page.slug.includes("-details-draft") &&
-              !page.slug.includes("checkout-draft") &&
-              !page.slug.includes("login-draft") &&
-              !page.slug.includes("signup-draft") &&
-              !page.slug.includes("order-confirmation-draft") && (
-                <div
-                  className="flex shrink-0"
-                  onClick={e => e.stopPropagation()}
-                >
-                  <DeletePageDialog page={page} onPageDeleted={onPageDeleted} />
-                </div>
-              )}
-          </div>
-        ))}
+      <div className="flex-1 py-2">
+        {renderPageList("Main Pages", mainPages)}
+        {renderPageList("Details Pages", detailsPages)}
+        {renderPageList("Store Pages", storePages)}
+        {renderPageList("Authentication", authPages)}
       </div>
     </aside>
   );

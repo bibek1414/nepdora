@@ -57,7 +57,7 @@ export const FaqCard8: React.FC<FaqCard8Props> = ({
             {faq.question}
           </span>
           <span
-            className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-colors duration-300 ${
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors duration-300 ${
               !isOpen
                 ? "bg-gray-100 text-gray-600 group-hover:bg-gray-200"
                 : "text-white"
@@ -89,36 +89,23 @@ export const FaqCard8: React.FC<FaqCard8Props> = ({
   return (
     <div className="w-full">
       <div className="mb-12 text-center">
-        {isEditable && onTitleChange ? (
-          <EditableText
-            value={title}
-            onChange={onTitleChange}
-            as="h2"
-            className="mb-4 text-4xl font-bold tracking-tight md:text-5xl"
-            style={{ color: primaryColor }}
-            isEditable={true}
-            placeholder="Enter title..."
-          />
-        ) : (
-          <h2
-            className="mb-4 text-4xl font-bold tracking-tight md:text-5xl"
-            style={{ color: primaryColor }}
-          >
-            {title}
-          </h2>
-        )}
-        {isEditable && onSubtitleChange ? (
-          <EditableText
-            value={subtitle}
-            onChange={onSubtitleChange}
-            as="p"
-            className="mx-auto max-w-2xl text-lg text-gray-600"
-            isEditable={true}
-            placeholder="Enter subtitle..."
-          />
-        ) : (
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">{subtitle}</p>
-        )}
+        <EditableText
+          value={title}
+          onChange={onTitleChange || (() => {})}
+          as="h2"
+          className="mb-4 text-4xl font-bold tracking-tight md:text-5xl"
+          style={{ color: primaryColor }}
+          isEditable={isEditable}
+          placeholder="Enter title..."
+        />
+        <EditableText
+          value={subtitle}
+          onChange={onSubtitleChange || (() => {})}
+          as="p"
+          className="mx-auto max-w-2xl text-lg text-gray-600"
+          isEditable={isEditable}
+          placeholder="Enter subtitle..."
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">

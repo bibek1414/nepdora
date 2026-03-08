@@ -1,7 +1,7 @@
 export interface NewsletterData {
   component_id?: string;
   component_type: "newsletter";
-  style: "newsletter-1" | "newsletter-2" | "newsletter-3";
+  style: "newsletter-1" | "newsletter-2" | "newsletter-3" | "newsletter-4";
   title: string;
   subtitle?: string;
   description?: string;
@@ -69,6 +69,19 @@ export const defaultNewsletter3Data: NewsletterData = {
   show_privacy_note: false,
 };
 
+export const defaultNewsletter4Data: NewsletterData = {
+  ...defaultNewsletterData,
+  style: "newsletter-4",
+  title: "Join the Elite Tech Community.",
+  subtitle: "Newsletter Signup",
+  description:
+    "Get priority access to limited edition drops, specialized hardware insights, and exclusive member pricing.",
+  placeholder_text: "Enter your executive email",
+  button_text: "Join",
+  show_privacy_note: true,
+  privacy_note: "By subscribing, you agree to our Privacy Policy and Terms of Service.",
+};
+
 export const DEFAULT_NEWSLETTER_MAP: Record<
   NewsletterData["style"],
   NewsletterData
@@ -76,4 +89,5 @@ export const DEFAULT_NEWSLETTER_MAP: Record<
   "newsletter-1": defaultNewsletter1Data,
   "newsletter-2": defaultNewsletter2Data,
   "newsletter-3": defaultNewsletter3Data,
+  "newsletter-4": defaultNewsletter4Data,
 };

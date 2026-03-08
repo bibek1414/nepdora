@@ -20,6 +20,7 @@ import { Trash2, RefreshCw } from "lucide-react";
 import { NewsletterStyle1 } from "./newsletter-style-1";
 import { NewsletterStyle2 } from "./newsletter-style-2";
 import { NewsletterStyle3 } from "./newsletter-style-3";
+import { NewsletterStyle4 } from "./newsletter-style-4";
 
 interface NewsletterComponentProps {
   component: NewsletterComponentData;
@@ -89,6 +90,8 @@ export const NewsletterComponent: React.FC<NewsletterComponentProps> = ({
     };
 
     switch (style) {
+      case "newsletter-4":
+        return <NewsletterStyle4 {...commonProps} />;
       case "newsletter-2":
         return <NewsletterStyle2 {...commonProps} />;
       case "newsletter-3":

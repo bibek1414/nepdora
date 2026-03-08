@@ -1,9 +1,9 @@
 "use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { useCategories } from '@/hooks/owner-site/admin/use-category';
-import Image from 'next/image';
+import React from "react";
+import Link from "next/link";
+import { useCategories } from "@/hooks/owner-site/admin/use-category";
+import Image from "next/image";
 import { EditableText } from "@/components/ui/editable-text";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -55,13 +55,16 @@ export const CategoryStyle8: React.FC<CategoryStyleProps> = ({
 
   if (isLoading) {
     return (
-      <section className="mb-16 py-16 lg:py-24 bg-white" style={{ backgroundColor: theme.colors.background }}>
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 animate-pulse">
+      <section
+        className="mb-16 bg-white py-16 lg:py-24"
+        style={{ backgroundColor: theme.colors.background }}
+      >
+        <div className="container mx-auto max-w-7xl px-4">
+          <div className="grid animate-pulse grid-cols-3 gap-6 sm:grid-cols-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex flex-col items-center gap-4">
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gray-200" />
-                <div className="h-4 w-16 bg-gray-200 rounded" />
+                <div className="h-20 w-20 rounded-full bg-gray-200 md:h-24 md:w-24" />
+                <div className="h-4 w-16 rounded bg-gray-200" />
               </div>
             ))}
           </div>
@@ -71,13 +74,13 @@ export const CategoryStyle8: React.FC<CategoryStyleProps> = ({
   }
 
   if (!categories || categories.length === 0) {
-     return null;
+    return null;
   }
 
   return (
-    <section className="mb-16 py-16 lg:py-24 bg-white" style={{ backgroundColor: theme.colors.background }}>
-      <div className="container mx-auto px-4 max-w-7xl">
-        <h2 className="text-2xl font-black mb-8" style={{ color: theme.colors.primary }}>
+    <section className="mb-16 bg-white py-16 lg:py-24">
+      <div className="container mx-auto max-w-7xl px-4">
+        <h2 className="mb-8 text-2xl font-black">
           <EditableText
             value={title}
             onChange={handleTitleChange}
@@ -85,14 +88,14 @@ export const CategoryStyle8: React.FC<CategoryStyleProps> = ({
             isEditable={isEditable}
           />
         </h2>
-        
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-6">
-          {categories.map((cat) => {
+
+        <div className="grid grid-cols-3 gap-6 sm:grid-cols-6">
+          {categories.map(cat => {
             return (
-              <Link 
-                href={getCategoryUrl(cat)} 
-                key={cat.id} 
-                className="flex flex-col items-center gap-4 group"
+              <Link
+                href={getCategoryUrl(cat)}
+                key={cat.id}
+                className="group flex flex-col items-center gap-4"
                 onClick={e => {
                   if (isEditable) {
                     e.preventDefault();
@@ -101,27 +104,23 @@ export const CategoryStyle8: React.FC<CategoryStyleProps> = ({
                   }
                 }}
               >
-                <div 
-                  className="relative w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-transparent transition-all duration-300"
-                  style={{ '--hover-color': theme.colors.primary } as React.CSSProperties}
-                  onMouseEnter={(e) => {
+                <div
+                  className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-transparent transition-all duration-300 md:h-24 md:w-24"
+                  onMouseEnter={e => {
                     e.currentTarget.style.borderColor = theme.colors.primary;
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'transparent';
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = "transparent";
                   }}
                 >
-                   <Image 
-                     src={cat.image || '/fallback/image-not-found.png'} 
-                     alt={cat.name} 
-                     fill 
-                     className="object-cover" 
-                   />
+                  <Image
+                    src={cat.image || "/fallback/image-not-found.png"}
+                    alt={cat.name}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-                <span 
-                  className="text-sm font-bold transition-colors uppercase tracking-wider text-center" 
-                  style={{ color: theme.colors.text }}
-                >
+                <span className="text-center text-sm font-bold tracking-wider uppercase transition-colors">
                   {cat.name}
                 </span>
               </Link>

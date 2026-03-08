@@ -1,7 +1,7 @@
 export interface OurClientsData {
   component_id?: string;
   component_type: "our_clients";
-  style: "our-clients-1" | "our-clients-2" | "our-clients-3" | "our-clients-4";
+  style: "our-clients-1" | "our-clients-2" | "our-clients-3" | "our-clients-4" | "our-clients-5";
   title: string;
   subtitle?: string;
   description?: string;
@@ -60,6 +60,16 @@ export const defaultOurClientsData4: OurClientsData = {
   limit: 6,
 };
 
+export const defaultOurClientsData5: OurClientsData = {
+  component_type: "our_clients",
+  style: "our-clients-5",
+  title: "",
+  subtitle: "Authorized Excellence Partner",
+  description: "",
+  show_all: true,
+  limit: 6,
+};
+
 export const DEFAULT_OUR_CLIENTS_MAP: Record<
   OurClientsData["style"],
   OurClientsData
@@ -68,4 +78,5 @@ export const DEFAULT_OUR_CLIENTS_MAP: Record<
   "our-clients-2": defaultOurClientsData2,
   "our-clients-3": defaultOurClientsData3,
   "our-clients-4": defaultOurClientsData4,
+  "our-clients-5": defaultOurClientsData5,
 };

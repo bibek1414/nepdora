@@ -137,20 +137,14 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-500">Email</p>
-                      {isEditable ? (
-                        <EditableText
-                          value={data.contact_info.email}
-                          onChange={value => updateContactInfo("email", value)}
-                          as="p"
-                          className="text-gray-900"
-                          isEditable={true}
-                          placeholder="email@example.com"
-                        />
-                      ) : (
-                        <p className="text-gray-900">
-                          {data.contact_info.email}
-                        </p>
-                      )}
+                      <EditableText
+                        value={data.contact_info.email || ""}
+                        onChange={value => updateContactInfo("email", value)}
+                        as="p"
+                        className="text-gray-900"
+                        isEditable={isEditable}
+                        placeholder="email@example.com"
+                      />
                     </div>
                   </div>
                 )}
@@ -168,20 +162,14 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-500">Phone</p>
-                      {isEditable ? (
-                        <EditableText
-                          value={data.contact_info.phone}
-                          onChange={value => updateContactInfo("phone", value)}
-                          as="p"
-                          className="text-gray-900"
-                          isEditable={true}
-                          placeholder="+1 (555) 123-4567"
-                        />
-                      ) : (
-                        <p className="text-gray-900">
-                          {data.contact_info.phone}
-                        </p>
-                      )}
+                      <EditableText
+                        value={data.contact_info.phone || ""}
+                        onChange={value => updateContactInfo("phone", value)}
+                        as="p"
+                        className="text-gray-900"
+                        isEditable={isEditable}
+                        placeholder="+1 (555) 123-4567"
+                      />
                     </div>
                   </div>
                 )}
@@ -201,23 +189,17 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                       <p className="text-sm font-medium text-gray-500">
                         Address
                       </p>
-                      {isEditable ? (
-                        <EditableText
-                          value={data.contact_info.address}
-                          onChange={value =>
-                            updateContactInfo("address", value)
-                          }
-                          as="p"
-                          className="text-gray-900"
-                          isEditable={true}
-                          placeholder="123 Business St, City, State"
-                          multiline={true}
-                        />
-                      ) : (
-                        <p className="text-gray-900">
-                          {data.contact_info.address}
-                        </p>
-                      )}
+                      <EditableText
+                        value={data.contact_info.address || ""}
+                        onChange={value =>
+                          updateContactInfo("address", value)
+                        }
+                        as="p"
+                        className="text-gray-900"
+                        isEditable={isEditable}
+                        placeholder="123 Business St, City, State"
+                        multiline={true}
+                      />
                     </div>
                   </div>
                 )}
@@ -248,7 +230,6 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                         <span className="font-medium text-gray-700">
                           {label}
                         </span>
-                        {isEditable ? (
                           <EditableText
                             value={hours || ""}
                             onChange={value => {
@@ -263,12 +244,9 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                               }
                             }}
                             className="text-right text-gray-600"
-                            isEditable={true}
+                            isEditable={isEditable}
                             placeholder="Closed"
                           />
-                        ) : (
-                          <span className="text-gray-600">{hours}</span>
-                        )}
                       </div>
                     );
                   })}

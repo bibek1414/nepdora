@@ -64,32 +64,6 @@ export const ProductDetailsComponent: React.FC<
     return sampleSlug;
   }, [productSlug, params, sampleSlug]);
 
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  const deleteMutation = useDeleteComponentMutation(
-    pageSlug,
-    "product_details"
-  );
-  const updateMutation = useUpdateComponentMutation(
-    pageSlug,
-    "product_details"
-  );
-
-  const handleUpdate = (updatedData: Partial<ProductDetailsData>) => {
-    updateMutation.mutate({
-      componentId: component.component_id,
-      data: updatedData,
-    });
-  };
-
-  const handleDelete = () => {
-    deleteMutation.mutate(component.component_id, {
-      onSuccess: () => {
-        setIsDeleteDialogOpen(false);
-      },
-    });
-  };
-
   const style = component.data?.style || "style-1";
 
   const renderContent = () => {
@@ -118,44 +92,7 @@ export const ProductDetailsComponent: React.FC<
               <RefreshCw className="mr-1 h-4 w-4" />
               Replace
             </Button>
-
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={() => setIsDeleteDialogOpen(true)}
-              className="h-8 w-fit justify-start px-3"
-            >
-              <Trash2 className="mr-1 h-4 w-4" />
-              Delete
-            </Button>
           </div>
-
-          <AlertDialog
-            open={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-          >
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Delete Product Details Section
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to delete this section? Most ecommerce
-                  sites need at least one product details section per product
-                  page.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleDelete}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </>
       )}
       {renderContent()}

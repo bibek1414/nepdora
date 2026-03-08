@@ -61,6 +61,19 @@ export const NewPageDialog: React.FC<NewPageDialogProps> = ({
       return;
     }
 
+    const generatedSlug = pageTitle
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+
+    const forbiddenKeywords = ["checkout", "order-confirmation", "login", "signup", "details"];
+    const isForbidden = forbiddenKeywords.some(keyword => generatedSlug.includes(keyword));
+
+    if (isForbidden) {
+      setError("This page type is created automatically and cannot be created manually");
+      return;
+    }
+
     createPageMutation.mutate(
       { title: pageTitle.trim() },
       {
