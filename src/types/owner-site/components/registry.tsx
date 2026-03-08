@@ -356,18 +356,20 @@ export const COMPONENT_REGISTRY: {
     type: "login_form",
     displayName: "Login Form",
     category: "basic",
-    getDefaultData: variant =>
-      DEFAULT_LOGIN_MAP[variant as keyof typeof DEFAULT_LOGIN_MAP] ||
-      DEFAULT_LOGIN_MAP["style-1"],
+    getDefaultData: variant => {
+      const styleKey = (variant?.replace("login-", "") as keyof typeof DEFAULT_LOGIN_MAP);
+      return DEFAULT_LOGIN_MAP[styleKey] || DEFAULT_LOGIN_MAP["style-1"];
+    },
     component: LoginForm,
   },
   signup_form: {
     type: "signup_form",
     displayName: "Signup Form",
     category: "basic",
-    getDefaultData: variant =>
-      DEFAULT_SIGNUP_MAP[variant as keyof typeof DEFAULT_SIGNUP_MAP] ||
-      DEFAULT_SIGNUP_MAP["style-1"],
+    getDefaultData: variant => {
+      const styleKey = (variant?.replace("signup-", "") as keyof typeof DEFAULT_SIGNUP_MAP);
+      return DEFAULT_SIGNUP_MAP[styleKey] || DEFAULT_SIGNUP_MAP["style-1"];
+    },
     component: SignupForm,
   },
 };

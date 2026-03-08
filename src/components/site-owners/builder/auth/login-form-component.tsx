@@ -1,22 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { AuthFormData } from "@/types/owner-site/components/auth-form-map";
-import {
-  useDeleteComponentMutation,
-  useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/use-unified";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Trash2, RefreshCw } from "lucide-react";
+import { useUpdateComponentMutation } from "@/hooks/owner-site/components/use-unified";
+
+import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LoginStyle1 } from "./styles/login-style-1";
 import { LoginStyle2 } from "./styles/login-style-2";
@@ -42,12 +30,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   onUpdate,
   onReplace,
 }) => {
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  const deleteComponent = useDeleteComponentMutation(
-    pageSlug || "",
-    "login_form"
-  );
   const updateComponent = useUpdateComponentMutation(
     pageSlug || "",
     "login_form"
@@ -70,12 +52,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     if (onUpdate) {
       onUpdate(componentId, newData);
     }
-  };
-
-  const handleConfirmDelete = () => {
-    if (!pageSlug) return;
-    deleteComponent.mutate(component.component_id);
-    setIsDeleteDialogOpen(false);
   };
 
   const renderStyle = () => {
@@ -113,40 +89,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             <RefreshCw className="mr-1 h-4 w-4" />
             Replace
           </Button>
-
-          <AlertDialog
-            open={isDeleteDialogOpen}
-            onOpenChange={setIsDeleteDialogOpen}
-          >
-            <Button
-              onClick={() => setIsDeleteDialogOpen(true)}
-              variant="destructive"
-              size="sm"
-              className="h-8 w-fit justify-start px-3"
-              disabled={deleteComponent.isPending}
-            >
-              <Trash2 className="mr-1 h-4 w-4" />
-              {deleteComponent.isPending ? "Deleting..." : "Delete"}
-            </Button>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Delete Login Form</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to delete this login form?
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleConfirmDelete}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  disabled={deleteComponent.isPending}
-                >
-                  {deleteComponent.isPending ? "Deleting..." : "Delete"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </div>
       )}
 

@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { useState } from "react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { EditableText } from "@/components/ui/editable-text";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface LoginStyle1Props {
   data: AuthFormData;
@@ -30,6 +31,18 @@ export const LoginStyle1: React.FC<LoginStyle1Props> = ({
   siteUser,
   onUpdate,
 }) => {
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+    },
+  };
+
   const pathname = usePathname();
   const { login, isLoading } = useAuth();
   const { data: localData, handleTextUpdate } = useBuilderLogic(data, onUpdate);
@@ -145,7 +158,12 @@ export const LoginStyle1: React.FC<LoginStyle1Props> = ({
                 type="submit"
                 variant="default"
                 disabled={isEditable || isLoading}
-                className="bg-primary hover:bg-primary/90 w-full rounded-lg px-4 py-3 font-medium text-white"
+                className="hover:opacity-90 w-full rounded-lg px-4 py-3 font-medium transition-opacity"
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  color: theme.colors.primaryForeground,
+                  fontFamily: theme.fonts.body,
+                }}
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center">
@@ -170,7 +188,8 @@ export const LoginStyle1: React.FC<LoginStyle1Props> = ({
                   isEditable,
                   false
                 )}
-                className="text-primary cursor-pointer font-medium hover:underline"
+                className="cursor-pointer font-medium hover:underline"
+                style={{ color: theme.colors.primary }}
               >
                 Sign up
               </Link>

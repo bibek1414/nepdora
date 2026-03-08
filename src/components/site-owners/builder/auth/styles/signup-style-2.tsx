@@ -17,6 +17,7 @@ import { AlertCircle } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface SignupStyle2Props {
   data: AuthFormData;
@@ -31,12 +32,30 @@ export const SignupStyle2: React.FC<SignupStyle2Props> = ({
   siteUser,
   onUpdate,
 }) => {
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+    },
+  };
+
   const pathname = usePathname();
   const { signup, isLoading } = useAuth();
   const { data: localData, handleTextUpdate } = useBuilderLogic(data, onUpdate);
   const [error, setError] = useState<string | null>(null);
 
-  const { title = "", subtitle = "", buttonText = "", imageUrl = "", imageAlt = "" } = localData;
+  const {
+    title = "",
+    subtitle = "",
+    buttonText = "",
+    imageUrl = "",
+    imageAlt = "",
+  } = localData;
 
   const handleImageUpdate = (newUrl: string, newAlt?: string) => {
     if (onUpdate) {
@@ -91,206 +110,219 @@ export const SignupStyle2: React.FC<SignupStyle2Props> = ({
 
   return (
     <div className="flex min-h-[700px] w-full items-center justify-center bg-gray-50 p-4 sm:p-8">
-      <div className="flex w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-xl">
+      <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-8 md:flex-row">
         {/* Left Side - Image */}
-        <div className="hidden w-1/2 lg:block relative bg-gray-100">
-          <EditableImage
-            src={imageUrl || ""}
-            alt={imageAlt || "Signup image"}
-            onImageChange={handleImageUpdate}
-            onAltChange={handleAltUpdate}
-            isEditable={isEditable}
-            className="absolute inset-0 h-full w-full object-cover"
-            width={800}
-            height={800}
-            showAltEditor={true}
-            placeholder={{ width: 800, height: 800, text: "Click to set signup image" }}
-          />
+        <div className="hidden w-full flex-col items-center justify-center p-8 md:flex md:w-1/2">
+          <div className="relative w-full max-w-md">
+            <EditableImage
+              src={imageUrl || ""}
+              alt={imageAlt || "Signup image"}
+              onImageChange={handleImageUpdate}
+              onAltChange={handleAltUpdate}
+              isEditable={isEditable}
+              className="h-auto w-full rounded-2xl drop-shadow-2xl"
+              width={800}
+              height={800}
+              placeholder={{
+                width: 800,
+                height: 800,
+                text: "Click to set signup image",
+              }}
+            />
+          </div>
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full p-8 sm:p-12 lg:w-1/2 flex flex-col justify-center">
-          <div className="mb-10 text-center lg:text-left">
-            <EditableText
-              as="h2"
-              value={title}
-              onChange={handleTextUpdate("title")}
-              isEditable={isEditable}
-              className="text-4xl font-extrabold tracking-tight text-gray-900"
-            />
-            <EditableText
-              as="p"
-              value={subtitle}
-              onChange={handleTextUpdate("subtitle")}
-              isEditable={isEditable}
-              className="mt-3 text-lg text-gray-500"
-            />
-          </div>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {error && (
-            <div className="flex items-center rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
-              <AlertCircle className="mr-2 h-4 w-4 shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Input
-                id="fname-2"
-                type="text"
-                label="First Name"
-                className={cn(
-                  "focus:border-primary h-12 border-gray-200",
-                  errors.first_name && "border-red-500"
-                )}
-                disabled={isEditable || isLoading}
-                {...register("first_name")}
+        <div className="w-full max-w-md md:w-1/2">
+          <div className="rounded-2xl bg-white p-8 shadow-2xl">
+            <div className="mb-10 text-center">
+              <EditableText
+                as="h2"
+                value={title}
+                onChange={handleTextUpdate("title")}
+                isEditable={isEditable}
+                className="text-4xl font-extrabold tracking-tight text-gray-900"
               />
-              {errors.first_name && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.first_name.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Input
-                id="lname-2"
-                type="text"
-                label="Last Name"
-                className={cn(
-                  "focus:border-primary h-12 border-gray-200",
-                  errors.last_name && "border-red-500"
-                )}
-                disabled={isEditable || isLoading}
-                {...register("last_name")}
+              <EditableText
+                as="p"
+                value={subtitle}
+                onChange={handleTextUpdate("subtitle")}
+                isEditable={isEditable}
+                className="mt-3 text-lg text-gray-500"
               />
-              {errors.last_name && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.last_name.message}
-                </p>
-              )}
             </div>
-          </div>
-
-          <div>
-            <Input
-              id="email-signup-2"
-              type="email"
-              label="Email"
-              className={cn(
-                "focus:border-primary h-12 border-gray-200",
-                errors.email && "border-red-500"
-              )}
-              disabled={isEditable || isLoading}
-              {...register("email")}
-            />
-            {errors.email && (
-              <p className="mt-1 text-xs text-red-500">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <Input
-              id="phone-signup-2"
-              type="tel"
-              label="Phone"
-              className={cn(
-                "focus:border-primary h-12 border-gray-200",
-                errors.phone && "border-red-500"
-              )}
-              disabled={isEditable || isLoading}
-              {...register("phone")}
-            />
-            {errors.phone && (
-              <p className="mt-1 text-xs text-red-500">
-                {errors.phone.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <Input
-              id="pass-signup-2"
-              type="password"
-              label="Password"
-              className={cn(
-                "focus:border-primary h-12 border-gray-200",
-                errors.password && "border-red-500"
-              )}
-              disabled={isEditable || isLoading}
-              {...register("password")}
-            />
-            {errors.password && (
-              <p className="mt-1 text-xs text-red-500">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <Input
-              id="confirm-pass-signup-2"
-              type="password"
-              label="Confirm Password"
-              className={cn(
-                "focus:border-primary h-12 border-gray-200",
-                errors.confirmPassword && "border-red-500"
-              )}
-              disabled={isEditable || isLoading}
-              {...register("confirmPassword")}
-            />
-            {errors.confirmPassword && (
-              <p className="mt-1 text-xs text-red-500">
-                {errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
-
-          <div className="pt-4">
-            <Button
-              type="submit"
-              disabled={isEditable || isLoading}
-              className="h-14 w-full rounded-2xl bg-gray-900 text-lg font-bold text-white shadow-xl transition-all hover:bg-black hover:shadow-2xl active:scale-[0.99]"
-            >
-              {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <div className="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
-                  Registering...
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {error && (
+                <div className="flex items-center rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+                  <AlertCircle className="mr-2 h-4 w-4 shrink-0" />
+                  <span>{error}</span>
                 </div>
-              ) : (
-                buttonText
               )}
-            </Button>
-          </div>
-
-          <div className="mt-8 text-center">
-            <p className="font-medium text-gray-500">
-              Already a member?{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  /* Link handling is already done in generateLinkHref */
-                }}
-                className="text-primary font-bold hover:underline"
-              >
-                <Link
-                  href={generateLinkHref(
-                    "/login",
-                    siteUser,
-                    pathname,
-                    isEditable,
-                    false
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Input
+                    id="fname-2"
+                    type="text"
+                    label="First Name"
+                    className={cn(
+                      "focus:border-primary h-12 border-gray-200",
+                      errors.first_name && "border-red-500"
+                    )}
+                    disabled={isEditable || isLoading}
+                    {...register("first_name")}
+                  />
+                  {errors.first_name && (
+                    <p className="mt-1 text-xs text-red-500">
+                      {errors.first_name.message}
+                    </p>
                   )}
+                </div>
+                <div>
+                  <Input
+                    id="lname-2"
+                    type="text"
+                    label="Last Name"
+                    className={cn(
+                      "focus:border-primary h-12 border-gray-200",
+                      errors.last_name && "border-red-500"
+                    )}
+                    disabled={isEditable || isLoading}
+                    {...register("last_name")}
+                  />
+                  {errors.last_name && (
+                    <p className="mt-1 text-xs text-red-500">
+                      {errors.last_name.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <Input
+                  id="email-signup-2"
+                  type="email"
+                  label="Email"
+                  className={cn(
+                    "focus:border-primary h-12 border-gray-200",
+                    errors.email && "border-red-500"
+                  )}
+                  disabled={isEditable || isLoading}
+                  {...register("email")}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Input
+                  id="phone-signup-2"
+                  type="tel"
+                  label="Phone"
+                  className={cn(
+                    "focus:border-primary h-12 border-gray-200",
+                    errors.phone && "border-red-500"
+                  )}
+                  disabled={isEditable || isLoading}
+                  {...register("phone")}
+                />
+                {errors.phone && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {errors.phone.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Input
+                  id="pass-signup-2"
+                  type="password"
+                  label="Password"
+                  className={cn(
+                    "focus:border-primary h-12 border-gray-200",
+                    errors.password && "border-red-500"
+                  )}
+                  disabled={isEditable || isLoading}
+                  {...register("password")}
+                />
+                {errors.password && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Input
+                  id="confirm-pass-signup-2"
+                  type="password"
+                  label="Confirm Password"
+                  className={cn(
+                    "focus:border-primary h-12 border-gray-200",
+                    errors.confirmPassword && "border-red-500"
+                  )}
+                  disabled={isEditable || isLoading}
+                  {...register("confirmPassword")}
+                />
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="pt-4">
+                <Button
+                  type="submit"
+                  disabled={isEditable || isLoading}
+                  className="h-14 w-full rounded-2xl text-lg font-bold shadow-xl transition-all hover:opacity-90 hover:shadow-2xl active:scale-[0.99]"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                    fontFamily: theme.fonts.body,
+                    boxShadow: `0 20px 25px -5px ${theme.colors.primary}40, 0 8px 10px -6px ${theme.colors.primary}40`,
+                  }}
                 >
-                  Log in
-                </Link>
-              </button>
-            </p>
+                  {isLoading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
+                      Registering...
+                    </div>
+                  ) : (
+                    buttonText
+                  )}
+                </Button>
+              </div>
+
+              <div className="mt-8 text-center">
+                <p className="font-medium text-gray-500">
+                  Already a member?{" "}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      /* Link handling is already done in generateLinkHref */
+                    }}
+                    className="font-bold hover:underline"
+                    style={{ color: theme.colors.primary }}
+                  >
+                    <Link
+                      href={generateLinkHref(
+                        "/login",
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        false
+                      )}
+                    >
+                      Log in
+                    </Link>
+                  </button>
+                </p>
+              </div>
+            </form>
           </div>
-        </form>
         </div>
       </div>
     </div>
