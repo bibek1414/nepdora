@@ -16,7 +16,8 @@ import { uploadToCloudinary } from "@/utils/cloudinary";
 const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
   {
     id: "gallery6-case-1",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
     image_alt_description: "Revive & Rise showcase",
     title: "Revive & Rise",
     description:
@@ -25,7 +26,8 @@ const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
   },
   {
     id: "gallery6-case-2",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
     image_alt_description: "Scaling Made Simple showcase",
     title: "Scaling Made Simple",
     description:
@@ -34,7 +36,8 @@ const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
   },
   {
     id: "gallery6-case-3",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
     image_alt_description: "Fast-Track Growth showcase",
     title: "Fast-Track Growth",
     description:
@@ -43,7 +46,8 @@ const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
   },
   {
     id: "gallery6-case-4",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
     image_alt_description: "Future-Proofing showcase",
     title: "Future-Proofing",
     description:
@@ -158,7 +162,9 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
   const handleAddImage = (imageUrl?: string) => {
     const newImage: GalleryImage = {
       id: Date.now(),
-      image: imageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      image:
+        imageUrl ||
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       image_alt_description: "New gallery card",
       title: "New Case Study",
       description: "Add a short descriptor",

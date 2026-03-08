@@ -15,7 +15,8 @@ export const OurClientsStyle5: React.FC<OurClientsStyleProps> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const { title = "Our Clients", subtitle = "Authorized Excellence Partner" } = data || {};
+  const { title = "Our Clients", subtitle = "Authorized Excellence Partner" } =
+    data || {};
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -26,7 +27,7 @@ export const OurClientsStyle5: React.FC<OurClientsStyleProps> = ({
   };
 
   return (
-    <section className="border-t border-gray-100 bg-background py-20">
+    <section className="bg-background border-t border-gray-100 py-20">
       <div className="mx-auto max-w-7xl px-4">
         {title && (
           <div className="mb-4 text-center">
@@ -40,13 +41,13 @@ export const OurClientsStyle5: React.FC<OurClientsStyleProps> = ({
             />
           </div>
         )}
-        
+
         <div className="mb-12 flex justify-center text-center">
           <EditableText
             value={subtitle}
             onChange={handleSubtitleChange}
             as="p"
-            className="text-center text-xs font-semibold uppercase tracking-[0.3em] text-gray-400"
+            className="text-center text-xs font-semibold tracking-[0.3em] text-gray-400 uppercase"
             isEditable={isEditable}
             placeholder="Enter subtitle..."
           />

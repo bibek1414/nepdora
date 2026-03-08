@@ -191,9 +191,7 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                       </p>
                       <EditableText
                         value={data.contact_info.address || ""}
-                        onChange={value =>
-                          updateContactInfo("address", value)
-                        }
+                        onChange={value => updateContactInfo("address", value)}
                         as="p"
                         className="text-gray-900"
                         isEditable={isEditable}
@@ -230,23 +228,23 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                         <span className="font-medium text-gray-700">
                           {label}
                         </span>
-                          <EditableText
-                            value={hours || ""}
-                            onChange={value => {
-                              if (onDataChange) {
-                                onDataChange({
-                                  ...data,
-                                  business_hours: {
-                                    ...data.business_hours,
-                                    [key]: value,
-                                  },
-                                });
-                              }
-                            }}
-                            className="text-right text-gray-600"
-                            isEditable={isEditable}
-                            placeholder="Closed"
-                          />
+                        <EditableText
+                          value={hours || ""}
+                          onChange={value => {
+                            if (onDataChange) {
+                              onDataChange({
+                                ...data,
+                                business_hours: {
+                                  ...data.business_hours,
+                                  [key]: value,
+                                },
+                              });
+                            }
+                          }}
+                          className="text-right text-gray-600"
+                          isEditable={isEditable}
+                          placeholder="Closed"
+                        />
                       </div>
                     );
                   })}

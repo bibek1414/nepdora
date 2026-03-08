@@ -230,7 +230,10 @@ export const EditableImage: React.FC<EditableImageProps> = ({
         ) : (
           // Actual Image
           <Image
-            src={optimizedSrc || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80"}
+            src={
+              optimizedSrc ||
+              "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80"
+            }
             alt={localAlt}
             width={width}
             height={height}

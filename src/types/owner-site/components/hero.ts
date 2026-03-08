@@ -416,7 +416,8 @@ export const defaultHeroTemplate1Data: HeroTemplate1Data = {
   ],
   layout: "text-center",
   showImage: true,
-  imageUrl: "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  imageUrl:
+    "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   imageAlt: "Hero image",
 };
 
@@ -456,7 +457,8 @@ export const defaultHeroTemplate2Data: HeroTemplate2Data = {
   ],
   backgroundType: "image",
   backgroundColor: "#FFFFFF",
-  backgroundImageUrl: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  backgroundImageUrl:
+    "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 };
 
 export const defaultHeroTemplate3Data: HeroTemplate3Data = {
@@ -470,7 +472,8 @@ export const defaultHeroTemplate3Data: HeroTemplate3Data = {
     { id: "2", text: "Watch Demo", variant: "outline", href: "#" },
   ],
   showImage: true,
-  imageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1170&auto=format&fit=crop",
+  imageUrl:
+    "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1170&auto=format&fit=crop",
   imageAlt: "Platform interface",
   statsNumber: "12k+",
   statsLabel: "Used by teams and professionals.",
@@ -486,7 +489,8 @@ export const defaultHeroTemplate4Data: HeroTemplate4Data = {
     { id: "1", text: "Shop Collection", variant: "primary", href: "#" },
   ],
   showImage: true,
-  imageUrl: "https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=1327&auto=format&fit=crop",
+  imageUrl:
+    "https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=1327&auto=format&fit=crop",
   imageAlt: "Fashion collection",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",
@@ -505,7 +509,8 @@ export const defaultHeroTemplate5Data: HeroTemplate5Data = {
     { id: "2", text: "Explore Collection", variant: "outline", href: "#" },
   ],
   backgroundType: "image",
-  backgroundImageUrl: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1035&auto=format&fit=crop",
+  backgroundImageUrl:
+    "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1035&auto=format&fit=crop",
   showOverlay: true,
   overlayOpacity: 0.7,
   imageAlt: "Minimalist design",
@@ -551,7 +556,8 @@ export const defaultHeroTemplate7Data: HeroTemplate7Data = {
       title: "WOMEN'S COLLECTION",
       subtitle: "NEW COLLECTION",
       badge: "WOMEN",
-      imageUrl: "https://images.unsplash.com/photo-1683509231125-5c487afaa453?q=80&w=1364&auto=format&fit=crop",
+      imageUrl:
+        "https://images.unsplash.com/photo-1683509231125-5c487afaa453?q=80&w=1364&auto=format&fit=crop",
       imageAlt: "Woman in yellow sportswear stretching on stairs",
       buttonText: "DISCOVER MORE",
       buttonHref: "#",
@@ -561,7 +567,8 @@ export const defaultHeroTemplate7Data: HeroTemplate7Data = {
       title: "MEN'S COLLECTION",
       subtitle: "SAVE 50% OFF",
       badge: "MEN",
-      imageUrl: "https://images.unsplash.com/photo-1725653811863-8ca1776e126a?q=80&w=764&auto=format&fit=crop",
+      imageUrl:
+        "https://images.unsplash.com/photo-1725653811863-8ca1776e126a?q=80&w=764&auto=format&fit=crop",
       imageAlt: "Man in red t-shirt resting after a workout",
       buttonText: "DISCOVER MORE",
       buttonHref: "#",
@@ -590,9 +597,11 @@ export const defaultHeroTemplate8Data: HeroTemplate8Data = {
     features: ["Free Shipping", "30-Day Returns"],
     customerText: "Trusted by 1000+ customers worldwide",
   },
-  leftImageUrl: "https://images.unsplash.com/photo-1758640920659-0bb864175983?q=80&w=1171&auto=format&fit=crop",
+  leftImageUrl:
+    "https://images.unsplash.com/photo-1758640920659-0bb864175983?q=80&w=1171&auto=format&fit=crop",
   leftImageAlt: "Left rug image",
-  rightImageUrl: "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  rightImageUrl:
+    "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   rightImageAlt: "Right rug image",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",
@@ -692,7 +701,8 @@ export const defaultHeroTemplate11Data: HeroTemplate11Data = {
   buttons: [
     { id: "1", text: "Get started today", variant: "primary", href: "#" },
   ],
-  imageUrl: "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  imageUrl:
+    "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   imageAlt: "Business strategy meeting",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",
@@ -705,7 +715,8 @@ export const defaultHeroTemplate12Data: HeroTemplate12Data = {
     { id: "1", text: "Read More", variant: "primary", href: "#" },
     { id: "2", text: "Watch Our Videos", variant: "secondary", href: "#" },
   ],
-  imageUrl: "https://images.unsplash.com/photo-1762112800040-b0d01696cb92?q=80&w=681&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  imageUrl:
+    "https://images.unsplash.com/photo-1762112800040-b0d01696cb92?q=80&w=681&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   imageAlt: "Happy traveler in Paris",
   backgroundType: "color",
   backgroundColor: "#013D2F",
@@ -721,7 +732,8 @@ export const defaultHeroTemplate13Data: HeroTemplate13Data = {
     { id: "1", text: "Book a Free Call", variant: "secondary", href: "#" },
   ],
   backgroundType: "image",
-  backgroundImageUrl: "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  backgroundImageUrl:
+    "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   imageAlt: "Office meeting background",
 };
 
@@ -730,7 +742,8 @@ export const defaultHeroTemplate14Data: HeroTemplate14Data = {
   subtitle: "Exclusive Drop",
   title: "MIDNIGHT SERIES",
   buttons: [{ id: "1", text: "Shop The Look", variant: "primary", href: "#" }],
-  backgroundImageUrl: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2080&auto=format&fit=crop",
+  backgroundImageUrl:
+    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2080&auto=format&fit=crop",
   imageAlt: "Featured Collection",
 };
 
@@ -741,7 +754,8 @@ export const defaultHeroTemplate15Data: HeroTemplate15Data = {
   description:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed sodales auctor orci, sit amet vulputate velit molestie.",
   buttons: [{ id: "1", text: "Order Now", variant: "primary", href: "#" }],
-  imageUrl: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=2940&auto=format&fit=crop",
+  imageUrl:
+    "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=2940&auto=format&fit=crop",
   imageAlt: "Delicious food plate",
   priceLabel: "Price",
   priceValue: "$ 10.03",
@@ -769,7 +783,8 @@ export const defaultHeroTemplate16Data: HeroTemplate16Data = {
     { id: "2", text: "5000+ Students Placed" },
     { id: "3", text: "100+ Partner Universities" },
   ],
-  imageUrl: "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2576&auto=format&fit=crop",
+  imageUrl:
+    "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2576&auto=format&fit=crop",
   imageAlt: "Students graduating",
 };
 
@@ -799,7 +814,8 @@ export const defaultHeroTemplate18Data: HeroTemplate18Data = {
       title: "Men's\nCollection",
       subtitle: "",
       badge: "",
-      imageUrl: "https://images.unsplash.com/photo-1523240715639-9942f1476d06?q=80&w=2070&auto=format&fit=crop",
+      imageUrl:
+        "https://images.unsplash.com/photo-1523240715639-9942f1476d06?q=80&w=2070&auto=format&fit=crop",
       imageAlt: "Men's collection",
       buttonText: "Shop Now",
       buttonHref: "#",
@@ -809,7 +825,8 @@ export const defaultHeroTemplate18Data: HeroTemplate18Data = {
       title: "Women's\nCollection",
       subtitle: "",
       badge: "",
-      imageUrl: "https://images.unsplash.com/photo-1516257984-b1b4d707412e?q=80&w=774&auto=format&fit=crop",
+      imageUrl:
+        "https://images.unsplash.com/photo-1516257984-b1b4d707412e?q=80&w=774&auto=format&fit=crop",
       imageAlt: "Women's collection",
       buttonText: "Shop Now",
       buttonHref: "#",
@@ -833,7 +850,8 @@ export const defaultHeroTemplate19Data: HeroTemplate19Data = {
     },
     { id: "2", text: "Our Story", variant: "outline", href: "#" },
   ],
-  imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1020&auto=format&fit=crop",
+  imageUrl:
+    "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1020&auto=format&fit=crop",
   imageAlt: "NepGlass Premium Sunglasses",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",

@@ -61,7 +61,8 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
         };
 
   // Default image if none provided
-  const defaultImageUrl = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
+  const defaultImageUrl =
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
   const imageUrl = data.imageUrl || defaultImageUrl;
 
   return (

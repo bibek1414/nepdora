@@ -14,10 +14,7 @@ export const OurClients5: React.FC<OurClients5Props> = ({ data }) => {
     return (
       <div className="flex items-center justify-center gap-12 opacity-20 md:gap-20">
         {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="h-8 w-24 animate-pulse rounded bg-gray-200"
-          />
+          <div key={i} className="h-8 w-24 animate-pulse rounded bg-gray-200" />
         ))}
       </div>
     );
@@ -34,11 +31,11 @@ export const OurClients5: React.FC<OurClients5Props> = ({ data }) => {
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-12 opacity-40 transition-opacity duration-700 hover:opacity-100 grayscale hover:grayscale-0 md:gap-20">
+    <div className="flex flex-wrap items-center justify-center gap-12 opacity-40 grayscale transition-opacity duration-700 hover:opacity-100 hover:grayscale-0 md:gap-20">
       {clients.map((client: OurClient) => (
         <div
           key={client.id}
-          className="relative h-6 w-24 transition-transform duration-300 hover:scale-110 hover:grayscale-0 grayscale md:h-8 md:w-32"
+          className="relative h-6 w-24 grayscale transition-transform duration-300 hover:scale-110 hover:grayscale-0 md:h-8 md:w-32"
         >
           {client.url ? (
             <a

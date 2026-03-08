@@ -143,7 +143,7 @@ export const NewsletterForm2: React.FC<NewsletterForm2Props> = ({
               disabled={
                 createNewsletter.isPending || isPreview || !formData.email
               }
-              className="bg-primary w-full px-4 mt-1 text-sm font-semibold text-white hover:bg-white/90 sm:w-auto sm:px-6 sm:text-base md:px-8"
+              className="bg-primary mt-1 w-full px-4 text-sm font-semibold text-white hover:bg-white/90 sm:w-auto sm:px-6 sm:text-base md:px-8"
             >
               {createNewsletter.isPending ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin sm:h-4 sm:w-4" />

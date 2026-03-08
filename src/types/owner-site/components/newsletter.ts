@@ -79,7 +79,8 @@ export const defaultNewsletter4Data: NewsletterData = {
   placeholder_text: "Enter your executive email",
   button_text: "Join",
   show_privacy_note: true,
-  privacy_note: "By subscribing, you agree to our Privacy Policy and Terms of Service.",
+  privacy_note:
+    "By subscribing, you agree to our Privacy Policy and Terms of Service.",
 };
 
 export const DEFAULT_NEWSLETTER_MAP: Record<

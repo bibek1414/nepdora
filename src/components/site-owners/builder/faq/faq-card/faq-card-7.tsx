@@ -85,14 +85,14 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
             variants={fadeInUp}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-              <EditableText
-                value={title}
-                onChange={onTitleChange || (() => {})}
-                as="h2"
-                className="mb-6 text-4xl font-semibold"
-                isEditable={isEditable}
-                placeholder="Enter title..."
-              />
+            <EditableText
+              value={title}
+              onChange={onTitleChange || (() => {})}
+              as="h2"
+              className="mb-6 text-4xl font-semibold"
+              isEditable={isEditable}
+              placeholder="Enter title..."
+            />
 
             <div className="mb-6 rounded-2xl border border-gray-100 bg-white p-6">
               <EditableText

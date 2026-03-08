@@ -66,11 +66,21 @@ export const NewPageDialog: React.FC<NewPageDialogProps> = ({
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9-]/g, "");
 
-    const forbiddenKeywords = ["checkout", "order-confirmation", "login", "signup", "details"];
-    const isForbidden = forbiddenKeywords.some(keyword => generatedSlug.includes(keyword));
+    const forbiddenKeywords = [
+      "checkout",
+      "order-confirmation",
+      "login",
+      "signup",
+      "details",
+    ];
+    const isForbidden = forbiddenKeywords.some(keyword =>
+      generatedSlug.includes(keyword)
+    );
 
     if (isForbidden) {
-      setError("This page type is created automatically and cannot be created manually");
+      setError(
+        "This page type is created automatically and cannot be created manually"
+      );
       return;
     }
 

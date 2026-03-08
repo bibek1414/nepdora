@@ -31,7 +31,8 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
       title: "Men's\nCollection",
       subtitle: "",
       badge: "",
-      imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      imageUrl:
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       imageAlt: "Men's collection",
       buttonText: "Shop Now",
       buttonHref: "#",
@@ -41,7 +42,8 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
       title: "Women's\nCollection",
       subtitle: "",
       badge: "",
-      imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      imageUrl:
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       imageAlt: "Women's collection",
       buttonText: "Shop Now",
       buttonHref: "#",

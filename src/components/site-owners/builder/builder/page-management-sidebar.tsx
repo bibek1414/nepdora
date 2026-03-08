@@ -20,15 +20,25 @@ export const PageManagementSidebar: React.FC<PageManagementSidebarProps> = ({
   onPageCreated,
   onPageDeleted,
 }) => {
-  const detailsPages = pages.filter(page => page.slug.includes("-details-draft"));
-  const storePages = pages.filter(page => page.slug.includes("checkout-draft") || page.slug.includes("order-confirmation-draft"));
-  const authPages = pages.filter(page => page.slug.includes("login-draft") || page.slug.includes("signup-draft"));
-  const mainPages = pages.filter(page => 
-    !page.slug.includes("-details-draft") && 
-    !page.slug.includes("checkout-draft") && 
-    !page.slug.includes("order-confirmation-draft") &&
-    !page.slug.includes("login-draft") && 
-    !page.slug.includes("signup-draft")
+  const detailsPages = pages.filter(page =>
+    page.slug.includes("-details-draft")
+  );
+  const storePages = pages.filter(
+    page =>
+      page.slug.includes("checkout-draft") ||
+      page.slug.includes("order-confirmation-draft")
+  );
+  const authPages = pages.filter(
+    page =>
+      page.slug.includes("login-draft") || page.slug.includes("signup-draft")
+  );
+  const mainPages = pages.filter(
+    page =>
+      !page.slug.includes("-details-draft") &&
+      !page.slug.includes("checkout-draft") &&
+      !page.slug.includes("order-confirmation-draft") &&
+      !page.slug.includes("login-draft") &&
+      !page.slug.includes("signup-draft")
   );
 
   const renderPageList = (title: string, list: Page[]) => {
@@ -36,7 +46,7 @@ export const PageManagementSidebar: React.FC<PageManagementSidebarProps> = ({
 
     return (
       <div className="mb-4">
-        <div className="px-4 py-1.5 text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+        <div className="px-4 py-1.5 text-[10px] font-bold tracking-wider text-gray-500 uppercase">
           {title}
         </div>
         <div className="space-y-1 px-2">
@@ -65,7 +75,10 @@ export const PageManagementSidebar: React.FC<PageManagementSidebarProps> = ({
                     className="flex shrink-0"
                     onClick={e => e.stopPropagation()}
                   >
-                    <DeletePageDialog page={page} onPageDeleted={onPageDeleted} />
+                    <DeletePageDialog
+                      page={page}
+                      onPageDeleted={onPageDeleted}
+                    />
                   </div>
                 )}
             </div>

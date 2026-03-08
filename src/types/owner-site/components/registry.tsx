@@ -357,7 +357,10 @@ export const COMPONENT_REGISTRY: {
     displayName: "Login Form",
     category: "basic",
     getDefaultData: variant => {
-      const styleKey = (variant?.replace("login-", "") as keyof typeof DEFAULT_LOGIN_MAP);
+      const styleKey = variant?.replace(
+        "login-",
+        ""
+      ) as keyof typeof DEFAULT_LOGIN_MAP;
       return DEFAULT_LOGIN_MAP[styleKey] || DEFAULT_LOGIN_MAP["style-1"];
     },
     component: LoginForm,
@@ -367,7 +370,10 @@ export const COMPONENT_REGISTRY: {
     displayName: "Signup Form",
     category: "basic",
     getDefaultData: variant => {
-      const styleKey = (variant?.replace("signup-", "") as keyof typeof DEFAULT_SIGNUP_MAP);
+      const styleKey = variant?.replace(
+        "signup-",
+        ""
+      ) as keyof typeof DEFAULT_SIGNUP_MAP;
       return DEFAULT_SIGNUP_MAP[styleKey] || DEFAULT_SIGNUP_MAP["style-1"];
     },
     component: SignupForm,

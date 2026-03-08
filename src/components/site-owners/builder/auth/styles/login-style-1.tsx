@@ -158,7 +158,7 @@ export const LoginStyle1: React.FC<LoginStyle1Props> = ({
                 type="submit"
                 variant="default"
                 disabled={isEditable || isLoading}
-                className="hover:opacity-90 w-full rounded-lg px-4 py-3 font-medium transition-opacity"
+                className="w-full rounded-lg px-4 py-3 font-medium transition-opacity hover:opacity-90"
                 style={{
                   backgroundColor: theme.colors.primary,
                   color: theme.colors.primaryForeground,

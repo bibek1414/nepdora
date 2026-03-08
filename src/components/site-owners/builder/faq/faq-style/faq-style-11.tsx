@@ -28,7 +28,6 @@ export const FAQStyle11: React.FC<FAQStyle11Props> = ({
 
   const { data: faqsResponse, isLoading } = useFAQs();
 
-
   const faqs =
     (Array.isArray(faqsResponse)
       ? faqsResponse

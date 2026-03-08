@@ -1,7 +1,12 @@
 export interface OurClientsData {
   component_id?: string;
   component_type: "our_clients";
-  style: "our-clients-1" | "our-clients-2" | "our-clients-3" | "our-clients-4" | "our-clients-5";
+  style:
+    | "our-clients-1"
+    | "our-clients-2"
+    | "our-clients-3"
+    | "our-clients-4"
+    | "our-clients-5";
   title: string;
   subtitle?: string;
   description?: string;
