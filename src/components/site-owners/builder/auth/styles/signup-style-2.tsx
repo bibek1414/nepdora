@@ -109,11 +109,11 @@ export const SignupStyle2: React.FC<SignupStyle2Props> = ({
   };
 
   return (
-    <div className="flex min-h-[700px] w-full items-center justify-center bg-gray-50 p-4 sm:p-8">
+    <div className="flex min-h-[700px] w-full items-center justify-center p-4 sm:p-8">
       <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-8 md:flex-row">
         {/* Left Side - Image */}
-        <div className="hidden w-full flex-col items-center justify-center p-8 md:flex md:w-1/2">
-          <div className="relative w-full max-w-md">
+        <div className="mr-auto hidden w-full flex-col items-center justify-center p-8 md:flex md:w-1/2">
+          <div className="relative w-full max-w-sm">
             <EditableImage
               src={imageUrl || ""}
               alt={imageAlt || "Signup image"}
@@ -134,7 +134,7 @@ export const SignupStyle2: React.FC<SignupStyle2Props> = ({
 
         {/* Right Side - Form */}
         <div className="w-full max-w-md md:w-1/2">
-          <div className="rounded-2xl bg-white p-8 shadow-2xl">
+          <div className="rounded-2xl border bg-white p-8 shadow-2xl">
             <div className="mb-10 text-center">
               <EditableText
                 as="h2"

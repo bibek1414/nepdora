@@ -109,10 +109,10 @@ export const LoginStyle3: React.FC<LoginStyle3Props> = ({
   };
 
   return (
-    <div className="flex min-h-[600px] w-full items-center justify-center bg-gray-50 p-4 sm:p-8">
-      <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-8 md:flex-row">
+    <div className="flex min-h-[600px] w-full items-center justify-center p-4 sm:p-8">
+      <div className="relative z-10 flex w-full max-w-6xl flex-col items-center gap-8 md:flex-row">
         {/* Left Side - Form */}
-        <div className="w-full max-w-md md:w-1/2">
+        <div className="w-full max-w-md rounded-2xl border md:w-1/2">
           <div className="rounded-2xl bg-white p-8 shadow-2xl">
             <div className="mb-6 text-center">
               <EditableText
@@ -144,7 +144,7 @@ export const LoginStyle3: React.FC<LoginStyle3Props> = ({
                   label="Email"
                   placeholder="hello@example.com"
                   className={cn(
-                    "border-gray-200 bg-gray-50 focus:bg-white",
+                    "border-gray-200 focus:bg-white",
                     errors.email && "border-red-500"
                   )}
                   disabled={isEditable || isLoading}
@@ -164,7 +164,7 @@ export const LoginStyle3: React.FC<LoginStyle3Props> = ({
                   label="Password"
                   placeholder="••••••••"
                   className={cn(
-                    "border-gray-200 bg-gray-50 focus:bg-white",
+                    "border-gray-200 focus:bg-white",
                     errors.password && "border-red-500"
                   )}
                   disabled={isEditable || isLoading}
@@ -175,24 +175,6 @@ export const LoginStyle3: React.FC<LoginStyle3Props> = ({
                     {errors.password.message}
                   </p>
                 )}
-              </div>
-
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex cursor-pointer items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300"
-                    disabled={isEditable || isLoading}
-                  />
-                  <span className="text-gray-600">Remember me</span>
-                </label>
-                <button
-                  type="button"
-                  className="font-medium hover:underline"
-                  style={{ color: theme.colors.primary }}
-                >
-                  Forgot password?
-                </button>
               </div>
 
               <Button
@@ -216,7 +198,7 @@ export const LoginStyle3: React.FC<LoginStyle3Props> = ({
                 )}
               </Button>
 
-              <div className="mt-8 rounded-xl bg-gray-50 p-4 text-center">
+              <div className="mt-8 rounded-xl p-4 text-center">
                 <p className="text-sm text-gray-600">
                   New here?{" "}
                   <Link
@@ -239,8 +221,8 @@ export const LoginStyle3: React.FC<LoginStyle3Props> = ({
         </div>
 
         {/* Right Side - Image */}
-        <div className="hidden w-full flex-col items-center justify-center p-8 md:flex md:w-1/2">
-          <div className="relative w-full max-w-md">
+        <div className="ml-auto hidden w-full flex-col items-center justify-center p-8 md:flex md:w-1/2">
+          <div className="relative w-full max-w-sm">
             <EditableImage
               src={imageUrl || ""}
               alt={imageAlt || "Login image"}

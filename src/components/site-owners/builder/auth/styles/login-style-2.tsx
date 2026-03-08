@@ -109,11 +109,11 @@ export const LoginStyle2: React.FC<LoginStyle2Props> = ({
   };
 
   return (
-    <div className="flex min-h-[600px] w-full items-center justify-center bg-gray-50 p-4 sm:p-8">
+    <div className="flex min-h-[800px] w-full items-center justify-center p-4 sm:p-8">
       <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-8 md:flex-row">
         {/* Left Side - Image/Decoration */}
-        <div className="hidden w-full flex-col items-center justify-center p-8 md:flex md:w-1/2">
-          <div className="relative w-full max-w-md">
+        <div className="mr-auto hidden w-full flex-col items-center justify-center p-8 md:flex md:w-1/2">
+          <div className="relative w-full max-w-sm">
             <EditableImage
               src={imageUrl || ""}
               alt={imageAlt || "Login image"}
@@ -133,7 +133,7 @@ export const LoginStyle2: React.FC<LoginStyle2Props> = ({
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full max-w-md md:w-1/2">
+        <div className="w-full max-w-md rounded-2xl border md:w-1/2">
           <div className="rounded-2xl bg-white p-8 shadow-2xl">
             <div className="mb-6 text-center">
               <EditableText
@@ -196,24 +196,6 @@ export const LoginStyle2: React.FC<LoginStyle2Props> = ({
                     {errors.password.message}
                   </p>
                 )}
-              </div>
-
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex cursor-pointer items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300"
-                    disabled={isEditable || isLoading}
-                  />
-                  <span className="text-gray-600">Remember me</span>
-                </label>
-                <button
-                  type="button"
-                  className="font-medium hover:underline"
-                  style={{ color: theme.colors.primary }}
-                >
-                  Forgot password?
-                </button>
               </div>
 
               <Button

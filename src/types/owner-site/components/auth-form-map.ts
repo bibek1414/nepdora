@@ -22,7 +22,7 @@ export const DEFAULT_LOGIN_MAP: Record<"style-1" | "style-2" | "style-3", AuthFo
     subtitle: "Access your dashboard and orders.",
     buttonText: "Sign In",
     redirectTo: "/",
-    imageUrl: "/fallback/image-not-found.png",
+    imageUrl: "https://images.pexels.com/photos/6579052/pexels-photo-6579052.jpeg",
     imageAlt: "Login decorative image",
   },
   "style-3": {
@@ -31,7 +31,7 @@ export const DEFAULT_LOGIN_MAP: Record<"style-1" | "style-2" | "style-3", AuthFo
     subtitle: "Access your dashboard and orders.",
     buttonText: "Sign In",
     redirectTo: "/",
-    imageUrl: "/fallback/image-not-found.png",
+    imageUrl: "https://images.pexels.com/photos/6579052/pexels-photo-6579052.jpeg",
     imageAlt: "Login decorative image",
   },
 };
@@ -50,7 +50,7 @@ export const DEFAULT_SIGNUP_MAP: Record<"style-1" | "style-2" | "style-3", AuthF
     subtitle: "Quick and easy registration.",
     buttonText: "Register Now",
     redirectTo: "/login",
-    imageUrl: "/fallback/image-not-found.png",
+    imageUrl: "https://images.pexels.com/photos/6579052/pexels-photo-6579052.jpeg",
     imageAlt: "Signup decorative image",
   },
   "style-3": {
@@ -59,7 +59,7 @@ export const DEFAULT_SIGNUP_MAP: Record<"style-1" | "style-2" | "style-3", AuthF
     subtitle: "Quick and easy registration.",
     buttonText: "Register Now",
     redirectTo: "/login",
-    imageUrl: "/fallback/image-not-found.png",
+    imageUrl: "https://images.pexels.com/photos/6579052/pexels-photo-6579052.jpeg",
     imageAlt: "Signup decorative image",
   },
 };

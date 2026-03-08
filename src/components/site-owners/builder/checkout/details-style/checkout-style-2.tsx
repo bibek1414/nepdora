@@ -285,23 +285,37 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
         includeToken: isAuthenticated && !!user,
       });
 
+      const prefix = pathname?.includes("/preview/")
+        ? `/preview/${siteUser}`
+        : pathname?.includes("/builder/")
+          ? `/builder/${siteUser}`
+          : "";
+
+      const orderConfirmUrl = prefix
+        ? `${prefix}/order-confirmation-draft/${order.id}`
+        : `/order-confirmation/${order.id}`;
+
+      const esewaUrl = prefix
+        ? `${prefix}/esewa-payment?orderId=${order.id}&orderNumber=${order.order_number}`
+        : `/esewa-payment?orderId=${order.id}&orderNumber=${order.order_number}`;
+
+      const khaltiUrl = prefix
+        ? `${prefix}/khalti-payment?orderId=${order.id}&orderNumber=${order.order_number}`
+        : `/khalti-payment?orderId=${order.id}&orderNumber=${order.order_number}`;
+
       // Handle payment method routing
       if (selectedPaymentMethod) {
         switch (selectedPaymentMethod.toLowerCase()) {
           case "esewa":
-            router.push(
-              `/preview/${siteUser}/esewa-payment?orderId=${order.id}&orderNumber=${order.order_number}`
-            );
+            router.push(esewaUrl);
             break;
           case "khalti":
-            router.push(
-              `/preview/${siteUser}/khalti-payment?orderId=${order.id}&orderNumber=${order.order_number}`
-            );
+            router.push(khaltiUrl);
             break;
           case "cod":
             toast.success("Order placed successfully! Pay on delivery.");
             clearCart();
-            router.push(`/preview/${siteUser}/order-confirmation/${order.id}`);
+            router.push(orderConfirmUrl);
             break;
           default:
             break;
@@ -309,7 +323,7 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
       } else {
         toast.success("Order placed successfully!");
         clearCart();
-        router.push(`/preview/${siteUser}/order-confirmation/${order.id}`);
+        router.push(orderConfirmUrl);
       }
     } catch (error) {
       console.error("Order creation failed:", error);
@@ -318,7 +332,12 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
   };
 
   const handleContinueShopping = () => {
-    router.push(`/preview/${siteUser}`);
+    const prefix = pathname?.includes("/preview/")
+      ? `/preview/${siteUser}`
+      : pathname?.includes("/builder/")
+        ? `/builder/${siteUser}`
+        : "";
+    router.push(prefix || "/");
   };
 
   if (cartItems.length === 0 && !isBuilder) {
@@ -455,7 +474,7 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                             className="h-auto w-full justify-between rounded-2xl border-transparent px-5 py-4 font-normal"
                             style={{
                               backgroundColor: `${theme.colors.primary}0A`,
-                              color: cityDistrict ? theme.colors.text : "gray",
+                              color: "gray",
                             }}
                             disabled={isSubmitting || isLoadingDeliveryCharges}
                           >
