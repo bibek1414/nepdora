@@ -120,7 +120,7 @@ export const defaultCTATemplate3Data: CTATemplate3Data = {
     { id: "2", text: "Schedule Demo", variant: "secondary", href: "#" },
   ],
   backgroundType: "image",
-  backgroundImageUrl: "/fallback/image-not-found.png",
+  backgroundImageUrl: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1374&auto=format&fit=crop",
   showFeatureIcons: true,
   featureIcons: ["✓", "✓", "✓"],
 };
@@ -143,7 +143,7 @@ export const defaultCTATemplate4Data: CTATemplate4Data = {
       text: "Start Building Your Competitive Advantage",
     },
   ],
-  imageUrl: "/fallback/image-not-found.png",
+  imageUrl: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1374&auto=format&fit=crop",
   imageAlt: "Working together",
   backgroundColor: "#1D4ED8",
   showOverlay: true,

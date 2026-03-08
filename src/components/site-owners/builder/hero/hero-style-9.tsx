@@ -19,7 +19,7 @@ interface HeroTemplate9Props {
 const defaultCollageImages = [
   {
     id: "1",
-    url: "/fallback/image-not-found.png",
+    url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
     alt: "Images 1",
   },
   {
@@ -34,7 +34,7 @@ const defaultCollageImages = [
   },
   {
     id: "4",
-    url: "/fallback/image-not-found.png",
+    url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
     alt: "Images 3",
   },
 ];

@@ -167,8 +167,8 @@ export const EditableImage: React.FC<EditableImageProps> = ({
     }
   };
 
-  // Show placeholder if no src and placeholder is provided
-  const showPlaceholder = !src && placeholder;
+  // Show placeholder only in editable mode if no src and placeholder is provided
+  const showPlaceholder = !src && placeholder && isEditable;
 
   // Optimize image URL if optimization options are provided
   const optimizedSrc = React.useMemo(() => {
@@ -230,7 +230,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
         ) : (
           // Actual Image
           <Image
-            src={optimizedSrc}
+            src={optimizedSrc || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80"}
             alt={localAlt}
             width={width}
             height={height}

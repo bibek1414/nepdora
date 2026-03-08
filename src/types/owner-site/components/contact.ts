@@ -185,7 +185,7 @@ export const defaultContactData6: ContactData = {
     phone: "+1 (555) 999-8888",
     address: "555 Partnership Way, Collaboration City, CC 99999",
   },
-  image_url: "/fallback/image-not-found.png",
+  image_url: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2940&auto=format&fit=crop",
   image_alt: "Traveler smiling",
   cta_title: "Let's Do Great!",
   cta_subtitle:
@@ -231,17 +231,17 @@ export const defaultContactData7: ContactData = {
     {
       id: "dublin",
       label: "Dublin",
-      image_url: "/fallback/image-not-found.png",
+      image_url: "https://images.unsplash.com/photo-1549918864-48ac978761a4?auto=format&fit=crop&w=800&q=80",
     },
     {
       id: "los-angeles",
       label: "Los Angeles",
-      image_url: "/fallback/image-not-found.png",
+      image_url: "https://images.unsplash.com/photo-1534237710431-e2fc698436d0?auto=format&fit=crop&w=800&q=80",
     },
     {
       id: "remote",
       label: "Remote",
-      image_url: "/fallback/image-not-found.png",
+      image_url: "https://images.unsplash.com/photo-1593642532400-2682810df593?auto=format&fit=crop&w=1600&q=80",
     },
   ],
 };
@@ -289,7 +289,7 @@ export const defaultContactData8: ContactData = {
     phone: "",
     address: "",
   },
-  image_url: "/fallback/image-not-found.png",
+  image_url: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2940&auto=format&fit=crop",
   image_alt: "Traveler smiling",
   button_label: "Send Message",
 };

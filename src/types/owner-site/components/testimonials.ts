@@ -38,7 +38,7 @@ export const defaultTestimonialsData: TestimonialsData = {
   subtitle:
     "Don't just take our word for it - hear from our satisfied customers",
   page_size: 6,
-  backgroundImage: "/fallback/image-not-found.png",
+  backgroundImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1600&q=80",
 };
 
 export const DEFAULT_TESTIMONIALS_MAP: Record<

@@ -86,22 +86,22 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
   const defaultSlides = [
     {
       id: "1",
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "Workout attire collection",
     },
     {
       id: "2",
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "Fitness clothing",
     },
     {
       id: "3",
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "Activewear selection",
     },
     {
       id: "4",
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "Workout gear",
     },
   ];
@@ -147,7 +147,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
   const addSlide = () => {
     const newSlide = {
       id: `slide-${Date.now()}`,
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "New slide",
     };
     const updatedSliderImages = [...slides, newSlide];

@@ -205,6 +205,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 19",
         image: "/images/site-owners/hero/hero19.png",
       },
+      {
+        id: "hero-20",
+        name: "Hero Style 20",
+        image: "/images/site-owners/hero/hero20.png",
+      },
     ],
     others: [
       {
@@ -1142,6 +1147,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/navbars/navbar12.png",
         description: "Includes language switcher",
       },
+      {
+        id: "navbar-13",
+        name: "Navbar with Language Switcher",
+        image: "/images/site-owners/navbars/navbar13.png",
+        description: "Includes language switcher",
+      },
     ],
     // FOOTER TEMPLATES
     footer: [
@@ -1230,7 +1241,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Login Style 3",
         image: "/images/site-owners/auth/login3.png",
         description: "Modern split-screen login",
-      }
+      },
     ],
     signup_form: [
       {
@@ -1250,7 +1261,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Signup Style 3",
         image: "/images/site-owners/auth/signup3.png",
         description: "Modern split-screen signup",
-      }
+      },
     ],
   };
 
@@ -1969,11 +1980,18 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
                           {/* Template Preview Image */}
                           <div className="relative flex aspect-video items-center justify-center bg-gray-50">
                             <img
-                              src={template.image}
+                              src={
+                                template.image ||
+                                "/fallback/image-not-found.png"
+                              }
                               alt={template.name}
                               width={800}
                               height={200}
                               className="h-auto w-full rounded"
+                              onError={e => {
+                                e.currentTarget.src =
+                                  "/fallback/image-not-found.png";
+                              }}
                             />
                           </div>
 
@@ -2019,11 +2037,18 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
                         <div className="relative overflow-hidden rounded-lg border border-gray-200 transition-all hover:border-blue-400">
                           <div className="relative flex aspect-video items-center justify-center bg-transparent">
                             <img
-                              src={template.image}
+                              src={
+                                template.image ||
+                                "/fallback/image-not-found.png"
+                              }
                               alt={template.name}
                               width={800}
                               height={200}
                               className="h-auto w-full rounded"
+                              onError={e => {
+                                e.currentTarget.src =
+                                  "/fallback/image-not-found.png";
+                              }}
                             />
                           </div>
                           <div className="bg-white p-3">

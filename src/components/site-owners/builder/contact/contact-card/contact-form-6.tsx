@@ -169,7 +169,7 @@ export const ContactForm6: React.FC<ContactForm6Props> = ({
   const ctaSubtitle =
     data.cta_subtitle ||
     "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standard dummy.";
-  const imageUrl = data.image_url || "/fallback/image-not-found.png";
+  const imageUrl = data.image_url || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
   const imageAlt = data.image_alt || "Traveler smiling";
 
   // Contact info with fallbacks

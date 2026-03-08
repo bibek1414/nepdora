@@ -150,8 +150,8 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
   };
 
   // Default images
-  const leftImageUrl = data.leftImageUrl || "/fallback/image-not-found.png";
-  const rightImageUrl = data.rightImageUrl || "/fallback/image-not-found.png";
+  const leftImageUrl = data.leftImageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
+  const rightImageUrl = data.rightImageUrl || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
 
   return (
     <section

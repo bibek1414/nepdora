@@ -32,9 +32,9 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
   const componentId = React.useId();
 
   const defaultImages = [
-    "/fallback/image-not-found.png",
-    "/fallback/image-not-found.png",
-    "/fallback/image-not-found.png",
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
   ];
 
   // Initialize with default images if no images are provided

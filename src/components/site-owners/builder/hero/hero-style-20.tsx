@@ -1,0 +1,359 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { ArrowRight, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+
+import { EditableText } from "@/components/ui/editable-text";
+import { EditableImage } from "@/components/ui/editable-image";
+import { EditableLink } from "@/components/ui/editable-link";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { uploadToCloudinary } from "@/utils/cloudinary";
+import { toast } from "sonner";
+import { HeroTemplate20Data } from "@/types/owner-site/components/hero";
+
+interface HeroTemplate20Props {
+  heroData: HeroTemplate20Data;
+  isEditable?: boolean;
+  siteUser?: string;
+  onUpdate?: (updatedData: Partial<HeroTemplate20Data>) => void;
+}
+
+export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
+  heroData,
+  siteUser,
+  isEditable = false,
+  onUpdate,
+}) => {
+  const componentId = React.useId();
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
+  const { data: themeResponse } = useThemeQuery();
+
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#FFFFFF",
+      primary: "#FFFFFF",
+      primaryForeground: "#000000",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#000000",
+    },
+    fonts: {
+      body: "sans-serif",
+      heading: "sans-serif",
+    },
+  };
+
+  const {
+    data,
+    setData,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(heroData, onUpdate);
+
+  const heroSlides = data.slides && data.slides.length > 0 ? data.slides : [];
+
+  useEffect(() => {
+    if (isEditable || heroSlides.length === 0) return;
+    const timer = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [heroSlides.length, isEditable]);
+
+  // Handle slide text updates
+  const handleSlideUpdate = (slideId: string, field: string) => (value: string) => {
+    handleArrayItemUpdate("slides", slideId)({ [field]: value });
+  };
+
+  const handleSlideImageUpdate = (
+    imageUrl: string,
+    altText?: string,
+    index?: number
+  ) => {
+    if (index !== undefined && index < heroSlides.length) {
+      handleArrayItemUpdate(
+        "slides",
+        heroSlides[index].id
+      )({
+        url: imageUrl,
+        alt: altText || heroSlides[index].alt,
+      });
+    } else {
+      // Add new slide
+      const newSlide = {
+        id: `slide-${Date.now()}`,
+        url: imageUrl,
+        alt: altText || "Slider image",
+        subtitle: "New Subtitle",
+        title: "New Title",
+        description: "New Description",
+        color: "from-navy-950/90",
+        buttonText: "Shop Now",
+        buttonHref: "#",
+      };
+      const updatedData = {
+        ...data,
+        slides: [...(data.slides || []), newSlide],
+      };
+      setData(updatedData);
+      onUpdate?.({ slides: updatedData.slides });
+    }
+  };
+
+  const addSlide = () => {
+    const newSlide = {
+      id: `slide-${Date.now()}`,
+      url: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      alt: "New slide",
+      subtitle: "New Subtitle",
+      title: "New Title",
+      description: "New Description",
+      color: "from-navy-950/90",
+      buttonText: "Shop Now",
+      buttonHref: "#",
+    };
+    const updatedSlides = [...heroSlides, newSlide];
+    const updatedData = { ...data, slides: updatedSlides };
+    setData(updatedData);
+    onUpdate?.({ slides: updatedSlides });
+  };
+
+  const removeSlide = (index: number) => {
+    if (heroSlides.length <= 1) {
+      toast.error("At least one slide is required");
+      return;
+    }
+    const updatedSlides = heroSlides.filter((_, i) => i !== index);
+    const updatedData = { ...data, slides: updatedSlides };
+    setData(updatedData);
+    onUpdate?.({ slides: updatedSlides });
+    
+    if (heroIndex >= updatedSlides.length) {
+      setHeroIndex(Math.max(0, updatedSlides.length - 1));
+    }
+  };
+
+  const handleSlideUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index?: number
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(`Please select a valid image file (${allowedTypes.join(", ")})`);
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    setIsUploadingBackground(true);
+
+    try {
+      const imageUrl = await uploadToCloudinary(file, {
+        folder: "hero-slides",
+        resourceType: "image",
+      });
+      handleSlideImageUpdate(imageUrl, `Slide image: ${file.name}`, index);
+      toast.success("Slide image uploaded successfully!");
+    } catch (error) {
+      console.error("Slide upload failed:", error);
+      toast.error("Failed to upload slide image. Please try again.");
+    } finally {
+      setIsUploadingBackground(false);
+      event.target.value = "";
+    }
+  };
+
+  if (heroSlides.length === 0) return null;
+
+  const currentSlide = heroSlides[heroIndex];
+
+  return (
+    <div className="relative overflow-hidden h-screen md:h-[100vh]" data-component-id={componentId}>
+      {isEditable && (
+        <div className="absolute top-6 right-4 z-30 flex gap-2">
+          <button
+            onClick={addSlide}
+            className="rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
+          >
+            Add Slide
+          </button>
+          <button
+            onClick={() => removeSlide(heroIndex)}
+            className="rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
+          >
+            Remove Current Slide
+          </button>
+        </div>
+      )}
+
+      {isUploadingBackground && (
+        <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/50">
+          <div className="flex flex-col items-center gap-2 text-white">
+            <Loader2 className="h-8 w-8 animate-spin" />
+            <p className="text-sm font-medium">Uploading image...</p>
+          </div>
+        </div>
+      )}
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentSlide.id}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.8 }}
+          className="absolute inset-0"
+        >
+          {/* Background Image Container */}
+          <div className="absolute inset-0 h-full w-full">
+            <div
+              className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url(${currentSlide.url})` }}
+            />
+
+            <EditableImage
+              key={`slide-${componentId}-${heroIndex}-${currentSlide.url}`}
+              src={currentSlide.url}
+              alt={currentSlide.alt}
+              onImageChange={(url, alt) => handleSlideImageUpdate(url, alt, heroIndex)}
+              isEditable={isEditable}
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
+              cloudinaryOptions={{
+                folder: "hero-slides",
+                resourceType: "image",
+              }}
+              imageOptimization={{
+                width: 1920,
+                height: 1080,
+                quality: "auto",
+                format: "auto",
+                crop: "fill",
+              }}
+              placeholder={{
+                width: 1920,
+                height: 1080,
+                text: `Slide ${heroIndex + 1}`,
+              }}
+            />
+
+            {isEditable && (
+              <div className="absolute top-4 left-4 z-40">
+                <label
+                  htmlFor={`slide-upload-${componentId}-${heroIndex}`}
+                  className={`cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-3 py-1 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
+                    isUploadingBackground ? "pointer-events-none opacity-50" : ""
+                  }`}
+                >
+                  {isUploadingBackground ? (
+                    <span className="flex items-center gap-1">
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                      Uploading...
+                    </span>
+                  ) : (
+                    "Change Background"
+                  )}
+                </label>
+                <input
+                  id={`slide-upload-${componentId}-${heroIndex}`}
+                  type="file"
+                  accept="image/*"
+                  onChange={e => handleSlideUpload(e, heroIndex)}
+                  className="hidden"
+                  disabled={isUploadingBackground}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Gradient Overlay based on currentSlide.color */}
+          <div
+            className={`absolute inset-0 bg-gradient-to-r ${currentSlide.color || "from-black/90"} via-transparent to-transparent flex items-center`}
+          >
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="max-w-xl text-white pt-10"
+              >
+                <div className="mb-6 inline-block w-full">
+                  <div className="w-auto inline-block border border-white/20 bg-white/10 backdrop-blur-md rounded-full px-3 py-1">
+                    <EditableText
+                      value={currentSlide.subtitle}
+                      onChange={handleSlideUpdate(currentSlide.id, "subtitle")}
+                      isEditable={isEditable}
+                      as="span"
+                      className="text-xs font-bold uppercase tracking-wider text-white"
+                      placeholder="Subtitle"
+                    />
+                  </div>
+                </div>
+
+                <EditableText
+                  value={currentSlide.title}
+                  onChange={handleSlideUpdate(currentSlide.id, "title")}
+                  isEditable={isEditable}
+                  multiline
+                  as="h1"
+                  className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-none tracking-tight shadow-sm"
+                  placeholder="Hero Title"
+                />
+
+                <EditableText
+                  value={currentSlide.description}
+                  onChange={handleSlideUpdate(currentSlide.id, "description")}
+                  isEditable={isEditable}
+                  multiline
+                  as="p"
+                  className="text-lg md:text-xl text-white/90 mb-8 font-light max-w-md leading-relaxed"
+                  placeholder="Hero Description"
+                />
+
+                <EditableLink
+                  text={currentSlide.buttonText}
+                  href={currentSlide.buttonHref}
+                  onChange={(text, href) => {
+                    handleSlideUpdate(currentSlide.id, "buttonText")(text);
+                    handleSlideUpdate(currentSlide.id, "buttonHref")(href);
+                  }}
+                  isEditable={isEditable}
+                  siteUser={siteUser}
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                  }}
+                  className="inline-flex items-center px-8 py-4 rounded-full font-bold transition-all shadow-xl hover:scale-105"
+                  textPlaceholder="Button text..."
+                  hrefPlaceholder="Button link..."
+                />
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      <div className="absolute bottom-8 left-0 right-0 z-20 flex justify-center gap-3">
+        {heroSlides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setHeroIndex(i)}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              i === heroIndex ? "bg-white w-8" : "bg-white/40 hover:bg-white/60 w-2"
+            }`}
+            aria-label={`Go to slide ${i + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};

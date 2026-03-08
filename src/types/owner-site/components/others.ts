@@ -196,7 +196,7 @@ export const defaultOthersTemplate1Data: OthersTemplate1Data = {
     },
   ],
   image: {
-    url: "/fallback/image-not-found.png",
+    url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1171&auto=format&fit=crop",
     alt: "Why Choose Us Image",
   },
   experienceBadge: {
@@ -247,11 +247,11 @@ export const defaultOthersTemplate2Data: OthersTemplate2Data = {
     },
   ],
   leftImage: {
-    url: "/fallback/image-not-found.png",
+    url: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop",
     alt: "Office workspace",
   },
   rightImage: {
-    url: "/fallback/image-not-found.png",
+    url: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop",
     alt: "Team collaboration",
   },
   backgroundType: "color",
@@ -332,7 +332,7 @@ export const defaultOthersTemplate5Data: OthersTemplate5Data = {
     "Advanced UV and blue light protection",
   ],
   image: {
-    url: "/fallback/image-not-found.png",
+    url: "https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&q=80&w=1000",
     alt: "Person wearing stylish glasses outdoors",
   },
   imagePosition: "left",
@@ -418,7 +418,7 @@ export const defaultOthersTemplate8Data: OthersTemplate8Data = {
       description:
         "Digital surfacing technology ensures lenses match your prescription perfectly.",
       image: {
-        url: "/fallback/image-not-found.png",
+        url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1171&auto=format&fit=crop",
         alt: "Precision Design",
       },
     },
@@ -428,7 +428,7 @@ export const defaultOthersTemplate8Data: OthersTemplate8Data = {
       description:
         "High-quality materials and meticulous craftsmanship create durable, lightweight lenses.",
       image: {
-        url: "/fallback/image-not-found.png",
+        url: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop",
         alt: "Advanced Manufacturing",
       },
     },
@@ -438,7 +438,7 @@ export const defaultOthersTemplate8Data: OthersTemplate8Data = {
       description:
         "Our specialists ensure lenses fit your frames and eyes comfortably for daily use.",
       image: {
-        url: "/fallback/image-not-found.png",
+        url: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop",
         alt: "Expert Fitting",
       },
     },
@@ -448,7 +448,7 @@ export const defaultOthersTemplate8Data: OthersTemplate8Data = {
       description:
         "Each lens is tested for clarity, durability, and compliance with premium standards.",
       image: {
-        url: "/fallback/image-not-found.png",
+        url: "https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&q=80&w=1000",
         alt: "Quality Assurance",
       },
     },

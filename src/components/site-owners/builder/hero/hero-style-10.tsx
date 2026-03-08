@@ -55,37 +55,37 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
   const defaultGridImages = [
     {
       id: "1",
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "Product image 1",
     },
     {
       id: "2",
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "Product image 2",
     },
     {
       id: "3",
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "Product image 3",
     },
     {
       id: "4",
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "Product image 4",
     },
     {
       id: "5",
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "Product image 5",
     },
     {
       id: "6",
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "Product image 6",
     },
     {
       id: "7",
-      url: "/fallback/image-not-found.png",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
       alt: "Product image 7",
     },
   ];

@@ -36,7 +36,7 @@ export const FaqCard6: React.FC<FAQCard6Props> = ({
   }, []);
 
   // Default image if not provided
-  const defaultLeftImage = leftImage || "/fallback/image-not-found.png";
+  const defaultLeftImage = leftImage || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
 
   return (
     <section className="bg-gradient-to-b from-slate-950 to-slate-900 px-4 py-12">
