@@ -21,7 +21,6 @@ interface CollectionsPageProps {
 export const CollectionsPage: React.FC<CollectionsPageProps> = ({
   siteUser,
   title = "Our Collections",
-  subtitle = "Explore our curated collection of premium products",
 }) => {
   const productFilters = useProductFilters();
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,20 +48,8 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="container mx-auto max-w-7xl px-4 py-8">
-        {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="mb-3 text-4xl font-bold tracking-tight text-gray-900">
-            {title}
-          </h1>
-          {subtitle && (
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
-              {subtitle}
-            </p>
-          )}
-        </div>
-
         {/* Main Layout: Sidebar + Products */}
         <div className="flex gap-6">
           {/* Desktop Sidebar */}
@@ -129,6 +116,12 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
             {/* Products Grid */}
             {!isLoading && !error && products.length > 0 && (
               <>
+                {/* Header */}
+                <div className="mb-8 text-left">
+                  <h1 className="mb-3 text-4xl font-bold tracking-tight text-gray-900">
+                    {title}
+                  </h1>
+                </div>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {products.map(product => (
                     <ProductCard4
@@ -155,7 +148,7 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
 
             {/* Empty State */}
             {!isLoading && !error && products.length === 0 && (
-              <div className="rounded-lg bg-white py-16 text-center shadow-sm">
+              <div className="rounded-lg bg-white py-16 text-center">
                 <ShoppingBag className="mx-auto mb-6 h-20 w-20 text-gray-400" />
                 <h3 className="mb-4 text-2xl font-semibold text-gray-900">
                   No Products Found
