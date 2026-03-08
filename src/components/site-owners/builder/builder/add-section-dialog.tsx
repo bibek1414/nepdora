@@ -1225,6 +1225,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/auth/login2.png",
         description: "Modern split-screen login",
       },
+      {
+        id: "login-style-3",
+        name: "Login Style 3",
+        image: "/images/site-owners/auth/login3.png",
+        description: "Modern split-screen login",
+      }
     ],
     signup_form: [
       {
@@ -1239,6 +1245,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/auth/signup2.png",
         description: "Modern minimalist signup",
       },
+      {
+        id: "signup-style-3",
+        name: "Signup Style 3",
+        image: "/images/site-owners/auth/signup3.png",
+        description: "Modern split-screen signup",
+      }
     ],
   };
 

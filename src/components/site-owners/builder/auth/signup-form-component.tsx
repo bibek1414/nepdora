@@ -20,6 +20,7 @@ import { Trash2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SignupStyle1 } from "./styles/signup-style-1";
 import { SignupStyle2 } from "./styles/signup-style-2";
+import { SignupStyle3 } from "./styles/signup-style-3";
 
 interface SignupFormProps {
   component: {
@@ -87,6 +88,8 @@ export const SignupForm: React.FC<SignupFormProps> = ({
     };
 
     switch (style) {
+      case "style-3":
+        return <SignupStyle3 {...commonProps} />;
       case "style-2":
         return <SignupStyle2 {...commonProps} />;
       case "style-1":

@@ -20,6 +20,7 @@ import { Trash2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LoginStyle1 } from "./styles/login-style-1";
 import { LoginStyle2 } from "./styles/login-style-2";
+import { LoginStyle3 } from "./styles/login-style-3";
 
 interface LoginFormProps {
   component: {
@@ -87,6 +88,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     };
 
     switch (style) {
+      case "style-3":
+        return <LoginStyle3 {...commonProps} />;
       case "style-2":
         return <LoginStyle2 {...commonProps} />;
       case "style-1":
