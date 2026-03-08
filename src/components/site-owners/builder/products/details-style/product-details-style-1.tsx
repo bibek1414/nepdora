@@ -360,7 +360,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                           : "/collections"
                       : "/collections"
                   }
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="transition-colors"
                 >
                   Collections
                 </Link>
@@ -381,7 +381,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                               : `/collections?${product.category.slug ? `category=${product.category.slug}` : `category_id=${product.category.id}`}`
                           : `/collections?${product.category.slug ? `category=${product.category.slug}` : `category_id=${product.category.id}`}`
                       }
-                      className="text-muted-foreground hover:text-primary transition-colors"
+                      className="transition-colors"
                     >
                       {product.category.name}
                     </Link>
@@ -429,7 +429,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                     key={idx}
                     className={`relative aspect-square w-full overflow-hidden rounded-xl border-2 transition-all focus:outline-none ${
                       selectedImage === img
-                        ? "border-primary shadow-sm"
+                        ? "border-black shadow-sm"
                         : "border-transparent opacity-70 hover:opacity-100"
                     }`}
                     onClick={() => setSelectedImage(img)}
