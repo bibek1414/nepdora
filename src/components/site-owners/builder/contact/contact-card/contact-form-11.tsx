@@ -12,6 +12,7 @@ import {
 import { toast } from "sonner";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Button } from "@/components/ui/site-owners/button";
+import { Input } from "@/components/ui/input";
 
 interface ContactForm11Props {
   data: ContactData;
@@ -37,7 +38,6 @@ export const ContactForm11: React.FC<ContactForm11Props> = ({
 
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
-  const { data: siteConfig } = useSiteConfig();
   const submitContactMutation = useSubmitContactForm(siteUser || "preview");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -46,7 +46,6 @@ export const ContactForm11: React.FC<ContactForm11Props> = ({
 
     submitContactMutation.mutate(formData, {
       onSuccess: () => {
-        toast.success("Message sent successfully!");
         setFormData({ name: "", phone_number: "", message: "", email: "" });
       },
     });
@@ -70,58 +69,39 @@ export const ContactForm11: React.FC<ContactForm11Props> = ({
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             {/* Floating Input Name */}
-            <div className="relative">
-              <input
-                type="text"
-                name="name"
-                required
-                value={formData.name}
-                onChange={e =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                placeholder=" "
-                className="peer w-full rounded-full border border-gray-100 bg-gray-50 px-6 py-4 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-gray-900/5"
-              />
-              <label className="pointer-events-none absolute top-4 left-6 text-xs font-medium text-gray-400 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:top-1 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:uppercase">
-                Full Name
-              </label>
-            </div>
+            <Input
+              type="text"
+              name="name"
+              label="Full Name"
+              required
+              value={formData.name}
+              onChange={e => setFormData({ ...formData, name: e.target.value })}
+              className="h-14 rounded-full border-gray-100 bg-gray-50 text-sm focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-gray-900/5"
+            />
 
             {/* Floating Input Phone */}
-            <div className="relative">
-              <input
-                type="tel"
-                name="phone_number"
-                required
-                value={formData.phone_number}
-                onChange={e =>
-                  setFormData({ ...formData, phone_number: e.target.value })
-                }
-                placeholder=" "
-                className="peer w-full rounded-full border border-gray-100 bg-gray-50 px-6 py-4 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-gray-900/5"
-              />
-              <label className="pointer-events-none absolute top-4 left-6 text-xs font-medium text-gray-400 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:top-1 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:uppercase">
-                Phone Number
-              </label>
-            </div>
+            <Input
+              type="tel"
+              name="phone_number"
+              label="Phone Number"
+              required
+              value={formData.phone_number}
+              onChange={e =>
+                setFormData({ ...formData, phone_number: e.target.value })
+              }
+              className="h-14 rounded-full border-gray-100 bg-gray-50 text-sm focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-gray-900/5"
+            />
           </div>
 
-          <div className="relative">
-            <input
-              type="email"
-              name="email"
-              required
-              value={formData.email}
-              onChange={e =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              placeholder=" "
-              className="peer w-full rounded-full border border-gray-100 bg-gray-50 px-6 py-4 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-gray-900/5"
-            />
-            <label className="pointer-events-none absolute top-4 left-6 text-xs font-medium text-gray-400 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:top-1 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:uppercase">
-              Email Address
-            </label>
-          </div>
+          <Input
+            type="email"
+            name="email"
+            label="Email Address"
+            required
+            value={formData.email}
+            onChange={e => setFormData({ ...formData, email: e.target.value })}
+            className="h-14 rounded-full border-gray-100 bg-gray-50 text-sm focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-gray-900/5"
+          />
 
           {/* Floating Textarea */}
           <div className="relative">
@@ -133,12 +113,9 @@ export const ContactForm11: React.FC<ContactForm11Props> = ({
               onChange={e =>
                 setFormData({ ...formData, message: e.target.value })
               }
-              placeholder=" "
+              placeholder="How can we help you?"
               className="peer w-full resize-none rounded-[1.5rem] border border-gray-100 bg-gray-50 px-6 py-4 pt-8 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-gray-900/5"
             />
-            <label className="pointer-events-none absolute top-6 left-6 text-sm font-medium text-gray-400 transition-all peer-placeholder-shown:top-8 peer-focus:top-3 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:uppercase">
-              How can we help?
-            </label>
           </div>
 
           <Button

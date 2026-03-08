@@ -62,13 +62,13 @@ export const TeamStyle6: React.FC<TeamStyleProps> = ({
 
   return (
     <section className="bg-white py-20">
-      <div className="container mx-auto px-4 md:px-8">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div className="mb-16 flex flex-col items-center gap-6 text-center">
           <EditableText
             value={resolvedSubtitle || ""}
             onChange={handleSubtitleChange}
             as="p"
-            className="inline-flex w-auto items-center rounded-full border border-slate-200 px-4 py-1 text-xs font-semibold tracking-[0.35em] text-slate-500 uppercase"
+            className="inline-flex w-auto items-center rounded-full border border-slate-200 px-4 py-1 text-xs font-semibold text-slate-500"
             isEditable={isEditable}
             placeholder="[Team Member]"
           />

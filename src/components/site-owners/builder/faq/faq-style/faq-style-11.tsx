@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { FAQData } from "@/types/owner-site/components/faq";
 import { EditableText } from "@/components/ui/editable-text";
-import { EditableLink } from "@/components/ui/editable-link";
 import { useFAQs } from "@/hooks/owner-site/admin/use-faq";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { ChevronDown } from "lucide-react";
+import { FAQCard11 } from "../faq-card/faq-card-11";
 
 interface FAQStyle11Props {
   data: FAQData;
@@ -29,7 +28,7 @@ export const FAQStyle11: React.FC<FAQStyle11Props> = ({
 
   const { data: faqsResponse, isLoading } = useFAQs();
 
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
   const faqs =
     (Array.isArray(faqsResponse)
       ? faqsResponse
@@ -47,7 +46,6 @@ export const FAQStyle11: React.FC<FAQStyle11Props> = ({
           <EditableText
             value={data.title}
             as="h1"
-            style={{ color: theme.colors.primary }}
             onChange={handleUpdate("title")}
             isEditable={isEditable}
           />
@@ -72,59 +70,7 @@ export const FAQStyle11: React.FC<FAQStyle11Props> = ({
             ))}
           </div>
         ) : (
-          <div className="mx-auto mb-12 max-w-3xl space-y-4">
-            {faqs.map((faq: any, index: number) => {
-              const isOpen = openIndex === index;
-
-              return (
-                <div
-                  key={index}
-                  className="overflow-hidden rounded-2xl border bg-white transition-all duration-300"
-                  style={{
-                    borderColor: isOpen ? theme.colors.primary : "#E5E7EB",
-                    boxShadow: isOpen
-                      ? `0 4px 20px -5px ${theme.colors.primary}20`
-                      : undefined,
-                  }}
-                >
-                  <button
-                    className="flex w-full items-center justify-between px-6 py-5 text-left focus:outline-none"
-                    onClick={() => setOpenIndex(isOpen ? null : index)}
-                    aria-expanded={isOpen}
-                  >
-                    <span
-                      className="pr-8 text-lg font-semibold transition-colors duration-200"
-                      style={{
-                        color: isOpen ? theme.colors.primary : undefined,
-                      }}
-                    >
-                      {faq.question}
-                    </span>
-                    <div className="ml-4 shrink-0 transition-transform duration-300">
-                      <ChevronDown
-                        className={`h-5 w-5 transition-transform duration-300 ${openIndex === index ? "rotate-180" : ""}`}
-                        style={{
-                          color: isOpen ? theme.colors.primary : "#9CA3AF",
-                        }}
-                      />
-                    </div>
-                  </button>
-
-                  <div
-                    className="transition-all duration-300 ease-in-out"
-                    style={{
-                      maxHeight: isOpen ? "500px" : "0",
-                      opacity: isOpen ? 1 : 0,
-                    }}
-                  >
-                    <div className="mt-2 border-t border-gray-100 px-6 pt-4 pb-6 leading-relaxed text-gray-500">
-                      {faq.answer}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <FAQCard11 faqs={faqs} theme={theme} />
         )}
       </div>
     </section>
