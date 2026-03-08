@@ -17,6 +17,7 @@ import { CheckCircle, Package, Truck, Mail } from "lucide-react";
 import Image from "next/image";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
+import { EditableText } from "@/components/ui/editable-text";
 
 const MOCK_ORDER = {
   id: 0,
@@ -108,7 +109,7 @@ const OrderConfirmationStyle1 = ({
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
           <h1 className="mb-4 text-2xl font-bold">Order not found</h1>
-          <p className="mb-8 text-gray-600">
+          <p className="mb-8 opacity-70">
             We couldn&apos;t find the order you&apos;re looking for.
           </p>
           <Button onClick={() => router.push(`/preview/${siteUser}`)}>
@@ -145,7 +146,7 @@ const OrderConfirmationStyle1 = ({
   const orderItems = order.order_items || order.items || [];
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-8">
+    <div className="container mx-auto max-w-5xl px-4 py-8 transition-colors duration-500">
       <div className="mx-auto max-w-5xl">
         {/* Success Header */}
         <div className="mb-8 text-center">
@@ -153,13 +154,23 @@ const OrderConfirmationStyle1 = ({
             className="mx-auto mb-4 h-16 w-16"
             style={{ color: theme.colors.primary }}
           />
-          <h1 className="mb-2 text-3xl font-bold text-gray-900">
-            Order Confirmed!
-          </h1>
-          <p className="text-gray-600">
-            Thank you for your purchase. Your order has been received and is
-            being processed.
-          </p>
+          <EditableText
+            value="Order Confirmed!"
+            onChange={() => {}}
+            as="h1"
+            className="mb-2 text-3xl font-bold"
+            style={{
+              fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+            }}
+            isEditable={isBuilder}
+          />
+          <EditableText
+            value="Thank you for your purchase. Your order has been received and is being processed."
+            onChange={() => {}}
+            as="p"
+            className="opacity-70"
+            isEditable={isBuilder}
+          />
         </div>
 
         {/* Order Details Card */}
@@ -197,14 +208,14 @@ const OrderConfirmationStyle1 = ({
                   <Mail className="mr-2 h-4 w-4" />
                   Customer Details
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm opacity-70">
                   <strong>Name:</strong> {order.customer_name}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm opacity-70">
                   <strong>Email:</strong> {order.customer_email}
                 </p>
                 {order.customer_phone && (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm opacity-70">
                     <strong>Phone:</strong> {order.customer_phone}
                   </p>
                 )}
@@ -215,11 +226,11 @@ const OrderConfirmationStyle1 = ({
                   <Truck className="mr-2 h-4 w-4" />
                   Shipping Address
                 </h3>
-                <p className="text-sm whitespace-pre-line text-gray-600">
+                <p className="text-sm whitespace-pre-line opacity-70">
                   {order.shipping_address}
                 </p>
                 {order.city && (
-                  <p className="mt-1 text-sm text-gray-600">
+                  <p className="mt-1 text-sm opacity-70">
                     <strong>City:</strong> {order.city}
                   </p>
                 )}
@@ -284,7 +295,7 @@ const OrderConfirmationStyle1 = ({
                             </div>
                           )}
 
-                          <p className="mt-1 text-sm text-gray-600">
+                          <p className="mt-1 text-sm opacity-70">
                             Quantity: {item.quantity}
                           </p>
                         </div>
@@ -294,7 +305,7 @@ const OrderConfirmationStyle1 = ({
                         <p className="font-medium">
                           Rs.{Number(itemPrice).toLocaleString("en-IN")}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm opacity-70">
                           Total: Rs.
                           {(Number(itemPrice) * item.quantity).toLocaleString(
                             "en-IN"
@@ -312,7 +323,7 @@ const OrderConfirmationStyle1 = ({
             {/* Order Summary */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Subtotal:</span>
+                <span className="opacity-70">Subtotal:</span>
                 <span className="font-medium">
                   Rs.
                   {(
@@ -324,7 +335,7 @@ const OrderConfirmationStyle1 = ({
 
               {order.delivery_charge && Number(order.delivery_charge) > 0 && (
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Delivery Charge:</span>
+                  <span className="opacity-70">Delivery Charge:</span>
                   <span className="font-medium">
                     Rs.{Number(order.delivery_charge).toLocaleString("en-IN")}
                   </span>
@@ -342,89 +353,6 @@ const OrderConfirmationStyle1 = ({
             </div>
           </CardContent>
         </Card>
-
-        {/* Next Steps */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>What&apos;s Next?</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-start space-x-3">
-              <div
-                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: subtlePrimaryBg }}
-              >
-                <span
-                  className="text-sm font-semibold"
-                  style={{ color: theme.colors.primary }}
-                >
-                  1
-                </span>
-              </div>
-              <div>
-                <h4 className="font-semibold">Order Confirmation</h4>
-                <p className="text-sm text-gray-600">
-                  You&apos;ll receive an email confirmation shortly with your
-                  order details.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-3">
-              <div
-                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: subtlePrimaryBg }}
-              >
-                <span
-                  className="text-sm font-semibold"
-                  style={{ color: theme.colors.primary }}
-                >
-                  2
-                </span>
-              </div>
-              <div>
-                <h4 className="font-semibold">Processing</h4>
-                <p className="text-sm text-gray-600">
-                  We&apos;ll start preparing your order for shipment within 1-2
-                  business days.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-3">
-              <div
-                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: subtlePrimaryBg }}
-              >
-                <span
-                  className="text-sm font-semibold"
-                  style={{ color: theme.colors.primary }}
-                >
-                  3
-                </span>
-              </div>
-              <div>
-                <h4 className="font-semibold">Shipping Updates</h4>
-                <p className="text-sm text-gray-600">
-                  You&apos;ll receive tracking information once your order
-                  ships.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col justify-center gap-4 sm:flex-row">
-          <Button
-            onClick={() => router.push(`/preview/${siteUser}`)}
-            variant="outline"
-            className="px-8"
-            style={outlineButtonStyle}
-          >
-            Continue Shopping
-          </Button>
-        </div>
       </div>
     </div>
   );

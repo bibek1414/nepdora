@@ -3,13 +3,7 @@
 import React from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useOrder } from "@/hooks/owner-site/admin/use-orders";
@@ -154,14 +148,7 @@ const OrderConfirmationStyle2 = ({
   const orderItems = order.order_items || order.items || [];
 
   return (
-    <div
-      className="min-h-full px-4 py-12 font-sans transition-colors duration-500 sm:px-6 lg:px-8"
-      style={{
-        backgroundColor: `${theme.colors.primary}05`,
-        color: theme.colors.text,
-        fontFamily: `var(--font-body, ${theme.fonts.body})`,
-      }}
-    >
+    <div className="min-h-full px-4 py-12 font-sans transition-colors duration-500 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl">
         {/* Success Header */}
         <div className="mb-12 text-center">
@@ -187,7 +174,6 @@ const OrderConfirmationStyle2 = ({
             as="h1"
             className="mb-4 text-4xl font-medium md:text-5xl"
             style={{
-              color: theme.colors.text,
               fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
             }}
             isEditable={isBuilder}
@@ -208,17 +194,10 @@ const OrderConfirmationStyle2 = ({
           {/* Main Content */}
           <div className="space-y-8 lg:col-span-2">
             {/* Order Items */}
-            <div
-              className="rounded-3xl border p-8 transition-all duration-300"
-              style={{
-                backgroundColor: theme.colors.background,
-                borderColor: `${theme.colors.primary}10`,
-              }}
-            >
+            <div className="rounded-3xl border border-gray-100 p-8 shadow-sm transition-all duration-300">
               <h3
                 className="mb-6 flex items-center gap-2 text-xl font-medium"
                 style={{
-                  color: theme.colors.text,
                   fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
                 }}
               >
@@ -292,17 +271,10 @@ const OrderConfirmationStyle2 = ({
 
             {/* Customer & Shipping Information */}
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-              <div
-                className="rounded-3xl border p-8 transition-all duration-300"
-                style={{
-                  backgroundColor: theme.colors.background,
-                  borderColor: `${theme.colors.primary}10`,
-                }}
-              >
+              <div className="rounded-3xl border border-gray-100 p-8 shadow-sm transition-all duration-300">
                 <h3
                   className="mb-4 flex items-center gap-2 text-lg font-medium"
                   style={{
-                    color: theme.colors.text,
                     fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
                   }}
                 >
@@ -327,17 +299,10 @@ const OrderConfirmationStyle2 = ({
                 </div>
               </div>
 
-              <div
-                className="rounded-3xl border p-8 transition-all duration-300"
-                style={{
-                  backgroundColor: theme.colors.background,
-                  borderColor: `${theme.colors.primary}10`,
-                }}
-              >
+              <div className="rounded-3xl border border-gray-100 p-8 shadow-sm transition-all duration-300">
                 <h3
                   className="mb-4 flex items-center gap-2 text-lg font-medium"
                   style={{
-                    color: theme.colors.text,
                     fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
                   }}
                 >
@@ -361,14 +326,7 @@ const OrderConfirmationStyle2 = ({
           {/* Sidebar: Summary & Status */}
           <div className="space-y-8">
             {/* Order Info */}
-            <div
-              className="rounded-3xl border p-8 transition-all duration-300"
-              style={{
-                backgroundColor: theme.colors.background,
-                borderColor: theme.colors.primary,
-                borderWidth: "1px",
-              }}
-            >
+            <div className="rounded-3xl border border-gray-100 p-8 shadow-sm transition-all duration-300">
               <div className="mb-6">
                 <Badge
                   className={cn(
@@ -416,64 +374,6 @@ const OrderConfirmationStyle2 = ({
                     Rs.{Number(order.total_amount).toLocaleString("en-IN")}
                   </span>
                 </div>
-              </div>
-
-              <Button
-                onClick={() => router.push(`/preview/${siteUser}`)}
-                className="group relative mt-8 w-full overflow-hidden rounded-full py-6 font-medium transition-all"
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  color: theme.colors.primaryForeground,
-                }}
-              >
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  <ShoppingBag className="h-4 w-4" />
-                  Continue Shopping
-                </span>
-                <div className="absolute inset-0 translate-y-full bg-black/10 transition-transform duration-300 group-hover:translate-y-0" />
-              </Button>
-            </div>
-
-            {/* Next Steps */}
-            <div
-              className="rounded-3xl border p-8 transition-all duration-300"
-              style={{
-                backgroundColor: theme.colors.background,
-                borderColor: `${theme.colors.primary}10`,
-              }}
-            >
-              <h3 className="mb-6 font-medium">What&apos;s Next?</h3>
-              <div className="space-y-6">
-                {[
-                  {
-                    title: "Confirmation",
-                    desc: "You'll receive an email confirmation shortly.",
-                  },
-                  {
-                    title: "Processing",
-                    desc: "We'll prepare your order within 1-2 days.",
-                  },
-                  {
-                    title: "Shipping",
-                    desc: "We'll send tracking once it ships.",
-                  },
-                ].map((step, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div
-                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
-                      style={{
-                        backgroundColor: `${theme.colors.primary}10`,
-                        color: theme.colors.primary,
-                      }}
-                    >
-                      {i + 1}
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium">{step.title}</h4>
-                      <p className="mt-1 text-xs opacity-50">{step.desc}</p>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           </div>

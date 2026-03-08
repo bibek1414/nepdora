@@ -139,7 +139,7 @@ export const PromoCodeInput: React.FC<PromoCodeInputProps> = ({
               onChange={e => setPromoCode(e.target.value.toUpperCase())}
               onKeyPress={handleKeyPress}
               disabled={validatePromoCodeMutation.isPending}
-              className="flex-1"
+              className="flex-1 placeholder:text-gray-400"
             />
             <Button
               type="button"
@@ -147,6 +147,7 @@ export const PromoCodeInput: React.FC<PromoCodeInputProps> = ({
               disabled={
                 validatePromoCodeMutation.isPending || !promoCode.trim()
               }
+              className="mt-1"
               style={{
                 backgroundColor: primaryColor,
                 color: "white",

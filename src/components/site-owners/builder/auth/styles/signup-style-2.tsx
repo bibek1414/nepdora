@@ -16,6 +16,7 @@ import { useState } from "react";
 import { AlertCircle } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { EditableText } from "@/components/ui/editable-text";
+import { EditableImage } from "@/components/ui/editable-image";
 
 interface SignupStyle2Props {
   data: AuthFormData;
@@ -35,7 +36,22 @@ export const SignupStyle2: React.FC<SignupStyle2Props> = ({
   const { data: localData, handleTextUpdate } = useBuilderLogic(data, onUpdate);
   const [error, setError] = useState<string | null>(null);
 
-  const { title = "", subtitle = "", buttonText = "" } = localData;
+  const { title = "", subtitle = "", buttonText = "", imageUrl = "", imageAlt = "" } = localData;
+
+  const handleImageUpdate = (newUrl: string, newAlt?: string) => {
+    if (onUpdate) {
+      onUpdate({
+        imageUrl: newUrl,
+        ...(newAlt ? { imageAlt: newAlt } : {}),
+      });
+    }
+  };
+
+  const handleAltUpdate = (newAlt: string) => {
+    if (onUpdate) {
+      onUpdate({ imageAlt: newAlt });
+    }
+  };
 
   const {
     register,
@@ -74,43 +90,42 @@ export const SignupStyle2: React.FC<SignupStyle2Props> = ({
   };
 
   return (
-    <div className="relative flex min-h-[700px] w-full items-center justify-center overflow-hidden bg-white">
-      {/* Decorative Blur Elements */}
-      <div className="bg-primary/5 absolute top-[-10%] right-[-5%] h-[40%] w-[40%] rounded-full blur-[100px]" />
-      <div className="absolute bottom-[-10%] left-[-5%] h-[40%] w-[40%] rounded-full bg-blue-500/5 blur-[100px]" />
-
-      <div className="relative w-full max-w-sm px-4">
-        <div className="mb-10 text-center">
-          <div className="bg-primary/10 mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl">
-            <svg
-              className="text-primary h-8 w-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-              />
-            </svg>
-          </div>
-          <EditableText
-            as="h2"
-            value={title}
-            onChange={handleTextUpdate("title")}
+    <div className="flex min-h-[700px] w-full items-center justify-center bg-gray-50 p-4 sm:p-8">
+      <div className="flex w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-xl">
+        {/* Left Side - Image */}
+        <div className="hidden w-1/2 lg:block relative bg-gray-100">
+          <EditableImage
+            src={imageUrl || ""}
+            alt={imageAlt || "Signup image"}
+            onImageChange={handleImageUpdate}
+            onAltChange={handleAltUpdate}
             isEditable={isEditable}
-            className="text-4xl font-extrabold tracking-tight text-gray-900"
-          />
-          <EditableText
-            as="p"
-            value={subtitle}
-            onChange={handleTextUpdate("subtitle")}
-            isEditable={isEditable}
-            className="mt-3 text-lg text-gray-500"
+            className="absolute inset-0 h-full w-full object-cover"
+            width={800}
+            height={800}
+            showAltEditor={true}
+            placeholder={{ width: 800, height: 800, text: "Click to set signup image" }}
           />
         </div>
+
+        {/* Right Side - Form */}
+        <div className="w-full p-8 sm:p-12 lg:w-1/2 flex flex-col justify-center">
+          <div className="mb-10 text-center lg:text-left">
+            <EditableText
+              as="h2"
+              value={title}
+              onChange={handleTextUpdate("title")}
+              isEditable={isEditable}
+              className="text-4xl font-extrabold tracking-tight text-gray-900"
+            />
+            <EditableText
+              as="p"
+              value={subtitle}
+              onChange={handleTextUpdate("subtitle")}
+              isEditable={isEditable}
+              className="mt-3 text-lg text-gray-500"
+            />
+          </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {error && (
@@ -276,6 +291,7 @@ export const SignupStyle2: React.FC<SignupStyle2Props> = ({
             </p>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

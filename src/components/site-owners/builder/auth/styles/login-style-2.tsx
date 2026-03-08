@@ -16,6 +16,7 @@ import { useState } from "react";
 import { AlertCircle } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { EditableText } from "@/components/ui/editable-text";
+import { EditableImage } from "@/components/ui/editable-image";
 
 interface LoginStyle2Props {
   data: AuthFormData;
@@ -35,7 +36,22 @@ export const LoginStyle2: React.FC<LoginStyle2Props> = ({
   const { data: localData, handleTextUpdate } = useBuilderLogic(data, onUpdate);
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  const { title = "", subtitle = "", buttonText = "" } = localData;
+  const { title = "", subtitle = "", buttonText = "", imageUrl = "", imageAlt = "" } = localData;
+
+  const handleImageUpdate = (newUrl: string, newAlt?: string) => {
+    if (onUpdate) {
+      onUpdate({
+        imageUrl: newUrl,
+        ...(newAlt ? { imageAlt: newAlt } : {}),
+      });
+    }
+  };
+
+  const handleAltUpdate = (newAlt: string) => {
+    if (onUpdate) {
+      onUpdate({ imageAlt: newAlt });
+    }
+  };
 
   const {
     register,
@@ -77,15 +93,19 @@ export const LoginStyle2: React.FC<LoginStyle2Props> = ({
     <div className="flex min-h-[600px] w-full items-center justify-center bg-gray-50">
       <div className="flex w-full max-w-4xl overflow-hidden rounded-2xl bg-white shadow-xl">
         {/* Left Side - Image/Decoration */}
-        <div className="bg-primary hidden w-1/2 flex-col justify-center p-12 text-white lg:flex">
-          <h2 className="mb-6 text-4xl font-bold">Join Our Community</h2>
-          <p className="text-lg leading-relaxed opacity-90">
-            Experience the best shopping experience with our premium selection
-            of products.
-          </p>
-          <div className="mt-12">
-            <div className="h-1 w-20 rounded-full bg-white/30" />
-          </div>
+        <div className="hidden w-1/2 lg:block relative bg-gray-100">
+          <EditableImage
+            src={imageUrl || ""}
+            alt={imageAlt || "Login image"}
+            onImageChange={handleImageUpdate}
+            onAltChange={handleAltUpdate}
+            isEditable={isEditable}
+            className="absolute inset-0 h-full w-full object-cover"
+            width={800}
+            height={800}
+            showAltEditor={true}
+            placeholder={{ width: 800, height: 800, text: "Click to set login image" }}
+          />
         </div>
 
         {/* Right Side - Form */}

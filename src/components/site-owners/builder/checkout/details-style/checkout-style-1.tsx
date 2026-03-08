@@ -53,6 +53,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { PromoCodeInput } from "../promo-code-input";
 import { PromoCode } from "@/types/owner-site/admin/promo-code-validate";
 import { useDeliveryChargeCalculator } from "@/hooks/owner-site/admin/use-delivery-charge-calculator";
+import { EditableText } from "@/components/ui/editable-text";
 
 interface CheckoutStyleProps {
   siteUser?: string;
@@ -368,18 +369,16 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                   </div>
                 )}
 
-                <p className="mt-1 text-xs text-gray-500">
-                  Qty: {item.quantity}
-                </p>
+                <p className="mt-1 text-xs opacity-50">Qty: {item.quantity}</p>
                 {item.product.weight && (
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 text-xs opacity-50">
                     Weight: {item.product.weight} kg each
                   </p>
                 )}
               </div>
 
               <div className="mt-2 flex items-end justify-between">
-                <div className="text-xs text-gray-500">
+                <div className="text-xs opacity-50">
                   Rs.{Number(displayPrice).toLocaleString("en-IN")} each
                 </div>
                 <div className="text-sm font-semibold">
@@ -408,7 +407,7 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
 
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">Subtotal:</span>
+          <span className="opacity-70">Subtotal:</span>
           <span className="font-medium">
             Rs.{Number(subtotalAmount).toLocaleString("en-IN")}
           </span>
@@ -416,7 +415,7 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
 
         {appliedPromoCode && (
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">
+            <span className="opacity-70">
               Discount ({appliedPromoCode.discount_percentage}%):
             </span>
             <span className="font-medium text-green-600">
@@ -426,7 +425,7 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
         )}
 
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">Delivery:</span>
+          <span className="opacity-70">Delivery:</span>
           <span className="font-medium">
             Rs.{Number(deliveryCharge).toLocaleString("en-IN")}
           </span>
@@ -439,31 +438,34 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
         <span className="text-lg font-semibold">Total:</span>
         <div className="text-right">
           {appliedPromoCode && (
-            <div className="text-sm text-gray-500 line-through">
+            <div className="text-sm line-through opacity-50">
               Rs.
               {Number(subtotalAmount + deliveryCharge).toLocaleString("en-IN")}
             </div>
           )}
-          <span
-            className="text-2xl font-bold"
-            style={{ color: theme.colors.primary }}
-          >
+          <span className="text-2xl font-bold">
             Rs.{Number(totalAmount).toLocaleString("en-IN")}
           </span>
         </div>
       </div>
 
       {/* Delivery Information */}
-      <div className="mt-4 rounded-lg bg-blue-50 p-3">
+      <div
+        className="mt-4 rounded-lg p-3"
+        style={{
+          backgroundColor: subtlePrimaryBg,
+          color: theme.colors.primary,
+        }}
+      >
         <div className="flex items-center justify-between text-sm">
-          <span className="text-blue-700">Total Weight:</span>
-          <span className="font-medium text-blue-700">
+          <span className="text-black">Total Weight:</span>
+          <span className="font-medium text-black">
             {totalWeight.toFixed(2)} kg
           </span>
         </div>
         <div className="mt-1 flex items-center justify-between text-sm">
-          <span className="text-blue-700">Delivery To:</span>
-          <span className="font-medium text-blue-700">
+          <span className="text-black">Delivery To:</span>
+          <span className="font-medium text-black">
             {sameAsCustomerAddress
               ? cityDistrict || "Not selected"
               : shippingCityDistrict || "Not selected"}
@@ -478,7 +480,7 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
       <div className="container mx-auto max-w-5xl px-4 py-8">
         <div className="text-center">
           <h1 className="mb-4 text-2xl font-bold">Your cart is empty</h1>
-          <p className="mb-8 text-gray-600">
+          <p className="mb-8 opacity-70">
             Add some items to your cart before checkout
           </p>
           <Button onClick={handleContinueShopping} style={primaryButtonStyle}>
@@ -493,7 +495,7 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
   if (cartItems.length === 0) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-8 text-center">
-        <p className="text-gray-500 italic">
+        <p className="italic opacity-50">
           No checkout items available for preview.
         </p>
       </div>
@@ -501,17 +503,41 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold">Checkout</h1>
+    <div className="mx-auto max-w-5xl px-4 py-8 transition-colors duration-500">
+      <EditableText
+        value="Checkout"
+        onChange={() => {}}
+        as="h1"
+        className="mb-8 text-3xl font-bold"
+        style={{
+          fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+        }}
+        isEditable={isBuilder}
+      />
 
       <div className="flex flex-col gap-8 lg:grid lg:grid-cols-3">
         {/* Shipping Information */}
         <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Shipping Information</CardTitle>
+          <Card className="p=">
+            <CardHeader className="px-0! text-left">
+              <CardTitle className="p-0">
+                <EditableText
+                  value="Shipping Information"
+                  onChange={() => {}}
+                  as="span"
+                  style={{
+                    fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+                  }}
+                  isEditable={isBuilder}
+                />
+              </CardTitle>
               <CardDescription>
-                Please fill in your details to complete your order
+                <EditableText
+                  value="Please fill in your details to complete your order"
+                  onChange={() => {}}
+                  as="span"
+                  isEditable={isBuilder}
+                />
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -733,7 +759,7 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                       {errors.note.message}
                     </p>
                   )}
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs opacity-50">
                     {watch("note")?.length || 0}/500 characters
                   </p>
                 </div>
@@ -742,8 +768,16 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                 <div className="block lg:hidden">
                   <Separator className="my-6" />
                   <Card>
-                    <CardHeader>
-                      <CardTitle>Order Summary</CardTitle>
+                    <CardHeader className="px-0! text-left">
+                      <CardTitle>
+                        <span
+                          style={{
+                            fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+                          }}
+                        >
+                          Order Summary
+                        </span>
+                      </CardTitle>
                       <CardDescription>
                         {cartItems.length}{" "}
                         {cartItems.length === 1 ? "item" : "items"}
@@ -764,7 +798,7 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                       <h3 className="mb-3 text-lg font-semibold">
                         Payment Method
                       </h3>
-                      <p className="mb-4 text-sm text-gray-600">
+                      <p className="mb-4 text-sm opacity-70">
                         Select your preferred payment option
                       </p>
 
@@ -860,8 +894,16 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
         <div className="hidden lg:col-span-1 lg:block">
           <div className="sticky top-8">
             <Card>
-              <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
+              <CardHeader className="px-0! text-left">
+                <CardTitle>
+                  <span
+                    style={{
+                      fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
+                    }}
+                  >
+                    Order Summary
+                  </span>
+                </CardTitle>
                 <CardDescription>
                   {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
                 </CardDescription>

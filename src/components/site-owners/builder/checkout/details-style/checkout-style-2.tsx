@@ -321,159 +321,6 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
     router.push(`/preview/${siteUser}`);
   };
 
-  // Order Summary Component (shared between mobile and desktop)
-  const OrderSummaryContent = () => (
-    <>
-      {cartItems.map((item, index) => {
-        const displayPrice = item.selectedVariant?.price || item.product.price;
-        const cartItemKey = `${item.product.id}-${item.selectedVariant?.id || "no-variant"}-${index}`;
-
-        return (
-          <div
-            key={cartItemKey}
-            className="flex gap-4 border-b border-gray-100 pb-4 last:border-b-0"
-          >
-            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border">
-              <Image
-                src={item.product.thumbnail_image || ""}
-                alt={item.product.name}
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            <div className="flex flex-1 flex-col justify-between">
-              <div>
-                <h4 className="text-sm leading-tight font-medium">
-                  {item.product.name}
-                </h4>
-
-                {/* Display variant options as badges */}
-                {item.selectedVariant && item.selectedVariant.option_values && (
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {Object.entries(item.selectedVariant.option_values).map(
-                      ([optionName, optionValue]) => (
-                        <Badge
-                          key={optionName}
-                          variant="secondary"
-                          className="text-xs capitalize"
-                          style={{
-                            backgroundColor: subtlePrimaryBg,
-                            color: theme.colors.primary,
-                          }}
-                        >
-                          {optionName}: {optionValue}
-                        </Badge>
-                      )
-                    )}
-                  </div>
-                )}
-
-                <p className="mt-1 text-xs text-gray-500">
-                  Qty: {item.quantity}
-                </p>
-                {item.product.weight && (
-                  <p className="mt-1 text-xs text-gray-500">
-                    Weight: {item.product.weight} kg each
-                  </p>
-                )}
-              </div>
-
-              <div className="mt-2 flex items-end justify-between">
-                <div className="text-xs text-gray-500">
-                  Rs.{Number(displayPrice).toLocaleString("en-IN")} each
-                </div>
-                <div className="text-sm font-semibold">
-                  Rs.
-                  {(Number(displayPrice) * item.quantity).toLocaleString(
-                    "en-IN"
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      })}
-
-      <Separator className="my-4" />
-
-      {/* Promo Code Input */}
-      <PromoCodeInput
-        onPromoCodeApplied={handlePromoCodeApplied}
-        appliedPromoCode={appliedPromoCode}
-        primaryColor={theme.colors.primary}
-        subtlePrimaryBg={subtlePrimaryBg}
-      />
-
-      <Separator className="my-4" />
-
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">Subtotal:</span>
-          <span className="font-medium">
-            Rs.{Number(subtotalAmount).toLocaleString("en-IN")}
-          </span>
-        </div>
-
-        {appliedPromoCode && (
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">
-              Discount ({appliedPromoCode.discount_percentage}%):
-            </span>
-            <span className="font-medium text-green-600">
-              -Rs.{Number(discountAmount).toLocaleString("en-IN")}
-            </span>
-          </div>
-        )}
-
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">Delivery:</span>
-          <span className="font-medium">
-            Rs.{Number(deliveryCharge).toLocaleString("en-IN")}
-          </span>
-        </div>
-      </div>
-
-      <Separator className="my-4" />
-
-      <div className="flex items-center justify-between">
-        <span className="text-lg font-semibold">Total:</span>
-        <div className="text-right">
-          {appliedPromoCode && (
-            <div className="text-sm text-gray-500 line-through">
-              Rs.
-              {Number(subtotalAmount + deliveryCharge).toLocaleString("en-IN")}
-            </div>
-          )}
-          <span
-            className="text-2xl font-bold"
-            style={{ color: theme.colors.primary }}
-          >
-            Rs.{Number(totalAmount).toLocaleString("en-IN")}
-          </span>
-        </div>
-      </div>
-
-      {/* Delivery Information */}
-      <div className="mt-4 rounded-lg bg-blue-50 p-3">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-blue-700">Total Weight:</span>
-          <span className="font-medium text-blue-700">
-            {totalWeight.toFixed(2)} kg
-          </span>
-        </div>
-        <div className="mt-1 flex items-center justify-between text-sm">
-          <span className="text-blue-700">Delivery To:</span>
-          <span className="font-medium text-blue-700">
-            {sameAsCustomerAddress
-              ? cityDistrict || "Not selected"
-              : shippingCityDistrict || "Not selected"}
-          </span>
-        </div>
-      </div>
-    </>
-  );
-
   if (cartItems.length === 0 && !isBuilder) {
     return (
       <div className="container mx-auto max-w-5xl px-4 py-8">
@@ -501,14 +348,7 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
   }
 
   return (
-    <div
-      className="min-h-full px-4 py-12 font-sans transition-colors duration-500 sm:px-6 lg:px-8"
-      style={{
-        backgroundColor: `${theme.colors.primary}05`,
-        color: theme.colors.text,
-        fontFamily: `var(--font-body, ${theme.fonts.body})`,
-      }}
-    >
+    <div className="min-h-full px-4 py-12 font-sans transition-colors duration-500 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-5xl">
         <div className="mb-12 text-center">
           <EditableText
@@ -517,7 +357,6 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
             as="h1"
             className="text-4xl font-medium md:text-5xl"
             style={{
-              color: theme.colors.text,
               fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
             }}
             isEditable={isBuilder}
@@ -534,10 +373,7 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
           />
         </div>
 
-        <div
-          className="rounded-[32px] p-6 shadow-xl shadow-stone-200/50 transition-all duration-300 md:p-10 lg:p-14"
-          style={{ backgroundColor: theme.colors.background }}
-        >
+        <div className="rounded-[32px] p-6 shadow-sm transition-all duration-300 md:p-10 lg:p-14">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-20">
             {/* Left Column: Form */}
             <div className="space-y-10">
@@ -546,7 +382,6 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                   <h2
                     className="mb-6 text-2xl font-medium"
                     style={{
-                      color: theme.colors.text,
                       fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
                     }}
                   >
@@ -557,10 +392,9 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                     <div>
                       <Input
                         {...register("customer_name")}
-                        className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
+                        className="place w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none placeholder:text-gray-500"
                         style={{
                           backgroundColor: `${theme.colors.primary}0A`,
-                          color: theme.colors.text,
                         }}
                         placeholder="Full Name"
                         disabled={isSubmitting}
@@ -576,10 +410,9 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                         <Input
                           {...register("customer_email")}
                           type="email"
-                          className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
+                          className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none placeholder:text-gray-500"
                           style={{
                             backgroundColor: `${theme.colors.primary}0A`,
-                            color: theme.colors.text,
                           }}
                           placeholder="Email"
                           disabled={isSubmitting}
@@ -594,10 +427,9 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                         <Input
                           {...register("customer_phone")}
                           type="tel"
-                          className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
+                          className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none placeholder:text-gray-500"
                           style={{
                             backgroundColor: `${theme.colors.primary}0A`,
-                            color: theme.colors.text,
                           }}
                           placeholder="+1 (555) 123-4567"
                           disabled={isSubmitting}
@@ -679,10 +511,9 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                     <div>
                       <Input
                         {...register("customer_address")}
-                        className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
+                        className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none placeholder:text-gray-500"
                         style={{
                           backgroundColor: `${theme.colors.primary}0A`,
-                          color: theme.colors.text,
                         }}
                         placeholder="Billing Address"
                         disabled={isSubmitting}
@@ -720,10 +551,9 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                       >
                         <Input
                           {...register("shipping_address")}
-                          className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
+                          className="w-full rounded-2xl border-transparent px-5 py-4 transition-all outline-none placeholder:text-gray-500"
                           style={{
                             backgroundColor: `${theme.colors.primary}0A`,
-                            color: theme.colors.text,
                           }}
                           placeholder="Shipping Address"
                           disabled={isSubmitting}
@@ -743,7 +573,6 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                         className="w-full resize-none rounded-2xl border-transparent px-5 py-4 transition-all outline-none"
                         style={{
                           backgroundColor: `${theme.colors.primary}0A`,
-                          color: theme.colors.text,
                         }}
                         placeholder="Any special instructions for your order..."
                         disabled={isSubmitting}
@@ -759,7 +588,6 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                   <h2
                     className="mb-6 text-2xl font-medium"
                     style={{
-                      color: theme.colors.text,
                       fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
                     }}
                   >
@@ -776,16 +604,6 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                             ? "bg-white shadow-sm"
                             : "opacity-60"
                         )}
-                        style={{
-                          borderColor:
-                            selectedPaymentMethod === type
-                              ? theme.colors.primary
-                              : "transparent",
-                          backgroundColor:
-                            selectedPaymentMethod === type
-                              ? "white"
-                              : `${theme.colors.primary}05`,
-                        }}
                         onClick={() => setSelectedPaymentMethod(type)}
                       >
                         <div
@@ -811,10 +629,7 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                               className="object-contain"
                             />
                           </div>
-                          <span
-                            className="font-medium"
-                            style={{ color: theme.colors.text }}
-                          >
+                          <span className="font-medium">
                             {getPaymentLabel(type)}
                           </span>
                         </div>
@@ -825,7 +640,7 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
 
                 <Button
                   type="submit"
-                  className="group relative w-full overflow-hidden rounded-full py-6 text-lg font-medium shadow-lg transition-all"
+                  className="group relative w-full overflow-hidden rounded-full py-6 text-lg font-medium transition-all"
                   style={{
                     backgroundColor: theme.colors.primary,
                     color: theme.colors.primaryForeground,
@@ -859,7 +674,6 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
               <h2
                 className="mb-2 text-2xl font-medium"
                 style={{
-                  color: theme.colors.text,
                   fontFamily: `var(--font-heading, ${theme.fonts.heading})`,
                 }}
               >
@@ -878,7 +692,7 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
 
                   return (
                     <div key={cartItemKey} className="flex items-center gap-4">
-                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-stone-100 shadow-sm">
+                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-stone-100">
                         <Image
                           src={item.product.thumbnail_image || ""}
                           alt={item.product.name}
