@@ -1,7 +1,14 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Check, X, ExternalLink, Plus } from "lucide-react";
+import {
+  Check,
+  X,
+  ExternalLink,
+  Plus,
+  ArrowLeft,
+  Link as LinkIcon,
+} from "lucide-react";
 import { usePages, useCreatePage } from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";
 import { Button } from "@/components/ui/button";
@@ -10,9 +17,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
+import { NewPageDialog } from "../site-owners/builder/new-page/new-page-dialog";
+import { NewExternalLinkDialog } from "../site-owners/builder/new-page/new-external-link-dialog";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { useProducts } from "@/hooks/owner-site/admin/use-product";
+import { useBlogs } from "@/hooks/owner-site/admin/use-blogs";
+import { useServices } from "@/hooks/owner-site/admin/use-services";
+import { usePortfolios } from "@/hooks/owner-site/admin/use-portfolio";
+
 interface EditableLinkProps {
   text: string;
   href: string;
@@ -43,12 +57,33 @@ const PageSelector: React.FC<PageSelectorProps> = ({
   dropdownPosition = "top",
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [showCreateForm, setShowCreateForm] = useState(false);
   const [newPageTitle, setNewPageTitle] = useState("");
   const [isCreating, setIsCreating] = useState(false);
 
+  const [open, setOpen] = useState(false);
+  const [showNewPageDialog, setShowNewPageDialog] = useState(false);
+  const [showExternalLinkDialog, setShowExternalLinkDialog] = useState(false);
+
+  const [selectionType, setSelectionType] = useState<
+    "page" | "product" | "blog" | "service" | "portfolio"
+  >("page");
+  const [basePageSlug, setBasePageSlug] = useState<string>("");
+  const [basePageTitle, setBasePageTitle] = useState<string>("");
+
   const { data: pages = [], isLoading } = usePages();
   const createPageMutation = useCreatePage();
+
+  const { data: productsData, isLoading: isLoadingProducts } = useProducts({
+    page_size: 50,
+  });
+  const { data: blogsData, isLoading: isLoadingBlogs } = useBlogs({
+    page_size: 50,
+  });
+  const { data: servicesData, isLoading: isLoadingServices } = useServices({
+    page_size: 50,
+  });
+  const { data: portfoliosData, isLoading: isLoadingPortfolios } =
+    usePortfolios({ page_size: 50 });
 
   // Filter pages based on search term
   const filteredPages = pages.filter(
@@ -56,6 +91,16 @@ const PageSelector: React.FC<PageSelectorProps> = ({
       page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       page.slug.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const filterItems = (items: any[]) => {
+    return (
+      items?.filter(item =>
+        (item.name || item.title || "")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      ) || []
+    );
+  };
 
   // Update slug when title changes
   useEffect(() => {
@@ -66,15 +111,55 @@ const PageSelector: React.FC<PageSelectorProps> = ({
 
   // Handle page selection
   const handlePageSelect = (page: Page) => {
+    const isProductDetail =
+      page.slug === "product-details" || page.slug === "product-details-draft";
+    const isBlogDetail =
+      page.slug === "blog-details" || page.slug === "blog-details-draft";
+    const isServiceDetail =
+      page.slug === "service-details" || page.slug === "service-details-draft";
+    const isPortfolioDetail =
+      page.slug === "portfolio-details" ||
+      page.slug === "portfolio-details-draft";
+
+    if (isProductDetail) {
+      setSelectionType("product");
+      setBasePageSlug(page.slug);
+      setBasePageTitle(page.title);
+      setSearchTerm("");
+      return;
+    }
+    if (isBlogDetail) {
+      setSelectionType("blog");
+      setBasePageSlug(page.slug);
+      setBasePageTitle(page.title);
+      setSearchTerm("");
+      return;
+    }
+    if (isServiceDetail) {
+      setSelectionType("service");
+      setBasePageSlug(page.slug);
+      setBasePageTitle(page.title);
+      setSearchTerm("");
+      return;
+    }
+    if (isPortfolioDetail) {
+      setSelectionType("portfolio");
+      setBasePageSlug(page.slug);
+      setBasePageTitle(page.title);
+      setSearchTerm("");
+      return;
+    }
+
     onSelect(`/${page.slug}`, page.title);
   };
 
-  // Handle external URL selection
-  const handleExternalUrl = () => {
-    const url = prompt("Enter external URL (including https://):");
-    if (url) {
-      onSelect(url, url);
-    }
+  const handleItemSelect = (itemSlug: string, itemName: string) => {
+    onSelect(`/${basePageSlug}/${itemSlug}`, `${basePageTitle}: ${itemName}`);
+  };
+
+  // Handle external URL selection submission
+  const handleAddExternalUrl = (url: string) => {
+    onSelect(url, url);
   };
 
   // Handle new page creation
@@ -92,7 +177,6 @@ const PageSelector: React.FC<PageSelectorProps> = ({
 
       // Reset form
       setNewPageTitle("");
-      setShowCreateForm(false);
     } catch (error) {
       console.error("Failed to create page:", error);
       alert("Failed to create page. Please try again.");
@@ -104,112 +188,195 @@ const PageSelector: React.FC<PageSelectorProps> = ({
   const positionClass =
     dropdownPosition === "bottom" ? "top-full mt-1" : "bottom-full mb-1";
 
-  return (
-    <Card
-      className={`absolute ${positionClass} left-0 z-[9999] w-80 bg-white py-0 shadow-xl`}
-    >
-      <CardContent className="p-0">
-        {/* Existing Pages - Fixed ScrollArea */}
-        <ScrollArea className="max-h-60 overflow-y-auto">
-          {isLoading ? (
-            <div className="text-muted-foreground p-4 text-center">
-              Loading pages...
-            </div>
-          ) : filteredPages.length > 0 ? (
-            <div className="p-2">
-              {filteredPages.map((page: Page) => (
-                <Button
-                  key={page.id}
-                  onClick={() => handlePageSelect(page)}
-                  variant={
-                    currentHref === `/${page.slug}` ? "secondary" : "ghost"
-                  }
-                  className={cn(
-                    "h-auto w-full justify-between p-3",
-                    currentHref === `/${page.slug}` &&
-                      "bg-primary/10 text-primary"
-                  )}
-                >
-                  <div className="flex-1 text-left">
-                    <div className="font-medium capitalize">{page.title}</div>
-                    <div className="text-muted-foreground text-sm">
-                      /{page.slug}
-                    </div>
-                  </div>
-                </Button>
-              ))}
-            </div>
-          ) : searchTerm && !isLoading ? (
-            <div className="text-muted-foreground p-4 text-center">
-              No pages found matching &quot;{searchTerm}&quot;
-            </div>
-          ) : null}
-        </ScrollArea>
+  const renderItemsList = () => {
+    let items: any[] = [];
+    let loading = false;
+    let fallbackMsg = "";
 
-        <Separator />
+    if (selectionType === "product") {
+      items = filterItems(productsData?.results || []);
+      loading = isLoadingProducts;
+      fallbackMsg = "No products found.";
+    } else if (selectionType === "blog") {
+      items = filterItems(blogsData?.results || []);
+      loading = isLoadingBlogs;
+      fallbackMsg = "No blogs found.";
+    } else if (selectionType === "service") {
+      items = filterItems(servicesData?.results || []);
+      loading = isLoadingServices;
+      fallbackMsg = "No services found.";
+    } else if (selectionType === "portfolio") {
+      items = filterItems(portfoliosData?.results || []);
+      loading = isLoadingPortfolios;
+      fallbackMsg = "No portfolios found.";
+    }
 
-        <div className="bg-white p-2">
-          {!showCreateForm ? (
+    if (loading) {
+      return (
+        <div className="text-muted-foreground p-4 text-center">Loading...</div>
+      );
+    }
+
+    if (items.length === 0) {
+      return (
+        <div className="text-muted-foreground p-4 text-center">
+          {searchTerm ? `No matches for "${searchTerm}"` : fallbackMsg}
+        </div>
+      );
+    }
+
+    return (
+      <div className="p-2">
+        {items.map((item: any) => {
+          const name = item.name || item.title || "Untitled";
+          console.log("item", item);
+          const image = item.thumbnail_image || "/fallback/image-not-found.png";
+          const itemHref = `/${basePageSlug}/${item.slug}`;
+          return (
             <Button
-              onClick={() => setShowCreateForm(true)}
-              variant="ghost"
-              className="w-full justify-start bg-white text-green-700 hover:bg-green-50 hover:text-green-700"
+              key={item.id}
+              onClick={() => handleItemSelect(item.slug, name)}
+              variant={currentHref === itemHref ? "secondary" : "ghost"}
+              className={cn(
+                "h-auto w-full justify-between p-3",
+                currentHref === itemHref && "bg-primary/10 text-primary"
+              )}
             >
-              <Plus className="h-4 w-4" />
-              <span>Create New Page</span>
+              <div className="flex items-center gap-2 text-left">
+                <img src={image} alt={name} className="h-8 w-8 rounded-md" />
+                <div className="font-medium capitalize">{name}</div>
+              </div>
             </Button>
-          ) : (
-            <div className="space-y-3 rounded bg-white p-2">
-              <div className="text-sm font-medium">Create New Page</div>
+          );
+        })}
+      </div>
+    );
+  };
 
-              <Input
-                type="text"
-                placeholder="Page title..."
-                value={newPageTitle}
-                onChange={e => setNewPageTitle(e.target.value)}
-                className="bg-white"
-              />
-
-              <div className="flex gap-2">
-                <SOButton
-                  onClick={handleCreatePage}
-                  variant="default"
-                  disabled={!newPageTitle.trim() || isCreating}
-                  className="flex-1"
-                  size="sm"
-                >
-                  {isCreating ? "Creating..." : "Create & Link"}
-                </SOButton>
-                <Button
-                  onClick={() => {
-                    setShowCreateForm(false);
-                    setNewPageTitle("");
-                  }}
-                  variant="outline"
-                  size="sm"
-                >
-                  Cancel
-                </Button>
+  return (
+    <>
+      <Card
+        className={`absolute ${positionClass} left-0 z-[9999] w-80 bg-white py-0 shadow-xl`}
+      >
+        <CardContent className="flex max-h-[400px] flex-col p-0">
+          {selectionType !== "page" ? (
+            <div className="bg-muted/30 flex items-center gap-2 border-b p-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => {
+                  setSelectionType("page");
+                  setSearchTerm("");
+                }}
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              <div className="flex-1 text-sm font-medium">
+                Select {selectionType}
               </div>
             </div>
-          )}
-        </div>
+          ) : null}
 
-        <Separator />
-
-        {/* Footer - Fixed Background */}
-        <div className="bg-muted/30 p-2">
-          <Button
-            onClick={onCancel}
-            variant="ghost"
-            className="text-muted-foreground hover:text-foreground w-full bg-white"
-            size="sm"
+          {/* Existing Pages or Items - Fixed ScrollArea */}
+          <ScrollArea
+            className="flex-1 overflow-y-auto"
+            style={{ maxHeight: "240px" }}
           >
-            Cancel
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+            {selectionType !== "page" ? (
+              renderItemsList()
+            ) : isLoading ? (
+              <div className="text-muted-foreground p-4 text-center">
+                Loading pages...
+              </div>
+            ) : filteredPages.length > 0 ? (
+              <div className="p-2">
+                {filteredPages.map((page: Page) => (
+                  <Button
+                    key={page.id}
+                    onClick={() => handlePageSelect(page)}
+                    variant={
+                      currentHref === `/${page.slug}` ? "secondary" : "ghost"
+                    }
+                    className={cn(
+                      "h-auto w-full justify-between p-3",
+                      currentHref === `/${page.slug}` &&
+                        "bg-primary/10 text-primary"
+                    )}
+                  >
+                    <div className="flex-1 text-left">
+                      <div className="font-medium capitalize">{page.title}</div>
+                      <div className="text-muted-foreground text-sm">
+                        /{page.slug}
+                      </div>
+                    </div>
+                  </Button>
+                ))}
+              </div>
+            ) : searchTerm && !isLoading ? (
+              <div className="text-muted-foreground p-4 text-center">
+                No pages found matching &quot;{searchTerm}&quot;
+              </div>
+            ) : null}
+          </ScrollArea>
+
+          {selectionType === "page" && (
+            <>
+              <Separator />
+              <div className="flex flex-col gap-1 bg-white p-2">
+                <Button
+                  onClick={() => setShowExternalLinkDialog(true)}
+                  variant="ghost"
+                  className="h-8 w-full justify-start text-green-600 hover:bg-blue-50 hover:text-green-700"
+                >
+                  <LinkIcon className="mr-2 h-4 w-4" />
+                  <span>Add External URL</span>
+                </Button>
+                <Button
+                  onClick={() => {
+                    setNewPageTitle("");
+                    setShowNewPageDialog(true);
+                  }}
+                  variant="ghost"
+                  className="h-8 w-full justify-start text-green-700 hover:bg-green-50 hover:text-green-700"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  <span>Create New Page</span>
+                </Button>
+              </div>
+            </>
+          )}
+
+          <Separator />
+
+          {/* Footer - Fixed Background */}
+          <div className="bg-muted/30 shrink-0 p-2">
+            <Button
+              onClick={onCancel}
+              variant="ghost"
+              className="text-muted-foreground hover:text-foreground h-8 w-full bg-white"
+              size="sm"
+            >
+              Cancel
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <NewPageDialog
+        open={showNewPageDialog}
+        onOpenChange={setShowNewPageDialog}
+        onPageCreated={page => {
+          onSelect(`/${page.slug}`, `${page.title}-draft`);
+        }}
+      />
+
+      <NewExternalLinkDialog
+        open={showExternalLinkDialog}
+        onOpenChange={setShowExternalLinkDialog}
+        onLinkCreated={handleAddExternalUrl}
+      />
+    </>
   );
 };
 
@@ -305,6 +472,12 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
   // Close page selector when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Check if the click is inside a dialog (e.g. the link or create page dialogs)
+      const dialogElement = document.querySelector('[role="dialog"]');
+      if (dialogElement && dialogElement.contains(event.target as Node)) {
+        return; // Ignore clicks inside the dialog
+      }
+
       if (
         containerRef.current &&
         !containerRef.current.contains(event.target as Node)

@@ -54,6 +54,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { NewPageDialog } from "../new-page/new-page-dialog";
+import { NewExternalLinkDialog } from "../new-page/new-external-link-dialog";
 import {
   FooterData,
   FooterSection,
@@ -123,6 +124,7 @@ const PageSelector: React.FC<PageSelectorProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [showNewPageDialog, setShowNewPageDialog] = useState(false);
+  const [showExternalLinkDialog, setShowExternalLinkDialog] = useState(false);
   const { data: pages = [], isLoading } = usePages();
 
   // Handle page selection
@@ -178,6 +180,16 @@ const PageSelector: React.FC<PageSelectorProps> = ({
                 <CommandItem
                   onSelect={() => {
                     setOpen(false);
+                    setShowExternalLinkDialog(true);
+                  }}
+                  className="text-green-600"
+                >
+                  <Link className="mr-2 h-4 w-4" />
+                  Add External Link
+                </CommandItem>
+                <CommandItem
+                  onSelect={() => {
+                    setOpen(false);
                     setShowNewPageDialog(true);
                   }}
                   className="text-green-600"
@@ -196,6 +208,14 @@ const PageSelector: React.FC<PageSelectorProps> = ({
         onOpenChange={setShowNewPageDialog}
         onPageCreated={page => {
           onSelect(`/${page.slug}`, `${page.title}-draft`);
+        }}
+      />
+
+      <NewExternalLinkDialog
+        open={showExternalLinkDialog}
+        onOpenChange={setShowExternalLinkDialog}
+        onLinkCreated={url => {
+          onSelect(url, url);
         }}
       />
     </>
