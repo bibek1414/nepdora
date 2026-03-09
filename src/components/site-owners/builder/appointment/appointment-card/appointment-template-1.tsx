@@ -44,6 +44,7 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
     time: "",
     reason_id: undefined,
   });
+  const [formErrors, setFormErrors] = useState<Record<string, string[]>>({});
 
   const { data: themeResponse } = useThemeQuery();
   const { data: reasonsData } = useGetAppointmentReasons();
@@ -64,6 +65,7 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setFormErrors({});
 
     if (!isPreview && siteUser) {
       submitAppointment.mutate(formData, {
@@ -77,6 +79,12 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
             time: "",
             reason_id: undefined,
           });
+          setFormErrors({});
+        },
+        onError: (error: any) => {
+          if (error.fieldErrors) {
+            setFormErrors(error.fieldErrors);
+          }
         },
       });
     }
@@ -116,6 +124,9 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
                 className="mt-1"
                 placeholder="John Doe"
               />
+              {formErrors.full_name && (
+                <p className="mt-1 text-xs text-red-500">{formErrors.full_name[0]}</p>
+              )}
             </div>
 
             {/* Email & Phone Row */}
@@ -140,6 +151,9 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
                     placeholder="john@example.com"
                   />
                 </div>
+                {formErrors.email && (
+                  <p className="mt-1 text-xs text-red-500">{formErrors.email[0]}</p>
+                )}
               </div>
 
               <div>
@@ -162,6 +176,9 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
                     placeholder="+1 (555) 123-4567"
                   />
                 </div>
+                {formErrors.phone && (
+                  <p className="mt-1 text-xs text-red-500">{formErrors.phone[0]}</p>
+                )}
               </div>
             </div>
 
@@ -186,6 +203,9 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
                     className="pl-10"
                   />
                 </div>
+                {formErrors.date && (
+                  <p className="mt-1 text-xs text-red-500">{formErrors.date[0]}</p>
+                )}
               </div>
 
               <div>
@@ -207,6 +227,9 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
                     className="pl-10"
                   />
                 </div>
+                {formErrors.time && (
+                  <p className="mt-1 text-xs text-red-500">{formErrors.time[0]}</p>
+                )}
               </div>
             </div>
 
@@ -237,6 +260,9 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
                     ))}
                   </SelectContent>
                 </Select>
+                {formErrors.reason_id && (
+                  <p className="mt-1 text-xs text-red-500">{formErrors.reason_id[0]}</p>
+                )}
               </div>
             )}
 
@@ -257,6 +283,9 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
                 className="mt-1 min-h-[100px]"
                 placeholder="Any additional information..."
               />
+              {formErrors.message && (
+                <p className="mt-1 text-xs text-red-500">{formErrors.message[0]}</p>
+              )}
             </div>
 
             {/* Submit Button */}

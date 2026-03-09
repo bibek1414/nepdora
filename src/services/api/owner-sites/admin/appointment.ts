@@ -6,6 +6,7 @@ import {
   AppointmentReason,
 } from "@/types/owner-site/admin/appointment";
 import { getApiBaseUrl } from "@/config/site";
+import { handleApiError } from "@/utils/api-error";
 
 export const appointmentAPI = {
   // Get all appointments with filters
@@ -51,10 +52,7 @@ export const appointmentAPI = {
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch appointments: ${response.status}`);
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 
@@ -71,10 +69,7 @@ export const appointmentAPI = {
       body: JSON.stringify(appointmentData),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to create appointment: ${response.status}`);
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 
@@ -92,10 +87,7 @@ export const appointmentAPI = {
       body: JSON.stringify(data),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to update appointment: ${response.status}`);
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 
@@ -109,9 +101,7 @@ export const appointmentAPI = {
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to delete appointment: ${response.status}`);
-    }
+    await handleApiError(response);
   },
 
   // Get all appointment reasons
@@ -124,12 +114,7 @@ export const appointmentAPI = {
       },
     });
 
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch appointment reasons: ${response.status}`
-      );
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 };
