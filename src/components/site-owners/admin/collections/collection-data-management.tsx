@@ -182,7 +182,7 @@ export function CollectionDataManagement({
     const imageField = getImageField();
     const nameField = getNameField();
 
-    const excludeNames = [imageField?.name, nameField?.name].filter(Boolean);
+    const excludeNames = [imageField?.name, nameField?.name, "slug"].filter(Boolean);
 
     return collection.all_fields
       .filter(f => !excludeNames.includes(f.name))
@@ -252,19 +252,16 @@ export function CollectionDataManagement({
       </div>
 
       {dataLoading ? (
-        <Card>
-          <CardContent className="py-8">
-            <div className="space-y-4">
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="rounded-lg bg-white">
+          <div className="space-y-4 p-6">
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-16 w-full" />
+          </div>
+        </div>
       ) : !collectionDataResponse ||
         collectionDataResponse.results.length === 0 ? (
-        <Card>
-          <CardContent>
+        <div className="rounded-lg bg-white">
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
                 <FileText className="h-6 w-6 text-slate-400" />
@@ -276,92 +273,94 @@ export function CollectionDataManagement({
                 No data available for this collection.
               </p>
             </div>
-          </CardContent>
-        </Card>
+        </div>
       ) : (
-        <Card>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  {imageField && <TableHead>Image</TableHead>}
-                  {nameField && <TableHead>{nameField.name}</TableHead>}
+        <div className="rounded-lg bg-white">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-b border-black/5">
+                {imageField && <TableHead className="px-6 py-3 text-xs font-normal text-black/60">Image</TableHead>}
+                {nameField && <TableHead className="px-6 py-3 text-xs font-normal text-black/60 capitalize">{nameField.name}</TableHead>}
+                {displayFields.map(field => (
+                  <TableHead key={field.name} className="px-6 py-3 text-xs font-normal text-black/60 capitalize">{field.name}</TableHead>
+                ))}
+                <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {collectionDataResponse.results.map(data => (
+                <TableRow 
+                  key={data.id}
+                  className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                >
+                  {imageField && (
+                    <TableCell className="px-6 py-4">
+                      {data.data[imageField.name] ? (
+                        <img
+                          src={data.data[imageField.name]}
+                          alt="Preview"
+                          className="h-12 w-12 rounded object-cover"
+                        />
+                      ) : (
+                        <div className="bg-muted text-muted-foreground flex h-12 w-12 items-center justify-center rounded text-xs">
+                          No image
+                        </div>
+                      )}
+                    </TableCell>
+                  )}
+                  {nameField && (
+                    <TableCell className="px-6 py-4 font-medium text-gray-900">
+                      {formatCellValue(
+                        data.data[nameField.name],
+                        nameField.type,
+                        nameField
+                      )}
+                    </TableCell>
+                  )}
                   {displayFields.map(field => (
-                    <TableHead key={field.name}>{field.name}</TableHead>
+                    <TableCell
+                      key={field.name}
+                      className="cursor-pointer px-6 py-4 text-gray-900"
+                      onClick={() => handleEdit(data)}
+                    >
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: showFifteenWordsHTML(
+                            formatCellValue(
+                              data.data[field.name],
+                              field.type,
+                              field
+                            )
+                          ),
+                        }}
+                      />
+                    </TableCell>
                   ))}
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {collectionDataResponse.results.map(data => (
-                  <TableRow key={data.id}>
-                    {imageField && (
-                      <TableCell>
-                        {data.data[imageField.name] ? (
-                          <img
-                            src={data.data[imageField.name]}
-                            alt="Preview"
-                            className="h-12 w-12 rounded object-cover"
-                          />
-                        ) : (
-                          <div className="bg-muted text-muted-foreground flex h-12 w-12 items-center justify-center rounded text-xs">
-                            No image
-                          </div>
-                        )}
-                      </TableCell>
-                    )}
-                    {nameField && (
-                      <TableCell className="font-medium">
-                        {formatCellValue(
-                          data.data[nameField.name],
-                          nameField.type,
-                          nameField
-                        )}
-                      </TableCell>
-                    )}
-                    {displayFields.map(field => (
-                      <TableCell
-                        key={field.name}
-                        className="hover:bg-muted/50 cursor-pointer"
+                  <TableCell className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
                         onClick={() => handleEdit(data)}
                       >
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: showFifteenWordsHTML(
-                              formatCellValue(
-                                data.data[field.name],
-                                field.type,
-                                field
-                              )
-                            ),
-                          }}
-                        />
-                      </TableCell>
-                    ))}
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEdit(data)}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => confirmDelete(data)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => confirmDelete(data)}
+                        className="h-8 w-8 rounded-full text-black/40 hover:text-red-600"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
 
       <CollectionDataDialog

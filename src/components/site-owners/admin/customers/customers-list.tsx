@@ -75,69 +75,67 @@ export function CustomersList() {
           />
         </div>
 
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader className="bg-slate-50">
-                <TableRow>
-                  <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                    Name
-                  </TableHead>
-                  <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                    Email
-                  </TableHead>
-                  <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                    Phone
-                  </TableHead>
-                  <TableHead className="px-6 py-4 font-semibold text-slate-700">
-                    Address
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading || isFetching ? (
-                  [...Array(pageSize)].map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell colSpan={4} className="px-6 py-4">
-                        <div className="h-10 w-full animate-pulse rounded-lg bg-slate-100" />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : customers.length > 0 ? (
-                  customers.map(customer => (
-                    <TableRow
-                      key={customer.id}
-                      className="transition-colors hover:bg-slate-50"
-                    >
-                      <TableCell className="px-6 py-4">
-                        <div className="font-medium text-slate-900">
-                          {customer.first_name} {customer.last_name}
-                        </div>
-                      </TableCell>
-                      <TableCell className="px-6 py-4 text-slate-600">
-                        {customer.email || "-"}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 text-slate-600">
-                        {customer.phone || "-"}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 text-slate-600">
-                        {customer.address || "-"}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={4}
-                      className="h-32 text-center text-slate-500"
-                    >
-                      No customers found matching &quot;{debouncedSearch}&quot;
+        <div className="rounded-lg bg-white">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-b border-black/5">
+                <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                  Name
+                </TableHead>
+                <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                  Email
+                </TableHead>
+                <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                  Phone
+                </TableHead>
+                <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                  Address
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading || isFetching ? (
+                [...Array(pageSize)].map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell colSpan={4} className="px-6 py-4">
+                      <div className="h-10 w-full animate-pulse rounded-lg bg-slate-100" />
                     </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                ))
+              ) : customers.length > 0 ? (
+                customers.map(customer => (
+                  <TableRow
+                    key={customer.id}
+                    className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                  >
+                    <TableCell className="px-6 py-4">
+                      <div className="font-medium text-gray-900">
+                        {customer.first_name} {customer.last_name}
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 font-medium text-gray-900">
+                      {customer.email || "-"}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 font-medium text-gray-900">
+                      {customer.phone || "-"}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 font-medium text-gray-900">
+                      {customer.address || "-"}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    className="h-32 text-center text-slate-500"
+                  >
+                    No customers found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
 
         {/* Pagination Section */}

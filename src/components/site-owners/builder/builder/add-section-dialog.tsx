@@ -1171,12 +1171,14 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Navbar with Language Switcher",
         image: "/images/site-owners/navbars/navbar12.png",
         description: "Includes language switcher",
+        showForWebsiteTypes: ["ecommerce"],
       },
       {
         id: "navbar-13",
         name: "Navbar with Language Switcher",
         image: "/images/site-owners/navbars/navbar13.png",
         description: "Includes language switcher",
+        showForWebsiteTypes: ["ecommerce"],
       },
     ],
     // FOOTER TEMPLATES
@@ -1246,6 +1248,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Footer Style 11",
         image: "/images/site-owners/footers/footer11.png",
         description: "Footer with social media links",
+        showForWebsiteTypes: ["ecommerce"],
       },
     ],
     login_form: [

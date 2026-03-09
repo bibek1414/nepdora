@@ -84,16 +84,7 @@ const navigationGroups = [
   {
     items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
   },
-  {
-    items: [
-      {
-        name: "Settings",
-        href: "/admin/settings/site-config",
-        icon: Settings,
-      },
-    ],
-    hideForService: true,
-  },
+
   {
     items: [
       {
@@ -122,8 +113,15 @@ const navigationGroups = [
     ],
   },
   {
+    items: [{ name: "Customers", href: "/admin/customers", icon: Users }],
+  },
+  {
     items: [
-      { name: "Customers", href: "/admin/customers", icon: Users },
+      {
+        name: "Settings",
+        href: "/admin/settings/site-config",
+        icon: Settings,
+      },
     ],
   },
 ];

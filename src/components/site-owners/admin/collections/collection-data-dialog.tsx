@@ -403,18 +403,6 @@ export function CollectionDataDialog({
       );
     }
 
-    // Make slug field read-only/disabled
-    if (field.name === "slug") {
-      return (
-        <Input
-          value={fieldValue || ""}
-          readOnly
-          disabled
-          className="bg-muted"
-        />
-      );
-    }
-
     switch (field.type) {
       case "text":
       case "email":
@@ -1028,7 +1016,9 @@ export function CollectionDataDialog({
 
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 py-4 capitalize">
-            {collection.all_fields.map(field => (
+            {collection.all_fields
+              .filter(field => field.name !== "slug")
+              .map(field => (
               <div key={field.name} className="space-y-2">
                 <Label htmlFor={field.name}>
                   {field.name}
