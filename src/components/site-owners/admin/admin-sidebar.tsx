@@ -23,6 +23,7 @@ import {
   IndianRupee,
   Database,
   BookOpen,
+  Users,
 } from "lucide-react";
 import { User } from "@/types/auth/auth";
 
@@ -118,6 +119,11 @@ const navigationGroups = [
   {
     items: [
       { name: "Collections", href: "/admin/collections", icon: Database },
+    ],
+  },
+  {
+    items: [
+      { name: "Customers", href: "/admin/customers", icon: Users },
     ],
   },
 ];
