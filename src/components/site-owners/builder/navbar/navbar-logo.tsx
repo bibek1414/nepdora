@@ -27,27 +27,31 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
   const renderLogo = () => {
     switch (logoType) {
       case "image":
-        return logoImage ? (
-          <img
-            src={getImageUrl(logoImage, {
-              height: 40,
-              quality: "auto",
-              format: "auto",
-            })}
-            alt={logoText || "Logo"}
-            className="h-6 w-auto object-contain sm:h-7 md:h-8"
-          />
-        ) : (
-          <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center rounded-sm px-2 sm:h-7 md:h-8">
-            <span className="text-sm font-bold">
-              {logoText?.charAt(0)?.toUpperCase() || "L"}
-            </span>
+        return (
+          <div className="flex items-center justify-start">
+            {logoImage ? (
+              <img
+                src={getImageUrl(logoImage, {
+                  height: 40,
+                  quality: "auto",
+                  format: "auto",
+                })}
+                alt={logoText || "Logo"}
+                className="h-6 w-auto object-contain object-left sm:h-7 md:h-8"
+              />
+            ) : (
+              <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center rounded-sm px-2 sm:h-7 md:h-8">
+                <span className="text-sm font-bold">
+                  {logoText?.charAt(0)?.toUpperCase() || "L"}
+                </span>
+              </div>
+            )}
           </div>
         );
 
       case "both":
         return (
-          <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
+          <div className="flex items-center justify-start gap-2 sm:gap-2.5 md:gap-3">
             {logoImage ? (
               <img
                 src={getImageUrl(logoImage, {
@@ -56,7 +60,7 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
                   format: "auto",
                 })}
                 alt={logoText || "Logo"}
-                className="h-6 w-auto object-contain sm:h-7 md:h-8"
+                className="h-6 w-auto object-contain object-left sm:h-7 md:h-8"
               />
             ) : (
               <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center rounded-sm px-2 sm:h-7 md:h-8">
@@ -74,9 +78,11 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
       case "text":
       default:
         return (
-          <span className="text-base font-bold sm:text-lg md:text-xl">
-            {logoText}
-          </span>
+          <div className="flex items-center justify-start">
+            <span className="text-base font-bold sm:text-lg md:text-xl">
+              {logoText}
+            </span>
+          </div>
         );
     }
   };
