@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { Search, Users } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -13,17 +12,34 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useGetRegisteredCustomers } from "@/hooks/owner-site/admin/use-customers";
+import Pagination from "@/components/ui/pagination";
+import useDebouncer from "@/hooks/use-debouncer";
 
 export function CustomersList() {
-  const { data: customers, isLoading, isError } = useGetRegisteredCustomers();
+  const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebouncer(searchQuery, 500);
 
-  const filteredCustomers =
-    customers?.filter(c => {
-      const searchStr =
-        `${c.first_name} ${c.last_name} ${c.email} ${c.phone}`.toLowerCase();
-      return searchStr.includes(searchQuery.toLowerCase());
-    }) || [];
+  const pageSize = 10;
+
+  // Reset to first page on new search
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  const {
+    data: paginatedData,
+    isLoading,
+    isError,
+  } = useGetRegisteredCustomers({
+    page,
+    page_size: pageSize,
+    search: debouncedSearch,
+  });
+
+  const customers = paginatedData?.results || [];
+  const totalCount = paginatedData?.count || 0;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   if (isLoading) {
     return (
@@ -94,8 +110,8 @@ export function CustomersList() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredCustomers.length > 0 ? (
-                  filteredCustomers.map(customer => (
+                {customers.length > 0 ? (
+                  customers.map(customer => (
                     <TableRow
                       key={customer.id}
                       className="transition-colors hover:bg-slate-50"
@@ -119,10 +135,10 @@ export function CustomersList() {
                 ) : (
                   <TableRow>
                     <TableCell
-                      colSpan={5}
+                      colSpan={4}
                       className="h-32 text-center text-slate-500"
                     >
-                      No customers found matching &quot;{searchQuery}&quot;
+                      No customers found matching &quot;{debouncedSearch}&quot;
                     </TableCell>
                   </TableRow>
                 )}
@@ -130,6 +146,17 @@ export function CustomersList() {
             </Table>
           </div>
         </div>
+
+        {/* Pagination Section */}
+        {totalPages > 1 && (
+          <div className="mt-8 flex justify-center">
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

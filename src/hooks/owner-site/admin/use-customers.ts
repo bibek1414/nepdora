@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { customerAPI } from "@/services/api/owner-sites/admin/customer";
-import { Customer } from "@/types/owner-site/admin/customer";
+import { CustomerFilters, PaginatedCustomers } from "@/types/owner-site/admin/customer";
 
-export const useGetRegisteredCustomers = () => {
-  return useQuery<Customer[]>({
-    queryKey: ["registered-customers"],
-    queryFn: () => customerAPI.getRegisteredCustomers(),
+export const useGetRegisteredCustomers = (filters: CustomerFilters = {}) => {
+  return useQuery<PaginatedCustomers>({
+    queryKey: ["registered-customers", filters],
+    queryFn: () => customerAPI.getRegisteredCustomers(filters),
   });
 };
