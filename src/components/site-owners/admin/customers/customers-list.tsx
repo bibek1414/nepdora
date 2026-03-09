@@ -30,6 +30,7 @@ export function CustomersList() {
   const {
     data: paginatedData,
     isLoading,
+    isFetching,
     isError,
   } = useGetRegisteredCustomers({
     page,
@@ -40,22 +41,6 @@ export function CustomersList() {
   const customers = paginatedData?.results || [];
   const totalCount = paginatedData?.count || 0;
   const totalPages = Math.ceil(totalCount / pageSize);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white p-8 sm:p-12">
-        <div className="mx-auto max-w-7xl animate-pulse space-y-6">
-          <div className="h-10 w-64 rounded-lg bg-slate-200" />
-          <div className="h-12 w-full rounded-lg bg-slate-200" />
-          <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-16 w-full rounded-lg bg-slate-100" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (isError) {
     return (
@@ -110,7 +95,15 @@ export function CustomersList() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {customers.length > 0 ? (
+                {isLoading || isFetching ? (
+                  [...Array(pageSize)].map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell colSpan={4} className="px-6 py-4">
+                        <div className="h-10 w-full animate-pulse rounded-lg bg-slate-100" />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : customers.length > 0 ? (
                   customers.map(customer => (
                     <TableRow
                       key={customer.id}
