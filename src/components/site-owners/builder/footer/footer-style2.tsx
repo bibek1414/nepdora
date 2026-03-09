@@ -196,8 +196,18 @@ export function FooterStyle2({
                                     pathname,
                                     isEditable
                                   )}
-                  target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                                  target={
+                                    link.href?.startsWith("http") ||
+                                    link.href?.startsWith("mailto:")
+                                      ? "_blank"
+                                      : undefined
+                                  }
+                                  rel={
+                                    link.href?.startsWith("http") ||
+                                    link.href?.startsWith("mailto:")
+                                      ? "noopener noreferrer"
+                                      : undefined
+                                  }
                                 >
                                   {link.text}
                                 </Link>
@@ -328,9 +338,21 @@ export function FooterStyle2({
                             isEditable
                           )}
                           className="text-muted-foreground hover:text-foreground text-xs transition-colors"
-                          target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
-                  onClick={isEditable ? e => e.preventDefault() : undefined}
+                          target={
+                            link.href?.startsWith("http") ||
+                            link.href?.startsWith("mailto:")
+                              ? "_blank"
+                              : undefined
+                          }
+                          rel={
+                            link.href?.startsWith("http") ||
+                            link.href?.startsWith("mailto:")
+                              ? "noopener noreferrer"
+                              : undefined
+                          }
+                          onClick={
+                            isEditable ? e => e.preventDefault() : undefined
+                          }
                         >
                           {link.text}
                         </Link>

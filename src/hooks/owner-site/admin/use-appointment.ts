@@ -56,6 +56,7 @@ export const useUpdateAppointment = () => {
     onSuccess: () => {
       toast.success("Appointment updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to update appointment");
@@ -72,6 +73,7 @@ export const useDeleteAppointment = () => {
     onSuccess: () => {
       toast.success("Appointment deleted successfully!");
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to delete appointment");

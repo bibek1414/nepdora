@@ -38,7 +38,7 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
             className="h-6 w-auto object-contain sm:h-7 md:h-8"
           />
         ) : (
-          <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center sm:h-7 md:h-8 px-2 rounded-sm">
+          <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center rounded-sm px-2 sm:h-7 md:h-8">
             <span className="text-sm font-bold">
               {logoText?.charAt(0)?.toUpperCase() || "L"}
             </span>
@@ -59,19 +59,25 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
                 className="h-6 w-auto object-contain sm:h-7 md:h-8"
               />
             ) : (
-              <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center sm:h-7 md:h-8 px-2 rounded-sm">
+              <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center rounded-sm px-2 sm:h-7 md:h-8">
                 <span className="text-xs font-bold">
                   {logoText?.charAt(0)?.toUpperCase() || "L"}
                 </span>
               </div>
             )}
-            <span className="text-base font-bold sm:text-lg md:text-xl">{logoText}</span>
+            <span className="text-base font-bold sm:text-lg md:text-xl">
+              {logoText}
+            </span>
           </div>
         );
 
       case "text":
       default:
-        return <span className="text-base font-bold sm:text-lg md:text-xl">{logoText}</span>;
+        return (
+          <span className="text-base font-bold sm:text-lg md:text-xl">
+            {logoText}
+          </span>
+        );
     }
   };
 

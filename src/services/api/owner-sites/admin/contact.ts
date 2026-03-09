@@ -53,4 +53,24 @@ export const contactAPI = {
 
     return await response.json();
   },
+
+  updateContact: async (
+    id: number,
+    data: Partial<Contact>
+  ): Promise<Contact> => {
+    const BASE_API_URL = getApiBaseUrl();
+    const response = await fetch(`${BASE_API_URL}/api/contact/${id}/`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update contact: ${response.status}`);
+    }
+
+    return await response.json();
+  },
 };

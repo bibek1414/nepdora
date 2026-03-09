@@ -112,6 +112,7 @@ export const useUpdatePopupForm = () => {
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["popup-forms"] });
       queryClient.invalidateQueries({ queryKey: ["popup-form", variables.id] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
   });
 };

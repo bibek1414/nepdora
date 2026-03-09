@@ -1,8 +1,13 @@
-import { CustomerFilters, PaginatedCustomers } from "@/types/owner-site/admin/customer";
+import {
+  CustomerFilters,
+  PaginatedCustomers,
+} from "@/types/owner-site/admin/customer";
 import { getApiBaseUrl } from "@/config/site";
 
 export const customerAPI = {
-  getRegisteredCustomers: async (filters: CustomerFilters = {}): Promise<PaginatedCustomers> => {
+  getRegisteredCustomers: async (
+    filters: CustomerFilters = {}
+  ): Promise<PaginatedCustomers> => {
     const API_BASE_URL = getApiBaseUrl();
     const { page = 1, page_size = 10, search } = filters;
 

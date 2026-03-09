@@ -165,10 +165,20 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                     isEditable,
                     disableClicks
                   )}
-                  target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                  target={
+                    link.href?.startsWith("http") ||
+                    link.href?.startsWith("mailto:")
+                      ? "_blank"
+                      : undefined
+                  }
+                  rel={
+                    link.href?.startsWith("http") ||
+                    link.href?.startsWith("mailto:")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
                   onClick={e => handleLinkClick(e, link.href)}
-className={`text-base font-medium transition-colors ${
+                  className={`text-base font-medium transition-colors ${
                     disableClicks
                       ? "cursor-default opacity-60"
                       : "cursor-pointer text-black hover:text-black/80"
@@ -218,8 +228,18 @@ className={`text-base font-medium transition-colors ${
                         isEditable,
                         disableClicks
                       )}
-                  target={(button.href?.startsWith("http") || button.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(button.href?.startsWith("http") || button.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                      target={
+                        button.href?.startsWith("http") ||
+                        button.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        button.href?.startsWith("http") ||
+                        button.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
                     >
                       {button.text}
                     </Link>
@@ -394,10 +414,20 @@ className={`text-base font-medium transition-colors ${
                           isEditable,
                           disableClicks
                         )}
-                        target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
-                  onClick={e => handleLinkClick(e, link.href)}
-className={`w-full text-left ${
+                        target={
+                          link.href?.startsWith("http") ||
+                          link.href?.startsWith("mailto:")
+                            ? "_blank"
+                            : undefined
+                        }
+                        rel={
+                          link.href?.startsWith("http") ||
+                          link.href?.startsWith("mailto:")
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
+                        onClick={e => handleLinkClick(e, link.href)}
+                        className={`w-full text-left ${
                           disableClicks ? "pointer-events-none opacity-60" : ""
                         }`}
                       >
@@ -450,8 +480,18 @@ className={`w-full text-left ${
                             disableClicks
                           )}
                           className="w-full text-center"
-                  target={(button.href?.startsWith("http") || button.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(button.href?.startsWith("http") || button.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                          target={
+                            button.href?.startsWith("http") ||
+                            button.href?.startsWith("mailto:")
+                              ? "_blank"
+                              : undefined
+                          }
+                          rel={
+                            button.href?.startsWith("http") ||
+                            button.href?.startsWith("mailto:")
+                              ? "noopener noreferrer"
+                              : undefined
+                          }
                         >
                           {button.text}
                         </Link>

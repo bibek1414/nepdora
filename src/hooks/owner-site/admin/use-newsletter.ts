@@ -1,6 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { newsletterApi } from "@/services/api/owner-sites/admin/newsletter";
-import { CreateNewsletterRequest } from "@/types/owner-site/admin/newsletter";
+import {
+  CreateNewsletterRequest,
+  Newsletter,
+} from "@/types/owner-site/admin/newsletter";
 
 // Query Keys
 export const newsletterKeys = {
@@ -27,6 +30,22 @@ export const useCreateNewsletter = () => {
       newsletterApi.createNewsletter(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: newsletterKeys.lists() });
+    },
+  });
+};
+
+export const useUpdateNewsletter = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<Newsletter> }) =>
+      newsletterApi.updateNewsletter(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: newsletterKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
+    },
+    onError: (error: Error) => {
+      console.error("Failed to update newsletter:", error);
     },
   });
 };

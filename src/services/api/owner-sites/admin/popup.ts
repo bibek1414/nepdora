@@ -108,11 +108,14 @@ export const popupApi = {
     return response.json();
   },
 
-  updatePopupForm: async (id: number, data: PopUpForm): Promise<PopUpForm> => {
+  updatePopupForm: async (
+    id: number,
+    data: Partial<PopUpForm>
+  ): Promise<PopUpForm> => {
     const API_BASE_URL = getApiBaseUrl();
 
     const response = await fetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },

@@ -233,9 +233,19 @@ export function FooterStyle9({
                   isEditable
                 )}
                 className="transition-colors hover:text-white"
-                target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
-                  onClick={isEditable ? e => e.preventDefault() : undefined}
+                target={
+                  link.href?.startsWith("http") ||
+                  link.href?.startsWith("mailto:")
+                    ? "_blank"
+                    : undefined
+                }
+                rel={
+                  link.href?.startsWith("http") ||
+                  link.href?.startsWith("mailto:")
+                    ? "noopener noreferrer"
+                    : undefined
+                }
+                onClick={isEditable ? e => e.preventDefault() : undefined}
               >
                 {link.text}
               </Link>

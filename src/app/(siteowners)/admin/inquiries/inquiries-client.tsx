@@ -23,15 +23,17 @@ import { cn } from "@/lib/utils";
 import { Contact } from "@/types/owner-site/admin/contact";
 import { Newsletter } from "@/types/owner-site/admin/newsletter";
 import { PopUpForm } from "@/types/owner-site/admin/popup";
+import { useUnreadCounts } from "@/hooks/owner-site/admin/use-stats";
 
 import { useGetContacts } from "@/hooks/owner-site/admin/use-contact";
 import { usePopupForms } from "@/hooks/owner-site/admin/use-popup";
 import { useNewsletters } from "@/hooks/owner-site/admin/use-newsletter";
 import ContactDetailsDialog from "@/components/site-owners/admin/contact/contact-details-dialog";
+import { NewsletterDetailsDialog } from "@/components/site-owners/admin/newsletter/newsletter-details-dialog";
+import { PopupFormDetailsDialog } from "@/components/site-owners/admin/popup/popup-form-details-dialog";
 
 const ITEMS_PER_PAGE = 10;
 type InquiryType = "contact" | "popup" | "newsletter";
-
 const SimplePagination = ({
   currentPage,
   totalPages,
@@ -77,11 +79,10 @@ interface InquiriesClientProps {
 export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
   const [selectedView, setSelectedView] = useState<InquiryType>("contact");
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedContactId, setSelectedContactId] = useState<number | null>(
-    null
-  );
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const { data: unreadCounts } = useUnreadCounts();
 
   // Debounce search
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -126,19 +127,19 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
       id: "contact" as InquiryType,
       label: "Messages",
       icon: Mail,
-      count: contactsData?.count || 0,
+      count: unreadCounts?.unread_contacts || 0,
     },
     {
       id: "popup" as InquiryType,
       label: "Popups",
       icon: MessageSquare,
-      count: popupsData?.count || 0,
+      count: unreadCounts?.unread_popup_forms || 0,
     },
     {
       id: "newsletter" as InquiryType,
       label: "Newsletter",
       icon: Bell,
-      count: newslettersData?.count || 0,
+      count: unreadCounts?.unread_newsletters || 0,
     },
   ];
 
@@ -152,7 +153,7 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
       : "—";
 
   const openDialog = (id: number) => {
-    setSelectedContactId(id);
+    setSelectedId(id);
     setIsDialogOpen(true);
   };
 
@@ -226,11 +227,19 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
             {(currentData as Contact[]).map((item, index) => (
               <TableRow
                 key={item.id || index}
-                onClick={() => openDialog(item.id)}
-                className="cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+                onClick={() => item.id && openDialog(item.id)}
+                className={cn(
+                  "cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2",
+                  !item.is_read && "bg-blue-50/50"
+                )}
               >
                 <TableCell className="px-6 py-4">
-                  <span className="text-sm font-normal text-black capitalize">
+                  <span
+                    className={cn(
+                      "text-sm font-normal capitalize",
+                      !item.is_read ? "font-bold text-[#003d79]" : "text-black"
+                    )}
+                  >
                     {item.name}
                   </span>
                 </TableCell>
@@ -288,10 +297,19 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
             {(currentData as Newsletter[]).map(item => (
               <TableRow
                 key={item.id}
-                className="border-b border-black/5 transition-colors hover:bg-black/2"
+                onClick={() => openDialog(item.id)}
+                className={cn(
+                  "cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2",
+                  !item.is_read && "bg-blue-50/50"
+                )}
               >
                 <TableCell className="px-6 py-4">
-                  <span className="text-sm font-normal text-black">
+                  <span
+                    className={cn(
+                      "text-sm font-normal",
+                      !item.is_read ? "font-bold text-[#003d79]" : "text-black"
+                    )}
+                  >
                     {item.email}
                   </span>
                 </TableCell>
@@ -337,10 +355,19 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
           {(currentData as PopUpForm[]).map((item, index) => (
             <TableRow
               key={item.id || index}
-              className="cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+              onClick={() => item.id !== undefined && openDialog(item.id)}
+              className={cn(
+                "cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2",
+                !item.is_read && "bg-blue-50/50"
+              )}
             >
               <TableCell className="px-6 py-4">
-                <span className="text-sm font-normal text-black capitalize">
+                <span
+                  className={cn(
+                    "text-sm font-normal capitalize",
+                    !item.is_read ? "font-bold text-[#003d79]" : "text-black"
+                  )}
+                >
                   {item.name || "Unknown"}
                 </span>
               </TableCell>
@@ -371,13 +398,6 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
     );
   };
 
-  const currentContacts = useMemo(() => {
-    if (selectedView === "contact") {
-      return (currentData as Contact[]) || [];
-    }
-    return [];
-  }, [selectedView, currentData]);
-
   return (
     <div className="min-h-screen bg-white">
       <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
@@ -398,6 +418,8 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
                   onClick={() => {
                     setSelectedView(tab.id);
                     setSearchTerm("");
+                    setSelectedId(null);
+                    setIsDialogOpen(false);
                   }}
                   className={cn(
                     "group relative flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out",
@@ -456,14 +478,32 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
           )}
         </div>
 
-        {/* Contact Details Dialog */}
+        {/* Dialogs */}
         {selectedView === "contact" && (
           <ContactDetailsDialog
-            contacts={currentContacts}
-            currentContactId={selectedContactId}
+            contacts={currentData as Contact[]}
+            currentContactId={selectedId}
             isOpen={isDialogOpen}
             onClose={() => setIsDialogOpen(false)}
-            onContactChange={setSelectedContactId}
+            onContactChange={setSelectedId}
+          />
+        )}
+        {selectedView === "newsletter" && (
+          <NewsletterDetailsDialog
+            newsletters={currentData as Newsletter[]}
+            currentNewsletterId={selectedId}
+            isOpen={isDialogOpen}
+            onClose={() => setIsDialogOpen(false)}
+            onNewsletterChange={setSelectedId}
+          />
+        )}
+        {selectedView === "popup" && (
+          <PopupFormDetailsDialog
+            popupForms={currentData as PopUpForm[]}
+            currentFormId={selectedId}
+            isOpen={isDialogOpen}
+            onClose={() => setIsDialogOpen(false)}
+            onFormChange={setSelectedId}
           />
         )}
       </div>

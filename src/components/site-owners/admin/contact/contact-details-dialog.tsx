@@ -13,7 +13,8 @@ import {
   X,
 } from "lucide-react";
 import { Contact } from "@/types/owner-site/admin/contact";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useUpdateContact } from "@/hooks/owner-site/admin/use-contact";
 
 interface ContactDetailsDialogProps {
   contacts: Contact[];
@@ -32,6 +33,25 @@ const ContactDetailsDialog = ({
 }: ContactDetailsDialogProps) => {
   const [currentContact, setCurrentContact] = useState<Contact | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const updateContact = useUpdateContact();
+  const markedAsReadRef = useRef<Set<number>>(new Set());
+
+  useEffect(() => {
+    if (
+      isOpen &&
+      currentContact &&
+      !currentContact.is_read &&
+      !markedAsReadRef.current.has(currentContact.id)
+    ) {
+      markedAsReadRef.current.add(currentContact.id);
+      updateContact.mutate({
+        id: currentContact.id,
+        data: {
+          is_read: true,
+        },
+      });
+    }
+  }, [isOpen, currentContact, updateContact]);
 
   useEffect(() => {
     if (currentContactId && contacts.length > 0) {

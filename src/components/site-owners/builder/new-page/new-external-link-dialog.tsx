@@ -61,14 +61,15 @@ export const NewExternalLinkDialog: React.FC<NewExternalLinkDialogProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent
-        onPointerDownOutside={(e) => e.stopPropagation()}
-        onInteractOutside={(e) => e.stopPropagation()}
+        onPointerDownOutside={e => e.stopPropagation()}
+        onInteractOutside={e => e.stopPropagation()}
         className="sm:max-w-md"
       >
         <DialogHeader>
           <DialogTitle>Add External Link</DialogTitle>
           <DialogDescription>
-            Enter an external URL. It will be opened in a new tab if appropriate.
+            Enter an external URL. It will be opened in a new tab if
+            appropriate.
           </DialogDescription>
         </DialogHeader>
 
@@ -76,7 +77,7 @@ export const NewExternalLinkDialog: React.FC<NewExternalLinkDialogProps> = ({
           <div className="py-2">
             <Input
               value={externalUrl}
-              onChange={(e) => setExternalUrl(e.target.value)}
+              onChange={e => setExternalUrl(e.target.value)}
               placeholder="https://example.com"
               autoFocus
             />

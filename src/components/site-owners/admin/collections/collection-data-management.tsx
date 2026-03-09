@@ -182,7 +182,9 @@ export function CollectionDataManagement({
     const imageField = getImageField();
     const nameField = getNameField();
 
-    const excludeNames = [imageField?.name, nameField?.name, "slug"].filter(Boolean);
+    const excludeNames = [imageField?.name, nameField?.name, "slug"].filter(
+      Boolean
+    );
 
     return collection.all_fields
       .filter(f => !excludeNames.includes(f.name))
@@ -262,34 +264,49 @@ export function CollectionDataManagement({
       ) : !collectionDataResponse ||
         collectionDataResponse.results.length === 0 ? (
         <div className="rounded-lg bg-white">
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
-                <FileText className="h-6 w-6 text-slate-400" />
-              </div>
-              <h3 className="text-sm font-medium text-slate-900">
-                No data found
-              </h3>
-              <p className="mt-1 text-sm text-slate-500">
-                No data available for this collection.
-              </p>
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+              <FileText className="h-6 w-6 text-slate-400" />
             </div>
+            <h3 className="text-sm font-medium text-slate-900">
+              No data found
+            </h3>
+            <p className="mt-1 text-sm text-slate-500">
+              No data available for this collection.
+            </p>
+          </div>
         </div>
       ) : (
         <div className="rounded-lg bg-white">
           <Table>
             <TableHeader>
               <TableRow className="border-b border-black/5">
-                {imageField && <TableHead className="px-6 py-3 text-xs font-normal text-black/60">Image</TableHead>}
-                {nameField && <TableHead className="px-6 py-3 text-xs font-normal text-black/60 capitalize">{nameField.name}</TableHead>}
+                {imageField && (
+                  <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                    Image
+                  </TableHead>
+                )}
+                {nameField && (
+                  <TableHead className="px-6 py-3 text-xs font-normal text-black/60 capitalize">
+                    {nameField.name}
+                  </TableHead>
+                )}
                 {displayFields.map(field => (
-                  <TableHead key={field.name} className="px-6 py-3 text-xs font-normal text-black/60 capitalize">{field.name}</TableHead>
+                  <TableHead
+                    key={field.name}
+                    className="px-6 py-3 text-xs font-normal text-black/60 capitalize"
+                  >
+                    {field.name}
+                  </TableHead>
                 ))}
-                <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">Actions</TableHead>
+                <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {collectionDataResponse.results.map(data => (
-                <TableRow 
+                <TableRow
                   key={data.id}
                   className="group border-b border-black/5 transition-colors hover:bg-black/2"
                 >

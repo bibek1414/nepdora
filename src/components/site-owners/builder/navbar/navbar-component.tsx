@@ -95,7 +95,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
 
   const navbarData = React.useMemo(() => {
     const rawData = navbar.data || defaultNavbarData;
-    
+
     return {
       ...rawData,
       logoImage: rawData.logoImage || siteConfig?.logo || "",

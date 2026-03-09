@@ -384,10 +384,20 @@ export const NavbarStyle13: React.FC<NavbarStyleProps> = ({
                         isEditable,
                         disableClicks
                       )}
-                      target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
-                  onClick={e => handleLinkClick(e, link.href)}
-className={`text-sm font-medium whitespace-nowrap transition-colors ${
+                      target={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={e => handleLinkClick(e, link.href)}
+                      className={`text-sm font-medium whitespace-nowrap transition-colors ${
                         pathname.includes(link.href)
                           ? "text-brand-600 font-semibold"
                           : "hover:text-brand-600 text-gray-600"
@@ -429,11 +439,22 @@ className={`text-sm font-medium whitespace-nowrap transition-colors ${
                     isEditable,
                     disableClicks
                   )}
-                  target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                  target={
+                    link.href?.startsWith("http") ||
+                    link.href?.startsWith("mailto:")
+                      ? "_blank"
+                      : undefined
+                  }
+                  rel={
+                    link.href?.startsWith("http") ||
+                    link.href?.startsWith("mailto:")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
                   onClick={e => {
                     handleLinkClick(e, link.href);
-                    setIsMenuOpen(false);}}
+                    setIsMenuOpen(false);
+                  }}
                   className="block border-b border-gray-50 py-2 text-sm font-medium text-gray-900"
                 >
                   {link.text}

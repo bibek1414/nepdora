@@ -250,9 +250,19 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
                       isEditable
                     )}
                     className="text-xs text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-white"
-                    target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
-                  onClick={isEditable ? e => e.preventDefault() : undefined}
+                    target={
+                      link.href?.startsWith("http") ||
+                      link.href?.startsWith("mailto:")
+                        ? "_blank"
+                        : undefined
+                    }
+                    rel={
+                      link.href?.startsWith("http") ||
+                      link.href?.startsWith("mailto:")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
+                    onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
                   </Link>
@@ -303,8 +313,16 @@ const FooterLink: React.FC<{
   return (
     <Link
       href={href || "#"}
-      target={href?.startsWith("http") || href?.startsWith("mailto:") ? "_blank" : undefined}
-      rel={href?.startsWith("http") || href?.startsWith("mailto:") ? "noopener noreferrer" : undefined}
+      target={
+        href?.startsWith("http") || href?.startsWith("mailto:")
+          ? "_blank"
+          : undefined
+      }
+      rel={
+        href?.startsWith("http") || href?.startsWith("mailto:")
+          ? "noopener noreferrer"
+          : undefined
+      }
       className="w-fit text-sm text-gray-500 transition-colors hover:text-black dark:text-gray-400 dark:hover:text-white"
     >
       {children}

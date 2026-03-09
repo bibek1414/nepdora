@@ -14,6 +14,7 @@ export interface PopUpForm {
   phone_number?: string;
   email?: string;
   address?: string;
+  is_read: boolean;
   created_at: string;
 }
 

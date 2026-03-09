@@ -4,6 +4,7 @@ import {
   ContactFormData,
   PaginatedContacts,
   ContactFilters,
+  Contact,
 } from "@/types/owner-site/admin/contact";
 import { ContactFormSubmission } from "@/types/owner-site/components/contact";
 import { toast } from "sonner";
@@ -33,6 +34,22 @@ export const useSubmitContactForm = (siteUser: string) => {
     },
     onError: error => {
       toast.error("Failed to send message");
+    },
+  });
+};
+
+export const useUpdateContact = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<Contact> }) =>
+      contactAPI.updateContact(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["contacts"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
+    },
+    onError: (error: Error) => {
+      console.error("Failed to update contact:", error);
     },
   });
 };

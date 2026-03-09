@@ -26,108 +26,28 @@ import {
   Users,
 } from "lucide-react";
 import { User } from "@/types/auth/auth";
+import { useUnreadCounts } from "@/hooks/owner-site/admin/use-stats";
+
+interface NavigationItem {
+  name: string;
+  href: string;
+  icon: any;
+  unreadCount?: number;
+}
+
+interface NavigationGroup {
+  items: NavigationItem[];
+  hideForService?: boolean;
+  showForBatoma?: boolean;
+}
 
 interface AdminSidebarProps {
   user: User;
 }
 
-const navigationGroups = [
-  {
-    items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
-  },
-  {
-    items: [
-      { name: "Template", href: "/admin/template", icon: LayoutPanelTop },
-    ],
-  },
-  {
-    items: [{ name: "Products", href: "/admin/products", icon: Package }],
-    hideForService: true,
-  },
-  {
-    items: [
-      { name: "Order Management", href: "/admin/orders", icon: FileText },
-    ],
-    hideForService: true,
-  },
-  {
-    items: [
-      {
-        name: "Content Management",
-        href: "/admin/content-management",
-        icon: MessageCircle,
-      },
-    ],
-  },
-  {
-    items: [{ name: "Inquiries", href: "/admin/inquiries", icon: Mail }],
-  },
-  {
-    items: [
-      {
-        name: "Appointment",
-        href: "/admin/appointments",
-        icon: Calendar,
-      },
-    ],
-  },
-  {
-    items: [
-      {
-        name: "Bookings",
-        href: "/admin/bookings",
-        icon: BookOpen,
-      },
-    ],
-    showForBatoma: true,
-  },
-  {
-    items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
-  },
-
-  {
-    items: [
-      {
-        name: "Payment Gateway",
-        href: "/admin/plugins/payment-gateway/esewa",
-        icon: Wallet,
-      },
-    ],
-    hideForService: true,
-  },
-  {
-    items: [
-      {
-        name: "Pricing",
-        href: "/admin/pricing",
-        icon: IndianRupee,
-      },
-    ],
-  },
-  {
-    items: [{ name: "Plugins", href: "/admin/plugins", icon: Unplug }],
-  },
-  {
-    items: [
-      { name: "Collections", href: "/admin/collections", icon: Database },
-    ],
-  },
-  {
-    items: [{ name: "Customers", href: "/admin/customers", icon: Users }],
-  },
-  {
-    items: [
-      {
-        name: "Settings",
-        href: "/admin/settings/site-config",
-        icon: Settings,
-      },
-    ],
-  },
-];
-
 export default function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname();
+  const { data: unreadCounts } = useUnreadCounts();
   const [collapsed, setCollapsed] = useState(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("sidebarCollapsed");
@@ -136,17 +56,125 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
     return false;
   });
 
+  const navigationGroups: NavigationGroup[] = [
+    {
+      items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
+    },
+    {
+      items: [
+        { name: "Template", href: "/admin/template", icon: LayoutPanelTop },
+      ],
+    },
+    {
+      items: [{ name: "Products", href: "/admin/products", icon: Package }],
+      hideForService: true,
+    },
+    {
+      items: [
+        {
+          name: "Order Management",
+          href: "/admin/orders",
+          icon: FileText,
+          unreadCount: unreadCounts?.unread_orders,
+        },
+      ],
+      hideForService: true,
+    },
+    {
+      items: [
+        {
+          name: "Content Management",
+          href: "/admin/content-management",
+          icon: MessageCircle,
+        },
+      ],
+    },
+    {
+      items: [
+        {
+          name: "Inquiries",
+          href: "/admin/inquiries",
+          icon: Mail,
+          unreadCount:
+            (unreadCounts?.unread_contacts || 0) +
+            (unreadCounts?.unread_popup_forms || 0) +
+            (unreadCounts?.unread_newsletters || 0),
+        },
+      ],
+    },
+    {
+      items: [
+        {
+          name: "Appointment",
+          href: "/admin/appointments",
+          icon: Calendar,
+          unreadCount: unreadCounts?.unread_appointments,
+        },
+      ],
+    },
+    {
+      items: [
+        {
+          name: "Bookings",
+          href: "/admin/bookings",
+          icon: BookOpen,
+        },
+      ],
+      showForBatoma: true,
+    },
+    {
+      items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
+    },
+
+    {
+      items: [
+        {
+          name: "Payment Gateway",
+          href: "/admin/plugins/payment-gateway/esewa",
+          icon: Wallet,
+        },
+      ],
+      hideForService: true,
+    },
+    {
+      items: [
+        {
+          name: "Pricing",
+          href: "/admin/pricing",
+          icon: IndianRupee,
+        },
+      ],
+    },
+    {
+      items: [{ name: "Plugins", href: "/admin/plugins", icon: Unplug }],
+    },
+    {
+      items: [
+        { name: "Collections", href: "/admin/collections", icon: Database },
+      ],
+    },
+    {
+      items: [{ name: "Customers", href: "/admin/customers", icon: Users }],
+    },
+    {
+      items: [
+        {
+          name: "Settings",
+          href: "/admin/settings/site-config",
+          icon: Settings,
+        },
+      ],
+    },
+  ];
+
   useEffect(() => {
     localStorage.setItem("sidebarCollapsed", JSON.stringify(collapsed));
   }, [collapsed]);
 
-  // Filter navigation groups based on website type and subdomain
   const filteredNavigationGroups = navigationGroups.filter(group => {
-    // If user's website type is 'service' and this group should be hidden for service, filter it out
     if (user.website_type === "service" && group.hideForService) {
       return false;
     }
-    // If group should only show for batoma subdomain
     if (group.showForBatoma && user.sub_domain !== "batoma") {
       return false;
     }
@@ -160,7 +188,6 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
         collapsed ? "w-16" : "w-64"
       )}
     >
-      {/* Logo Section */}
       <div className="flex h-16 items-center border-b border-gray-100 px-4">
         <div
           className={cn(
@@ -169,20 +196,11 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           )}
         >
           {collapsed ? (
-            // <div className="flex w-full justify-center">
-            //   <Image src="/icon.svg" alt="Icon" width={32} height={32} />
-            // </div>
             <></>
           ) : (
             <div className="flex flex-col">
               <div className="flex items-center space-x-4">
                 <div className="shrink-0 items-center">
-                  {/* <Image
-                    src="/nepdora-logo.png"
-                    alt="Logo"
-                    width={110}
-                    height={30}
-                  /> */}
                   <h1 className="text-xl font-bold text-[#003d79]">
                     Admin Panel
                   </h1>
@@ -192,7 +210,6 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           )}
         </div>
 
-        {/* Toggle Button */}
         <button
           onClick={() => setCollapsed(!collapsed)}
           className={cn(
@@ -208,12 +225,10 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
         </button>
       </div>
 
-      {/* Navigation */}
       <div className="scrollbar-hide flex-1 overflow-y-auto py-4">
         <nav className="grid gap-1 px-2">
           {filteredNavigationGroups.map((group, groupIndex) => (
             <div key={groupIndex}>
-              {/* Group Items */}
               <div className="grid gap-1">
                 {group.items.map(item => {
                   const isActive = pathname === item.href;
@@ -239,12 +254,23 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
                       {!collapsed && (
                         <span className="truncate">{item.name}</span>
                       )}
+                      {item.unreadCount !== undefined &&
+                        item.unreadCount > 0 && (
+                          <div
+                            className={cn(
+                              "flex items-center justify-center rounded-full bg-[#003d79] text-[10px] text-white",
+                              collapsed
+                                ? "absolute top-1 right-1 h-2 w-2"
+                                : "ml-auto h-5 min-w-[20px] px-1"
+                            )}
+                          >
+                            {!collapsed && item.unreadCount}
+                          </div>
+                        )}
                     </Link>
                   );
                 })}
               </div>
-
-              {/* Divider for collapsed state */}
               {collapsed &&
                 groupIndex > 0 &&
                 groupIndex < filteredNavigationGroups.length - 1 && (
@@ -255,7 +281,6 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
         </nav>
       </div>
 
-      {/* User Profile Section */}
       <div className="border-t border-gray-100 p-4">
         <div
           className={cn(

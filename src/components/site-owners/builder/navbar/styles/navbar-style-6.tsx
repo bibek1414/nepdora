@@ -217,10 +217,20 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                         isEditable,
                         disableClicks
                       )}
-                      target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
-                  onClick={e => handleLinkClick(e, link.href)}
-className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
+                      target={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={e => handleLinkClick(e, link.href)}
+                      className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
                         disableClicks
                           ? "cursor-default opacity-60"
                           : "cursor-pointer"
@@ -287,9 +297,21 @@ className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
                               )
                           : "#"
                       }
-                      target={(item.href?.startsWith("http") || item.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(item.href?.startsWith("http") || item.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
-                  onClick={e => disableClicks ? e.preventDefault() : undefined}
+                      target={
+                        item.href?.startsWith("http") ||
+                        item.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        item.href?.startsWith("http") ||
+                        item.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={e =>
+                        disableClicks ? e.preventDefault() : undefined
+                      }
                       className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
                         disableClicks
                           ? "cursor-default opacity-60"

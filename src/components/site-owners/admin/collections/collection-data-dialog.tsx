@@ -1019,21 +1019,21 @@ export function CollectionDataDialog({
             {collection.all_fields
               .filter(field => field.name !== "slug")
               .map(field => (
-              <div key={field.name} className="space-y-2">
-                <Label htmlFor={field.name}>
-                  {field.name}
-                  {field.required && (
-                    <span className="text-destructive ml-1">*</span>
-                  )}
-                </Label>
-                {renderFieldInput(field)}
-                <p className="text-muted-foreground text-xs">
-                  Type: {field.type}
-                  {field.filterable && " • Filterable"}
-                  {field.searchable && " • Searchable"}
-                </p>
-              </div>
-            ))}
+                <div key={field.name} className="space-y-2">
+                  <Label htmlFor={field.name}>
+                    {field.name}
+                    {field.required && (
+                      <span className="text-destructive ml-1">*</span>
+                    )}
+                  </Label>
+                  {renderFieldInput(field)}
+                  <p className="text-muted-foreground text-xs">
+                    Type: {field.type}
+                    {field.filterable && " • Filterable"}
+                    {field.searchable && " • Searchable"}
+                  </p>
+                </div>
+              ))}
           </div>
 
           <DialogFooter>

@@ -56,6 +56,7 @@ export const useUpdateOrderStatus = () => {
     onSuccess: () => {
       // Invalidate and refetch orders list
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
     onError: error => {
       console.error("Failed to update order status:", error);

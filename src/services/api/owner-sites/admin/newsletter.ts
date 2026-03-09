@@ -5,6 +5,7 @@ import {
   CreateNewsletterRequest,
   CreateNewsletterResponse,
   GetNewslettersResponse,
+  Newsletter,
 } from "@/types/owner-site/admin/newsletter";
 
 export const newsletterApi = {
@@ -37,6 +38,20 @@ export const newsletterApi = {
     const API_BASE_URL = getApiBaseUrl();
     const response = await fetch(`${API_BASE_URL}/api/newsletter/`, {
       method: "POST",
+      headers: createHeaders(),
+      body: JSON.stringify(data),
+    });
+    await handleApiError(response);
+    return response.json();
+  },
+
+  updateNewsletter: async (
+    id: number,
+    data: Partial<Newsletter>
+  ): Promise<Newsletter> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/newsletter/${id}/`, {
+      method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
     });

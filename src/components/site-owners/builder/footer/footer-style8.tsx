@@ -91,8 +91,18 @@ export function FooterStyle8({
                               isEditable
                             )}
                             className="font-medium text-gray-400 transition-colors hover:text-white"
-                  target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                            target={
+                              link.href?.startsWith("http") ||
+                              link.href?.startsWith("mailto:")
+                                ? "_blank"
+                                : undefined
+                            }
+                            rel={
+                              link.href?.startsWith("http") ||
+                              link.href?.startsWith("mailto:")
+                                ? "noopener noreferrer"
+                                : undefined
+                            }
                           >
                             {link.text}
                           </Link>
@@ -125,8 +135,18 @@ export function FooterStyle8({
                               isEditable
                             )}
                             className="font-medium text-gray-400 transition-colors hover:text-white"
-                  target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                            target={
+                              link.href?.startsWith("http") ||
+                              link.href?.startsWith("mailto:")
+                                ? "_blank"
+                                : undefined
+                            }
+                            rel={
+                              link.href?.startsWith("http") ||
+                              link.href?.startsWith("mailto:")
+                                ? "noopener noreferrer"
+                                : undefined
+                            }
                           >
                             {link.text}
                           </Link>
@@ -224,9 +244,19 @@ export function FooterStyle8({
                       isEditable
                     )}
                     className="text-sm text-gray-400 transition-colors hover:text-white"
-                    target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
-                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
-                  onClick={isEditable ? e => e.preventDefault() : undefined}
+                    target={
+                      link.href?.startsWith("http") ||
+                      link.href?.startsWith("mailto:")
+                        ? "_blank"
+                        : undefined
+                    }
+                    rel={
+                      link.href?.startsWith("http") ||
+                      link.href?.startsWith("mailto:")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
+                    onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
                   </Link>
