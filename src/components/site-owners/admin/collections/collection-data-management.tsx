@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, Filter, Trash2, Edit } from "lucide-react";
+import { Plus, Search, Filter, Trash2, Edit, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -238,30 +238,18 @@ export function CollectionDataManagement({
 
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{collection.name}</h1>
-          <p className="text-muted-foreground mt-1">
-            Manage data for this collection
-          </p>
+          <h1 className="px-2 text-3xl font-bold capitalize">
+            {collection.name}
+          </h1>
         </div>
-        <Button onClick={handleCreateNew}>
+        <Button
+          onClick={handleCreateNew}
+          className="bg-black/90 hover:bg-black/80"
+        >
           <Plus className="mr-2 h-4 w-4" />
-          Add Data
+          Add New Data
         </Button>
       </div>
-
-      <CardContent className="gap-0 px-0 py-0">
-        <div className="mb-6 flex w-full sm:w-64">
-          <div className="relative w-full">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
-            <Input
-              placeholder="Search..."
-              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-            />
-          </div>
-        </div>
-      </CardContent>
 
       {dataLoading ? (
         <Card>
@@ -276,12 +264,18 @@ export function CollectionDataManagement({
       ) : !collectionDataResponse ||
         collectionDataResponse.results.length === 0 ? (
         <Card>
-          <CardContent className="py-16 text-center">
-            <p className="text-muted-foreground mb-4">No data yet</p>
-            <Button onClick={handleCreateNew}>
-              <Plus className="mr-2 h-4 w-4" />
-              Add First Entry
-            </Button>
+          <CardContent>
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+                <FileText className="h-6 w-6 text-slate-400" />
+              </div>
+              <h3 className="text-sm font-medium text-slate-900">
+                No data found
+              </h3>
+              <p className="mt-1 text-sm text-slate-500">
+                No data available for this collection.
+              </p>
+            </div>
           </CardContent>
         </Card>
       ) : (

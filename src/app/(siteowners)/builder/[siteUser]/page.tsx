@@ -8,5 +8,5 @@ interface BuilderRedirectProps {
 export default function BuilderRedirect({ params }: BuilderRedirectProps) {
   const { siteUser } = use(params);
 
-  redirect(`/builder/${siteUser}/home`);
+  redirect(`/builder/${siteUser}/home-draft`);
 }

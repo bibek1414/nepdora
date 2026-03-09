@@ -68,7 +68,9 @@ export function CollectionDataDialog({
       const parsedData = { ...editingData.data };
       collection.all_fields.forEach(field => {
         if (
-          (field.type === "text" || field.type === "email") &&
+          (field.type === "text" ||
+            field.type === "email" ||
+            field.type === "multiple_text") &&
           typeof parsedData[field.name] === "string"
         ) {
           try {
@@ -142,7 +144,11 @@ export function CollectionDataDialog({
       }
 
       // Handle text/email fields that can be string or array
-      if (f.type === "text" || f.type === "email") {
+      if (
+        f.type === "text" ||
+        f.type === "email" ||
+        f.type === "multiple_text"
+      ) {
         if (Array.isArray(value)) {
           if (
             value.length === 0 ||
@@ -237,7 +243,9 @@ export function CollectionDataDialog({
       const processedData = { ...formData };
       collection.all_fields.forEach(field => {
         if (
-          (field.type === "text" || field.type === "email") &&
+          (field.type === "text" ||
+            field.type === "email" ||
+            field.type === "multiple_text") &&
           Array.isArray(processedData[field.name])
         ) {
           // Stringify array values for text fields
@@ -381,7 +389,7 @@ export function CollectionDataDialog({
   const renderFieldInput = (field: any) => {
     const fieldValue = formData[field.name];
 
-    if (field.name === "content") {
+    if (field.type === "rich_text") {
       return (
         <Tiptap
           value={fieldValue || ""}
@@ -410,7 +418,32 @@ export function CollectionDataDialog({
     switch (field.type) {
       case "text":
       case "email":
+      case "multiple_text":
+        const isMultiple = field.type === "multiple_text";
         const isArrayValue = Array.isArray(fieldValue);
+
+        if (!isMultiple) {
+          const stringValue = isArrayValue
+            ? fieldValue.length > 0
+              ? fieldValue[0]
+              : ""
+            : fieldValue || "";
+
+          return (
+            <Input
+              type={field.type === "email" ? "email" : "text"}
+              value={stringValue}
+              onChange={e => updateFieldValue(field.name, e.target.value)}
+              placeholder={
+                field.type === "email"
+                  ? "Enter email address"
+                  : `Enter ${field.name}`
+              }
+              required={field.required}
+            />
+          );
+        }
+
         const textArray = isArrayValue
           ? fieldValue
           : fieldValue
@@ -477,7 +510,7 @@ export function CollectionDataDialog({
                 const newArray = [...currentArray, ""];
                 updateFieldValue(field.name, newArray);
               }}
-              className="w-full"
+              className="w-1/2"
             >
               <Plus className="mr-2 h-4 w-4" />
               Add {field.name}
@@ -989,11 +1022,8 @@ export function CollectionDataDialog({
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {editingData ? "Edit Data" : "Add New Data"}
+            {editingData ? `Edit Data for ${collection.name}` : "Add New Data"}
           </DialogTitle>
-          <DialogDescription>
-            Fill in the fields for {collection.name}
-          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
@@ -1004,11 +1034,6 @@ export function CollectionDataDialog({
                   {field.name}
                   {field.required && (
                     <span className="text-destructive ml-1">*</span>
-                  )}
-                  {field.is_default && (
-                    <Badge variant="outline" className="ml-2 text-xs">
-                      Default
-                    </Badge>
                   )}
                 </Label>
                 {renderFieldInput(field)}

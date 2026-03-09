@@ -60,15 +60,17 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
     if (collection) {
       setCollectionName(collection.name);
       setFields(
-        collection.fields.map(f => ({
-          name: f.name,
-          type: f.type,
-          required: f.required,
-          filterable: f.filterable,
-          searchable: f.searchable,
-          model_collection_id:
-            (f as any).model || (f as any).model_collection_id,
-        }))
+        collection.all_fields
+          .filter(f => f.name !== "slug")
+          .map(f => ({
+            name: f.name,
+            type: f.type,
+            required: f.required,
+            filterable: f.filterable,
+            searchable: f.searchable,
+            model_collection_id:
+              (f as any).model || (f as any).model_collection_id,
+          }))
       );
       setSendEmail(collection.send_email ?? false);
       setAdminEmail(collection.admin_email ?? "");
@@ -140,11 +142,50 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
     }
 
     try {
-      await updateCollectionMutation.mutateAsync({
-        slug,
-        collectionData: {
-          name: collectionName,
-          fields: fields.map(f => ({
+      const payload: any = {};
+
+      if (collectionName !== collection?.name) {
+        payload.name = collectionName;
+      }
+
+      if (sendEmail !== (collection?.send_email ?? false)) {
+        payload.send_email = sendEmail;
+      }
+
+      if (sendEmail && adminEmail.trim() !== (collection?.admin_email ?? "")) {
+        payload.admin_email = adminEmail.trim();
+      }
+
+      const slugField = (collection?.default_fields?.["slug"] as any) || {};
+      const changedDefaultFields: Record<string, any> = {
+        slug: {
+          type: slugField.type || "text",
+          required: slugField.required ?? false,
+          filterable: slugField.filterable ?? true,
+          searchable: slugField.searchable ?? true,
+          model: null,
+        }
+      };
+      const changedCustomFields: any[] = [];
+
+      const origCustomFields = collection?.fields || [];
+      const origDefaultFields = collection?.default_fields || {};
+
+      fields.forEach(f => {
+        // If it was originally a default field
+        if (origDefaultFields[f.name]) {
+          changedDefaultFields[f.name] = {
+            type: f.type,
+            required: f.required,
+            filterable: f.filterable,
+            searchable: f.searchable,
+            model:
+              f.type === "model" && f.model_collection_id
+                ? f.model_collection_id
+                : null,
+          };
+        } else {
+          changedCustomFields.push({
             name: f.name,
             type: f.type,
             required: f.required,
@@ -154,11 +195,22 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
               f.type === "model" && f.model_collection_id
                 ? f.model_collection_id
                 : null,
-          })),
-          send_email: sendEmail,
-          ...(sendEmail &&
-            adminEmail.trim() && { admin_email: adminEmail.trim() }),
-        },
+          });
+        }
+      });
+
+      payload.default_fields = changedDefaultFields;
+      payload.fields = changedCustomFields;
+
+      if (Object.keys(payload).length === 0) {
+        toast.success("No changes to save");
+        router.push(`/admin/collections/${slug}`);
+        return;
+      }
+
+      await updateCollectionMutation.mutateAsync({
+        slug,
+        collectionData: payload,
       });
 
       toast.success("Collection updated successfully");
@@ -230,14 +282,6 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label>Current Slug</Label>
-              <Input value={collection.slug} disabled />
-              <p className="text-muted-foreground text-sm">
-                Slug cannot be changed after creation
-              </p>
-            </div>
-
             <div className="space-y-4 pt-4">
               <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
@@ -280,43 +324,9 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Default Fields</CardTitle>
+                <CardTitle>Fields</CardTitle>
                 <CardDescription>
-                  These fields are automatically included
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {collection.all_fields
-                .filter(f => f.is_default)
-                .map(field => (
-                  <div
-                    key={field.name}
-                    className="bg-muted/50 flex items-center justify-between rounded-lg border p-3"
-                  >
-                    <div>
-                      <p className="font-medium">{field.name}</p>
-                      <p className="text-muted-foreground text-sm">
-                        Type: {field.type} •{" "}
-                        {field.required ? "Required" : "Optional"}
-                      </p>
-                    </div>
-                    <Badge variant="outline">Default</Badge>
-                  </div>
-                ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="mt-6">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Custom Fields</CardTitle>
-                <CardDescription>
-                  Add and manage custom fields for your collection
+                  Add and manage fields for your collection
                 </CardDescription>
               </div>
               <Button
@@ -334,8 +344,7 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
             {fields.length === 0 ? (
               <div className="rounded-lg border-2 border-dashed py-8 text-center">
                 <p className="text-muted-foreground">
-                  No custom fields yet. Click &quot;Add Field&quot; to create
-                  one.
+                  No fields yet. Click &quot;Add Field&quot; to create one.
                 </p>
               </div>
             ) : (
@@ -406,6 +415,10 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
                             <SelectItem value="image">Image</SelectItem>
                             <SelectItem value="json">JSON</SelectItem>
                             <SelectItem value="model">Model</SelectItem>
+                            <SelectItem value="multiple_text">
+                              Multiple Text
+                            </SelectItem>
+                            <SelectItem value="rich_text">Rich Text</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

@@ -6,6 +6,8 @@ export type FieldType =
   | "email"
   | "image"
   | "json"
+  | "rich_text"
+  | "multiple_text"
   | "model";
 
 export interface FieldDefinition {

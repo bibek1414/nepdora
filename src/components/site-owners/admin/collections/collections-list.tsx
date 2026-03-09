@@ -41,156 +41,6 @@ import {
 import { CreateCollectionDialog } from "./create-collection-dialog";
 import { toast } from "sonner";
 
-// Smart mapping for Canva-like card styles
-const getCollectionStyle = (name: string) => {
-  const lower = name.toLowerCase();
-
-  // Returns: bg (for container), color (for icon)
-  if (
-    lower.includes("blog") ||
-    lower.includes("post") ||
-    lower.includes("article")
-  ) {
-    return {
-      bg: "bg-orange-50",
-      color: "text-orange-600",
-      shadowColor: "hover:border-orange-200",
-      icon: PenTool,
-    };
-  }
-  if (
-    lower.includes("case") ||
-    lower.includes("study") ||
-    lower.includes("portfolio")
-  ) {
-    return {
-      bg: "bg-blue-50",
-      color: "text-blue-600",
-      shadowColor: "hover:border-blue-200",
-      icon: Briefcase,
-    };
-  }
-  if (
-    lower.includes("team") ||
-    lower.includes("member") ||
-    lower.includes("user") ||
-    lower.includes("staff")
-  ) {
-    return {
-      bg: "bg-cyan-50",
-      color: "text-cyan-600",
-      shadowColor: "hover:border-cyan-200",
-      icon: Users,
-    };
-  }
-  if (
-    lower.includes("product") ||
-    lower.includes("shop") ||
-    lower.includes("store") ||
-    lower.includes("item")
-  ) {
-    return {
-      bg: "bg-emerald-50",
-      color: "text-emerald-600",
-      shadowColor: "hover:border-emerald-200",
-      icon: ShoppingBag,
-    };
-  }
-  if (
-    lower.includes("event") ||
-    lower.includes("date") ||
-    lower.includes("schedule")
-  ) {
-    return {
-      bg: "bg-rose-50",
-      color: "text-rose-600",
-      shadowColor: "hover:border-rose-200",
-      icon: Calendar,
-    };
-  }
-  if (
-    lower.includes("image") ||
-    lower.includes("photo") ||
-    lower.includes("gallery") ||
-    lower.includes("media")
-  ) {
-    return {
-      bg: "bg-purple-50",
-      color: "text-purple-600",
-      shadowColor: "hover:border-purple-200",
-      icon: ImageIcon,
-    };
-  }
-  if (
-    lower.includes("category") ||
-    lower.includes("tag") ||
-    lower.includes("meta")
-  ) {
-    return {
-      bg: "bg-amber-50",
-      color: "text-amber-600",
-      shadowColor: "hover:border-amber-200",
-      icon: Tag,
-    };
-  }
-  if (
-    lower.includes("review") ||
-    lower.includes("testimonial") ||
-    lower.includes("feedback")
-  ) {
-    return {
-      bg: "bg-pink-50",
-      color: "text-pink-600",
-      shadowColor: "hover:border-pink-200",
-      icon: MessageCircle,
-    };
-  }
-  if (lower.includes("service") || lower.includes("offer")) {
-    return {
-      bg: "bg-indigo-50",
-      color: "text-indigo-600",
-      shadowColor: "hover:border-indigo-200",
-      icon: Star,
-    };
-  }
-  if (
-    lower.includes("promotion") ||
-    lower.includes("ad") ||
-    lower.includes("campaign")
-  ) {
-    return {
-      bg: "bg-red-50",
-      color: "text-red-600",
-      shadowColor: "hover:border-red-200",
-      icon: Megaphone,
-    };
-  }
-
-  // Fallback
-  const sum = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const fallbacks = [
-    {
-      bg: "bg-slate-50",
-      color: "text-slate-600",
-      shadowColor: "hover:border-slate-300",
-      icon: LayoutTemplate,
-    },
-    {
-      bg: "bg-violet-50",
-      color: "text-violet-600",
-      shadowColor: "hover:border-violet-200",
-      icon: FileText,
-    },
-    {
-      bg: "bg-lime-50",
-      color: "text-lime-600",
-      shadowColor: "hover:border-lime-200",
-      icon: Layout,
-    },
-  ];
-  return fallbacks[sum % fallbacks.length];
-};
-
 export function CollectionsList() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
@@ -244,7 +94,7 @@ export function CollectionsList() {
             <div className="h-11 w-72 animate-pulse rounded-xl bg-slate-200/70" />
             <div className="h-11 w-40 animate-pulse rounded-xl bg-slate-200/70" />
           </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[1, 2, 3, 4, 5, 6].map(i => (
               <div
                 key={i}
@@ -260,31 +110,10 @@ export function CollectionsList() {
   return (
     <div className="animate-in fade-in min-h-screen bg-white p-8 duration-700 sm:p-12">
       <div className="mx-auto max-w-7xl">
-        {/* Header Section */}
-        <div className="mb-12 space-y-3">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-            Collections
-          </h1>
-          <p className="max-w-2xl text-lg text-slate-500">
-            Structure and manage your dynamic content.{" "}
-            <span className="font-semibold text-slate-700">
-              {collections?.length || 0}
-            </span>{" "}
-            collection{collections?.length !== 1 ? "s" : ""} available.
-          </p>
-        </div>
-
-        {/* Search and Create */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="group relative w-full sm:w-80">
-            <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-black/40" />
-            <Input
-              placeholder="Search collections..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="h-11 rounded-xl bg-black/5 pl-12 text-sm transition-all placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
-            />
-          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+            Collections Management
+          </h1>
 
           <Button
             size="lg"
@@ -297,7 +126,7 @@ export function CollectionsList() {
         </div>
 
         {/* Collections Grid */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {/* Empty State - No search results */}
           {filteredCollections.length === 0 && searchQuery && (
             <div className="col-span-full rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 py-16 text-center">
@@ -353,8 +182,6 @@ export function CollectionsList() {
 
           {/* Collection Cards */}
           {filteredCollections.map((collection, idx) => {
-            const style = getCollectionStyle(collection.name);
-            const Icon = style.icon;
 
             return (
               <div
@@ -370,8 +197,7 @@ export function CollectionsList() {
                 <div
                   className={cn(
                     "relative h-full overflow-hidden rounded-2xl border border-transparent p-7 transition-all duration-500 ease-out hover:-translate-y-1.5",
-                    style.bg,
-                    style.shadowColor
+                    "bg-slate-50"
                   )}
                 >
                   {/* Action Buttons */}
@@ -432,7 +258,7 @@ export function CollectionsList() {
                 collection and all its data.
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter className="gap-2 sm:gap-0">
+            <DialogFooter className="gap-2 sm:gap-2">
               <Button
                 variant="outline"
                 onClick={() => setDeleteId(null)}
