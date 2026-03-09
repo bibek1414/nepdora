@@ -196,6 +196,8 @@ export function FooterStyle1({
                             isEditable
                           )}
                           className="text-muted-foreground hover:text-foreground block text-left text-sm transition-colors"
+                  target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
                         >
                           {link.text}
                         </Link>
@@ -283,7 +285,9 @@ export function FooterStyle1({
                       isEditable
                     )}
                     className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-                    onClick={isEditable ? e => e.preventDefault() : undefined}
+                    target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                  onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
                   </Link>

@@ -217,8 +217,10 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                               isEditable,
                               disableClicks
                             )}
-                            onClick={e => handleLinkClick(e, link.href)}
-                            className={`flex items-center text-sm font-medium hover:text-gray-800 ${
+                            target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                  onClick={e => handleLinkClick(e, link.href)}
+className={`flex items-center text-sm font-medium hover:text-gray-800 ${
                               disableClicks
                                 ? "cursor-default opacity-60"
                                 : "cursor-pointer"
@@ -255,8 +257,10 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                             isEditable,
                             disableClicks
                           )}
-                          onClick={e => handleLinkClick(e, button.href)}
-                          className={`text-sm font-medium hover:text-gray-800 ${
+                          target={(button.href?.startsWith("http") || button.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(button.href?.startsWith("http") || button.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                  onClick={e => handleLinkClick(e, button.href)}
+className={`text-sm font-medium hover:text-gray-800 ${
                             disableClicks
                               ? "cursor-default opacity-60"
                               : "cursor-pointer"
@@ -448,8 +452,10 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                         isEditable,
                         disableClicks
                       )}
-                      onClick={e => handleLinkClick(e, link.href)}
-                      className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
+                      target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                  onClick={e => handleLinkClick(e, link.href)}
+className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
                     >
                       {link.text}
                     </Link>
@@ -484,8 +490,10 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                           isEditable,
                           disableClicks
                         )}
-                        onClick={e => handleLinkClick(e, button.href)}
-                        className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
+                        target={(button.href?.startsWith("http") || button.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(button.href?.startsWith("http") || button.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                  onClick={e => handleLinkClick(e, button.href)}
+className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
                       >
                         {button.text}
                       </Link>

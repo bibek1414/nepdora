@@ -302,7 +302,9 @@ export function FooterStyle7({
                         "--hover-color": secondaryColor,
                       } as React.CSSProperties
                     }
-                    onClick={isEditable ? e => e.preventDefault() : undefined}
+                    target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                  onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
                   </Link>
@@ -336,7 +338,9 @@ export function FooterStyle7({
                         "--hover-color": secondaryColor,
                       } as React.CSSProperties
                     }
-                    onClick={isEditable ? e => e.preventDefault() : undefined}
+                    target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                  onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
                   </Link>
@@ -424,7 +428,9 @@ export function FooterStyle7({
                 )}
                 className="transition-colors hover:text-white"
                 style={{ color: "inherit" }}
-                onClick={isEditable ? e => e.preventDefault() : undefined}
+                target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                  onClick={isEditable ? e => e.preventDefault() : undefined}
               >
                 {link.text}
               </Link>

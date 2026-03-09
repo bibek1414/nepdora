@@ -183,8 +183,10 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                           isEditable,
                           disableClicks
                         )}
-                        onClick={e => handleLinkClick(e, link.href)}
-                        className={`font-medium text-black transition-colors hover:text-black/80 ${
+                        target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
+                  onClick={e => handleLinkClick(e, link.href)}
+className={`font-medium text-black transition-colors hover:text-black/80 ${
                           disableClicks
                             ? "cursor-default opacity-60"
                             : "cursor-pointer"

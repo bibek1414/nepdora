@@ -193,8 +193,10 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                     isEditable,
                     disableClicks
                   )}
+                  target={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(link.href?.startsWith("http") || link.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
                   onClick={e => handleLinkClick(e, link.href)}
-                  className={`text-sm font-medium whitespace-nowrap transition-colors ${
+className={`text-sm font-medium whitespace-nowrap transition-colors ${
                     disableClicks
                       ? "cursor-default opacity-60"
                       : "cursor-pointer hover:opacity-80"
@@ -239,6 +241,8 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                         isEditable,
                         disableClicks
                       )}
+                  target={(button.href?.startsWith("http") || button.href?.startsWith("mailto:")) ? "_blank" : undefined}
+                  rel={(button.href?.startsWith("http") || button.href?.startsWith("mailto:")) ? "noopener noreferrer" : undefined}
                     >
                       {button.text}
                     </Link>
