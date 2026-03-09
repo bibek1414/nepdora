@@ -115,9 +115,6 @@ export function FooterStyle5({
                 <FooterLogo
                   footerData={data}
                   getImageUrl={getImageUrl}
-                  textClassName="text-heading-light dark:text-heading-dark text-xl"
-                  imageClassName="h-8"
-                  containerClassName="gap-3"
                 />
               </div>
 

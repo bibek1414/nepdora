@@ -1,81 +1,75 @@
 import React from "react";
 import { FooterData } from "@/types/owner-site/components/footer";
-import { cn } from "@/lib/utils";
 
 interface FooterLogoProps {
   footerData: FooterData;
-  getImageUrl: (path: string) => string;
-  textClassName?: string;
-  imageClassName?: string;
-  containerClassName?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getImageUrl: (path: string, options?: any) => string;
 }
 
 export const FooterLogo = ({
   footerData,
   getImageUrl,
-  textClassName,
-  imageClassName,
-  containerClassName,
 }: FooterLogoProps) => {
   const { logoType, logoImage, logoText, companyName } = footerData;
+  const displayText = logoText || companyName;
 
-  const renderText = () => (
-    <span
-      className={cn("text-base font-bold sm:text-lg md:text-xl", textClassName)}
-    >
-      {logoText || companyName}
-    </span>
-  );
+  const renderLogo = () => {
+    switch (logoType) {
+      case "image":
+        return logoImage ? (
+          <img
+            src={getImageUrl(logoImage, {
+              height: 40,
+              quality: "auto",
+              format: "auto",
+            })}
+            alt={displayText || "Logo"}
+            className="h-6 w-auto object-contain sm:h-7 md:h-8"
+          />
+        ) : (
+          <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center rounded-sm px-2 sm:h-7 md:h-8">
+            <span className="text-sm font-bold">
+              {displayText?.charAt(0)?.toUpperCase() || "L"}
+            </span>
+          </div>
+        );
 
-  const renderImage = () =>
-    logoImage ? (
-      <img
-        src={getImageUrl(logoImage)}
-        alt={companyName}
-        className={cn(
-          "h-6 w-auto object-contain sm:h-7 md:h-8",
-          imageClassName
-        )}
-      />
-    ) : (
-      renderText()
-    );
+      case "both":
+        return (
+          <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
+            {logoImage ? (
+              <img
+                src={getImageUrl(logoImage, {
+                  height: 32,
+                  quality: "auto",
+                  format: "auto",
+                })}
+                alt={displayText || "Logo"}
+                className="h-6 w-auto object-contain sm:h-7 md:h-8"
+              />
+            ) : (
+              <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center rounded-sm px-2 sm:h-7 md:h-8">
+                <span className="text-xs font-bold">
+                  {displayText?.charAt(0)?.toUpperCase() || "L"}
+                </span>
+              </div>
+            )}
+            <span className="text-base font-bold sm:text-lg md:text-xl">
+              {displayText}
+            </span>
+          </div>
+        );
 
-  if (logoType === "text") {
-    return (
-      <div className={cn("flex items-center", containerClassName)}>
-        {renderText()}
-      </div>
-    );
-  }
+      case "text":
+      default:
+        return (
+          <span className="text-base font-bold sm:text-lg md:text-xl">
+            {displayText}
+          </span>
+        );
+    }
+  };
 
-  if (logoType === "image") {
-    return (
-      <div className={cn("flex items-center", containerClassName)}>
-        {renderImage()}
-      </div>
-    );
-  }
-
-  // logoType === "both"
-  return (
-    <div
-      className={cn(
-        "flex items-center gap-2 sm:gap-2.5 md:gap-3",
-        containerClassName
-      )}
-    >
-      {logoImage && (
-        <img
-          src={getImageUrl(logoImage)}
-          alt={companyName}
-          className={cn(
-            "h-6 w-auto object-contain sm:h-7 md:h-8",
-            imageClassName
-          )}
-        />
-      )}
-      {renderText()}
-    </div>
-  );
+  return <>{renderLogo()}</>;
 };

@@ -241,7 +241,6 @@ export function FooterStyle7({
               <FooterLogo
                 footerData={data}
                 getImageUrl={getImageUrl}
-                textClassName="text-white"
               />
             </div>
             <p className="text-xs leading-relaxed text-white sm:text-sm">

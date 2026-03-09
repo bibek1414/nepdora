@@ -199,9 +199,6 @@ export function FooterStyle9({
               <FooterLogo
                 footerData={data}
                 getImageUrl={getImageUrl}
-                textClassName="text-white text-2xl tracking-tight font-bold"
-                imageClassName="h-10"
-                containerClassName="gap-3"
               />
             </div>
 

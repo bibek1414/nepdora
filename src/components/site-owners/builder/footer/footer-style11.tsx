@@ -16,6 +16,7 @@ import { FooterData } from "@/types/owner-site/components/footer";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
+import { FooterLogo } from "./shared/footer-logo";
 import Image from "next/image";
 import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
@@ -92,21 +93,7 @@ export const FooterStyle11: React.FC<FooterStyle11Props> = ({
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
           {/* Column 1: Logo, Newsletter, Social */}
           <div className="flex flex-col space-y-6 lg:col-span-4 lg:pr-12">
-            {data.logoType === "image" || data.logoType === "both" ? (
-              <Image
-                src={getImageUrl(data.logoImage)}
-                alt={data.companyName}
-                width={150}
-                height={50}
-                className="max-h-[60px] w-auto object-contain object-left"
-              />
-            ) : null}
-            {(data.logoType === "text" || data.logoType === "both") &&
-              data.logoText && (
-                <h2 className="font-serif text-4xl tracking-tight text-gray-900 dark:text-white">
-                  {data.logoText}
-                </h2>
-              )}
+            <FooterLogo footerData={data} getImageUrl={getImageUrl} />
 
             <p className="max-w-[280px] text-base text-gray-600 dark:text-gray-400">
               {data.newsletter.description ||

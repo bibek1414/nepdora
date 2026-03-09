@@ -55,9 +55,6 @@ export function FooterStyle8({
               <FooterLogo
                 footerData={data}
                 getImageUrl={getImageUrl}
-                textClassName="text-vistara-accent text-2xl font-semibold tracking-tight"
-                imageClassName="h-8"
-                containerClassName="gap-3"
               />
             </div>
             <p className="max-w-md text-lg leading-relaxed text-gray-400">
