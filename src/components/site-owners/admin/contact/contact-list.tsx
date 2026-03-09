@@ -57,7 +57,7 @@ const useDebounce = (value: string, delay: number) => {
 const ContactDetails = () => {
   const [filters, setFilters] = useState<ContactFilters>({
     page: 1,
-    page_size: 10,
+    page_size: 20,
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
