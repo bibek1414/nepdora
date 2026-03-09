@@ -31,15 +31,14 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
           <img
             src={getImageUrl(logoImage, {
               height: 40,
-              crop: "fill",
               quality: "auto",
               format: "auto",
             })}
             alt={logoText || "Logo"}
-            className="h-10 w-auto object-cover"
+            className="h-6 w-auto object-contain sm:h-7 md:h-8"
           />
         ) : (
-          <div className="bg-primary text-primary-foreground flex h-10 w-auto items-center justify-center">
+          <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center sm:h-7 md:h-8 px-2 rounded-sm">
             <span className="text-sm font-bold">
               {logoText?.charAt(0)?.toUpperCase() || "L"}
             </span>
@@ -48,32 +47,31 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
 
       case "both":
         return (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
             {logoImage ? (
               <img
                 src={getImageUrl(logoImage, {
                   height: 32,
-                  crop: "fill",
                   quality: "auto",
                   format: "auto",
                 })}
                 alt={logoText || "Logo"}
-                className="h-8 w-auto object-cover"
+                className="h-6 w-auto object-contain sm:h-7 md:h-8"
               />
             ) : (
-              <div className="bg-primary text-primary-foreground flex h-8 w-auto items-center justify-center">
+              <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center sm:h-7 md:h-8 px-2 rounded-sm">
                 <span className="text-xs font-bold">
                   {logoText?.charAt(0)?.toUpperCase() || "L"}
                 </span>
               </div>
             )}
-            <span className="text-xl font-bold">{logoText}</span>
+            <span className="text-base font-bold sm:text-lg md:text-xl">{logoText}</span>
           </div>
         );
 
       case "text":
       default:
-        return <span className="text-xl font-bold">{logoText}</span>;
+        return <span className="text-base font-bold sm:text-lg md:text-xl">{logoText}</span>;
     }
   };
 

@@ -195,17 +195,6 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                     )}
                   </React.Fragment>
                 ))}
-
-                {isEditable && onAddLink && (
-                  <Button
-                    onClick={onAddLink}
-                    variant="ghost"
-                    size="sm"
-                    className="pointer-events-auto h-7 px-2"
-                  >
-                    Link
-                  </Button>
-                )}
               </div>
 
               {/* Right: Social Icons & User Actions */}

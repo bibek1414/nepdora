@@ -11,6 +11,7 @@ import {
   useDeleteNavbarMutation,
 } from "@/hooks/owner-site/components/use-navbar";
 import { useAuth } from "@/hooks/use-auth";
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { NavbarEditorDialog } from "./navbar-settings";
 import { NavbarStyle1 } from "./styles/navbar-style-1";
 import { NavbarStyle2 } from "./styles/navbar-style-2";
@@ -90,7 +91,17 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
     useDeleteNavbarMutation();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
-  const navbarData = navbar.data || defaultNavbarData;
+  const { data: siteConfig } = useSiteConfig();
+
+  const navbarData = React.useMemo(() => {
+    const rawData = navbar.data || defaultNavbarData;
+    
+    return {
+      ...rawData,
+      logoImage: rawData.logoImage || siteConfig?.logo || "",
+      logoText: rawData.logoText || siteConfig?.business_name || "Brand",
+    };
+  }, [navbar.data, siteConfig]);
 
   const handleSaveNavbar = (data: NavbarData) => {
     if (!isEditable) return;

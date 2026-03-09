@@ -548,7 +548,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
 
                     {navbarData.logoImage && (
                       <div className="flex items-center gap-3 rounded-lg border p-3">
-                        <div className="h-12 w-12 overflow-hidden rounded-full border">
+                        <div className="overflow-hidden border">
                           <img
                             src={navbarData.logoImage}
                             alt="Logo preview"
