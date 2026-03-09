@@ -112,10 +112,7 @@ export function FooterStyle2({
                 <div className="lg:col-span-1">
                   {/* Logo */}
                   <div className="mb-4">
-                    <FooterLogo
-                      footerData={data}
-                      getImageUrl={getImageUrl}
-                    />
+                    <FooterLogo footerData={data} getImageUrl={getImageUrl} />
                   </div>
 
                   <Badge

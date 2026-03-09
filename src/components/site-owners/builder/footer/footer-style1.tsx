@@ -109,10 +109,7 @@ export function FooterStyle1({
             <div className="lg:col-span-2">
               {/* Logo */}
               <div className="mb-4">
-                <FooterLogo
-                  footerData={data}
-                  getImageUrl={getImageUrl}
-                />
+                <FooterLogo footerData={data} getImageUrl={getImageUrl} />
               </div>
 
               <p className="text-muted-foreground mb-6 max-w-md">

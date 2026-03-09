@@ -196,10 +196,7 @@ export function FooterStyle9({
 
             {/* Logo */}
             <div className="mt-4 cursor-pointer opacity-90 transition-opacity hover:opacity-100">
-              <FooterLogo
-                footerData={data}
-                getImageUrl={getImageUrl}
-              />
+              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
 
             {/* Decorative bottom graphic hint */}

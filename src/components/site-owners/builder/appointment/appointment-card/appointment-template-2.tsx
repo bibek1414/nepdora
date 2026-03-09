@@ -289,7 +289,9 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                   placeholder="John Doe"
                 />
                 {formErrors.full_name && (
-                  <p className="mt-1 text-xs text-red-500">{formErrors.full_name[0]}</p>
+                  <p className="mt-1 text-xs text-red-500">
+                    {formErrors.full_name[0]}
+                  </p>
                 )}
               </div>
 
@@ -312,7 +314,9 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                   placeholder="john@example.com"
                 />
                 {formErrors.email && (
-                  <p className="mt-1 text-xs text-red-500">{formErrors.email[0]}</p>
+                  <p className="mt-1 text-xs text-red-500">
+                    {formErrors.email[0]}
+                  </p>
                 )}
               </div>
 
@@ -335,7 +339,9 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                   placeholder="+1 (555) 123-4567"
                 />
                 {formErrors.phone && (
-                  <p className="mt-1 text-xs text-red-500">{formErrors.phone[0]}</p>
+                  <p className="mt-1 text-xs text-red-500">
+                    {formErrors.phone[0]}
+                  </p>
                 )}
               </div>
 
@@ -358,7 +364,9 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                     className="mt-1"
                   />
                   {formErrors.date && (
-                    <p className="mt-1 text-xs text-red-500">{formErrors.date[0]}</p>
+                    <p className="mt-1 text-xs text-red-500">
+                      {formErrors.date[0]}
+                    </p>
                   )}
                 </div>
 
@@ -379,7 +387,9 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                     className="mt-1"
                   />
                   {formErrors.time && (
-                    <p className="mt-1 text-xs text-red-500">{formErrors.time[0]}</p>
+                    <p className="mt-1 text-xs text-red-500">
+                      {formErrors.time[0]}
+                    </p>
                   )}
                 </div>
               </div>
@@ -415,7 +425,9 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                     </SelectContent>
                   </Select>
                   {formErrors.reason_id && (
-                    <p className="mt-1 text-xs text-red-500">{formErrors.reason_id[0]}</p>
+                    <p className="mt-1 text-xs text-red-500">
+                      {formErrors.reason_id[0]}
+                    </p>
                   )}
                 </div>
               )}
@@ -438,7 +450,9 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                   placeholder="Any additional information..."
                 />
                 {formErrors.message && (
-                  <p className="mt-1 text-xs text-red-500">{formErrors.message[0]}</p>
+                  <p className="mt-1 text-xs text-red-500">
+                    {formErrors.message[0]}
+                  </p>
                 )}
               </div>
 

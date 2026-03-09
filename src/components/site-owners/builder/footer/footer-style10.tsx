@@ -85,7 +85,7 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
     <footer className="w-full overflow-hidden border-t border-gray-200 bg-gray-50 px-6 pt-16 pb-8 font-sans text-gray-900 transition-colors duration-300 md:px-12 lg:px-24 dark:border-white/5 dark:bg-[#020205] dark:text-white">
       <div className="mx-auto max-w-7xl">
         {/* Main Content Grid */}
-        <div className="mb-16 mt-8 grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <div className="mt-8 mb-16 grid grid-cols-1 gap-10 lg:grid-cols-12">
           {/* Column 1: Info & Address */}
 
           <div className="flex flex-col items-start space-y-6 pr-0 text-left lg:col-span-4 lg:pr-12">

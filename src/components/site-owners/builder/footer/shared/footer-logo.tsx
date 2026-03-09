@@ -7,10 +7,7 @@ interface FooterLogoProps {
   getImageUrl: (path: string, options?: any) => string;
 }
 
-export const FooterLogo = ({
-  footerData,
-  getImageUrl,
-}: FooterLogoProps) => {
+export const FooterLogo = ({ footerData, getImageUrl }: FooterLogoProps) => {
   const { logoType, logoImage, logoText, companyName } = footerData;
   const displayText = logoText || companyName;
 

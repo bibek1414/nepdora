@@ -85,10 +85,7 @@ export function FooterStyle6({
       >
         {/* Logo */}
         <div className="mb-4">
-          <FooterLogo
-            footerData={data}
-            getImageUrl={getImageUrl}
-          />
+          <FooterLogo footerData={data} getImageUrl={getImageUrl} />
         </div>
 
         {/* Copyright */}

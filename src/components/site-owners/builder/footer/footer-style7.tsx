@@ -238,10 +238,7 @@ export function FooterStyle7({
                   className="-rotate-45 fill-current sm:h-5 sm:w-5 md:h-5 md:w-5"
                 />
               </div>
-              <FooterLogo
-                footerData={data}
-                getImageUrl={getImageUrl}
-              />
+              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
             <p className="text-xs leading-relaxed text-white sm:text-sm">
               {data.description}

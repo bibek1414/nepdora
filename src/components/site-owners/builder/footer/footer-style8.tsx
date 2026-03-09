@@ -52,10 +52,7 @@ export function FooterStyle8({
           {/* Column 1: Brand Info */}
           <div className="w-full border-b border-gray-800 p-8 lg:w-[40%] lg:border-r lg:border-b-0 lg:p-16">
             <div className="mb-6 flex items-center gap-3">
-              <FooterLogo
-                footerData={data}
-                getImageUrl={getImageUrl}
-              />
+              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
             <p className="max-w-md text-lg leading-relaxed text-gray-400">
               {data.description}

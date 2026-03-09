@@ -219,10 +219,7 @@ export function FooterStyle3({
           <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 text-sm text-gray-200 md:flex-row">
             {/* Logo and Company Name */}
             <div className="mb-4 flex items-center md:mb-0">
-              <FooterLogo
-                footerData={data}
-                getImageUrl={getImageUrl}
-              />
+              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
 
             {/* Copyright */}

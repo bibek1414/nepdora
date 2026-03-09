@@ -106,10 +106,7 @@ export function FooterStyle4({
             <div className="lg:col-span-2">
               {/* Logo */}
               <div className="mb-6">
-                <FooterLogo
-                  footerData={data}
-                  getImageUrl={getImageUrl}
-                />
+                <FooterLogo footerData={data} getImageUrl={getImageUrl} />
               </div>
 
               <p className="mb-6 text-lg leading-relaxed text-white/90">
