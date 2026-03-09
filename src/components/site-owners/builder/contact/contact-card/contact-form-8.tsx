@@ -17,7 +17,6 @@ import {
   ContactFormSubmission,
 } from "@/types/owner-site/components/contact";
 import { useSubmitContactForm } from "@/hooks/owner-site/admin/use-contact";
-import { toast } from "sonner";
 
 interface ContactForm8Props {
   data: ContactData;
@@ -64,7 +63,6 @@ export const ContactForm8: React.FC<ContactForm8Props> = ({
     e.preventDefault();
 
     if (isPreview) {
-      toast.success("Message sent successfully!");
       setFormData({
         name: "",
         email: "",
@@ -86,7 +84,6 @@ export const ContactForm8: React.FC<ContactForm8Props> = ({
         },
       });
     } else {
-      toast.success("Message sent successfully!");
       setFormData({
         name: "",
         email: "",

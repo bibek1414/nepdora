@@ -29,12 +29,10 @@ export const useSubmitContactForm = (siteUser: string) => {
       return contactAPI.createContact(contactData);
     },
     onSuccess: data => {
-      toast.success(data.message);
-      console.log("Contact form submitted successfully:", data);
+      toast.success("Message sent successfully");
     },
     onError: error => {
-      toast.error("Failed to submit contact form");
-      console.error("Failed to submit contact form:", error);
+      toast.error("Failed to send message");
     },
   });
 };

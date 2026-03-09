@@ -7,7 +7,6 @@ import {
   ContactFormSubmission,
 } from "@/types/owner-site/components/contact";
 import { useSubmitContactForm } from "@/hooks/owner-site/admin/use-contact";
-import { toast } from "sonner";
 import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 
 interface ContactForm10Props {
@@ -38,7 +37,6 @@ export const ContactForm10: React.FC<ContactForm10Props> = ({
     e.preventDefault();
 
     if (isPreview) {
-      toast.success("Message sent successfully!");
       setFormData({
         name: "",
         phone_number: "",
@@ -61,7 +59,6 @@ export const ContactForm10: React.FC<ContactForm10Props> = ({
         },
       });
     } else {
-      toast.success("Message sent successfully!");
       setFormData({
         name: "",
         phone_number: "",
