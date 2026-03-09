@@ -164,7 +164,7 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
           filterable: slugField.filterable ?? true,
           searchable: slugField.searchable ?? true,
           model: null,
-        }
+        },
       };
       const changedCustomFields: any[] = [];
 

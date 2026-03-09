@@ -51,7 +51,9 @@ export function CreateCollectionDialog({
 }: CreateCollectionDialogProps) {
   const router = useRouter();
   const [step, setStep] = useState(1);
-  const [createdCollection, setCreatedCollection] = useState<Collection | null>(null);
+  const [createdCollection, setCreatedCollection] = useState<Collection | null>(
+    null
+  );
   const [createdCollectionSlug, setCreatedCollectionSlug] = useState<
     string | null
   >(null);
@@ -152,23 +154,27 @@ export function CreateCollectionDialog({
         );
       } else if ((result as any).default_fields) {
         const mappedFields: any[] = [];
-        Object.entries((result as any).default_fields).forEach(([key, val]: [string, any]) => {
-          if (key !== "slug") {
-            mappedFields.push({
-              name: key,
-              type: val.type,
-              required: val.required,
-              filterable: val.filterable,
-              searchable: val.searchable,
-              model_collection_id: null
-            });
+        Object.entries((result as any).default_fields).forEach(
+          ([key, val]: [string, any]) => {
+            if (key !== "slug") {
+              mappedFields.push({
+                name: key,
+                type: val.type,
+                required: val.required,
+                filterable: val.filterable,
+                searchable: val.searchable,
+                model_collection_id: null,
+              });
+            }
           }
-        });
+        );
         setFields(mappedFields);
       }
 
       setStep(2);
-      toast.success("Collection created. Now you can configure features and custom fields.");
+      toast.success(
+        "Collection created. Now you can configure features and custom fields."
+      );
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Failed to create collection"
@@ -205,7 +211,7 @@ export function CreateCollectionDialog({
           filterable: slugField.filterable ?? true,
           searchable: slugField.searchable ?? true,
           model: null,
-        }
+        },
       };
       const changedCustomFields: any[] = [];
 
@@ -452,9 +458,11 @@ export function CreateCollectionDialog({
                               <SelectTrigger>
                                 <SelectValue placeholder="Select a collection" />
                               </SelectTrigger>
-                            <SelectContent>
+                              <SelectContent>
                                 {collections
-                                  ?.filter(c => c.slug !== createdCollectionSlug) // Exclude current collection
+                                  ?.filter(
+                                    c => c.slug !== createdCollectionSlug
+                                  ) // Exclude current collection
                                   .map(collection => (
                                     <SelectItem
                                       key={collection.id}

@@ -182,7 +182,6 @@ export function CollectionsList() {
 
           {/* Collection Cards */}
           {filteredCollections.map((collection, idx) => {
-
             return (
               <div
                 key={collection.id}
