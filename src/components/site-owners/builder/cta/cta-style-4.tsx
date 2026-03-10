@@ -108,16 +108,14 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
               isEditable={isEditable}
             />
 
-            <h2 className="mb-6 text-4xl leading-tight font-semibold text-white lg:text-5xl">
-              <EditableText
-                value={data.title}
-                onChange={handleTextUpdate("title")}
-                as="span"
-                className="block"
-                isEditable={isEditable}
-                multiline
-              />
-            </h2>
+            <EditableText
+              value={data.title}
+              onChange={handleTextUpdate("title")}
+              as="h3"
+              className="mb-6 block"
+              isEditable={isEditable}
+              multiline
+            />
 
             <EditableLink
               text={data.button.text}

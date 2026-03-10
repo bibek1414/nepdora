@@ -139,16 +139,6 @@ export const GalleryComponent: React.FC<GalleryComponentProps> = ({
       {isEditable && (
         <>
           <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 rounded-lg p-1 opacity-0 transition-opacity group-hover:opacity-100">
-            <Link href="/admin/gallery/" target="_blank" rel="noopener">
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-full justify-start"
-              >
-                Manage Gallery
-              </Button>
-            </Link>
-
             <Button
               size="sm"
               variant="outline"

@@ -14,12 +14,15 @@ export interface TestimonialsData {
     | "testimonial-10"
     | "testimonial-11"
     | "testimonial-12"
-    | "testimonial-13";
+    | "testimonial-13"
+    | "testimonial-14";
   title: string;
   subtitle?: string;
   page_size: number;
   order?: number;
   backgroundImage?: string;
+  buttonText?: string;
+  buttonLink?: string;
 }
 
 export interface TestimonialsComponentData {
@@ -59,4 +62,10 @@ export const DEFAULT_TESTIMONIALS_MAP: Record<
   "testimonial-11": { ...defaultTestimonialsData, style: "testimonial-11" },
   "testimonial-12": { ...defaultTestimonialsData, style: "testimonial-12" },
   "testimonial-13": { ...defaultTestimonialsData, style: "testimonial-13" },
+  "testimonial-14": {
+    ...defaultTestimonialsData,
+    style: "testimonial-14",
+    buttonText: "Get a free consultation",
+    buttonLink: "#",
+  },
 };

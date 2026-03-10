@@ -216,7 +216,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
 
   return (
     <motion.section
-      className="relative h-[800px] w-full overflow-hidden bg-gray-900"
+      className="relative h-[880px] w-full overflow-hidden bg-gray-900"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}

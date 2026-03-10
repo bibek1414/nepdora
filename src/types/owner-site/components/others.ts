@@ -146,6 +146,21 @@ export interface OthersTemplate8Data {
   steps: OthersStepItem[];
 }
 
+export interface OthersTemplate9Data {
+  template: "others-9";
+  badge: string;
+  heading: string;
+  features: OthersFeature[];
+  image: {
+    url: string;
+    alt: string;
+  };
+  accentColor: string; // The lime yellow color in the image
+  backgroundType: "color" | "gradient" | "image";
+  backgroundColor?: string;
+  backgroundImageUrl?: string;
+}
+
 // Union type for all others templates
 export type OthersData =
   | OthersTemplate1Data
@@ -155,7 +170,8 @@ export type OthersData =
   | OthersTemplate5Data
   | OthersTemplate6Data
   | OthersTemplate7Data
-  | OthersTemplate8Data;
+  | OthersTemplate8Data
+  | OthersTemplate9Data;
 
 // Component and API interfaces
 export interface OthersComponentData {
@@ -455,6 +471,39 @@ export const defaultOthersTemplate8Data: OthersTemplate8Data = {
   ],
 };
 
+export const defaultOthersTemplate9Data: OthersTemplate9Data = {
+  template: "others-9",
+  badge: "Why Choose us",
+  heading: "Why We're Your Best Choice",
+  features: [
+    {
+      id: "1",
+      title: "Personalized Coaching Plans",
+      description:
+        "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod",
+    },
+    {
+      id: "2",
+      title: "Proven Success Strategies",
+      description:
+        "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod",
+    },
+    {
+      id: "3",
+      title: "Flexible Scheduling Options",
+      description:
+        "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod",
+    },
+  ],
+  image: {
+    url: "https://images.pexels.com/photos/36485447/pexels-photo-36485447.jpeg",
+    alt: "Professional team",
+  },
+  accentColor: "#D4FF5F", // Lime yellow color from the image
+  backgroundType: "color",
+  backgroundColor: "#FFFFFF",
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -465,6 +514,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-6": defaultOthersTemplate6Data,
   "others-7": defaultOthersTemplate7Data,
   "others-8": defaultOthersTemplate8Data,
+  "others-9": defaultOthersTemplate9Data,
 };
 
 // Type guards
@@ -499,3 +549,7 @@ export const isOthersTemplate7 = (
 export const isOthersTemplate8 = (
   data: OthersData
 ): data is OthersTemplate8Data => data.template === "others-8";
+
+export const isOthersTemplate9 = (
+  data: OthersData
+): data is OthersTemplate9Data => data.template === "others-9";
